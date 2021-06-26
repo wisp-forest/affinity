@@ -1,0 +1,19 @@
+{
+  "effect.nidween.life_leech": "Life Leech",
+  "item.minecraft.potion.effect.life_leech": "Potion of Life Leech",
+  "item.minecraft.splash_potion.effect.life_leech": "Splash Potion of Life Leech",
+  "item.minecraft.lingering_potion.effect.life_leech": "Lingering Potion of Life Leech",
+  "item.minecraft.tipped_arrow.effect.life_leech": "Arrow of Life Leech",
+
+  "effect.nidween.steadfast": "Steadfast",
+  "item.minecraft.potion.effect.steadfast": "Potion of Knockback Resistance",
+  "item.minecraft.splash_potion.effect.steadfast": "Splash Potion of Knockback Resistance",
+  "item.minecraft.lingering_potion.effect.steadfast": "Lingering Potion of Knockback Resistance",
+  "item.minecraft.tipped_arrow.effect.steadfast": "Arrow of Knockback Resistance",
+
+  "effect.nidween.flight": "Flight",
+  "item.minecraft.potion.effect.flight": "Potion of Paragravity",
+  "item.minecraft.splash_potion.effect.flight": "Splash Potion of Paragravity",
+  "item.minecraft.lingering_potion.effect.flight": "Lingering Potion of Paragravity",
+  "item.minecraft.tipped_arrow.effect.flight": "Arrow of Paragravity"
+}

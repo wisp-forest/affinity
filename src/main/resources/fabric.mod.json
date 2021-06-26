@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "nidween",
+  "version": "${version}",
+  "name": "Nidween",
+  "description": "",
+  "authors": [
+    "glisco"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/nidween/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.glisco.nidween.client.NidweenClient"
+    ],
+    "main": [
+      "com.glisco.nidween.Nidween"
+    ]
+  },
+  "mixins": [
+    "nidween.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.6",
+    "fabric": "*",
+    "minecraft": "1.17"
+  }
+}
