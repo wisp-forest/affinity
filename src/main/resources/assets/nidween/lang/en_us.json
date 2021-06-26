@@ -15,5 +15,9 @@
   "item.minecraft.potion.effect.flight": "Potion of Paragravity",
   "item.minecraft.splash_potion.effect.flight": "Splash Potion of Paragravity",
   "item.minecraft.lingering_potion.effect.flight": "Lingering Potion of Paragravity",
-  "item.minecraft.tipped_arrow.effect.flight": "Arrow of Paragravity"
+  "item.minecraft.tipped_arrow.effect.flight": "Arrow of Paragravity",
+
+  "item.minecraft.potion.effect.dubious": "Dubious Potion",
+  "item.minecraft.splash_potion.effect.dubious": "Twhicc Splashy Potion",
+  "item.minecraft.lingering_potion.effect.dubious": "Twhicc Goes-Everyhwere Potion"
 }

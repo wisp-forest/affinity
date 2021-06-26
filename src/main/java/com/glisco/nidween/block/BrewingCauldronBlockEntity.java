@@ -84,8 +84,7 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
     }
 
     public boolean canPotionBeAdded(PotionMixture potion) {
-        if (fillLevel > 2) return false;
-        return currentPotion.isEmpty() || potion.equals(currentPotion);
+        return fillLevel < 3;
     }
 
     public void addOneBottle(PotionMixture potion) {
@@ -93,6 +92,8 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
 
         if (fillLevel == 0) {
             this.currentPotion = potion;
+        } else {
+            this.currentPotion = currentPotion.mix(potion);
         }
 
         this.fillLevel++;
