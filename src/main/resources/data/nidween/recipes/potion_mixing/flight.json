@@ -1,0 +1,13 @@
+{
+  "type": "nidween:potion_mixing",
+  "output": "nidween:flight",
+  "effectInputs": [
+    "minecraft:jump_boost",
+    "minecraft:slow_falling"
+  ],
+  "itemInputs": [
+    {
+      "item": "minecraft:amethyst_shard"
+    }
+  ]
+}

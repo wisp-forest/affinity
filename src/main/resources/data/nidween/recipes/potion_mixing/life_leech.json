@@ -1,0 +1,10 @@
+{
+  "type": "nidween:potion_mixing",
+  "output": "nidween:life_leech",
+  "effectInputs": [
+    "minecraft:instant_health",
+    "minecraft:instant_damage",
+    "minecraft:poison"
+  ],
+  "itemInputs": []
+}

@@ -1,0 +1,10 @@
+{
+  "type": "nidween:potion_mixing",
+  "output": "nidween:steadfast",
+  "effectInputs": [
+    "minecraft:resistance",
+    "minecraft:slowness",
+    "minecraft:speed"
+  ],
+  "itemInputs": []
+}

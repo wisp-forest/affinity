@@ -3,7 +3,6 @@ package com.glisco.nidween.registries;
 import com.glisco.nidween.Nidween;
 import com.glisco.nidween.statuseffects.FlightStatusEffect;
 import com.glisco.nidween.statuseffects.NidweenStatusEffect;
-import com.glisco.nidween.util.potion.PotionMixingRecipeRegistry;
 import com.glisco.nidween.util.potion.PotionMixture;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -31,8 +30,6 @@ public class NidweenStatusEffects {
         registerEffectAndPotions(FLIGHT, "flight", 2400, true, false);
 
         Registry.register(Registry.POTION, Nidween.id("dubious"), PotionMixture.DUBIOUS_POTION);
-
-        PotionMixingRecipeRegistry.registerDefaultRecipes();
     }
 
     private static void registerEffectAndPotions(StatusEffect effect, String baseName, int baseDuration, boolean registerLong, boolean registerStrong) {

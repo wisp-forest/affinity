@@ -1,15 +1,16 @@
 package com.glisco.nidween.block;
 
+import com.glisco.nidween.registries.NidweenBlocks;
 import com.glisco.nidween.util.potion.PotionMixture;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.potion.Potions;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.function.BooleanBiFunction;
@@ -49,6 +50,12 @@ public class BrewingCauldronBlock extends BlockWithEntity {
         return OUTLINE_SHAPE;
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, NidweenBlocks.BlockEntityTypes.BREWING_CAULDRON, BrewingCauldronBlockEntity::tick);
+    }
+
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 
@@ -56,7 +63,7 @@ public class BrewingCauldronBlock extends BlockWithEntity {
         final var playerStack = player.getStackInHand(hand);
 
         if (playerStack.getItem() instanceof PotionItem) {
-            if (!cauldron.canPotionBeAdded(PotionMixture.fromStack(playerStack))) return ActionResult.PASS;
+            if (!cauldron.canPotionBeAdded()) return ActionResult.PASS;
 
             if (!world.isClient()) {
                 cauldron.addOneBottle(PotionMixture.fromStack(playerStack));
@@ -73,6 +80,15 @@ public class BrewingCauldronBlock extends BlockWithEntity {
                 if (potionStack.isEmpty()) return ActionResult.PASS;
 
                 player.setStackInHand(hand, potionStack);
+            }
+
+            return ActionResult.SUCCESS;
+        } else if (playerStack.isEmpty()) {
+
+            if (!cauldron.itemAvailable()) return ActionResult.PASS;
+
+            if (!world.isClient()) {
+                player.setStackInHand(hand, cauldron.getAndRemoveLast());
             }
 
             return ActionResult.SUCCESS;

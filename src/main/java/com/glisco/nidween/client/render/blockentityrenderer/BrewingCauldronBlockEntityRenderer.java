@@ -1,16 +1,20 @@
 package com.glisco.nidween.client.render.blockentityrenderer;
 
 import com.glisco.nidween.block.BrewingCauldronBlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3f;
 
 public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<BrewingCauldronBlockEntity> {
 
@@ -45,5 +49,26 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
             matrices.pop();
         }
 
+        matrices.push();
+        matrices.translate(0.5, 0.6, 0.5);
+
+        float angle = (float) ((System.currentTimeMillis() / 1000d) % (2 * Math.PI));
+
+        matrices.scale(0.5f, 0.5f, 0.5f);
+
+        for (int i = 0; i < entity.getItems().size(); i++) {
+            final var stack = entity.getItems().get(i);
+            matrices.push();
+
+            final var itemAngle = (float) (angle + i * 0.4 * Math.PI);
+            matrices.translate(0.5 * MathHelper.cos(itemAngle), MathHelper.sin(itemAngle + angle) * 0.2, 0.5 * MathHelper.sin(itemAngle));
+            matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(itemAngle));
+
+            MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, 0);
+
+            matrices.pop();
+        }
+
+        matrices.pop();
     }
 }

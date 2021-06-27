@@ -28,12 +28,14 @@ public class PotionMixture {
     private final Potion basePotion;
     private final List<StatusEffectInstance> customEffects;
     private final int color;
+    private final boolean pure;
 
-    public static final PotionMixture EMPTY = new PotionMixture(Potions.EMPTY, ImmutableList.of());
+    public static final PotionMixture EMPTY = new PotionMixture(Potions.EMPTY, ImmutableList.of(), true);
 
-    public PotionMixture(Potion basePotion, List<StatusEffectInstance> customEffects) {
+    public PotionMixture(Potion basePotion, List<StatusEffectInstance> customEffects, boolean pure) {
         this.basePotion = basePotion;
         this.customEffects = ImmutableList.copyOf(customEffects);
+        this.pure = pure;
 
         final var colorEffects = new ArrayList<>(customEffects);
         if (basePotion != Potions.EMPTY) colorEffects.addAll(basePotion.getEffects());
@@ -45,7 +47,7 @@ public class PotionMixture {
         final var potion = PotionUtil.getPotion(stack);
         final var effects = PotionUtil.getCustomPotionEffects(stack);
 
-        return new PotionMixture(potion, effects);
+        return new PotionMixture(potion, effects, true);
     }
 
     public static PotionMixture fromNbt(NbtCompound nbt) {
@@ -65,7 +67,7 @@ public class PotionMixture {
             }
         }
 
-        return new PotionMixture(potion, effects);
+        return new PotionMixture(potion, effects, nbt.getBoolean("Pure"));
 
     }
 
@@ -88,24 +90,17 @@ public class PotionMixture {
             nbt.put("Effects", effectsNbt);
         }
 
+        nbt.putBoolean("Pure", pure);
+
         return nbt;
     }
 
     public ItemStack toStack() {
         final var stack = new ItemStack(Items.POTION);
 
-//        if (basePotion != Potions.EMPTY) {
-//            PotionUtil.setPotion(stack, basePotion);
-//        }
-//
-//        if (!customEffects.isEmpty()) {
-//            PotionUtil.setCustomPotionEffects(stack, customEffects);
-//        }
-
-        final var matchingRecipe = PotionMixingRecipeRegistry.getOrEmpty(this, ImmutableList.of());
-
-        if (matchingRecipe.isPresent()) {
-            PotionUtil.setPotion(stack, matchingRecipe.get().output());
+        if (pure) {
+            if (basePotion != Potions.EMPTY) PotionUtil.setPotion(stack, basePotion);
+            if (!customEffects.isEmpty()) PotionUtil.setCustomPotionEffects(stack, customEffects);
         } else {
             PotionUtil.setPotion(stack, DUBIOUS_POTION);
         }
@@ -122,7 +117,7 @@ public class PotionMixture {
         effects.addAll(basePotion.getEffects());
         effects.addAll(other.basePotion.getEffects());
 
-        return new PotionMixture(Potions.EMPTY, effects);
+        return new PotionMixture(Potions.EMPTY, effects, false);
     }
 
     @Override
