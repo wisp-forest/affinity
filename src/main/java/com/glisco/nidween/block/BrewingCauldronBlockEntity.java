@@ -3,6 +3,7 @@ package com.glisco.nidween.block;
 import com.glisco.nidween.registries.NidweenBlocks;
 import com.glisco.nidween.util.potion.PotionMixture;
 import com.glisco.nidween.util.recipe.PotionMixingRecipe;
+import com.glisco.owo.ItemOps;
 import com.glisco.owo.client.ClientParticles;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -88,8 +89,8 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
             for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos), itemEntity -> true)) {
 
                 if (!canAddItem()) break;
-                addItem(item.getStack());
-                item.discard();
+                addItem(ItemOps.singleCopy(item.getStack()));
+                if(!ItemOps.emptyAwareDecrement(item.getStack())) item.discard();
                 world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1, 0.25f + world.random.nextFloat() * 0.5f);
             }
         }

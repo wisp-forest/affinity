@@ -22,8 +22,8 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
     @Override
     public PotionMixingRecipe read(Identifier id, JsonObject json) {
 
-        final var effectInputsJson = JsonHelper.getArray(json, "effectInputs");
-        final var itemInputsJson = JsonHelper.getArray(json, "itemInputs");
+        final var effectInputsJson = JsonHelper.getArray(json, "effect_inputs");
+        final var itemInputsJson = JsonHelper.getArray(json, "item_inputs");
 
         final var outputPotion = Registry.POTION.getOrEmpty(Identifier.tryParse(JsonHelper.getString(json, "output"))).orElseThrow(() -> new JsonSyntaxException("Invalid potion: " + JsonHelper.getString(json, "output")));
 

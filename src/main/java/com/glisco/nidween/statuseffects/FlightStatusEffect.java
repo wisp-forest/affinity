@@ -13,16 +13,22 @@ public class FlightStatusEffect extends NidweenStatusEffect {
 
     @Override
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if (!(entity instanceof ServerPlayerEntity player)) return;
-        player.getAbilities().allowFlying = true;
-        player.sendAbilitiesUpdate();
+        if (entity instanceof ServerPlayerEntity player){
+            player.getAbilities().allowFlying = true;
+            player.sendAbilitiesUpdate();
+        } else {
+            entity.setNoGravity(true);
+        }
     }
 
     @Override
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if (!(entity instanceof ServerPlayerEntity player)) return;
+        if (entity instanceof ServerPlayerEntity player){
+            player.interactionManager.getGameMode().setAbilities(player.getAbilities());
+            player.sendAbilitiesUpdate();
+        } else {
+            entity.setNoGravity(false);
+        }
 
-        player.interactionManager.getGameMode().setAbilities(player.getAbilities());
-        player.sendAbilitiesUpdate();
     }
 }

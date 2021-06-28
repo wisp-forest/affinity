@@ -1,0 +1,26 @@
+{
+  "type": "nidween:potion_mixing",
+  "output": "nidween:resistance",
+  "effect_inputs": [
+    "minecraft:resistance",
+    "minecraft:slowness",
+    "minecraft:speed"
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:scute"
+    },
+    {
+      "item": "minecraft:crying_obsidian"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.Potions;
 import net.minecraft.recipe.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -43,27 +44,32 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
         return false;
     }
 
-    public static Optional<PotionMixingRecipe> getMatching(RecipeManager manager, PotionMixture mixture, List<ItemStack> stacks) {
+    public static Optional<PotionMixingRecipe> getMatching(RecipeManager manager, PotionMixture inputMixture, List<ItemStack> inputStacks) {
 
-        if(mixture.isEmpty()) return Optional.empty();
+        if (inputMixture.isEmpty()) return Optional.empty();
 
-        //TODO exact matching, allow for longer and stronger
         for (var recipe : manager.listAllOfType(Type.INSTANCE)) {
-            final var effects = mixture.getCustomEffects().stream().map(StatusEffectInstance::getEffectType).toList();
 
-            final var mutableItems = new ConcurrentLinkedQueue<>(stacks);
+            final var effects = inputMixture.getCustomEffects().stream().map(StatusEffectInstance::getEffectType).toList();
+            final var mutableItems = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
+
+            if(effects.size() != recipe.effectInputs.size() || mutableItems.size() != recipe.itemInputs.size()) continue;
+
             final var confirmedIngredients = new ArrayList<Ingredient>();
 
-            for (var ingredient : recipe.itemInputs){
-                for (var stack : mutableItems){
-                    if(!ingredient.test(stack)) continue;
+            for (var ingredient : recipe.itemInputs) {
+                for (var stack : mutableItems) {
+                    if (!ingredient.test(stack)) continue;
                     mutableItems.remove(stack);
                     confirmedIngredients.add(ingredient);
                     break;
                 }
             }
 
-            if(!effects.containsAll(recipe.effectInputs) || confirmedIngredients.size() != recipe.itemInputs.size()) continue;
+            //Test for awkward potion input if no effects have been declared
+            boolean effectsConfirmed = recipe.effectInputs.isEmpty() ? inputMixture.getBasePotion() == Potions.AWKWARD : effects.containsAll(recipe.effectInputs);
+
+            if (!effectsConfirmed || confirmedIngredients.size() != recipe.itemInputs.size()) continue;
 
             return Optional.of(recipe);
         }

@@ -19,5 +19,25 @@
 
   "item.minecraft.potion.effect.dubious": "Dubious Potion",
   "item.minecraft.splash_potion.effect.dubious": "Twhicc Splashy Potion",
-  "item.minecraft.lingering_potion.effect.dubious": "Twhicc Goes-Everyhwere Potion"
+  "item.minecraft.lingering_potion.effect.dubious": "Twhicc Goes-Everyhwere Potion",
+
+  "item.minecraft.potion.effect.resistance": "Potion of Resilience",
+  "item.minecraft.splash_potion.effect.resistance": "Splash Potion of Resilience",
+  "item.minecraft.lingering_potion.effect.resistance": "Lingering Potion of Resilience",
+  "item.minecraft.tipped_arrow.effect.resistance": "Arrow of Resilience",
+
+  "item.minecraft.potion.effect.glowing": "Potion of Incandescence",
+  "item.minecraft.splash_potion.effect.glowing": "Splash Potion of Incandescence",
+  "item.minecraft.lingering_potion.effect.glowing": "Lingering Potion of Incandescence",
+  "item.minecraft.tipped_arrow.effect.glowing": "Arrow of Incandescence",
+
+  "item.minecraft.potion.effect.wither": "Potion of Decay",
+  "item.minecraft.splash_potion.effect.wither": "Splash Potion of Decay",
+  "item.minecraft.lingering_potion.effect.wither": "Lingering Potion of Decay",
+  "item.minecraft.tipped_arrow.effect.wither": "Arrow of Decay",
+
+  "item.minecraft.potion.effect.hunger": "Potion of Enervation",
+  "item.minecraft.splash_potion.effect.hunger": "Splash Potion of Enervation",
+  "item.minecraft.lingering_potion.effect.hunger": "Lingering Potion of Enervation",
+  "item.minecraft.tipped_arrow.effect.hunger": "Arrow of Enervation"
 }

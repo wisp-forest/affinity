@@ -1,3 +1,6 @@
 {
-  "parent": "block/cauldron"
+  "parent": "block/cauldron",
+  "textures": {
+    "side": "nidween:block/brewing_cauldron_side"
+  }
 }

@@ -1,0 +1,23 @@
+{
+  "type": "nidween:potion_mixing",
+  "output": "nidween:long_hunger",
+  "effect_inputs": [
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "minecraft:chicken"
+    }
+  ]
+}
