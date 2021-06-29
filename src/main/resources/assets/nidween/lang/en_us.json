@@ -1,4 +1,6 @@
 {
+  "block.nidween.brewing_cauldron": "Brewing Cauldron",
+
   "effect.nidween.life_leech": "Life Leech",
   "item.minecraft.potion.effect.life_leech": "Potion of Life Leech",
   "item.minecraft.splash_potion.effect.life_leech": "Splash Potion of Life Leech",

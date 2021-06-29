@@ -8,6 +8,7 @@ import com.glisco.owo.client.ClientParticles;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.Inventories;
@@ -32,7 +33,9 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
     private PotionMixture currentPotion = PotionMixture.EMPTY;
     private int fillLevel = 0;
     private int processTick = 0;
+
     private PotionMixingRecipe cachedRecipe = null;
+    private BlockPos sporeBlossomPos = null;
 
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(5, ItemStack.EMPTY);
 
@@ -90,7 +93,7 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
 
                 if (!canAddItem()) break;
                 addItem(ItemOps.singleCopy(item.getStack()));
-                if(!ItemOps.emptyAwareDecrement(item.getStack())) item.discard();
+                if (!ItemOps.emptyAwareDecrement(item.getStack())) item.discard();
                 world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1, 0.25f + world.random.nextFloat() * 0.5f);
             }
         }
@@ -105,13 +108,16 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
                     float b = (currentPotion.getColor() & 0xFF) / 255f;
 
                     ClientParticles.setVelocity(new Vec3d(r, g, b));
+                    ClientParticles.setParticleCount(2);
                     ClientParticles.spawnPrecise(ParticleTypes.ENTITY_EFFECT, world, Vec3d.of(pos).add(0.5, 0.8, 0.5), 0.6, 0.2, 0.6);
 
                     ParticleEffect dust = new DustParticleEffect(new Vec3f(233 / 255f, 100 / 255f, 178 / 255f), 1);
+                    final var sporeBlossomOffset = sporeBlossomPos.subtract(pos).getY() + 1;
 
-                    ClientParticles.setParticleCount(5);
-                    ClientParticles.spawnLine(dust, world, Vec3d.of(pos).add(0.5, 0.8, 0.5), Vec3d.of(pos).add(0.5, 3, 0.5), 0.15f);
-                    ClientParticles.spawn(ParticleTypes.FALLING_SPORE_BLOSSOM, world, Vec3d.of(pos).add(0.5, 3, 0.5), 0.5);
+                    ClientParticles.setParticleCount(sporeBlossomOffset * 2);
+                    ClientParticles.spawnLine(dust, world, Vec3d.of(pos).add(0.5, 0.8, 0.5), Vec3d.of(pos).add(0.5, sporeBlossomOffset, 0.5), 0.15f);
+
+                    ClientParticles.spawn(ParticleTypes.FALLING_SPORE_BLOSSOM, world, Vec3d.of(pos).add(0.5, sporeBlossomOffset, 0.5), 0.5);
                 }
                 processTick++;
             } else {
@@ -131,8 +137,8 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
                     this.currentPotion = new PotionMixture(cachedRecipe.getPotionOutput(), ImmutableList.of(), true);
                     markDirty();
                 } else {
-                    ClientParticles.setParticleCount(25);
-                    ClientParticles.spawnPrecise(ParticleTypes.WITCH, world, Vec3d.of(pos).add(0.5, 0.8, 0.5), 0.6, 0.2, 0.6);
+                    ClientParticles.setParticleCount(75);
+                    ClientParticles.spawnPrecise(ParticleTypes.WITCH, world, Vec3d.of(pos).add(0.5, 0.9, 0.5), 0.75, 0.2, 0.75);
                 }
 
                 processTick = 0;
@@ -143,8 +149,18 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
     }
 
     private void verifyRecipe() {
+
+        if (sporeBlossomPos == null || !world.getBlockState(sporeBlossomPos).isOf(Blocks.SPORE_BLOSSOM)) {
+            sporeBlossomPos = null;
+            for (var pos : BlockPos.iterate(pos.add(0, 1, 0), pos.add(0, 4, 0))) {
+                if (!world.getBlockState(pos).isOf(Blocks.SPORE_BLOSSOM)) continue;
+                sporeBlossomPos = pos;
+                break;
+            }
+        }
+
         this.cachedRecipe = PotionMixingRecipe.getMatching(world.getRecipeManager(), currentPotion, items).orElse(null);
-        if (cachedRecipe == null) {
+        if (cachedRecipe == null || sporeBlossomPos == null) {
             this.processTick = 0;
         } else if (processTick == 0) {
             this.processTick = 1;

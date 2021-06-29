@@ -17,6 +17,9 @@
     ],
     "main": [
       "com.glisco.nidween.Nidween"
+    ],
+    "rei_plugins": [
+      "com.glisco.nidween.compat.rei.NidweenReiPlugin"
     ]
   },
   "mixins": [
