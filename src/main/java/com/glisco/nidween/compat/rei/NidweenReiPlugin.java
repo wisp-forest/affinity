@@ -15,7 +15,7 @@ public class NidweenReiPlugin implements REIClientPlugin {
 
         registry.add(new PotionMixingCategory());
 
-        registry.addWorkstations(PotionMixingCategory.ID, EntryStacks.of(NidweenBlocks.BREWING_CAULDRON_BLOCK));
+        registry.addWorkstations(PotionMixingCategory.ID, EntryStacks.of(NidweenBlocks.BREWING_CAULDRON));
         registry.addWorkstations(PotionMixingCategory.ID, EntryStacks.of(Blocks.SPORE_BLOSSOM));
     }
 

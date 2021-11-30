@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "shard=true": {
+      "model": "nidween:block/stone_banded_aether_flux_node_with_shard"
+    },
+    "shard=false": {
+      "model": "nidween:block/stone_banded_aether_flux_node"
+    }
+  }
+}

@@ -10,7 +10,6 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
@@ -47,7 +46,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(NidweenBlocks.BREWING_CAULDRON_BLOCK);
+        return EntryStacks.of(NidweenBlocks.BREWING_CAULDRON);
     }
 
     @Override

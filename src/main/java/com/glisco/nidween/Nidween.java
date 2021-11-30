@@ -19,7 +19,6 @@ public class Nidween implements ModInitializer {
 
         Registry.register(Registry.RECIPE_TYPE, PotionMixingRecipe.Type.ID, PotionMixingRecipe.Type.INSTANCE);
         Registry.register(Registry.RECIPE_SERIALIZER, PotionMixingRecipeSerializer.ID, PotionMixingRecipeSerializer.INSTANCE);
-
     }
 
     public static Identifier id(String path) {

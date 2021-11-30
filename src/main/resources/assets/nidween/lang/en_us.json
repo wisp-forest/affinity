@@ -1,5 +1,7 @@
 {
   "block.nidween.brewing_cauldron": "Brewing Cauldron",
+  "block.nidween.copper_plated_aether_flux_node": "Copper Plated Aether Flux Node",
+  "block.nidween.stone_banded_aether_flux_node": "Stone Banded Aether Flux Node",
 
   "effect.nidween.life_leech": "Life Leech",
   "item.minecraft.potion.effect.life_leech": "Potion of Life Leech",
@@ -18,6 +20,12 @@
   "item.minecraft.splash_potion.effect.flight": "Splash Potion of Paragravity",
   "item.minecraft.lingering_potion.effect.flight": "Lingering Potion of Paragravity",
   "item.minecraft.tipped_arrow.effect.flight": "Arrow of Paragravity",
+
+  "effect.nidween.freezing": "Freezing",
+  "item.minecraft.potion.effect.freezing": "Potion of Winter",
+  "item.minecraft.splash_potion.effect.freezing": "Splash Potion of Winter",
+  "item.minecraft.lingering_potion.effect.freezing": "Lingering Potion of Winter",
+  "item.minecraft.tipped_arrow.effect.freezing": "Arrow of Winter",
 
   "item.minecraft.potion.effect.dubious": "Dubious Potion",
   "item.minecraft.splash_potion.effect.dubious": "Twhicc Splashy Potion",

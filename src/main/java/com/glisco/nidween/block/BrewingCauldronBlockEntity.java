@@ -98,7 +98,7 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
             }
         }
 
-        verifyRecipe();
+        checkCanCraft();
 
         if (processTick > 0) {
             if (processTick < 100) {
@@ -148,7 +148,7 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
 
     }
 
-    private void verifyRecipe() {
+    private void checkCanCraft() {
 
         if (sporeBlossomPos == null || !world.getBlockState(sporeBlossomPos).isOf(Blocks.SPORE_BLOSSOM)) {
             sporeBlossomPos = null;

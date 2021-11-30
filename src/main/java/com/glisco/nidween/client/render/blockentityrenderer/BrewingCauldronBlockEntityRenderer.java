@@ -23,15 +23,14 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
 
     static {
         ModelData data = new ModelData();
-        data.getRoot().addChild("portionFluid", ModelPartBuilder.create().uv(-24, 0).cuboid(0, 0, 0, 12, 0, 12), ModelTransform.NONE);
+        data.getRoot().addChild("potionFluid", ModelPartBuilder.create().uv(-24, 0).cuboid(0, 0, 0, 12, 0, 12), ModelTransform.NONE);
         POTION_MODEL = TexturedModelData.of(data, 16, 16).createModel();
     }
 
     public BrewingCauldronBlockEntityRenderer(BlockEntityRendererFactory.Context context) {}
 
     @Override
-    public void render(BrewingCauldronBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-
+    public void render(BrewingCauldronBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {n 
         if (!entity.getCurrentPotion().isEmpty()) {
             matrices.push();
             matrices.translate(0.125, entity.getFluidHeight(), 0.125);
