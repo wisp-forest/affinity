@@ -4,13 +4,13 @@
   "package": "com.glisco.affinity.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "ItemStackMixin",
-    "LivingEntityMixin",
-    "PotionItemMixin",
-    "PotionUtilMixin"
+    "io.glisco.affinity.mixin.ItemStackMixin",
+    "io.glisco.affinity.mixin.LivingEntityMixin",
+    "io.glisco.affinity.mixin.PotionItemMixin",
+    "io.glisco.affinity.mixin.PotionUtilMixin"
   ],
   "client": [
-    "WorldRendererMixin"
+    "io.glisco.affinity.mixin.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
