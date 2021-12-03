@@ -1,32 +1,32 @@
 {
   "schemaVersion": 1,
-  "id": "nidween",
+  "id": "affinity",
   "version": "${version}",
-  "name": "Nidween",
+  "name": "Affinity",
   "description": "",
   "authors": [
     "glisco"
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/nidween/icon.png",
+  "icon": "assets/affinity/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "com.glisco.nidween.client.NidweenClient"
+      "com.glisco.affinity.client.AffinityClient"
     ],
     "main": [
-      "com.glisco.nidween.Nidween"
+      "com.glisco.affinity.Affinity"
     ],
     "rei_plugins": [
-      "com.glisco.nidween.compat.rei.NidweenReiPlugin"
+      "com.glisco.affinity.compat.rei.AffinityReiPlugin"
     ],
     "cardinal-components-entity": [
-      "com.glisco.nidween.util.components.NidweenComponents"
+      "com.glisco.affinity.util.components.AffinityComponents"
     ]
   },
   "mixins": [
-    "nidween.mixins.json"
+    "affinity.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.6",
@@ -35,7 +35,7 @@
   },
   "custom": {
     "cardinal-components": [
-      "nidween:glowing_color"
+      "affinity:glowing_color"
     ]
   }
 }
