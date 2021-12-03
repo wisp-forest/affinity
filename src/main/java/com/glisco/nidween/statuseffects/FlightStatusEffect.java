@@ -2,12 +2,12 @@ package com.glisco.nidween.statuseffects;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class FlightStatusEffect extends NidweenStatusEffect {
 
-    public FlightStatusEffect(StatusEffectType type, int color) {
+    public FlightStatusEffect(StatusEffectCategory type, int color) {
         super(type, color);
     }
 

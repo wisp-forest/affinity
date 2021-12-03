@@ -20,6 +20,9 @@
     ],
     "rei_plugins": [
       "com.glisco.nidween.compat.rei.NidweenReiPlugin"
+    ],
+    "cardinal-components-entity": [
+      "com.glisco.nidween.util.components.NidweenComponents"
     ]
   },
   "mixins": [
@@ -28,6 +31,11 @@
   "depends": {
     "fabricloader": ">=0.11.6",
     "fabric": "*",
-    "minecraft": "1.17"
+    "minecraft": ">=1.18"
+  },
+  "custom": {
+    "cardinal-components": [
+      "nidween:glowing_color"
+    ]
   }
 }

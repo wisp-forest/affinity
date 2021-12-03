@@ -1,6 +1,6 @@
 package com.glisco.nidween.block;
 
-import com.glisco.owo.ItemOps;
+import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -50,12 +50,12 @@ public abstract class AbstractAetherFluxNodeBlock extends BlockWithEntity {
         final var playerStack = player.getStackInHand(hand);
 
         if (state.get(SHARD)) {
-            if (ItemOps.canStack(playerStack, new ItemStack(Items.AMETHYST_SHARD))) {
-                playerStack.increment(1);
+            if (playerStack.isEmpty()) {
+                player.setStackInHand(hand, new ItemStack(Items.AMETHYST_SHARD));
                 world.setBlockState(pos, state.with(SHARD, false));
                 return ActionResult.SUCCESS;
-            } else if (playerStack.isEmpty()) {
-                player.setStackInHand(hand, new ItemStack(Items.AMETHYST_SHARD));
+            } else if (ItemOps.canStack(playerStack, new ItemStack(Items.AMETHYST_SHARD))) {
+                playerStack.increment(1);
                 world.setBlockState(pos, state.with(SHARD, false));
                 return ActionResult.SUCCESS;
             }
@@ -75,8 +75,8 @@ public abstract class AbstractAetherFluxNodeBlock extends BlockWithEntity {
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if(state.getBlock() != newState.getBlock()){
-            if(state.get(SHARD)) {
+        if (state.getBlock() != newState.getBlock()) {
+            if (state.get(SHARD)) {
                 ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.AMETHYST_SHARD));
             }
             super.onStateReplaced(state, world, pos, newState, moved);

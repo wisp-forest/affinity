@@ -2,46 +2,47 @@ package com.glisco.nidween.registries;
 
 import com.glisco.nidween.Nidween;
 import com.glisco.nidween.block.*;
+import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
+import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.registry.Registry;
 
-public class NidweenBlocks {
+public class NidweenBlocks implements BlockRegistryContainer {
 
     public static final Block BREWING_CAULDRON = new BrewingCauldronBlock();
     public static final Block COPPER_PLATED_AETHER_FLUX_NODE = new CopperPlatedAetherFluxNodeBlock();
+    public static final Block COPPER_PLATED_AETHER_FLUX_CACHE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10));
     public static final Block STONE_BANDED_AETHER_FLUX_NODE = new StoneBandedAetherFluxNodeBlock();
+    public static final Block SUNDIAL = new SundialBlock();
 
-    public static void register() {
-        registerBlockAndItem("brewing_cauldron", BREWING_CAULDRON);
-        registerBlockAndItem("copper_plated_aether_flux_node", COPPER_PLATED_AETHER_FLUX_NODE);
-        registerBlockAndItem("stone_banded_aether_flux_node", STONE_BANDED_AETHER_FLUX_NODE);
-
-        BlockEntityTypes.register();
+    @Override
+    public BlockItem createBlockItem(Block block, String identifier) {
+        return new BlockItem(block, new Item.Settings().group(Nidween.NIDWEEN_GROUP));
     }
 
-    private static void registerBlockAndItem(String name, Block block) {
-        registerBlockAndItem(name, block, new Item.Settings());
-    }
+    public static class Entities implements AutoRegistryContainer<BlockEntityType<?>> {
 
-    private static void registerBlockAndItem(String name, Block block, Item.Settings settings) {
-        Registry.register(Registry.BLOCK, Nidween.id(name), block);
-        Registry.register(Registry.ITEM, Nidween.id(name), new BlockItem(block, settings));
-    }
+        public static final BlockEntityType<BrewingCauldronBlockEntity> BREWING_CAULDRON = FabricBlockEntityTypeBuilder.create(BrewingCauldronBlockEntity::new,
+                NidweenBlocks.BREWING_CAULDRON).build();
+        public static final BlockEntityType<AetherFluxNodeBlockEntity> AETHER_FLUX_NODE = FabricBlockEntityTypeBuilder.create(AetherFluxNodeBlockEntity::new,
+                NidweenBlocks.COPPER_PLATED_AETHER_FLUX_NODE, NidweenBlocks.STONE_BANDED_AETHER_FLUX_NODE).build();
 
-    public static class BlockEntityTypes {
-
-        public static BlockEntityType<BrewingCauldronBlockEntity> BREWING_CAULDRON = FabricBlockEntityTypeBuilder.create(BrewingCauldronBlockEntity::new, NidweenBlocks.BREWING_CAULDRON).build();
-        public static BlockEntityType<AetherFluxNodeBlockEntity> AETHER_FLUX_NODE = FabricBlockEntityTypeBuilder.create(AetherFluxNodeBlockEntity::new, NidweenBlocks.COPPER_PLATED_AETHER_FLUX_NODE, NidweenBlocks.STONE_BANDED_AETHER_FLUX_NODE).build();
-
-        private static void register() {
-            Registry.register(Registry.BLOCK_ENTITY_TYPE, Nidween.id("brewing_cauldron"), BREWING_CAULDRON);
-            Registry.register(Registry.BLOCK_ENTITY_TYPE, Nidween.id("aether_flux_node"), AETHER_FLUX_NODE);
+        @Override
+        public Registry<BlockEntityType<?>> getRegistry() {
+            return Registry.BLOCK_ENTITY_TYPE;
         }
 
+        @Override
+        @SuppressWarnings("unchecked")
+        public Class<BlockEntityType<?>> getTargetFieldType() {
+            return (Class<BlockEntityType<?>>) (Object) BlockEntityType.class;
+        }
     }
 
 }

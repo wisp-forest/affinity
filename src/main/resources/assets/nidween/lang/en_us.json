@@ -1,6 +1,10 @@
 {
+  "itemGroup.nidween.nidween": "Nidween",
+
   "block.nidween.brewing_cauldron": "Brewing Cauldron",
+  "block.nidween.sundial": "Sundial",
   "block.nidween.copper_plated_aether_flux_node": "Copper Plated Aether Flux Node",
+  "block.nidween.copper_plated_aether_flux_cache": "Copper Plated Aether Flux Cache",
   "block.nidween.stone_banded_aether_flux_node": "Stone Banded Aether Flux Node",
 
   "effect.nidween.life_leech": "Life Leech",

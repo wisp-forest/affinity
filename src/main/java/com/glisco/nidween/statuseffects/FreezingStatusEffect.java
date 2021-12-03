@@ -1,11 +1,12 @@
 package com.glisco.nidween.statuseffects;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.entity.effect.StatusEffectCategory;
 
 public class FreezingStatusEffect extends NidweenStatusEffect {
 
-    public FreezingStatusEffect(StatusEffectType type, int color) {
+    public FreezingStatusEffect(StatusEffectCategory type, int color) {
         super(type, color);
     }
 

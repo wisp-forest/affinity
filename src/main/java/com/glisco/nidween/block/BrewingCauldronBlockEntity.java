@@ -3,10 +3,10 @@ package com.glisco.nidween.block;
 import com.glisco.nidween.registries.NidweenBlocks;
 import com.glisco.nidween.util.potion.PotionMixture;
 import com.glisco.nidween.util.recipe.PotionMixingRecipe;
-import com.glisco.owo.ItemOps;
-import com.glisco.owo.client.ClientParticles;
+import io.wispforest.owo.ops.ItemOps;
+import io.wispforest.owo.ops.WorldOps;
+import io.wispforest.owo.particles.ClientParticles;
 import com.google.common.collect.ImmutableList;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -14,6 +14,9 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -26,8 +29,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class BrewingCauldronBlockEntity extends BlockEntity {
 
     @NotNull
     private PotionMixture currentPotion = PotionMixture.EMPTY;
@@ -40,7 +44,7 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(5, ItemStack.EMPTY);
 
     public BrewingCauldronBlockEntity(BlockPos pos, BlockState state) {
-        super(NidweenBlocks.BlockEntityTypes.BREWING_CAULDRON, pos, state);
+        super(NidweenBlocks.Entities.BREWING_CAULDRON, pos, state);
     }
 
     @Override
@@ -56,31 +60,18 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         nbt.put("PotionMixture", currentPotion.toNbt());
         nbt.putInt("FillLevel", fillLevel);
         nbt.putInt("ProcessTick", processTick);
         Inventories.writeNbt(nbt, items);
-
-        return super.writeNbt(nbt);
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
+        super.writeNbt(nbt);
     }
 
     @Override
     public void markDirty() {
         super.markDirty();
-        if (!world.isClient()) {
-            this.sync();
-        }
+        WorldOps.updateIfOnServer(world, pos);
     }
 
     public float getFluidHeight() {
@@ -244,5 +235,18 @@ public class BrewingCauldronBlockEntity extends BlockEntity implements BlockEnti
 
     public static void tick(World world, BlockPos blockPos, BlockState state, BrewingCauldronBlockEntity blockEntity) {
         blockEntity.tick();
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        final var nbt = new NbtCompound();
+        writeNbt(nbt);
+        return nbt;
     }
 }

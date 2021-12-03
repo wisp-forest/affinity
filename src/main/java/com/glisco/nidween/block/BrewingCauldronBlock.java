@@ -53,7 +53,7 @@ public class BrewingCauldronBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, NidweenBlocks.BlockEntityTypes.BREWING_CAULDRON, BrewingCauldronBlockEntity::tick);
+        return checkType(type, NidweenBlocks.Entities.BREWING_CAULDRON, BrewingCauldronBlockEntity::tick);
     }
 
     @Override

@@ -30,7 +30,7 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
     public BrewingCauldronBlockEntityRenderer(BlockEntityRendererFactory.Context context) {}
 
     @Override
-    public void render(BrewingCauldronBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {n 
+    public void render(BrewingCauldronBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (!entity.getCurrentPotion().isEmpty()) {
             matrices.push();
             matrices.translate(0.125, entity.getFluidHeight(), 0.125);
