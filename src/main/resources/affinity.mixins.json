@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.glisco.affinity.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "PotionItemMixin",
+    "PotionUtilMixin"
+  ],
+  "client": [
+    "WorldRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:steadfast",
+  "effect_inputs": [
+    "minecraft:resistance",
+    "minecraft:slow_falling"
+  ],
+  "item_inputs": [
+
+  ]
+}

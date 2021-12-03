@@ -1,0 +1,23 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:glowing",
+  "effect_inputs": [
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:glow_ink_sac"
+    },
+    {
+      "item": "minecraft:glow_berries"
+    },
+    {
+      "item": "minecraft:glow_berries"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ]
+}

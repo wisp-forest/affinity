@@ -1,0 +1,10 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:life_leech",
+  "effect_inputs": [
+    "minecraft:instant_health",
+    "minecraft:instant_damage",
+    "minecraft:poison"
+  ],
+  "item_inputs": []
+}

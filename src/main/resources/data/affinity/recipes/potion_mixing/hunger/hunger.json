@@ -1,0 +1,23 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:hunger",
+  "effect_inputs": [
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:chicken"
+    }
+  ]
+}

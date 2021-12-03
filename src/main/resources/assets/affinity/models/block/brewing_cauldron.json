@@ -1,0 +1,6 @@
+{
+  "parent": "block/cauldron",
+  "textures": {
+    "side": "affinity:block/brewing_cauldron_side"
+  }
+}
