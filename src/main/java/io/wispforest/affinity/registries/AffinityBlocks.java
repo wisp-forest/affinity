@@ -30,6 +30,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<BrewingCauldronBlockEntity> BREWING_CAULDRON = FabricBlockEntityTypeBuilder.create(BrewingCauldronBlockEntity::new,
                 AffinityBlocks.BREWING_CAULDRON).build();
+
         public static final BlockEntityType<AetherFluxNodeBlockEntity> AETHER_FLUX_NODE = FabricBlockEntityTypeBuilder.create(AetherFluxNodeBlockEntity::new,
                 AffinityBlocks.COPPER_PLATED_AETHER_FLUX_NODE, AffinityBlocks.STONE_BANDED_AETHER_FLUX_NODE).build();
 

@@ -13,16 +13,16 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "io.glisco.affinity.client.AffinityClient"
+      "io.wispforest.affinity.client.AffinityClient"
     ],
     "main": [
-      "io.glisco.affinity.Affinity"
+      "io.wispforest.affinity.Affinity"
     ],
     "rei_plugins": [
-      "io.glisco.affinity.compat.rei.AffinityReiPlugin"
+      "io.wispforest.affinity.compat.rei.AffinityReiPlugin"
     ],
     "cardinal-components-entity": [
-      "io.glisco.affinity.util.components.AffinityComponents"
+      "io.wispforest.affinity.util.components.AffinityComponents"
     ]
   },
   "mixins": [
