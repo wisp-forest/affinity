@@ -1,7 +1,6 @@
 package io.wispforest.affinity.registries;
 
 import io.wispforest.affinity.Affinity;
-import com.glisco.affinity.block.*;
 import io.wispforest.affinity.block.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;

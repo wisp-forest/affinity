@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
-    @Shadow public abstract boolean hasStatusEffect(StatusEffect effect);
+    @Shadow
+    public abstract boolean hasStatusEffect(StatusEffect effect);
 
     @Inject(method = "applyDamage", at = @At("TAIL"))
     public void applyLifeLeech(DamageSource source, float amount, CallbackInfo ci) {
@@ -26,8 +27,8 @@ public abstract class LivingEntityMixin {
     }
 
     @Inject(method = "canFreeze", at = @At("HEAD"), cancellable = true)
-    public void dontWearLeatherHats(CallbackInfoReturnable<Boolean> cir){
-        if(!this.hasStatusEffect(AffinityStatusEffects.FREEZING)) return;
+    public void dontWearLeatherHats(CallbackInfoReturnable<Boolean> cir) {
+        if (!this.hasStatusEffect(AffinityStatusEffects.FREEZING)) return;
         cir.setReturnValue(true);
     }
 

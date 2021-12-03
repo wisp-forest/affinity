@@ -53,7 +53,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
             final var effects = inputMixture.getCustomEffects().stream().map(StatusEffectInstance::getEffectType).toList();
             final var mutableItems = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
 
-            if(effects.size() != recipe.effectInputs.size() || mutableItems.size() != recipe.itemInputs.size()) continue;
+            if (effects.size() != recipe.effectInputs.size() || mutableItems.size() != recipe.itemInputs.size()) continue;
 
             final var confirmedIngredients = new ArrayList<Ingredient>();
 

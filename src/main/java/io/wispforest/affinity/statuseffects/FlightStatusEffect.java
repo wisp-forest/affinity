@@ -13,7 +13,7 @@ public class FlightStatusEffect extends AffinityStatusEffect {
 
     @Override
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if (entity instanceof ServerPlayerEntity player){
+        if (entity instanceof ServerPlayerEntity player) {
             player.getAbilities().allowFlying = true;
             player.sendAbilitiesUpdate();
         } else {
@@ -23,7 +23,7 @@ public class FlightStatusEffect extends AffinityStatusEffect {
 
     @Override
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if (entity instanceof ServerPlayerEntity player){
+        if (entity instanceof ServerPlayerEntity player) {
             player.interactionManager.getGameMode().setAbilities(player.getAbilities());
             player.sendAbilitiesUpdate();
         } else {

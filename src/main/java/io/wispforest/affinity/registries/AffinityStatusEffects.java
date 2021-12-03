@@ -1,9 +1,9 @@
 package io.wispforest.affinity.registries;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
 import io.wispforest.affinity.statuseffects.FlightStatusEffect;
 import io.wispforest.affinity.statuseffects.FreezingStatusEffect;
-import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
 import io.wispforest.affinity.util.potion.GlowingPotion;
 import io.wispforest.affinity.util.potion.PotionMixture;
 import io.wispforest.affinity.util.recipe.GlowingPotionDyeRecipe;

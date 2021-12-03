@@ -11,7 +11,7 @@ import net.minecraft.world.BlockView;
 
 public class SundialBlock extends Block {
 
-    private static final VoxelShape SHAPE = Block.createCuboidShape(2, 0, 2 ,14, 2, 14);
+    private static final VoxelShape SHAPE = Block.createCuboidShape(2, 0, 2, 14, 2, 14);
 
     public SundialBlock() {
         super(FabricBlockSettings.copyOf(Blocks.COPPER_BLOCK).nonOpaque());

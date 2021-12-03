@@ -1,12 +1,12 @@
 package io.wispforest.affinity.block;
 
+import com.google.common.collect.ImmutableList;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.util.potion.PotionMixture;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipe;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;

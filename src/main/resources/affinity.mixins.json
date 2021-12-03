@@ -1,16 +1,16 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.glisco.affinity.mixin",
+  "package": "io.wispforest.affinity.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "io.glisco.affinity.mixin.ItemStackMixin",
-    "io.glisco.affinity.mixin.LivingEntityMixin",
-    "io.glisco.affinity.mixin.PotionItemMixin",
-    "io.glisco.affinity.mixin.PotionUtilMixin"
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "PotionItemMixin",
+    "PotionUtilMixin"
   ],
   "client": [
-    "io.glisco.affinity.mixin.WorldRendererMixin"
+    "WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
