@@ -1,5 +1,7 @@
 package io.wispforest.affinity.block;
 
+import io.wispforest.affinity.blockentity.AetherFluxNodeBlockEntity;
+import io.wispforest.affinity.blockentity.AetherNetworkMemberBlockEntity;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -19,7 +21,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractAetherFluxNodeBlock extends BlockWithEntity {
+public abstract class AbstractAetherFluxNodeBlock extends AetherNetworkMemberBlock {
 
     public static BooleanProperty SHARD = BooleanProperty.of("shard");
 

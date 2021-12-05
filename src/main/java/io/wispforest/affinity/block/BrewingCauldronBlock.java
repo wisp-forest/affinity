@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block;
 
+import io.wispforest.affinity.blockentity.BrewingCauldronBlockEntity;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.util.potion.PotionMixture;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -22,7 +23,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class BrewingCauldronBlock extends BlockWithEntity {
+public class BrewingCauldronBlock extends AetherNetworkMemberBlock {
 
     private static final VoxelShape OUTLINE_SHAPE = VoxelShapes.combineAndSimplify(VoxelShapes.fullCube(), VoxelShapes.union(
             createCuboidShape(0.0D, 0.0D, 4.0D, 16.0D, 3.0D, 12.0D),

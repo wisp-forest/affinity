@@ -1,4 +1,4 @@
-package io.wispforest.affinity.block;
+package io.wispforest.affinity.blockentity;
 
 import com.google.common.collect.ImmutableList;
 import io.wispforest.affinity.registries.AffinityBlocks;
@@ -31,7 +31,9 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BrewingCauldronBlockEntity extends BlockEntity {
+import java.util.List;
+
+public class BrewingCauldronBlockEntity extends AetherNetworkMemberBlockEntity {
 
     @NotNull
     private PotionMixture currentPotion = PotionMixture.EMPTY;
@@ -248,5 +250,10 @@ public class BrewingCauldronBlockEntity extends BlockEntity {
         final var nbt = new NbtCompound();
         writeNbt(nbt);
         return nbt;
+    }
+
+    @Override
+    public long flux() {
+        return 0;
     }
 }

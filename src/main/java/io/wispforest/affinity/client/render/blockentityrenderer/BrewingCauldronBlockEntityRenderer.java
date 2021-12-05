@@ -1,6 +1,6 @@
 package io.wispforest.affinity.client.render.blockentityrenderer;
 
-import io.wispforest.affinity.block.BrewingCauldronBlockEntity;
+import io.wispforest.affinity.blockentity.BrewingCauldronBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -31,23 +31,6 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
 
     @Override
     public void render(BrewingCauldronBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (!entity.getCurrentPotion().isEmpty()) {
-            matrices.push();
-            matrices.translate(0.125, entity.getFluidHeight(), 0.125);
-
-            VertexConsumer consumer = WATER_TEXTURE.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getTranslucent());
-
-            int color = entity.getCurrentPotion().getColor();
-
-            float r = (color >> 16) / 255f;
-            float g = ((color & 0xFF00) >> 8) / 255f;
-            float b = (color & 0xFF) / 255f;
-
-            POTION_MODEL.render(matrices, consumer, light, overlay, r, g, b, 1);
-
-            matrices.pop();
-        }
-
         matrices.push();
         matrices.translate(0.5, 0.6, 0.5);
 
@@ -68,6 +51,25 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
             matrices.pop();
         }
 
+        MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers().draw();
+
         matrices.pop();
+
+        if (!entity.getCurrentPotion().isEmpty()) {
+            matrices.push();
+            matrices.translate(0.125, entity.getFluidHeight(), 0.125);
+
+            VertexConsumer consumer = WATER_TEXTURE.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getTranslucent());
+
+            int color = entity.getCurrentPotion().getColor();
+
+            float r = (color >> 16) / 255f;
+            float g = ((color & 0xFF00) >> 8) / 255f;
+            float b = (color & 0xFF) / 255f;
+
+            POTION_MODEL.render(matrices, consumer, light, overlay, r, g, b, 1);
+
+            matrices.pop();
+        }
     }
 }

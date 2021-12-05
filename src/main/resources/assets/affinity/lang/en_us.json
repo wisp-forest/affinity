@@ -7,6 +7,14 @@
   "block.affinity.copper_plated_aether_flux_cache": "Copper Plated Aether Flux Cache",
   "block.affinity.stone_banded_aether_flux_node": "Stone Banded Aether Flux Node",
 
+  "item.affinity.aether_wand": "Aether Wand",
+
+  "message.affinity.linking.started": "Started linking from %s",
+  "message.affinity.linking.already_linked": "%s is already linked",
+  "message.affinity.linking.no_target": "Invalid link target",
+  "message.affinity.linking.success": "Linked to %s",
+  "message.affinity.linking_failed": "Could not link to %s",
+
   "effect.affinity.life_leech": "Life Leech",
   "item.minecraft.potion.effect.life_leech": "Potion of Life Leech",
   "item.minecraft.splash_potion.effect.life_leech": "Splash Potion of Life Leech",
