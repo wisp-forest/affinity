@@ -9,7 +9,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 
-public class SundialBlock extends AetherNetworkMemberBlock {
+public class SundialBlock extends AethumNetworkMemberBlock {
 
     private static final VoxelShape SHAPE = Block.createCuboidShape(2, 0, 2, 14, 2, 14);
 

@@ -23,7 +23,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class BrewingCauldronBlock extends AetherNetworkMemberBlock {
+public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
 
     private static final VoxelShape OUTLINE_SHAPE = VoxelShapes.combineAndSimplify(VoxelShapes.fullCube(), VoxelShapes.union(
             createCuboidShape(0.0D, 0.0D, 4.0D, 16.0D, 3.0D, 12.0D),

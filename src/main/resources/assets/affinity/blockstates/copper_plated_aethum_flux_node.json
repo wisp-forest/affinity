@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "shard=true": {
+      "model": "affinity:block/copper_plated_aethum_flux_node_with_shard"
+    },
+    "shard=false": {
+      "model": "affinity:block/copper_plated_aethum_flux_node"
+    }
+  }
+}

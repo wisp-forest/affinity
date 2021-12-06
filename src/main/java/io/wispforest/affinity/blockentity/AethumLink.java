@@ -1,12 +1,12 @@
 package io.wispforest.affinity.blockentity;
 
-public class AetherLink {
+public class AethumLink {
 
     public enum Element {
         NODE, MEMBER;
 
-        public static Element of(AetherNetworkMember member) {
-            return member instanceof AetherNetworkNode ? NODE : MEMBER;
+        public static Element of(AethumNetworkMember member) {
+            return member instanceof AethumNetworkNode ? NODE : MEMBER;
         }
     }
 

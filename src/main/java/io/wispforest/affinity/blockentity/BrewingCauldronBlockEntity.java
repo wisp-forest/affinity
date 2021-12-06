@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BrewingCauldronBlockEntity extends AetherNetworkMemberBlockEntity {
+public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity {
 
     @NotNull
     private PotionMixture currentPotion = PotionMixture.EMPTY;
@@ -47,6 +47,9 @@ public class BrewingCauldronBlockEntity extends AetherNetworkMemberBlockEntity {
 
     public BrewingCauldronBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.BREWING_CAULDRON, pos, state);
+
+        this.fluxStorage.setFluxCapacity(64000);
+        this.fluxStorage.setMaxInsert(64);
     }
 
     @Override
@@ -254,6 +257,6 @@ public class BrewingCauldronBlockEntity extends AetherNetworkMemberBlockEntity {
 
     @Override
     public long flux() {
-        return 0;
+        return super.flux();
     }
 }

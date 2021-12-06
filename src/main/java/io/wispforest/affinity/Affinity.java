@@ -1,7 +1,7 @@
 package io.wispforest.affinity;
 
-import io.wispforest.affinity.blockentity.AetherNetworkMember;
-import io.wispforest.affinity.blockentity.AetherNetworkNode;
+import io.wispforest.affinity.blockentity.AethumNetworkMember;
+import io.wispforest.affinity.blockentity.AethumNetworkNode;
 import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.registries.AffinityItems;
@@ -20,8 +20,8 @@ public class Affinity implements ModInitializer {
     public static final String MOD_ID = "affinity";
     public static final OwoItemGroup AFFINITY_GROUP = new AffinityItemGroup(id("affinity"));
 
-    public static final BlockApiLookup<AetherNetworkMember, Void> AETHER_MEMBER = BlockApiLookup.get(id("aether_member"), AetherNetworkMember.class, Void.class);
-    public static final BlockApiLookup<AetherNetworkNode, Void> AETHER_NODE = BlockApiLookup.get(id("aether_node"), AetherNetworkNode.class, Void.class);
+    public static final BlockApiLookup<AethumNetworkMember, Void> AETHUM_MEMBER = BlockApiLookup.get(id("aethum_member"), AethumNetworkMember.class, Void.class);
+    public static final BlockApiLookup<AethumNetworkNode, Void> AETHUM_NODE = BlockApiLookup.get(id("aethum_node"), AethumNetworkNode.class, Void.class);
 
     @Override
     public void onInitialize() {

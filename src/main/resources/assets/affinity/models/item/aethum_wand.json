@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "affinity:item/aether_wand"
+    "layer0": "affinity:item/aethum_wand"
   }
 }

@@ -1,10 +1,11 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.blockentity.AetherLink;
-import io.wispforest.affinity.blockentity.AetherLink.Element;
-import io.wispforest.affinity.blockentity.AetherNetworkMember;
-import io.wispforest.affinity.blockentity.AetherNetworkNode;
+import io.wispforest.affinity.blockentity.AethumLink;
+import io.wispforest.affinity.blockentity.AethumLink.Element;
+import io.wispforest.affinity.blockentity.AethumNetworkMember;
+import io.wispforest.affinity.blockentity.AethumNetworkNode;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -18,9 +19,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class AetherWandItem extends Item {
+@SuppressWarnings("UnstableApiUsage")
+public class AethumWandItem extends Item {
 
-    public AetherWandItem() {
+    public AethumWandItem() {
         super(new Settings().group(Affinity.AFFINITY_GROUP).maxCount(1));
     }
 
@@ -30,8 +32,16 @@ public class AetherWandItem extends Item {
         final var world = context.getWorld();
         final var pos = context.getBlockPos();
 
-        var nextMember = Affinity.AETHER_MEMBER.find(world, pos, null);
+        var nextMember = Affinity.AETHUM_MEMBER.find(world, pos, null);
         if (nextMember == null) return ActionResult.PASS;
+
+        if (context.getPlayer().isSneaking()) {
+            try (var transaction = Transaction.openOuter()) {
+                nextMember.insert(1000, transaction);
+                transaction.commit();
+            }
+            return ActionResult.SUCCESS;
+        }
 
         if (Objects.equals(getStoredPos(stack), context.getBlockPos())) return ActionResult.PASS;
         var existingElement = getLink(stack);
@@ -76,16 +86,18 @@ public class AetherWandItem extends Item {
         stack.getOrCreateNbt().put("LinkingFrom", nbt);
     }
 
-    private AetherLink.Result executeLink(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AetherNetworkMember nextMember) {
+    private AethumLink.Result executeLink(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
         var linkNbt = stack.getOrCreateNbt().getCompound("LinkingFrom");
         var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
 
         stack.getOrCreateNbt().remove("LinkingFrom");
 
-        return switch (existingElement) {
-            case NODE -> Affinity.AETHER_NODE.find(world, existingPos, null).createGenericLink(nextPos);
-            case MEMBER -> ((AetherNetworkNode) nextMember).createGenericLink(existingPos);
-        };
+        if (existingElement == Element.NODE) {
+            var node = Affinity.AETHUM_NODE.find(world, existingPos, null);
+            return node == null ? AethumLink.Result.NO_TARGET : node.createGenericLink(nextPos);
+        } else {
+            return ((AethumNetworkNode) nextMember).createGenericLink(existingPos);
+        }
     }
 
     @Override

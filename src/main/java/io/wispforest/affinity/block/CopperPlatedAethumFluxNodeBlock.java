@@ -6,7 +6,7 @@ import net.minecraft.util.shape.VoxelShapes;
 
 import java.util.stream.Stream;
 
-public class CopperPlatedAetherFluxNodeBlock extends AbstractAetherFluxNodeBlock {
+public class CopperPlatedAethumFluxNodeBlock extends AbstractAethumFluxNodeBlock {
 
     private static final VoxelShape EMPTY_SHAPE;
     private static final VoxelShape SHAPE_WITH_SHARD;

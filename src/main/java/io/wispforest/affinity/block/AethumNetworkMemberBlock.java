@@ -1,15 +1,15 @@
 package io.wispforest.affinity.block;
 
-import io.wispforest.affinity.blockentity.AetherNetworkMemberBlockEntity;
+import io.wispforest.affinity.blockentity.AethumNetworkMemberBlockEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class AetherNetworkMemberBlock extends BlockWithEntity {
+public abstract class AethumNetworkMemberBlock extends BlockWithEntity {
 
-    protected AetherNetworkMemberBlock(Settings settings) {
+    protected AethumNetworkMemberBlock(Settings settings) {
         super(settings);
     }
 
@@ -22,7 +22,7 @@ public abstract class AetherNetworkMemberBlock extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
 
-            if (world.getBlockEntity(pos) instanceof AetherNetworkMemberBlockEntity member) {
+            if (world.getBlockEntity(pos) instanceof AethumNetworkMemberBlockEntity member) {
                 member.onBroken();
             }
 

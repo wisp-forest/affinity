@@ -1,4 +1,4 @@
-package io.wispforest.affinity.mixin;
+package io.wispforest.affinity.mixin.client;
 
 import io.wispforest.affinity.util.components.AffinityComponents;
 import net.minecraft.client.render.*;

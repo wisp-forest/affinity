@@ -2,6 +2,7 @@ package io.wispforest.affinity.blockentity;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.owo.ops.WorldOps;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -15,10 +16,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AetherNetworkMemberBlockEntity extends BlockEntity implements AetherNetworkMember {
-    protected final List<BlockPos> LINKED_MEMBERS = new ArrayList<>();
+@SuppressWarnings("UnstableApiUsage")
+public abstract class AethumNetworkMemberBlockEntity extends BlockEntity implements AethumNetworkMember {
 
-    public AetherNetworkMemberBlockEntity(BlockEntityType<? extends AetherNetworkMemberBlockEntity> type, BlockPos pos, BlockState state) {
+    protected final List<BlockPos> LINKED_MEMBERS = new ArrayList<>();
+    protected final AethumFluxStorage fluxStorage = new AethumFluxStorage();
+
+    public AethumNetworkMemberBlockEntity(BlockEntityType<? extends AethumNetworkMemberBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
@@ -29,6 +33,7 @@ public abstract class AetherNetworkMemberBlockEntity extends BlockEntity impleme
         for (var member : nbt.getLongArray("LinkedMembers")) {
             LINKED_MEMBERS.add(BlockPos.fromLong(member));
         }
+        this.fluxStorage.readNbt(nbt);
     }
 
     @Override
@@ -40,20 +45,16 @@ public abstract class AetherNetworkMemberBlockEntity extends BlockEntity impleme
         }
 
         nbt.putLongArray("LinkedMembers", members);
+        this.fluxStorage.writeNbt(nbt);
     }
 
     public void onBroken() {
         for (var memberPos : this.LINKED_MEMBERS) {
-            var member = Affinity.AETHER_MEMBER.find(world, memberPos, null);
+            var member = Affinity.AETHUM_MEMBER.find(world, memberPos, null);
             if (member == null) continue;
 
             member.onLinkTargetRemoved(this.pos);
         }
-    }
-
-    @Override
-    public long flux() {
-        return 0;
     }
 
     @Override
@@ -83,6 +84,50 @@ public abstract class AetherNetworkMemberBlockEntity extends BlockEntity impleme
     }
 
     @Override
+    public long flux() {
+        return fluxStorage.flux();
+    }
+
+    @Override
+    public long fluxCapacity() {
+        return fluxStorage.fluxCapacity();
+    }
+
+    @Override
+    public long insert(long max, TransactionContext transaction) {
+        final var change = fluxStorage.insert(max, transaction);
+        this.markDirty();
+        return change;
+    }
+
+    @Override
+    public boolean canInsert() {
+        return fluxStorage.canInsert();
+    }
+
+    @Override
+    public long maxInsert() {
+        return fluxStorage.maxInsert();
+    }
+
+    @Override
+    public long extract(long max, TransactionContext transaction) {
+        final var change = fluxStorage.extract(max, transaction);
+        this.markDirty();
+        return change;
+    }
+
+    @Override
+    public long maxExtract() {
+        return fluxStorage.maxExtract();
+    }
+
+    @Override
+    public boolean canExtract() {
+        return fluxStorage.canExtract();
+    }
+
+    @Override
     public NbtCompound toInitialChunkDataNbt() {
         final var nbt = new NbtCompound();
         this.writeNbt(nbt);
@@ -100,4 +145,5 @@ public abstract class AetherNetworkMemberBlockEntity extends BlockEntity impleme
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }
+
 }

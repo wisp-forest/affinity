@@ -1,6 +1,6 @@
 package io.wispforest.affinity.block;
 
-import io.wispforest.affinity.blockentity.AetherFluxCacheBlockEntity;
+import io.wispforest.affinity.blockentity.AethumFluxCacheBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class CopperPlatedAetherFluxCacheBlock extends AetherNetworkMemberBlock {
+public class CopperPlatedAethumFluxCacheBlock extends AethumNetworkMemberBlock {
 
     private static final VoxelShape SHAPE = Stream.of(
             Block.createCuboidShape(1, 0, 1, 15, 2, 15),
@@ -31,7 +31,7 @@ public class CopperPlatedAetherFluxCacheBlock extends AetherNetworkMemberBlock {
             Block.createCuboidShape(11, 2, 11, 13, 13, 13)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
 
-    public CopperPlatedAetherFluxCacheBlock() {
+    public CopperPlatedAethumFluxCacheBlock() {
         super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10));
     }
 
@@ -43,7 +43,7 @@ public class CopperPlatedAetherFluxCacheBlock extends AetherNetworkMemberBlock {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new AetherFluxCacheBlockEntity(pos, state);
+        return new AethumFluxCacheBlockEntity(pos, state);
     }
 
     @Override

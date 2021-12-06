@@ -5,7 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 
-public class SundialBlockEntity extends AetherNetworkMemberBlockEntity {
+public class SundialBlockEntity extends AethumNetworkMemberBlockEntity {
 
     public SundialBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.SUNDIAL, pos, state);

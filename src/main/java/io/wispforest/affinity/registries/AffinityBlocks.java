@@ -15,9 +15,9 @@ import net.minecraft.util.registry.Registry;
 public class AffinityBlocks implements BlockRegistryContainer {
 
     public static final Block BREWING_CAULDRON = new BrewingCauldronBlock();
-    public static final Block COPPER_PLATED_AETHER_FLUX_NODE = new CopperPlatedAetherFluxNodeBlock();
-    public static final Block COPPER_PLATED_AETHER_FLUX_CACHE = new CopperPlatedAetherFluxCacheBlock();
-    public static final Block STONE_BANDED_AETHER_FLUX_NODE = new StoneBandedAetherFluxNodeBlock();
+    public static final Block COPPER_PLATED_AETHUM_FLUX_NODE = new CopperPlatedAethumFluxNodeBlock();
+    public static final Block COPPER_PLATED_AETHUM_FLUX_CACHE = new CopperPlatedAethumFluxCacheBlock();
+    public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
     public static final Block SUNDIAL = new SundialBlock();
 
     @Override
@@ -30,10 +30,10 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<BrewingCauldronBlockEntity> BREWING_CAULDRON = FabricBlockEntityTypeBuilder.create(BrewingCauldronBlockEntity::new,
                 AffinityBlocks.BREWING_CAULDRON).build();
 
-        public static final BlockEntityType<AetherFluxNodeBlockEntity> AETHER_FLUX_NODE = FabricBlockEntityTypeBuilder.create(AetherFluxNodeBlockEntity::new,
-                AffinityBlocks.COPPER_PLATED_AETHER_FLUX_NODE, AffinityBlocks.STONE_BANDED_AETHER_FLUX_NODE).build();
-        public static final BlockEntityType<AetherFluxCacheBlockEntity> AETHER_FLUX_CACHE = FabricBlockEntityTypeBuilder.create(AetherFluxCacheBlockEntity::new,
-                AffinityBlocks.COPPER_PLATED_AETHER_FLUX_CACHE).build();
+        public static final BlockEntityType<AethumFluxNodeBlockEntity> AETHUM_FLUX_NODE = FabricBlockEntityTypeBuilder.create(AethumFluxNodeBlockEntity::new,
+                AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_NODE, AffinityBlocks.STONE_BANDED_AETHUM_FLUX_NODE).build();
+        public static final BlockEntityType<AethumFluxCacheBlockEntity> AETHUM_FLUX_CACHE = FabricBlockEntityTypeBuilder.create(AethumFluxCacheBlockEntity::new,
+                AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_CACHE).build();
 
         public static final BlockEntityType<SundialBlockEntity> SUNDIAL = FabricBlockEntityTypeBuilder.create(SundialBlockEntity::new,
                 AffinityBlocks.SUNDIAL).build();
@@ -51,12 +51,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         @Override
         public void afterFieldProcessing() {
-            Affinity.AETHER_MEMBER.registerSelf(AETHER_FLUX_NODE);
-            Affinity.AETHER_NODE.registerSelf(AETHER_FLUX_NODE);
+            Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
+            Affinity.AETHUM_NODE.registerSelf(AETHUM_FLUX_NODE);
 
-            Affinity.AETHER_MEMBER.registerSelf(AETHER_FLUX_CACHE);
-            Affinity.AETHER_MEMBER.registerSelf(BREWING_CAULDRON);
-            Affinity.AETHER_MEMBER.registerSelf(SUNDIAL);
+            Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_CACHE);
+            Affinity.AETHUM_MEMBER.registerSelf(BREWING_CAULDRON);
+            Affinity.AETHUM_MEMBER.registerSelf(SUNDIAL);
         }
     }
 

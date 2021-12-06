@@ -6,7 +6,7 @@ import net.minecraft.util.shape.VoxelShapes;
 
 import java.util.stream.Stream;
 
-public class StoneBandedAetherFluxNodeBlock extends AbstractAetherFluxNodeBlock {
+public class StoneBandedAethumFluxNodeBlock extends AbstractAethumFluxNodeBlock {
 
     private static final VoxelShape EMPTY_SHAPE;
     private static final VoxelShape SHAPE_WITH_SHARD;
