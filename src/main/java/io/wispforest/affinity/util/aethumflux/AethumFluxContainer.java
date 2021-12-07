@@ -1,4 +1,4 @@
-package io.wispforest.affinity.blockentity;
+package io.wispforest.affinity.util.aethumflux;
 
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
@@ -15,7 +15,9 @@ public interface AethumFluxContainer {
      */
     long fluxCapacity();
 
+    // ---------
     // Insertion
+    // ---------
 
     /**
      * Tries to insert {@code max} amount of flux into this container
@@ -36,7 +38,9 @@ public interface AethumFluxContainer {
      */
     long maxInsert();
 
+    // ----------
     // Extraction
+    // ----------
 
     /**
      * Tries to extract {@code max} amount of flux from this container

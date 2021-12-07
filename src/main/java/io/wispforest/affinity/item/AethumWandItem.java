@@ -1,10 +1,10 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.blockentity.AethumLink;
-import io.wispforest.affinity.blockentity.AethumLink.Element;
-import io.wispforest.affinity.blockentity.AethumNetworkMember;
-import io.wispforest.affinity.blockentity.AethumNetworkNode;
+import io.wispforest.affinity.util.aethumflux.AethumLink;
+import io.wispforest.affinity.util.aethumflux.AethumLink.Element;
+import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
+import io.wispforest.affinity.util.aethumflux.AethumNetworkNode;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

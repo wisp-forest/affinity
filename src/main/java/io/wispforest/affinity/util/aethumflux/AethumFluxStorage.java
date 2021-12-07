@@ -1,4 +1,4 @@
-package io.wispforest.affinity.blockentity;
+package io.wispforest.affinity.util.aethumflux;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -8,22 +8,26 @@ import net.minecraft.nbt.NbtCompound;
 @SuppressWarnings("UnstableApiUsage")
 public class AethumFluxStorage extends SnapshotParticipant<Long> implements AethumFluxContainer {
 
+    private final CommitCallback commitCallback;
+
     private long capacity;
     private long maxInsert;
     private long maxExtract;
 
     private long flux = 0;
 
-    public AethumFluxStorage() {
+    public AethumFluxStorage(CommitCallback callback) {
         this.capacity = 0;
         this.maxInsert = 0;
         this.maxExtract = 0;
+        this.commitCallback = callback;
     }
 
-    public AethumFluxStorage(long capacity, long maxInsert, long maxExtract) {
+    public AethumFluxStorage(long capacity, long maxInsert, long maxExtract, CommitCallback callback) {
         this.capacity = capacity;
         this.maxInsert = maxInsert;
         this.maxExtract = maxExtract;
+        this.commitCallback = callback;
     }
 
     // -------
@@ -110,6 +114,16 @@ public class AethumFluxStorage extends SnapshotParticipant<Long> implements Aeth
     @Override
     protected void readSnapshot(Long snapshot) {
         this.flux = snapshot;
+    }
+
+    @Override
+    protected void onFinalCommit() {
+        this.commitCallback.onTransactionCommitted();
+    }
+
+    @FunctionalInterface
+    public interface CommitCallback {
+        void onTransactionCommitted();
     }
 
     // -------------

@@ -19,28 +19,50 @@ import java.util.Objects;
 
 /**
  * Container for a potion. This could be a {@link net.minecraft.potion.Potion} contained in {@link net.minecraft.util.registry.Registry#POTION}
- * or simply a list of {@link net.minecraft.entity.effect.StatusEffectInstance}
+ * or simply a list of {@link net.minecraft.entity.effect.StatusEffectInstance}s
  */
 public class PotionMixture {
 
+    public static final PotionMixture EMPTY = new PotionMixture(Potions.EMPTY, ImmutableList.of(), true);
     public static final Potion DUBIOUS_POTION = new Potion("dubious");
 
     private final Potion basePotion;
-    private final List<StatusEffectInstance> customEffects;
-    private final int color;
+    private final List<StatusEffectInstance> effects;
     private final boolean pure;
+    private final int color;
 
-    public static final PotionMixture EMPTY = new PotionMixture(Potions.EMPTY, ImmutableList.of(), true);
-
-    public PotionMixture(Potion basePotion, List<StatusEffectInstance> customEffects, boolean pure) {
+    public PotionMixture(Potion basePotion) {
         this.basePotion = basePotion;
-        this.customEffects = ImmutableList.copyOf(customEffects);
-        this.pure = pure;
+        this.effects = ImmutableList.of();
+        this.pure = true;
 
-        final var colorEffects = new ArrayList<>(customEffects);
+        final var colorEffects = new ArrayList<>(effects);
         if (basePotion != Potions.EMPTY) colorEffects.addAll(basePotion.getEffects());
 
         this.color = PotionUtil.getColor(colorEffects);
+    }
+
+    public PotionMixture(Potion basePotion, List<StatusEffectInstance> effects, boolean pure) {
+        this.basePotion = basePotion;
+        this.effects = ImmutableList.copyOf(effects);
+        this.pure = pure;
+
+        final var colorEffects = new ArrayList<>(effects);
+        if (basePotion != Potions.EMPTY) colorEffects.addAll(basePotion.getEffects());
+
+        this.color = PotionUtil.getColor(colorEffects);
+    }
+
+    public PotionMixture mix(PotionMixture other) {
+
+        if (this.equals(other)) return this;
+
+        final var effects = new ArrayList<>(this.effects);
+        effects.addAll(other.effects);
+        effects.addAll(basePotion.getEffects());
+        effects.addAll(other.basePotion.getEffects());
+
+        return new PotionMixture(Potions.EMPTY, effects, false);
     }
 
     public static PotionMixture fromStack(ItemStack stack) {
@@ -68,7 +90,6 @@ public class PotionMixture {
         }
 
         return new PotionMixture(potion, effects, nbt.getBoolean("Pure"));
-
     }
 
     public NbtCompound toNbt() {
@@ -81,9 +102,9 @@ public class PotionMixture {
             nbt.put("Potion", potionNbt);
         }
 
-        if (!customEffects.isEmpty()) {
+        if (!effects.isEmpty()) {
             final var effectsNbt = new NbtList();
-            for (var effect : customEffects) {
+            for (var effect : effects) {
                 effectsNbt.add(effect.writeNbt(new NbtCompound()));
             }
 
@@ -100,7 +121,7 @@ public class PotionMixture {
 
         if (pure) {
             if (basePotion != Potions.EMPTY) PotionUtil.setPotion(stack, basePotion);
-            if (!customEffects.isEmpty()) PotionUtil.setCustomPotionEffects(stack, customEffects);
+            if (!effects.isEmpty()) PotionUtil.setCustomPotionEffects(stack, effects);
         } else {
             PotionUtil.setPotion(stack, DUBIOUS_POTION);
         }
@@ -108,16 +129,20 @@ public class PotionMixture {
         return stack;
     }
 
-    public PotionMixture mix(PotionMixture other) {
+    public boolean isEmpty() {
+        return this == EMPTY || (basePotion == Potions.EMPTY && effects.isEmpty());
+    }
 
-        if (this.equals(other)) return this;
+    public int color() {
+        return color;
+    }
 
-        final var effects = new ArrayList<>(customEffects);
-        effects.addAll(other.customEffects);
-        effects.addAll(basePotion.getEffects());
-        effects.addAll(other.basePotion.getEffects());
+    public List<StatusEffectInstance> effects() {
+        return effects;
+    }
 
-        return new PotionMixture(Potions.EMPTY, effects, false);
+    public Potion basePotion() {
+        return basePotion;
     }
 
     @Override
@@ -125,27 +150,11 @@ public class PotionMixture {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PotionMixture that = (PotionMixture) o;
-        return basePotion.equals(that.basePotion) && customEffects.equals(that.customEffects);
+        return basePotion.equals(that.basePotion) && effects.equals(that.effects);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(basePotion, customEffects);
-    }
-
-    public boolean isEmpty() {
-        return this == EMPTY || (basePotion == Potions.EMPTY && customEffects.isEmpty());
-    }
-
-    public int getColor() {
-        return color;
-    }
-
-    public List<StatusEffectInstance> getCustomEffects() {
-        return customEffects;
-    }
-
-    public Potion getBasePotion() {
-        return basePotion;
+        return Objects.hash(basePotion, effects);
     }
 }

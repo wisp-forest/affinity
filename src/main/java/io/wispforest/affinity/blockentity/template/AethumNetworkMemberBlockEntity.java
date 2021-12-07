@@ -1,6 +1,8 @@
-package io.wispforest.affinity.blockentity;
+package io.wispforest.affinity.blockentity.template;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.util.aethumflux.AethumFluxStorage;
+import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
 import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
@@ -17,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract class AethumNetworkMemberBlockEntity extends BlockEntity implements AethumNetworkMember {
+public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback {
 
     protected final List<BlockPos> LINKED_MEMBERS = new ArrayList<>();
-    protected final AethumFluxStorage fluxStorage = new AethumFluxStorage();
+    protected final AethumFluxStorage fluxStorage = new AethumFluxStorage(this);
 
     public AethumNetworkMemberBlockEntity(BlockEntityType<? extends AethumNetworkMemberBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -95,9 +97,7 @@ public abstract class AethumNetworkMemberBlockEntity extends BlockEntity impleme
 
     @Override
     public long insert(long max, TransactionContext transaction) {
-        final var change = fluxStorage.insert(max, transaction);
-        this.markDirty();
-        return change;
+        return fluxStorage.insert(max, transaction);
     }
 
     @Override
@@ -112,9 +112,7 @@ public abstract class AethumNetworkMemberBlockEntity extends BlockEntity impleme
 
     @Override
     public long extract(long max, TransactionContext transaction) {
-        final var change = fluxStorage.extract(max, transaction);
-        this.markDirty();
-        return change;
+        return fluxStorage.extract(max, transaction);
     }
 
     @Override
@@ -128,22 +126,7 @@ public abstract class AethumNetworkMemberBlockEntity extends BlockEntity impleme
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        final var nbt = new NbtCompound();
-        this.writeNbt(nbt);
-        return nbt;
+    public void onTransactionCommitted() {
+        this.markDirty();
     }
-
-    @Override
-    public void markDirty() {
-        super.markDirty();
-        WorldOps.updateIfOnServer(this.world, this.pos);
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
-    }
-
 }

@@ -1,10 +1,16 @@
-package io.wispforest.affinity.block;
+package io.wispforest.affinity.block.impl;
 
-import io.wispforest.affinity.blockentity.BrewingCauldronBlockEntity;
+import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
+import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
+import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.util.potion.PotionMixture;
+import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -54,7 +60,7 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.BREWING_CAULDRON, BrewingCauldronBlockEntity::tick);
+        return checkType(type, AffinityBlocks.Entities.BREWING_CAULDRON, TickedBlockEntity.ticker());
     }
 
     @Override
@@ -80,7 +86,8 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
                 final var potionStack = cauldron.extractOneBottle();
                 if (potionStack.isEmpty()) return ActionResult.PASS;
 
-                player.setStackInHand(hand, potionStack);
+                ItemOps.decrementPlayerHandItem(player, hand);
+                player.getInventory().offerOrDrop(potionStack);
             }
 
             return ActionResult.SUCCESS;

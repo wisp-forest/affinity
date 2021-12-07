@@ -1,6 +1,6 @@
-package io.wispforest.affinity.block;
+package io.wispforest.affinity.block.template;
 
-import io.wispforest.affinity.blockentity.AethumFluxNodeBlockEntity;
+import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;

@@ -1,6 +1,6 @@
-package io.wispforest.affinity.client.render.blockentityrenderer;
+package io.wispforest.affinity.client.render.blockentity;
 
-import io.wispforest.affinity.blockentity.BrewingCauldronBlockEntity;
+import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -31,37 +31,41 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
 
     @Override
     public void render(BrewingCauldronBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        matrices.push();
-        matrices.translate(0.5, 0.6, 0.5);
-
-        float angle = (float) ((System.currentTimeMillis() / 1000d) % (2 * Math.PI));
-
-        matrices.scale(0.5f, 0.5f, 0.5f);
-
-        for (int i = 0; i < entity.getItems().size(); i++) {
-            final var stack = entity.getItems().get(i);
+        if (entity.itemAvailable()) {
             matrices.push();
+            matrices.translate(0.5, 0.6, 0.5);
 
-            final var itemAngle = (float) (angle + i * 0.4 * Math.PI);
-            matrices.translate(0.5 * MathHelper.cos(itemAngle), MathHelper.sin(itemAngle + angle) * 0.2, 0.5 * MathHelper.sin(itemAngle));
-            matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(itemAngle));
+            float angle = (float) ((System.currentTimeMillis() / 1000d) % (2 * Math.PI));
 
-            MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, 0);
+            matrices.scale(0.5f, 0.5f, 0.5f);
+
+            for (int i = 0; i < entity.getItems().size(); i++) {
+                final var stack = entity.getItems().get(i);
+                if (stack.isEmpty()) continue;
+
+                matrices.push();
+
+                final var itemAngle = (float) (angle + i * 0.4 * Math.PI);
+                matrices.translate(0.5 * MathHelper.cos(itemAngle), MathHelper.sin(itemAngle + angle) * 0.2, 0.5 * MathHelper.sin(itemAngle));
+                matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(itemAngle));
+
+                MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, 0);
+
+                matrices.pop();
+            }
+
+            MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers().draw();
 
             matrices.pop();
         }
 
-        MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers().draw();
-
-        matrices.pop();
-
-        if (!entity.getCurrentPotion().isEmpty()) {
+        if (!entity.storedPotion().isEmpty()) {
             matrices.push();
             matrices.translate(0.125, entity.getFluidHeight(), 0.125);
 
             VertexConsumer consumer = WATER_TEXTURE.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getTranslucent());
 
-            int color = entity.getCurrentPotion().getColor();
+            int color = entity.storedPotion().color();
 
             float r = (color >> 16) / 255f;
             float g = ((color & 0xFF00) >> 8) / 255f;

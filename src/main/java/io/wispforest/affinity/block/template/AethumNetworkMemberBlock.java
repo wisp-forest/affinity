@@ -1,6 +1,6 @@
-package io.wispforest.affinity.block;
+package io.wispforest.affinity.block.template;
 
-import io.wispforest.affinity.blockentity.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;

@@ -1,7 +1,7 @@
 package io.wispforest.affinity;
 
-import io.wispforest.affinity.blockentity.AethumNetworkMember;
-import io.wispforest.affinity.blockentity.AethumNetworkNode;
+import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
+import io.wispforest.affinity.util.aethumflux.AethumNetworkNode;
 import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.registries.AffinityItems;

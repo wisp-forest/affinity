@@ -1,6 +1,7 @@
-package io.wispforest.affinity.block;
+package io.wispforest.affinity.block.impl;
 
-import io.wispforest.affinity.blockentity.AethumFluxCacheBlockEntity;
+import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
+import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;

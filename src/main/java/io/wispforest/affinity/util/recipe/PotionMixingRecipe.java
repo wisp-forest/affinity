@@ -12,7 +12,6 @@ import net.minecraft.recipe.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -50,29 +49,31 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
         for (var recipe : manager.listAllOfType(Type.INSTANCE)) {
 
-            final var effects = inputMixture.getCustomEffects().stream().map(StatusEffectInstance::getEffectType).toList();
-            final var mutableItems = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
+            final var effectInputs = inputMixture.effects().stream().map(StatusEffectInstance::getEffectType).toList();
+            final var itemInputs = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
 
-            if (effects.size() != recipe.effectInputs.size() || mutableItems.size() != recipe.itemInputs.size()) continue;
+            if (effectInputs.size() != recipe.effectInputs.size() || itemInputs.size() != recipe.itemInputs.size()) continue;
 
-            final var confirmedIngredients = new ArrayList<Ingredient>();
+            int confirmedItemInputs = 0;
 
             for (var ingredient : recipe.itemInputs) {
-                for (var stack : mutableItems) {
+                for (var stack : itemInputs) {
                     if (!ingredient.test(stack)) continue;
-                    mutableItems.remove(stack);
-                    confirmedIngredients.add(ingredient);
+
+                    itemInputs.remove(stack);
+                    confirmedItemInputs++;
                     break;
                 }
             }
 
             //Test for awkward potion input if no effects have been declared
-            boolean effectsConfirmed = recipe.effectInputs.isEmpty() ? inputMixture.getBasePotion() == Potions.AWKWARD : effects.containsAll(recipe.effectInputs);
+            boolean effectsConfirmed = recipe.effectInputs.isEmpty() ? inputMixture.basePotion() == Potions.AWKWARD : effectInputs.containsAll(recipe.effectInputs);
 
-            if (!effectsConfirmed || confirmedIngredients.size() != recipe.itemInputs.size()) continue;
+            if (!effectsConfirmed || confirmedItemInputs != recipe.itemInputs.size()) continue;
 
             return Optional.of(recipe);
         }
+
         return Optional.empty();
     }
 

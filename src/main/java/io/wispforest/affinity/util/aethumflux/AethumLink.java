@@ -1,6 +1,9 @@
-package io.wispforest.affinity.blockentity;
+package io.wispforest.affinity.util.aethumflux;
 
-public class AethumLink {
+import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
+import io.wispforest.affinity.util.aethumflux.AethumNetworkNode;
+
+public final class AethumLink {
 
     public enum Element {
         NODE, MEMBER;

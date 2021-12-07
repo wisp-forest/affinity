@@ -1,6 +1,10 @@
-package io.wispforest.affinity.blockentity;
+package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.util.aethumflux.AethumLink;
+import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
+import io.wispforest.affinity.util.aethumflux.AethumNetworkNode;
+import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -65,7 +69,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
             networkFlux += node.flux();
             networkCapacity += node.fluxCapacity();
 
-            for (var member : node.getConnectedMembers()) {
+            for (var member : node.getLinkedMembers()) {
                 members.add(new TransferMember(node, member));
             }
         }
@@ -134,7 +138,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
         return visitedNodes;
     }
 
-    public Collection<AethumNetworkMember> getConnectedMembers() {
+    public Collection<AethumNetworkMember> getLinkedMembers() {
         if (this.cachedMembers != null) return this.cachedMembers;
 
         this.cachedMembers = new ArrayList<>(this.LINKED_MEMBERS.size());
@@ -187,11 +191,6 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     public void addNodeLink(BlockPos pos) {
         this.LINKED_MEMBERS.add(pos);
         this.markDirty();
-    }
-
-    @Override
-    public boolean canLink(BlockPos pos) {
-        return !isLinked(pos);
     }
 
     @SuppressWarnings("UnstableApiUsage")

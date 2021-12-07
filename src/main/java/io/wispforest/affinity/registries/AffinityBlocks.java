@@ -1,8 +1,11 @@
 package io.wispforest.affinity.registries;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.block.*;
-import io.wispforest.affinity.blockentity.*;
+import io.wispforest.affinity.block.impl.*;
+import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
+import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
+import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
+import io.wispforest.affinity.blockentity.impl.SundialBlockEntity;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
