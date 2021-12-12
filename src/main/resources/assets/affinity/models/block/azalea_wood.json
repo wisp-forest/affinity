@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "affinity:block/azalea_log",
+    "side": "affinity:block/azalea_log"
+  }
+}

@@ -1,11 +1,11 @@
 package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.util.aethumflux.AethumLink;
 import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
 import io.wispforest.affinity.util.aethumflux.AethumNetworkNode;
-import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
-import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
@@ -79,8 +79,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
 //        System.out.printf("[#%d] Ticking network of %d nodes\n", lastTick, nodes.size());
 //        System.out.printf("[#%d] Flux Before: %d | Capacity: %d\n", lastTick, networkFlux, networkCapacity);
 
-        Collections.shuffle(members);
-        members.sort(Comparator.comparingLong(value -> value.potentialExtract));
+        prepareMemberList(members, Comparator.comparingLong(value -> value.potentialExtract));
 
         try (var transaction = Transaction.openOuter()) {
             for (var transferMember : members) {
@@ -93,8 +92,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
             transaction.commit();
         }
 
-        Collections.shuffle(members);
-        members.sort(Comparator.comparingLong(value -> value.potentialInsert));
+        prepareMemberList(members, Comparator.comparingLong(value -> value.potentialInsert));
 
         try (var transaction = Transaction.openOuter()) {
             for (var transferMember : members) {
@@ -116,6 +114,13 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
 //        System.out.printf("[#%d] Flux After: %d | Capacity: %d\n", lastTick, networkFlux, networkCapacity);
     }
 
+    private void prepareMemberList(List<TransferMember> members, Comparator<TransferMember> comparator) {
+        Collections.shuffle(members);
+        members.sort(comparator);
+    }
+
+//    private void transfer()
+
     private Collection<BlockPos> visitNetwork() {
         var visitedNodes = new ArrayList<BlockPos>();
         visitedNodes.add(this.pos);
@@ -124,7 +129,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
 
         while (!queue.isEmpty()) {
             var nodePos = queue.poll();
-            if (!(world.getBlockEntity(nodePos) instanceof AethumFluxNodeBlockEntity node)) continue;
+            if (!(Affinity.AETHUM_NODE.find(world, nodePos, null) instanceof AethumFluxNodeBlockEntity node)) continue;
 
             visitedNodes.add(nodePos);
             node.lastTick = world.getTime();

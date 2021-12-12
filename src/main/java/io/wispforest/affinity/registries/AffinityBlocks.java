@@ -8,8 +8,11 @@ import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
 import io.wispforest.affinity.blockentity.impl.SundialBlockEntity;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.PillarBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -22,6 +25,10 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block COPPER_PLATED_AETHUM_FLUX_CACHE = new CopperPlatedAethumFluxCacheBlock();
     public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
     public static final Block SUNDIAL = new SundialBlock();
+
+    public static final Block AZALEA_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
+    public static final Block AZALEA_LOG = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG));
+    public static final Block AZALEA_WOOD = new Block(FabricBlockSettings.copyOf(Blocks.OAK_WOOD));
 
     @Override
     public BlockItem createBlockItem(Block block, String identifier) {

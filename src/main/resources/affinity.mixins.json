@@ -7,11 +7,12 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "PotionItemMixin",
-    "PotionUtilMixin"
+    "PotionUtilMixin",
+    "TreeConfigureFeaturesAccessor"
   ],
   "client": [
-    "client.WorldRendererMixin",
-    "client.InGameHudMixin"
+    "client.InGameHudMixin",
+    "client.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
