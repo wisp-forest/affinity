@@ -19,7 +19,15 @@ public abstract class SyncedBlockEntity extends BlockEntity {
 
     @Override
     public void markDirty() {
-        super.markDirty();
+        this.markDirty(true);
+    }
+
+    public void markDirty(boolean updateComparators) {
+        if (this.world == null) return;
+
+        this.world.markDirty(this.pos);
+        if (updateComparators) this.world.updateComparators(this.pos, this.getCachedState().getBlock());
+
         WorldOps.updateIfOnServer(this.world, this.pos);
     }
 

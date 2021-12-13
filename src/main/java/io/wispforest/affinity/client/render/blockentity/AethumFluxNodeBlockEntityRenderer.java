@@ -46,7 +46,7 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
 
         matrices.push();
 
-        double shardHeight = Math.sin(time / 1000d) * .0075;
+        double shardHeight = Math.sin(time / 1000d) * .015;
         matrices.translate(0.4375, .8 + shardHeight, 0.4375);
 
         matrices.push();

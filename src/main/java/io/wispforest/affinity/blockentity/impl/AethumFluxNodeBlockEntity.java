@@ -2,12 +2,14 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.util.aethumflux.AethumLink;
 import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
 import io.wispforest.affinity.util.aethumflux.AethumNetworkNode;
 import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -21,7 +23,7 @@ import net.minecraft.util.math.Vec3d;
 import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
-public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity implements AethumNetworkNode {
+public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity {
 
     private Collection<AethumNetworkMember> cachedMembers = null;
     private long lastTick = 0;
@@ -50,6 +52,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
         ClientParticles.reset();
     }
 
+    @Override
     public void tickServer() {
         if (lastTick == world.getTime()) return;
         this.lastTick = world.getTime();
@@ -79,47 +82,36 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
 //        System.out.printf("[#%d] Ticking network of %d nodes\n", lastTick, nodes.size());
 //        System.out.printf("[#%d] Flux Before: %d | Capacity: %d\n", lastTick, networkFlux, networkCapacity);
 
-        prepareMemberList(members, Comparator.comparingLong(value -> value.potentialExtract));
+        networkFlux = transfer(members, networkFlux, networkCapacity, TransferFunction.EXTRACT_FROM_MEMBER);
+        networkFlux = transfer(members, networkFlux, networkCapacity, TransferFunction.INSERT_INTO_MEMBER);
 
-        try (var transaction = Transaction.openOuter()) {
-            for (var transferMember : members) {
-                if (transferMember.potentialExtract + networkFlux > networkCapacity) break;
+        var fluxPerNode = (long) Math.ceil(networkFlux / (double) nodes.size());
 
-                long transferred = transferMember.member.extract(transferMember.potentialExtract, transaction);
-                networkFlux += transferred;
-            }
-
-            transaction.commit();
-        }
-
-        prepareMemberList(members, Comparator.comparingLong(value -> value.potentialInsert));
-
-        try (var transaction = Transaction.openOuter()) {
-            for (var transferMember : members) {
-                if (transferMember.potentialInsert > networkFlux) break;
-
-                long transferred = transferMember.member.insert(transferMember.potentialInsert, transaction);
-                networkFlux -= transferred;
-            }
-
-            transaction.commit();
-        }
-
-        var fluxPerNode = networkFlux / nodes.size();
         for (var node : nodes) {
-            node.fluxStorage.setFlux(fluxPerNode);
-            node.markDirty();
+            node.fluxStorage.setFlux(Math.min(networkFlux, fluxPerNode));
+            node.markDirty(false);
+
+            networkFlux -= fluxPerNode;
         }
 
 //        System.out.printf("[#%d] Flux After: %d | Capacity: %d\n", lastTick, networkFlux, networkCapacity);
     }
 
-    private void prepareMemberList(List<TransferMember> members, Comparator<TransferMember> comparator) {
+    private long transfer(List<TransferMember> members, long networkFlux, long networkCapacity, TransferFunction function) {
         Collections.shuffle(members);
-        members.sort(comparator);
-    }
+        members.sort(function.comparator());
 
-//    private void transfer()
+        try (var transaction = Transaction.openOuter()) {
+            for (var transferMember : members) {
+                networkFlux = function.transfer(transferMember, networkFlux, networkCapacity, transaction);
+                if (networkFlux < 0 || networkFlux > networkCapacity) break;
+            }
+
+            transaction.commit();
+        }
+
+        return networkFlux;
+    }
 
     private Collection<BlockPos> visitNetwork() {
         var visitedNodes = new ArrayList<BlockPos>();
@@ -160,7 +152,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     }
 
     @Override
-    public AethumLink.Result createGenericLink(BlockPos pos) {
+    public AethumLink.Result createGenericLink(BlockPos pos, AethumLink.Type type) {
         if (isLinked(pos)) return AethumLink.Result.ALREADY_LINKED;
 
         var member = Affinity.AETHUM_MEMBER.find(world, pos, null);
@@ -170,12 +162,12 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
             if (node.isLinked(this.pos)) return AethumLink.Result.ALREADY_LINKED;
             node.addNodeLink(this.pos);
         } else {
-            if (!member.addLinkParent(this.pos)) return AethumLink.Result.ALREADY_LINKED;
+            if (!member.addLinkParent(this.pos, type)) return AethumLink.Result.ALREADY_LINKED;
         }
 
         this.LINKED_MEMBERS.add(pos);
         this.cachedMembers = null;
-        this.markDirty();
+        this.markDirty(true);
 
         return AethumLink.Result.SUCCESS;
     }
@@ -195,7 +187,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     @Override
     public void addNodeLink(BlockPos pos) {
         this.LINKED_MEMBERS.add(pos);
-        this.markDirty();
+        this.markDirty(true);
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -213,6 +205,41 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
                 this.potentialInsert = member.insert(node.maxExtract(), transaction);
             }
         }
+    }
 
+    private interface TransferFunction {
+
+        Comparator<TransferMember> INSERT_SORT = Comparator.comparingLong(value -> value.potentialInsert);
+        Comparator<TransferMember> EXTRACT_SORT = Comparator.comparingLong(value -> value.potentialExtract);
+
+        TransferFunction INSERT_INTO_MEMBER = new TransferFunction() {
+            @Override
+            public long transfer(TransferMember transferMember, long networkFlux, long networkCapacity, TransactionContext transactionContext) {
+                return networkFlux - transferMember.member.insert(Math.min(transferMember.potentialInsert, networkFlux),
+                        transactionContext);
+            }
+
+            @Override
+            public Comparator<TransferMember> comparator() {
+                return INSERT_SORT;
+            }
+        };
+
+        TransferFunction EXTRACT_FROM_MEMBER = new TransferFunction() {
+            @Override
+            public long transfer(TransferMember transferMember, long networkFlux, long networkCapacity, TransactionContext transactionContext) {
+                return networkFlux + transferMember.member.extract(Math.min(transferMember.potentialExtract, networkCapacity - networkFlux),
+                        transactionContext);
+            }
+
+            @Override
+            public Comparator<TransferMember> comparator() {
+                return EXTRACT_SORT;
+            }
+        };
+
+        long transfer(TransferMember transferMember, long networkFlux, long networkCapacity, TransactionContext transactionContext);
+
+        Comparator<TransferMember> comparator();
     }
 }

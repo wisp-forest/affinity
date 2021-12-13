@@ -12,10 +12,11 @@ public interface AethumNetworkNode extends AethumNetworkMember {
      * the link parent
      *
      * @param pos The position of the link target
+     * @param type The type of link to establish
      * @return {@link AethumLink.Result#SUCCESS} if the link was established,
      * a {@link AethumLink.Result} describing the problem otherwise
      */
-    AethumLink.Result createGenericLink(BlockPos pos);
+    AethumLink.Result createGenericLink(BlockPos pos, AethumLink.Type type);
 
     /**
      * Creates a link to another node - this specifically

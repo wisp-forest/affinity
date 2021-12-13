@@ -1,6 +1,7 @@
 package io.wispforest.affinity.block.template;
 
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
+import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -85,7 +86,7 @@ public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlo
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient ? null : checkType(type, AffinityBlocks.Entities.AETHUM_FLUX_NODE, (world1, pos, state1, blockEntity) -> blockEntity.tickServer());
+        return checkType(type, AffinityBlocks.Entities.AETHUM_FLUX_NODE, TickedBlockEntity.ticker());
     }
 
     @Override

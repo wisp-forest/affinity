@@ -1,7 +1,7 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "affinity:item/aethum_wand"
+    "layer0": "affinity:item/emerald_wand_of_iridescence"
   },
   "display": {
     "thirdperson_righthand": {

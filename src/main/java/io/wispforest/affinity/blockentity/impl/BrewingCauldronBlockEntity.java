@@ -134,7 +134,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         }
 
         this.storedPotion = new PotionMixture(cachedRecipe.getPotionOutput());
-        this.markDirty();
+        this.markDirty(true);
 
         processTick = 0;
         cachedRecipe = null;
@@ -173,7 +173,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
         this.fillLevel--;
         if (fillLevel == 0) this.storedPotion = PotionMixture.EMPTY;
-        this.markDirty();
+        this.markDirty(true);
 
         return potionStack;
     }
@@ -188,7 +188,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         }
 
         this.fillLevel++;
-        this.markDirty();
+        this.markDirty(true);
     }
 
     public boolean canPotionBeExtracted() {
@@ -210,7 +210,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
             items.set(i, stack);
             break;
         }
-        markDirty();
+        markDirty(true);
     }
 
     public ItemStack getAndRemoveLast() {
@@ -218,7 +218,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
             if (items.get(i).isEmpty()) continue;
 
             final var stack = items.set(i, ItemStack.EMPTY);
-            this.markDirty();
+            this.markDirty(true);
 
             return stack;
         }

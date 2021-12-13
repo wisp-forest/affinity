@@ -1,19 +1,15 @@
 package io.wispforest.affinity.blockentity.template;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.util.NbtUtil;
 import io.wispforest.affinity.util.aethumflux.AethumFluxStorage;
+import io.wispforest.affinity.util.aethumflux.AethumLink;
 import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
-import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,23 +26,13 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        LINKED_MEMBERS.clear();
-
-        for (var member : nbt.getLongArray("LinkedMembers")) {
-            LINKED_MEMBERS.add(BlockPos.fromLong(member));
-        }
+        NbtUtil.readBlockPosList(nbt, "LinkedMembers", LINKED_MEMBERS);
         this.fluxStorage.readNbt(nbt);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        var members = new long[LINKED_MEMBERS.size()];
-
-        for (int i = 0; i < LINKED_MEMBERS.size(); i++) {
-            members[i] = LINKED_MEMBERS.get(i).asLong();
-        }
-
-        nbt.putLongArray("LinkedMembers", members);
+        NbtUtil.writeBlockPosList(nbt, "LinkedMembers", LINKED_MEMBERS);
         this.fluxStorage.writeNbt(nbt);
     }
 
@@ -70,11 +56,11 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     }
 
     @Override
-    public boolean addLinkParent(BlockPos pos) {
+    public boolean addLinkParent(BlockPos pos, AethumLink.Type type) {
         if (isLinked(pos)) return false;
 
         this.LINKED_MEMBERS.add(pos);
-        this.markDirty();
+        this.markDirty(true);
 
         return true;
     }
@@ -82,7 +68,7 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     @Override
     public void onLinkTargetRemoved(BlockPos pos) {
         this.LINKED_MEMBERS.remove(pos);
-        this.markDirty();
+        this.markDirty(true);
     }
 
     @Override
@@ -127,6 +113,6 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public void onTransactionCommitted() {
-        this.markDirty();
+        this.markDirty(false);
     }
 }
