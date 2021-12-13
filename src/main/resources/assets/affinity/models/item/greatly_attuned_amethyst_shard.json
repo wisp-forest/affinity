@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "affinity:item/greatly_attuned_amethyst_shard"
+  }
+}

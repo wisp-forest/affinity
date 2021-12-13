@@ -2,6 +2,7 @@ package io.wispforest.affinity.client.render.blockentity;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
+import io.wispforest.affinity.registries.AffinityBlocks;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
@@ -35,49 +36,6 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
     @Override
     public void render(AethumFluxNodeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
-        var packedLight = LightmapTextureManager.pack(
-                entity.getWorld().getLightLevel(LightType.BLOCK, entity.getPos()) - 2,
-                entity.getWorld().getLightLevel(LightType.SKY, entity.getPos()));
-
-        entity.getWorld().random.setSeed(entity.getPos().asLong());
-        long time = System.currentTimeMillis() + entity.getWorld().random.nextLong(5000);
-
-        float angle = (float) ((time / 2000d) % (2 * Math.PI));
-
-        matrices.push();
-
-        double shardHeight = Math.sin(time / 1000d) * .015;
-        matrices.translate(0.4375, .8 + shardHeight, 0.4375);
-
-        matrices.push();
-
-        matrices.translate(.0625, 0, .0625);
-        matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(-/*20 * */angle));
-        matrices.translate(-.0625, 0, -.0625);
-
-        var consumer = SHARD_TEXTURE.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
-        FLOATING_SHARD.render(matrices, consumer, packedLight, overlay);
-
-        matrices.pop();
-
-        matrices.translate(0, -shardHeight, 0);
-
-        for (int i = 0; i < 5; i++) {
-            matrices.push();
-
-            var shardAngle = (float) (angle /* * 20*/ + i * (2 / 5f) * Math.PI);
-
-            matrices.translate(.0625, 0, .0625);
-            matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(shardAngle));
-            matrices.translate(.35 - .0625, Math.sin(shardAngle + angle) * .05, -.0625);
-
-            FLOATING_SHARD.render(matrices, consumer, packedLight, overlay);
-
-            matrices.pop();
-        }
-
-        matrices.pop();
-
         for (var linkedMember : entity.linkedMembers()) {
             var offset = Vec3d.ofCenter(linkedMember).subtract(Vec3d.of(entity.getPos()));
 
@@ -89,6 +47,51 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
                     .vertex(matrices.peek().getPositionMatrix(), (float) offset.x, (float) offset.y, (float) offset.z)
                     .color(0xffff0000)
                     .normal(1, 0, 1).next();
+        }
+
+        if (entity.getCachedState().isOf(AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_NODE)) {
+            var packedLight = LightmapTextureManager.pack(
+                    entity.getWorld().getLightLevel(LightType.BLOCK, entity.getPos()) - 2,
+                    entity.getWorld().getLightLevel(LightType.SKY, entity.getPos()));
+
+            entity.getWorld().random.setSeed(entity.getPos().asLong());
+            long time = System.currentTimeMillis() + entity.getWorld().random.nextLong(5000);
+
+            float angle = (float) ((time / 2000d) % (2 * Math.PI));
+
+            matrices.push();
+
+            double shardHeight = Math.sin(time / 1000d) * .015;
+            matrices.translate(0.4375, .8 + shardHeight, 0.4375);
+
+            matrices.push();
+
+            matrices.translate(.0625, 0, .0625);
+            matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(-/*20 * */angle));
+            matrices.translate(-.0625, 0, -.0625);
+
+            var consumer = SHARD_TEXTURE.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
+            FLOATING_SHARD.render(matrices, consumer, packedLight, overlay);
+
+            matrices.pop();
+
+            matrices.translate(0, -shardHeight, 0);
+
+            for (int i = 0; i < 5; i++) {
+                matrices.push();
+
+                var shardAngle = (float) (angle /* * 20*/ + i * (2 / 5f) * Math.PI);
+
+                matrices.translate(.0625, 0, .0625);
+                matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(shardAngle));
+                matrices.translate(.35 - .0625, Math.sin(shardAngle + angle) * .05, -.0625);
+
+                FLOATING_SHARD.render(matrices, consumer, packedLight, overlay);
+
+                matrices.pop();
+            }
+
+            matrices.pop();
         }
 
         ((VertexConsumerProvider.Immediate) vertexConsumers).draw();

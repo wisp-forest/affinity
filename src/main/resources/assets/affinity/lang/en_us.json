@@ -14,6 +14,10 @@
   "item.affinity.emerald_wand_of_iridescence": "Emerald Wand of Iridescence",
   "item.affinity.aethum_flux_bottle": "Bottle of Aethum Flux",
 
+  "item.affinity.mildly_attuned_amethyst_shard": "Mildly Attuned Amethyst Shard",
+  "item.affinity.fairly_attuned_amethyst_shard": "Fairly Attuned Amethyst Shard",
+  "item.affinity.greatly_attuned_amethyst_shard": "Greatly Attuned Amethyst Shard",
+
   "message.affinity.linking.started": "Creating link from %s",
   "message.affinity.linking.started_push": "Creating §ascatter §rlink from %s",
   "message.affinity.linking.already_linked": "%s is already linked",
