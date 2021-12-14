@@ -1,6 +1,6 @@
 {
   "parent": "affinity:item/iridescence_wand",
   "textures": {
-    "layer0": "affinity:item/emerald_wand_of_iridescence"
+    "layer0": "affinity:item/sapphire_wand_of_iridescence"
   }
 }

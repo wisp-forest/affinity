@@ -3,6 +3,7 @@ package io.wispforest.affinity.blockentity.impl;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.registries.AffinityBlocks;
+import io.wispforest.affinity.util.ListUtil;
 import io.wispforest.affinity.util.potion.PotionMixture;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipe;
 import io.wispforest.owo.ops.ItemOps;
@@ -106,7 +107,9 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos), itemEntity -> true)) {
             if (!canAddItem()) break;
 
-            addItem(ItemOps.singleCopy(item.getStack()));
+            ListUtil.addItem(this.items, ItemOps.singleCopy(item.getStack()));
+            this.markDirty();
+
             if (!ItemOps.emptyAwareDecrement(item.getStack())) item.discard();
 
             world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1, 0.25f + world.random.nextFloat() * 0.5f);
@@ -202,28 +205,6 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     @NotNull
     public PotionMixture storedPotion() {
         return storedPotion;
-    }
-
-    public void addItem(ItemStack stack) {
-        for (int i = 0; i < items.size(); i++) {
-            if (!items.get(i).isEmpty()) continue;
-            items.set(i, stack);
-            break;
-        }
-        markDirty(true);
-    }
-
-    public ItemStack getAndRemoveLast() {
-        for (int i = items.size() - 1; i >= 0; i--) {
-            if (items.get(i).isEmpty()) continue;
-
-            final var stack = items.set(i, ItemStack.EMPTY);
-            this.markDirty(true);
-
-            return stack;
-        }
-
-        return ItemStack.EMPTY;
     }
 
     public boolean canAddItem() {

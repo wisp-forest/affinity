@@ -2,9 +2,9 @@ package io.wispforest.affinity.blockentity.template;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.util.NbtUtil;
-import io.wispforest.affinity.util.aethumflux.AethumFluxStorage;
-import io.wispforest.affinity.util.aethumflux.AethumLink;
-import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
+import io.wispforest.affinity.aethumflux.storage.AethumFluxStorage;
+import io.wispforest.affinity.aethumflux.net.AethumLink;
+import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;

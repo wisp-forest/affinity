@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util.aethumflux;
+package io.wispforest.affinity.aethumflux.net;
 
 import net.minecraft.util.math.BlockPos;
 

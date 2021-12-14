@@ -1,12 +1,12 @@
 package io.wispforest.affinity;
 
+import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
+import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.mixin.TreeFeatureConfigAccessor;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.registries.AffinityItems;
 import io.wispforest.affinity.registries.AffinityStatusEffects;
-import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
-import io.wispforest.affinity.util.aethumflux.AethumNetworkNode;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipeSerializer;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
@@ -16,7 +16,6 @@ import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class Affinity implements ModInitializer {

@@ -1,5 +1,6 @@
-package io.wispforest.affinity.util.aethumflux;
+package io.wispforest.affinity.aethumflux.net;
 
+import io.wispforest.affinity.aethumflux.storage.AethumFluxContainer;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;

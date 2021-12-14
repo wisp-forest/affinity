@@ -5,7 +5,7 @@ import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntit
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.util.NbtUtil;
-import io.wispforest.affinity.util.aethumflux.AethumLink;
+import io.wispforest.affinity.aethumflux.net.AethumLink;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;

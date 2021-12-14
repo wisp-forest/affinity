@@ -4,6 +4,7 @@ import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
 import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.registries.AffinityBlocks;
+import io.wispforest.affinity.util.ListUtil;
 import io.wispforest.affinity.util.potion.PotionMixture;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -96,7 +97,7 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
             if (!cauldron.itemAvailable()) return ActionResult.PASS;
 
             if (!world.isClient()) {
-                player.setStackInHand(hand, cauldron.getAndRemoveLast());
+                player.setStackInHand(hand, ListUtil.getAndRemoveLast(cauldron.getItems()));
             }
 
             return ActionResult.SUCCESS;

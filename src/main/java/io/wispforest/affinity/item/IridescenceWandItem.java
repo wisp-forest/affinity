@@ -1,11 +1,11 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.util.aethumflux.AethumLink;
-import io.wispforest.affinity.util.aethumflux.AethumLink.Element;
-import io.wispforest.affinity.util.aethumflux.AethumLink.Type;
-import io.wispforest.affinity.util.aethumflux.AethumNetworkMember;
-import io.wispforest.affinity.util.aethumflux.AethumNetworkNode;
+import io.wispforest.affinity.aethumflux.net.AethumLink;
+import io.wispforest.affinity.aethumflux.net.AethumLink.Element;
+import io.wispforest.affinity.aethumflux.net.AethumLink.Type;
+import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
+import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;

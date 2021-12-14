@@ -1,9 +1,6 @@
 {
   "variants": {
-    "shard=true": {
-      "model": "affinity:block/stone_banded_aethum_flux_node_with_shard"
-    },
-    "shard=false": {
+    "": {
       "model": "affinity:block/stone_banded_aethum_flux_node"
     }
   }
