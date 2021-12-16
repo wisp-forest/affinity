@@ -98,6 +98,7 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
 
             if (!world.isClient()) {
                 player.setStackInHand(hand, ListUtil.getAndRemoveLast(cauldron.getItems()));
+                cauldron.markDirty(false);
             }
 
             return ActionResult.SUCCESS;

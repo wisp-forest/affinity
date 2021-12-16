@@ -21,11 +21,7 @@ public abstract class AethumNetworkMemberBlock extends BlockWithEntity {
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
-
-            if (world.getBlockEntity(pos) instanceof AethumNetworkMemberBlockEntity member) {
-                member.onBroken();
-            }
-
+            if (world.getBlockEntity(pos) instanceof AethumNetworkMemberBlockEntity member) member.onBroken();
             super.onStateReplaced(state, world, pos, newState, moved);
         }
     }

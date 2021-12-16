@@ -3,6 +3,7 @@ package io.wispforest.affinity.client;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.BrewingCauldronBlockEntityRenderer;
+import io.wispforest.affinity.network.AffinityPackets;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -23,6 +24,8 @@ public class AffinityClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.SUNDIAL, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_CACHE, RenderLayer.getCutout());
+
+        AffinityPackets.Client.registerListeners();
 
         // TODO make this data-driven
 

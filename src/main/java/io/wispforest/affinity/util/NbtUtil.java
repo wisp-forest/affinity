@@ -1,5 +1,6 @@
 package io.wispforest.affinity.util;
 
+import io.wispforest.affinity.aethumflux.net.AethumLink;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -7,25 +8,29 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class NbtUtil {
 
-    public static void writeBlockPosList(NbtCompound nbt, String key, List<BlockPos> list) {
-        var members = new long[list.size()];
+    public static void writeBlockPosSet(NbtCompound nbt, String key, Set<BlockPos> set) {
+        var posArray = new long[set.size()];
 
-        for (int i = 0; i < list.size(); i++) {
-            members[i] = list.get(i).asLong();
+        int idx = 0;
+        for (var pos : set) {
+            posArray[idx] = pos.asLong();
+            idx++;
         }
 
-        nbt.putLongArray(key, members);
+        nbt.putLongArray(key, posArray);
     }
 
-    public static void readBlockPosList(NbtCompound nbt, String key, List<BlockPos> list) {
-        list.clear();
+    public static void readBlockPosSet(NbtCompound nbt, String key, Set<BlockPos> set) {
+        set.clear();
 
         for (var pos : nbt.getLongArray(key)) {
-            list.add(BlockPos.fromLong(pos));
+            set.add(BlockPos.fromLong(pos));
         }
     }
 
@@ -46,12 +51,35 @@ public class NbtUtil {
         final var nbtList = nbt.getList(key, NbtElement.COMPOUND_TYPE);
         items.clear();
 
-        for (int i = 0; i < nbtList.size(); i++) {
-            var stackNbt =(NbtCompound) nbtList.get(i);
+        for (NbtElement element : nbtList) {
+            var stackNbt = (NbtCompound) element;
             byte idx = stackNbt.getByte("Slot");
 
-            if (i > 0 && i < items.size()) items.set(idx, ItemStack.fromNbt(stackNbt));
+            if (idx >= 0 && idx < items.size()) items.set(idx, ItemStack.fromNbt(stackNbt));
         }
     }
 
+    private static final long LINK_TYPE_MASK = ~(0xFFL << 56);
+
+    public static void readLinks(NbtCompound nbt, String key, Map<BlockPos, AethumLink.Type> links) {
+        links.clear();
+
+        for (var link : nbt.getLongArray(key)) {
+            long pos = link & LINK_TYPE_MASK;
+            byte type = (byte) (link >> 56);
+
+            links.put(BlockPos.fromLong(pos), AethumLink.Type.values()[type]);
+        }
+    }
+
+    public static void writeLinks(NbtCompound nbt, String key, Map<BlockPos, AethumLink.Type> links) {
+        var members = new long[links.size()];
+
+        var idx = new AtomicInteger(-1);
+        links.forEach((blockPos, type) -> {
+            members[idx.incrementAndGet()] = blockPos.asLong() | ((long) type.ordinal() << 56);
+        });
+
+        nbt.putLongArray(key, members);
+    }
 }

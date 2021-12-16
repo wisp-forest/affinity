@@ -3,14 +3,14 @@ package io.wispforest.affinity.aethumflux.net;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxContainer;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
+import java.util.Set;
 
 public interface AethumNetworkMember extends AethumFluxContainer {
 
     /**
      * @return The positions of all network members
      */
-    List<BlockPos> linkedMembers();
+    Set<BlockPos> linkedMembers();
 
     /**
      * @return {@code true} if this member is linked to another member at {@code pos}

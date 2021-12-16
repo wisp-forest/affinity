@@ -17,6 +17,7 @@ public class AethumFluxBottleItem extends Item {
     public ActionResult useOnBlock(ItemUsageContext context) {
         var member = Affinity.AETHUM_MEMBER.find(context.getWorld(), context.getBlockPos(), null);
         if (member == null) return ActionResult.PASS;
+        if (context.getWorld().isClient) return ActionResult.SUCCESS;
 
         try (var transaction = Transaction.openOuter()) {
             member.insert(1000, transaction);

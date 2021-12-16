@@ -2,6 +2,7 @@ package io.wispforest.affinity.client.render.blockentity;
 
 import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
+import io.wispforest.affinity.util.MathUtil;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
@@ -30,9 +31,12 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
     @Override
     public void render(AethumFluxNodeBlockEntity node, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
-        final boolean canTransfer = node.tier() != AttunedShardTiers.EMPTY;
-        int startColor = canTransfer ? 0xff8800ff : 0xffff0000;
-        int endColor = canTransfer ? 0xff0000ff : 0xffff0000;
+        // --------------
+        // Link rendering
+        // --------------
+
+        int startColor = node.hasShard() ? 0xff8800ff : 0xffff0000;
+        int endColor = node.hasShard() ? 0xff0000ff : 0xffff0000;
 
         for (var linkedMember : node.linkedMembers()) {
             var offset = Vec3d.ofCenter(linkedMember).subtract(Vec3d.of(node.getPos()));
@@ -47,6 +51,10 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
                     .normal(1, 0, 1).next();
         }
 
+        // -------------------------
+        // Prerequisite calculations
+        // -------------------------
+
         var packedLight = LightmapTextureManager.pack(
                 node.getWorld().getLightLevel(LightType.BLOCK, node.getPos()) - 2,
                 node.getWorld().getLightLevel(LightType.SKY, node.getPos()));
@@ -54,7 +62,11 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
         node.getWorld().random.setSeed(node.getPos().asLong());
         long time = System.currentTimeMillis() + node.getWorld().random.nextLong(5000);
 
-        float angle = (float) ((time / 2000d) % (2 * Math.PI));
+        float angle = (float) ((time / -2000d) % (2 * Math.PI));
+
+        // -------------
+        // Central shard
+        // -------------
 
         matrices.push();
 
@@ -64,22 +76,31 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
         matrices.push();
 
         matrices.translate(.0625, 0, .0625);
-        matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(-/*20 * */angle));
+        matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(-angle));
         matrices.translate(-.0625, 0, -.0625);
 
         var consumer = node.tier().sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
-        if (canTransfer) FLOATING_SHARD.render(matrices, consumer, packedLight, overlay);
+        if (node.hasShard()) FLOATING_SHARD.render(matrices, consumer, packedLight, overlay);
 
         matrices.pop();
 
-        if (node.supportsOuterShards()) {
+        // ---------------
+        // Floating shards
+        // ---------------
+
+        if (node.isUpgradeable()) {
             matrices.translate(0, -shardHeight, 0);
             consumer = AttunedShardTiers.CRUDE.sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
+
+            float renderShardCount = node.outerShardCount();
+
+            int tickDiff = (int) (node.getWorld().getTime() - node.lastShardChangeTick);
+            if (tickDiff < 10) renderShardCount = MathUtil.sinLerp(node.lastOuterShardCount, node.outerShardCount(), (tickDiff + tickDelta) / 10f);
 
             for (int i = 0; i < node.outerShardCount(); i++) {
                 matrices.push();
 
-                var shardAngle = (float) (angle /* * 20*/ + i * (2 / 5f) * Math.PI);
+                var shardAngle = (float) (angle + i * (2 / renderShardCount) * Math.PI);
 
                 matrices.translate(.0625, 0, .0625);
                 matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(shardAngle));
@@ -93,7 +114,11 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
 
         matrices.pop();
 
-        ((VertexConsumerProvider.Immediate) vertexConsumers).draw();
+        // -----------
+        // Render call
+        // -----------
+
+        if (vertexConsumers instanceof VertexConsumerProvider.Immediate immediate) immediate.draw();
     }
 
 }

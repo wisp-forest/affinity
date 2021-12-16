@@ -11,7 +11,7 @@ public interface AethumNetworkNode extends AethumNetworkMember {
      * or member and also notifies that member, so it can store
      * the link parent
      *
-     * @param pos The position of the link target
+     * @param pos  The position of the link target
      * @param type The type of link to establish
      * @return {@link AethumLink.Result#SUCCESS} if the link was established,
      * a {@link AethumLink.Result} describing the problem otherwise
@@ -28,7 +28,8 @@ public interface AethumNetworkNode extends AethumNetworkMember {
     void addNodeLink(BlockPos pos);
 
     /**
-     * @return All members linked to this node - this specifically excludes other nodes
+     * @return All members linked to this node via a link of type
+     * {@link AethumLink.Type#NORMAL} - this also specifically excludes other nodes
      */
-    Collection<AethumNetworkMember> getLinkedMembers();
+    Collection<AethumNetworkMember> membersWithNormalLink();
 }

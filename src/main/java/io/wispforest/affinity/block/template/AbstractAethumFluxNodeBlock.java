@@ -50,16 +50,14 @@ public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlo
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.getBlock() != newState.getBlock()) {
-            if (world.getBlockEntity(pos) instanceof AethumFluxNodeBlockEntity node) node.onBroken();
-            super.onStateReplaced(state, world, pos, newState, moved);
-        }
+    public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+        if (!(world.getBlockEntity(pos) instanceof AethumFluxNodeBlockEntity node)) return;
+        node.onBreakStart(player);
     }
 
     protected abstract VoxelShape getShape();
 
-    public abstract boolean supportsOuterShards();
+    public abstract boolean isUpgradeable();
 
     public abstract float shardHeight();
 }

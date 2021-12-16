@@ -10,12 +10,13 @@ import io.wispforest.affinity.block.template.AbstractAethumFluxNodeBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.item.AttunedShardItem;
-import io.wispforest.affinity.item.IridescenceWandItem;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.util.ListUtil;
 import io.wispforest.affinity.util.NbtUtil;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
@@ -32,12 +33,16 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
 public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity {
+
+    @Environment(EnvType.CLIENT) public float lastOuterShardCount = 1;
+    @Environment(EnvType.CLIENT) public long lastShardChangeTick = -1;
 
     private long lastTick = 0;
     private Collection<AethumNetworkMember> cachedMembers = null;
@@ -49,101 +54,29 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     private int outerShardCount = 0;
 
     private final float shardHeight;
-    private final boolean supportsOuterShards;
+    private final boolean isUpgradeable;
 
     public AethumFluxNodeBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.AETHUM_FLUX_NODE, pos, state);
 
         if (state.getBlock() instanceof AbstractAethumFluxNodeBlock nodeBlock) {
             this.shardHeight = nodeBlock.shardHeight();
-            this.supportsOuterShards = nodeBlock.supportsOuterShards();
+            this.isUpgradeable = nodeBlock.isUpgradeable();
         } else {
             this.shardHeight = .5f;
-            this.supportsOuterShards = false;
+            this.isUpgradeable = false;
         }
 
         this.fluxStorage.setFluxCapacity(32000);
     }
 
-    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var playerStack = player.getStackInHand(hand);
-
-        final var playerItem = playerStack.getItem();
-        if (!(playerItem instanceof IridescenceWandItem)) {
-            // TODO make this not suck
-
-            if (playerStack.isEmpty()) {
-
-                if (!this.supportsOuterShards || this.outerShards.isEmpty() || player.isSneaking()) {
-                    player.setStackInHand(hand, this.shard.copy());
-                    this.shard = ItemStack.EMPTY;
-                    this.tier = AttunedShardTiers.EMPTY;
-
-                } else if (!this.outerShards.isEmpty()) {
-                    player.setStackInHand(hand, ListUtil.getAndRemoveLast(this.outerShards));
-                    this.outerShardCount = ListUtil.nonEmptyStacks(this.outerShards);
-                }
-
-            } else if (playerItem instanceof AttunedShardItem shardItem) {
-
-//                if (ItemOps.canStack(playerStack, this.shard)) {
-//                    playerStack.increment(1);
-//                    this.shard = ItemStack.EMPTY;
-//                    this.tier = AttunedShardTiers.EMPTY;
-//
-//                    return ActionResult.SUCCESS;
-//                } else if (ItemOps.canStack(playerStack, ListUtil.peekLast(this.outerShards))) {
-//                    playerStack.increment(1);
-//
-//                    ListUtil.getAndRemoveLast(this.outerShards);
-//                    this.outerShardCount = ListUtil.nonEmptyStacks(this.outerShards);
-//
-//                    return ActionResult.SUCCESS;
-//                }
-
-                if (this.shard.isEmpty()) {
-                    ItemOps.decrementPlayerHandItem(player, hand);
-                    this.shard = ItemOps.singleCopy(playerStack);
-                    this.tier = shardItem.tier();
-                } else if (playerStack.isOf(Items.AMETHYST_SHARD) && this.canAcceptShards()) {
-                    ItemOps.decrementPlayerHandItem(player, hand);
-
-                    ListUtil.addItem(this.outerShards, ItemOps.singleCopy(playerStack));
-                    this.outerShardCount = ListUtil.nonEmptyStacks(this.outerShards);
-                }
-
-            }
-
-        } else {
-            if (!world.isClient) return ActionResult.PASS;
-
-            final var network = visitNetwork();
-            player.sendMessage(Text.of("Network size: " + network.size()), false);
-
-            ClientParticles.persist();
-            ClientParticles.setParticleCount(20);
-
-            for (var nodePos : network) {
-                ClientParticles.spawnLine(ParticleTypes.GLOW, world, Vec3d.ofCenter(nodePos), Vec3d.ofCenter(nodePos.add(0, 2, 0)), 0);
-            }
-
-            ClientParticles.reset();
-        }
-
-        return ActionResult.SUCCESS;
-    }
-
-    private boolean canAcceptShards() {
-        return this.supportsOuterShards && this.outerShards.stream().anyMatch(ItemStack::isEmpty);
-    }
-
-    public void onBroken() {
-        ItemScatterer.spawn(world, pos, this.outerShards);
-        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.shard);
-    }
+    // ------------------
+    // Ticking / Transfer
+    // ------------------
 
     @Override
     public void tickServer() {
+        if (!this.hasShard()) return;
         if (lastTick == world.getTime()) return;
         this.lastTick = world.getTime();
 
@@ -162,7 +95,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
             networkFlux += node.flux();
             networkCapacity += node.fluxCapacity();
 
-            for (var member : node.getLinkedMembers()) {
+            for (var member : node.membersWithNormalLink()) {
                 members.add(new TransferMember(node, member));
             }
         }
@@ -177,7 +110,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
 
         for (var node : nodes) {
             node.fluxStorage.setFlux(Math.min(networkFlux, fluxPerNode));
-            node.markDirty(false);
+            node.sendFluxUpdate();
 
             networkFlux -= fluxPerNode;
         }
@@ -203,16 +136,17 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
         var visitedNodes = new ArrayList<BlockPos>();
         visitedNodes.add(this.pos);
 
-        var queue = new ArrayDeque<>(LINKED_MEMBERS);
+        var queue = new ArrayDeque<>(LINKS.keySet());
 
         while (!queue.isEmpty()) {
-            var nodePos = queue.poll();
-            if (!(Affinity.AETHUM_NODE.find(world, nodePos, null) instanceof AethumFluxNodeBlockEntity node)) continue;
+            var memberPos = queue.poll();
+            if (!(Affinity.AETHUM_NODE.find(world, memberPos, null) instanceof AethumFluxNodeBlockEntity node)) continue;
+            if (!node.hasShard()) continue;
 
-            visitedNodes.add(nodePos);
+            visitedNodes.add(memberPos);
             node.lastTick = world.getTime();
 
-            for (var neighbor : node.LINKED_MEMBERS) {
+            for (var neighbor : node.linkedMembers()) {
                 if (visitedNodes.contains(neighbor) || queue.contains(neighbor)) continue;
                 queue.add(neighbor);
             }
@@ -221,12 +155,18 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
         return visitedNodes;
     }
 
-    public Collection<AethumNetworkMember> getLinkedMembers() {
+    // -------
+    // Linking
+    // -------
+
+    public Collection<AethumNetworkMember> membersWithNormalLink() {
+        // TODO check if this works now
         if (this.cachedMembers != null) return this.cachedMembers;
 
-        this.cachedMembers = new ArrayList<>(this.LINKED_MEMBERS.size());
-        for (var memberPos : LINKED_MEMBERS) {
-            final var member = Affinity.AETHUM_MEMBER.find(world, memberPos, null);
+        this.cachedMembers = new ArrayList<>(this.LINKS.size());
+        for (var memberLink : LINKS.keySet()) {
+            if (LINKS.get(memberLink) != AethumLink.Type.NORMAL) continue;
+            final var member = Affinity.AETHUM_MEMBER.find(world, memberLink, null);
 
             if (member == null) continue;
             if (member instanceof AethumNetworkNode) continue;
@@ -251,11 +191,17 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
             if (!member.addLinkParent(this.pos, type)) return AethumLink.Result.ALREADY_LINKED;
         }
 
-        this.LINKED_MEMBERS.add(pos);
+        this.LINKS.put(pos, type);
         this.cachedMembers = null;
         this.markDirty(true);
 
         return AethumLink.Result.SUCCESS;
+    }
+
+    @Override
+    public void addNodeLink(BlockPos pos) {
+        this.LINKS.put(pos, AethumLink.Type.NORMAL);
+        this.markDirty(true);
     }
 
     @Override
@@ -264,12 +210,20 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
         this.cachedMembers = null;
     }
 
+    // -------------
+    // Serialization
+    // -------------
+
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
 
         this.shard = ItemStack.fromNbt(nbt.getCompound("Shard"));
+        if (this.shard.isOf(Items.AMETHYST_SHARD)) this.tier = AttunedShardTiers.CRUDE;
+        if (this.shard.getItem() instanceof AttunedShardItem shardItem) this.tier = shardItem.tier();
+
         NbtUtil.readItemStackList(nbt, "OuterShards", this.outerShards);
+        this.outerShardCount = ListUtil.nonEmptyStacks(this.outerShards);
 
         this.fluxStorage.setMaxExtract(this.tier.maxTransfer());
         this.fluxStorage.setMaxInsert(this.tier.maxTransfer());
@@ -285,10 +239,108 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
         NbtUtil.writeItemStackList(nbt, "OuterShards", this.outerShards);
     }
 
+    // -----------
+    // Interaction
+    // -----------
+
+    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
+        var playerStack = player.getStackInHand(hand);
+
+        if (!playerStack.isEmpty()) {
+
+            if (playerStack.isOf(Items.AMETHYST_SHARD)) {
+                if (this.shard.isEmpty()) {
+                    this.shard = ItemOps.singleCopy(playerStack);
+                    this.tier = AttunedShardTiers.CRUDE;
+
+                    ItemOps.decrementPlayerHandItem(player, hand);
+
+                    updatePropertyCache(world);
+                    return ActionResult.SUCCESS;
+                } else if (this.isUpgradeable && this.outerShardCount < this.outerShards.size()) {
+                    ListUtil.addItem(this.outerShards, ItemOps.singleCopy(playerStack));
+
+                    ItemOps.decrementPlayerHandItem(player, hand);
+
+                    updatePropertyCache(world);
+                    return ActionResult.SUCCESS;
+
+                }
+            } else if (this.isUpgradeable() && this.shard.isEmpty() && playerStack.getItem() instanceof AttunedShardItem shardItem) {
+                this.shard = ItemOps.singleCopy(playerStack);
+                this.tier = shardItem.tier();
+
+                ItemOps.decrementPlayerHandItem(player, hand);
+
+                updatePropertyCache(world);
+                return ActionResult.SUCCESS;
+            }
+
+        } else {
+            if (!world.isClient) return ActionResult.PASS;
+
+            final var network = visitNetwork();
+            player.sendMessage(Text.of("Network size: " + network.size()), false);
+
+            ClientParticles.persist();
+            ClientParticles.setParticleCount(20);
+
+            for (var nodePos : network) {
+                ClientParticles.spawnLine(ParticleTypes.GLOW, world, Vec3d.ofCenter(nodePos), Vec3d.ofCenter(nodePos.add(0, 2, 0)), 0);
+            }
+
+            ClientParticles.reset();
+            return ActionResult.SUCCESS;
+        }
+
+        return ActionResult.PASS;
+    }
+
+    public void onBreakStart(PlayerEntity player) {
+
+        if ((player.isSneaking() || this.outerShardCount < 1) && !this.shard.isEmpty()) {
+            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.shard.copy());
+
+            this.shard = ItemStack.EMPTY;
+            this.tier = AttunedShardTiers.EMPTY;
+
+            this.markDirty(false);
+        } else if (this.outerShardCount > 0) {
+            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), ListUtil.getAndRemoveLast(this.outerShards));
+
+            this.markDirty(false);
+        }
+
+        updatePropertyCache(world);
+    }
+
     @Override
-    public void addNodeLink(BlockPos pos) {
-        this.LINKED_MEMBERS.add(pos);
-        this.markDirty(true);
+    public void onBroken() {
+        super.onBroken();
+
+        ItemScatterer.spawn(world, pos, this.outerShards);
+        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.shard);
+    }
+
+    private void updatePropertyCache(World world) {
+        var currentShardCount = ListUtil.nonEmptyStacks(this.outerShards);
+
+        if (this.outerShardCount != currentShardCount) {
+            this.lastOuterShardCount = this.outerShardCount;
+            this.outerShardCount = currentShardCount;
+            if (world.isClient) this.lastShardChangeTick = world.getTime();
+        }
+
+        this.fluxStorage.setMaxExtract(this.tier.maxTransfer());
+        this.fluxStorage.setMaxInsert(this.tier.maxTransfer());
+    }
+
+    // -------
+    // Getters
+    // -------
+
+    public boolean hasShard() {
+        return this.tier != AttunedShardTiers.EMPTY;
     }
 
     public AttunedShardTier tier() {
@@ -299,13 +351,17 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
         return this.outerShardCount;
     }
 
-    public boolean supportsOuterShards() {
-        return this.supportsOuterShards;
+    public boolean isUpgradeable() {
+        return this.isUpgradeable;
     }
 
     public float shardHeight() {
         return this.shardHeight;
     }
+
+    // ------------------------
+    // Transfer utility classes
+    // ------------------------
 
     @SuppressWarnings("UnstableApiUsage")
     private static class TransferMember {

@@ -1,43 +1,33 @@
 package io.wispforest.affinity.blockentity.template;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.util.NbtUtil;
-import io.wispforest.affinity.aethumflux.storage.AethumFluxStorage;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
+import io.wispforest.affinity.aethumflux.storage.AethumFluxStorage;
+import io.wispforest.affinity.network.AffinityPackets;
+import io.wispforest.affinity.util.NbtUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
 public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback {
 
-    protected final List<BlockPos> LINKED_MEMBERS = new ArrayList<>();
+    protected final Map<BlockPos, AethumLink.Type> LINKS = new HashMap<>();
     protected final AethumFluxStorage fluxStorage = new AethumFluxStorage(this);
 
     public AethumNetworkMemberBlockEntity(BlockEntityType<? extends AethumNetworkMemberBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        NbtUtil.readBlockPosList(nbt, "LinkedMembers", LINKED_MEMBERS);
-        this.fluxStorage.readNbt(nbt);
-    }
-
-    @Override
-    protected void writeNbt(NbtCompound nbt) {
-        NbtUtil.writeBlockPosList(nbt, "LinkedMembers", LINKED_MEMBERS);
-        this.fluxStorage.writeNbt(nbt);
-    }
-
     public void onBroken() {
-        for (var memberPos : this.LINKED_MEMBERS) {
+        for (var memberPos : this.LINKS.keySet()) {
             var member = Affinity.AETHUM_MEMBER.find(world, memberPos, null);
             if (member == null) continue;
 
@@ -45,21 +35,50 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
         }
     }
 
+    // -------------
+    // Serialization
+    // -------------
+
     @Override
-    public List<BlockPos> linkedMembers() {
-        return LINKED_MEMBERS;
+    public void readNbt(NbtCompound nbt) {
+        NbtUtil.readLinks(nbt, "LinkedMembers", LINKS);
+        this.fluxStorage.readNbt(nbt);
+    }
+
+    @Override
+    protected void writeNbt(NbtCompound nbt) {
+        NbtUtil.writeLinks(nbt, "LinkedMembers", LINKS);
+        this.fluxStorage.writeNbt(nbt);
+    }
+
+    protected void sendFluxUpdate() {
+        if (world.isClient) return;
+        AffinityPackets.Server.sendFluxUpdate(this);
+    }
+
+    public void readFluxUpdate(long flux) {
+        this.fluxStorage.setFlux(flux);
+    }
+
+    // -------
+    // Linking
+    // -------
+
+    @Override
+    public Set<BlockPos> linkedMembers() {
+        return LINKS.keySet();
     }
 
     @Override
     public boolean isLinked(BlockPos pos) {
-        return LINKED_MEMBERS.contains(pos);
+        return this.LINKS.containsKey(pos);
     }
 
     @Override
     public boolean addLinkParent(BlockPos pos, AethumLink.Type type) {
         if (isLinked(pos)) return false;
 
-        this.LINKED_MEMBERS.add(pos);
+        this.LINKS.put(pos, type);
         this.markDirty(true);
 
         return true;
@@ -67,9 +86,13 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public void onLinkTargetRemoved(BlockPos pos) {
-        this.LINKED_MEMBERS.remove(pos);
+        this.LINKS.remove(pos);
         this.markDirty(true);
     }
+
+    // ------------
+    // Flux methods
+    // ------------
 
     @Override
     public long flux() {
@@ -113,6 +136,6 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public void onTransactionCommitted() {
-        this.markDirty(false);
+        this.sendFluxUpdate();
     }
 }

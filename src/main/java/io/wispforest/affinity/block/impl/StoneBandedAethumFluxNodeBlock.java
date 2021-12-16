@@ -36,7 +36,7 @@ public class StoneBandedAethumFluxNodeBlock extends AbstractAethumFluxNodeBlock 
     }
 
     @Override
-    public boolean supportsOuterShards() {
+    public boolean isUpgradeable() {
         return false;
     }
 

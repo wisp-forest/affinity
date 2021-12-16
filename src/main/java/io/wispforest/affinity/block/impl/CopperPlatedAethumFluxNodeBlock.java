@@ -27,7 +27,7 @@ public class CopperPlatedAethumFluxNodeBlock extends AbstractAethumFluxNodeBlock
     }
 
     @Override
-    public boolean supportsOuterShards() {
+    public boolean isUpgradeable() {
         return true;
     }
 
