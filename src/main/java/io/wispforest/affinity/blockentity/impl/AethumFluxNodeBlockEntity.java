@@ -42,7 +42,6 @@ import java.util.*;
 public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity {
 
     @Environment(EnvType.CLIENT) public float lastOuterShardCount = 1;
-    @Environment(EnvType.CLIENT) public long lastShardChangeTick = -1;
 
     private long lastTick = 0;
     private Collection<AethumNetworkMember> cachedMembers = null;
@@ -112,7 +111,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
             node.fluxStorage.setFlux(Math.min(networkFlux, fluxPerNode));
             node.sendFluxUpdate();
 
-            networkFlux -= fluxPerNode;
+            networkFlux = Math.max(0, networkFlux - fluxPerNode);
         }
     }
 
@@ -133,6 +132,8 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     }
 
     private Collection<BlockPos> visitNetwork() {
+        if (!hasShard()) return Collections.emptyList();
+
         var visitedNodes = new ArrayList<BlockPos>();
         visitedNodes.add(this.pos);
 
@@ -276,11 +277,11 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
                 return ActionResult.SUCCESS;
             }
 
-        } else {
+        } else if (player.isSneaking()) {
             if (!world.isClient) return ActionResult.PASS;
 
             final var network = visitNetwork();
-            player.sendMessage(Text.of("Network size: " + network.size()), false);
+            player.sendMessage(Text.of("Network size: " + network.size()), true);
 
             ClientParticles.persist();
             ClientParticles.setParticleCount(20);
@@ -323,14 +324,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     }
 
     private void updatePropertyCache(World world) {
-        var currentShardCount = ListUtil.nonEmptyStacks(this.outerShards);
-
-        if (this.outerShardCount != currentShardCount) {
-            this.lastOuterShardCount = this.outerShardCount;
-            this.outerShardCount = currentShardCount;
-            if (world.isClient) this.lastShardChangeTick = world.getTime();
-        }
-
+        this.outerShardCount = ListUtil.nonEmptyStacks(this.outerShards);
         this.fluxStorage.setMaxExtract(this.tier.maxTransfer());
         this.fluxStorage.setMaxInsert(this.tier.maxTransfer());
     }

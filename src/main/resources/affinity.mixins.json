@@ -4,6 +4,7 @@
   "package": "io.wispforest.affinity.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ItemMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PotionItemMixin",

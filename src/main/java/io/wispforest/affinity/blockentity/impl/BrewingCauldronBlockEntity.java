@@ -106,6 +106,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     public void tickServer() {
         for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos), itemEntity -> true)) {
             if (!canAddItem()) break;
+            if (item.getScoreboardTags().contains("NoSuckySuckInCauldron")) continue;
 
             ListUtil.addItem(this.items, ItemOps.singleCopy(item.getStack()));
             this.markDirty();

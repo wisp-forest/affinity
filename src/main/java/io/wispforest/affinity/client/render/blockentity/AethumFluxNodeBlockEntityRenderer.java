@@ -2,7 +2,7 @@ package io.wispforest.affinity.client.render.blockentity;
 
 import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
-import io.wispforest.affinity.util.MathUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
@@ -93,14 +93,19 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
             consumer = AttunedShardTiers.CRUDE.sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
 
             float renderShardCount = node.outerShardCount();
+            float diff = node.lastOuterShardCount - renderShardCount;
 
-            int tickDiff = (int) (node.getWorld().getTime() - node.lastShardChangeTick);
-            if (tickDiff < 10) renderShardCount = MathUtil.sinLerp(node.lastOuterShardCount, node.outerShardCount(), (tickDiff + tickDelta) / 10f);
+            if (Math.abs(diff) > .0025) {
+                node.lastOuterShardCount -= diff * .001 * (MinecraftClient.getInstance().getLastFrameDuration() / .005);
+                renderShardCount = node.lastOuterShardCount;
+            } else {
+                node.lastOuterShardCount = renderShardCount;
+            }
 
             for (int i = 0; i < node.outerShardCount(); i++) {
                 matrices.push();
 
-                var shardAngle = (float) (angle + i * (2 / renderShardCount) * Math.PI);
+                var shardAngle = renderShardCount + (float) (angle + i * (2 / renderShardCount) * Math.PI);
 
                 matrices.translate(.0625, 0, .0625);
                 matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(shardAngle));

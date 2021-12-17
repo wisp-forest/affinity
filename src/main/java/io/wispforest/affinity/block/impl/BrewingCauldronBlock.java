@@ -15,12 +15,14 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -70,7 +72,17 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
         if (!(world.getBlockEntity(pos) instanceof BrewingCauldronBlockEntity cauldron)) return ActionResult.PASS;
         final var playerStack = player.getStackInHand(hand);
 
-        if (playerStack.getItem() instanceof PotionItem) {
+        if (ItemOps.canStack(playerStack, ListUtil.peekLast(cauldron.getItems()))) {
+
+            if (!world.isClient()) {
+                playerStack.increment(1);
+
+                ListUtil.getAndRemoveLast(cauldron.getItems());
+                cauldron.markDirty(false);
+            }
+
+            return ActionResult.SUCCESS;
+        } else if (playerStack.getItem() instanceof PotionItem) {
             if (!cauldron.canPotionBeAdded()) return ActionResult.PASS;
 
             if (!world.isClient()) {
@@ -92,7 +104,21 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
             }
 
             return ActionResult.SUCCESS;
-        } else if (playerStack.isEmpty()) {
+        } else if (!playerStack.isEmpty()) {
+
+            if (!cauldron.itemAvailable()) return ActionResult.PASS;
+
+            if (!world.isClient()) {
+                final var item = new ItemEntity(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5,
+                        ListUtil.getAndRemoveLast(cauldron.getItems()));
+                item.addScoreboardTag("NoSuckySuckInCauldron");
+
+                world.spawnEntity(item);
+                cauldron.markDirty(false);
+            }
+
+            return ActionResult.SUCCESS;
+        } else {
 
             if (!cauldron.itemAvailable()) return ActionResult.PASS;
 
@@ -103,7 +129,5 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
 
             return ActionResult.SUCCESS;
         }
-
-        return ActionResult.PASS;
     }
 }
