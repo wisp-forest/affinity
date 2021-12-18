@@ -189,6 +189,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
             if (node.isLinked(this.pos)) return AethumLink.Result.ALREADY_LINKED;
             node.addNodeLink(this.pos);
         } else {
+            if (!member.acceptsLinks()) return AethumLink.Result.NO_TARGET;
             if (!member.addLinkParent(this.pos, type)) return AethumLink.Result.ALREADY_LINKED;
         }
 

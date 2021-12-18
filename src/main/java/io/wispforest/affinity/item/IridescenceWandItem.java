@@ -33,6 +33,7 @@ public class IridescenceWandItem extends Item {
 
         var nextMember = Affinity.AETHUM_MEMBER.find(world, pos, null);
         if (nextMember == null) return ActionResult.PASS;
+        if (!nextMember.acceptsLinks()) return ActionResult.PASS;
 
         if (Objects.equals(getStoredPos(stack), context.getBlockPos())) return ActionResult.PASS;
         var existingElement = getLink(stack);

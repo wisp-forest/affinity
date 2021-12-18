@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "part=middle": {
+      "model": "affinity:block/aethum_flux_cache_middle"
+    },
+    "part=top": {
+      "model": "affinity:block/aethum_flux_cache_top"
+    },
+    "part=bottom": {
+      "model": "affinity:block/aethum_flux_cache_bottom"
+    },
+    "part=standalone": {
+      "model": "affinity:block/aethum_flux_cache_standalone"
+    }
+  }
+}

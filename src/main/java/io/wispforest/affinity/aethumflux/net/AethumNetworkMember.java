@@ -18,6 +18,11 @@ public interface AethumNetworkMember extends AethumFluxContainer {
     boolean isLinked(BlockPos pos);
 
     /**
+     * @return {@code true} if a new link to this member can be established
+     */
+    boolean acceptsLinks();
+
+    /**
      * Adds a link parent to this member, so that it can notify
      * all it's parents when it is removed
      *
@@ -38,7 +43,5 @@ public interface AethumNetworkMember extends AethumFluxContainer {
      * @return The type of link to establish if the player is pressing
      * {@code SHIFT} while beginning the linking process
      */
-    default AethumLink.Type specialLinkType() {
-        return AethumLink.Type.NORMAL;
-    }
+    AethumLink.Type specialLinkType();
 }

@@ -8,13 +8,14 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NbtUtil {
 
-    public static void writeBlockPosSet(NbtCompound nbt, String key, Set<BlockPos> set) {
+    public static void writeBlockPosList(NbtCompound nbt, String key, List<BlockPos> set) {
         var posArray = new long[set.size()];
 
         int idx = 0;
@@ -26,7 +27,7 @@ public class NbtUtil {
         nbt.putLongArray(key, posArray);
     }
 
-    public static void readBlockPosSet(NbtCompound nbt, String key, Set<BlockPos> set) {
+    public static void readBlockPosList(NbtCompound nbt, String key, List<BlockPos> set) {
         set.clear();
 
         for (var pos : nbt.getLongArray(key)) {

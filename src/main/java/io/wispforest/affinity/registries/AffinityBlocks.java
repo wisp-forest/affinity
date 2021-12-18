@@ -22,7 +22,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
     public static final Block BREWING_CAULDRON = new BrewingCauldronBlock();
     public static final Block COPPER_PLATED_AETHUM_FLUX_NODE = new CopperPlatedAethumFluxNodeBlock();
-    public static final Block COPPER_PLATED_AETHUM_FLUX_CACHE = new CopperPlatedAethumFluxCacheBlock();
+    public static final Block AETHUM_FLUX_CACHE = new AethumFluxCacheBlock();
     public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
     public static final Block SUNDIAL = new SundialBlock();
 
@@ -43,7 +43,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<AethumFluxNodeBlockEntity> AETHUM_FLUX_NODE = FabricBlockEntityTypeBuilder.create(AethumFluxNodeBlockEntity::new,
                 AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_NODE, AffinityBlocks.STONE_BANDED_AETHUM_FLUX_NODE).build();
         public static final BlockEntityType<AethumFluxCacheBlockEntity> AETHUM_FLUX_CACHE = FabricBlockEntityTypeBuilder.create(AethumFluxCacheBlockEntity::new,
-                AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_CACHE).build();
+                AffinityBlocks.AETHUM_FLUX_CACHE).build();
 
         public static final BlockEntityType<SundialBlockEntity> SUNDIAL = FabricBlockEntityTypeBuilder.create(SundialBlockEntity::new,
                 AffinityBlocks.SUNDIAL).build();

@@ -35,6 +35,16 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
         }
     }
 
+    @Override
+    public boolean acceptsLinks() {
+        return true;
+    }
+
+    @Override
+    public AethumLink.Type specialLinkType() {
+        return AethumLink.Type.NORMAL;
+    }
+
     // -------------
     // Serialization
     // -------------

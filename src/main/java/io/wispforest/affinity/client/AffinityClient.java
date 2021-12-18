@@ -23,7 +23,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.AETHUM_FLUX_NODE, AethumFluxNodeBlockEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.SUNDIAL, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_CACHE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.AETHUM_FLUX_CACHE, RenderLayer.getCutout());
 
         AffinityPackets.Client.registerListeners();
 
