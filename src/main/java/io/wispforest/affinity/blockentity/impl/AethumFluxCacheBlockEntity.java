@@ -5,9 +5,15 @@ import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.network.AffinityPackets;
 import io.wispforest.affinity.registries.AffinityBlocks;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,8 +26,10 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity {
 
+    @Environment(EnvType.CLIENT) public float renderHeight = 0;
+
     private boolean isPrimaryStorage;
-    @Nullable private AethumFluxCacheBlockEntity parent = null;
+    @Nullable private ParentStorageReference parent = null;
     @Nullable private List<AethumFluxCacheBlockEntity> childCache = null;
 
     public AethumFluxCacheBlockEntity(BlockPos pos, BlockState state) {
@@ -54,31 +62,27 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
 
         this.isPrimaryStorage = part.isBase;
 
-//        this.world.getServer().getPlayerManager()
-//                .broadcast(Text.of(this.pos.getY() + ": Cache updated -> is parent: " + isPrimaryStorage),  MessageType.CHAT, null);
-
         if (this.isPrimaryStorage) updateChildCache();
-        if (this.parent != null) parent.updateChildCache();
+        if (this.parent != null) parent.entity.updateChildCache();
     }
 
     private void updateChildCache() {
         this.childCache = new ArrayList<>();
-        this.parent = null;
 
         for (var pos : BlockPos.iterate(this.pos.up(), this.pos.add(0, this.world.getHeight() - this.pos.getY(), 0))) {
             final var state = this.world.getBlockState(pos);
             if (!state.isOf(AffinityBlocks.AETHUM_FLUX_CACHE) || state.get(AethumFluxCacheBlock.PART).isBase) break;
 
             if (!(this.world.getBlockEntity(pos) instanceof AethumFluxCacheBlockEntity cacheEntity)) break;
-            cacheEntity.parent = this;
+            cacheEntity.parent = new ParentStorageReference(this, this.childCache.size());
+            cacheEntity.isPrimaryStorage = false;
 
             moveChildLinksOntoSelf(cacheEntity);
 
             this.childCache.add(cacheEntity);
         }
 
-//        this.world.getServer().getPlayerManager()
-//                .broadcast(Text.of(this.pos.getY() + ": Parent updated - " + childCache.size() + " children cached"),  MessageType.CHAT, null);
+        if (!this.childCache.isEmpty()) AffinityPackets.Server.sendCacheChildrenUpdate(this);
     }
 
     private void moveChildLinksOntoSelf(AethumFluxCacheBlockEntity child) {
@@ -87,9 +91,8 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
                 final var targetNode = Affinity.AETHUM_NODE.find(this.world, link, null);
                 if (targetNode == null) continue;
 
-                // TODO this doesn't actually get removed for some reason
-                targetNode.onLinkTargetRemoved(link);
-                targetNode.createGenericLink(this.pos, AethumLink.Type.NORMAL);
+                targetNode.onLinkTargetRemoved(child.pos);
+                targetNode.createGenericLink(this.pos, child.LINKS.get(link));
             }
 
             child.LINKS.clear();
@@ -98,25 +101,26 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
     }
 
     private void moveSelfLinksOntoChild(AethumFluxCacheBlockEntity child) {
+        child.isPrimaryStorage = true;
+
         if (!LINKS.isEmpty()) {
             for (var link : linkedMembers()) {
                 final var targetNode = Affinity.AETHUM_NODE.find(this.world, link, null);
                 if (targetNode == null) continue;
 
                 targetNode.onLinkTargetRemoved(link);
-
-                // TODO this cant work because the child doesn't consider itself a parent yet
-                targetNode.createGenericLink(child.pos, AethumLink.Type.NORMAL);
+                targetNode.createGenericLink(child.pos, LINKS.get(link));
             }
         }
+
+        child.isPrimaryStorage = false;
     }
 
     @Override
     public void onBroken() {
         super.onBroken();
-        if (this.world.getBlockEntity(this.pos.up()) instanceof AethumFluxCacheBlockEntity child) {
-            moveSelfLinksOntoChild(child);
-        }
+        if (!(this.world.getBlockEntity(this.pos.up()) instanceof AethumFluxCacheBlockEntity child)) return;
+        moveSelfLinksOntoChild(child);
     }
 
     @Override
@@ -130,24 +134,56 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
         if (this.childCache == null) this.updateChildCache();
 
         var pushTargets = findPushTargets();
-        if (pushTargets.isEmpty()) return;
 
-        long flux = this.fluxStorage.flux();
-        final long maxTransferPerNode = (long) Math.ceil(flux / (double) pushTargets.size());
+        long totalFlux = this.fluxStorage.flux();
+        if (!this.childCache.isEmpty()) totalFlux += this.childCache.stream().mapToLong(value -> value.fluxStorage.flux()).sum();
 
-        try (var transaction = Transaction.openOuter()) {
-            for (var pushTarget : pushTargets) {
-                var targetNode = Affinity.AETHUM_NODE.find(world, pushTarget, null);
-                if (targetNode == null) return;
+        if (!pushTargets.isEmpty()) {
+            final long maxTransferPerNode = (long) Math.ceil(totalFlux / (double) pushTargets.size());
 
-                flux -= targetNode.insert(Math.min(flux, maxTransferPerNode), transaction);
+            try (var transaction = Transaction.openOuter()) {
+                for (var pushTarget : pushTargets) {
+                    var targetNode = Affinity.AETHUM_NODE.find(world, pushTarget, null);
+                    if (targetNode == null) return;
+
+                    totalFlux -= targetNode.insert(Math.min(totalFlux, maxTransferPerNode), transaction);
+                }
+
+                transaction.commit();
             }
-
-            transaction.commit();
         }
 
-        this.fluxStorage.setFlux(flux);
-        this.markDirty(false);
+        final long perCacheCap = this.fluxStorage.fluxCapacity();
+
+        long insertedFlux = Math.min(perCacheCap, totalFlux);
+        this.fluxStorage.setFlux(insertedFlux);
+        this.sendFluxUpdate();
+        totalFlux -= insertedFlux;
+
+        if (!this.childCache.isEmpty()) {
+            for (var child : childCache) {
+                insertedFlux = Math.min(perCacheCap, totalFlux);
+
+                if (child.fluxStorage.flux() != insertedFlux) {
+                    child.fluxStorage.setFlux(insertedFlux);
+                    child.sendFluxUpdate();
+                }
+
+                totalFlux -= insertedFlux;
+            }
+        }
+    }
+
+    @Override
+    public long insert(long max, TransactionContext transaction) {
+        if (this.childCache != null && this.fluxStorage.flux() >= this.fluxStorage.fluxCapacity()) {
+            for (var child : childCache) {
+                if (child.fluxStorage.flux() >= child.fluxStorage.fluxCapacity()) continue;
+                return child.insert(max, transaction);
+            }
+        }
+
+        return super.insert(max, transaction);
     }
 
     private Set<BlockPos> findPushTargets() {
@@ -157,5 +193,47 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
     @Override
     public AethumLink.Type specialLinkType() {
         return AethumLink.Type.PUSH;
+    }
+
+    public PacketByteBuf writeChildren() {
+        var buf = PacketByteBufs.create();
+        buf.writeCollection(childCache, (byteBuf, cacheBlockEntity) -> byteBuf.writeBlockPos(cacheBlockEntity.getPos()));
+        return buf;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void readChildren(List<BlockPos> children) {
+        if (this.childCache == null) this.childCache = new ArrayList<>();
+        this.childCache.clear();
+        this.parent = new ParentStorageReference(this, -1);
+
+        for (var childPos : children) {
+            if (!(world.getBlockEntity(childPos) instanceof AethumFluxCacheBlockEntity child)) return;
+            child.parent = new ParentStorageReference(this, this.childCache.size());
+            this.childCache.add(child);
+        }
+    }
+
+    public ParentStorageReference parent() {
+        return parent;
+    }
+
+    public record ParentStorageReference(AethumFluxCacheBlockEntity entity, int index) {
+
+        @SuppressWarnings("ConstantConditions")
+        public @Nullable AethumFluxCacheBlockEntity previous() {
+            if (index == 0) return entity;
+            return validIndex(index - 1) ? entity.childCache.get(index - 1) : null;
+        }
+
+        @SuppressWarnings("ConstantConditions")
+        public @Nullable AethumFluxCacheBlockEntity next() {
+            return validIndex(index + 1) ? entity.childCache.get(index + 1) : null;
+        }
+
+        private boolean validIndex(int index) {
+            return entity.childCache != null && index >= 0 && index < entity.childCache.size();
+        }
+
     }
 }

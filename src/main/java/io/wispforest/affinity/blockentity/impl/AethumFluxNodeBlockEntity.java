@@ -41,7 +41,7 @@ import java.util.*;
 @SuppressWarnings("UnstableApiUsage")
 public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity {
 
-    @Environment(EnvType.CLIENT) public float lastOuterShardCount = 1;
+    @Environment(EnvType.CLIENT) public float renderShardCount = 1;
 
     private long lastTick = 0;
     private Collection<AethumNetworkMember> cachedMembers = null;
@@ -193,7 +193,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
             if (!member.addLinkParent(this.pos, type)) return AethumLink.Result.ALREADY_LINKED;
         }
 
-        this.LINKS.put(pos, type);
+        this.LINKS.put(pos.toImmutable(), type);
         this.cachedMembers = null;
         this.markDirty(true);
 
@@ -202,7 +202,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
 
     @Override
     public void addNodeLink(BlockPos pos) {
-        this.LINKS.put(pos, AethumLink.Type.NORMAL);
+        this.LINKS.put(pos.toImmutable(), AethumLink.Type.NORMAL);
         this.markDirty(true);
     }
 

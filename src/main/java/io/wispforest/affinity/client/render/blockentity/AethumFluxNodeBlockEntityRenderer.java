@@ -2,7 +2,7 @@ package io.wispforest.affinity.client.render.blockentity;
 
 import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
-import net.minecraft.client.MinecraftClient;
+import io.wispforest.affinity.util.MathUtil;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
@@ -92,20 +92,12 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
             matrices.translate(0, -shardHeight, 0);
             consumer = AttunedShardTiers.CRUDE.sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
 
-            float renderShardCount = node.outerShardCount();
-            float diff = node.lastOuterShardCount - renderShardCount;
-
-            if (Math.abs(diff) > .0025) {
-                node.lastOuterShardCount -= diff * .001 * (MinecraftClient.getInstance().getLastFrameDuration() / .005);
-                renderShardCount = node.lastOuterShardCount;
-            } else {
-                node.lastOuterShardCount = renderShardCount;
-            }
+            node.renderShardCount = MathUtil.proportionalApproach(node.renderShardCount, node.outerShardCount(), .0025f, .001f);
 
             for (int i = 0; i < node.outerShardCount(); i++) {
                 matrices.push();
 
-                var shardAngle = renderShardCount + (float) (angle + i * (2 / renderShardCount) * Math.PI);
+                var shardAngle = node.renderShardCount + (float) (angle + i * (2 / node.renderShardCount) * Math.PI);
 
                 matrices.translate(.0625, 0, .0625);
                 matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(shardAngle));
@@ -118,12 +110,6 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
         }
 
         matrices.pop();
-
-        // -----------
-        // Render call
-        // -----------
-
-        if (vertexConsumers instanceof VertexConsumerProvider.Immediate immediate) immediate.draw();
     }
 
 }

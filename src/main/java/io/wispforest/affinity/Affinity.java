@@ -17,10 +17,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Affinity implements ModInitializer {
 
     public static final String MOD_ID = "affinity";
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+
     public static final OwoItemGroup AFFINITY_GROUP = new AffinityItemGroup(id("affinity"));
 
     public static final BlockApiLookup<AethumNetworkMember, Void> AETHUM_MEMBER = BlockApiLookup.get(id("aethum_member"), AethumNetworkMember.class, Void.class);

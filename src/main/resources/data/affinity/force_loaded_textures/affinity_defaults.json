@@ -1,0 +1,9 @@
+{
+  "atlas": "minecraft:textures/atlas/blocks.png",
+  "textures": [
+    "affinity:block/crude_aethum_flux_node_shard",
+    "affinity:block/fairly_attuned_aethum_flux_node_shard",
+    "affinity:block/mildly_attuned_aethum_flux_node_shard",
+    "affinity:block/greatly_attuned_aethum_flux_node_shard"
+  ]
+}

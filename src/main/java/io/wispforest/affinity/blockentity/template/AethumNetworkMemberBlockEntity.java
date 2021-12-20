@@ -88,7 +88,7 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     public boolean addLinkParent(BlockPos pos, AethumLink.Type type) {
         if (isLinked(pos)) return false;
 
-        this.LINKS.put(pos, type);
+        this.LINKS.put(pos.toImmutable(), type);
         this.markDirty(true);
 
         return true;

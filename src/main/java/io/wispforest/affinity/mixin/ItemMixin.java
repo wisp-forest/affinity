@@ -19,7 +19,7 @@ public class ItemMixin {
     private void dontYeetNodes(BlockState state, World world, BlockPos pos, PlayerEntity miner, CallbackInfoReturnable<Boolean> cir) {
         if (!(state.getBlock() instanceof AbstractAethumFluxNodeBlock)) return;
         if (!(world.getBlockEntity(pos) instanceof AethumFluxNodeBlockEntity node)) return;
-        if (!node.hasShard() && node.outerShardCount() < 1) return;
+        if (!node.hasShard()) return;
 
         node.onBreakStart(miner);
         cir.setReturnValue(false);
