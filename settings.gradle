@@ -9,5 +9,9 @@ pluginManagement {
             name = 'Cotton'
             url = 'https://server.bbkr.space/artifactory/libs-release/'
         }
+        maven {
+            name = "Basique's maven"
+            url = uri("https://porez.ml/maven")
+        }
     }
 }

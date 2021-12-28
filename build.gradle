@@ -2,10 +2,19 @@ plugins {
     id 'fabric-loom' version '0.10-SNAPSHOT'
     id 'maven-publish'
     id 'io.github.juuxel.loom-quiltflower-mini' version '1.1.0'
+    id "me.basiqueevangelist.ecstatic" version "0.1.3"
 }
 
 version = "${project.mod_version}+${project.minecraft_base_version}"
 group = project.maven_group
+
+loom {
+    accessWidenerPath = file("src/main/resources/affinity.accesswidener")
+}
+
+ecstatic {
+    targetedClasses.add 'net/minecraft/world/biome/source/BiomeSource$class_6543'
+}
 
 repositories {
     maven {
@@ -33,7 +42,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
-    modRuntime "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+    modLocalRuntime "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
 
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
