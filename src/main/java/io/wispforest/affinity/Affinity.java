@@ -7,6 +7,7 @@ import io.wispforest.affinity.mixin.TreeFeatureConfigAccessor;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.registries.AffinityItems;
 import io.wispforest.affinity.registries.AffinityStatusEffects;
+import io.wispforest.affinity.registries.AffinityWorldgen;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipeSerializer;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
@@ -40,6 +41,9 @@ public class Affinity implements ModInitializer {
         //noinspection ConstantConditions
         var azaleaConfig = (TreeFeatureConfigAccessor) BuiltinRegistries.CONFIGURED_FEATURE.get(new Identifier("azalea_tree")).config;
         azaleaConfig.setAzaleaTree(BlockStateProvider.of(AffinityBlocks.AZALEA_LOG));
+
+        FieldRegistrationHandler.register(AffinityWorldgen.class, MOD_ID, false);
+        AffinityWorldgen.registerBiomes();
 
         AffinityStatusEffects.register();
 
