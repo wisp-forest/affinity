@@ -1,11 +1,5 @@
 package io.wispforest.affinity.aethumflux.net;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
 public final class AethumLink {
 
     public enum Type {

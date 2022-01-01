@@ -5,7 +5,6 @@ import io.wispforest.affinity.client.render.blockentity.AethumFluxCacheBlockEnti
 import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.BrewingCauldronBlockEntityRenderer;
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
-import io.wispforest.affinity.entity.WispEntity;
 import io.wispforest.affinity.network.AffinityPackets;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.registries.AffinityEntities;

@@ -2,7 +2,6 @@ package io.wispforest.affinity.blockentity.template;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 
 public interface TickedBlockEntity {
 
