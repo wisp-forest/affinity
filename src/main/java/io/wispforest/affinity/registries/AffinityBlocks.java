@@ -58,6 +58,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final BoatEntity.Type AZALEA_BOAT_TYPE = BoatEntityTypeAccessor.affinity$invokeNew("AZALEA",
             BoatEntity.Type.values().length, AZALEA_PLANKS, "azalea");
 
+    public static final Block UNFLOWERING_AZALEA_LEAVES = new UnfloweringAzaleaLeavesBlock();
+
     @Override
     public void postProcessField(String namespace, Block value, String identifier, Field field) {
         if (field.isAnnotationPresent(NoBlockItem.class)) return;

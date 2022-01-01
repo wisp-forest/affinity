@@ -22,6 +22,8 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item EMERALD_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
     public static final Item SAPPHIRE_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
 
+    public static final Item AZALEA_FLOWERS = new Item(new OwoItemSettings().tab(1).group(Affinity.AFFINITY_GROUP));
+
     public static final Item AZALEA_SIGN = new SignItem(new OwoItemSettings().group(Affinity.AFFINITY_GROUP)
             .maxCount(16).tab(1), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
     public static final Item AZALEA_BOAT = new BoatItem(AffinityBlocks.AZALEA_BOAT_TYPE,

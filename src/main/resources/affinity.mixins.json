@@ -9,6 +9,7 @@
     "BoatEntityTypeAccessor$BoatEntityTypeMixin",
     "ItemMixin",
     "ItemStackMixin",
+    "AbstractBlockMixin",
     "LivingEntityMixin",
     "PotionItemMixin",
     "PotionUtilMixin",
