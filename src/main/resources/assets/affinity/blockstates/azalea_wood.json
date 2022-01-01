@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
+    "axis=x": {
+      "model": "affinity:block/azalea_wood",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
       "model": "affinity:block/azalea_wood"
+    },
+    "axis=z": {
+      "model": "affinity:block/azalea_wood",
+      "x": 90
     }
   }
 }

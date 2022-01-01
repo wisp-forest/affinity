@@ -10,7 +10,6 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NbtUtil {
@@ -60,27 +59,30 @@ public class NbtUtil {
         }
     }
 
-    private static final long LINK_TYPE_MASK = ~(0xFFL << 56);
-
     public static void readLinks(NbtCompound nbt, String key, Map<BlockPos, AethumLink.Type> links) {
         links.clear();
 
-        for (var link : nbt.getLongArray(key)) {
-            long pos = link & LINK_TYPE_MASK;
-            byte type = (byte) (link >> 56);
+        for (var element : nbt.getList(key, NbtElement.COMPOUND_TYPE)) {
+            var linkData = (NbtCompound) element;
+
+            long pos = linkData.getLong("Target");
+            byte type = linkData.getByte("Type");
 
             links.put(BlockPos.fromLong(pos), AethumLink.Type.values()[type]);
         }
     }
 
     public static void writeLinks(NbtCompound nbt, String key, Map<BlockPos, AethumLink.Type> links) {
-        var members = new long[links.size()];
+        var members = new NbtList();
 
         var idx = new AtomicInteger(-1);
         links.forEach((blockPos, type) -> {
-            members[idx.incrementAndGet()] = blockPos.asLong() | ((long) type.ordinal() << 56);
+            var linkData = new NbtCompound();
+            linkData.putLong("Target", blockPos.asLong());
+            linkData.putByte("Type", (byte) type.ordinal());
+            members.add(linkData);
         });
 
-        nbt.putLongArray(key, members);
+        nbt.put(key, members);
     }
 }

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "affinity:block/azalea_slab"
+    },
+    "type=double": {
+      "model": "affinity:block/azalea_planks"
+    },
+    "type=top": {
+      "model": "affinity:block/azalea_slab_top"
+    }
+  }
+}

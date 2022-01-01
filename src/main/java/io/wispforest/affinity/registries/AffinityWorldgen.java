@@ -3,6 +3,7 @@ package io.wispforest.affinity.registries;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.sound.BiomeMoodSound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.intprovider.ClampedIntProvider;
@@ -25,36 +26,9 @@ import java.util.List;
 
 public class AffinityWorldgen implements AutoRegistryContainer<PlacedFeature> {
 
-//    private final RegistryKey<Biome>[][] OCEAN_BIOMES = new RegistryKey[][]{
-//            {BiomeKeys.DEEP_FROZEN_OCEAN, BiomeKeys.DEEP_COLD_OCEAN, BiomeKeys.DEEP_OCEAN, BiomeKeys.DEEP_LUKEWARM_OCEAN, BiomeKeys.WARM_OCEAN},
-//            {BiomeKeys.FROZEN_OCEAN, BiomeKeys.COLD_OCEAN, BiomeKeys.OCEAN, BiomeKeys.LUKEWARM_OCEAN, BiomeKeys.WARM_OCEAN}};
-//    private final RegistryKey<Biome>[][] COMMON_BIOMES = new RegistryKey[][]{
-//            {BiomeKeys.SNOWY_PLAINS, BiomeKeys.SNOWY_PLAINS, BiomeKeys.SNOWY_PLAINS, BiomeKeys.SNOWY_TAIGA, BiomeKeys.TAIGA},
-//            {BiomeKeys.PLAINS, BiomeKeys.PLAINS, BiomeKeys.FOREST, BiomeKeys.TAIGA, BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA},
-//            {BiomeKeys.FLOWER_FOREST, BiomeKeys.PLAINS, BiomeKeys.FOREST, BiomeKeys.BIRCH_FOREST, BiomeKeys.DARK_FOREST},
-//            {BiomeKeys.SAVANNA, BiomeKeys.SAVANNA, BiomeKeys.FOREST, BiomeKeys.JUNGLE, BiomeKeys.JUNGLE},
-//            {BiomeKeys.DESERT, BiomeKeys.DESERT, BiomeKeys.DESERT, BiomeKeys.DESERT, BiomeKeys.DESERT}};
-//    private final RegistryKey<Biome>[][] UNCOMMON_BIOMES = new RegistryKey[][]{
-//            {BiomeKeys.ICE_SPIKES, null, BiomeKeys.SNOWY_TAIGA, null, null},
-//            {null, null, null, null, BiomeKeys.OLD_GROWTH_PINE_TAIGA},
-//            {BiomeKeys.SUNFLOWER_PLAINS, null, null, BiomeKeys.OLD_GROWTH_BIRCH_FOREST, null},
-//            {null, null, BiomeKeys.PLAINS, BiomeKeys.SPARSE_JUNGLE, BiomeKeys.BAMBOO_JUNGLE},
-//            {null, null, null, null, null}};
-//    private final RegistryKey<Biome>[][] NEAR_MOUNTAIN_BIOMES = new RegistryKey[][]{
-//            {BiomeKeys.SNOWY_PLAINS, BiomeKeys.SNOWY_PLAINS, BiomeKeys.SNOWY_PLAINS, BiomeKeys.SNOWY_TAIGA, BiomeKeys.SNOWY_TAIGA},
-//            {BiomeKeys.MEADOW, BiomeKeys.MEADOW, BiomeKeys.FOREST, BiomeKeys.TAIGA, BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA}, {BiomeKeys.MEADOW, BiomeKeys.MEADOW, BiomeKeys.MEADOW, BiomeKeys.MEADOW, BiomeKeys.DARK_FOREST}, {BiomeKeys.SAVANNA_PLATEAU, BiomeKeys.SAVANNA_PLATEAU, BiomeKeys.FOREST, BiomeKeys.FOREST, BiomeKeys.JUNGLE}, {BiomeKeys.BADLANDS, BiomeKeys.BADLANDS, BiomeKeys.BADLANDS, BiomeKeys.WOODED_BADLANDS, BiomeKeys.WOODED_BADLANDS}};
-//    private final RegistryKey<Biome>[][] SPECIAL_NEAR_MOUNTAIN_BIOMES = new RegistryKey[][]{
-//            {BiomeKeys.ICE_SPIKES, null, null, null, null}, {null, null, BiomeKeys.MEADOW, BiomeKeys.MEADOW, BiomeKeys.OLD_GROWTH_PINE_TAIGA},
-//            {null, null, BiomeKeys.FOREST, BiomeKeys.BIRCH_FOREST, null}, {null, null, null, null, null}, {BiomeKeys.ERODED_BADLANDS, BiomeKeys.ERODED_BADLANDS, null, null, null}};
-//    private final RegistryKey<Biome>[][] HILL_BIOMES = new RegistryKey[][]{
-//            {BiomeKeys.WINDSWEPT_GRAVELLY_HILLS, BiomeKeys.WINDSWEPT_GRAVELLY_HILLS, BiomeKeys.WINDSWEPT_HILLS, BiomeKeys.WINDSWEPT_FOREST, BiomeKeys.WINDSWEPT_FOREST},
-//            {BiomeKeys.WINDSWEPT_GRAVELLY_HILLS, BiomeKeys.WINDSWEPT_GRAVELLY_HILLS, BiomeKeys.WINDSWEPT_HILLS, BiomeKeys.WINDSWEPT_FOREST, BiomeKeys.WINDSWEPT_FOREST}, {BiomeKeys.WINDSWEPT_HILLS, BiomeKeys.WINDSWEPT_HILLS, BiomeKeys.WINDSWEPT_HILLS, BiomeKeys.WINDSWEPT_FOREST, BiomeKeys.WINDSWEPT_FOREST}, {null, null, null, null, null}, {null, null, null, null, null}};
-
     public static final RegistryKey<Biome> WISP_FOREST_KEY = RegistryKey.of(Registry.BIOME_KEY, Affinity.id("wisp_forest"));
-    public static Biome WISP_FOREST;
 
-    public static final PlacedFeature AZALEA_TREE = TreeConfiguredFeatures.AZALEA_TREE
-            .withWouldSurviveFilter(Blocks.AZALEA);
+    public static final PlacedFeature AZALEA_TREE = TreeConfiguredFeatures.AZALEA_TREE.withWouldSurviveFilter(Blocks.AZALEA);
 
     public static final PlacedFeature OAK_AND_AZALEA_TREE = Feature.RANDOM_SELECTOR.configure(
                     new RandomFeatureConfig(List.of(
@@ -67,7 +41,7 @@ public class AffinityWorldgen implements AutoRegistryContainer<PlacedFeature> {
     public static final PlacedFeature WISP_FOREST_FLOWERS = VegetationConfiguredFeatures.FOREST_FLOWERS.withPlacement(RarityFilterPlacementModifier.of(7), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, CountPlacementModifier.of(ClampedIntProvider.create(UniformIntProvider.create(-1, 3), 0, 3)), BiomePlacementModifier.of());
 
     public static void registerBiomes() {
-        WISP_FOREST = Registry.register(BuiltinRegistries.BIOME, WISP_FOREST_KEY, makeWispForest());
+        Registry.register(BuiltinRegistries.BIOME, WISP_FOREST_KEY, makeWispForest());
     }
 
     private static Biome makeWispForest() {
@@ -103,6 +77,7 @@ public class AffinityWorldgen implements AutoRegistryContainer<PlacedFeature> {
                 .build();
 
         var spawnSettings = new SpawnSettings.Builder();
+        spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(AffinityEntities.WISP, 10, 2, 10));
         DefaultBiomeFeatures.addFarmAnimals(spawnSettings);
 
         return new Biome.Builder()

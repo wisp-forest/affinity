@@ -1,19 +1,23 @@
 package io.wispforest.affinity;
 
+import com.google.common.collect.ImmutableSet;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.item.AffinityItemGroup;
+import io.wispforest.affinity.mixin.BlockEntityTypeAccessor;
+import io.wispforest.affinity.mixin.BoatEntityTypeAccessor;
+import io.wispforest.affinity.mixin.SignTypeInvoker;
 import io.wispforest.affinity.mixin.TreeFeatureConfigAccessor;
-import io.wispforest.affinity.registries.AffinityBlocks;
-import io.wispforest.affinity.registries.AffinityItems;
-import io.wispforest.affinity.registries.AffinityStatusEffects;
-import io.wispforest.affinity.registries.AffinityWorldgen;
+import io.wispforest.affinity.registries.*;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipeSerializer;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
@@ -38,6 +42,8 @@ public class Affinity implements ModInitializer {
 
         FieldRegistrationHandler.register(AffinityItems.class, MOD_ID, false);
 
+        FieldRegistrationHandler.register(AffinityEntities.class, MOD_ID, false);
+
         //noinspection ConstantConditions
         var azaleaConfig = (TreeFeatureConfigAccessor) BuiltinRegistries.CONFIGURED_FEATURE.get(new Identifier("azalea_tree")).config;
         azaleaConfig.setAzaleaTree(BlockStateProvider.of(AffinityBlocks.AZALEA_LOG));
@@ -46,6 +52,18 @@ public class Affinity implements ModInitializer {
         AffinityWorldgen.registerBiomes();
 
         AffinityStatusEffects.register();
+
+        // Inject our sign block into the BE type
+        var signBlocks = ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$getBlocks();
+        signBlocks = ImmutableSet.<Block>builder().addAll(signBlocks).add(AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN).build();
+        ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$setBlocks(signBlocks);
+
+        SignTypeInvoker.affinity$invokeRegister(AffinityBlocks.AZALEA_SIGN_TYPE);
+
+        var boatTypes = new BoatEntity.Type[BoatEntity.Type.values().length];
+        System.arraycopy(BoatEntity.Type.values(), 0, boatTypes, 0, BoatEntity.Type.values().length);
+        boatTypes[boatTypes.length - 1] = AffinityBlocks.AZALEA_BOAT_TYPE;
+        BoatEntityTypeAccessor.affinity$setValues(boatTypes);
 
         Registry.register(Registry.RECIPE_TYPE, PotionMixingRecipe.Type.ID, PotionMixingRecipe.Type.INSTANCE);
         Registry.register(Registry.RECIPE_SERIALIZER, PotionMixingRecipeSerializer.ID, PotionMixingRecipeSerializer.INSTANCE);

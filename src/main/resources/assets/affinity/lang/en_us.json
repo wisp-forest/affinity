@@ -1,5 +1,7 @@
 {
   "itemGroup.affinity.affinity": "Affinity",
+  "itemGroup.affinity.affinity.tab.main": "Affinity",
+  "itemGroup.affinity.affinity.tab.nature": "Affinity - Nature",
 
   "block.affinity.brewing_cauldron": "Brewing Cauldron",
   "block.affinity.sundial": "Sundial",
@@ -9,7 +11,19 @@
 
   "block.affinity.azalea_planks": "Azalea Planks",
   "block.affinity.azalea_log": "Azalea Log",
+  "block.affinity.stripped_azalea_log": "Stripped Azalea Log",
   "block.affinity.azalea_wood": "Azalea Wood",
+  "block.affinity.stripped_azalea_wood": "Stripped Azalea Wood",
+  "block.affinity.azalea_slab": "Azalea Slab",
+  "block.affinity.azalea_fence": "Azalea Fence",
+  "block.affinity.azalea_stairs": "Azalea Stairs",
+  "block.affinity.azalea_button": "Azalea Button",
+  "block.affinity.azalea_pressure_plate": "Azalea Pressure Plate",
+  "block.affinity.azalea_door": "Azalea Door",
+  "block.affinity.azalea_trapdoor": "Azalea Trapdoor",
+  "block.affinity.azalea_fence_gate": "Azalea Fence Gate",
+  "block.affinity.azalea_sign": "Azalea Sign",
+  "item.affinity.azalea_boat": "Azalea Boat",
 
   "item.affinity.emerald_wand_of_iridescence": "Emerald Wand of Iridescence",
   "item.affinity.sapphire_wand_of_iridescence": "Sapphire Wand of Iridescence",
