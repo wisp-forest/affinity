@@ -22,7 +22,7 @@ public interface BoatEntityTypeAccessor {
     }
 
     @Mutable
-    @Accessor("field_7724")
+    @Accessor(value = "field_7724", remap = false)
     static void affinity$setValues(BoatEntity.Type[] values) {
         throw new IllegalStateException("How did this mixin stub get called conc");
     }

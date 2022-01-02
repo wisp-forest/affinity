@@ -60,7 +60,7 @@ public class Affinity implements ModInitializer {
 
         SignTypeInvoker.affinity$invokeRegister(AffinityBlocks.AZALEA_SIGN_TYPE);
 
-        var boatTypes = new BoatEntity.Type[BoatEntity.Type.values().length];
+        var boatTypes = new BoatEntity.Type[BoatEntity.Type.values().length + 1];
         System.arraycopy(BoatEntity.Type.values(), 0, boatTypes, 0, BoatEntity.Type.values().length);
         boatTypes[boatTypes.length - 1] = AffinityBlocks.AZALEA_BOAT_TYPE;
         BoatEntityTypeAccessor.affinity$setValues(boatTypes);

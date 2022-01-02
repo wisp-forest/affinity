@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "affinity:block/budding_azalea_leaves_0"
+    },
+    "age=1": {
+      "model": "affinity:block/budding_azalea_leaves_1"
+    },
+    "age=2": {
+      "model": "affinity:block/budding_azalea_leaves_2"
+    }
+  }
+}

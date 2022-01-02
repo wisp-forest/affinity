@@ -14,8 +14,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.LightType;
 
+import java.util.Random;
+
 public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<AethumFluxNodeBlockEntity> {
 
+    private static final Random RANDOM = new Random();
     private static final ModelPart FLOATING_SHARD;
 
     static {
@@ -59,8 +62,8 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
                 node.getWorld().getLightLevel(LightType.BLOCK, node.getPos()) - 2,
                 node.getWorld().getLightLevel(LightType.SKY, node.getPos()));
 
-        node.getWorld().random.setSeed(node.getPos().asLong());
-        long time = System.currentTimeMillis() + node.getWorld().random.nextLong(5000);
+        RANDOM.setSeed(node.getPos().asLong());
+        long time = System.currentTimeMillis() + RANDOM.nextLong(5000);
 
         float angle = (float) ((time / -2000d) % (2 * Math.PI));
 

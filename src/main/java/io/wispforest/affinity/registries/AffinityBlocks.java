@@ -58,18 +58,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final BoatEntity.Type AZALEA_BOAT_TYPE = BoatEntityTypeAccessor.affinity$invokeNew("AZALEA",
             BoatEntity.Type.values().length, AZALEA_PLANKS, "azalea");
 
+    public static final Block BUDDING_AZALEA_LEAVES = new BuddingAzaleaLeavesBlock();
     public static final Block UNFLOWERING_AZALEA_LEAVES = new UnfloweringAzaleaLeavesBlock();
-
-    @Override
-    public void postProcessField(String namespace, Block value, String identifier, Field field) {
-        if (field.isAnnotationPresent(NoBlockItem.class)) return;
-
-        int tab = 1;
-        if (field.isAnnotationPresent(Tab.class)) tab = field.getAnnotation(Tab.class).value();
-
-        Registry.register(Registry.ITEM, new Identifier(namespace, identifier),
-                new BlockItem(value, new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP)));
-    }
 
     @Override
     public void afterFieldProcessing() {
@@ -110,6 +100,17 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(BREWING_CAULDRON);
             Affinity.AETHUM_MEMBER.registerSelf(SUNDIAL);
         }
+    }
+
+    @Override
+    public void postProcessField(String namespace, Block value, String identifier, Field field) {
+        if (field.isAnnotationPresent(NoBlockItem.class)) return;
+
+        int tab = 1;
+        if (field.isAnnotationPresent(Tab.class)) tab = field.getAnnotation(Tab.class).value();
+
+        Registry.register(Registry.ITEM, new Identifier(namespace, identifier),
+                new BlockItem(value, new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP)));
     }
 
     @Retention(RetentionPolicy.RUNTIME)

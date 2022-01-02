@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/leaves",
   "textures": {
-    "all": "affinity:block/unflowering_azalea_leaves_0"
+    "all": "affinity:block/budding_azalea_leaves_2"
   }
 }
