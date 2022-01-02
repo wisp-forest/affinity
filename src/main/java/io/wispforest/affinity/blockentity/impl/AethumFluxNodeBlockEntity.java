@@ -108,8 +108,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
         var fluxPerNode = (long) Math.ceil(networkFlux / (double) nodes.size());
 
         for (var node : nodes) {
-            node.fluxStorage.setFlux(Math.min(networkFlux, fluxPerNode));
-            node.sendFluxUpdate();
+            node.updateFlux(Math.min(networkFlux, fluxPerNode));
 
             networkFlux = Math.max(0, networkFlux - fluxPerNode);
         }

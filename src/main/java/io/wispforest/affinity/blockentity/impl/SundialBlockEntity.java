@@ -20,7 +20,6 @@ public class SundialBlockEntity extends AethumNetworkMemberBlockEntity implement
         var flux = this.fluxStorage.flux();
         if (flux >= this.fluxStorage.fluxCapacity()) return;
 
-        this.fluxStorage.setFlux(Math.min(flux + 20, this.fluxStorage.fluxCapacity()));
-        this.markDirty(false);
+        this.updateFlux(Math.min(flux + 20, this.fluxStorage.fluxCapacity()));
     }
 }

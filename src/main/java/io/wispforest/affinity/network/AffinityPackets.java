@@ -11,22 +11,26 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class AffinityPackets {
 
     public static class Server {
 
-        public static final Identifier UPDATE_FLUX = Affinity.id("update_flux");
+        public static final Identifier UPDATE_CHUNK_FLUX = Affinity.id("update_chunk_flux");
         public static final Identifier UPDATE_CACHE_CHILDREN = Affinity.id("update_cache_children");
 
-        public static void sendFluxUpdate(AethumNetworkMemberBlockEntity member) {
+        public static void sendChunkFluxUpdates(ServerWorld world, ChunkPos chunk, Map<BlockPos, Long> updates) {
             var buf = PacketByteBufs.create();
-            buf.writeBlockPos(member.getPos());
-            buf.writeVarLong(member.flux());
-            PlayerLookup.tracking(member).forEach(player -> ServerPlayNetworking.send(player, UPDATE_FLUX, buf));
+            buf.writeVarLong(chunk.toLong());
+            buf.writeMap(updates, PacketByteBuf::writeBlockPos, PacketByteBuf::writeVarLong);
+            PlayerLookup.tracking(world, chunk).forEach(player -> ServerPlayNetworking.send(player, UPDATE_CHUNK_FLUX, buf));
         }
 
         public static void sendCacheChildrenUpdate(AethumFluxCacheBlockEntity cache) {
@@ -40,7 +44,7 @@ public class AffinityPackets {
     public static class Client {
 
         public static void registerListeners() {
-            ClientPlayNetworking.registerGlobalReceiver(Server.UPDATE_FLUX, Client::onFluxUpdate);
+            ClientPlayNetworking.registerGlobalReceiver(Server.UPDATE_CHUNK_FLUX, Client::onFluxUpdate);
             ClientPlayNetworking.registerGlobalReceiver(Server.UPDATE_CACHE_CHILDREN, Client::onCacheChildrenUpdate);
         }
 
@@ -54,11 +58,14 @@ public class AffinityPackets {
         }
 
         private static void onFluxUpdate(MinecraftClient client, ClientPlayNetworkHandler clientPlayNetworkHandler, PacketByteBuf byteBuf, PacketSender packetSender) {
-            var pos = byteBuf.readBlockPos();
-            long flux = byteBuf.readVarLong();
+            final var chunkPos = new ChunkPos(byteBuf.readVarLong());
+            final var updates = byteBuf.readMap(PacketByteBuf::readBlockPos, PacketByteBuf::readVarLong);
             client.execute(() -> {
-                if (!(client.world.getBlockEntity(pos) instanceof AethumNetworkMemberBlockEntity member)) return;
-                member.readFluxUpdate(flux);
+                final var chunk = client.world.getChunk(chunkPos.x, chunkPos.z);
+                updates.forEach((pos, flux) -> {
+                    if (!(chunk.getBlockEntity(pos) instanceof AethumNetworkMemberBlockEntity member)) return;
+                    member.readFluxUpdate(flux);
+                });
             });
         }
 

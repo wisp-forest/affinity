@@ -142,8 +142,13 @@ public class AethumFluxStorage extends SnapshotParticipant<Long> implements Aeth
     // Setters
     // -------
 
-    public void setFlux(long flux) {
+    /**
+     * @return {@code true} if the flux stored in this storage changed
+     */
+    public boolean setFlux(long flux) {
+        boolean changed = this.flux != flux;
         this.flux = flux;
+        return changed;
     }
 
     public void setFluxCapacity(long capacity) {

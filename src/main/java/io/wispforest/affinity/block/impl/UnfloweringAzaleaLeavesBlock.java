@@ -1,15 +1,19 @@
 package io.wispforest.affinity.block.impl;
 
+import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.Random;
 
@@ -27,6 +31,21 @@ public class UnfloweringAzaleaLeavesBlock extends LeavesBlock {
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
         builder.add(AGE);
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!player.isSneaking()) return ActionResult.PASS;
+
+        if (!world.isClient) {
+            for (var testPos : BlockPos.iterate(pos.add(-16, -3, -16), pos.add(16, 3, 16))) {
+                if (!(world.getBlockState(testPos).getBlock() instanceof PlantBlock)) continue;
+                WorldOps.breakBlockWithItem(world, testPos, ItemStack.EMPTY);
+            }
+            WorldOps.breakBlockWithItem(world, pos, ItemStack.EMPTY);
+        }
+
+        return ActionResult.SUCCESS;
     }
 
     @Override

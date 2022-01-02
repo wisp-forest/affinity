@@ -4,8 +4,10 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxStorage;
-import io.wispforest.affinity.network.AffinityPackets;
+import io.wispforest.affinity.network.FluxSyncHandler;
 import io.wispforest.affinity.util.NbtUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -63,9 +65,10 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     protected void sendFluxUpdate() {
         if (world.isClient) return;
-        AffinityPackets.Server.sendFluxUpdate(this);
+        FluxSyncHandler.queueUpdate(this);
     }
 
+    @Environment(EnvType.CLIENT)
     public void readFluxUpdate(long flux) {
         this.fluxStorage.setFlux(flux);
     }
@@ -103,6 +106,10 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     // ------------
     // Flux methods
     // ------------
+
+    public void updateFlux(long flux) {
+        if (this.fluxStorage.setFlux(flux)) this.sendFluxUpdate();
+    }
 
     @Override
     public long flux() {

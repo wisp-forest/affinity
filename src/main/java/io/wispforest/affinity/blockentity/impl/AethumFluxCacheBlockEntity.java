@@ -156,18 +156,14 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
         final long perCacheCap = this.fluxStorage.fluxCapacity();
 
         long insertedFlux = Math.min(perCacheCap, totalFlux);
-        this.fluxStorage.setFlux(insertedFlux);
-        this.sendFluxUpdate();
+        this.updateFlux(insertedFlux);
         totalFlux -= insertedFlux;
 
         if (!this.childCache.isEmpty()) {
             for (var child : childCache) {
                 insertedFlux = Math.min(perCacheCap, totalFlux);
 
-                if (child.fluxStorage.flux() != insertedFlux) {
-                    child.fluxStorage.setFlux(insertedFlux);
-                    child.sendFluxUpdate();
-                }
+                child.updateFlux(insertedFlux);
 
                 totalFlux -= insertedFlux;
             }
