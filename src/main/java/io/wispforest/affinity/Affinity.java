@@ -11,6 +11,8 @@ import io.wispforest.affinity.mixin.TreeFeatureConfigAccessor;
 import io.wispforest.affinity.registries.*;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipeSerializer;
+import io.wispforest.affinity.worldgen.AffinityStructures;
+import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.api.ModInitializer;
@@ -44,14 +46,16 @@ public class Affinity implements ModInitializer {
 
         FieldRegistrationHandler.register(AffinityEntities.class, MOD_ID, false);
 
+        AffinityStatusEffects.register();
+
         //noinspection ConstantConditions
         var azaleaConfig = (TreeFeatureConfigAccessor) BuiltinRegistries.CONFIGURED_FEATURE.get(new Identifier("azalea_tree")).config;
         azaleaConfig.setAzaleaTree(BlockStateProvider.of(AffinityBlocks.AZALEA_LOG));
 
+        AffinityStructures.register();
+
         FieldRegistrationHandler.register(AffinityWorldgen.class, MOD_ID, false);
         AffinityWorldgen.registerBiomes();
-
-        AffinityStatusEffects.register();
 
         // Inject our sign block into the BE type
         var signBlocks = ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$getBlocks();

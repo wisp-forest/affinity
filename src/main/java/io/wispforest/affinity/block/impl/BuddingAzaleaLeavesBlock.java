@@ -36,13 +36,15 @@ public class BuddingAzaleaLeavesBlock extends LeavesBlock {
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        int age = state.get(AGE);
-        if (age < MAX_AGE) world.setBlockState(pos, state.with(AGE, age + 1));
+        if (random.nextFloat() > .75f) {
+            int age = state.get(AGE);
+            if (age < MAX_AGE) world.setBlockState(pos, state.with(AGE, age + 1));
 
-        if (age == MAX_AGE) {
-            world.setBlockState(pos, Blocks.FLOWERING_AZALEA_LEAVES.getDefaultState()
-                    .with(LeavesBlock.PERSISTENT, state.get(LeavesBlock.PERSISTENT)));
-            return;
+            if (age == MAX_AGE) {
+                world.setBlockState(pos, Blocks.FLOWERING_AZALEA_LEAVES.getDefaultState()
+                        .with(LeavesBlock.PERSISTENT, state.get(LeavesBlock.PERSISTENT)));
+                return;
+            }
         }
 
         if (super.hasRandomTicks(state)) super.randomTick(state, world, pos, random);

@@ -1,6 +1,6 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.registries.AffinityWorldgen;
+import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.util.VanillaBiomeParameters;

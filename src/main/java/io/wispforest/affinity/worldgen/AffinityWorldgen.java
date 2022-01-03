@@ -1,7 +1,9 @@
-package io.wispforest.affinity.registries;
+package io.wispforest.affinity.worldgen;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.registries.AffinityEntities;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.sound.BiomeMoodSound;
@@ -65,6 +67,7 @@ public class AffinityWorldgen implements AutoRegistryContainer<PlacedFeature> {
         generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, FLOWER_WISP_FOREST);
         generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, WISP_FOREST_FLOWERS);
         generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, OAK_AND_AZALEA_TREE);
+//        generation.feature()
 
         var effects = new BiomeEffects.Builder()
                 .grassColor(0x5AA469)
