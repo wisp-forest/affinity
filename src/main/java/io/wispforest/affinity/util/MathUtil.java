@@ -23,6 +23,17 @@ public class MathUtil {
         }
     }
 
+    @Environment(EnvType.CLIENT)
+    public static double proportionalApproach(double value, double targetValue, double minChange, double coefficient) {
+        double diff = value - targetValue;
+
+        if (Math.abs(diff) > minChange) {
+            return value - diff * coefficient;
+        } else {
+            return targetValue;
+        }
+    }
+
     public static Vec3f unpackRGB(int rgb) {
         return new Vec3f((rgb >> 16) / 255f, ((rgb >> 8) & 0xFF) / 255f, (rgb & 0xFF) / 255f);
     }

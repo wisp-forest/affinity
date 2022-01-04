@@ -1,4 +1,4 @@
-package io.wispforest.affinity.mixin;
+package io.wispforest.affinity.mixin.access;
 
 import net.minecraft.util.SignType;
 import org.spongepowered.asm.mixin.Mixin;

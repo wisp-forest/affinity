@@ -1,4 +1,4 @@
-package io.wispforest.affinity.mixin;
+package io.wispforest.affinity.mixin.access;
 
 import io.wispforest.affinity.registries.AffinityBlocks;
 import net.minecraft.block.Block;

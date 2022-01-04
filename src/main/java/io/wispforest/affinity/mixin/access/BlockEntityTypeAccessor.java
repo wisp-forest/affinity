@@ -1,4 +1,4 @@
-package io.wispforest.affinity.mixin;
+package io.wispforest.affinity.mixin.access;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;

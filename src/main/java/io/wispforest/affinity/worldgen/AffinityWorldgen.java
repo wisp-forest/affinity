@@ -3,7 +3,6 @@ package io.wispforest.affinity.worldgen;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.registries.AffinityEntities;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.sound.BiomeMoodSound;

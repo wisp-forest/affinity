@@ -5,21 +5,24 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AbstractBlockMixin",
-    "BlockEntityTypeAccessor",
-    "BoatEntityTypeAccessor",
-    "BoatEntityTypeAccessor$BoatEntityTypeMixin",
     "ConfiguredStructureFeaturesMixin",
     "ItemMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PotionItemMixin",
     "PotionUtilMixin",
-    "SignTypeInvoker",
     "StatusEffectMixin",
-    "TreeFeatureConfigAccessor",
-    "VanillaBiomeParametersMixin"
+    "VanillaBiomeParametersMixin",
+    "access.BlockEntityTypeAccessor",
+    "access.BoatEntityTypeAccessor",
+    "access.BoatEntityTypeAccessor$BoatEntityTypeMixin",
+    "access.SignTypeInvoker",
+    "access.TreeFeatureConfigAccessor"
   ],
   "client": [
+    "client.ClientPlayNetworkHandlerMixin",
+    "client.ClientWorldMixin",
+    "client.DimensionTypeMixin",
     "client.InGameHudMixin",
     "client.WorldRendererMixin"
   ],
