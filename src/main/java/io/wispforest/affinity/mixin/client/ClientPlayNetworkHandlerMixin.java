@@ -29,7 +29,7 @@ public class ClientPlayNetworkHandlerMixin {
         CelestialZoomer.serverTimeOfDay = serverTimeOfDay;
 
         if (isInWispForest()) {
-            CelestialZoomer.enableOffset(-18000);
+            CelestialZoomer.enableOffset((Math.abs(serverTimeOfDay) / 24000) * -24000 - 18000);
         } else if (CelestialZoomer.offsetEnabled()) {
             CelestialZoomer.disableOffset();
         }

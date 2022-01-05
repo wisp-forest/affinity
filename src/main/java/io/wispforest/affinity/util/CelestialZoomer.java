@@ -5,7 +5,7 @@ import net.minecraft.world.World;
 public class CelestialZoomer {
 
     public static long serverTimeOfDay = 0;
-    private static long lastWorldTime = 0;
+    public static long lastWorldTime = 0;
     private static long offsetTime = 0;
 
     private static boolean isZooming = false;
@@ -26,17 +26,12 @@ public class CelestialZoomer {
         return isZooming;
     }
 
-    public static long lastWorldTime() {
-        return lastWorldTime;
-    }
-
     public static boolean offsetEnabled() {
         return offsetEnabled || isZooming;
     }
 
     public static long getZoomedTime(World world) {
         long actual = world.getTimeOfDay();
-        lastWorldTime = actual;
 
         long target = offsetEnabled ? offsetTime : serverTimeOfDay;
 
