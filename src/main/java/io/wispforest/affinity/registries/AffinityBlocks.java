@@ -55,8 +55,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_SIGN_TYPE);
     @NoBlockItem public static final Block AZALEA_WALL_SIGN = new WallSignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_SIGN_TYPE);
 
-    public static final BoatEntity.Type AZALEA_BOAT_TYPE = BoatEntityTypeAccessor.affinity$invokeNew("AZALEA",
-            BoatEntity.Type.values().length, AZALEA_PLANKS, "azalea");
+    public static BoatEntity.Type AZALEA_BOAT_TYPE;
 
     public static final Block BUDDING_AZALEA_LEAVES = new BuddingAzaleaLeavesBlock();
     public static final Block UNFLOWERING_AZALEA_LEAVES = new UnfloweringAzaleaLeavesBlock();

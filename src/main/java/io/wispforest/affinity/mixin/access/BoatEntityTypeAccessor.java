@@ -3,32 +3,45 @@ package io.wispforest.affinity.mixin.access;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.vehicle.BoatEntity;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
 @Mixin(BoatEntity.Type.class)
-public interface BoatEntityTypeAccessor {
+public class BoatEntityTypeAccessor {
 
     @Invoker("<init>")
-    static BoatEntity.Type affinity$invokeNew(String internalName, int ordinal, Block baseBlock, String name) {
+    public static BoatEntity.Type affinity$invokeNew(String internalName, int ordinal, Block baseBlock, String name) {
         throw new IllegalStateException("How did this mixin stub get called conc");
     }
 
+    @Final
+    @Shadow
     @Mutable
-    @Accessor(value = "field_7724", remap = false)
-    static void affinity$setValues(BoatEntity.Type[] values) {
-        throw new IllegalStateException("How did this mixin stub get called conc");
+    private static BoatEntity.Type[] field_7724;
+
+    @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/vehicle/BoatEntity$Type;field_7724:[Lnet/minecraft/entity/vehicle/BoatEntity$Type;", shift = At.Shift.AFTER, opcode = Opcodes.PUTSTATIC))
+    private static void addAzaleaBoet(CallbackInfo ci) {
+        var boatTypes = new BoatEntity.Type[field_7724.length + 1];
+        System.arraycopy(field_7724, 0, boatTypes, 0, field_7724.length);
+
+        boatTypes[boatTypes.length - 1] = BoatEntityTypeAccessor.affinity$invokeNew("AZALEA", BoatEntity.Type.values().length, AffinityBlocks.AZALEA_PLANKS, "azalea");
+        AffinityBlocks.AZALEA_BOAT_TYPE = boatTypes[boatTypes.length - 1];
+
+        field_7724 = boatTypes;
     }
 
     @Mixin(BoatEntity.Type.class)
-    class BoatEntityTypeMixin {
+    public static class BoatEntityTypeMixin {
 
         @Inject(method = "getType(I)Lnet/minecraft/entity/vehicle/BoatEntity$Type;", at = @At("HEAD"), cancellable = true)
         private static void returnCorrectType(int type, CallbackInfoReturnable<BoatEntity.Type> cir) {
