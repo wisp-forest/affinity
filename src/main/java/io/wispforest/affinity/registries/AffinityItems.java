@@ -11,6 +11,7 @@ import net.minecraft.item.BoatItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.SignItem;
 
+@SuppressWarnings("unused")
 public class AffinityItems implements ItemRegistryContainer {
 
     public static final Item AETHUM_FLUX_BOTTLE = new AethumFluxBottleItem();

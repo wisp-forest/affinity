@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 @Mixin(BoatEntity.Type.class)
 public class BoatEntityTypeAccessor {
 

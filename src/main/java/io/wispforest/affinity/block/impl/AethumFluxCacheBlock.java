@@ -133,17 +133,15 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
     }
 
     public enum Part implements StringIdentifiable {
-        BOTTOM(true, true),
-        MIDDLE(false, true),
-        TOP(false, false),
-        STANDALONE(true, false);
+        BOTTOM(true),
+        MIDDLE(false),
+        TOP(false),
+        STANDALONE(true);
 
         public final boolean isBase;
-        public final boolean extendsUp;
 
-        Part(boolean isBase, boolean extendsUp) {
+        Part(boolean isBase) {
             this.isBase = isBase;
-            this.extendsUp = extendsUp;
         }
 
         @Override

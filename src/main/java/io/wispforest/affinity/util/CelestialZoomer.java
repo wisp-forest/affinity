@@ -37,8 +37,19 @@ public class CelestialZoomer {
 
         if (target < 0) actual = -actual;
 
-        final var zoomedTime = Math.round(MathUtil.proportionalApproach(actual, target, 10, .05));
+        final var zoomedTime = Math.round(interpolate(actual, target, 20, .05));
         isZooming = zoomedTime != target;
         return zoomedTime;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static double interpolate(double value, double targetValue, double minChange, double coefficient) {
+        double diff = value - targetValue;
+
+        if (Math.abs(diff) > minChange) {
+            return value - diff * coefficient;
+        } else {
+            return targetValue;
+        }
     }
 }

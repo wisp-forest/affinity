@@ -7,7 +7,6 @@ import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
 import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
 import io.wispforest.affinity.blockentity.impl.SundialBlockEntity;
-import io.wispforest.affinity.mixin.access.BoatEntityTypeAccessor;
 import io.wispforest.affinity.mixin.access.SignTypeInvoker;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
@@ -29,6 +28,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 
+@SuppressWarnings("unused")
 public class AffinityBlocks implements BlockRegistryContainer {
 
     @Tab(0) public static final Block BREWING_CAULDRON = new BrewingCauldronBlock();

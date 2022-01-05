@@ -24,10 +24,6 @@ public class BikeshedFeature extends StructureFeature<StructurePoolFeatureConfig
         final var spawnXZ = context.chunkPos().getCenterAtY(0);
         final int landHeight = context.chunkGenerator().getHeightInGround(spawnXZ.getX(), spawnXZ.getZ(), Heightmap.Type.WORLD_SURFACE_WG, context.world());
 
-        final var biome = context.biomeSource().getBiome(spawnXZ.getX(), landHeight, spawnXZ.getZ(), context.chunkGenerator().getMultiNoiseSampler());
-
-//        if (!AffinityWorldgen.WISP_FOREST_KEY.getValue().equals(context.registryManager().get(Registry.BIOME_KEY).getId(biome))) return false;
-
         var columnSample = context.chunkGenerator().getColumnSample(spawnXZ.getX(), spawnXZ.getZ(), context.world());
         var topState = columnSample.getState(landHeight);
 

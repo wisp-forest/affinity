@@ -33,7 +33,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -256,14 +255,14 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
 
                     ItemOps.decrementPlayerHandItem(player, hand);
 
-                    updatePropertyCache(world);
+                    updatePropertyCache();
                     return ActionResult.SUCCESS;
                 } else if (this.isUpgradeable && this.outerShardCount < this.outerShards.size()) {
                     ListUtil.addItem(this.outerShards, ItemOps.singleCopy(playerStack));
 
                     ItemOps.decrementPlayerHandItem(player, hand);
 
-                    updatePropertyCache(world);
+                    updatePropertyCache();
                     return ActionResult.SUCCESS;
 
                 }
@@ -273,7 +272,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
 
                 ItemOps.decrementPlayerHandItem(player, hand);
 
-                updatePropertyCache(world);
+                updatePropertyCache();
                 return ActionResult.SUCCESS;
             }
 
@@ -312,7 +311,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
             this.markDirty(false);
         }
 
-        updatePropertyCache(world);
+        updatePropertyCache();
     }
 
     @Override
@@ -323,7 +322,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
         ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.shard);
     }
 
-    private void updatePropertyCache(World world) {
+    private void updatePropertyCache() {
         this.outerShardCount = ListUtil.nonEmptyStacks(this.outerShards);
         this.fluxStorage.setMaxExtract(this.tier.maxTransfer());
         this.fluxStorage.setMaxInsert(this.tier.maxTransfer());

@@ -13,6 +13,7 @@ public interface SignTypeInvoker {
     }
 
     @Invoker("register")
+    @SuppressWarnings("UnusedReturnValue")
     static SignType affinity$invokeRegister(SignType type) {
         throw new IllegalStateException("How did this mixin stub get called conc");
     }

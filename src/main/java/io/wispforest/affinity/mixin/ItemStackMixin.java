@@ -1,23 +1,18 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.util.potion.GlowingPotion;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
-
-    @Shadow
-    public abstract Item getItem();
 
     @Inject(method = "getName", at = @At("RETURN"), cancellable = true)
     private void injectNameColorForIncandescence(CallbackInfoReturnable<Text> cir) {
