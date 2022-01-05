@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity {
 
-    @Environment(EnvType.CLIENT) public float renderHeight = 0;
+    @Environment(EnvType.CLIENT) public float renderFluxY = 0;
 
     private boolean isPrimaryStorage;
     @Nullable private ParentStorageReference parent = null;
@@ -215,6 +215,16 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
     }
 
     public record ParentStorageReference(AethumFluxCacheBlockEntity entity, int index) {
+
+        public boolean previousIsNotFull() {
+            final var previous = previous();
+            return previous != null && previous.flux() < previous.fluxCapacity();
+        }
+
+        public boolean nextIsEmpty() {
+            final var next = next();
+            return next != null && next.flux() == 0;
+        }
 
         @SuppressWarnings("ConstantConditions")
         public @Nullable AethumFluxCacheBlockEntity previous() {

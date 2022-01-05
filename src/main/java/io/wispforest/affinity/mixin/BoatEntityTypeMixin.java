@@ -1,4 +1,4 @@
-package io.wispforest.affinity.mixin.access;
+package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.registries.AffinityBlocks;
 import net.minecraft.block.Block;
@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @SuppressWarnings("unused")
 @Mixin(BoatEntity.Type.class)
-public class BoatEntityTypeAccessor {
+public class BoatEntityTypeMixin {
 
     @Invoker("<init>")
     public static BoatEntity.Type affinity$invokeNew(String internalName, int ordinal, Block baseBlock, String name) {
@@ -35,26 +35,21 @@ public class BoatEntityTypeAccessor {
         var boatTypes = new BoatEntity.Type[field_7724.length + 1];
         System.arraycopy(field_7724, 0, boatTypes, 0, field_7724.length);
 
-        boatTypes[boatTypes.length - 1] = BoatEntityTypeAccessor.affinity$invokeNew("AZALEA", BoatEntity.Type.values().length, AffinityBlocks.AZALEA_PLANKS, "azalea");
+        boatTypes[boatTypes.length - 1] = BoatEntityTypeMixin.affinity$invokeNew("AZALEA", BoatEntity.Type.values().length, AffinityBlocks.AZALEA_PLANKS, "azalea");
         AffinityBlocks.AZALEA_BOAT_TYPE = boatTypes[boatTypes.length - 1];
 
         field_7724 = boatTypes;
     }
 
-    @Mixin(BoatEntity.Type.class)
-    public static class BoatEntityTypeMixin {
+    @Inject(method = "getType(I)Lnet/minecraft/entity/vehicle/BoatEntity$Type;", at = @At("HEAD"), cancellable = true)
+    private static void returnCorrectType(int type, CallbackInfoReturnable<BoatEntity.Type> cir) {
+        if (type != AffinityBlocks.AZALEA_BOAT_TYPE.ordinal()) return;
+        cir.setReturnValue(AffinityBlocks.AZALEA_BOAT_TYPE);
+    }
 
-        @Inject(method = "getType(I)Lnet/minecraft/entity/vehicle/BoatEntity$Type;", at = @At("HEAD"), cancellable = true)
-        private static void returnCorrectType(int type, CallbackInfoReturnable<BoatEntity.Type> cir) {
-            if (type != AffinityBlocks.AZALEA_BOAT_TYPE.ordinal()) return;
-            cir.setReturnValue(AffinityBlocks.AZALEA_BOAT_TYPE);
-        }
-
-        @Inject(method = "getType(Ljava/lang/String;)Lnet/minecraft/entity/vehicle/BoatEntity$Type;", at = @At("HEAD"), cancellable = true)
-        private static void returnCorrectType(String name, CallbackInfoReturnable<BoatEntity.Type> cir) {
-            if (!Objects.equals(name, "azalea")) return;
-            cir.setReturnValue(AffinityBlocks.AZALEA_BOAT_TYPE);
-        }
-
+    @Inject(method = "getType(Ljava/lang/String;)Lnet/minecraft/entity/vehicle/BoatEntity$Type;", at = @At("HEAD"), cancellable = true)
+    private static void returnCorrectType(String name, CallbackInfoReturnable<BoatEntity.Type> cir) {
+        if (!Objects.equals(name, "azalea")) return;
+        cir.setReturnValue(AffinityBlocks.AZALEA_BOAT_TYPE);
     }
 }

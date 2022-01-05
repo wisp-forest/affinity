@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AbstractBlockMixin",
+    "BoatEntityTypeMixin",
     "ConfiguredStructureFeaturesMixin",
     "ItemMixin",
     "ItemStackMixin",
@@ -14,8 +15,6 @@
     "StatusEffectMixin",
     "VanillaBiomeParametersMixin",
     "access.BlockEntityTypeAccessor",
-    "access.BoatEntityTypeAccessor",
-    "access.BoatEntityTypeAccessor$BoatEntityTypeMixin",
     "access.SignTypeInvoker",
     "access.TreeFeatureConfigAccessor"
   ],

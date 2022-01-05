@@ -3,6 +3,9 @@ package io.wispforest.affinity.client.render.blockentity;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
 import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
 import io.wispforest.affinity.util.MathUtil;
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -13,7 +16,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Direction;
 
 public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<AethumFluxCacheBlockEntity> {
 
@@ -25,58 +28,43 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
     public void render(AethumFluxCacheBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (entity.flux() < 1) return;
 
-        var consumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
-        var sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(WATER_TEXTURE);
+        final int color = 0xA685E2;
+        final float[] rgb = {(color >> 16) / 255f, ((color >> 8) & 0xFF) / 255f, (color & 0xFF) / 255f};
 
-        final var part = entity.getCachedState().get(AethumFluxCacheBlock.PART);
-        var bottomY = part.isBase ? 0.125f : 0;
-        var topY = (part == AethumFluxCacheBlock.Part.TOP || part == AethumFluxCacheBlock.Part.STANDALONE ? 0.875f : 1) - bottomY;
+        final var consumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
+        final var sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(WATER_TEXTURE);
 
-        var targetTopY = bottomY + (entity.flux() / (float) entity.fluxCapacity()) * topY;
+        final var cachePart = entity.getCachedState().get(AethumFluxCacheBlock.PART);
+        final var bottomY = cachePart.isBase ? 0.125f : 0;
+        final var topY = (cachePart.hasCap ? 0.875f : 1);
 
-        entity.renderHeight = MathUtil.proportionalApproach(entity.renderHeight, targetTopY, .0025f, .0075f);
-        targetTopY = entity.renderHeight;
+        final var targetFluxY = bottomY + (entity.flux() / (float) entity.fluxCapacity()) * (topY - bottomY);
+        entity.renderFluxY = MathUtil.proportionalApproach(entity.renderFluxY, targetFluxY, .0025f, .0075f);
 
-        sideQuad(sprite, matrices, consumer, .87f, bottomY, .13f, .87f, targetTopY, .87f, 0x6E3CBC, overlay, light);
-        sideQuad(sprite, matrices, consumer, .13f, bottomY, .87f, .13f, targetTopY, .13f, 0x6E3CBC, overlay, light);
-        sideQuad(sprite, matrices, consumer, .13f, bottomY, .13f, .87f, targetTopY, .13f, 0x6E3CBC, overlay, light);
-        sideQuad(sprite, matrices, consumer, .87f, bottomY, .87f, .13f, targetTopY, .87f, 0x6E3CBC, overlay, light);
+        //noinspection ConstantConditions
+        var quadEmitter = RendererAccess.INSTANCE.getRenderer().meshBuilder().getEmitter();
+        for (var direction : Direction.values()) {
+            if (direction.getAxis().isVertical()) continue;
+            fluxQuad(direction, quadEmitter, consumer, matrices, sprite, rgb, .13f, bottomY, .87f, entity.renderFluxY, .13f, light, overlay);
+        }
 
         final var parent = entity.parent();
 
-        if (targetTopY != topY + bottomY || parent == null || (parent.next() != null && parent.next().flux() == 0)) {
-            topQuad(sprite, matrices, consumer, targetTopY, .13f, .13f, .87f, .87f, 0x6E3CBC, overlay, light);
+        if (targetFluxY != topY || parent == null || parent.nextIsEmpty()) {
+            fluxQuad(Direction.UP, quadEmitter, consumer, matrices, sprite, rgb, .13f, .13f, .87f, .87f, 1 - entity.renderFluxY, light, overlay);
         }
 
-        if (parent == null) return;
-
-        final var previous = parent.previous();
-        if (previous != null && previous.flux() < previous.fluxCapacity()) {
-            consumer.vertex(matrices.peek().getPositionMatrix(), 0.13f, bottomY, 0.13f).color(148, 179, 253, 255).texture(sprite.getFrameU(0), sprite.getFrameV(0)).overlay(overlay).light(light).normal(0, 1, 0).next();
-            consumer.vertex(matrices.peek().getPositionMatrix(), 0.87f, bottomY, 0.13f).color(148, 179, 253, 255).texture(sprite.getFrameU(16), sprite.getFrameV(0)).overlay(overlay).light(light).normal(0, 1, 0).next();
-            consumer.vertex(matrices.peek().getPositionMatrix(), 0.87f, bottomY, 0.87f).color(148, 179, 253, 255).texture(sprite.getFrameU(16), sprite.getFrameV(16)).overlay(overlay).light(light).normal(0, 1, 0).next();
-            consumer.vertex(matrices.peek().getPositionMatrix(), 0.13f, bottomY, 0.87f).color(148, 179, 253, 255).texture(sprite.getFrameU(0), sprite.getFrameV(16)).overlay(overlay).light(light).normal(0, 1, 0).next();
+        if (parent != null && parent.previousIsNotFull()) {
+            fluxQuad(Direction.DOWN, quadEmitter, consumer, matrices, sprite, rgb, .13f, .13f, .87f, .87f, bottomY, light, overlay);
         }
 
     }
 
-    private static void sideQuad(Sprite sprite, MatrixStack matrices, VertexConsumer consumer, float blX, float blY, float blZ, float trX, float trY, float trZ, int color, int overlay, int light) {
-        final int[] rgb = {color >> 16, (color >> 8) & 0xFF, color & 0xFF};
-        final Matrix4f matrix = matrices.peek().getPositionMatrix();
-
-        consumer.vertex(matrix, blX, blY, blZ).color(rgb[0], rgb[1], rgb[2], 255).texture(sprite.getFrameU(blY * 16), sprite.getFrameV(0)).overlay(overlay).light(light).normal(0, 1, 0).next();
-        consumer.vertex(matrix, blX, trY, blZ).color(rgb[0], rgb[1], rgb[2], 255).texture(sprite.getFrameU(trY * 16), sprite.getFrameV(0)).overlay(overlay).light(light).normal(0, 1, 0).next();
-        consumer.vertex(matrix, trX, trY, trZ).color(rgb[0], rgb[1], rgb[2], 255).texture(sprite.getFrameU(trY * 16), sprite.getFrameV(16)).overlay(overlay).light(light).normal(0, 1, 0).next();
-        consumer.vertex(matrix, trX, blY, trZ).color(rgb[0], rgb[1], rgb[2], 255).texture(sprite.getFrameU(blY * 16), sprite.getFrameV(16)).overlay(overlay).light(light).normal(0, 1, 0).next();
+    private static void fluxQuad(Direction direction, QuadEmitter emitter, VertexConsumer consumer, MatrixStack matrices, Sprite sprite, float[] rgb, float left, float bottom, float right, float top, float depth, int light, int overlay) {
+        emitter.square(direction, left, bottom, right, top, depth);
+        emitter.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV);
+        emitter.spriteColor(0, -1, -1, -1, -1);
+        consumer.quad(matrices.peek(), emitter.toBakedQuad(0, sprite, false), rgb[0], rgb[1], rgb[2], light, overlay);
     }
 
-    private static void topQuad(Sprite sprite, MatrixStack matrices, VertexConsumer consumer, float y, float blX, float blZ, float trX, float trZ, int color, int overlay, int light) {
-        final int[] rgb = {color >> 16, (color >> 8) & 0xFF, color & 0xFF};
-        final Matrix4f matrix = matrices.peek().getPositionMatrix();
-
-        consumer.vertex(matrix, blX, y, blZ).color(rgb[0], rgb[1], rgb[2], 255).texture(sprite.getFrameU(0), sprite.getFrameV(0)).overlay(overlay).light(light).normal(0, 1, 0).next();
-        consumer.vertex(matrix, blX, y, trZ).color(rgb[0], rgb[1], rgb[2], 255).texture(sprite.getFrameU(16), sprite.getFrameV(0)).overlay(overlay).light(light).normal(0, 1, 0).next();
-        consumer.vertex(matrix, trX, y, trZ).color(rgb[0], rgb[1], rgb[2], 255).texture(sprite.getFrameU(16), sprite.getFrameV(16)).overlay(overlay).light(light).normal(0, 1, 0).next();
-        consumer.vertex(matrix, trX, y, blZ).color(rgb[0], rgb[1], rgb[2], 255).texture(sprite.getFrameU(0), sprite.getFrameV(16)).overlay(overlay).light(light).normal(0, 1, 0).next();
-    }
 }
