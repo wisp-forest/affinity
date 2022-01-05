@@ -18,8 +18,16 @@ public class MathUtil {
         }
     }
 
-    public static Vec3f unpackRGB(int rgb) {
+    public static Vec3f splitRGBToVector(int rgb) {
         return new Vec3f((rgb >> 16) / 255f, ((rgb >> 8) & 0xFF) / 255f, (rgb & 0xFF) / 255f);
     }
 
+    public static float[] splitRGBToFloats(int rgb) {
+        return new float[]{(rgb >> 16) / 255f, ((rgb >> 8) & 0xFF) / 255f, (rgb & 0xFF) / 255f};
+    }
+
+    public static int[] splitRGBToInts(int rgb) {
+        return new int[]{rgb >> 16, (rgb >> 8) & 0xFF, rgb & 0xFF};
+    }
 }
+

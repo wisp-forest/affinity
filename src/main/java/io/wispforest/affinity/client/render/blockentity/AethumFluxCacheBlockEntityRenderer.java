@@ -28,8 +28,7 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
     public void render(AethumFluxCacheBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (entity.flux() < 1) return;
 
-        final int color = 0xA685E2;
-        final float[] rgb = {(color >> 16) / 255f, ((color >> 8) & 0xFF) / 255f, (color & 0xFF) / 255f};
+        final float[] rgb = MathUtil.splitRGBToFloats(0xA685E2);
 
         final var consumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
         final var sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(WATER_TEXTURE);
@@ -60,10 +59,11 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
 
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void fluxQuad(Direction direction, QuadEmitter emitter, VertexConsumer consumer, MatrixStack matrices, Sprite sprite, float[] rgb, float left, float bottom, float right, float top, float depth, int light, int overlay) {
         emitter.square(direction, left, bottom, right, top, depth);
         emitter.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV);
-        emitter.spriteColor(0, -1, -1, -1, -1);
+
         consumer.quad(matrices.peek(), emitter.toBakedQuad(0, sprite, false), rgb[0], rgb[1], rgb[2], light, overlay);
     }
 

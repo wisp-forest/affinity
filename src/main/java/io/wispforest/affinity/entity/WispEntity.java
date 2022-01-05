@@ -27,7 +27,7 @@ import java.util.Random;
 
 public class WispEntity extends PathAwareEntity {
 
-    private static final DustParticleEffect PARTICLES = new DustParticleEffect(MathUtil.unpackRGB(0x6A8CAF), 1);
+    private static final DustParticleEffect PARTICLES = new DustParticleEffect(MathUtil.splitRGBToVector(0x6A8CAF), 1);
 
     public WispEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
