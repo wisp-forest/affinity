@@ -223,7 +223,7 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
 
         public boolean nextIsEmpty() {
             final var next = next();
-            return next != null && next.flux() == 0;
+            return next == null || next.flux() == 0;
         }
 
         @SuppressWarnings("ConstantConditions")

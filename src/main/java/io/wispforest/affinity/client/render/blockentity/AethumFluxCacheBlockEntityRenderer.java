@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client.render.blockentity;
 
+import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
 import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
 import io.wispforest.affinity.util.MathUtil;
@@ -18,6 +19,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
+import static io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer.FLOATING_SHARD;
+
 public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<AethumFluxCacheBlockEntity> {
 
     private static final Identifier WATER_TEXTURE = new Identifier("block/water_still");
@@ -26,9 +29,7 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
 
     @Override
     public void render(AethumFluxCacheBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.flux() < 1) return;
-
-        final float[] rgb = MathUtil.splitRGBToFloats(0xA685E2);
+        final float[] rgb = MathUtil.splitRGBToFloats(0xC295D8);
 
         final var consumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
         final var sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(WATER_TEXTURE);
@@ -40,23 +41,39 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
         final var targetFluxY = bottomY + (entity.flux() / (float) entity.fluxCapacity()) * (topY - bottomY);
         entity.renderFluxY = MathUtil.proportionalApproach(entity.renderFluxY, targetFluxY, .0025f, .0075f);
 
-        //noinspection ConstantConditions
-        var quadEmitter = RendererAccess.INSTANCE.getRenderer().meshBuilder().getEmitter();
-        for (var direction : Direction.values()) {
-            if (direction.getAxis().isVertical()) continue;
-            fluxQuad(direction, quadEmitter, consumer, matrices, sprite, rgb, .13f, bottomY, .87f, entity.renderFluxY, .13f, light, overlay);
-        }
-
         final var parent = entity.parent();
+        final var noFluxAbove = parent == null || parent.nextIsEmpty();
 
-        if (targetFluxY != topY || parent == null || parent.nextIsEmpty()) {
-            fluxQuad(Direction.UP, quadEmitter, consumer, matrices, sprite, rgb, .13f, .13f, .87f, .87f, 1 - entity.renderFluxY, light, overlay);
+        if (entity.flux() > 1) {
+            //noinspection ConstantConditions
+            var quadEmitter = RendererAccess.INSTANCE.getRenderer().meshBuilder().getEmitter();
+            for (var direction : Direction.values()) {
+                if (direction.getAxis().isVertical()) continue;
+                fluxQuad(direction, quadEmitter, consumer, matrices, sprite, rgb, .13f, bottomY, .87f, entity.renderFluxY, .13f, light, overlay);
+            }
+
+            if (targetFluxY != topY || noFluxAbove) {
+                fluxQuad(Direction.UP, quadEmitter, consumer, matrices, sprite, rgb, .13f, .13f, .87f, .87f, 1 - entity.renderFluxY, light, overlay);
+            }
+
+            if (parent != null && parent.previousIsNotFull()) {
+                fluxQuad(Direction.DOWN, quadEmitter, consumer, matrices, sprite, rgb, .13f, .13f, .87f, .87f, bottomY, light, overlay);
+            }
         }
 
-        if (parent != null && parent.previousIsNotFull()) {
-            fluxQuad(Direction.DOWN, quadEmitter, consumer, matrices, sprite, rgb, .13f, .13f, .87f, .87f, bottomY, light, overlay);
-        }
+        if ((entity.flux() > 1 || cachePart.isBase) && noFluxAbove) {
+            matrices.push();
 
+            var y = entity.renderFluxY - .125 + Math.sin(System.currentTimeMillis() / 2000d) * .02;
+            if (cachePart.isBase) y = Math.max(bottomY, y);
+            if (cachePart.hasCap) y = Math.min(y, topY - .25);
+
+            matrices.translate(.4375, y, .4375);
+
+            final var shardConsumer = AttunedShardTiers.CRUDE.sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
+            FLOATING_SHARD.render(matrices, shardConsumer, light, overlay);
+            matrices.pop();
+        }
     }
 
     @SuppressWarnings("SameParameterValue")

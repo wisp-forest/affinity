@@ -18,8 +18,8 @@ import java.util.Random;
 
 public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<AethumFluxNodeBlockEntity> {
 
+    public static final ModelPart FLOATING_SHARD;
     private static final Random RANDOM = new Random();
-    private static final ModelPart FLOATING_SHARD;
 
     static {
         ModelData floatingShardData = new ModelData();
