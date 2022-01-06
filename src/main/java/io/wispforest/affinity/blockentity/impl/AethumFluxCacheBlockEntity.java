@@ -3,17 +3,23 @@ package io.wispforest.affinity.blockentity.impl;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
-import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.network.AffinityPackets;
 import io.wispforest.affinity.registries.AffinityBlocks;
+import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
-public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity {
+public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements TickedBlockEntity {
 
     @Environment(EnvType.CLIENT) public float renderFluxY = 0;
 
@@ -36,7 +42,6 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
         super(AffinityBlocks.Entities.AETHUM_FLUX_CACHE, pos, state);
 
         this.fluxStorage.setFluxCapacity(128000);
-        this.fluxStorage.setMaxInsert(512);
 
         this.isPrimaryStorage = state.get(AethumFluxCacheBlock.PART).isBase;
     }
@@ -186,11 +191,6 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
         return LINKS.entrySet().stream().filter(entry -> entry.getValue() == AethumLink.Type.PUSH).map(Map.Entry::getKey).collect(Collectors.toSet());
     }
 
-    @Override
-    public AethumLink.Type specialLinkType() {
-        return AethumLink.Type.PUSH;
-    }
-
     public PacketByteBuf writeChildren() {
         var buf = PacketByteBufs.create();
         buf.writeCollection(childCache, (byteBuf, cacheBlockEntity) -> byteBuf.writeBlockPos(cacheBlockEntity.getPos()));
@@ -208,6 +208,46 @@ public class AethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity i
             child.parent = new ParentStorageReference(this, this.childCache.size());
             this.childCache.add(child);
         }
+    }
+
+    @Override
+    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
+
+        final var playerStack = player.getStackInHand(hand);
+
+        if (playerStack.isEmpty()) {
+            if (this.shard.isEmpty()) return ActionResult.PASS;
+            player.setStackInHand(hand, this.shard.copy());
+
+            this.shard = ItemStack.EMPTY;
+            this.markDirty();
+        } else {
+            if (this.shard.isEmpty()) {
+                this.shard = ItemOps.singleCopy(playerStack);
+                ItemOps.decrementPlayerHandItem(player, hand);
+
+                this.markDirty();
+            } else if (ItemOps.canStack(playerStack, this.shard)) {
+                this.shard = ItemStack.EMPTY;
+
+                playerStack.increment(1);
+                player.setStackInHand(hand, playerStack);
+
+                this.markDirty();
+            } else {
+                player.getInventory().offerOrDrop(shard.copy());
+                this.shard = ItemStack.EMPTY;
+
+                markDirty();
+            }
+        }
+
+        return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public AethumLink.Type specialLinkType() {
+        return AethumLink.Type.PUSH;
     }
 
     public ParentStorageReference parent() {

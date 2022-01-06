@@ -4,10 +4,9 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
-import io.wispforest.affinity.aethumflux.shards.AttunedShardTier;
 import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
 import io.wispforest.affinity.block.template.AbstractAethumFluxNodeBlock;
-import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.item.AttunedShardItem;
 import io.wispforest.affinity.registries.AffinityBlocks;
@@ -33,20 +32,16 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
-public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity {
+public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity {
 
     @Environment(EnvType.CLIENT) public float renderShardCount = 1;
 
     private long lastTick = 0;
     private Collection<AethumNetworkMember> cachedMembers = null;
-
-    @NotNull private ItemStack shard = ItemStack.EMPTY;
-    @NotNull private AttunedShardTier tier = AttunedShardTiers.EMPTY;
 
     private final DefaultedList<ItemStack> outerShards = DefaultedList.ofSize(5, ItemStack.EMPTY);
     private int outerShardCount = 0;
@@ -159,7 +154,6 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     // -------
 
     public Collection<AethumNetworkMember> membersWithNormalLink() {
-        // TODO check if this works now
         if (this.cachedMembers != null) return this.cachedMembers;
 
         this.cachedMembers = new ArrayList<>(this.LINKS.size());
@@ -218,24 +212,15 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
 
-        this.shard = ItemStack.fromNbt(nbt.getCompound("Shard"));
-        if (this.shard.isOf(Items.AMETHYST_SHARD)) this.tier = AttunedShardTiers.CRUDE;
-        if (this.shard.getItem() instanceof AttunedShardItem shardItem) this.tier = shardItem.tier();
-
         NbtUtil.readItemStackList(nbt, "OuterShards", this.outerShards);
-        this.outerShardCount = ListUtil.nonEmptyStacks(this.outerShards);
 
-        this.fluxStorage.setMaxExtract(this.tier.maxTransfer());
-        this.fluxStorage.setMaxInsert(this.tier.maxTransfer());
-
+        updatePropertyCache();
         this.cachedMembers = null;
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-
-        nbt.put("Shard", this.shard.writeNbt(new NbtCompound()));
         NbtUtil.writeItemStackList(nbt, "OuterShards", this.outerShards);
     }
 
@@ -243,6 +228,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     // Interaction
     // -----------
 
+    @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         var playerStack = player.getStackInHand(hand);
 
@@ -264,7 +250,6 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
 
                     updatePropertyCache();
                     return ActionResult.SUCCESS;
-
                 }
             } else if (this.isUpgradeable() && this.shard.isEmpty() && playerStack.getItem() instanceof AttunedShardItem shardItem) {
                 this.shard = ItemOps.singleCopy(playerStack);
@@ -317,9 +302,7 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     @Override
     public void onBroken() {
         super.onBroken();
-
         ItemScatterer.spawn(world, pos, this.outerShards);
-        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.shard);
     }
 
     private void updatePropertyCache() {
@@ -331,14 +314,6 @@ public class AethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity im
     // -------
     // Getters
     // -------
-
-    public boolean hasShard() {
-        return this.tier != AttunedShardTiers.EMPTY;
-    }
-
-    public AttunedShardTier tier() {
-        return tier;
-    }
 
     public int outerShardCount() {
         return this.outerShardCount;
