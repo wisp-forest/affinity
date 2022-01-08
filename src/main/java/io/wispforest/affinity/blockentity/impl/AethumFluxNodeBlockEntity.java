@@ -287,7 +287,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
             ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.shard.copy());
 
             this.shard = ItemStack.EMPTY;
-            this.tier = AttunedShardTiers.EMPTY;
+            this.tier = AttunedShardTiers.NONE;
 
             this.markDirty(false);
         } else if (this.outerShardCount > 0) {
@@ -307,8 +307,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
     private void updatePropertyCache() {
         this.outerShardCount = ListUtil.nonEmptyStacks(this.outerShards);
-        this.fluxStorage.setMaxExtract(this.tier.maxTransfer());
-        this.fluxStorage.setMaxInsert(this.tier.maxTransfer());
+        this.updateTransferRateForTier();
     }
 
     // -------
@@ -343,6 +342,9 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
             try (var transaction = Transaction.openOuter()) {
                 this.potentialExtract = member.extract(node.maxInsert(), transaction);
+            }
+
+            try (var transaction = Transaction.openOuter()) {
                 this.potentialInsert = member.insert(node.maxExtract(), transaction);
             }
         }

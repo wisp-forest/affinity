@@ -30,6 +30,11 @@ public class CelestialZoomer {
         return offsetEnabled || isZooming;
     }
 
+    public static void reset() {
+        isZooming = false;
+        offsetEnabled = false;
+    }
+
     public static long getZoomedTime(World world) {
         long actual = world.getTimeOfDay();
 

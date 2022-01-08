@@ -2,6 +2,7 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
+import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
 import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
@@ -82,6 +83,9 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
             cacheEntity.parent = new ParentStorageReference(this, this.childCache.size());
             cacheEntity.isPrimaryStorage = false;
 
+            cacheEntity.tier = this.tier;
+            cacheEntity.updateTransferRateForTier();
+
             moveChildLinksOntoSelf(cacheEntity);
 
             this.childCache.add(cacheEntity);
@@ -143,8 +147,8 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         long totalFlux = this.fluxStorage.flux();
         if (!this.childCache.isEmpty()) totalFlux += this.childCache.stream().mapToLong(value -> value.fluxStorage.flux()).sum();
 
-        if (!pushTargets.isEmpty()) {
-            final long maxTransferPerNode = (long) Math.ceil(totalFlux / (double) pushTargets.size());
+        if (!pushTargets.isEmpty() && this.tier.maxTransfer() > 0) {
+            final long maxTransferPerNode = Math.min(this.tier.maxTransfer(), (long) Math.ceil(totalFlux / (double) pushTargets.size()));
 
             try (var transaction = Transaction.openOuter()) {
                 for (var pushTarget : pushTargets) {
@@ -206,12 +210,23 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         for (var childPos : children) {
             if (!(world.getBlockEntity(childPos) instanceof AethumFluxCacheBlockEntity child)) return;
             child.parent = new ParentStorageReference(this, this.childCache.size());
+            child.isPrimaryStorage = false;
+
+            child.tier = this.tier;
+            child.updateTransferRateForTier();
+
             this.childCache.add(child);
         }
     }
 
     @Override
+    protected void updateTransferRateForTier() {
+        this.fluxStorage.setMaxExtract(this.tier.maxTransfer());
+    }
+
+    @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!this.isPrimaryStorage) return this.parent == null ? ActionResult.PASS : this.parent.entity.onUse(player, hand, hit);
 
         final var playerStack = player.getStackInHand(hand);
 
@@ -222,7 +237,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
             this.shard = ItemStack.EMPTY;
             this.markDirty();
         } else {
-            if (this.shard.isEmpty()) {
+            if (this.shard.isEmpty() && !AttunedShardTiers.forItem(playerStack.getItem()).isNone()) {
                 this.shard = ItemOps.singleCopy(playerStack);
                 ItemOps.decrementPlayerHandItem(player, hand);
 
@@ -235,12 +250,13 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
                 this.markDirty();
             } else {
-                player.getInventory().offerOrDrop(shard.copy());
-                this.shard = ItemStack.EMPTY;
-
-                markDirty();
+                return ActionResult.PASS;
             }
         }
+
+        this.tier = AttunedShardTiers.forItem(this.shard.getItem());
+        this.updateTransferRateForTier();
+        if (!world.isClient) this.updateChildCache();
 
         return ActionResult.SUCCESS;
     }

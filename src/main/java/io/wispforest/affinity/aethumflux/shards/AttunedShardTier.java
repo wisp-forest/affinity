@@ -29,4 +29,12 @@ public interface AttunedShardTier {
     @Environment(EnvType.CLIENT)
     SpriteIdentifier sprite();
 
+    /**
+     * @return {@code true} if this tier should be treated like
+     * {@link AttunedShardTiers#NONE}
+     */
+    default boolean isNone() {
+        return this == AttunedShardTiers.NONE;
+    }
+
 }

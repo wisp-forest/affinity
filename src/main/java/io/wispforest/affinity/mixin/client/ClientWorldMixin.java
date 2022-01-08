@@ -1,6 +1,8 @@
 package io.wispforest.affinity.mixin.client;
 
 import io.wispforest.affinity.util.CelestialZoomer;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.RegistryKey;
@@ -24,6 +26,11 @@ public abstract class ClientWorldMixin extends World {
 
     @Shadow
     public abstract void setTimeOfDay(long timeOfDay);
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void resetZoomer(ClientPlayNetworkHandler netHandler, ClientWorld.Properties properties, RegistryKey registryRef, DimensionType dimensionType, int loadDistance, int simulationDistance, Supplier profiler, WorldRenderer worldRenderer, boolean debugWorld, long seed, CallbackInfo ci) {
+        CelestialZoomer.reset();
+    }
 
     @Inject(method = "tickTime", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/MutableWorldProperties;getGameRules()Lnet/minecraft/world/GameRules;"), cancellable = true)
     private void zooooom(CallbackInfo ci) {

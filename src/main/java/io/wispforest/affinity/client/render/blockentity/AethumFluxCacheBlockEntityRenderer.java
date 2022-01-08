@@ -1,6 +1,5 @@
 package io.wispforest.affinity.client.render.blockentity;
 
-import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
 import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
 import io.wispforest.affinity.util.MathUtil;
@@ -61,7 +60,7 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
             }
         }
 
-        if ((entity.flux() > 1 || cachePart.isBase) && noFluxAbove) {
+        if (!entity.tier().isNone() && (entity.flux() > 1 || cachePart.isBase) && noFluxAbove) {
             matrices.push();
 
             var y = entity.renderFluxY - .125 + Math.sin(System.currentTimeMillis() / 2000d) * .02;
@@ -70,7 +69,7 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
 
             matrices.translate(.4375, y, .4375);
 
-            final var shardConsumer = AttunedShardTiers.CRUDE.sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
+            final var shardConsumer = entity.tier().sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
             FLOATING_SHARD.render(matrices, shardConsumer, light, overlay);
             matrices.pop();
         }

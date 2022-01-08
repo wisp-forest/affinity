@@ -2,12 +2,10 @@ package io.wispforest.affinity.blockentity.template;
 
 import io.wispforest.affinity.aethumflux.shards.AttunedShardTier;
 import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
-import io.wispforest.affinity.item.AttunedShardItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -19,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class ShardBearingAethumNetworkMemberBlockEntity extends AethumNetworkMemberBlockEntity {
 
     @NotNull protected ItemStack shard = ItemStack.EMPTY;
-    @NotNull protected AttunedShardTier tier = AttunedShardTiers.EMPTY;
+    @NotNull protected AttunedShardTier tier = AttunedShardTiers.NONE;
 
     public ShardBearingAethumNetworkMemberBlockEntity(BlockEntityType<? extends AethumNetworkMemberBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -28,11 +26,16 @@ public abstract class ShardBearingAethumNetworkMemberBlockEntity extends AethumN
     public abstract ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit);
 
     public boolean hasShard() {
-        return this.tier != AttunedShardTiers.EMPTY;
+        return this.tier != AttunedShardTiers.NONE;
     }
 
     public AttunedShardTier tier() {
         return tier;
+    }
+
+    protected void updateTransferRateForTier() {
+        this.fluxStorage.setMaxExtract(this.tier.maxTransfer());
+        this.fluxStorage.setMaxInsert(this.tier.maxTransfer());
     }
 
     @Override
@@ -52,7 +55,7 @@ public abstract class ShardBearingAethumNetworkMemberBlockEntity extends AethumN
         super.readNbt(nbt);
 
         this.shard = ItemStack.fromNbt(nbt.getCompound("Shard"));
-        if (this.shard.isOf(Items.AMETHYST_SHARD)) this.tier = AttunedShardTiers.CRUDE;
-        if (this.shard.getItem() instanceof AttunedShardItem shardItem) this.tier = shardItem.tier();
+        this.tier = AttunedShardTiers.forItem(this.shard.getItem());
+        this.updateTransferRateForTier();
     }
 }
