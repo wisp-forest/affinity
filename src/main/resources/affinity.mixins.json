@@ -22,8 +22,8 @@
     "client.ClientPlayNetworkHandlerMixin",
     "client.ClientWorldMixin",
     "client.DimensionTypeMixin",
-    "client.InGameHudMixin",
-    "client.WorldRendererMixin"
+    "client.EntityMixin",
+    "client.InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

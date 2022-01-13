@@ -4,11 +4,15 @@ import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.Formatting;
+
+import java.util.Objects;
 
 public class GlowingColorComponent implements Component, AutoSyncedComponent {
 
     private final PlayerEntity provider;
-    private String color = "green";
+    private String color = "none";
 
     public GlowingColorComponent(PlayerEntity provider) {
         this.provider = provider;
@@ -24,8 +28,13 @@ public class GlowingColorComponent implements Component, AutoSyncedComponent {
         tag.putString("Color", this.color);
     }
 
-    public String getColor() {
-        return color;
+    public DyeColor getColor() {
+        return Objects.equals(color, "none") ? null : DyeColor.byName(color, DyeColor.WHITE);
+    }
+
+    public void reset() {
+        this.color = "none";
+        AffinityComponents.GLOWING_COLOR.sync(provider);
     }
 
     public void setColor(String color) {
