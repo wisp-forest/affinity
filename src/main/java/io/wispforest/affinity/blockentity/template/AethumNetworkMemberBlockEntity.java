@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxStorage;
+import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.network.FluxSyncHandler;
 import io.wispforest.affinity.util.NbtUtil;
 import net.fabricmc.api.EnvType;
@@ -12,14 +13,16 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback {
+public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback, CrosshairStatProvider {
 
     protected final Map<BlockPos, AethumLink.Type> LINKS = new HashMap<>();
     protected final AethumFluxStorage fluxStorage = new AethumFluxStorage(this);
@@ -106,6 +109,11 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     // ------------
     // Flux methods
     // ------------
+
+    @Override
+    public void appendTooltipEntries(List<Entry> entries) {
+        entries.add(new Entry(Text.of("Flux: " + this.flux()), 0, 0));
+    }
 
     public void updateFlux(long flux) {
         if (this.fluxStorage.setFlux(flux)) this.sendFluxUpdate();

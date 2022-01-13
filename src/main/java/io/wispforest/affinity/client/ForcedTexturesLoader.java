@@ -1,4 +1,4 @@
-package io.wispforest.affinity.client.render;
+package io.wispforest.affinity.client;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

@@ -1,17 +1,19 @@
 package io.wispforest.affinity.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.ArrayList;
 
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
@@ -30,10 +32,20 @@ public class InGameHudMixin {
 
         if (!(client.crosshairTarget instanceof BlockHitResult hit)) return;
 
-        final var member = Affinity.AETHUM_MEMBER.find(client.world, hit.getBlockPos(), null);
-        if (member == null) return;
+        final var blockEntity = client.world.getBlockEntity(hit.getBlockPos());
+        if (!(blockEntity instanceof CrosshairStatProvider provider)) return;
 
-        client.textRenderer.draw(matrices, Text.of("Stored Flux: " + member.flux()), this.scaledWidth / 2f + 10, this.scaledHeight / 2f, 0xFFFFFF);
+        var entries = new ArrayList<CrosshairStatProvider.Entry>();
+        provider.appendTooltipEntries(entries);
+
+        for (int i = 0; i < entries.size(); i++) {
+            CrosshairStatProvider.Entry entry = entries.get(i);
+
+            RenderSystem.setShaderTexture(0, entry.texture());
+
+            DrawableHelper.drawTexture(matrices, this.scaledWidth / 2 + 10, this.scaledHeight / 2 + i * 10, entry.x(), entry.y(), 8, 8, 32, 32);
+            client.textRenderer.draw(matrices, entry.text(), this.scaledWidth / 2f + 10 + 15, this.scaledHeight / 2f + i * 10, 0xFFFFFF);
+        }
 
         RenderSystem.setShaderTexture(0, InGameHud.GUI_ICONS_TEXTURE);
     }

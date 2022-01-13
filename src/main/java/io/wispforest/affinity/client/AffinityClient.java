@@ -1,6 +1,5 @@
 package io.wispforest.affinity.client;
 
-import io.wispforest.affinity.client.render.ForcedTexturesLoader;
 import io.wispforest.affinity.client.render.blockentity.AethumFluxCacheBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.BrewingCauldronBlockEntityRenderer;

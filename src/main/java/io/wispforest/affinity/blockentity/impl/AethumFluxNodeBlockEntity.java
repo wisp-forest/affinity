@@ -314,6 +314,13 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     // Getters
     // -------
 
+    @Override
+    public void appendTooltipEntries(List<Entry> entries) {
+        super.appendTooltipEntries(entries);
+        entries.add(new Entry(Text.of("Max Transfer: " + this.tier.maxTransfer() + "/t"), 8, 0));
+        entries.add(new Entry(Text.of("Links: " + this.LINKS.size()), 16, 0));
+    }
+
     public int outerShardCount() {
         return this.outerShardCount;
     }
