@@ -3,7 +3,7 @@ package io.wispforest.affinity.block.impl;
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
 import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
-import io.wispforest.affinity.registries.AffinityBlocks;
+import io.wispforest.affinity.init.AffinityBlocks;
 import io.wispforest.affinity.util.ListUtil;
 import io.wispforest.affinity.util.potion.PotionMixture;
 import io.wispforest.owo.ops.ItemOps;

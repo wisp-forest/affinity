@@ -1,4 +1,4 @@
-package io.wispforest.affinity.registries;
+package io.wispforest.affinity.init;
 
 import io.wispforest.affinity.entity.WispEntity;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;

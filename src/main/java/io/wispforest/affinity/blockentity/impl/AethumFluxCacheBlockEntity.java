@@ -8,7 +8,7 @@ import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntit
 import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.network.AffinityNetwork;
-import io.wispforest.affinity.registries.AffinityBlocks;
+import io.wispforest.affinity.init.AffinityBlocks;
 import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.api.EnvType;

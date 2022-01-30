@@ -9,7 +9,7 @@ import io.wispforest.affinity.block.template.AbstractAethumFluxNodeBlock;
 import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.item.AttunedShardItem;
-import io.wispforest.affinity.registries.AffinityBlocks;
+import io.wispforest.affinity.init.AffinityBlocks;
 import io.wispforest.affinity.util.ListUtil;
 import io.wispforest.affinity.util.NbtUtil;
 import io.wispforest.owo.ops.ItemOps;

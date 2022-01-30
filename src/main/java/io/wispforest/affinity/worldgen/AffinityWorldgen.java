@@ -1,7 +1,7 @@
 package io.wispforest.affinity.worldgen;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.registries.AffinityEntities;
+import io.wispforest.affinity.init.AffinityEntities;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.SpawnGroup;

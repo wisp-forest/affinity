@@ -3,7 +3,7 @@ package io.wispforest.affinity.block.impl;
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
 import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
-import io.wispforest.affinity.registries.AffinityBlocks;
+import io.wispforest.affinity.init.AffinityBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-import static io.wispforest.affinity.registries.AffinityBlocks.AETHUM_FLUX_CACHE;
+import static io.wispforest.affinity.init.AffinityBlocks.AETHUM_FLUX_CACHE;
 
 @SuppressWarnings("deprecation")
 public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {

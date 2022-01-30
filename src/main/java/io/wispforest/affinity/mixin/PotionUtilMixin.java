@@ -1,6 +1,6 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.registries.AffinityStatusEffects;
+import io.wispforest.affinity.init.AffinityStatusEffects;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.effect.StatusEffectInstance;

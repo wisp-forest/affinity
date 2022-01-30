@@ -1,7 +1,7 @@
 package io.wispforest.affinity.item;
 
-import io.wispforest.affinity.registries.AffinityBlocks;
-import io.wispforest.affinity.registries.AffinityItems;
+import io.wispforest.affinity.init.AffinityBlocks;
+import io.wispforest.affinity.init.AffinityItems;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.itemgroup.gui.ItemGroupButton;
