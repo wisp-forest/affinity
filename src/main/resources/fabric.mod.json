@@ -33,7 +33,7 @@
     "fabric": "*",
     "minecraft": ">=1.18",
     "trinkets": ">=3.0.0",
-    "owo": ">=0.3.12"
+    "owo": ">=0.5.0+1.18"
   },
   "custom": {
     "cardinal-components": [

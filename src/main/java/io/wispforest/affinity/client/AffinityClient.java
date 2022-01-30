@@ -4,7 +4,7 @@ import io.wispforest.affinity.client.render.blockentity.AethumFluxCacheBlockEnti
 import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.BrewingCauldronBlockEntityRenderer;
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
-import io.wispforest.affinity.network.AffinityPackets;
+import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.registries.AffinityEntities;
 import net.fabricmc.api.ClientModInitializer;
@@ -32,7 +32,6 @@ public class AffinityClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(AffinityEntities.WISP, WispEntityRenderer::new);
 
-        AffinityPackets.Client.registerListeners();
         ForcedTexturesLoader.load();
     }
 }

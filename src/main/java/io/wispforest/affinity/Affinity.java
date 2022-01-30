@@ -7,6 +7,7 @@ import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.mixin.access.BlockEntityTypeAccessor;
 import io.wispforest.affinity.mixin.access.SignTypeInvoker;
 import io.wispforest.affinity.mixin.access.TreeFeatureConfigAccessor;
+import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.registries.AffinityBlocks;
 import io.wispforest.affinity.registries.AffinityEntities;
 import io.wispforest.affinity.registries.AffinityItems;
@@ -48,6 +49,7 @@ public class Affinity implements ModInitializer {
         FieldRegistrationHandler.register(AffinityEntities.class, MOD_ID, false);
 
         AffinityStatusEffects.register();
+        AffinityNetwork.initialize();
 
         //noinspection ConstantConditions
         var azaleaConfig = (TreeFeatureConfigAccessor) BuiltinRegistries.CONFIGURED_FEATURE.get(new Identifier("azalea_tree")).config;

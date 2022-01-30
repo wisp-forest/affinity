@@ -20,7 +20,7 @@ public class AffinityItemGroup extends OwoItemGroup {
         this.addTab(Icon.of(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE), "main", ItemGroupTab.EMPTY);
         this.addTab(Icon.of(AffinityBlocks.AZALEA_LOG), "nature", ItemGroupTab.EMPTY);
 
-        this.addButton(ItemGroupButton.github("https://github.com/glisco03/affinity"));
+        this.addButton(ItemGroupButton.github("https://github.com/gliscowo/affinity"));
     }
 
     @Override

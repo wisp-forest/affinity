@@ -130,7 +130,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         var visitedNodes = new ArrayList<BlockPos>();
         visitedNodes.add(this.pos);
 
-        var queue = new ArrayDeque<>(LINKS.keySet());
+        var queue = new ArrayDeque<>(links.keySet());
 
         while (!queue.isEmpty()) {
             var memberPos = queue.poll();
@@ -156,9 +156,9 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     public Collection<AethumNetworkMember> membersWithNormalLink() {
         if (this.cachedMembers != null) return this.cachedMembers;
 
-        this.cachedMembers = new ArrayList<>(this.LINKS.size());
-        for (var memberLink : LINKS.keySet()) {
-            if (LINKS.get(memberLink) != AethumLink.Type.NORMAL) continue;
+        this.cachedMembers = new ArrayList<>(this.links.size());
+        for (var memberLink : links.keySet()) {
+            if (links.get(memberLink) != AethumLink.Type.NORMAL) continue;
             final var member = Affinity.AETHUM_MEMBER.find(world, memberLink, null);
 
             if (member == null) continue;
@@ -185,7 +185,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
             if (!member.addLinkParent(this.pos, type)) return AethumLink.Result.ALREADY_LINKED;
         }
 
-        this.LINKS.put(pos.toImmutable(), type);
+        this.links.put(pos.toImmutable(), type);
         this.cachedMembers = null;
         this.markDirty(true);
 
@@ -194,7 +194,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
     @Override
     public void addNodeLink(BlockPos pos) {
-        this.LINKS.put(pos.toImmutable(), AethumLink.Type.NORMAL);
+        this.links.put(pos.toImmutable(), AethumLink.Type.NORMAL);
         this.markDirty(true);
     }
 
@@ -317,8 +317,8 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     @Override
     public void appendTooltipEntries(List<Entry> entries) {
         super.appendTooltipEntries(entries);
-        entries.add(new Entry(Text.of("Max Transfer: " + this.tier.maxTransfer() + "/t"), 8, 0));
-        entries.add(new Entry(Text.of("Links: " + this.LINKS.size()), 16, 0));
+        entries.add(new Entry(Text.of(this.tier.maxTransfer() + "/t"), 8, 0));
+        entries.add(new Entry(Text.of("" + this.links.size()), 16, 0));
     }
 
     public int outerShardCount() {

@@ -3,10 +3,7 @@ package io.wispforest.affinity.registries;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.*;
 import io.wispforest.affinity.block.shadowed.*;
-import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
-import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
-import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
-import io.wispforest.affinity.blockentity.impl.SundialBlockEntity;
+import io.wispforest.affinity.blockentity.impl.*;
 import io.wispforest.affinity.mixin.access.SignTypeInvoker;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
@@ -36,6 +33,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(0) public static final Block AETHUM_FLUX_CACHE = new AethumFluxCacheBlock();
     @Tab(0) public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
     @Tab(0) public static final Block SUNDIAL = new SundialBlock();
+    @Tab(0) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
 
     public static final Block AZALEA_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
     public static final Block AZALEA_LOG = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG));
@@ -79,6 +77,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<SundialBlockEntity> SUNDIAL = FabricBlockEntityTypeBuilder.create(SundialBlockEntity::new,
                 AffinityBlocks.SUNDIAL).build();
 
+        public static final BlockEntityType<ArborealAccumulationApparatusBlockEntity> ARBOREAL_ACCUMULATION_APPARATUS =
+                FabricBlockEntityTypeBuilder.create(ArborealAccumulationApparatusBlockEntity::new, AffinityBlocks.ARBOREAL_ACCUMULATION_APPARATUS).build();
+
         @Override
         public Registry<BlockEntityType<?>> getRegistry() {
             return Registry.BLOCK_ENTITY_TYPE;
@@ -98,6 +99,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_CACHE);
             Affinity.AETHUM_MEMBER.registerSelf(BREWING_CAULDRON);
             Affinity.AETHUM_MEMBER.registerSelf(SUNDIAL);
+            Affinity.AETHUM_MEMBER.registerSelf(ARBOREAL_ACCUMULATION_APPARATUS);
         }
     }
 

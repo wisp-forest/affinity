@@ -24,7 +24,7 @@ import java.util.Set;
 @SuppressWarnings("UnstableApiUsage")
 public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback, CrosshairStatProvider {
 
-    protected final Map<BlockPos, AethumLink.Type> LINKS = new HashMap<>();
+    protected final Map<BlockPos, AethumLink.Type> links = new HashMap<>();
     protected final AethumFluxStorage fluxStorage = new AethumFluxStorage(this);
 
     public AethumNetworkMemberBlockEntity(BlockEntityType<? extends AethumNetworkMemberBlockEntity> type, BlockPos pos, BlockState state) {
@@ -32,7 +32,7 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     }
 
     public void onBroken() {
-        for (var memberPos : this.LINKS.keySet()) {
+        for (var memberPos : this.links.keySet()) {
             var member = Affinity.AETHUM_MEMBER.find(world, memberPos, null);
             if (member == null) continue;
 
@@ -56,13 +56,13 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        NbtUtil.readLinks(nbt, "LinkedMembers", LINKS);
+        NbtUtil.readLinks(nbt, "LinkedMembers", links);
         this.fluxStorage.readNbt(nbt);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        NbtUtil.writeLinks(nbt, "LinkedMembers", LINKS);
+        NbtUtil.writeLinks(nbt, "LinkedMembers", links);
         this.fluxStorage.writeNbt(nbt);
     }
 
@@ -82,19 +82,19 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public Set<BlockPos> linkedMembers() {
-        return LINKS.keySet();
+        return links.keySet();
     }
 
     @Override
     public boolean isLinked(BlockPos pos) {
-        return this.LINKS.containsKey(pos);
+        return this.links.containsKey(pos);
     }
 
     @Override
     public boolean addLinkParent(BlockPos pos, AethumLink.Type type) {
         if (isLinked(pos)) return false;
 
-        this.LINKS.put(pos.toImmutable(), type);
+        this.links.put(pos.toImmutable(), type);
         this.markDirty(true);
 
         return true;
@@ -102,7 +102,7 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public void onLinkTargetRemoved(BlockPos pos) {
-        this.LINKS.remove(pos);
+        this.links.remove(pos);
         this.markDirty(true);
     }
 
@@ -112,11 +112,15 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public void appendTooltipEntries(List<Entry> entries) {
-        entries.add(new Entry(Text.of("Flux: " + this.flux()), 0, 0));
+        entries.add(new Entry(Text.of("" + this.visualFlux()), 0, 0));
     }
 
     public void updateFlux(long flux) {
         if (this.fluxStorage.setFlux(flux)) this.sendFluxUpdate();
+    }
+
+    public long visualFlux() {
+        return flux();
     }
 
     @Override
