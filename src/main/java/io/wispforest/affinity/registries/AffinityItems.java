@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
 import io.wispforest.affinity.item.AethumFluxBottleItem;
 import io.wispforest.affinity.item.AttunedShardItem;
+import io.wispforest.affinity.item.GeologicalResonatorItem;
 import io.wispforest.affinity.item.IridescenceWandItem;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
@@ -22,6 +23,7 @@ public class AffinityItems implements ItemRegistryContainer {
 
     public static final Item EMERALD_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
     public static final Item SAPPHIRE_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
+    public static final Item GEOLOGICAL_RESONATOR = new GeologicalResonatorItem();
 
     public static final Item AZALEA_FLOWERS = new Item(new OwoItemSettings().tab(1).group(Affinity.AFFINITY_GROUP));
 
