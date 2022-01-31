@@ -35,6 +35,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(0) public static final Block SUNDIAL = new SundialBlock();
     @Tab(0) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
 
+    public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
+
     public static final Block AZALEA_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
     public static final Block AZALEA_LOG = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG));
     public static final Block STRIPPED_AZALEA_LOG = new PillarBlock(FabricBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG));

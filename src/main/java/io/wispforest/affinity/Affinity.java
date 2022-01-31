@@ -12,6 +12,7 @@ import io.wispforest.affinity.init.AffinityBlocks;
 import io.wispforest.affinity.init.AffinityEntities;
 import io.wispforest.affinity.init.AffinityItems;
 import io.wispforest.affinity.init.AffinityStatusEffects;
+import io.wispforest.affinity.util.ClumpDirectionLootCondition;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.util.recipe.PotionMixingRecipeSerializer;
 import io.wispforest.affinity.worldgen.AffinityStructures;
@@ -22,6 +23,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.loot.condition.LootConditionTypes;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
@@ -50,6 +52,8 @@ public class Affinity implements ModInitializer {
 
         AffinityStatusEffects.register();
         AffinityNetwork.initialize();
+
+        Registry.register(Registry.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
 
         //noinspection ConstantConditions
         var azaleaConfig = (TreeFeatureConfigAccessor) BuiltinRegistries.CONFIGURED_FEATURE.get(new Identifier("azalea_tree")).config;
