@@ -10,6 +10,7 @@
     "ItemMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
+    "PlayerEntityMixin",
     "PotionItemMixin",
     "PotionUtilMixin",
     "StatusEffectMixin",

@@ -66,6 +66,9 @@ dependencies {
 
     modImplementation "dev.emi:trinkets:${project.trinkets_version}"
 
+    modImplementation "io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"
+    include "io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"
+
     modImplementation "io.wispforest:owo-lib:${project.owo_version}"
 
     modImplementation 'com.ptsmods:devlogin:1.2.1'
