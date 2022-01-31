@@ -29,9 +29,7 @@ public class GeologicalResonatorItem extends Item {
         if (world.isClient()) return ActionResult.SUCCESS;
         final var validDirection = PeculiarClumpBlock.getValidDirection(pos);
         final var side = context.getSide();
-        if (validDirection == side) {
-            WorldOps.playSound(world, pos, SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.BLOCKS);
-        }
+        WorldOps.playSound(world, pos, side == validDirection ? SoundEvents.BLOCK_AMETHYST_BLOCK_HIT : SoundEvents.BLOCK_STONE_HIT, SoundCategory.BLOCKS);
 
         return ActionResult.SUCCESS;
     }

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "affinity:peculiar_clump"
+    "affinity:peculiar_clump",
+    "affinity:copper_plated_aethum_flux_node"
   ]
 }
