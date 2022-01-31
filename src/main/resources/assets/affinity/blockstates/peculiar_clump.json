@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "block/andesite"
+      "model": "affinity:block/peculiar_clump"
     }
   }
 }

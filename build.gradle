@@ -7,6 +7,33 @@ plugins {
 version = "${project.mod_version}+${project.minecraft_base_version}"
 group = project.maven_group
 
+loom {
+    accessWidenerPath = project.file("src/main/resources/affinity-datagen.accesswidener");
+
+    runs {
+        datagen {
+            server()
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated")}"
+            vmArg "-Dfabric-api.datagen.strict-validation"
+
+            ideConfigGenerated = true
+            runDir "build/datagen"
+        }
+        datagenClient {
+            client()
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated")}"
+            vmArg "-Dfabric-api.datagen.strict-validation"
+
+            ideConfigGenerated = true
+            runDir "build/datagen"
+        }
+    }
+}
+
 repositories {
     maven {
         name = "TerraformersMC"

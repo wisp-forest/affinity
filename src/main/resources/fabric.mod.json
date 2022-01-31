@@ -21,6 +21,9 @@
     "rei_plugins": [
       "io.wispforest.affinity.compat.rei.AffinityReiPlugin"
     ],
+    "fabric-datagen": [
+      "io.wispforest.affinity.datagen.AffinityDataGeneratorEntrypoint"
+    ],
     "cardinal-components-entity": [
       "io.wispforest.affinity.util.components.AffinityComponents"
     ]
