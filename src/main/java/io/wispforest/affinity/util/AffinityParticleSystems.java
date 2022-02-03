@@ -4,7 +4,9 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
+import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.Vec3d;
 
 public class AffinityParticleSystems {
 
@@ -20,6 +22,15 @@ public class AffinityParticleSystems {
         ClientParticles.setParticleCount(50);
         ClientParticles.spawnPrecise(ParticleTypes.SCRAPE, world, pos, 1, 2, 1);
     });
+
+    public static final ParticleSystem<LineData> WISP_ATTACK = CONTROLLER.register(LineData.class, (world, pos, data) -> {
+        var length = data.target().subtract(pos).length();
+
+        ClientParticles.setParticleCount((int) Math.round(length * 5));
+        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVector(data.color()), 1), world, pos, data.target(), .15f);
+    });
+
+    public record LineData(Vec3d target, int color) {}
 
     public static void initialize() {}
 }

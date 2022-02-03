@@ -79,7 +79,8 @@ public class AffinityWorldgen implements AutoRegistryContainer<PlacedFeature> {
                 .build();
 
         var spawnSettings = new SpawnSettings.Builder();
-        spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(AffinityEntities.WISP, 10, 2, 10));
+        spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(AffinityEntities.PASSIVE_WISP, 10, 2, 5));
+        spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(AffinityEntities.HOSTILE_WISP, 2, 5, 15));
         DefaultBiomeFeatures.addFarmAnimals(spawnSettings);
 
         return new Biome.Builder()

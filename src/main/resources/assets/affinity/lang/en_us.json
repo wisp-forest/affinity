@@ -4,6 +4,9 @@
   "itemGroup.affinity.affinity.tab.main": "Affinity",
   "itemGroup.affinity.affinity.tab.nature": "Affinity - Nature",
 
+  "entity.affinity.passive_wisp": "Wisp",
+  "entity.affinity.hostile_wisp": "Wisp",
+
   "block.affinity.brewing_cauldron": "Brewing Cauldron",
   "block.affinity.sundial": "Sundial",
   "block.affinity.copper_plated_aethum_flux_node": "Copper Plated Aethum Flux Node",

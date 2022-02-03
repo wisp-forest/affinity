@@ -29,7 +29,8 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.AZALEA_TRAPDOOR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.UNFLOWERING_AZALEA_LEAVES, RenderLayer.getCutout());
 
-        EntityRendererRegistry.register(AffinityEntities.WISP, WispEntityRenderer::new);
+        EntityRendererRegistry.register(AffinityEntities.PASSIVE_WISP, WispEntityRenderer::new);
+        EntityRendererRegistry.register(AffinityEntities.HOSTILE_WISP, WispEntityRenderer::new);
 
         ForcedTexturesLoader.load();
     }
