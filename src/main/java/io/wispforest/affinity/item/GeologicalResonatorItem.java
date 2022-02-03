@@ -2,7 +2,7 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.PeculiarClumpBlock;
-import io.wispforest.affinity.init.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.item.Item;

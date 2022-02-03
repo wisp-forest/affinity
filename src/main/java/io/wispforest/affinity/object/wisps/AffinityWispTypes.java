@@ -1,4 +1,4 @@
-package io.wispforest.affinity.init;
+package io.wispforest.affinity.object.wisps;
 
 public enum AffinityWispTypes implements WispType {
 

@@ -1,4 +1,4 @@
-package io.wispforest.affinity.init;
+package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.statuseffects.AffinityStatusEffect;

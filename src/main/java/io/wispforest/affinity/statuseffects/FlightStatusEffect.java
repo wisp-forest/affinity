@@ -4,7 +4,7 @@ import io.github.ladysnake.pal.AbilitySource;
 import io.github.ladysnake.pal.Pal;
 import io.github.ladysnake.pal.VanillaAbilities;
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.init.AffinityStatusEffects;
+import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffectCategory;

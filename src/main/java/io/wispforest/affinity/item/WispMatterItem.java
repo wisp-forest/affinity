@@ -1,7 +1,7 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.init.WispType;
+import io.wispforest.affinity.object.wisps.WispType;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.ops.TextOps;
 import net.minecraft.client.item.TooltipContext;

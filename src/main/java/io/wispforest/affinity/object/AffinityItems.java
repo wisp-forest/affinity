@@ -1,8 +1,9 @@
-package io.wispforest.affinity.init;
+package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.item.*;
+import io.wispforest.affinity.object.wisps.AffinityWispTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import net.minecraft.item.BoatItem;

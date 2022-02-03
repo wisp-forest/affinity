@@ -1,6 +1,6 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.init.AffinityStatusEffects;
+import io.wispforest.affinity.object.AffinityStatusEffects;
 import io.wispforest.affinity.misc.AffinityParticleSystems;
 import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.entity.EntityType;

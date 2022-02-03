@@ -1,4 +1,4 @@
-package io.wispforest.affinity.aethumflux.shards;
+package io.wispforest.affinity.object.attunedshards;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.item.AttunedShardItem;

@@ -4,9 +4,9 @@ import io.wispforest.affinity.client.render.blockentity.AethumFluxCacheBlockEnti
 import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.BrewingCauldronBlockEntityRenderer;
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
-import io.wispforest.affinity.init.AffinityBlocks;
-import io.wispforest.affinity.init.AffinityEntities;
-import io.wispforest.affinity.init.AffinityItems;
+import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityEntities;
+import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.item.WispMatterItem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;

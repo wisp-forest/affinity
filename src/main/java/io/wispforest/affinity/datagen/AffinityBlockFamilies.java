@@ -1,6 +1,6 @@
 package io.wispforest.affinity.datagen;
 
-import io.wispforest.affinity.init.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityBlocks;
 import net.minecraft.data.family.BlockFamily;
 
 public class AffinityBlockFamilies {

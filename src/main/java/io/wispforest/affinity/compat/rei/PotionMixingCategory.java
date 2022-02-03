@@ -1,7 +1,7 @@
 package io.wispforest.affinity.compat.rei;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.init.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityBlocks;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;

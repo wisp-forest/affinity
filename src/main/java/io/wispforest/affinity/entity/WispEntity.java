@@ -2,7 +2,7 @@ package io.wispforest.affinity.entity;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.entity.goal.FlyRandomlyGoal;
-import io.wispforest.affinity.init.WispType;
+import io.wispforest.affinity.object.wisps.WispType;
 import io.wispforest.affinity.util.MathUtil;
 import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.block.BlockState;

@@ -1,7 +1,7 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.init.AffinityBlocks;
-import io.wispforest.affinity.init.AffinityItems;
+import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

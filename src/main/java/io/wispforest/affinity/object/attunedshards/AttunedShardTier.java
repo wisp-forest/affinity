@@ -1,4 +1,4 @@
-package io.wispforest.affinity.aethumflux.shards;
+package io.wispforest.affinity.object.attunedshards;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

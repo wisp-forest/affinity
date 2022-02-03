@@ -1,4 +1,4 @@
-package io.wispforest.affinity.init;
+package io.wispforest.affinity.object.wisps;
 
 /**
  * The type of a Wisp entity. Used to determine the

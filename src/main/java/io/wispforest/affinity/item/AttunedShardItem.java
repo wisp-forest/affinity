@@ -1,7 +1,7 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.aethumflux.shards.AttunedShardTier;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.minecraft.item.Item;
 

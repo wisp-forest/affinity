@@ -1,7 +1,7 @@
 package io.wispforest.affinity.entity;
 
-import io.wispforest.affinity.init.AffinityWispTypes;
-import io.wispforest.affinity.init.WispType;
+import io.wispforest.affinity.object.wisps.AffinityWispTypes;
+import io.wispforest.affinity.object.wisps.WispType;
 import io.wispforest.affinity.misc.AffinityParticleSystems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;

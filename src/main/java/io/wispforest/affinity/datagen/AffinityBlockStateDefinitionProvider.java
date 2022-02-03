@@ -12,8 +12,8 @@ import net.minecraft.util.Identifier;
 
 import java.util.Optional;
 
-import static io.wispforest.affinity.init.AffinityBlocks.*;
-import static io.wispforest.affinity.init.AffinityItems.*;
+import static io.wispforest.affinity.object.AffinityBlocks.*;
+import static io.wispforest.affinity.object.AffinityItems.*;
 
 public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefinitionProvider {
 

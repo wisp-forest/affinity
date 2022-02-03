@@ -1,7 +1,7 @@
 package io.wispforest.affinity.datagen;
 
-import io.wispforest.affinity.init.AffinityEntities;
-import io.wispforest.affinity.init.AffinityItems;
+import io.wispforest.affinity.object.AffinityEntities;
+import io.wispforest.affinity.object.AffinityItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
 import net.minecraft.entity.EntityType;

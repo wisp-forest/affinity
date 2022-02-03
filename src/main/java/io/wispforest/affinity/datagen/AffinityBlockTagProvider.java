@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.block.Block;
 import net.minecraft.tag.BlockTags;
 
-import static io.wispforest.affinity.init.AffinityBlocks.*;
+import static io.wispforest.affinity.object.AffinityBlocks.*;
 
 public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 

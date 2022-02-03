@@ -1,7 +1,7 @@
 package io.wispforest.affinity.blockentity.template;
 
-import io.wispforest.affinity.aethumflux.shards.AttunedShardTier;
-import io.wispforest.affinity.aethumflux.shards.AttunedShardTiers;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
