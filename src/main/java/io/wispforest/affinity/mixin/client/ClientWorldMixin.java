@@ -1,6 +1,6 @@
 package io.wispforest.affinity.mixin.client;
 
-import io.wispforest.affinity.util.CelestialZoomer;
+import io.wispforest.affinity.misc.CelestialZoomer;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;

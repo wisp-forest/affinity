@@ -1,11 +1,10 @@
-package io.wispforest.affinity.util.components;
+package io.wispforest.affinity.misc.components;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.Formatting;
 
 import java.util.Objects;
 

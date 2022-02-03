@@ -1,6 +1,7 @@
-package io.wispforest.affinity.util;
+package io.wispforest.affinity.misc;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.util.MathUtil;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;

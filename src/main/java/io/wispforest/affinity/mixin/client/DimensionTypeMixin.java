@@ -1,6 +1,6 @@
 package io.wispforest.affinity.mixin.client;
 
-import io.wispforest.affinity.util.CelestialZoomer;
+import io.wispforest.affinity.misc.CelestialZoomer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.dimension.DimensionType;

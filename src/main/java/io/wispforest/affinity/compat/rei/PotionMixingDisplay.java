@@ -1,7 +1,7 @@
 package io.wispforest.affinity.compat.rei;
 
 import com.google.common.collect.ImmutableList;
-import io.wispforest.affinity.util.recipe.PotionMixingRecipe;
+import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;

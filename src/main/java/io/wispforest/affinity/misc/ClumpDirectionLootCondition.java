@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util;
+package io.wispforest.affinity.misc;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;

@@ -1,6 +1,6 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.util.potion.GlowingPotion;
+import io.wispforest.affinity.misc.potion.GlowingPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.text.Style;

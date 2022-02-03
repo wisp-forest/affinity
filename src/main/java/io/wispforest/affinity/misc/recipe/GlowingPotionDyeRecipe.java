@@ -1,6 +1,6 @@
-package io.wispforest.affinity.util.recipe;
+package io.wispforest.affinity.misc.recipe;
 
-import io.wispforest.affinity.util.potion.GlowingPotion;
+import io.wispforest.affinity.misc.potion.GlowingPotion;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;

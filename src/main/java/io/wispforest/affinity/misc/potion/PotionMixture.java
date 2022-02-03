@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util.potion;
+package io.wispforest.affinity.misc.potion;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.effect.StatusEffectInstance;

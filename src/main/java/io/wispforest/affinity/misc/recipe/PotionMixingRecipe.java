@@ -1,7 +1,7 @@
-package io.wispforest.affinity.util.recipe;
+package io.wispforest.affinity.misc.recipe;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.util.potion.PotionMixture;
+import io.wispforest.affinity.misc.potion.PotionMixture;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.Inventory;

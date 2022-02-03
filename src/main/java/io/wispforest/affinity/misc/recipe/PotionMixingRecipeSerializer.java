@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util.recipe;
+package io.wispforest.affinity.misc.recipe;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;

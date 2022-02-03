@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util.components;
+package io.wispforest.affinity.misc.components;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
