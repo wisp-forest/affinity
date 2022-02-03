@@ -8,5 +8,6 @@ public class AffinityDataGeneratorEntrypoint implements DataGeneratorEntrypoint 
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         fabricDataGenerator.addProvider(AffinityBlockStateDefinitionProvider::new);
         fabricDataGenerator.addProvider(AffinityBlockTagProvider::new);
+        fabricDataGenerator.addProvider(AffinityEntityLootTableProvider::new);
     }
 }

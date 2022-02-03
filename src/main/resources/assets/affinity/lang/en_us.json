@@ -4,8 +4,11 @@
   "itemGroup.affinity.affinity.tab.main": "Affinity",
   "itemGroup.affinity.affinity.tab.nature": "Affinity - Nature",
 
-  "entity.affinity.passive_wisp": "Wisp",
-  "entity.affinity.hostile_wisp": "Wisp",
+  "entity.affinity.wisp": "Wisp",
+  "item.affinity.wisp_matter": "Wisp Matter",
+  "wispType.affinity.inert": "Inert",
+  "wispType.affinity.wise": "Wise",
+  "wispType.affinity.vicious": "Vicious",
 
   "block.affinity.brewing_cauldron": "Brewing Cauldron",
   "block.affinity.sundial": "Sundial",

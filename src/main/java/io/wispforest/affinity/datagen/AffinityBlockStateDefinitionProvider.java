@@ -8,6 +8,7 @@ import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.model.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Identifier;
 
 import java.util.Optional;
 
@@ -47,12 +48,15 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
         simpleStateWithParentedItem(generator, STONE_BANDED_AETHUM_FLUX_NODE);
         simpleStateWithGeneratedItem(generator, SUNDIAL);
         simpleStateWithParentedItem(generator, ARBOREAL_ACCUMULATION_APPARATUS);
+
     }
 
     @Override
     public void generateItemModels(ItemModelGenerator generator) {
         generated(generator, AZALEA_FLOWERS, AETHUM_FLUX_BOTTLE, AZALEA_BOAT,
                 MILDLY_ATTUNED_AMETHYST_SHARD, FAIRLY_ATTUNED_AMETHYST_SHARD, GREATLY_ATTUNED_AMETHYST_SHARD);
+
+        generatedWithTexture(generator, Affinity.id("item/wisp_matter"), INERT_WISP_MATTER, WISE_WISP_MATTER, VICIOUS_WISP_MATTER);
 
         iridescenceWand(generator, EMERALD_WAND_OF_IRIDESCENCE, SAPPHIRE_WAND_OF_IRIDESCENCE);
 
@@ -68,6 +72,12 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
     private void iridescenceWand(ItemModelGenerator generator, Item... items) {
         for (var item : items) {
             generator.register(item, IRIDESCENCE_WAND_MODEL);
+        }
+    }
+
+    private void generatedWithTexture(ItemModelGenerator generator, Identifier texture, Item... items) {
+        for (var item : items) {
+            Models.GENERATED.upload(ModelIds.getItemModelId(item), Texture.layer0(texture), generator.writer);
         }
     }
 

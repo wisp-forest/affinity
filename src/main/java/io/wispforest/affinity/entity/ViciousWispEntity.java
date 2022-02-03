@@ -1,5 +1,7 @@
 package io.wispforest.affinity.entity;
 
+import io.wispforest.affinity.init.AffinityWispTypes;
+import io.wispforest.affinity.init.WispType;
 import io.wispforest.affinity.misc.AffinityParticleSystems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
@@ -8,11 +10,11 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
-public class HostileWispEntity extends WispEntity {
+public class ViciousWispEntity extends WispEntity {
 
     private int attackCooldown = 0;
 
-    public HostileWispEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public ViciousWispEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -22,8 +24,8 @@ public class HostileWispEntity extends WispEntity {
     }
 
     @Override
-    protected int particleColor() {
-        return 0xB8405E;
+    protected WispType type() {
+        return AffinityWispTypes.VICIOUS;
     }
 
     @Override
@@ -46,7 +48,7 @@ public class HostileWispEntity extends WispEntity {
 
         closestPlayer.damage(DamageSource.magic(this, this), 2);
         AffinityParticleSystems.WISP_ATTACK.spawn(this.world, this.getPos(),
-                new AffinityParticleSystems.LineData(closestPlayer.getPos().add(0, 1, 0), this.particleColor()));
+                new AffinityParticleSystems.LineData(closestPlayer.getPos().add(0, 1, 0), this.type().color()));
         this.attackCooldown = 50;
     }
 

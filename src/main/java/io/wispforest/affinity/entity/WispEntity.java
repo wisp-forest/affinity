@@ -1,6 +1,8 @@
 package io.wispforest.affinity.entity;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.entity.goal.FlyRandomlyGoal;
+import io.wispforest.affinity.init.WispType;
 import io.wispforest.affinity.util.MathUtil;
 import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.block.BlockState;
@@ -15,6 +17,9 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -23,12 +28,14 @@ import java.util.Random;
 
 public abstract class WispEntity extends PathAwareEntity {
 
+    private static final TranslatableText DEFAULT_NAME = new TranslatableText(Util.createTranslationKey("entity", Affinity.id("wisp")));
+
     private final DustParticleEffect particles;
 
     public WispEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
 
-        this.particles = new DustParticleEffect(MathUtil.splitRGBToVector(this.particleColor()), 1);
+        this.particles = new DustParticleEffect(MathUtil.splitRGBToVector(this.type().color()), 1);
         this.moveControl = new FlightMoveControl(this, 75, true);
     }
 
@@ -36,7 +43,7 @@ public abstract class WispEntity extends PathAwareEntity {
 
     protected abstract void tickClient();
 
-    protected abstract int particleColor();
+    protected abstract WispType type();
 
     @Override
     protected void initGoals() {
@@ -44,14 +51,24 @@ public abstract class WispEntity extends PathAwareEntity {
     }
 
     @Override
+    public Text getName() {
+        return new TranslatableText(type().translationKey()).append(" ").append(super.getName());
+    }
+
+    @Override
+    protected Text getDefaultName() {
+        return DEFAULT_NAME;
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
-        if (!world.isClient) {
-            this.tickServer();
-        } else {
-            this.tickClient();
+        if (world.isClient) {
             ClientParticles.spawnPrecise(particles, world, this.getPos(), .2, .2, .2);
+            this.tickClient();
+        } else {
+            this.tickServer();
         }
     }
 

@@ -6,11 +6,14 @@ import io.wispforest.affinity.client.render.blockentity.BrewingCauldronBlockEnti
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
 import io.wispforest.affinity.init.AffinityBlocks;
 import io.wispforest.affinity.init.AffinityEntities;
+import io.wispforest.affinity.init.AffinityItems;
+import io.wispforest.affinity.item.WispMatterItem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.RenderLayer;
 
@@ -29,8 +32,13 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.AZALEA_TRAPDOOR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.UNFLOWERING_AZALEA_LEAVES, RenderLayer.getCutout());
 
-        EntityRendererRegistry.register(AffinityEntities.PASSIVE_WISP, WispEntityRenderer::new);
-        EntityRendererRegistry.register(AffinityEntities.HOSTILE_WISP, WispEntityRenderer::new);
+        EntityRendererRegistry.register(AffinityEntities.INERT_WISP, WispEntityRenderer::new);
+        EntityRendererRegistry.register(AffinityEntities.VICIOUS_WISP, WispEntityRenderer::new);
+
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+            if (!(stack.getItem() instanceof WispMatterItem matterItem)) return 0xFFFFFF;
+            return matterItem.wispType().color();
+        }, AffinityItems.INERT_WISP_MATTER, AffinityItems.WISE_WISP_MATTER, AffinityItems.VICIOUS_WISP_MATTER);
 
         ForcedTexturesLoader.load();
     }
