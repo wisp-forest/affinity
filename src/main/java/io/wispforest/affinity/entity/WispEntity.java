@@ -32,11 +32,6 @@ public abstract class WispEntity extends PathAwareEntity {
 
     private final DustParticleEffect particles;
 
-    @Override
-    public boolean shouldRenderName() {
-        return super.shouldRenderName();
-    }
-
     public WispEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
 
@@ -53,11 +48,6 @@ public abstract class WispEntity extends PathAwareEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(10, new FlyRandomlyGoal(this));
-    }
-
-    @Override
-    public Text getDisplayName() {
-        return super.getDisplayName();
     }
 
     @Override

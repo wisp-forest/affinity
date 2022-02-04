@@ -2,13 +2,14 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
-import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
+import io.wispforest.affinity.util.NbtUtil;
 import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.api.EnvType;
@@ -20,6 +21,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -96,6 +99,27 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         if (!this.childCache.isEmpty()) {
             AffinityNetwork.CHANNEL.serverHandle(PlayerLookup.tracking(this))
                     .send(new CacheChildrenPacket(this.pos, this.childCache.stream().map(BlockEntity::getPos).toList()));
+        }
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        final var nbt = super.toInitialChunkDataNbt();
+
+        if (!(this.childCache == null || this.childCache.isEmpty())) {
+            NbtUtil.writeBlockPosList(nbt, "ChildCache", this.childCache.stream().map(BlockEntity::getPos).toList());
+        }
+
+        return nbt;
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        if (this.world != null && this.world.isClient && nbt.contains("ChildCache", NbtElement.LIST_TYPE)) {
+            var children = new ArrayList<BlockPos>();
+            NbtUtil.readBlockPosList(nbt, "ChildCache", children);
+            this.readChildren(children);
         }
     }
 

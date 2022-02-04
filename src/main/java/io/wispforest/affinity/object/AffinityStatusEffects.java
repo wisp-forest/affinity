@@ -36,7 +36,6 @@ public class AffinityStatusEffects {
 
         registerEffectAndPotions(FLIGHT, "flight", 2400, true, false);
 
-
         registerPotions(StatusEffects.RESISTANCE, "resistance", 4800, true, true);
         registerPotions(StatusEffects.GLOWING, "glowing", 9600, true, false, GlowingPotion::new);
         registerPotions(StatusEffects.WITHER, "wither", 400, true, true);

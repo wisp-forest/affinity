@@ -14,11 +14,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NbtUtil {
 
-    public static void writeBlockPosList(NbtCompound nbt, String key, List<BlockPos> set) {
-        var posArray = new long[set.size()];
+    public static void writeBlockPosList(NbtCompound nbt, String key, List<BlockPos> list) {
+        var posArray = new long[list.size()];
 
         int idx = 0;
-        for (var pos : set) {
+        for (var pos : list) {
             posArray[idx] = pos.asLong();
             idx++;
         }
@@ -26,11 +26,11 @@ public class NbtUtil {
         nbt.putLongArray(key, posArray);
     }
 
-    public static void readBlockPosList(NbtCompound nbt, String key, List<BlockPos> set) {
-        set.clear();
+    public static void readBlockPosList(NbtCompound nbt, String key, List<BlockPos> list) {
+        list.clear();
 
         for (var pos : nbt.getLongArray(key)) {
-            set.add(BlockPos.fromLong(pos));
+            list.add(BlockPos.fromLong(pos));
         }
     }
 

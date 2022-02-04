@@ -30,9 +30,6 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
     public void render(AethumFluxCacheBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         final float[] rgb = MathUtil.splitRGBToFloats(0xC295D8);
 
-        final var consumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
-        final var sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(WATER_TEXTURE);
-
         final var cachePart = entity.getCachedState().get(AethumFluxCacheBlock.PART);
         final var bottomY = cachePart.isBase ? 0.125f : 0;
         final var topY = (cachePart.hasCap ? 0.875f : 1);
@@ -42,6 +39,23 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
 
         final var parent = entity.parent();
         final var noFluxAbove = parent == null || parent.nextIsEmpty();
+
+        if (!entity.tier().isNone() && (entity.flux() > 1 || cachePart.isBase) && noFluxAbove) {
+            matrices.push();
+
+            var y = entity.renderFluxY - .125 + Math.sin(System.currentTimeMillis() / 2000d) * .02;
+            if (cachePart.isBase) y = Math.max(bottomY, y);
+            if (cachePart.hasCap) y = Math.min(y, topY - .25);
+
+            matrices.translate(.4375, y, .4375);
+
+            final var shardConsumer = entity.tier().sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
+            FLOATING_SHARD.render(matrices, shardConsumer, light, overlay);
+            matrices.pop();
+        }
+
+        final var consumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
+        final var sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(WATER_TEXTURE);
 
         if (entity.flux() > 1) {
             //noinspection ConstantConditions
@@ -58,20 +72,6 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
             if (parent != null && parent.previousIsNotFull()) {
                 fluxQuad(Direction.DOWN, quadEmitter, consumer, matrices, sprite, rgb, .13f, .13f, .87f, .87f, bottomY, light, overlay);
             }
-        }
-
-        if (!entity.tier().isNone() && (entity.flux() > 1 || cachePart.isBase) && noFluxAbove) {
-            matrices.push();
-
-            var y = entity.renderFluxY - .125 + Math.sin(System.currentTimeMillis() / 2000d) * .02;
-            if (cachePart.isBase) y = Math.max(bottomY, y);
-            if (cachePart.hasCap) y = Math.min(y, topY - .25);
-
-            matrices.translate(.4375, y, .4375);
-
-            final var shardConsumer = entity.tier().sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
-            FLOATING_SHARD.render(matrices, shardConsumer, light, overlay);
-            matrices.pop();
         }
     }
 
