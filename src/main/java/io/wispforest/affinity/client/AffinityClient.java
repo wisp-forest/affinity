@@ -4,10 +4,10 @@ import io.wispforest.affinity.client.render.blockentity.AethumFluxCacheBlockEnti
 import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.BrewingCauldronBlockEntityRenderer;
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
+import io.wispforest.affinity.item.WispMatterItem;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEntities;
 import io.wispforest.affinity.object.AffinityItems;
-import io.wispforest.affinity.item.WispMatterItem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,10 +35,8 @@ public class AffinityClient implements ClientModInitializer {
         EntityRendererRegistry.register(AffinityEntities.INERT_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.VICIOUS_WISP, WispEntityRenderer::new);
 
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
-            if (!(stack.getItem() instanceof WispMatterItem matterItem)) return 0xFFFFFF;
-            return matterItem.wispType().color();
-        }, AffinityItems.INERT_WISP_MATTER, AffinityItems.WISE_WISP_MATTER, AffinityItems.VICIOUS_WISP_MATTER);
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ((WispMatterItem) stack.getItem()).wispType().color(),
+                AffinityItems.INERT_WISP_MATTER, AffinityItems.WISE_WISP_MATTER, AffinityItems.VICIOUS_WISP_MATTER);
 
         ForcedTexturesLoader.load();
     }

@@ -48,6 +48,13 @@ repositories {
     maven { url 'https://maven.wispforest.io' }
 
     maven { url "https://maven.shedaniel.me/" }
+
+    maven {
+        url 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
 }
 
 dependencies {
@@ -71,7 +78,8 @@ dependencies {
 
     modImplementation "io.wispforest:owo-lib:${project.owo_version}"
 
-    modImplementation 'com.ptsmods:devlogin:1.2.1'
+    modLocalRuntime 'com.ptsmods:devlogin:1.2.1'
+    modLocalRuntime "maven.modrinth:emoji-type:1.0.3"
 }
 
 processResources {

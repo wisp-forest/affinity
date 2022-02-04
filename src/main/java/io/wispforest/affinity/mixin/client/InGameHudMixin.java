@@ -38,6 +38,7 @@ public class InGameHudMixin {
         var entries = new ArrayList<CrosshairStatProvider.Entry>();
         provider.appendTooltipEntries(entries);
 
+        RenderSystem.disableBlend();
         for (int i = 0; i < entries.size(); i++) {
             CrosshairStatProvider.Entry entry = entries.get(i);
 
@@ -47,6 +48,7 @@ public class InGameHudMixin {
             client.textRenderer.draw(matrices, entry.text(), this.scaledWidth / 2f + 10 + 15, this.scaledHeight / 2f + i * 10, 0xFFFFFF);
         }
 
+        RenderSystem.enableBlend();
         RenderSystem.setShaderTexture(0, InGameHud.GUI_ICONS_TEXTURE);
     }
 
