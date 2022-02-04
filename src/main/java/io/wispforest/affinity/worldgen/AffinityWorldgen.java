@@ -1,12 +1,12 @@
 package io.wispforest.affinity.worldgen;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.mixin.access.OverworldBiomeCreatorInvoker;
 import io.wispforest.affinity.object.AffinityEntities;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.sound.BiomeMoodSound;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.intprovider.ClampedIntProvider;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.registry.BuiltinRegistries;
@@ -66,20 +66,20 @@ public class AffinityWorldgen implements AutoRegistryContainer<PlacedFeature> {
         generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, FLOWER_WISP_FOREST);
         generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, WISP_FOREST_FLOWERS);
         generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, OAK_AND_AZALEA_TREE);
-//        generation.feature()
 
         var effects = new BiomeEffects.Builder()
                 .grassColor(0x5AA469)
-                .fogColor(getSkyColor(.7f))
+                .fogColor(OverworldBiomeCreatorInvoker.affinity$getSkyColor(.7f))
                 .waterColor(0x94B3FD)
                 .waterFogColor(0x94DAFF)
-                .skyColor(getSkyColor(.7f))
+                .skyColor(OverworldBiomeCreatorInvoker.affinity$getSkyColor(.7f))
                 .moodSound(BiomeMoodSound.CAVE)
                 .music(null)
                 .build();
 
         var spawnSettings = new SpawnSettings.Builder();
         spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(AffinityEntities.INERT_WISP, 10, 2, 5));
+        spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(AffinityEntities.WISE_WISP, 5, 2, 5));
         spawnSettings.spawn(SpawnGroup.MONSTER, new SpawnSettings.SpawnEntry(AffinityEntities.VICIOUS_WISP, 2, 5, 15));
         DefaultBiomeFeatures.addFarmAnimals(spawnSettings);
 
@@ -92,12 +92,6 @@ public class AffinityWorldgen implements AutoRegistryContainer<PlacedFeature> {
                 .spawnSettings(spawnSettings.build())
                 .generationSettings(generation.build())
                 .build();
-    }
-
-    private static int getSkyColor(float temperature) {
-        float f = temperature / 3.0F;
-        f = MathHelper.clamp(f, -1.0F, 1.0F);
-        return MathHelper.hsvToRgb(0.62222224F - f * 0.05F, 0.5F + f * 0.1F, 1.0F);
     }
 
     @Override

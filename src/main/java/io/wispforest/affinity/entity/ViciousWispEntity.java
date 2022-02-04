@@ -24,7 +24,7 @@ public class ViciousWispEntity extends WispEntity {
     }
 
     @Override
-    protected WispType type() {
+    public WispType type() {
         return AffinityWispTypes.VICIOUS;
     }
 

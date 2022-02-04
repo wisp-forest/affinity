@@ -28,6 +28,7 @@ public class AffinityEntityLootTableProvider extends SimpleFabricLootTableProvid
     public void accept(BiConsumer<Identifier, LootTable.Builder> consumer) {
         forEntity(consumer, AffinityEntities.INERT_WISP, itemWithLooting(AffinityItems.INERT_WISP_MATTER, 3));
         forEntity(consumer, AffinityEntities.VICIOUS_WISP, itemWithLooting(AffinityItems.VICIOUS_WISP_MATTER, 3));
+        forEntity(consumer, AffinityEntities.WISE_WISP, itemWithLooting(AffinityItems.WISE_WISP_MATTER, 3));
     }
 
     private LootTable.Builder itemWithLooting(ItemConvertible item, int maxCount) {
