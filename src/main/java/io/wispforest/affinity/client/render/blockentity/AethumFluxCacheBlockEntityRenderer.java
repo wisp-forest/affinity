@@ -28,7 +28,7 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
 
     @Override
     public void render(AethumFluxCacheBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        final float[] rgb = MathUtil.splitRGBToFloats(0xC295D8);
+        final float[] rgb = MathUtil.splitRGBToFloats(0x9C51E0);
 
         final var cachePart = entity.getCachedState().get(AethumFluxCacheBlock.PART);
         final var bottomY = cachePart.isBase ? 0.125f : 0;

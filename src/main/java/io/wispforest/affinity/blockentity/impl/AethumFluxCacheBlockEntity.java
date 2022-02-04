@@ -9,7 +9,6 @@ import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
-import io.wispforest.affinity.util.NbtUtil;
 import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.api.EnvType;
@@ -21,8 +20,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -39,6 +36,7 @@ import java.util.stream.Collectors;
 public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements TickedBlockEntity {
 
     @Environment(EnvType.CLIENT) public float renderFluxY = 0;
+    @Environment(EnvType.CLIENT) public boolean tickedOnce = false;
 
     private boolean isPrimaryStorage;
     @Nullable private ParentStorageReference parentRef = null;
@@ -97,29 +95,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         }
 
         if (!this.childCache.isEmpty()) {
-            AffinityNetwork.CHANNEL.serverHandle(PlayerLookup.tracking(this))
-                    .send(new CacheChildrenPacket(this.pos, this.childCache.stream().map(BlockEntity::getPos).toList()));
-        }
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        final var nbt = super.toInitialChunkDataNbt();
-
-        if (!(this.childCache == null || this.childCache.isEmpty())) {
-            NbtUtil.writeBlockPosList(nbt, "ChildCache", this.childCache.stream().map(BlockEntity::getPos).toList());
-        }
-
-        return nbt;
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        if (this.world != null && this.world.isClient && nbt.contains("ChildCache", NbtElement.LIST_TYPE)) {
-            var children = new ArrayList<BlockPos>();
-            NbtUtil.readBlockPosList(nbt, "ChildCache", children);
-            this.readChildren(children);
+            AffinityNetwork.CHANNEL.serverHandle(PlayerLookup.tracking(this)).send(new CacheChildrenUpdatePacket(this));
         }
     }
 
@@ -164,6 +140,17 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     @Override
     public boolean acceptsLinks() {
         return this.isPrimaryStorage;
+    }
+
+    @Override
+    public void tickClient() {
+        if (this.tickedOnce) return;
+
+        if (this.isPrimaryStorage) {
+            AffinityNetwork.CHANNEL.clientHandle().send(new RequestCacheChildrenPacket(this.pos));
+        }
+
+        this.tickedOnce = true;
     }
 
     @Override
@@ -303,13 +290,24 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     }
 
     static {
-        AffinityNetwork.CHANNEL.registerClientbound(CacheChildrenPacket.class, (message, access) -> {
+        AffinityNetwork.CHANNEL.registerServerbound(RequestCacheChildrenPacket.class, (message, access) -> {
+            if (!(access.player().world.getBlockEntity(message.pos()) instanceof AethumFluxCacheBlockEntity cache)) return;
+            AffinityNetwork.CHANNEL.serverHandle(access.player()).send(new CacheChildrenUpdatePacket(cache));
+        });
+
+        AffinityNetwork.CHANNEL.registerClientbound(CacheChildrenUpdatePacket.class, (message, access) -> {
             if (!(access.runtime().world.getBlockEntity(message.cachePos()) instanceof AethumFluxCacheBlockEntity cache)) return;
             cache.readChildren(message.children());
         });
     }
 
-    public static record CacheChildrenPacket(BlockPos cachePos, @ElementType(BlockPos.class) List<BlockPos> children) {}
+    public static record RequestCacheChildrenPacket(BlockPos pos) {}
+
+    public static record CacheChildrenUpdatePacket(BlockPos cachePos, @ElementType(BlockPos.class) List<BlockPos> children) {
+        public CacheChildrenUpdatePacket(AethumFluxCacheBlockEntity cache) {
+            this(cache.pos, cache.childCache.stream().map(BlockEntity::getPos).toList());
+        }
+    }
 
     public static record ParentStorageReference(AethumFluxCacheBlockEntity entity, int index) {
 
