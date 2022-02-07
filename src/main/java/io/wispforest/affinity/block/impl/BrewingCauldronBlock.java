@@ -71,7 +71,7 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
         if (!(world.getBlockEntity(pos) instanceof BrewingCauldronBlockEntity cauldron)) return ActionResult.PASS;
         final var playerStack = player.getStackInHand(hand);
 
-        if (ItemOps.canStack(playerStack, ListUtil.peekLast(cauldron.getItems()))) {
+        if (!playerStack.isEmpty() && ItemOps.canStack(playerStack, ListUtil.peekLast(cauldron.getItems()))) {
 
             if (!world.isClient()) {
                 playerStack.increment(1);
