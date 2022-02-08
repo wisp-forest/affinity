@@ -28,14 +28,14 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
 
     @Override
     public void render(AethumFluxCacheBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        final float[] rgb = MathUtil.splitRGBToFloats(0x9C51E0);
+        final float[] rgb = MathUtil.splitRGBToFloats(0xEB55BF);
 
         final var cachePart = entity.getCachedState().get(AethumFluxCacheBlock.PART);
         final var bottomY = cachePart.isBase ? 0.125f : 0;
         final var topY = (cachePart.hasCap ? 0.875f : 1);
 
         final var targetFluxY = bottomY + (entity.flux() / (float) entity.fluxCapacity()) * (topY - bottomY);
-        entity.renderFluxY = MathUtil.proportionalApproach(entity.renderFluxY, targetFluxY, .0025f, .0075f);
+        entity.renderFluxY = MathUtil.proportionalApproach(entity.renderFluxY, targetFluxY, .0025f, .0025f);
 
         final var parent = entity.parent();
         final var noFluxAbove = parent == null || parent.nextIsEmpty();

@@ -38,8 +38,8 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
         // Link rendering
         // --------------
 
-        int startColor = node.hasShard() ? 0xff8800ff : 0xffff0000;
-        int endColor = node.hasShard() ? 0xff0000ff : 0xffff0000;
+        int startColor = node.hasShard() ? 0xff4FC1E9 : 0xffff0000;
+        int endColor = node.hasShard() ? 0xff7A57D1 : 0xffff0000;
 
         for (var linkedMember : node.linkedMembers()) {
             var offset = Vec3d.ofCenter(linkedMember).subtract(Vec3d.of(node.getPos()));
