@@ -12,7 +12,11 @@ public class MathUtil {
         float diff = value - targetValue;
 
         if (Math.abs(diff) > minChange) {
-            return value - diff * coefficient * (MinecraftClient.getInstance().getLastFrameDuration() / .005f);
+            if (targetValue < 0) {
+                return Math.max(targetValue, value - diff * coefficient * (MinecraftClient.getInstance().getLastFrameDuration() / .005f));
+            } else {
+                return Math.min(targetValue, value - diff * coefficient * (MinecraftClient.getInstance().getLastFrameDuration() / .005f));
+            }
         } else {
             return targetValue;
         }

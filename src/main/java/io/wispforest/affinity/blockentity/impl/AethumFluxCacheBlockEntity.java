@@ -26,10 +26,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
@@ -305,7 +302,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
     public static record CacheChildrenUpdatePacket(BlockPos cachePos, @ElementType(BlockPos.class) List<BlockPos> children) {
         public CacheChildrenUpdatePacket(AethumFluxCacheBlockEntity cache) {
-            this(cache.pos, cache.childCache.stream().map(BlockEntity::getPos).toList());
+            this(cache.pos, cache.childCache == null ? Collections.emptyList() : cache.childCache.stream().map(BlockEntity::getPos).toList());
         }
     }
 
