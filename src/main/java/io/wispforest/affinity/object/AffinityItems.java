@@ -22,6 +22,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item EMERALD_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
     public static final Item SAPPHIRE_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
     public static final Item GEOLOGICAL_RESONATOR = new GeologicalResonatorItem();
+    public static final Item COLLECTION_STAFF = new CollectionStaffItem();
 
     public static final Item AZALEA_FLOWERS = new Item(new OwoItemSettings().tab(1).group(Affinity.AFFINITY_GROUP));
 
@@ -33,4 +34,8 @@ public class AffinityItems implements ItemRegistryContainer {
             .maxCount(16).tab(1), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
     public static final Item AZALEA_BOAT = new BoatItem(AffinityBlocks.AZALEA_BOAT_TYPE,
             new OwoItemSettings().tab(1).group(Affinity.AFFINITY_GROUP).maxCount(1));
+
+    public static OwoItemSettings settings(int tab) {
+        return new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP);
+    }
 }

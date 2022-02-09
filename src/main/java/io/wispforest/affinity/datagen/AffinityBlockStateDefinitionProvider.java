@@ -56,6 +56,8 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
         generated(generator, AZALEA_FLOWERS, AETHUM_FLUX_BOTTLE, AZALEA_BOAT,
                 MILDLY_ATTUNED_AMETHYST_SHARD, FAIRLY_ATTUNED_AMETHYST_SHARD, GREATLY_ATTUNED_AMETHYST_SHARD);
 
+        handheld(generator, COLLECTION_STAFF);
+
         generatedWithTexture(generator, Affinity.id("item/wisp_matter"), INERT_WISP_MATTER, WISE_WISP_MATTER, VICIOUS_WISP_MATTER);
 
         iridescenceWand(generator, EMERALD_WAND_OF_IRIDESCENCE, SAPPHIRE_WAND_OF_IRIDESCENCE);
@@ -66,6 +68,12 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
     private void generated(ItemModelGenerator generator, Item... items) {
         for (var item : items) {
             generator.register(item, Models.GENERATED);
+        }
+    }
+
+    private void handheld(ItemModelGenerator generator, Item... items) {
+        for (var item : items) {
+            generator.register(item, Models.HANDHELD);
         }
     }
 
