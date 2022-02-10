@@ -72,15 +72,10 @@ public class CollectionStaffItem extends Item {
         return entity.world.getEntitiesByClass(ItemEntity.class, box, itemEntity -> !itemEntity.cannotPickup());
     }
 
-    @Override
-    public int getMaxUseTime(ItemStack stack) {
-        return 25;
-    }
-
     static {
         AffinityNetwork.CHANNEL.registerClientbound(BulkParticlesPacket.class, (message, access) -> {
             for (var pos : message.positions()) {
-                ClientParticles.spawn(message.particle(), access.runtime().world,
+                ClientParticles.spawn(message.particle(), access.player().world,
                         pos.add(0, .125, 0), message.deviation());
             }
         });
