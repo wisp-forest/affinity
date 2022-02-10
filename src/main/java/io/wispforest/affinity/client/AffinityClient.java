@@ -3,6 +3,7 @@ package io.wispforest.affinity.client;
 import io.wispforest.affinity.client.render.blockentity.AethumFluxCacheBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.BrewingCauldronBlockEntityRenderer;
+import io.wispforest.affinity.client.render.blockentity.RitualStandBlockEntityRenderer;
 import io.wispforest.affinity.client.render.entity.WispEntityModel;
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
 import io.wispforest.affinity.item.WispMatterItem;
@@ -27,6 +28,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.BREWING_CAULDRON, BrewingCauldronBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.AETHUM_FLUX_NODE, AethumFluxNodeBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.AETHUM_FLUX_CACHE, AethumFluxCacheBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(AffinityBlocks.Entities.RITUAL_STAND, RitualStandBlockEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.SUNDIAL, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.AETHUM_FLUX_CACHE, RenderLayer.getCutout());

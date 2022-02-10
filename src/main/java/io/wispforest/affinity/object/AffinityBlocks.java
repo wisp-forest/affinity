@@ -34,6 +34,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(0) public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
     @Tab(0) public static final Block SUNDIAL = new SundialBlock();
     @Tab(0) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
+    @Tab(0) public static final Block AZALEA_STAND = new AzaleaStandBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
 
@@ -75,6 +76,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
                 AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_NODE, AffinityBlocks.STONE_BANDED_AETHUM_FLUX_NODE).build();
         public static final BlockEntityType<AethumFluxCacheBlockEntity> AETHUM_FLUX_CACHE = FabricBlockEntityTypeBuilder.create(AethumFluxCacheBlockEntity::new,
                 AffinityBlocks.AETHUM_FLUX_CACHE).build();
+
+        public static final BlockEntityType<RitualStandBlockEntity> RITUAL_STAND = FabricBlockEntityTypeBuilder.create(RitualStandBlockEntity::new,
+                AffinityBlocks.AZALEA_STAND).build();
 
         public static final BlockEntityType<SundialBlockEntity> SUNDIAL = FabricBlockEntityTypeBuilder.create(SundialBlockEntity::new,
                 AffinityBlocks.SUNDIAL).build();

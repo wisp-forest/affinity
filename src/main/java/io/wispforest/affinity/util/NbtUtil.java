@@ -34,6 +34,14 @@ public class NbtUtil {
         }
     }
 
+    public static void writeItemStack(NbtCompound nbt, String key, ItemStack stack) {
+        nbt.put(key, stack.writeNbt(new NbtCompound()));
+    }
+
+    public static ItemStack readItemStack(NbtCompound nbt, String key) {
+        return nbt.contains(key, NbtElement.COMPOUND_TYPE) ? ItemStack.fromNbt(nbt.getCompound(key)) : ItemStack.EMPTY;
+    }
+
     public static void writeItemStackList(NbtCompound nbt, String key, DefaultedList<ItemStack> items) {
         final var nbtList = new NbtList();
 

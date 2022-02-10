@@ -42,13 +42,9 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
         cubeAllWithParentedItem(generator, UNFLOWERING_AZALEA_LEAVES);
         cubeAllWithParentedItem(generator, PECULIAR_CLUMP);
 
-        simpleStateWithGeneratedItem(generator, BREWING_CAULDRON);
-
-        simpleStateWithParentedItem(generator, COPPER_PLATED_AETHUM_FLUX_NODE);
-        simpleStateWithParentedItem(generator, STONE_BANDED_AETHUM_FLUX_NODE);
-        simpleStateWithGeneratedItem(generator, SUNDIAL);
-        simpleStateWithParentedItem(generator, ARBOREAL_ACCUMULATION_APPARATUS);
-
+        simpleStateWithParentedItem(generator, COPPER_PLATED_AETHUM_FLUX_NODE, STONE_BANDED_AETHUM_FLUX_NODE,
+                ARBOREAL_ACCUMULATION_APPARATUS, AZALEA_STAND);
+        simpleStateWithGeneratedItem(generator, SUNDIAL, BREWING_CAULDRON);
     }
 
     @Override
@@ -95,19 +91,25 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
         }
     }
 
-    private void simpleStateWithGeneratedItem(BlockStateModelGenerator generator, Block block) {
-        generator.registerSimpleState(block);
-        generator.registerItemModel(block.asItem());
+    private void simpleStateWithGeneratedItem(BlockStateModelGenerator generator, Block... blocks) {
+        for (var block : blocks) {
+            generator.registerSimpleState(block);
+            generator.registerItemModel(block.asItem());
+        }
     }
 
-    private void simpleStateWithParentedItem(BlockStateModelGenerator generator, Block block) {
-        generator.registerSimpleState(block);
-        var blockModelId = ModelIds.getBlockModelId(block);
-        generator.registerParentedItemModel(block.asItem(), blockModelId);
+    private void simpleStateWithParentedItem(BlockStateModelGenerator generator, Block... blocks) {
+        for (var block : blocks) {
+            generator.registerSimpleState(block);
+            var blockModelId = ModelIds.getBlockModelId(block);
+            generator.registerParentedItemModel(block.asItem(), blockModelId);
+        }
     }
 
-    private void cubeAllWithParentedItem(BlockStateModelGenerator generator, Block block) {
-        generator.registerSimpleCubeAll(block);
-        generator.registerParentedItemModel(block.asItem(), ModelIds.getBlockModelId(block));
+    private void cubeAllWithParentedItem(BlockStateModelGenerator generator, Block... blocks) {
+        for (var block : blocks) {
+            generator.registerSimpleCubeAll(block);
+            generator.registerParentedItemModel(block.asItem(), ModelIds.getBlockModelId(block));
+        }
     }
 }
