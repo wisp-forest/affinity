@@ -35,6 +35,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(0) public static final Block SUNDIAL = new SundialBlock();
     @Tab(0) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
     @Tab(0) public static final Block AZALEA_STAND = new AzaleaStandBlock();
+    @Tab(0) public static final Block ASP_RITE_CORE = new AspRiteCoreBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
 
@@ -79,23 +80,14 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<RitualStandBlockEntity> RITUAL_STAND = FabricBlockEntityTypeBuilder.create(RitualStandBlockEntity::new,
                 AffinityBlocks.AZALEA_STAND).build();
+        public static final BlockEntityType<RitualCoreBlockEntity> RITUAL_CORE = FabricBlockEntityTypeBuilder.create(RitualCoreBlockEntity::new,
+                AffinityBlocks.ASP_RITE_CORE).build();
 
         public static final BlockEntityType<SundialBlockEntity> SUNDIAL = FabricBlockEntityTypeBuilder.create(SundialBlockEntity::new,
                 AffinityBlocks.SUNDIAL).build();
 
         public static final BlockEntityType<ArborealAccumulationApparatusBlockEntity> ARBOREAL_ACCUMULATION_APPARATUS =
                 FabricBlockEntityTypeBuilder.create(ArborealAccumulationApparatusBlockEntity::new, AffinityBlocks.ARBOREAL_ACCUMULATION_APPARATUS).build();
-
-        @Override
-        public Registry<BlockEntityType<?>> getRegistry() {
-            return Registry.BLOCK_ENTITY_TYPE;
-        }
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public Class<BlockEntityType<?>> getTargetFieldType() {
-            return (Class<BlockEntityType<?>>) (Object) BlockEntityType.class;
-        }
 
         @Override
         public void afterFieldProcessing() {
@@ -106,6 +98,18 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(BREWING_CAULDRON);
             Affinity.AETHUM_MEMBER.registerSelf(SUNDIAL);
             Affinity.AETHUM_MEMBER.registerSelf(ARBOREAL_ACCUMULATION_APPARATUS);
+            Affinity.AETHUM_MEMBER.registerSelf(RITUAL_CORE);
+        }
+
+        @Override
+        public Registry<BlockEntityType<?>> getRegistry() {
+            return Registry.BLOCK_ENTITY_TYPE;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public Class<BlockEntityType<?>> getTargetFieldType() {
+            return (Class<BlockEntityType<?>>) (Object) BlockEntityType.class;
         }
     }
 

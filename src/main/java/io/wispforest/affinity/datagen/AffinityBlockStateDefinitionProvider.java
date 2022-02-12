@@ -39,8 +39,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
         generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(BUDDING_AZALEA_LEAVES).coordinate(variantMap));
         generator.registerParentedItemModel(BUDDING_AZALEA_LEAVES.asItem(), ModelIds.getBlockSubModelId(BUDDING_AZALEA_LEAVES, "_0"));
 
-        cubeAllWithParentedItem(generator, UNFLOWERING_AZALEA_LEAVES);
-        cubeAllWithParentedItem(generator, PECULIAR_CLUMP);
+        cubeAllWithParentedItem(generator, PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, ASP_RITE_CORE);
 
         simpleStateWithParentedItem(generator, COPPER_PLATED_AETHUM_FLUX_NODE, STONE_BANDED_AETHUM_FLUX_NODE,
                 ARBOREAL_ACCUMULATION_APPARATUS, AZALEA_STAND);
