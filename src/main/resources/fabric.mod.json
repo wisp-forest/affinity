@@ -10,6 +10,7 @@
   "contact": {},
   "license": "MIT",
   "icon": "assets/affinity/icon.png",
+  "accessWidener": "affinity.accesswidener",
   "environment": "*",
   "entrypoints": {
     "client": [

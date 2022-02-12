@@ -4,18 +4,15 @@ import com.google.common.collect.ImmutableSet;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.item.AffinityItemGroup;
-import io.wispforest.affinity.mixin.access.BlockEntityTypeAccessor;
-import io.wispforest.affinity.mixin.access.SignTypeInvoker;
-import io.wispforest.affinity.mixin.access.TreeFeatureConfigAccessor;
-import io.wispforest.affinity.network.AffinityNetwork;
-import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.affinity.object.AffinityEntities;
-import io.wispforest.affinity.object.AffinityItems;
-import io.wispforest.affinity.object.AffinityStatusEffects;
 import io.wispforest.affinity.misc.AffinityParticleSystems;
 import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
 import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.misc.recipe.PotionMixingRecipeSerializer;
+import io.wispforest.affinity.mixin.access.BlockEntityTypeAccessor;
+import io.wispforest.affinity.mixin.access.SignTypeInvoker;
+import io.wispforest.affinity.mixin.access.TreeFeatureConfigAccessor;
+import io.wispforest.affinity.network.AffinityNetwork;
+import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
@@ -49,6 +46,7 @@ public class Affinity implements ModInitializer {
         FieldRegistrationHandler.register(AffinityItems.class, MOD_ID, false);
 
         FieldRegistrationHandler.register(AffinityEntities.class, MOD_ID, false);
+        FieldRegistrationHandler.register(AffinityParticleTypes.class, MOD_ID, false);
 
         AffinityStatusEffects.register();
         AffinityNetwork.initialize();

@@ -8,7 +8,7 @@ version = "${project.mod_version}+${project.minecraft_base_version}"
 group = project.maven_group
 
 loom {
-    accessWidenerPath = project.file("src/main/resources/affinity-datagen.accesswidener");
+    accessWidenerPath = project.file("src/main/resources/affinity.accesswidener");
 
     runs {
         datagen {

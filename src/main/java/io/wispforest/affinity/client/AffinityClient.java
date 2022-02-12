@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client;
 
+import io.wispforest.affinity.client.particle.ColoredFlamedParticle;
 import io.wispforest.affinity.client.render.blockentity.AethumFluxCacheBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.BrewingCauldronBlockEntityRenderer;
@@ -10,10 +11,12 @@ import io.wispforest.affinity.item.WispMatterItem;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEntities;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinityParticleTypes;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -37,6 +40,8 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.UNFLOWERING_AZALEA_LEAVES, RenderLayer.getCutout());
 
         EntityModelLayerRegistry.registerModelLayer(WispEntityModel.LAYER, WispEntityModel::createModelData);
+
+        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.COLORED_FLAME, ColoredFlamedParticle.Factory::new);
 
         EntityRendererRegistry.register(AffinityEntities.INERT_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.WISE_WISP, WispEntityRenderer::new);
