@@ -3,6 +3,7 @@ package io.wispforest.affinity.blockentity.impl;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
+import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
@@ -30,7 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
-public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements TickedBlockEntity {
+public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity {
 
     @Environment(EnvType.CLIENT) public float renderFluxY = 0;
     @Environment(EnvType.CLIENT) public boolean tickedOnce = false;

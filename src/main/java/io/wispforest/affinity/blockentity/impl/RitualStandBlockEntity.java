@@ -1,5 +1,6 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.util.NbtUtil;
@@ -15,7 +16,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-public class RitualStandBlockEntity extends SyncedBlockEntity {
+public class RitualStandBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity {
 
     private final String ITEM_KEY = "item";
 

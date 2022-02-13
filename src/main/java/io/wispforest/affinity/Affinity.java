@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.item.AffinityItemGroup;
-import io.wispforest.affinity.misc.AffinityDebugCommands;
 import io.wispforest.affinity.misc.AffinityParticleSystems;
 import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
 import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
@@ -16,7 +15,6 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
-import io.wispforest.owo.Owo;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.api.ModInitializer;
@@ -77,9 +75,6 @@ public class Affinity implements ModInitializer {
         Registry.register(Registry.RECIPE_SERIALIZER, PotionMixingRecipeSerializer.ID, PotionMixingRecipeSerializer.INSTANCE);
 
         AFFINITY_GROUP.initialize();
-
-        if (!Owo.DEBUG) return;
-        AffinityDebugCommands.register();
     }
 
     public static Identifier id(String path) {

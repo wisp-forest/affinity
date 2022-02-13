@@ -1,6 +1,7 @@
 package io.wispforest.affinity.block.template;
 
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
+import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -45,8 +46,7 @@ public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlo
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!(world.getBlockEntity(pos) instanceof AethumFluxNodeBlockEntity node)) return ActionResult.PASS;
-        return node.onUse(player, hand, hit);
+        return InteractableBlockEntity.tryHandle(world, pos, player, hand, hit);
     }
 
     @Override

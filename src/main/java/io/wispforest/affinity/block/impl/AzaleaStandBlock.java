@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
+import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.impl.RitualStandBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -24,8 +25,7 @@ public class AzaleaStandBlock extends BlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!(world.getBlockEntity(pos) instanceof RitualStandBlockEntity stand)) return ActionResult.PASS;
-        return stand.onUse(player, hand, hit);
+        return InteractableBlockEntity.tryHandle(world, pos, player, hand, hit);
     }
 
     @Override

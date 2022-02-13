@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
+import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.block.template.AbstractAethumFluxNodeBlock;
 import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
@@ -36,7 +37,7 @@ import net.minecraft.util.math.Vec3d;
 import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
-public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity {
+public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity, InteractableBlockEntity {
 
     @Environment(EnvType.CLIENT) public float renderShardCount = 1;
 

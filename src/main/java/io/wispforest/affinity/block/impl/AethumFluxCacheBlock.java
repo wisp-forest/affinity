@@ -1,6 +1,7 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
+import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -122,8 +123,7 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!(world.getBlockEntity(pos) instanceof AethumFluxCacheBlockEntity cache)) return ActionResult.PASS;
-        return cache.onUse(player, hand, hit);
+        return InteractableBlockEntity.tryHandle(world, pos, player, hand, hit);
     }
 
     @Override
