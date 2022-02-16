@@ -5,17 +5,23 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.particle.ColoredFlameParticleEffect;
+import io.wispforest.affinity.util.MathUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.poi.PointOfInterestStorage;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity {
 
@@ -27,19 +33,76 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (this.world.isClient()) return ActionResult.SUCCESS;
 
-        var stands = ((ServerWorld) this.world).getPointOfInterestStorage().getInCircle(type -> type == AffinityPoiTypes.RITUAL_STAND,
-                this.pos, 10, PointOfInterestStorage.OccupationStatus.ANY).toList();
+        final var centerPos = this.pos.add(0, 1, 0);
+        var standPOIs = ((ServerWorld) this.world).getPointOfInterestStorage().getInCircle(type -> type == AffinityPoiTypes.RITUAL_STAND,
+                this.pos, 10, PointOfInterestStorage.OccupationStatus.ANY).filter(poi -> poi.getPos().getY() == this.pos.getY() + 1).toList();
+
+        double stability = 75;
+
+        List<Double> allDistances = new ArrayList<>((standPOIs.size() - 1) * standPOIs.size());
+
+        var stands = new ArrayList<RitualStandEntry>();
+        for (var standPOI : standPOIs) {
+            double meanDistance = 0;
+            double minDistance = Double.MAX_VALUE;
+
+            final var standPos = standPOI.getPos();
+            for (var other : standPOIs) {
+                if (other == standPOI) continue;
+
+                final var distance = MathUtil.distance(standPos, other.getPos());
+
+                meanDistance += distance;
+                allDistances.add(distance);
+                if (distance < minDistance) minDistance = distance;
+            }
+
+            meanDistance /= (standPOIs.size() - 1d);
+            stands.add(new RitualStandEntry(standPos, meanDistance, minDistance, MathUtil.distance(standPos, centerPos)));
+        }
+
+        stands.sort(Comparator.comparingDouble(RitualStandEntry::meanDistance));
+
+        final double mean = MathUtil.mean(allDistances);
+        final double standardDeviation = MathUtil.standardDeviation(mean, allDistances);
+        final var distancePenalty = mean > 4.5 ? mean - 4.5 : 0;
+
+        stability -= distancePenalty * 15;
+        stability *= Math.min((mean / 75) + 1.5 / standardDeviation, 1.25);
 
         for (var stand : stands) {
-            var standPos = stand.getPos();
+            var color = DyeColor.RED;
 
-            var packet = new ParticleS2CPacket(new ColoredFlameParticleEffect(DyeColor.byId(world.random.nextInt(16))),
-                    false, standPos.getX() + .5, standPos.getY() + 1.2, standPos.getZ() + .5,
-                    .1f, .1f, .1f, 0, 10);
+            if (stand.coreDistance() < 1.5) {
+                stability *= .5;
+            } else if (stand.minDistance() < 1.25) {
+                stability *= .975;
+            } else {
+                color = DyeColor.GREEN;
+            }
 
-            ((ServerPlayerEntity) player).networkHandler.sendPacket(packet);
+            sendDebugParticles(stand.position(), player, color);
         }
+
+//        player.sendMessage(Text.of("Mean -> " + MathUtil.rounded(mean, 2)), false);
+//        player.sendMessage(Text.of("Standard Deviation -> " + MathUtil.rounded(standardDeviation, 2)), false);
+//        player.sendMessage(Text.of("Deviation factor -> " + MathUtil.rounded(standardDeviation / 1.3, 2)), false);
+//        player.sendMessage(Text.of("Largest -> " + MathUtil.rounded(largestDistance, 2)), false);
+//        player.sendMessage(Text.of("Diff -> " + MathUtil.rounded(largestDistance - mean, 2)), false);
+//        player.sendMessage(Text.of("Distance Penalty -> " + (distancePenalty != 0 ? MathUtil.rounded(distancePenalty, 2) : "None")), false);
+        player.sendMessage(Text.of(stands.size() + " - " + MathUtil.rounded(stability, 2)), true);
+//        player.sendMessage(Text.of(""), false);
 
         return ActionResult.SUCCESS;
     }
+
+    private void sendDebugParticles(BlockPos standPos, PlayerEntity player, DyeColor color) {
+        var packet = new ParticleS2CPacket(new ColoredFlameParticleEffect(color),
+                false, standPos.getX() + .5, standPos.getY() + 1.2, standPos.getZ() + .5,
+                .1f, .1f, .1f, 0, 10);
+
+        ((ServerPlayerEntity) player).networkHandler.sendPacket(packet);
+    }
+
+    private record RitualStandEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {}
 }
