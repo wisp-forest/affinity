@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client;
 
+import io.wispforest.affinity.client.particle.BezierItemParticle;
 import io.wispforest.affinity.client.particle.ColoredFlamedParticle;
 import io.wispforest.affinity.client.render.blockentity.AethumFluxCacheBlockEntityRenderer;
 import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
@@ -43,6 +44,7 @@ public class AffinityClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(WispEntityModel.LAYER, WispEntityModel::createModelData);
 
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.COLORED_FLAME, ColoredFlamedParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.BEZIER_ITEM, new BezierItemParticle.Factory());
 
         EntityRendererRegistry.register(AffinityEntities.INERT_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.WISE_WISP, WispEntityRenderer::new);

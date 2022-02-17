@@ -20,7 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.poi.PointOfInterestStorage;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity {
@@ -61,8 +60,6 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
             stands.add(new RitualStandEntry(standPos, meanDistance, minDistance, MathUtil.distance(standPos, centerPos)));
         }
 
-        stands.sort(Comparator.comparingDouble(RitualStandEntry::meanDistance));
-
         final double mean = MathUtil.mean(allDistances);
         final double standardDeviation = MathUtil.standardDeviation(mean, allDistances);
         final var distancePenalty = mean > 4.5 ? mean - 4.5 : 0;
@@ -84,14 +81,7 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
             sendDebugParticles(stand.position(), player, color);
         }
 
-//        player.sendMessage(Text.of("Mean -> " + MathUtil.rounded(mean, 2)), false);
-//        player.sendMessage(Text.of("Standard Deviation -> " + MathUtil.rounded(standardDeviation, 2)), false);
-//        player.sendMessage(Text.of("Deviation factor -> " + MathUtil.rounded(standardDeviation / 1.3, 2)), false);
-//        player.sendMessage(Text.of("Largest -> " + MathUtil.rounded(largestDistance, 2)), false);
-//        player.sendMessage(Text.of("Diff -> " + MathUtil.rounded(largestDistance - mean, 2)), false);
-//        player.sendMessage(Text.of("Distance Penalty -> " + (distancePenalty != 0 ? MathUtil.rounded(distancePenalty, 2) : "None")), false);
         player.sendMessage(Text.of(stands.size() + " - " + MathUtil.rounded(stability, 2)), true);
-//        player.sendMessage(Text.of(""), false);
 
         return ActionResult.SUCCESS;
     }
