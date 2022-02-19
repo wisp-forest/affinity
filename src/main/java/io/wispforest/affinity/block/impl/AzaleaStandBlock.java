@@ -1,10 +1,14 @@
 package io.wispforest.affinity.block.impl;
 
-import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.impl.RitualStandBlockEntity;
+import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
+import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.object.AffinityBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -26,6 +30,12 @@ public class AzaleaStandBlock extends BlockWithEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         return InteractableBlockEntity.tryHandle(world, pos, player, hand, hit);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, AffinityBlocks.Entities.RITUAL_STAND, TickedBlockEntity.ticker());
     }
 
     @Override

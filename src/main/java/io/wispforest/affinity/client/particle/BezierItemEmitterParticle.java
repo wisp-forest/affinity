@@ -22,7 +22,7 @@ public class BezierItemEmitterParticle extends NoRenderParticle {
         super(world, x, y, z);
         this.endpoint = endpoint;
 
-        this.maxAge = 20;
+        this.maxAge = 25;
         this.gravityStrength = 0;
         this.stack = stack;
     }
@@ -37,9 +37,9 @@ public class BezierItemEmitterParticle extends NoRenderParticle {
                 this.x, this.y, this.z, offset.x, offset.y, offset.z);
 
 
-        offset = VectorRandomUtils.getRandomOffset(this.world, Vec3d.ZERO, .25);
-        this.world.addParticle(new BezierItemParticleEffect(stack, this.endpoint),
-                this.x + offset.x, this.y + offset.y, this.z + offset.z, 0, 0, 0);
+//        offset = VectorRandomUtils.getRandomOffset(this.world, Vec3d.ZERO, .25);
+//        this.world.addParticle(new BezierItemParticleEffect(stack, this.endpoint),
+//                this.x + offset.x, this.y + offset.y, this.z + offset.z, 0, 0, 0);
 
         super.tick();
     }

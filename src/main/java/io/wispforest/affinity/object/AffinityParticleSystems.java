@@ -1,13 +1,18 @@
-package io.wispforest.affinity.misc;
+package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.particle.BezierItemEmitterParticleEffect;
 import io.wispforest.affinity.util.MathUtil;
+import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.List;
 
 public class AffinityParticleSystems {
 
@@ -30,6 +35,12 @@ public class AffinityParticleSystems {
         ClientParticles.setParticleCount((int) Math.round(length * 5));
         ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVector(data.color()), 1), world, pos, data.target(), .15f);
     });
+
+    public static final ParticleSystem<DissolveData> DISSOLVE_ITEM = CONTROLLER.register(DissolveData.class, (world, pos, data) -> {
+        world.addParticle(new BezierItemEmitterParticleEffect(data.stack(), data.suckWhere()), pos.x, pos.y, pos.z, 0, 0, 0);
+    });
+
+    public record DissolveData(ItemStack stack, Vec3d suckWhere) {}
 
     public record LineData(Vec3d target, int color) {}
 

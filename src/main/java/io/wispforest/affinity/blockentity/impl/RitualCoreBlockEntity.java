@@ -2,6 +2,7 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
+import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.particle.ColoredFlameParticleEffect;
@@ -18,11 +19,17 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.poi.PointOfInterestStorage;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity {
+public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
+
+    @Nullable RitualConfiguration cachedConfiguration = null;
+    private int ritualTick = -1;
+    private int lastActivatedStand = -1;
 
     public RitualCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.RITUAL_CORE, pos, state);
@@ -32,9 +39,45 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (this.world.isClient()) return ActionResult.SUCCESS;
 
-        final var centerPos = this.pos.add(0, 1, 0);
+        if (player.isSneaking()) {
+            var configuration = this.examineConfiguration();
+            player.sendMessage(Text.of(configuration.stands().size() + " - " + MathUtil.rounded(configuration.stability(), 2)), true);
+            return ActionResult.SUCCESS;
+        } else {
+            return tryStartRitual();
+        }
+    }
+
+    public ActionResult tryStartRitual() {
+        var configuration = this.examineConfiguration();
+        if (configuration.isEmpty()) return ActionResult.PASS;
+
+        this.cachedConfiguration = configuration;
+        Collections.shuffle(this.cachedConfiguration.stands(), this.world.random);
+
+        this.ritualTick = 0;
+        return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public void tickServer() {
+        if (this.ritualTick < 0) return;
+
+        if (this.ritualTick % 5 == 0 && ++this.lastActivatedStand < this.cachedConfiguration.stands().size()) {
+            var entity = this.world.getBlockEntity(this.cachedConfiguration.stands().get(this.lastActivatedStand).position());
+            if (entity instanceof RitualStandBlockEntity stand) stand.beginExtraction(this.pos);
+        }
+
+        if (this.ritualTick++ >= this.cachedConfiguration.length()) {
+            this.ritualTick = -1;
+            this.lastActivatedStand = -1;
+            this.cachedConfiguration = null;
+        }
+    }
+
+    private RitualConfiguration examineConfiguration() {
         var standPOIs = ((ServerWorld) this.world).getPointOfInterestStorage().getInCircle(type -> type == AffinityPoiTypes.RITUAL_STAND,
-                this.pos, 10, PointOfInterestStorage.OccupationStatus.ANY).filter(poi -> poi.getPos().getY() == this.pos.getY() + 1).toList();
+                this.pos, 10, PointOfInterestStorage.OccupationStatus.ANY).filter(poi -> poi.getPos().getY() == this.pos.getY()).toList();
 
         double stability = 75;
 
@@ -57,7 +100,7 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
             }
 
             meanDistance /= (standPOIs.size() - 1d);
-            stands.add(new RitualStandEntry(standPos, meanDistance, minDistance, MathUtil.distance(standPos, centerPos)));
+            stands.add(new RitualStandEntry(standPos, meanDistance, minDistance, MathUtil.distance(standPos, this.pos)));
         }
 
         final double mean = MathUtil.mean(allDistances);
@@ -68,22 +111,14 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
         stability *= Math.min((mean / 75) + 1.5 / standardDeviation, 1.25);
 
         for (var stand : stands) {
-            var color = DyeColor.RED;
-
             if (stand.coreDistance() < 1.5) {
                 stability *= .5;
             } else if (stand.minDistance() < 1.25) {
                 stability *= .975;
-            } else {
-                color = DyeColor.GREEN;
             }
-
-            sendDebugParticles(stand.position(), player, color);
         }
 
-        player.sendMessage(Text.of(stands.size() + " - " + MathUtil.rounded(stability, 2)), true);
-
-        return ActionResult.SUCCESS;
+        return new RitualConfiguration(stability, stands.size() * 5 + 50, stands);
     }
 
     private void sendDebugParticles(BlockPos standPos, PlayerEntity player, DyeColor color) {
@@ -92,6 +127,12 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
                 .1f, .1f, .1f, 0, 10);
 
         ((ServerPlayerEntity) player).networkHandler.sendPacket(packet);
+    }
+
+    private record RitualConfiguration(double stability, int length, List<RitualStandEntry> stands) {
+        public boolean isEmpty() {
+            return stands.isEmpty();
+        }
     }
 
     private record RitualStandEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {}

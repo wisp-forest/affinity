@@ -17,7 +17,7 @@ public class BezierItemParticle extends CrackParticle {
     public BezierItemParticle(ClientWorld world, double x, double y, double z, ItemStack stack, Vec3d endpoint) {
         super(world, x, y, z, stack);
 
-        this.maxAge = 25;
+        this.maxAge = 15;
         this.gravityStrength = 0;
 
         this.spline = makePath(new Vec3d(x, y, z), endpoint, this.maxAge + 1);
@@ -37,8 +37,8 @@ public class BezierItemParticle extends CrackParticle {
 
     public static BezierSpline makePath(Vec3d from, Vec3d to, int resolution) {
         final var diff = to.subtract(from);
-        final var c1 = from.add(diff.rotateY((float) Math.toRadians(-45)).multiply(.5));
-        final var c2 = from.add(diff.add(0, 1, 0).rotateY((float) Math.toRadians(45)).multiply(.5));
+        final var c1 = from.add(diff.add(0, 3, 0).rotateY((float) Math.toRadians(-45)).multiply(.5));
+        final var c2 = from.add(diff.add(0, 2, 0).rotateY((float) Math.toRadians(45)).multiply(.5));
 
         return BezierSpline.compute(from, c1, c2, to, resolution);
     }

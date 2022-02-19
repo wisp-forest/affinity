@@ -76,7 +76,7 @@ public class RitualStandBlockEntityRenderer implements BlockEntityRenderer<Ritua
         if (!stack.isEmpty()) {
             matrices.push();
 
-            final var scaleFactor = stack.getItem() instanceof BlockItem ? .5f : .35f;
+            final var scaleFactor = stack.getItem() instanceof BlockItem ? .65f : .5f;
 
             matrices.translate(.5, .925, .5);
             matrices.scale(scaleFactor, scaleFactor, scaleFactor);
