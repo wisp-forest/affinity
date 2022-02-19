@@ -17,7 +17,7 @@ public class BezierSpline {
         return spline;
     }
 
-    public BezierSpline(Vec3d from, Vec3d c1, Vec3d c2, Vec3d to) {
+    private BezierSpline(Vec3d from, Vec3d c1, Vec3d c2, Vec3d to) {
         this.from = from;
         this.c1 = c1;
         this.c2 = c2;

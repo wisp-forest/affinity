@@ -90,7 +90,7 @@ public class RitualStandBlockEntity extends SyncedBlockEntity implements Interac
     @Override
     public void tickServer() {
         if (this.extractionTicks < 1) return;
-        if (this.extractionTicks++ < 20) return;
+        if (this.extractionTicks++ < 25) return;
 
         this.extractionTicks = 0;
         this.item = ItemStack.EMPTY;
