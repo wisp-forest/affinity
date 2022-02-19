@@ -19,7 +19,8 @@
     "access.BlockEntityTypeAccessor",
     "access.OverworldBiomeCreatorInvoker",
     "access.SignTypeInvoker",
-    "access.TreeFeatureConfigAccessor"
+    "access.TreeFeatureConfigAccessor",
+    "client.CrackParticleMixin"
   ],
   "client": [
     "client.ClientPlayNetworkHandlerMixin",
