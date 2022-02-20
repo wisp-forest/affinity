@@ -6,8 +6,8 @@ import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
+import io.wispforest.affinity.util.InteractionUtil;
 import io.wispforest.affinity.util.NbtUtil;
-import io.wispforest.owo.ops.ItemOps;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -15,7 +15,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -46,39 +45,11 @@ public class RitualStandBlockEntity extends SyncedBlockEntity implements Interac
             if (core.isEmpty()) return ActionResult.SUCCESS;
             beginExtraction(core.get().getPos());
 
+            return ActionResult.SUCCESS;
         } else {
-            var playerStack = player.getStackInHand(hand);
-
-            if (playerStack.isEmpty()) {
-                if (this.item.isEmpty()) return ActionResult.PASS;
-                if (this.world.isClient()) return ActionResult.SUCCESS;
-
-                player.setStackInHand(hand, this.item.copy());
-                this.item = ItemStack.EMPTY;
-
-                this.markDirty();
-            } else {
-                if (this.world.isClient()) return ActionResult.SUCCESS;
-
-                if (this.item.isEmpty()) {
-                    this.item = ItemOps.singleCopy(playerStack);
-                    ItemOps.decrementPlayerHandItem(player, hand);
-
-                    this.markDirty();
-                } else {
-                    if (ItemOps.canStack(playerStack, this.item)) {
-                        playerStack.increment(1);
-                    } else {
-                        ItemScatterer.spawn(this.world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.item);
-                    }
-
-                    this.item = ItemStack.EMPTY;
-                    this.markDirty();
-                }
-            }
+            return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
+                    () -> this.item, stack -> this.item = stack, this::markDirty);
         }
-
-        return ActionResult.SUCCESS;
     }
 
     public void beginExtraction(BlockPos corePosition) {
@@ -109,9 +80,5 @@ public class RitualStandBlockEntity extends SyncedBlockEntity implements Interac
 
     public @NotNull ItemStack getItem() {
         return item;
-    }
-
-    public void setItem(@NotNull ItemStack item) {
-        this.item = item;
     }
 }

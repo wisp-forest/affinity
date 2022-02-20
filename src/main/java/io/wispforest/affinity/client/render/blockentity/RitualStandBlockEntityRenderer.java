@@ -2,21 +2,17 @@ package io.wispforest.affinity.client.render.blockentity;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.RitualStandBlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3f;
 
-public class RitualStandBlockEntityRenderer implements BlockEntityRenderer<RitualStandBlockEntity> {
+public class RitualStandBlockEntityRenderer implements BlockEntityRenderer<RitualStandBlockEntity>, RotatingItemRenderer {
 
     public static final ModelPart ROD;
     public static final ModelPart RECEIVER;
@@ -74,18 +70,7 @@ public class RitualStandBlockEntityRenderer implements BlockEntityRenderer<Ritua
 
         final var stack = entity.getItem();
         if (!stack.isEmpty()) {
-            matrices.push();
-
-            final var scaleFactor = stack.getItem() instanceof BlockItem ? .65f : .5f;
-
-            matrices.translate(.5, .925, .5);
-            matrices.scale(scaleFactor, scaleFactor, scaleFactor);
-            matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion((float) (scaledTime * -2 % (2 * Math.PI))));
-
-            MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformation.Mode.GROUND,
-                    light, overlay, matrices, vertexConsumers, 0);
-
-            matrices.pop();
+            this.renderItem(matrices, vertexConsumers, stack, 3000, .5f, .5f, .935f, .5f, light, overlay);
         }
 
     }

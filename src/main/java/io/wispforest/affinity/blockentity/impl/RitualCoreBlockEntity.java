@@ -6,19 +6,23 @@ import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.particle.ColoredFlameParticleEffect;
+import io.wispforest.affinity.util.InteractionUtil;
 import io.wispforest.affinity.util.MathUtil;
+import io.wispforest.affinity.util.NbtUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.poi.PointOfInterestStorage;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -27,7 +31,10 @@ import java.util.List;
 
 public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
-    @Nullable RitualConfiguration cachedConfiguration = null;
+    private final String ITEM_KEY = "item";
+
+    @NotNull private ItemStack item = ItemStack.EMPTY;
+    @Nullable private RitualConfiguration cachedConfiguration = null;
     private int ritualTick = -1;
     private int lastActivatedStand = -1;
 
@@ -40,15 +47,18 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
         if (this.world.isClient()) return ActionResult.SUCCESS;
 
         if (player.isSneaking()) {
-            var configuration = this.examineConfiguration();
-            player.sendMessage(Text.of(configuration.stands().size() + " - " + MathUtil.rounded(configuration.stability(), 2)), true);
-            return ActionResult.SUCCESS;
+//            var configuration = this.examineConfiguration();
+//            player.sendMessage(Text.of(configuration.stands().size() + " - " + MathUtil.rounded(configuration.stability(), 2)), true);
+            return this.tryStartRitual();
         } else {
-            return tryStartRitual();
+            return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
+                    () -> this.item, stack -> this.item = stack, this::markDirty);
         }
     }
 
     public ActionResult tryStartRitual() {
+        if (this.item.isEmpty()) return ActionResult.PASS;
+
         var configuration = this.examineConfiguration();
         if (configuration.isEmpty()) return ActionResult.PASS;
 
@@ -72,6 +82,9 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
             this.ritualTick = -1;
             this.lastActivatedStand = -1;
             this.cachedConfiguration = null;
+
+            this.item = ItemStack.EMPTY;
+            this.markDirty();
         }
     }
 
@@ -118,7 +131,21 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
             }
         }
 
-        return new RitualConfiguration(stability, stands.size() * 5 + 50, stands);
+        return new RitualConfiguration(stability, stands.size() * 5 + 40, stands);
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        this.item = NbtUtil.readItemStack(nbt, ITEM_KEY);
+    }
+
+    @Override
+    protected void writeNbt(NbtCompound nbt) {
+        NbtUtil.writeItemStack(nbt, ITEM_KEY, this.item);
+    }
+
+    public @NotNull ItemStack getItem() {
+        return item;
     }
 
     private void sendDebugParticles(BlockPos standPos, PlayerEntity player, DyeColor color) {

@@ -20,15 +20,14 @@ public class BezierItemParticle extends CrackParticle {
         this.maxAge = 15;
         this.gravityStrength = 0;
 
-        this.spline = makePath(new Vec3d(x, y, z), endpoint, this.maxAge + 1);
+        this.spline = makePath(new Vec3d(x, y, z), endpoint, this.maxAge);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (this.dead) return;
 
-        final var pos = this.spline.get(this.age);
+        final var pos = this.spline.get(Math.min(this.age, this.spline.resolution() - 1));
 
         this.x = pos.x;
         this.y = pos.y;
