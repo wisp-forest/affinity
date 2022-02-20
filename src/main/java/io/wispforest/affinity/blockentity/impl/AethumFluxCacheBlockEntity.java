@@ -3,8 +3,8 @@ package io.wispforest.affinity.blockentity.impl;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
-import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -75,6 +75,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
     private void updateChildCache() {
         this.childCache = new ArrayList<>();
+        this.parentRef = new ParentStorageReference(this, -1);
 
         for (var pos : BlockPos.iterate(this.pos.up(), this.pos.add(0, this.world.getHeight() - this.pos.getY(), 0))) {
             final var state = this.world.getBlockState(pos);

@@ -36,7 +36,7 @@ public class FluxSyncHandler {
         return PENDING_UPDATES.computeIfAbsent(world.getRegistryKey(), worldRegistryKey -> new HashMap<>());
     }
 
-    public static record FluxSyncPacket(ChunkPos chunk, @MapTypes(keys = BlockPos.class, values = Long.class) Map<BlockPos, Long> updates) {}
+    public record FluxSyncPacket(ChunkPos chunk, @MapTypes(keys = BlockPos.class, values = Long.class) Map<BlockPos, Long> updates) {}
 
     static {
         ServerTickEvents.END_WORLD_TICK.register(FluxSyncHandler::dispatchUpdatesToClients);

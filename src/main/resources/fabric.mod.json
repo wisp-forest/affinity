@@ -22,6 +22,9 @@
     "rei_plugins": [
       "io.wispforest.affinity.compat.rei.AffinityReiPlugin"
     ],
+    "top_plugin": [
+      "io.wispforest.affinity.compat.top.AffinityTOPPlugin"
+    ],
     "fabric-datagen": [
       "io.wispforest.affinity.datagen.AffinityDataGeneratorEntrypoint"
     ],

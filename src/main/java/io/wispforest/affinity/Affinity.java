@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.item.AffinityItemGroup;
-import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
 import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.misc.recipe.PotionMixingRecipeSerializer;

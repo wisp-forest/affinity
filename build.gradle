@@ -55,6 +55,10 @@ repositories {
             includeGroup 'maven.modrinth'
         }
     }
+
+    maven { url 'https://cursemaven.com' }
+
+    mavenLocal()
 }
 
 dependencies {
@@ -77,6 +81,8 @@ dependencies {
     include "io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"
 
     modImplementation "io.wispforest:owo-lib:${project.owo_version}"
+
+    modImplementation "mcjty.theoneprobe:theoneprobe:${project.top_version}"
 
     modLocalRuntime 'com.ptsmods:devlogin:1.2.1'
     modLocalRuntime "maven.modrinth:emoji-type:1.0.3"
