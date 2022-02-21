@@ -51,6 +51,7 @@ public class Affinity implements ModInitializer {
         AffinityNetwork.initialize();
         AffinityParticleSystems.initialize();
         AffinityPoiTypes.initialize();
+        AffinityScreenHandlerTypes.initialize();
 
         Registry.register(Registry.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
 

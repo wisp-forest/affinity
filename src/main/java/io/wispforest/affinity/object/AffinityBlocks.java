@@ -34,8 +34,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(0) public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
     @Tab(0) public static final Block SUNDIAL = new SundialBlock();
     @Tab(0) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
-    @Tab(0) public static final Block AZALEA_STAND = new AzaleaStandBlock();
+    @Tab(0) public static final Block RUDIMENTARY_RITUAL_SOCLE = new RudimentaryRitualSocleBlock();
     @Tab(0) public static final Block ASP_RITE_CORE = new AspRiteCoreBlock();
+    @Tab(0) public static final Block RITUAL_SOCLE_COMPOSER = new RitualSocleComposerBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
 
@@ -78,8 +79,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<AethumFluxCacheBlockEntity> AETHUM_FLUX_CACHE = FabricBlockEntityTypeBuilder.create(AethumFluxCacheBlockEntity::new,
                 AffinityBlocks.AETHUM_FLUX_CACHE).build();
 
-        public static final BlockEntityType<RitualStandBlockEntity> RITUAL_STAND = FabricBlockEntityTypeBuilder.create(RitualStandBlockEntity::new,
-                AffinityBlocks.AZALEA_STAND).build();
+        public static final BlockEntityType<RitualSocleBlockEntity> RITUAL_SOCLE = FabricBlockEntityTypeBuilder.create(RitualSocleBlockEntity::new,
+                AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE).build();
         public static final BlockEntityType<RitualCoreBlockEntity> RITUAL_CORE = FabricBlockEntityTypeBuilder.create(RitualCoreBlockEntity::new,
                 AffinityBlocks.ASP_RITE_CORE).build();
 

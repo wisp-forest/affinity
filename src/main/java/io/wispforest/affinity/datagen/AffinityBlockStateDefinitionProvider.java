@@ -42,7 +42,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
         cubeAllWithParentedItem(generator, PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, ASP_RITE_CORE);
 
         simpleStateWithParentedItem(generator, COPPER_PLATED_AETHUM_FLUX_NODE, STONE_BANDED_AETHUM_FLUX_NODE,
-                ARBOREAL_ACCUMULATION_APPARATUS, AZALEA_STAND);
+                ARBOREAL_ACCUMULATION_APPARATUS, RUDIMENTARY_RITUAL_SOCLE, RITUAL_SOCLE_COMPOSER);
         simpleStateWithGeneratedItem(generator, SUNDIAL, BREWING_CAULDRON);
     }
 

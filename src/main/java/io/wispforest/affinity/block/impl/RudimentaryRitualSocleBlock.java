@@ -1,6 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
-import io.wispforest.affinity.blockentity.impl.RitualStandBlockEntity;
+import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -12,19 +12,30 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class AzaleaStandBlock extends BlockWithEntity {
+import java.util.stream.Stream;
 
-    private static final VoxelShape SHAPE = Block.createCuboidShape(5, 0, 5, 11, 15, 11);
+public class RudimentaryRitualSocleBlock extends BlockWithEntity {
 
-    public AzaleaStandBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque());
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.createCuboidShape(4, 8, 4, 12, 11, 5),
+            Block.createCuboidShape(3, 0, 3, 13, 2, 13),
+            Block.createCuboidShape(5, 2, 5, 11, 13, 11),
+            Block.createCuboidShape(11, 8, 5, 12, 11, 11),
+            Block.createCuboidShape(4, 8, 5, 5, 11, 11),
+            Block.createCuboidShape(4, 8, 11, 12, 11, 12)
+    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+
+    public RudimentaryRitualSocleBlock() {
+        super(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE).nonOpaque());
     }
 
     @Override
@@ -35,7 +46,7 @@ public class AzaleaStandBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.RITUAL_STAND, TickedBlockEntity.ticker());
+        return checkType(type, AffinityBlocks.Entities.RITUAL_SOCLE, TickedBlockEntity.ticker());
     }
 
     @Override
@@ -51,6 +62,6 @@ public class AzaleaStandBlock extends BlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new RitualStandBlockEntity(pos, state);
+        return new RitualSocleBlockEntity(pos, state);
     }
 }

@@ -23,15 +23,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 
-public class RitualStandBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
+public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
     private final String ITEM_KEY = "item";
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
     private int extractionTicks = 0;
 
-    public RitualStandBlockEntity(BlockPos pos, BlockState state) {
-        super(AffinityBlocks.Entities.RITUAL_STAND, pos, state);
+    public RitualSocleBlockEntity(BlockPos pos, BlockState state) {
+        super(AffinityBlocks.Entities.RITUAL_SOCLE, pos, state);
     }
 
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {

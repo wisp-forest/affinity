@@ -19,12 +19,12 @@
     "access.BlockEntityTypeAccessor",
     "access.OverworldBiomeCreatorInvoker",
     "access.SignTypeInvoker",
-    "access.TreeFeatureConfigAccessor",
-    "client.CrackParticleMixin"
+    "access.TreeFeatureConfigAccessor"
   ],
   "client": [
     "client.ClientPlayNetworkHandlerMixin",
     "client.ClientWorldMixin",
+    "client.CrackParticleMixin",
     "client.DimensionTypeMixin",
     "client.EntityMixin",
     "client.InGameHudMixin"

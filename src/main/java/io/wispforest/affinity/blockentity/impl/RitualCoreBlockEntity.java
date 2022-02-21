@@ -36,7 +36,7 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
     @NotNull private ItemStack item = ItemStack.EMPTY;
     @Nullable private RitualConfiguration cachedConfiguration = null;
     private int ritualTick = -1;
-    private int lastActivatedStand = -1;
+    private int lastActivatedSocle = -1;
 
     public RitualCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.RITUAL_CORE, pos, state);
@@ -48,7 +48,7 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
 
         if (player.isSneaking()) {
 //            var configuration = this.examineConfiguration();
-//            player.sendMessage(Text.of(configuration.stands().size() + " - " + MathUtil.rounded(configuration.stability(), 2)), true);
+//            player.sendMessage(Text.of(configuration.socles().size() + " - " + MathUtil.rounded(configuration.stability(), 2)), true);
             return this.tryStartRitual();
         } else {
             return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
@@ -63,7 +63,7 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
         if (configuration.isEmpty()) return ActionResult.PASS;
 
         this.cachedConfiguration = configuration;
-        Collections.shuffle(this.cachedConfiguration.stands(), this.world.random);
+        Collections.shuffle(this.cachedConfiguration.socles(), this.world.random);
 
         this.ritualTick = 0;
         return ActionResult.SUCCESS;
@@ -73,14 +73,14 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
     public void tickServer() {
         if (this.ritualTick < 0) return;
 
-        if (this.ritualTick % 5 == 0 && ++this.lastActivatedStand < this.cachedConfiguration.stands().size()) {
-            var entity = this.world.getBlockEntity(this.cachedConfiguration.stands().get(this.lastActivatedStand).position());
-            if (entity instanceof RitualStandBlockEntity stand) stand.beginExtraction(this.pos);
+        if (this.ritualTick % 5 == 0 && ++this.lastActivatedSocle < this.cachedConfiguration.socles().size()) {
+            var entity = this.world.getBlockEntity(this.cachedConfiguration.socles().get(this.lastActivatedSocle).position());
+            if (entity instanceof RitualSocleBlockEntity socle) socle.beginExtraction(this.pos);
         }
 
         if (this.ritualTick++ >= this.cachedConfiguration.length()) {
             this.ritualTick = -1;
-            this.lastActivatedStand = -1;
+            this.lastActivatedSocle = -1;
             this.cachedConfiguration = null;
 
             this.item = ItemStack.EMPTY;
@@ -89,31 +89,31 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
     }
 
     private RitualConfiguration examineConfiguration() {
-        var standPOIs = ((ServerWorld) this.world).getPointOfInterestStorage().getInCircle(type -> type == AffinityPoiTypes.RITUAL_STAND,
+        var soclePOIs = ((ServerWorld) this.world).getPointOfInterestStorage().getInCircle(type -> type == AffinityPoiTypes.RITUAL_SOCLE,
                 this.pos, 10, PointOfInterestStorage.OccupationStatus.ANY).filter(poi -> poi.getPos().getY() == this.pos.getY()).toList();
 
         double stability = 75;
 
-        List<Double> allDistances = new ArrayList<>((standPOIs.size() - 1) * standPOIs.size());
+        List<Double> allDistances = new ArrayList<>((soclePOIs.size() - 1) * soclePOIs.size());
 
-        var stands = new ArrayList<RitualStandEntry>();
-        for (var standPOI : standPOIs) {
+        var socles = new ArrayList<RitualSocleEntry>();
+        for (var soclePOI : soclePOIs) {
             double meanDistance = 0;
             double minDistance = Double.MAX_VALUE;
 
-            final var standPos = standPOI.getPos();
-            for (var other : standPOIs) {
-                if (other == standPOI) continue;
+            final var soclePos = soclePOI.getPos();
+            for (var other : soclePOIs) {
+                if (other == soclePOI) continue;
 
-                final var distance = MathUtil.distance(standPos, other.getPos());
+                final var distance = MathUtil.distance(soclePos, other.getPos());
 
                 meanDistance += distance;
                 allDistances.add(distance);
                 if (distance < minDistance) minDistance = distance;
             }
 
-            meanDistance /= (standPOIs.size() - 1d);
-            stands.add(new RitualStandEntry(standPos, meanDistance, minDistance, MathUtil.distance(standPos, this.pos)));
+            meanDistance /= (soclePOIs.size() - 1d);
+            socles.add(new RitualSocleEntry(soclePos, meanDistance, minDistance, MathUtil.distance(soclePos, this.pos)));
         }
 
         final double mean = MathUtil.mean(allDistances);
@@ -123,15 +123,15 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
         stability -= distancePenalty * 15;
         stability *= Math.min((mean / 75) + 1.5 / standardDeviation, 1.25);
 
-        for (var stand : stands) {
-            if (stand.coreDistance() < 1.5) {
+        for (var socle : socles) {
+            if (socle.coreDistance() < 1.5) {
                 stability *= .5;
-            } else if (stand.minDistance() < 1.25) {
+            } else if (socle.minDistance() < 1.25) {
                 stability *= .975;
             }
         }
 
-        return new RitualConfiguration(stability, stands.size() * 5 + 40, stands);
+        return new RitualConfiguration(stability, socles.size() * 5 + 40, socles);
     }
 
     @Override
@@ -156,11 +156,11 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
         ((ServerPlayerEntity) player).networkHandler.sendPacket(packet);
     }
 
-    private record RitualConfiguration(double stability, int length, List<RitualStandEntry> stands) {
+    private record RitualConfiguration(double stability, int length, List<RitualSocleEntry> socles) {
         public boolean isEmpty() {
-            return stands.isEmpty();
+            return socles.isEmpty();
         }
     }
 
-    private record RitualStandEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {}
+    private record RitualSocleEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {}
 }
