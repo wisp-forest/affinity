@@ -42,7 +42,7 @@ public class CelestialZoomer {
 
         if (target < 0) actual = -actual;
 
-        final var zoomedTime = Math.round(interpolate(actual, target, 20, .05));
+        final var zoomedTime = Math.round(interpolate(actual, target, 10, .05));
         isZooming = zoomedTime != target;
         return zoomedTime;
     }

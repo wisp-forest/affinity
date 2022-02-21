@@ -24,16 +24,22 @@ public class ClientPlayNetworkHandlerMixin {
     @Final
     private MinecraftClient client;
 
+    @Unique
+    private boolean affinity$firstPacketReceived = false;
+
     @ModifyArg(method = "onWorldTimeUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;setTimeOfDay(J)V"))
     private long itIsAlwaysNightyNight(long serverTimeOfDay) {
         CelestialZoomer.serverTimeOfDay = serverTimeOfDay;
 
         if (isInWispForest()) {
-            CelestialZoomer.enableOffset((Math.abs(serverTimeOfDay) / 24000) * -24000 - 18000);
+            final var forestTime = (Math.abs(serverTimeOfDay) / 24000) * -24000 - 18000;
+            if (!this.affinity$firstPacketReceived) world.setTimeOfDay(forestTime);
+            CelestialZoomer.enableOffset(forestTime);
         } else if (CelestialZoomer.offsetEnabled()) {
             CelestialZoomer.disableOffset();
         }
 
+        this.affinity$firstPacketReceived = true;
         return CelestialZoomer.offsetEnabled() ? world.getTimeOfDay() : serverTimeOfDay;
     }
 
