@@ -36,7 +36,7 @@ public class AspRiteCoreBlock extends AethumNetworkMemberBlock {
             Block.createCuboidShape(5, 9, 5, 11, 10, 11),
             Block.createCuboidShape(11, 9, 2, 14, 13, 14),
             Block.createCuboidShape(5, 9, 2, 11, 13, 5)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+    ).reduce(VoxelShapes::union).get();
 
     public AspRiteCoreBlock() {
         super(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque());

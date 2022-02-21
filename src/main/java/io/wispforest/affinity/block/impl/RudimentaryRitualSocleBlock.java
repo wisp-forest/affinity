@@ -32,7 +32,7 @@ public class RudimentaryRitualSocleBlock extends BlockWithEntity {
             Block.createCuboidShape(11, 8, 5, 12, 11, 11),
             Block.createCuboidShape(4, 8, 5, 5, 11, 11),
             Block.createCuboidShape(4, 8, 11, 12, 11, 12)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+    ).reduce(VoxelShapes::union).get();
 
     public RudimentaryRitualSocleBlock() {
         super(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE).nonOpaque());

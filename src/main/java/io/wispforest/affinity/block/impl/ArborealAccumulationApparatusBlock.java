@@ -32,7 +32,7 @@ public class ArborealAccumulationApparatusBlock extends AethumNetworkMemberBlock
             Block.createCuboidShape(7, 0, 5, 9, 10, 11),
             Block.createCuboidShape(4, 0, 4, 7, 12, 7),
             Block.createCuboidShape(9, 0, 9, 12, 12, 12)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+    ).reduce(VoxelShapes::union).get();
 
     public ArborealAccumulationApparatusBlock() {
         super(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque());

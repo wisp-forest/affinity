@@ -1,8 +1,8 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
-import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
+import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -48,23 +48,29 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
             Block.createCuboidShape(0, 0, 4, 2, 16, 6),
             Block.createCuboidShape(0, 0, 10, 2, 16, 12),
             Block.createCuboidShape(4, 0, 14, 6, 16, 16)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+    ).reduce(VoxelShapes::union).get();
 
-    private static final VoxelShape BOTTOM_SHAPE = VoxelShapes.combineAndSimplify(
-            Block.createCuboidShape(0, 0, 0, 16, 2, 16),
-            MIDDLE_SHAPE, BooleanBiFunction.OR
-    );
+    private static final VoxelShape BOTTOM_SHAPE = Stream.of(MIDDLE_SHAPE,
+            Block.createCuboidShape(2, 0, 0, 14, 4, 16),
+            Block.createCuboidShape(14, 0, 14, 16, 2, 16),
+            Block.createCuboidShape(0, 0, 14, 2, 2, 16),
+            Block.createCuboidShape(0, 0, 2, 2, 4, 14),
+            Block.createCuboidShape(0, 0, 0, 2, 2, 2),
+            Block.createCuboidShape(14, 0, 0, 16, 2, 2),
+            Block.createCuboidShape(14, 0, 2, 16, 4, 14)
+    ).reduce(VoxelShapes::union).get();
 
-    private static final VoxelShape TOP_SHAPE = VoxelShapes.combineAndSimplify(
-            Block.createCuboidShape(0, 14, 0, 16, 16, 16),
-            MIDDLE_SHAPE, BooleanBiFunction.OR
-    );
+    private static final VoxelShape TOP_SHAPE = Stream.of(MIDDLE_SHAPE,
+            Block.createCuboidShape(2, 12, 0, 14, 16, 16),
+            Block.createCuboidShape(0, 14, 14, 2, 16, 16),
+            Block.createCuboidShape(0, 12, 2, 2, 16, 14),
+            Block.createCuboidShape(0, 14, 0, 2, 16, 2),
+            Block.createCuboidShape(14, 14, 0, 16, 16, 2),
+            Block.createCuboidShape(14, 12, 2, 16, 16, 14),
+            Block.createCuboidShape(14, 14, 14, 16, 16, 16)
+    ).reduce(VoxelShapes::union).get();
 
-    private static final VoxelShape STANDALONE_SHAPE = VoxelShapes.union(
-            Block.createCuboidShape(0, 14, 0, 16, 16, 16),
-            Block.createCuboidShape(0, 0, 0, 16, 2, 16),
-            MIDDLE_SHAPE
-    );
+    private static final VoxelShape STANDALONE_SHAPE = VoxelShapes.union(TOP_SHAPE, BOTTOM_SHAPE);
 
     public AethumFluxCacheBlock() {
         super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10));

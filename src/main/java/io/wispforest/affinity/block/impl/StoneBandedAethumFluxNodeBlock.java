@@ -28,7 +28,7 @@ public class StoneBandedAethumFluxNodeBlock extends AbstractAethumFluxNodeBlock 
             createCuboidShape(4, 0, 4, 12, 3, 12),
             createCuboidShape(4, 2, 4, 12, 3, 12),
             createCuboidShape(12, 0, 2, 14, 5, 14)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+    ).reduce(VoxelShapes::union).get();
 
     @Override
     protected VoxelShape getShape() {

@@ -19,7 +19,7 @@ public class CopperPlatedAethumFluxNodeBlock extends AbstractAethumFluxNodeBlock
             Block.createCuboidShape(7, 2, 4, 9, 8, 5),
             Block.createCuboidShape(4, 8, 4, 12, 10, 12),
             Block.createCuboidShape(5, 10, 5, 11, 11, 11)
-    ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR)).get();
+    ).reduce(VoxelShapes::union).get();
 
     @Override
     protected VoxelShape getShape() {
