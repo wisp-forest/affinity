@@ -3,7 +3,6 @@ package io.wispforest.affinity.mixin.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
@@ -26,9 +25,12 @@ public abstract class InGameHudMixin {
     @Shadow
     private int scaledHeight;
 
-    @Shadow public abstract void clear();
+    @Shadow
+    public abstract void clear();
 
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @Inject(method = "renderCrosshair", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V",

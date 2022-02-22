@@ -2,7 +2,6 @@ package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.AbstractAethumFluxNodeBlock;
 import net.minecraft.block.Block;
-import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 

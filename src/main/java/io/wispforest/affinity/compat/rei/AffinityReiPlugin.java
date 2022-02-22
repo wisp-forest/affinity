@@ -1,7 +1,7 @@
 package io.wispforest.affinity.compat.rei;
 
-import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
+import io.wispforest.affinity.object.AffinityBlocks;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;

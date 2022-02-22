@@ -1,12 +1,12 @@
 package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
-import io.wispforest.affinity.statuseffects.FlightStatusEffect;
-import io.wispforest.affinity.statuseffects.FreezingStatusEffect;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.misc.recipe.GlowingPotionDyeRecipe;
+import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
+import io.wispforest.affinity.statuseffects.FlightStatusEffect;
+import io.wispforest.affinity.statuseffects.FreezingStatusEffect;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;

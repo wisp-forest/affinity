@@ -3,7 +3,6 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.particle.BezierItemEmitterParticleEffect;
 import io.wispforest.affinity.util.MathUtil;
-import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
@@ -11,8 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
-
-import java.util.List;
 
 public class AffinityParticleSystems {
 
