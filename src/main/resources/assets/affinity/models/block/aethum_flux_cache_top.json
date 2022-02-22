@@ -6,7 +6,7 @@
 		"1": "affinity:block/aethum_flux_cache_base",
 		"2": "affinity:block/aethum_flux_cache_glass",
 		"4": "affinity:block/aethum_flux_cache_base_bottom",
-		"particle": "affinity:block/aethum_flux_cache_beams"
+		"particle": "affinity:block/aethum_flux_cache_base"
 	},
 	"elements": [
 		{
