@@ -2,12 +2,12 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "block/cut_copper",
+		"0": "affinity:block/aethum_flux_cache_beams",
 		"1": "affinity:block/aethum_flux_cache_base",
 		"2": "affinity:block/aethum_flux_cache_glass",
 		"3": "affinity:block/aethum_flux_cache_base_top",
 		"4": "affinity:block/aethum_flux_cache_base_bottom",
-		"particle": "block/cut_copper"
+		"particle": "affinity:block/aethum_flux_cache_beams"
 	},
 	"elements": [
 		{
@@ -273,7 +273,6 @@
 			}
 		}
 	],
-	"display": {},
 	"groups": [
 		0,
 		1,

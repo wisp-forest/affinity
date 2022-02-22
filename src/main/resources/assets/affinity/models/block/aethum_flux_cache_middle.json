@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "block/cut_copper",
+		"0": "affinity:block/aethum_flux_cache_beams",
 		"2": "affinity:block/aethum_flux_cache_glass",
-		"particle": "block/cut_copper"
+		"particle": "affinity:block/aethum_flux_cache_beams"
 	},
 	"elements": [
 		{
