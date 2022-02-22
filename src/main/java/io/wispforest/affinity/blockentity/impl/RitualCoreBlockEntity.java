@@ -143,6 +143,12 @@ public class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implem
     }
 
     @Override
+    public void onBroken() {
+        super.onBroken();
+        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.getItem());
+    }
+
+    @Override
     public void readNbt(NbtCompound nbt) {
         this.item = NbtUtil.readItemStack(nbt, ITEM_KEY);
     }

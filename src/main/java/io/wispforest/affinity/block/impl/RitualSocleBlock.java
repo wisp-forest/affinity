@@ -13,6 +13,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -57,6 +58,16 @@ public class RitualSocleBlock extends BlockWithEntity {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return checkType(type, AffinityBlocks.Entities.RITUAL_SOCLE, TickedBlockEntity.ticker());
+    }
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getBlock() != newState.getBlock()) {
+            if (world.getBlockEntity(pos) instanceof RitualSocleBlockEntity socle) {
+                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), socle.getItem());
+            }
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
     }
 
     @Override
