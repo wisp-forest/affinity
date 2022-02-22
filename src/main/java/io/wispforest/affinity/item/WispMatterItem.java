@@ -1,8 +1,8 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.wisps.WispType;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.ops.TextOps;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
@@ -22,7 +22,7 @@ public class WispMatterItem extends Item {
     private final WispType type;
 
     public WispMatterItem(WispType type) {
-        super(new OwoItemSettings().tab(0).group(Affinity.AFFINITY_GROUP));
+        super(AffinityItems.settings(0));
         this.type = type;
     }
 

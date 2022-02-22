@@ -1,7 +1,7 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
+import io.wispforest.affinity.object.AffinityItems;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
@@ -11,7 +11,7 @@ import net.minecraft.util.ActionResult;
 public class AethumFluxBottleItem extends Item {
 
     public AethumFluxBottleItem() {
-        super(new OwoItemSettings().tab(0).group(Affinity.AFFINITY_GROUP).maxCount(1));
+        super(AffinityItems.settings(0).maxCount(1));
     }
 
     @Override

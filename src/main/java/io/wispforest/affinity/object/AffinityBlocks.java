@@ -5,6 +5,7 @@ import io.wispforest.affinity.block.impl.*;
 import io.wispforest.affinity.block.shadowed.*;
 import io.wispforest.affinity.blockentity.impl.*;
 import io.wispforest.affinity.mixin.access.SignTypeInvoker;
+import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
@@ -34,7 +35,10 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(0) public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
     @Tab(0) public static final Block SUNDIAL = new SundialBlock();
     @Tab(0) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
-    @Tab(0) public static final Block RUDIMENTARY_RITUAL_SOCLE = new RudimentaryRitualSocleBlock();
+    @Tab(0) public static final Block BLANK_RITUAL_SOCLE = new BlankRitualSocleBlock();
+    @Tab(0) public static final Block RUDIMENTARY_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.RUDIMENTARY);
+    @Tab(0) public static final Block REFINED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.REFINED);
+    @Tab(0) public static final Block SOPHISTICATED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.SOPHISTICATED);
     @Tab(0) public static final Block ASP_RITE_CORE = new AspRiteCoreBlock();
     @Tab(0) public static final Block RITUAL_SOCLE_COMPOSER = new RitualSocleComposerBlock();
 
@@ -80,7 +84,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
                 AffinityBlocks.AETHUM_FLUX_CACHE).build();
 
         public static final BlockEntityType<RitualSocleBlockEntity> RITUAL_SOCLE = FabricBlockEntityTypeBuilder.create(RitualSocleBlockEntity::new,
-                AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE).build();
+                AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, AffinityBlocks.REFINED_RITUAL_SOCLE, AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE).build();
         public static final BlockEntityType<RitualCoreBlockEntity> RITUAL_CORE = FabricBlockEntityTypeBuilder.create(RitualCoreBlockEntity::new,
                 AffinityBlocks.ASP_RITE_CORE).build();
 

@@ -6,7 +6,7 @@ import io.wispforest.affinity.aethumflux.net.AethumLink.Element;
 import io.wispforest.affinity.aethumflux.net.AethumLink.Type;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
+import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -23,7 +23,7 @@ import java.util.Objects;
 public class IridescenceWandItem extends Item {
 
     public IridescenceWandItem() {
-        super(new OwoItemSettings().tab(0).group(Affinity.AFFINITY_GROUP).maxCount(1));
+        super(AffinityItems.settings(0).maxCount(1));
     }
 
     @Override

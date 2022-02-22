@@ -5,8 +5,6 @@ import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
-import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
-import io.wispforest.affinity.misc.recipe.PotionMixingRecipeSerializer;
 import io.wispforest.affinity.mixin.access.BlockEntityTypeAccessor;
 import io.wispforest.affinity.mixin.access.SignTypeInvoker;
 import io.wispforest.affinity.mixin.access.TreeFeatureConfigAccessor;
@@ -47,6 +45,9 @@ public class Affinity implements ModInitializer {
         FieldRegistrationHandler.register(AffinityEntities.class, MOD_ID, false);
         FieldRegistrationHandler.register(AffinityParticleTypes.class, MOD_ID, false);
 
+        FieldRegistrationHandler.register(AffinityRecipeTypes.class, MOD_ID, false);
+        FieldRegistrationHandler.register(AffinityRecipeTypes.Serializers.class, MOD_ID, false);
+
         AffinityStatusEffects.register();
         AffinityNetwork.initialize();
         AffinityParticleSystems.initialize();
@@ -70,9 +71,6 @@ public class Affinity implements ModInitializer {
         ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$setBlocks(signBlocks);
 
         SignTypeInvoker.affinity$invokeRegister(AffinityBlocks.AZALEA_SIGN_TYPE);
-
-        Registry.register(Registry.RECIPE_TYPE, PotionMixingRecipe.Type.ID, PotionMixingRecipe.Type.INSTANCE);
-        Registry.register(Registry.RECIPE_SERIALIZER, PotionMixingRecipeSerializer.ID, PotionMixingRecipeSerializer.INSTANCE);
 
         AFFINITY_GROUP.initialize();
     }

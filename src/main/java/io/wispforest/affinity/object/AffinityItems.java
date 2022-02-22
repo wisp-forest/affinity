@@ -1,8 +1,9 @@
 package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.item.*;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
+import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.affinity.object.wisps.AffinityWispTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
@@ -24,11 +25,15 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item GEOLOGICAL_RESONATOR = new GeologicalResonatorItem();
     public static final Item COLLECTION_STAFF = new CollectionStaffItem();
 
-    public static final Item AZALEA_FLOWERS = new Item(new OwoItemSettings().tab(1).group(Affinity.AFFINITY_GROUP));
+    public static final Item AZALEA_FLOWERS = new Item(settings(1));
 
     public static final Item INERT_WISP_MATTER = new WispMatterItem(AffinityWispTypes.INERT);
     public static final Item WISE_WISP_MATTER = new WispMatterItem(AffinityWispTypes.WISE);
     public static final Item VICIOUS_WISP_MATTER = new WispMatterItem(AffinityWispTypes.VICIOUS);
+
+    public static final Item STONE_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.RUDIMENTARY);
+    public static final Item PRISMARINE_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.REFINED);
+    public static final Item PURPUR_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.SOPHISTICATED);
 
     public static final Item AZALEA_SIGN = new SignItem(new OwoItemSettings().group(Affinity.AFFINITY_GROUP)
             .maxCount(16).tab(1), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);

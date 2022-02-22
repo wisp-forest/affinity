@@ -4,7 +4,7 @@
 	"textures": {
 		"0": "affinity:block/ritual_socle_pillar",
 		"1": "affinity:block/rudimentary_ritual_socle_base",
-		"2": "block/stone_bricks",
+		"2": "block/dark_prismarine",
 		"3": "affinity:block/ritual_socle_pillar_overlay",
 		"particle": "affinity:block/ritual_socle_pillar"
 	},

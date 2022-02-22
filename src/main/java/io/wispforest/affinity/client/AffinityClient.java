@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client;
 
+import io.wispforest.affinity.block.impl.RitualSocleBlock;
 import io.wispforest.affinity.client.particle.BezierItemEmitterParticle;
 import io.wispforest.affinity.client.particle.BezierItemParticle;
 import io.wispforest.affinity.client.particle.ColoredFlamedParticle;
@@ -9,6 +10,7 @@ import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
 import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
 import io.wispforest.affinity.item.WispMatterItem;
 import io.wispforest.affinity.object.*;
+import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -38,6 +40,21 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.AZALEA_TRAPDOOR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.UNFLOWERING_AZALEA_LEAVES, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.ASP_RITE_CORE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.REFINED_RITUAL_SOCLE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE, RenderLayer.getCutout());
+
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
+            if (tintIndex != 0 || !(state.getBlock() instanceof RitualSocleBlock socle)) return 0xFFFFFF;
+            return socle.glowColor();
+        }, AffinityBlocks.REFINED_RITUAL_SOCLE, AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
+
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+            if (tintIndex != 0) return 0xFFFFFF;
+
+            final var type = AffinityRitualSocleTypes.forBlockItem(stack);
+            return type == null ? 0xFFFFFF : type.glowColor();
+        }, AffinityBlocks.REFINED_RITUAL_SOCLE, AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
 
         EntityModelLayerRegistry.registerModelLayer(WispEntityModel.LAYER, WispEntityModel::createModelData);
 

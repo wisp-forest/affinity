@@ -1,0 +1,7 @@
+{
+  "type": "affinity:ritual_socle_composer_conversion",
+  "input": {
+    "item": "minecraft:purpur_block"
+  },
+  "output": "affinity:purpur_socle_ornament"
+}

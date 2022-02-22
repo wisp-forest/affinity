@@ -1,8 +1,7 @@
 package io.wispforest.affinity.item;
 
-import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.minecraft.item.Item;
 
 public class AttunedShardItem extends Item {
@@ -10,7 +9,7 @@ public class AttunedShardItem extends Item {
     private final AttunedShardTier tier;
 
     public AttunedShardItem(AttunedShardTier tier) {
-        super(new OwoItemSettings().tab(0).group(Affinity.AFFINITY_GROUP));
+        super(AffinityItems.settings(0));
         this.tier = tier;
     }
 
