@@ -53,7 +53,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
                 MILDLY_ATTUNED_AMETHYST_SHARD, FAIRLY_ATTUNED_AMETHYST_SHARD, GREATLY_ATTUNED_AMETHYST_SHARD,
                 STONE_SOCLE_ORNAMENT, PRISMARINE_SOCLE_ORNAMENT, PURPUR_SOCLE_ORNAMENT);
 
-        handheld(generator, COLLECTION_STAFF);
+        handheld(generator, COLLECTION_STAFF, WAND_OF_INQUIRY);
 
         generatedWithTexture(generator, Affinity.id("item/wisp_matter"), INERT_WISP_MATTER, WISE_WISP_MATTER, VICIOUS_WISP_MATTER);
 

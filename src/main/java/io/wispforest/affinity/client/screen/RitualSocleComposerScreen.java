@@ -35,12 +35,13 @@ public class RitualSocleComposerScreen extends HandledScreen<RitualSocleComposer
             AffinityNetwork.CHANNEL.clientHandle().send(new RitualSocleComposerScreenHandler.ActionRequestPacket(
                     RitualSocleComposerScreenHandler.Action.REQUEST_MERGE));
         });
-
+        this.mergeButton.active = false;
 
         this.splitButton = new StatefulButtonWidget(this.x + 101, this.y + 63, 27, 13, 203, 13, 13, TEXTURE, button -> {
             AffinityNetwork.CHANNEL.clientHandle().send(new RitualSocleComposerScreenHandler.ActionRequestPacket(
                     RitualSocleComposerScreenHandler.Action.REQUEST_SPLIT));
         });
+        this.splitButton.active = false;
 
         this.addDrawableChild(mergeButton);
         this.addDrawableChild(splitButton);

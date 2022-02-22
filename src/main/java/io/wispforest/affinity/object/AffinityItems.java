@@ -22,6 +22,7 @@ public class AffinityItems implements ItemRegistryContainer {
 
     public static final Item EMERALD_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
     public static final Item SAPPHIRE_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
+    public static final Item WAND_OF_INQUIRY = new WandOfInquiryItem();
     public static final Item GEOLOGICAL_RESONATOR = new GeologicalResonatorItem();
     public static final Item COLLECTION_STAFF = new CollectionStaffItem();
 

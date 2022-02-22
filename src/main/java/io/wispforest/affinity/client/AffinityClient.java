@@ -10,7 +10,7 @@ import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
 import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
 import io.wispforest.affinity.item.WispMatterItem;
 import io.wispforest.affinity.object.*;
-import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
+import io.wispforest.affinity.object.rituals.RitualSocleType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -52,7 +52,7 @@ public class AffinityClient implements ClientModInitializer {
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
             if (tintIndex != 0) return 0xFFFFFF;
 
-            final var type = AffinityRitualSocleTypes.forBlockItem(stack);
+            final var type = RitualSocleType.forBlockItem(stack);
             return type == null ? 0xFFFFFF : type.glowColor();
         }, AffinityBlocks.REFINED_RITUAL_SOCLE, AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
 

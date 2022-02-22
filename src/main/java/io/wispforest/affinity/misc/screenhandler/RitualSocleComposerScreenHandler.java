@@ -6,7 +6,7 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
-import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
+import io.wispforest.affinity.object.rituals.RitualSocleType;
 import io.wispforest.owo.client.screens.ScreenUtils;
 import io.wispforest.owo.client.screens.ValidatingSlot;
 import io.wispforest.owo.ops.ItemOps;
@@ -97,14 +97,14 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
 
         if (!canMerge(ornamentSlot.getStack(), blankSocleSlot.getStack(), socleSlot.getStack())) return;
 
-        this.incrementOrSet(socleSlot, AffinityRitualSocleTypes.forItem(ornamentSlot.getStack()).socleBlock().asItem().getDefaultStack());
+        this.incrementOrSet(socleSlot, RitualSocleType.forItem(ornamentSlot.getStack()).socleBlock().asItem().getDefaultStack());
 
         if (!ItemOps.emptyAwareDecrement(blankSocleSlot.getStack())) blankSocleSlot.setStack(ItemStack.EMPTY);
         if (!ItemOps.emptyAwareDecrement(ornamentSlot.getStack())) ornamentSlot.setStack(ItemStack.EMPTY);
     }
 
     public static boolean canMerge(ItemStack ornament, ItemStack blankSocle, ItemStack socle) {
-        final var socleType = AffinityRitualSocleTypes.forItem(ornament);
+        final var socleType = RitualSocleType.forItem(ornament);
         if (socleType == null) return false;
 
         return !blankSocle.isEmpty() && ItemOps.canStack(socle, socleType.socleBlock().asItem().getDefaultStack());
@@ -117,13 +117,13 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
 
         if (!canSplit(socleSlot.getStack(), ornamentSlot.getStack(), blankSocleSlot.getStack())) return;
 
-        this.incrementOrSet(ornamentSlot, AffinityRitualSocleTypes.forBlockItem(socleSlot.getStack()).ornamentItem().getDefaultStack());
+        this.incrementOrSet(ornamentSlot, RitualSocleType.forBlockItem(socleSlot.getStack()).ornamentItem().getDefaultStack());
         this.incrementOrSet(blankSocleSlot, AffinityBlocks.BLANK_RITUAL_SOCLE.asItem().getDefaultStack());
         if (!ItemOps.emptyAwareDecrement(socleSlot.getStack())) socleSlot.setStack(ItemStack.EMPTY);
     }
 
     public static boolean canSplit(ItemStack socle, ItemStack resultOrnament, ItemStack blankSocle) {
-        final var socleType = AffinityRitualSocleTypes.forBlockItem(socle);
+        final var socleType = RitualSocleType.forBlockItem(socle);
         if (socleType == null) return false;
 
         return ItemOps.canStack(resultOrnament, socleType.ornamentItem().getDefaultStack())
