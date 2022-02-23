@@ -13,12 +13,15 @@ public class AffinityComponents implements EntityComponentInitializer, ChunkComp
 
     public static final ComponentKey<GlowingColorComponent> GLOWING_COLOR =
             ComponentRegistry.getOrCreate(Affinity.id("glowing_color"), GlowingColorComponent.class);
+    public static final ComponentKey<PlayerAethumComponent> PLAYER_AETHUM =
+            ComponentRegistry.getOrCreate(Affinity.id("player_aethum"), PlayerAethumComponent.class);
     public static final ComponentKey<ChunkAethumComponent> CHUNK_AETHUM =
             ComponentRegistry.getOrCreate(Affinity.id("chunk_aethum"), ChunkAethumComponent.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.registerForPlayers(GLOWING_COLOR, GlowingColorComponent::new, RespawnCopyStrategy.NEVER_COPY);
+        registry.registerForPlayers(PLAYER_AETHUM, PlayerAethumComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
     }
 
     @Override

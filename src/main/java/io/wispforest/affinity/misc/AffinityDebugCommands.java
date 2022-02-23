@@ -7,6 +7,7 @@ import io.wispforest.affinity.misc.components.AffinityComponents;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.command.argument.BlockPosArgumentType;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -27,7 +28,12 @@ public class AffinityDebugCommands {
                                     .then(literal("get").executes(AffinityDebugCommands::getChunkAethum))
                                     .then(literal("set")
                                             .then(argument("aethum", DoubleArgumentType.doubleArg()).executes(AffinityDebugCommands::setChunkAethum)))
-                                    .then(literal("regenerate").executes(AffinityDebugCommands::regenerateChunkAethum)))));
+                                    .then(literal("regenerate").executes(AffinityDebugCommands::regenerateChunkAethum))))
+                    .then(literal("player")
+                            .then(argument("player", EntityArgumentType.player())
+                                    .then(literal("get").executes(AffinityDebugCommands::getPlayerAethum))
+                                    .then(literal("set")
+                                            .then(argument("aethum", DoubleArgumentType.doubleArg()).executes(AffinityDebugCommands::setPlayerAethum))))));
 
         });
     }
@@ -57,16 +63,33 @@ public class AffinityDebugCommands {
         final var pos = BlockPosArgumentType.getBlockPos(context, "chunk");
 
         final double chunkAethum = AffinityComponents.CHUNK_AETHUM.get(player.world.getChunk(pos)).getAethum();
-
-        final var message = TextOps.withColor("affinity §> chunk aethum: §" + chunkAethum,
-                AFFINITY_COLOR, TextOps.color(Formatting.GRAY), VALUE_COLOR);
-        context.getSource().sendFeedback(message, true);
+        context.getSource().sendFeedback(valueFeedback("chunk aethum", chunkAethum), true);
 
         return (int) Math.round(chunkAethum);
     }
 
+    private static int getPlayerAethum(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        final double playerAethum = AffinityComponents.PLAYER_AETHUM.get(context.getSource().getPlayer()).getAethum();
+        context.getSource().sendFeedback(valueFeedback("player aethum", playerAethum), true);
+
+        return (int) Math.round(playerAethum);
+    }
+
+    private static int setPlayerAethum(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        final var aethum = DoubleArgumentType.getDouble(context, "aethum");
+        AffinityComponents.PLAYER_AETHUM.get(EntityArgumentType.getPlayer(context, "player")).setAethum(aethum);
+
+        context.getSource().sendFeedback(simpleFeedback("player aethum updated"), true);
+
+        return (int) Math.round(aethum);
+    }
+
     private static Text simpleFeedback(String message) {
         return TextOps.withColor("affinity §> " + message, AFFINITY_COLOR, TextOps.color(Formatting.GRAY));
+    }
+
+    private static Text valueFeedback(String message, double value) {
+        return TextOps.withColor("affinity §> " + message + ": §" + value, AFFINITY_COLOR, TextOps.color(Formatting.GRAY), VALUE_COLOR);
     }
 
 }
