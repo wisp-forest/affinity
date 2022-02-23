@@ -30,6 +30,9 @@
     ],
     "cardinal-components-entity": [
       "io.wispforest.affinity.misc.components.AffinityComponents"
+    ],
+    "cardinal-components-chunk": [
+      "io.wispforest.affinity.misc.components.AffinityComponents"
     ]
   },
   "mixins": [
@@ -44,7 +47,8 @@
   },
   "custom": {
     "cardinal-components": [
-      "affinity:glowing_color"
+      "affinity:glowing_color",
+      "affinity:chunk_aethum"
     ]
   }
 }
