@@ -7,7 +7,7 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.util.InteractionUtil;
-import io.wispforest.affinity.util.NbtUtil;
+import io.wispforest.affinity.util.NbtKey;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -25,7 +25,7 @@ import java.util.Comparator;
 
 public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
-    private final String ITEM_KEY = "item";
+    private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("item", NbtKey.Type.ITEM_STACK);
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
     private int extractionTicks = 0;
@@ -70,12 +70,12 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        this.item = NbtUtil.readItemStack(nbt, ITEM_KEY);
+        this.item = ITEM_KEY.read(nbt);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        NbtUtil.writeItemStack(nbt, ITEM_KEY, this.item);
+        ITEM_KEY.write(nbt, this.item);
     }
 
     public @NotNull ItemStack getItem() {

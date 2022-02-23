@@ -11,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class NbtUtil {
 

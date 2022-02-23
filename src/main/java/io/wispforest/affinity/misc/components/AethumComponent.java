@@ -3,13 +3,15 @@ package io.wispforest.affinity.misc.components;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import io.wispforest.affinity.util.NbtKey;
 import net.minecraft.nbt.NbtCompound;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AethumComponent<H> implements Component, AutoSyncedComponent {
 
-    public static final String AETHUM_KEY = "Aethum";
+    public static final NbtKey<Double> AETHUM_KEY = new NbtKey<>("Aethum", NbtKey.Type.DOUBLE);
 
-    private final ComponentKey<?> key;
+    protected final ComponentKey<?> key;
 
     protected H holder;
     protected double aethum;
@@ -23,13 +25,13 @@ public abstract class AethumComponent<H> implements Component, AutoSyncedCompone
     abstract double defaultValue();
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
-        this.aethum = tag.getDouble(AETHUM_KEY);
+    public void readFromNbt(@NotNull NbtCompound tag) {
+        this.aethum = AETHUM_KEY.readOr(tag, this.aethum);
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
-        tag.putDouble(AETHUM_KEY, this.aethum);
+    public void writeToNbt(@NotNull NbtCompound tag) {
+        AETHUM_KEY.write(tag, this.aethum);
     }
 
     public double getAethum() {
