@@ -19,10 +19,10 @@ public abstract class AethumComponent<H> implements Component, AutoSyncedCompone
     public AethumComponent(ComponentKey<? extends AethumComponent<H>> key, H holder) {
         this.key = key;
         this.holder = holder;
-        this.aethum = this.defaultValue();
+        this.aethum = this.initialValue();
     }
 
-    abstract double defaultValue();
+    abstract double initialValue();
 
     @Override
     public void readFromNbt(@NotNull NbtCompound tag) {
@@ -32,6 +32,11 @@ public abstract class AethumComponent<H> implements Component, AutoSyncedCompone
     @Override
     public void writeToNbt(@NotNull NbtCompound tag) {
         AETHUM_KEY.write(tag, this.aethum);
+    }
+
+    public double addAethum(double value) {
+        this.setAethum(this.aethum + value);
+        return this.aethum;
     }
 
     public double getAethum() {

@@ -2,7 +2,9 @@ package io.wispforest.affinity.misc.components;
 
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 
@@ -10,8 +12,41 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ChunkAethumComponent extends AethumComponent<Chunk> implements ServerTickingComponent {
 
+    private static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
+
+    private final ChunkPos pos;
+
     public ChunkAethumComponent(Chunk chunk) {
         super(AffinityComponents.CHUNK_AETHUM, chunk);
+        this.pos = this.holder instanceof WorldChunk ? this.holder.getPos() : ChunkPos.ORIGIN;
+    }
+
+    @Override
+    public void setAethum(double aethum) {
+        super.setAethum(aethum);
+        this.holder.setShouldSave(true);
+    }
+
+    @Override
+    public void serverTick() {
+        if (!(this.holder instanceof WorldChunk chunk)) return;
+        final var world = chunk.getWorld();
+
+        if (world.getRandom().nextDouble() > .005) return;
+
+        final double previousAethum = this.aethum;
+
+        for (var dir : HORIZONTAL_DIRECTIONS) {
+            final var aethumComponent = AffinityComponents.CHUNK_AETHUM.get(getChunk(world, this.pos, dir));
+            var diff = this.aethum - aethumComponent.getAethum();
+            if (diff < 20) continue;
+
+            diff *= .15;
+            aethumComponent.addAethum(diff);
+            this.aethum -= diff;
+        }
+
+        if (this.aethum != previousAethum) this.setAethum(this.aethum);
     }
 
     public double adjustedAethum() {
@@ -21,11 +56,8 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         double mean = this.aethum;
         double min = this.aethum;
         double max = this.aethum;
-        var pos = this.holder.getPos();
-
-        for (var dir : Direction.values()) {
-            if (dir.getAxis().isVertical()) continue;
-            final var aethum = AffinityComponents.CHUNK_AETHUM.get(world.getChunk(pos.x + dir.getOffsetX(), pos.z + dir.getOffsetZ())).getAethum();
+        for (var dir : HORIZONTAL_DIRECTIONS) {
+            final var aethum = AffinityComponents.CHUNK_AETHUM.get(getChunk(world, this.pos, dir)).getAethum();
             mean += aethum;
 
             if (aethum < min) min = aethum;
@@ -48,13 +80,11 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
 
         if (!(this.holder instanceof WorldChunk worldChunk)) return -1;
         var world = worldChunk.getWorld();
-
-        final var chunkPos = worldChunk.getPos();
         final var chunks = new Chunk[25];
 
         int idx = 0;
-        for (int x = chunkPos.x - 2; x <= chunkPos.x + 2; x++) {
-            for (int z = chunkPos.z - 2; z <= chunkPos.z + 2; z++) {
+        for (int x = this.pos.x - 2; x <= this.pos.x + 2; x++) {
+            for (int z = this.pos.z - 2; z <= this.pos.z + 2; z++) {
                 chunks[idx++] = world.getChunk(x, z);
             }
         }
@@ -71,30 +101,22 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         return numerator / denominator;
     }
 
+    private static WorldChunk getChunk(World world, ChunkPos pos, Direction offset) {
+        return world.getChunk(pos.x + offset.getOffsetX(), pos.z + offset.getOffsetZ());
+    }
+
     private static BlockPos getCenter(Chunk chunk) {
         final var pos = chunk.getPos();
         return new BlockPos(pos.x * 16 + 8, 0, pos.z * 16 + 8);
     }
 
-    @Override
-    public void setAethum(double aethum) {
-        super.setAethum(aethum);
-        this.holder.setShouldSave(true);
-    }
-
-    @Override
-    public void serverTick() {
-        if (this.aethum != this.defaultValue()) return;
-        this.regenerate();
-    }
-
     public void regenerate() {
-        this.aethum = ThreadLocalRandom.current().nextDouble(50, 75);
+        ThreadLocalRandom.current().nextDouble(50, 75);
         this.holder.setShouldSave(true);
     }
 
     @Override
-    double defaultValue() {
-        return -1;
+    double initialValue() {
+        return ThreadLocalRandom.current().nextDouble(60, 85);
     }
 }

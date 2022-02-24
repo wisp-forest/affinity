@@ -56,7 +56,7 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
     }
 
     @Override
-    double defaultValue() {
+    double initialValue() {
         return 10;
     }
 

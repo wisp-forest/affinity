@@ -41,7 +41,10 @@ public class AffinityDebugCommands {
                             .then(argument("position", BlockPosArgumentType.blockPos())
                                     .then(literal("get").executes(AffinityDebugCommands::getWorldAethum))
                                     .then(literal("dump")
-                                            .then(argument("radius", IntegerArgumentType.integer()).executes(AffinityDebugCommands::dumpWorldAethum)))))
+                                            .then(argument("radius", IntegerArgumentType.integer()).executes(AffinityDebugCommands::dumpWorldAethum)
+                                                    .then(argument("lower_bound", IntegerArgumentType.integer())
+                                                            .then(argument("range", IntegerArgumentType.integer())
+                                                                    .executes(AffinityDebugCommands::dumpWorldAethumBounded)))))))
                     .then(literal("chunk")
                             .then(argument("chunk", BlockPosArgumentType.blockPos())
                                     .then(literal("get").executes(AffinityDebugCommands::getChunkAethum))
@@ -111,34 +114,41 @@ public class AffinityDebugCommands {
         return (int) Math.round(worldAethum);
     }
 
+    private static int dumpWorldAethumBounded(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        return doWorldAethumDump(context, IntegerArgumentType.getInteger(context, "lower_bound"), IntegerArgumentType.getInteger(context, "range"));
+    }
+
     private static int dumpWorldAethum(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        return doWorldAethumDump(context, 0, 100);
+    }
+
+    private static int doWorldAethumDump(CommandContext<ServerCommandSource> context, int lowerBound, int range) throws CommandSyntaxException {
         final var center = BlockPosArgumentType.getBlockPos(context, "position");
         final int radius = IntegerArgumentType.getInteger(context, "radius");
         final var world = context.getSource().getWorld();
-        final var dumpFile = FabricLoader.getInstance().getGameDir().resolve("aethum_dump.png");
 
+        final var dumpFile = FabricLoader.getInstance().getGameDir().resolve("aethum_dump.png");
         final var image = new BufferedImage(radius + radius + 1, radius + radius + 1, BufferedImage.TYPE_INT_RGB);
 
-        context.getSource().getServer().execute(() -> {
-            try (var out = Files.newOutputStream(dumpFile)) {
+        try (var out = Files.newOutputStream(dumpFile)) {
 
-                int zIdx, xIdx = 0;
+            int zIdx, xIdx = 0;
 
-                for (int x = center.getX() - radius; x <= center.getX() + radius; x++) {
-                    zIdx = 0;
-                    for (int z = center.getZ() - radius; z <= center.getZ() + radius; z++) {
-                        var aethum = (int) (0xFF * AffinityComponents.CHUNK_AETHUM.get(world.getChunk(new BlockPos(x, 0, z))).aethumAt(new BlockPos(x, 0, z)) / 100);
-                        aethum = MathHelper.clamp(aethum, 0, 0xFF);
-                        image.setRGB(xIdx, zIdx++, aethum << 16 | aethum << 8 | aethum);
-                    }
-                    xIdx++;
+            for (int x = center.getX() - radius; x <= center.getX() + radius; x++) {
+                zIdx = 0;
+                for (int z = center.getZ() - radius; z <= center.getZ() + radius; z++) {
+                    var aethum = (int) (0xFF * (AffinityComponents.CHUNK_AETHUM.get(world.getChunk(new BlockPos(x, 0, z))).aethumAt(new BlockPos(x, 0, z)) - lowerBound) / range);
+                    aethum = MathHelper.clamp(aethum, 0, 0xFF);
+                    image.setRGB(xIdx, zIdx++, aethum << 16 | aethum << 8 | aethum);
                 }
-
-                ImageIO.write(image, "png", out);
-            } catch (IOException e) {
-                context.getSource().sendError(Text.of(e.getMessage()));
+                xIdx++;
             }
-        });
+
+            ImageIO.write(image, "png", out);
+        } catch (IOException e) {
+            context.getSource().sendError(Text.of(e.getMessage()));
+            return 1;
+        }
 
         return 0;
     }
