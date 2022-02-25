@@ -25,9 +25,9 @@ public abstract class CrackParticleMixin extends Particle {
         if (provider != null) {
             final var colors = MathUtil.splitRGBToFloats(provider.getColor(stack, 0));
 
-            this.colorRed = colors[0];
-            this.colorGreen = colors[1];
-            this.colorBlue = colors[2];
+            this.red = colors[0];
+            this.green = colors[1];
+            this.blue = colors[2];
         }
     }
 
