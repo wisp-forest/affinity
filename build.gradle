@@ -55,8 +55,6 @@ repositories {
     }
 
     maven { url 'https://cursemaven.com' }
-
-    mavenLocal()
 }
 
 dependencies {
@@ -84,7 +82,7 @@ dependencies {
 
     modImplementation "io.wispforest:owo-lib:${project.owo_version}"
 
-    modImplementation "mcjty.theoneprobe:theoneprobe:${project.top_version}"
+    modImplementation "mcjty.theoneprobe:theoneprobe-fabric:${project.top_version}"
 
     modLocalRuntime 'com.ptsmods:devlogin:1.2.1'
     modLocalRuntime "maven.modrinth:emoji-type:1.0.3"
