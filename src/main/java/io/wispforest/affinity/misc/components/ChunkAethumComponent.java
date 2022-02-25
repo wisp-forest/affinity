@@ -1,5 +1,7 @@
 package io.wispforest.affinity.misc.components;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -8,11 +10,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class ChunkAethumComponent extends AethumComponent<Chunk> implements ServerTickingComponent {
 
     private static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
+    private static final Cache<ChunkPos, WorldChunk> CHUNK_CACHE = CacheBuilder.newBuilder()
+            .maximumSize(100).expireAfterAccess(60, TimeUnit.SECONDS).build();
 
     private final ChunkPos pos;
 
@@ -85,7 +91,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         int idx = 0;
         for (int x = this.pos.x - 2; x <= this.pos.x + 2; x++) {
             for (int z = this.pos.z - 2; z <= this.pos.z + 2; z++) {
-                chunks[idx++] = world.getChunk(x, z);
+                chunks[idx++] = getCached(world, new ChunkPos(x, z));
             }
         }
 
@@ -102,7 +108,15 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     }
 
     private static WorldChunk getChunk(World world, ChunkPos pos, Direction offset) {
-        return world.getChunk(pos.x + offset.getOffsetX(), pos.z + offset.getOffsetZ());
+        return getCached(world, new ChunkPos(pos.x + offset.getOffsetX(), pos.z + offset.getOffsetZ()));
+    }
+
+    private static WorldChunk getCached(World world, ChunkPos pos) {
+        try {
+            return CHUNK_CACHE.get(pos, () -> world.getChunk(pos.x, pos.z));
+        } catch (ExecutionException e) {
+            return world.getChunk(pos.x, pos.z);
+        }
     }
 
     private static BlockPos getCenter(Chunk chunk) {

@@ -17,6 +17,7 @@
     "StatusEffectMixin",
     "VanillaBiomeParametersMixin",
     "access.BlockEntityTypeAccessor",
+    "access.FilledMapItemInvoker",
     "access.OverworldBiomeCreatorInvoker",
     "access.SignTypeInvoker",
     "access.TreeFeatureConfigAccessor"
@@ -27,6 +28,7 @@
     "client.CrackParticleMixin",
     "client.DimensionTypeMixin",
     "client.EntityMixin",
+    "client.HeldItemRendererMixin",
     "client.InGameHudMixin"
   ],
   "injectors": {
