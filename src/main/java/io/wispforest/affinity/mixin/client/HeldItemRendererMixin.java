@@ -17,7 +17,7 @@ public class HeldItemRendererMixin {
 
     @ModifyVariable(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 0), argsOnly = true)
     private ItemStack injectMap(ItemStack value) {
-        if (!value.isOf(AffinityItems.AETHUM_MAP)) return value;
+        if (!value.isOf(AffinityItems.REALIZED_AETHUM_MAP)) return value;
         this.affinity$cachedItem = value;
         return AFFINITY$FILLED_MAP;
     }

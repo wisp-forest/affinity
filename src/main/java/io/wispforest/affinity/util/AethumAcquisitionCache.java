@@ -3,6 +3,7 @@ package io.wispforest.affinity.util;
 import io.wispforest.affinity.misc.components.AffinityComponents;
 import io.wispforest.affinity.misc.components.ChunkAethumComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.ChunkStatus;
 
 public class AethumAcquisitionCache {
 
@@ -14,10 +15,14 @@ public class AethumAcquisitionCache {
     private final int topLeftZ;
 
     public static AethumAcquisitionCache create(World world, int topLeftX, int topLeftZ, int sideLength) {
-        return new AethumAcquisitionCache(world, topLeftX - 2, topLeftZ - 2, sideLength + 4);
+        return new AethumAcquisitionCache(world, topLeftX - 2, topLeftZ - 2, sideLength + 4, false);
     }
 
-    public AethumAcquisitionCache(World world, int topLeftX, int topLeftZ, int sideLength) {
+    public static AethumAcquisitionCache forceLoadAndCreate(World world, int topLeftX, int topLeftZ, int sideLength) {
+        return new AethumAcquisitionCache(world, topLeftX - 2, topLeftZ - 2, sideLength + 4, true);
+    }
+
+    public AethumAcquisitionCache(World world, int topLeftX, int topLeftZ, int sideLength, boolean loadChunks) {
 
         final var chunkCount = sideLength * sideLength;
 
@@ -28,8 +33,11 @@ public class AethumAcquisitionCache {
         this.topLeftZ = topLeftZ;
 
         for (int i = 0; i < chunkCount; i++) {
-            final var component = AffinityComponents.CHUNK_AETHUM.get(
-                    world.getChunk(topLeftX + i / sideLength, topLeftZ + i % sideLength));
+            final var chunk = world.getChunkManager().getChunk(topLeftX + i / sideLength, topLeftZ + i % sideLength,
+                    loadChunks ? ChunkStatus.EMPTY : ChunkStatus.FULL, loadChunks);
+            if (chunk == null) continue;
+
+            final var component = AffinityComponents.CHUNK_AETHUM.get(chunk);
 
             this.chunkComponentCache[i] = component;
             this.adjustedChunkAethumCache[i] = component.adjustedAethum();

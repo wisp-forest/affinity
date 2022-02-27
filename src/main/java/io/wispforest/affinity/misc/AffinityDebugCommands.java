@@ -130,7 +130,7 @@ public class AffinityDebugCommands {
         final var dumpFile = FabricLoader.getInstance().getGameDir().resolve("aethum_dump.png");
         final var image = new BufferedImage(radius + radius + 1, radius + radius + 1, BufferedImage.TYPE_INT_RGB);
 
-        final var cache = AethumAcquisitionCache.create(world,
+        final var cache = AethumAcquisitionCache.forceLoadAndCreate(world,
                 (center.getX() - radius) >> 4, (center.getZ() - radius) >> 4, MathHelper.ceilDiv(radius + radius, 16));
 
         try (var out = Files.newOutputStream(dumpFile)) {

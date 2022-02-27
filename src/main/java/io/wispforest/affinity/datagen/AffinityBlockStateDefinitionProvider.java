@@ -51,7 +51,8 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
     public void generateItemModels(ItemModelGenerator generator) {
         generated(generator, AZALEA_FLOWERS, AETHUM_FLUX_BOTTLE, AZALEA_BOAT,
                 MILDLY_ATTUNED_AMETHYST_SHARD, FAIRLY_ATTUNED_AMETHYST_SHARD, GREATLY_ATTUNED_AMETHYST_SHARD,
-                STONE_SOCLE_ORNAMENT, PRISMARINE_SOCLE_ORNAMENT, PURPUR_SOCLE_ORNAMENT);
+                STONE_SOCLE_ORNAMENT, PRISMARINE_SOCLE_ORNAMENT, PURPUR_SOCLE_ORNAMENT,
+                AETHUM_MAP_PROTOTYPE, REALIZED_AETHUM_MAP);
 
         handheld(generator, COLLECTION_STAFF, WAND_OF_INQUIRY);
 

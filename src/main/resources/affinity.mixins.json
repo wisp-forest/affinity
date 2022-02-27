@@ -18,6 +18,7 @@
     "VanillaBiomeParametersMixin",
     "access.BlockEntityTypeAccessor",
     "access.FilledMapItemInvoker",
+    "access.MapStateAccessor",
     "access.OverworldBiomeCreatorInvoker",
     "access.SignTypeInvoker",
     "access.TreeFeatureConfigAccessor"

@@ -36,7 +36,8 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item PRISMARINE_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.REFINED);
     public static final Item PURPUR_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.SOPHISTICATED);
 
-    public static final Item AETHUM_MAP = new AethumMapItem();
+    public static final Item AETHUM_MAP_PROTOTYPE = new AethumMapPrototypeItem();
+    public static final Item REALIZED_AETHUM_MAP = new RealizedAethumMapItem();
 
     public static final Item AZALEA_SIGN = new SignItem(new OwoItemSettings().group(Affinity.AFFINITY_GROUP)
             .maxCount(16).tab(1), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
