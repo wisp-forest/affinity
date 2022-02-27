@@ -5,9 +5,12 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import io.wispforest.affinity.util.MathUtil;
+import io.wispforest.owo.network.ClientAccess;
 import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.particles.ClientParticles;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.DustParticleEffect;
@@ -29,7 +32,8 @@ public class WandOfInquiryItem extends Item {
         final var world = context.getWorld();
         final var player = context.getPlayer();
 
-        if (!(world.getBlockEntity(context.getBlockPos()) instanceof RitualCoreBlockEntity core)) return ActionResult.PASS;
+        if (!(world.getBlockEntity(context.getBlockPos()) instanceof RitualCoreBlockEntity core))
+            return ActionResult.PASS;
 
 //        player.getItemCooldownManager().set(this, 100);
 
@@ -51,23 +55,28 @@ public class WandOfInquiryItem extends Item {
     }
 
     static {
-        AffinityNetwork.CHANNEL.registerClientbound(SocleParticlesPacket.class, (message, access) -> {
-            final var world = access.runtime().world;
-
-            ClientParticles.persist();
-            ClientParticles.setParticleCount(5);
-
-            for (var soclePos : message.soclePositions()) {
-                final var type = RitualSocleType.forBlockState(world.getBlockState(soclePos));
-                final int color = type == null ? 0 : type.glowColor();
-
-                ClientParticles.spawnPrecise(new DustParticleEffect(MathUtil.splitRGBToVector(color), 2), world,
-                        Vec3d.ofCenter(soclePos).add(0, .34, 0), .15, .15, .15);
-            }
-
-            ClientParticles.reset();
-        });
+        //noinspection Convert2MethodRef
+        AffinityNetwork.CHANNEL.registerClientbound(SocleParticlesPacket.class, (message, access) -> handleParticlePacket(message, access));
     }
 
-    public record SocleParticlesPacket(@ElementType(BlockPos.class) List<BlockPos> soclePositions) {}
+    @Environment(EnvType.CLIENT)
+    private static void handleParticlePacket(SocleParticlesPacket message, ClientAccess access) {
+        final var world = access.runtime().world;
+
+        ClientParticles.persist();
+        ClientParticles.setParticleCount(5);
+
+        for (var soclePos : message.soclePositions()) {
+            final var type = RitualSocleType.forBlockState(world.getBlockState(soclePos));
+            final int color = type == null ? 0 : type.glowColor();
+
+            ClientParticles.spawnPrecise(new DustParticleEffect(MathUtil.splitRGBToVector(color), 2), world,
+                    Vec3d.ofCenter(soclePos).add(0, .34, 0), .15, .15, .15);
+        }
+
+        ClientParticles.reset();
+    }
+
+    public record SocleParticlesPacket(@ElementType(BlockPos.class) List<BlockPos> soclePositions) {
+    }
 }
