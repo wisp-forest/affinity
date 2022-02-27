@@ -1,26 +1,23 @@
 package io.wispforest.affinity.misc.components;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
+import io.wispforest.affinity.util.AethumAcquisitionCache;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
 public class ChunkAethumComponent extends AethumComponent<Chunk> implements ServerTickingComponent {
 
     private static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
-    private static final Cache<ChunkPos, WorldChunk> CHUNK_CACHE = CacheBuilder.newBuilder()
-            .maximumSize(100).expireAfterAccess(60, TimeUnit.SECONDS).build();
 
     private final ChunkPos pos;
+    private boolean neighborsCached = false;
+    private final WorldChunk[] neighbors = new WorldChunk[4];
 
     public ChunkAethumComponent(Chunk chunk) {
         super(AffinityComponents.CHUNK_AETHUM, chunk);
@@ -38,16 +35,27 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         if (!(this.holder instanceof WorldChunk chunk)) return;
         final var world = chunk.getWorld();
 
+        if (!this.neighborsCached) {
+            for (var dir : HORIZONTAL_DIRECTIONS) {
+                neighbors[dir.getHorizontal()] = (WorldChunk) world.getChunk(this.pos.x + dir.getOffsetX(),
+                        this.pos.z + dir.getOffsetZ(), ChunkStatus.FULL);
+            }
+            this.neighborsCached = true;
+        }
+
         if (world.getRandom().nextDouble() > .005) return;
 
         final double previousAethum = this.aethum;
 
         for (var dir : HORIZONTAL_DIRECTIONS) {
-            final var aethumComponent = AffinityComponents.CHUNK_AETHUM.get(getChunk(world, this.pos, dir));
+            final var neighbor = neighbors[dir.getHorizontal()];
+            if (neighbor == null) continue;
+
+            final var aethumComponent = AffinityComponents.CHUNK_AETHUM.get(neighbor);
             var diff = this.aethum - aethumComponent.getAethum();
             if (diff < 20) continue;
 
-            diff *= .15;
+            diff *= .5;
             aethumComponent.addAethum(diff);
             this.aethum -= diff;
         }
@@ -56,14 +64,17 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     }
 
     public double adjustedAethum() {
-        if (!(this.holder instanceof WorldChunk worldChunk)) return -1;
-        var world = worldChunk.getWorld();
+        if (!(this.holder instanceof WorldChunk)) return -1;
 
         double mean = this.aethum;
         double min = this.aethum;
         double max = this.aethum;
+
         for (var dir : HORIZONTAL_DIRECTIONS) {
-            final var aethum = AffinityComponents.CHUNK_AETHUM.get(getChunk(world, this.pos, dir)).getAethum();
+            final var neighbor = neighbors[dir.getHorizontal()];
+            if (neighbor == null) continue;
+
+            final var aethum = AffinityComponents.CHUNK_AETHUM.get(neighbor).getAethum();
             mean += aethum;
 
             if (aethum < min) min = aethum;
@@ -81,47 +92,55 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         return mean / 5;
     }
 
-    public double aethumAt(BlockPos pos) {
-        pos = new BlockPos(pos.getX(), 0, pos.getZ());
+    public double aethumAt(int x, int z) {
+        final var pos = new BlockPos(x, 0, z);
 
         if (!(this.holder instanceof WorldChunk worldChunk)) return -1;
-        var world = worldChunk.getWorld();
-        final var chunks = new Chunk[25];
-
-        int idx = 0;
-        for (int x = this.pos.x - 2; x <= this.pos.x + 2; x++) {
-            for (int z = this.pos.z - 2; z <= this.pos.z + 2; z++) {
-                chunks[idx++] = getCached(world, new ChunkPos(x, z));
-            }
-        }
+        final var world = worldChunk.getWorld();
 
         double numerator = 0;
         double denominator = 0;
 
-        for (var chunk : chunks) {
-            final var distance = Math.pow(Math.sqrt(pos.getSquaredDistance(getCenter(chunk))), -3.5);
-            numerator += distance * AffinityComponents.CHUNK_AETHUM.get(chunk).adjustedAethum();
-            denominator += distance;
+        for (x = this.pos.x - 2; x <= this.pos.x + 2; x++) {
+            for (z = this.pos.z - 2; z <= this.pos.z + 2; z++) {
+                final var aethum = AffinityComponents.CHUNK_AETHUM.get(world.getChunk(x, z)).adjustedAethum();
+                final var squaredDistance = pos.getSquaredDistance(getCenter(x, z));
+
+                final var weightedDistance = 1 / (squaredDistance * squaredDistance);
+                numerator += weightedDistance * aethum;
+                denominator += weightedDistance;
+            }
         }
 
         return numerator / denominator;
     }
 
-    private static WorldChunk getChunk(World world, ChunkPos pos, Direction offset) {
-        return getCached(world, new ChunkPos(pos.x + offset.getOffsetX(), pos.z + offset.getOffsetZ()));
-    }
+    public double fastAethumAt(AethumAcquisitionCache cache, int x, int z) {
+        final var pos = new BlockPos(x, 0, z);
 
-    private static WorldChunk getCached(World world, ChunkPos pos) {
-        try {
-            return CHUNK_CACHE.get(pos, () -> world.getChunk(pos.x, pos.z));
-        } catch (ExecutionException e) {
-            return world.getChunk(pos.x, pos.z);
+        double numerator = 0;
+        double denominator = 0;
+
+        for (x = this.pos.x - 2; x <= this.pos.x + 2; x++) {
+            for (z = this.pos.z - 2; z <= this.pos.z + 2; z++) {
+                final var aethum = cache.getAdjustedAethumFromCache(x, z);
+                final var squaredDistance = pos.getSquaredDistance(getCenter(x, z));
+
+                final var weightedDistance = 1 / (squaredDistance * squaredDistance);
+                numerator += weightedDistance * aethum;
+                denominator += weightedDistance;
+            }
         }
+
+        return numerator / denominator;
     }
 
-    private static BlockPos getCenter(Chunk chunk) {
-        final var pos = chunk.getPos();
-        return new BlockPos(pos.x * 16 + 8, 0, pos.z * 16 + 8);
+    private static BlockPos getCenter(int x, int z) {
+        return new BlockPos((x << 4) + 8, 0, (z << 4) + 8);
+    }
+
+    public ChunkPos getPos() {
+        return pos;
     }
 
     public void regenerate() {

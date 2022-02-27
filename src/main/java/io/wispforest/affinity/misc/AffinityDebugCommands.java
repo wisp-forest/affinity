@@ -8,6 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.wispforest.affinity.misc.components.AethumComponent;
 import io.wispforest.affinity.misc.components.AffinityComponents;
 import io.wispforest.affinity.misc.components.PlayerAethumComponent;
+import io.wispforest.affinity.util.AethumAcquisitionCache;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -16,7 +17,6 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 import javax.imageio.ImageIO;
@@ -108,7 +108,7 @@ public class AffinityDebugCommands {
     private static int getWorldAethum(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         final var pos = BlockPosArgumentType.getBlockPos(context, "position");
 
-        final double worldAethum = AffinityComponents.CHUNK_AETHUM.get(context.getSource().getWorld().getChunk(pos)).aethumAt(pos);
+        final double worldAethum = AffinityComponents.CHUNK_AETHUM.get(context.getSource().getWorld().getChunk(pos)).aethumAt(pos.getX(), pos.getZ());
         context.getSource().sendFeedback(valueFeedback("world aethum", worldAethum), true);
 
         return (int) Math.round(worldAethum);
@@ -130,6 +130,9 @@ public class AffinityDebugCommands {
         final var dumpFile = FabricLoader.getInstance().getGameDir().resolve("aethum_dump.png");
         final var image = new BufferedImage(radius + radius + 1, radius + radius + 1, BufferedImage.TYPE_INT_RGB);
 
+        final var cache = AethumAcquisitionCache.create(world,
+                (center.getX() - radius) >> 4, (center.getZ() - radius) >> 4, MathHelper.ceilDiv(radius + radius, 16));
+
         try (var out = Files.newOutputStream(dumpFile)) {
 
             int zIdx, xIdx = 0;
@@ -137,8 +140,9 @@ public class AffinityDebugCommands {
             for (int x = center.getX() - radius; x <= center.getX() + radius; x++) {
                 zIdx = 0;
                 for (int z = center.getZ() - radius; z <= center.getZ() + radius; z++) {
-                    var aethum = (int) (0xFF * (AffinityComponents.CHUNK_AETHUM.get(world.getChunk(new BlockPos(x, 0, z))).aethumAt(new BlockPos(x, 0, z)) - lowerBound) / range);
+                    var aethum = (int) (0xFF * ((cache.getComponentFrom(x >> 4, z >> 4).aethumAt(x, z) - lowerBound) / range));
                     aethum = MathHelper.clamp(aethum, 0, 0xFF);
+
                     image.setRGB(xIdx, zIdx++, aethum << 16 | aethum << 8 | aethum);
                 }
                 xIdx++;
