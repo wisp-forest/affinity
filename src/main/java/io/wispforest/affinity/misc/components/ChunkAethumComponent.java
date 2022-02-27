@@ -17,7 +17,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
 
     private final ChunkPos pos;
     private boolean neighborsCached = false;
-    private final WorldChunk[] neighbors = new WorldChunk[4];
+    private final ChunkAethumComponent[] neighbors = new ChunkAethumComponent[4];
 
     public ChunkAethumComponent(Chunk chunk) {
         super(AffinityComponents.CHUNK_AETHUM, chunk);
@@ -37,8 +37,8 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
 
         if (!this.neighborsCached) {
             for (var dir : HORIZONTAL_DIRECTIONS) {
-                neighbors[dir.getHorizontal()] = (WorldChunk) world.getChunk(this.pos.x + dir.getOffsetX(),
-                        this.pos.z + dir.getOffsetZ(), ChunkStatus.FULL);
+                neighbors[dir.getHorizontal()] = AffinityComponents.CHUNK_AETHUM.get((WorldChunk) world
+                        .getChunk(this.pos.x + dir.getOffsetX(), this.pos.z + dir.getOffsetZ(), ChunkStatus.FULL));
             }
             this.neighborsCached = true;
         }
@@ -51,12 +51,11 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
             final var neighbor = neighbors[dir.getHorizontal()];
             if (neighbor == null) continue;
 
-            final var aethumComponent = AffinityComponents.CHUNK_AETHUM.get(neighbor);
-            var diff = this.aethum - aethumComponent.getAethum();
+            var diff = this.aethum - neighbor.getAethum();
             if (diff < 20) continue;
 
             diff *= .5;
-            aethumComponent.addAethum(diff);
+            neighbor.addAethum(diff);
             this.aethum -= diff;
         }
 
@@ -74,7 +73,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
             final var neighbor = neighbors[dir.getHorizontal()];
             if (neighbor == null) continue;
 
-            final var aethum = AffinityComponents.CHUNK_AETHUM.get(neighbor).getAethum();
+            final var aethum = neighbor.getAethum();
             mean += aethum;
 
             if (aethum < min) min = aethum;
