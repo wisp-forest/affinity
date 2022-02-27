@@ -8,7 +8,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.map.MapState;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -38,13 +37,15 @@ public class RealizedAethumMapItem extends FilledMapItem {
 
     @Override
     public void updateColors(World world, Entity entity, MapState state) {
-        if (world.getTime() % 50 != 0) return;
+        final double entityX = entity.getX();
+        final double entityZ = entity.getZ();
+        final var withinMapArea = entityX >= state.centerX - 64
+                && entityX <= state.centerX + 64
+                && entityZ >= state.centerZ - 64
+                && entityZ <= state.centerZ + 64;
 
-        final long startTime = System.nanoTime();
-
-        final var stateAccess = (MapStateAccessor) state;
-        stateAccess.affinity$setCenterX((int) entity.getX());
-        stateAccess.affinity$setCenterZ((int) entity.getZ());
+        if (withinMapArea && world.getTime() % 50 != 0) return;
+        if (!withinMapArea) realign(state, (int) entityX, (int) entityZ);
 
         final var cache = AethumAcquisitionCache.create(world,
                 (state.centerX - 64) >> 4, (state.centerZ - 64) >> 4, 8 + 1);
@@ -63,9 +64,18 @@ public class RealizedAethumMapItem extends FilledMapItem {
                 }
             }
         }
+    }
 
-        var length = System.nanoTime() - startTime;
-        entity.sendSystemMessage(Text.of("Refreshed in " + (length * .000001) + "ms"), null);
+    public static void realign(MapState state, int x, int z) {
+        int sideLength = 128;
+        int magicX = MathHelper.floor((x + 64.0) / sideLength);
+        int magicZ = MathHelper.floor((z + 64.0) / sideLength);
+        int centerX = magicX * sideLength + sideLength / 2 - 64;
+        int centerZ = magicZ * sideLength + sideLength / 2 - 64;
+
+        final var stateAccess = (MapStateAccessor) state;
+        stateAccess.affinity$setCenterX(centerX);
+        stateAccess.affinity$setCenterZ(centerZ);
     }
 
     @Override
