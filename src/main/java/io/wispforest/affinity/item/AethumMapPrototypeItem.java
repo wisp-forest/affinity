@@ -26,8 +26,8 @@ public class AethumMapPrototypeItem extends Item {
         FilledMapItemInvoker.affinity$createMapState(mapStack, world, user.getBlockX(), user.getBlockZ(), 0,
                 true, false, world.getRegistryKey());
         var stateAccess = (MapStateAccessor) FilledMapItem.getOrCreateMapState(mapStack, world);
-        stateAccess.affinity$setCenterX((int) user.getX());
-        stateAccess.affinity$setCenterZ((int) user.getZ());
+        stateAccess.affinity$setCenterX(RealizedAethumMapItem.makeCenter((int) user.getX()));
+        stateAccess.affinity$setCenterZ(RealizedAethumMapItem.makeCenter((int) user.getZ()));
 
         user.getInventory().offerOrDrop(mapStack);
 

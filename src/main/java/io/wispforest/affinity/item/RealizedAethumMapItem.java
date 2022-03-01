@@ -67,15 +67,15 @@ public class RealizedAethumMapItem extends FilledMapItem {
     }
 
     public static void realign(MapState state, int x, int z) {
-        int sideLength = 128;
-        int magicX = MathHelper.floor((x + 64.0) / sideLength);
-        int magicZ = MathHelper.floor((z + 64.0) / sideLength);
-        int centerX = magicX * sideLength + sideLength / 2 - 64;
-        int centerZ = magicZ * sideLength + sideLength / 2 - 64;
-
         final var stateAccess = (MapStateAccessor) state;
-        stateAccess.affinity$setCenterX(centerX);
-        stateAccess.affinity$setCenterZ(centerZ);
+        stateAccess.affinity$setCenterX(makeCenter(x));
+        stateAccess.affinity$setCenterZ(makeCenter(z));
+    }
+
+    public static int makeCenter(int coordinate) {
+        int sideLength = 128;
+        int magic = MathHelper.floor((coordinate + 64.0) / sideLength);
+        return magic * sideLength + sideLength / 2 - 64;
     }
 
     @Override
