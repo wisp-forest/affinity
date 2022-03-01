@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:diamond",
+          "name": "affinity:anthracite_powder",
           "functions": [
             {
               "function": "minecraft:set_count",

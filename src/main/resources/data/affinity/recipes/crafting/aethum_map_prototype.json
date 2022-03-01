@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " a ",
+    "ama",
+    " a "
+  ],
+  "key": {
+    "a": {
+      "item": "affinity:anthracite_powder"
+    },
+    "m": {
+      "item": "minecraft:map"
+    }
+  },
+  "result": {
+    "item": "affinity:aethum_map_prototype"
+  }
+}

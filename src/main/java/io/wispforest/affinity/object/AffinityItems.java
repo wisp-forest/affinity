@@ -36,6 +36,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item PRISMARINE_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.REFINED);
     public static final Item PURPUR_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.SOPHISTICATED);
 
+    public static final Item ANTHRACITE_POWDER = new Item(settings(0));
     public static final Item AETHUM_MAP_PROTOTYPE = new AethumMapPrototypeItem();
     public static final Item REALIZED_AETHUM_MAP = new RealizedAethumMapItem();
 
