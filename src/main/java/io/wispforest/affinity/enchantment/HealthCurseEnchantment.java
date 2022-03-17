@@ -14,7 +14,7 @@ import java.util.UUID;
 public class HealthCurseEnchantment extends CurseEnchantment implements EnchantmentEquipEventReceiver {
 
     private static final EntityAttributeModifier HEALTH_ADDITION = new EntityAttributeModifier(UUID.fromString("12c2351c-607f-467d-93ae-0f15de7f0246"),
-            "Curse of Health Boost", 4, EntityAttributeModifier.Operation.ADDITION);
+            "Curse of Health - Boost", 4, EntityAttributeModifier.Operation.ADDITION);
 
     public HealthCurseEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentTarget.ARMOR, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET);
@@ -32,7 +32,7 @@ public class HealthCurseEnchantment extends CurseEnchantment implements Enchantm
         this.healthAttribute(entity).removeModifier(HEALTH_ADDITION);
 
         this.healthAttribute(entity).addPersistentModifier(new EntityAttributeModifier(UUID.randomUUID(),
-                "Curse of Health Penalty", -10, EntityAttributeModifier.Operation.ADDITION));
+                "Curse of Health - Penalty", -10, EntityAttributeModifier.Operation.ADDITION));
         entity.damage(DamageSource.OUT_OF_WORLD, Float.MIN_NORMAL);
     }
 
