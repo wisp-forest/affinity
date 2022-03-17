@@ -22,7 +22,8 @@
     "access.MapStateAccessor",
     "access.OverworldBiomeCreatorInvoker",
     "access.SignTypeInvoker",
-    "access.TreeFeatureConfigAccessor"
+    "access.TreeFeatureConfigAccessor",
+    "client.MinecraftClientMixin"
   ],
   "client": [
     "client.ClientPlayNetworkHandlerMixin",
