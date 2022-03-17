@@ -4,7 +4,7 @@ import io.wispforest.affinity.blockentity.impl.RitualCoreBlockEntity;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
-import io.wispforest.affinity.util.MathUtil;
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.owo.network.ClientAccess;
 import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.ops.TextOps;

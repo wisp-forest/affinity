@@ -3,7 +3,7 @@ package io.wispforest.affinity.misc.components;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import io.wispforest.affinity.util.NbtKey;
+import io.wispforest.affinity.misc.NbtKey;
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 

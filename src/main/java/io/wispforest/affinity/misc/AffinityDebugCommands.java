@@ -8,7 +8,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.wispforest.affinity.misc.components.AethumComponent;
 import io.wispforest.affinity.misc.components.AffinityComponents;
 import io.wispforest.affinity.misc.components.PlayerAethumComponent;
-import io.wispforest.affinity.util.AethumAcquisitionCache;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;

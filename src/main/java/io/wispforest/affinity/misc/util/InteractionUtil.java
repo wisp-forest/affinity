@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util;
+package io.wispforest.affinity.misc.util;
 
 import io.wispforest.owo.ops.ItemOps;
 import net.minecraft.entity.player.PlayerEntity;

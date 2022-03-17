@@ -1,6 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
-import io.wispforest.affinity.util.MathUtil;
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;

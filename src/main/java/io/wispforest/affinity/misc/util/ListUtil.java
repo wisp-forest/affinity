@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util;
+package io.wispforest.affinity.misc.util;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;

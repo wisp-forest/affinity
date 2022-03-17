@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util;
+package io.wispforest.affinity.misc.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

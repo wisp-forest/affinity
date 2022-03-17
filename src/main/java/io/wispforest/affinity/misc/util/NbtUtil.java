@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util;
+package io.wispforest.affinity.misc.util;
 
 import io.wispforest.affinity.aethumflux.net.AethumLink;
 import net.minecraft.item.ItemStack;
@@ -11,8 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class NbtUtil {
 

@@ -1,5 +1,6 @@
-package io.wispforest.affinity.util;
+package io.wispforest.affinity.misc;
 
+import io.wispforest.affinity.misc.util.NbtUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;

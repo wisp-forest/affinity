@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util;
+package io.wispforest.affinity.misc.util;
 
 import java.util.*;
 import java.util.function.Function;

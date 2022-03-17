@@ -1,4 +1,4 @@
-package io.wispforest.affinity.util;
+package io.wispforest.affinity.misc;
 
 import io.wispforest.affinity.misc.components.AffinityComponents;
 import io.wispforest.affinity.misc.components.ChunkAethumComponent;

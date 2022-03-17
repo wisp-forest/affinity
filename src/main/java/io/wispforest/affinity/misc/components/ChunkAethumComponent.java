@@ -1,7 +1,7 @@
 package io.wispforest.affinity.misc.components;
 
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
-import io.wispforest.affinity.util.AethumAcquisitionCache;
+import io.wispforest.affinity.misc.AethumAcquisitionCache;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;

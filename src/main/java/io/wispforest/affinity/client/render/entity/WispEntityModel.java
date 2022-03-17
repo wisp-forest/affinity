@@ -5,7 +5,7 @@ package io.wispforest.affinity.client.render.entity;// Made with Blockbench 4.0.
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.entity.WispEntity;
-import io.wispforest.affinity.util.MathUtil;
+import io.wispforest.affinity.misc.util.MathUtil;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;

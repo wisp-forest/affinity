@@ -2,7 +2,7 @@ package io.wispforest.affinity.client.render.blockentity;
 
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
 import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
-import io.wispforest.affinity.util.MathUtil;
+import io.wispforest.affinity.misc.util.MathUtil;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;

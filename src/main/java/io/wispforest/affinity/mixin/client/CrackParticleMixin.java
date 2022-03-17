@@ -1,6 +1,6 @@
 package io.wispforest.affinity.mixin.client;
 
-import io.wispforest.affinity.util.MathUtil;
+import io.wispforest.affinity.misc.util.MathUtil;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.particle.CrackParticle;
 import net.minecraft.client.particle.Particle;

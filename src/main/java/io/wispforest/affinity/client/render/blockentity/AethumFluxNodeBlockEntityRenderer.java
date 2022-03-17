@@ -2,7 +2,7 @@ package io.wispforest.affinity.client.render.blockentity;
 
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
-import io.wispforest.affinity.util.MathUtil;
+import io.wispforest.affinity.misc.util.MathUtil;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;

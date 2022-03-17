@@ -1,5 +1,6 @@
-package io.wispforest.affinity.util;
+package io.wispforest.affinity.misc;
 
+import io.wispforest.affinity.misc.util.MathUtil;
 import net.minecraft.util.math.Vec3d;
 
 public class BezierSpline {

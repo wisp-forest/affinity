@@ -6,7 +6,7 @@ import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxStorage;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.network.FluxSyncHandler;
-import io.wispforest.affinity.util.NbtUtil;
+import io.wispforest.affinity.misc.util.NbtUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
