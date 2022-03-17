@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ItemMixin {
 
     @Inject(method = "canMine", at = @At("HEAD"), cancellable = true)
-    private void dontYeetNodes(BlockState state, World world, BlockPos pos, PlayerEntity miner, CallbackInfoReturnable<Boolean> cir) {
+    private void doNotYeetNodes(BlockState state, World world, BlockPos pos, PlayerEntity miner, CallbackInfoReturnable<Boolean> cir) {
         if (!(state.getBlock() instanceof AbstractAethumFluxNodeBlock)) return;
         if (!(world.getBlockEntity(pos) instanceof AethumFluxNodeBlockEntity node)) return;
         if (!node.hasShard()) return;
