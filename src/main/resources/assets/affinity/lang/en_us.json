@@ -62,6 +62,8 @@
   "item.affinity.aethum_map_prototype": "Aethum Map Prototype",
   "item.affinity.realized_aethum_map": "Realized Aethum Map",
 
+  "enchantment.affinity.curse_of_illiteracy": "Curse of Illiteracy",
+
   "message.affinity.linking.started": "Creating link from %s",
   "message.affinity.linking.started_push": "Creating §ascatter §rlink from %s",
   "message.affinity.linking.already_linked": "%s is already linked",

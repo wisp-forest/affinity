@@ -3,6 +3,7 @@ package io.wispforest.affinity.item;
 import io.wispforest.affinity.block.impl.PeculiarClumpBlock;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
@@ -28,7 +29,8 @@ public class GeologicalResonatorItem extends Item {
         if (world.isClient()) return ActionResult.SUCCESS;
         final var validDirection = PeculiarClumpBlock.getValidDirection(pos);
         final var side = context.getSide();
-        WorldOps.playSound(world, pos, side == validDirection ? SoundEvents.BLOCK_AMETHYST_BLOCK_HIT : SoundEvents.BLOCK_STONE_HIT, SoundCategory.BLOCKS);
+        WorldOps.playSound(world, pos, side == validDirection ?
+                AffinitySoundEvents.BLOCK_PECULIAR_CLUMP_RESONANCE : SoundEvents.BLOCK_STONE_HIT, SoundCategory.BLOCKS);
 
         return ActionResult.SUCCESS;
     }

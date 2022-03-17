@@ -1,0 +1,10 @@
+{
+  "block.peculiar_clump.resonance": {
+    "sounds": [
+      "affinity:block/peculiar_clump_resonance_1",
+      "affinity:block/peculiar_clump_resonance_2",
+      "affinity:block/peculiar_clump_resonance_3",
+      "affinity:block/peculiar_clump_resonance_4"
+    ]
+  }
+}

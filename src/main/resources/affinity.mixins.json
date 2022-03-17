@@ -15,6 +15,7 @@
     "PotionItemMixin",
     "PotionUtilMixin",
     "StatusEffectMixin",
+    "StyleMixin",
     "VanillaBiomeParametersMixin",
     "access.BlockEntityTypeAccessor",
     "access.FilledMapItemInvoker",
