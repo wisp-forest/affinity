@@ -197,12 +197,21 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     @Override
     public long insert(long max, TransactionContext transaction) {
         if (this.childCache != null && this.fluxStorage.flux() >= this.fluxStorage.fluxCapacity()) {
+            long totalAvailable = max;
+
             for (var child : childCache) {
                 if (child.fluxStorage.flux() >= child.fluxStorage.fluxCapacity()) continue;
-                return child.insert(max, transaction);
+                max -= child.directInsert(max, transaction);
+                if (max <= 0) break;
             }
+
+            return totalAvailable - max;
         }
 
+        return this.directInsert(max, transaction);
+    }
+
+    private long directInsert(long max, TransactionContext transaction) {
         return super.insert(max, transaction);
     }
 
