@@ -1,7 +1,7 @@
 package io.wispforest.affinity.client.particle;
 
-import io.wispforest.affinity.particle.BezierItemParticleEffect;
 import io.wispforest.affinity.misc.BezierSpline;
+import io.wispforest.affinity.particle.BezierItemParticleEffect;
 import net.minecraft.client.particle.CrackParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;

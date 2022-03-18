@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "affinity:bikeshed",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 20598149,
+    "spacing": 3,
+    "separation": 1,
+    "type": "minecraft:random_spread"
+  }
+}

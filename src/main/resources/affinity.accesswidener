@@ -2,7 +2,7 @@ accessWidener v1 named
 
 accessible method net/minecraft/client/particle/FlameParticle <init> (Lnet/minecraft/client/world/ClientWorld;DDDDDD)V
 
-accessible class net/minecraft/data/client/model/BlockStateModelGenerator$BlockTexturePool
-accessible class net/minecraft/data/client/model/BlockStateModelGenerator$LogTexturePool
+accessible class net/minecraft/data/client/BlockStateModelGenerator$BlockTexturePool
+accessible class net/minecraft/data/client/BlockStateModelGenerator$LogTexturePool
 
 accessible field net/minecraft/data/client/ItemModelGenerator writer Ljava/util/function/BiConsumer;

@@ -61,13 +61,11 @@ public class Affinity implements ModInitializer {
         Registry.register(Registry.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
 
         //noinspection ConstantConditions
-        var azaleaConfig = (TreeFeatureConfigAccessor) BuiltinRegistries.CONFIGURED_FEATURE.get(new Identifier("azalea_tree")).config;
+        var azaleaConfig = (TreeFeatureConfigAccessor) BuiltinRegistries.CONFIGURED_FEATURE.get(new Identifier("azalea_tree")).config();
         azaleaConfig.setAzaleaTree(BlockStateProvider.of(AffinityBlocks.AZALEA_LOG));
 
         AffinityStructures.register();
-
-        FieldRegistrationHandler.register(AffinityWorldgen.class, MOD_ID, false);
-        AffinityWorldgen.registerBiomes();
+        AffinityWorldgen.initialize();
 
         // Inject our sign block into the BE type
         var signBlocks = ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$getBlocks();
@@ -84,6 +82,10 @@ public class Affinity implements ModInitializer {
 
     public static Identifier id(String path) {
         return new Identifier(MOD_ID, path);
+    }
+
+    public static String idPlain(String path) {
+        return id(path).toString();
     }
 
 }

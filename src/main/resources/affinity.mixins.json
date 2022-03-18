@@ -6,7 +6,6 @@
   "mixins": [
     "AbstractBlockMixin",
     "BoatEntityTypeMixin",
-    "ConfiguredStructureFeaturesMixin",
     "EntityMixin",
     "ItemMixin",
     "ItemStackMixin",
@@ -16,12 +15,12 @@
     "PotionUtilMixin",
     "StatusEffectMixin",
     "StyleMixin",
-    "VanillaBiomeParametersMixin",
     "access.BlockEntityTypeAccessor",
     "access.FilledMapItemInvoker",
     "access.MapStateAccessor",
     "access.OverworldBiomeCreatorInvoker",
     "access.SignTypeInvoker",
+    "access.StructureFeatureAccessor",
     "access.TreeFeatureConfigAccessor",
     "client.MinecraftClientMixin"
   ],

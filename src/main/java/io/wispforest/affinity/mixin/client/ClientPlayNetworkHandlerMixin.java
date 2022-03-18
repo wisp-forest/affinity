@@ -5,7 +5,6 @@ import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,7 +44,6 @@ public class ClientPlayNetworkHandlerMixin {
 
     @Unique
     private boolean isInWispForest() {
-        return Objects.equals(world.getRegistryManager().get(Registry.BIOME_KEY).
-                getKey(world.getBiome(client.player.getBlockPos())).orElse(null), AffinityWorldgen.WISP_FOREST_KEY);
+        return Objects.equals(world.getBiome(client.player.getBlockPos()).getKey().orElse(null), AffinityWorldgen.WISP_FOREST_KEY);
     }
 }

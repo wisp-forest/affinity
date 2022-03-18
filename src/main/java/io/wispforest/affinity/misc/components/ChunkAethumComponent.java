@@ -27,7 +27,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     @Override
     public void setAethum(double aethum) {
         super.setAethum(aethum);
-        this.holder.setShouldSave(true);
+        this.holder.setNeedsSaving(true);
     }
 
     @Override
@@ -109,7 +109,9 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         for (x = this.pos.x - 2; x <= this.pos.x + 2; x++) {
             for (z = this.pos.z - 2; z <= this.pos.z + 2; z++) {
                 final var aethum = AffinityComponents.CHUNK_AETHUM.get(world.getChunk(x, z)).adjustedAethum();
-                final var squaredDistance = pos.getSquaredDistance(getCenter(x, z));
+
+                final var center = getCenter(x, z);
+                final var squaredDistance = pos.getSquaredDistanceFromCenter(center.getX(), center.getY(), center.getZ());
 
                 final var weightedDistance = 1 / (squaredDistance * squaredDistance);
                 numerator += weightedDistance * aethum;
@@ -129,7 +131,9 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         for (x = this.pos.x - 2; x <= this.pos.x + 2; x++) {
             for (z = this.pos.z - 2; z <= this.pos.z + 2; z++) {
                 final var aethum = cache.getAdjustedAethumFromCache(x, z);
-                final var squaredDistance = pos.getSquaredDistance(getCenter(x, z));
+
+                final var center = getCenter(x, z);
+                final var squaredDistance = pos.getSquaredDistanceFromCenter(center.getX(), center.getY(), center.getZ());
 
                 final var weightedDistance = 1 / (squaredDistance * squaredDistance);
                 numerator += weightedDistance * aethum;
@@ -150,7 +154,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
 
     public void regenerate() {
         ThreadLocalRandom.current().nextDouble(50, 75);
-        this.holder.setShouldSave(true);
+        this.holder.setNeedsSaving(true);
     }
 
     @Override

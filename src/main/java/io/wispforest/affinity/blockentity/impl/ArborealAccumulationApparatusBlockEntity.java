@@ -42,8 +42,8 @@ public class ArborealAccumulationApparatusBlockEntity extends AethumNetworkMembe
     private void updateGenerationFactor() {
         this.generationFactor = 0;
         for (BlockPos pos : BlockPos.iterate(this.getPos().add(-5, -5, -5), this.pos.add(5, 5, 5))) {
-            final var block = world.getBlockState(pos).getBlock();
-            if (!BlockTags.FLOWERS.contains(block) && !BlockTags.LEAVES.contains(block)) continue;
+            final var state = world.getBlockState(pos);
+            if (!state.isIn(BlockTags.FLOWERS) && !state.isIn(BlockTags.LEAVES)) continue;
             this.generationFactor++;
         }
 

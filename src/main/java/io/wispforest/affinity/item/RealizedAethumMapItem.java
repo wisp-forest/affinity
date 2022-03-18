@@ -1,7 +1,7 @@
 package io.wispforest.affinity.item;
 
-import io.wispforest.affinity.mixin.access.MapStateAccessor;
 import io.wispforest.affinity.misc.AethumAcquisitionCache;
+import io.wispforest.affinity.mixin.access.MapStateAccessor;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.minecraft.block.MapColor;
 import net.minecraft.entity.Entity;

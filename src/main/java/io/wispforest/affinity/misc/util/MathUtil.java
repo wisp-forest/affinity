@@ -64,7 +64,7 @@ public class MathUtil {
     }
 
     public static double distance(BlockPos pos, BlockPos other) {
-        return Math.sqrt(pos.getSquaredDistance(other, false));
+        return Math.sqrt(pos.getSquaredDistance(other));
     }
 
     public static String rounded(double value, int places) {

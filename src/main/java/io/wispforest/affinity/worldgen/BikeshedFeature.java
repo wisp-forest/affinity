@@ -1,23 +1,22 @@
 package io.wispforest.affinity.worldgen;
 
-import com.mojang.serialization.Codec;
 import io.wispforest.affinity.Affinity;
 import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.PostPlacementProcessor;
 import net.minecraft.structure.StructureGeneratorFactory;
 import net.minecraft.structure.StructurePiecesGenerator;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
 import java.util.Optional;
 
+// TODO possibly replace with json
 public class BikeshedFeature extends StructureFeature<StructurePoolFeatureConfig> {
 
-    public BikeshedFeature(Codec<StructurePoolFeatureConfig> codec) {
-        super(codec, BikeshedFeature::createPiecesGenerator, PostPlacementProcessor.EMPTY);
+    public BikeshedFeature() {
+        super(StructurePoolFeatureConfig.CODEC, BikeshedFeature::createPiecesGenerator, PostPlacementProcessor.EMPTY);
     }
 
     private static boolean isFeatureChunk(StructureGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
@@ -31,29 +30,11 @@ public class BikeshedFeature extends StructureFeature<StructurePoolFeatureConfig
     }
 
     public static Optional<StructurePiecesGenerator<StructurePoolFeatureConfig>> createPiecesGenerator(StructureGeneratorFactory.Context<StructurePoolFeatureConfig> context) {
-
         if (!isFeatureChunk(context)) return Optional.empty();
 
-        var config = new StructurePoolFeatureConfig(
-                () -> context.registryManager().get(Registry.STRUCTURE_POOL_KEY).get(Affinity.id("bikeshed/pool")),
-                1);
-
-        var newContext = new StructureGeneratorFactory.Context<>(
-                context.chunkGenerator(),
-                context.biomeSource(),
-                context.seed(),
-                context.chunkPos(),
-                config,
-                context.world(),
-                context.validBiome(),
-                context.structureManager(),
-                context.registryManager()
-        );
-
         var centerPos = context.chunkPos().getCenterAtY(0);
-
         var pieceGenerator = StructurePoolBasedGenerator.generate(
-                newContext,
+                context,
                 PoolStructurePiece::new,
                 centerPos,
                 false,

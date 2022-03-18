@@ -2,10 +2,9 @@ package io.wispforest.affinity.datagen;
 
 import io.wispforest.affinity.Affinity;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockStateDefinitionProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.block.Block;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.model.*;
+import net.minecraft.data.client.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -15,7 +14,7 @@ import java.util.Optional;
 import static io.wispforest.affinity.object.AffinityBlocks.*;
 import static io.wispforest.affinity.object.AffinityItems.*;
 
-public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefinitionProvider {
+public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
 
     private static final Model IRIDESCENCE_WAND_MODEL = new Model(Optional.of(Affinity.id("item/iridescence_wand")), Optional.empty(), TextureKey.LAYER0);
 
@@ -33,7 +32,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
 
         var variantMap = BlockStateVariantMap.create(Properties.AGE_2)
                 .register(integer -> {
-                    var id = generator.createSubModel(BUDDING_AZALEA_LEAVES, "_" + integer, Models.CUBE_ALL, Texture::all);
+                    var id = generator.createSubModel(BUDDING_AZALEA_LEAVES, "_" + integer, Models.CUBE_ALL, TextureMap::all);
                     return BlockStateVariant.create().put(VariantSettings.MODEL, id);
                 });
         generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(BUDDING_AZALEA_LEAVES).coordinate(variantMap));
@@ -83,7 +82,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricBlockStateDefini
 
     private void generatedWithTexture(ItemModelGenerator generator, Identifier texture, Item... items) {
         for (var item : items) {
-            Models.GENERATED.upload(ModelIds.getItemModelId(item), Texture.layer0(texture), generator.writer);
+            Models.GENERATED.upload(ModelIds.getItemModelId(item), TextureMap.layer0(texture), generator.writer);
         }
     }
 

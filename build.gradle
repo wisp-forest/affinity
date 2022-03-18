@@ -55,6 +55,8 @@ repositories {
     }
 
     maven { url 'https://cursemaven.com' }
+
+    maven { url 'https://maven.minecraftforge.net/' }
 }
 
 dependencies {
@@ -75,9 +77,7 @@ dependencies {
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-chunk:${project.cca_version}"
 
-    modImplementation ("dev.emi:trinkets:${project.trinkets_version}") {
-        transitive = false
-    }
+    modImplementation ("dev.emi:trinkets:${project.trinkets_version}")
 
     modImplementation "io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"
     include "io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"
@@ -86,7 +86,9 @@ dependencies {
 
     modImplementation "mcjty.theoneprobe:theoneprobe-fabric:${project.top_version}"
 
-    modLocalRuntime 'com.ptsmods:devlogin:1.2.1'
+    modImplementation "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"
+
+    modLocalRuntime 'com.ptsmods:devlogin:2.0'
     modLocalRuntime "maven.modrinth:emoji-type:1.0.3"
 }
 
