@@ -1,6 +1,14 @@
 {
   "parent": "affinity:item/iridescence_wand",
   "textures": {
-    "layer0": "affinity:item/emerald_wand_of_iridescence"
-  }
+    "layer0": "affinity:item/emerald_wand_of_iridescence_bind"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "affinity:mode": 1
+      },
+      "model": "affinity:item/emerald_wand_of_iridescence_release"
+    }
+  ]
 }

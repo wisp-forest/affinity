@@ -49,6 +49,14 @@
 
   "item.affinity.emerald_wand_of_iridescence": "Emerald Wand of Iridescence",
   "item.affinity.sapphire_wand_of_iridescence": "Sapphire Wand of Iridescence",
+  "item.affinity.wand_of_iridescence.help": "Sneak-Click to cycle modes",
+  "item.affinity.wand_of_iridescence.help.template": "⇄ %s",
+  "item.affinity.wand_of_iridescence.mode.template": " [%s]",
+  "item.affinity.wand_of_iridescence.mode.bind": "Bind",
+  "item.affinity.wand_of_iridescence.mode.bind.description": "Link machines together",
+  "item.affinity.wand_of_iridescence.mode.release": "Release",
+  "item.affinity.wand_of_iridescence.mode.release.description": "Remove links between machines",
+
   "item.affinity.wand_of_inquiry": "Wand of Inquiry",
   "item.affinity.geological_resonator": "Geological Resonator",
   "item.affinity.collection_staff": "Collection Staff",
@@ -70,7 +78,7 @@
   "message.affinity.linking.already_linked": "%s is already linked",
   "message.affinity.linking.no_target": "Invalid link target",
   "message.affinity.linking.success": "Linked to %s",
-  "message.affinity.linking_failed": "Could not link to %s",
+  "message.affinity.linking.failed": "Could not link to %s",
 
   "effect.affinity.life_leech": "Life Leech",
   "item.minecraft.potion.effect.life_leech": "Potion of Life Leech",

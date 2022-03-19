@@ -1,0 +1,6 @@
+{
+  "parent": "affinity:item/iridescence_wand",
+  "textures": {
+    "layer0": "affinity:item/emerald_wand_of_iridescence_release"
+  }
+}
