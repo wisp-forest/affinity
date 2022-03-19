@@ -46,6 +46,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
     private final DefaultedList<ItemStack> outerShards = DefaultedList.ofSize(5, ItemStack.EMPTY);
     private int outerShardCount = 0;
+    private boolean allLinksValid = false;
 
     private final float shardHeight;
     private final boolean isUpgradeable;
@@ -179,7 +180,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         if (member == null) return AethumLink.Result.NO_TARGET;
 
         if (this.links.size() >= this.maxConnections()) return AethumLink.Result.TOO_MANY_LINKS;
-        if (!this.pos.isWithinDistance(pos, this.tier.maxDistance())) return AethumLink.Result.OUT_OF_RANGE;
+        if (!this.pos.isWithinDistance(pos, this.tier.maxDistance() + 1)) return AethumLink.Result.OUT_OF_RANGE;
 
         if (member instanceof AethumNetworkNode node) {
             if (node.isLinked(this.pos)) return AethumLink.Result.ALREADY_LINKED;
@@ -246,7 +247,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     }
 
     private boolean validForTransfer() {
-        return this.hasShard() && this.links.size() <= this.maxConnections();
+        return this.hasShard() && this.allLinksValid && this.links.size() <= this.maxConnections();
     }
 
     // -------------
@@ -353,6 +354,12 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     private void updatePropertyCache() {
         this.outerShardCount = ListUtil.nonEmptyStacks(this.outerShards);
         this.updateTransferRateForTier();
+
+        boolean validityAccumulator = true;
+        for (var link : this.links.keySet()) {
+            validityAccumulator &= this.pos.isWithinDistance(link, this.tier.maxDistance() + 1);
+        }
+        this.allLinksValid = validityAccumulator;
     }
 
     // -------
