@@ -9,6 +9,7 @@ import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemb
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.ops.ItemOps;
@@ -70,7 +71,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         this.isPrimaryStorage = part.isBase;
 
         if (this.isPrimaryStorage) updateChildCache();
-        if (this.parentRef != null) parentRef.entity.updateChildCache();
+        if (this.parentRef != null && parentRef.entity != this) parentRef.entity.updateChildCache();
     }
 
     private void updateChildCache() {
@@ -93,9 +94,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
             this.childCache.add(cacheEntity);
         }
 
-        if (!this.childCache.isEmpty()) {
-            AffinityNetwork.CHANNEL.serverHandle(PlayerLookup.tracking(this)).send(new CacheChildrenUpdatePacket(this));
-        }
+        AffinityNetwork.CHANNEL.serverHandle(PlayerLookup.tracking(this)).send(new CacheChildrenUpdatePacket(this));
     }
 
     private void moveChildLinksOntoSelf(AethumFluxCacheBlockEntity child) {
@@ -249,6 +248,12 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     @Override
     protected void updateTransferRateForTier() {
         this.fluxStorage.setMaxInsert(this.tier.maxTransfer());
+    }
+
+    @Override
+    protected void setTierFromNbt(AttunedShardTier tier) {
+        if (!this.isPrimaryStorage) return;
+        super.setTierFromNbt(tier);
     }
 
     @Override
