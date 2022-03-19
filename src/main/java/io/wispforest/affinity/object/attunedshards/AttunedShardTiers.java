@@ -13,20 +13,22 @@ import org.jetbrains.annotations.NotNull;
 
 public enum AttunedShardTiers implements AttunedShardTier {
 
-    NONE(0),
-    CRUDE(50),
-    MILDLY_ATTUNED(100),
-    FAIRLY_ATTUNED(500),
-    GREATLY_ATTUNED(2000);
+    NONE(0, 5),
+    CRUDE(50, 5),
+    MILDLY_ATTUNED(100, 10),
+    FAIRLY_ATTUNED(500, 15),
+    GREATLY_ATTUNED(2000, 20);
 
     private final long maxTransfer;
+    private final int maxDistance;
     private final String translationKey;
 
     @Environment(EnvType.CLIENT)
     private SpriteIdentifier sprite;
 
-    AttunedShardTiers(int maxTransfer) {
+    AttunedShardTiers(int maxTransfer, int maxDistance) {
         this.maxTransfer = maxTransfer;
+        this.maxDistance = maxDistance;
 
         final var name = this.name().toLowerCase();
         this.translationKey = "shard_tier.affinity." + name;
@@ -46,7 +48,12 @@ public enum AttunedShardTiers implements AttunedShardTier {
 
     @Override
     public long maxTransfer() {
-        return maxTransfer;
+        return this.maxTransfer;
+    }
+
+    @Override
+    public int maxDistance() {
+        return this.maxDistance;
     }
 
     @Override

@@ -70,7 +70,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
     @Override
     public void tickServer() {
-        if (!this.hasShard()) return;
+        if (!this.validForTransfer()) return;
         if (lastTick == world.getTime()) return;
         this.lastTick = world.getTime();
 
@@ -126,7 +126,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     }
 
     private Collection<BlockPos> visitNetwork() {
-        if (!hasShard()) return Collections.emptyList();
+        if (!validForTransfer()) return Collections.emptyList();
 
         var visitedNodes = new ArrayList<BlockPos>();
         visitedNodes.add(this.pos);
@@ -136,7 +136,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         while (!queue.isEmpty()) {
             var memberPos = queue.poll();
             if (!(Affinity.AETHUM_NODE.find(world, memberPos, null) instanceof AethumFluxNodeBlockEntity node)) continue;
-            if (!node.hasShard()) continue;
+            if (!node.validForTransfer()) continue;
 
             visitedNodes.add(memberPos);
             node.lastTick = world.getTime();
@@ -177,6 +177,9 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
         var member = Affinity.AETHUM_MEMBER.find(world, pos, null);
         if (member == null) return AethumLink.Result.NO_TARGET;
+
+        if (this.links.size() >= this.maxConnections()) return AethumLink.Result.TOO_MANY_LINKS;
+        if (!this.pos.isWithinDistance(pos, this.tier.maxDistance())) return AethumLink.Result.OUT_OF_RANGE;
 
         if (member instanceof AethumNetworkNode node) {
             if (node.isLinked(this.pos)) return AethumLink.Result.ALREADY_LINKED;
@@ -231,6 +234,19 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     public void onLinkTargetRemoved(BlockPos pos) {
         super.onLinkTargetRemoved(pos);
         this.cachedMembers = null;
+    }
+
+    @Override
+    public boolean acceptsLinks() {
+        return this.links.size() < this.maxConnections();
+    }
+
+    private int maxConnections() {
+        return 5 + this.outerShardCount * 2;
+    }
+
+    private boolean validForTransfer() {
+        return this.hasShard() && this.links.size() <= this.maxConnections();
     }
 
     // -------------

@@ -17,6 +17,12 @@ public interface AttunedShardTier {
     long maxTransfer();
 
     /**
+     * @return The maximum distance a link from a
+     * node with a shard of this tier can have
+     */
+    int maxDistance();
+
+    /**
      * @return The translation key of this tier, used in the
      * HUD when looking at a node with a shard of this tier
      */

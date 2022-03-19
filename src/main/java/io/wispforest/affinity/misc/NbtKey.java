@@ -6,6 +6,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import org.apache.logging.log4j.util.TriConsumer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
@@ -29,6 +30,18 @@ public class NbtKey<T> {
 
     public void write(NbtCompound nbt, T value) {
         this.type.setter.accept(nbt, this.key, value);
+    }
+
+    public void delete(NbtCompound nbt) {
+        nbt.remove(this.key);
+    }
+
+    public boolean isIn(NbtCompound nbt) {
+        return nbt.contains(this.key, this.type.nbtEquivalent);
+    }
+
+    public boolean maybeIsIn(@Nullable NbtCompound nbt) {
+        return nbt != null && nbt.contains(this.key, this.type.nbtEquivalent);
     }
 
     public static final class ListKey<T> extends NbtKey<NbtList> {

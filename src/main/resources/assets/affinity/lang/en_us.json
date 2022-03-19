@@ -79,6 +79,8 @@
   "message.affinity.linking.already_linked": "%s is already linked",
   "message.affinity.linking.not_linked": "%s is not linked",
   "message.affinity.linking.no_target": "Invalid link target",
+  "message.affinity.linking.out_of_range": "%s is out of range",
+  "message.affinity.linking.too_many_links": "This node cannot carry any more links",
   "message.affinity.linking.link_created": "Linked to %s",
   "message.affinity.linking.link_destroyed": "Link to %s destroyed",
   "message.affinity.linking.failed": "Could not link to %s",

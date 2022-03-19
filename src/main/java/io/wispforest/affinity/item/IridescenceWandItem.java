@@ -36,6 +36,8 @@ import java.util.Objects;
 public class IridescenceWandItem extends Item {
 
     public static final NbtKey<String> MODE = new NbtKey<>("Mode", NbtKey.Type.STRING);
+    public static final NbtKey<NbtCompound> LINK_DATA = new NbtKey<>("LinkData", NbtKey.Type.COMPOUND);
+
     private static final String WAND_OF_IRIDESCENCE_PREFIX = "item.affinity.wand_of_iridescence";
 
     public IridescenceWandItem() {
@@ -90,7 +92,16 @@ public class IridescenceWandItem extends Item {
 
         var nextMember = Affinity.AETHUM_MEMBER.find(world, pos, null);
         if (nextMember == null) return ActionResult.PASS;
-        if (!nextMember.acceptsLinks()) return ActionResult.PASS;
+        if (!nextMember.acceptsLinks()) {
+            final var isNode = nextMember instanceof AethumNetworkNode;
+            if (mode == Mode.BIND && isNode) {
+                context.getPlayer().sendMessage(new TranslatableText(AethumLink.Result.TOO_MANY_LINKS.translationKey), true);
+                LINK_DATA.delete(stack.getOrCreateNbt());
+                return ActionResult.SUCCESS;
+            } else if (!isNode) {
+                return ActionResult.PASS;
+            }
+        }
 
         if (Objects.equals(getStoredPos(stack), context.getBlockPos())) return ActionResult.PASS;
         var existingElement = getLink(stack);
@@ -112,20 +123,22 @@ public class IridescenceWandItem extends Item {
         var result = mode.processor.run(stack, world, existingElement, pos, nextMember);
         context.getPlayer().sendMessage(new TranslatableText(result.translationKey, world.getBlockState(pos).getBlock().getName()), true);
 
+        LINK_DATA.delete(stack.getOrCreateNbt());
+
         return ActionResult.SUCCESS;
     }
 
     private BlockPos getStoredPos(ItemStack stack) {
-        return stack.getOrCreateNbt().contains("InitialMember", NbtElement.COMPOUND_TYPE) ?
-                BlockPos.fromLong(stack.getOrCreateNbt().getCompound("InitialMember").getLong("Position"))
+        return stack.getOrCreateNbt().contains("LinkData", NbtElement.COMPOUND_TYPE) ?
+                BlockPos.fromLong(stack.getOrCreateNbt().getCompound("LinkData").getLong("Position"))
                 : null;
     }
 
     private Element getLink(ItemStack stack) {
         var nbt = stack.getOrCreateNbt();
-        if (!nbt.contains("InitialMember", NbtElement.COMPOUND_TYPE)) return null;
+        if (!LINK_DATA.isIn(nbt)) return null;
 
-        return Element.values()[nbt.getCompound("InitialMember").getInt("Element")];
+        return Element.values()[LINK_DATA.read(nbt).getInt("Element")];
     }
 
     private void beginLink(ItemStack stack, BlockPos pos, Element element, Type type) {
@@ -134,15 +147,13 @@ public class IridescenceWandItem extends Item {
         nbt.putInt("Element", element.ordinal());
         nbt.putInt("Type", type.ordinal());
 
-        stack.getOrCreateNbt().put("InitialMember", nbt);
+        LINK_DATA.write(stack.getOrCreateNbt(), nbt);
     }
 
     private static AethumLink.Result executeBind(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
-        var linkNbt = stack.getOrCreateNbt().getCompound("InitialMember");
+        var linkNbt = LINK_DATA.read(stack.getOrCreateNbt());
         var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
         var linkType = Type.values()[linkNbt.getInt("Type")];
-
-        stack.getOrCreateNbt().remove("InitialMember");
 
         if (existingElement == Element.NODE) {
             var node = Affinity.AETHUM_NODE.find(world, existingPos, null);
@@ -153,10 +164,8 @@ public class IridescenceWandItem extends Item {
     }
 
     private static AethumLink.Result executeRelease(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
-        var linkNbt = stack.getOrCreateNbt().getCompound("InitialMember");
+        var linkNbt = LINK_DATA.read(stack.getOrCreateNbt());
         var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
-
-        stack.getOrCreateNbt().remove("InitialMember");
 
         if (existingElement == Element.NODE) {
             var node = Affinity.AETHUM_NODE.find(world, existingPos, null);
@@ -168,7 +177,7 @@ public class IridescenceWandItem extends Item {
 
     @Override
     public boolean hasGlint(ItemStack stack) {
-        return stack.getOrCreateNbt().contains("InitialMember");
+        return LINK_DATA.maybeIsIn(stack.getNbt());
     }
 
     public enum Mode {

@@ -18,7 +18,8 @@ public interface AethumNetworkMember extends AethumFluxContainer {
     boolean isLinked(BlockPos pos);
 
     /**
-     * @return {@code true} if a new link to this member can be established
+     * @return {@code true} if a new link to this member can be established.
+     * <b>On a node, this method must only return false if the connection limit is reached</b>
      */
     boolean acceptsLinks();
 
