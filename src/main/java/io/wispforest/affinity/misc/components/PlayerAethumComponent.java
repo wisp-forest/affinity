@@ -28,15 +28,15 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
     @Override
     public void readFromNbt(@NotNull NbtCompound tag) {
         super.readFromNbt(tag);
-        this.maxAethum = MAX_AETHUM_KEY.readOr(tag, this.maxAethum);
-        this.naturalRegenSpeed = NATURAL_REGEN_SPEED_KEY.readOr(tag, this.naturalRegenSpeed);
+        this.maxAethum = MAX_AETHUM_KEY.getOr(tag, this.maxAethum);
+        this.naturalRegenSpeed = NATURAL_REGEN_SPEED_KEY.getOr(tag, this.naturalRegenSpeed);
     }
 
     @Override
     public void writeToNbt(@NotNull NbtCompound tag) {
         super.writeToNbt(tag);
-        MAX_AETHUM_KEY.write(tag, this.maxAethum);
-        NATURAL_REGEN_SPEED_KEY.write(tag, this.naturalRegenSpeed);
+        MAX_AETHUM_KEY.put(tag, this.maxAethum);
+        NATURAL_REGEN_SPEED_KEY.put(tag, this.naturalRegenSpeed);
     }
 
     public void setMaxAethum(double maxAethum) {

@@ -53,16 +53,16 @@ public class IridescenceWandItem extends Item {
         if (world.isClient) return TypedActionResult.success(playerStack);
 
         final var stackNbt = playerStack.getOrCreateNbt();
-        final var mode = Mode.byId(MODE.read(stackNbt));
+        final var mode = Mode.byId(MODE.get(stackNbt));
 
-        MODE.write(stackNbt, mode.next().id);
+        MODE.put(stackNbt, mode.next().id);
 
         return TypedActionResult.success(playerStack);
     }
 
     @Override
     public Text getName(ItemStack stack) {
-        final var mode = Mode.byId(MODE.read(stack.getOrCreateNbt()));
+        final var mode = Mode.byId(MODE.get(stack.getOrCreateNbt()));
 
         return new TranslatableText(this.getTranslationKey()).append(new TranslatableText(WAND_OF_IRIDESCENCE_PREFIX + ".mode.template",
                 TextOps.translateWithColor(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id, mode.color)).formatted(Formatting.GRAY));
@@ -70,7 +70,7 @@ public class IridescenceWandItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        final var mode = Mode.byId(MODE.read(stack.getOrCreateNbt()));
+        final var mode = Mode.byId(MODE.get(stack.getOrCreateNbt()));
 
         tooltip.add(Text.of(" "));
 
@@ -88,7 +88,7 @@ public class IridescenceWandItem extends Item {
         final var world = context.getWorld();
         final var pos = context.getBlockPos();
 
-        final var mode = Mode.byId(MODE.read(stack.getOrCreateNbt()));
+        final var mode = Mode.byId(MODE.get(stack.getOrCreateNbt()));
 
         var nextMember = Affinity.AETHUM_MEMBER.find(world, pos, null);
         if (nextMember == null) return ActionResult.PASS;
@@ -138,7 +138,7 @@ public class IridescenceWandItem extends Item {
         var nbt = stack.getOrCreateNbt();
         if (!LINK_DATA.isIn(nbt)) return null;
 
-        return Element.values()[LINK_DATA.read(nbt).getInt("Element")];
+        return Element.values()[LINK_DATA.get(nbt).getInt("Element")];
     }
 
     private void beginLink(ItemStack stack, BlockPos pos, Element element, Type type) {
@@ -147,11 +147,11 @@ public class IridescenceWandItem extends Item {
         nbt.putInt("Element", element.ordinal());
         nbt.putInt("Type", type.ordinal());
 
-        LINK_DATA.write(stack.getOrCreateNbt(), nbt);
+        LINK_DATA.put(stack.getOrCreateNbt(), nbt);
     }
 
     private static AethumLink.Result executeBind(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
-        var linkNbt = LINK_DATA.read(stack.getOrCreateNbt());
+        var linkNbt = LINK_DATA.get(stack.getOrCreateNbt());
         var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
         var linkType = Type.values()[linkNbt.getInt("Type")];
 
@@ -164,7 +164,7 @@ public class IridescenceWandItem extends Item {
     }
 
     private static AethumLink.Result executeRelease(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
-        var linkNbt = LINK_DATA.read(stack.getOrCreateNbt());
+        var linkNbt = LINK_DATA.get(stack.getOrCreateNbt());
         var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
 
         if (existingElement == Element.NODE) {

@@ -26,12 +26,12 @@ public abstract class AethumComponent<H> implements Component, AutoSyncedCompone
 
     @Override
     public void readFromNbt(@NotNull NbtCompound tag) {
-        this.aethum = AETHUM_KEY.readOr(tag, this.aethum);
+        this.aethum = AETHUM_KEY.getOr(tag, this.aethum);
     }
 
     @Override
     public void writeToNbt(@NotNull NbtCompound tag) {
-        AETHUM_KEY.write(tag, this.aethum);
+        AETHUM_KEY.put(tag, this.aethum);
     }
 
     public double addAethum(double value) {

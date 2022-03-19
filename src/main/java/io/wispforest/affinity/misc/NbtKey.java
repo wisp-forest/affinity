@@ -20,15 +20,15 @@ public class NbtKey<T> {
         this.type = type;
     }
 
-    public T read(NbtCompound nbt) {
+    public T get(NbtCompound nbt) {
         return this.type.getter.apply(nbt, this.key);
     }
 
-    public T readOr(NbtCompound nbt, T defaultValue) {
-        return nbt.contains(this.key, this.type.nbtEquivalent) ? this.read(nbt) : defaultValue;
+    public T getOr(NbtCompound nbt, T defaultValue) {
+        return nbt.contains(this.key, this.type.nbtEquivalent) ? this.get(nbt) : defaultValue;
     }
 
-    public void write(NbtCompound nbt, T value) {
+    public void put(NbtCompound nbt, T value) {
         this.type.setter.accept(nbt, this.key, value);
     }
 
@@ -54,17 +54,17 @@ public class NbtKey<T> {
         }
 
         @Override
-        public NbtList read(NbtCompound nbt) {
+        public NbtList get(NbtCompound nbt) {
             return nbt.getList(this.key, this.elementType.nbtEquivalent);
         }
 
         @Override
-        public NbtList readOr(NbtCompound nbt, NbtList defaultValue) {
-            return nbt.contains(this.key, NbtElement.LIST_TYPE) ? this.read(nbt) : defaultValue;
+        public NbtList getOr(NbtCompound nbt, NbtList defaultValue) {
+            return nbt.contains(this.key, NbtElement.LIST_TYPE) ? this.get(nbt) : defaultValue;
         }
 
         @Override
-        public void write(NbtCompound nbt, NbtList value) {
+        public void put(NbtCompound nbt, NbtList value) {
             nbt.put(this.key, value);
         }
     }

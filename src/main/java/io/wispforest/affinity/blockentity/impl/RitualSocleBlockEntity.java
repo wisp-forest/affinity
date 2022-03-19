@@ -70,12 +70,12 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        this.item = ITEM_KEY.read(nbt);
+        this.item = ITEM_KEY.get(nbt);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        ITEM_KEY.write(nbt, this.item);
+        ITEM_KEY.put(nbt, this.item);
     }
 
     public @NotNull ItemStack getItem() {
