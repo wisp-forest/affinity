@@ -12,8 +12,8 @@ public class AffinityModelPredicateProviders {
             IridescenceWandItem.Mode.byId(IridescenceWandItem.MODE.read(stack.getOrCreateNbt())).ordinal();
 
     public static void applyDefaults() {
-        ModelPredicateProviderRegistry.register(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE, Affinity.id("mode"), AffinityModelPredicateProviders.IRIDESCENCE_WAND_MODE);
-        ModelPredicateProviderRegistry.register(AffinityItems.SAPPHIRE_WAND_OF_IRIDESCENCE, Affinity.id("mode"), AffinityModelPredicateProviders.IRIDESCENCE_WAND_MODE);
+        ModelPredicateProviderRegistry.register(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE, Affinity.id("mode"), IRIDESCENCE_WAND_MODE);
+        ModelPredicateProviderRegistry.register(AffinityItems.SAPPHIRE_WAND_OF_IRIDESCENCE, Affinity.id("mode"), IRIDESCENCE_WAND_MODE);
     }
 
 }

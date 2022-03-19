@@ -73,11 +73,14 @@
   "enchantment.affinity.curse_of_illiteracy": "Curse of Illiteracy",
   "enchantment.affinity.curse_of_health": "Curse of Health",
 
-  "message.affinity.linking.started": "Creating link from %s",
-  "message.affinity.linking.started_push": "Creating §ascatter §rlink from %s",
+  "message.affinity.linking.started_create": "Creating link from %s",
+  "message.affinity.linking.started_destroy": "Destroying link from %s",
+  "message.affinity.linking.started_create_push": "Creating §ascatter §rlink from %s",
   "message.affinity.linking.already_linked": "%s is already linked",
+  "message.affinity.linking.not_linked": "%s is not linked",
   "message.affinity.linking.no_target": "Invalid link target",
-  "message.affinity.linking.success": "Linked to %s",
+  "message.affinity.linking.link_created": "Linked to %s",
+  "message.affinity.linking.link_destroyed": "Link to %s destroyed",
   "message.affinity.linking.failed": "Could not link to %s",
 
   "effect.affinity.life_leech": "Life Leech",

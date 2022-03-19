@@ -190,12 +190,40 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         this.cachedMembers = null;
         this.markDirty(true);
 
-        return AethumLink.Result.SUCCESS;
+        return AethumLink.Result.LINK_CREATED;
+    }
+
+    @Override
+    public AethumLink.Result destroyLink(BlockPos pos) {
+        if (!isLinked(pos)) return AethumLink.Result.NOT_LINKED;
+
+        var member = Affinity.AETHUM_MEMBER.find(world, pos, null);
+        if (member == null) return AethumLink.Result.NO_TARGET;
+
+        if (!member.isLinked(this.pos)) return AethumLink.Result.NOT_LINKED;
+
+        if (member instanceof AethumNetworkNode node) {
+            node.removeNodeLink(this.pos);
+        } else {
+            member.onLinkTargetRemoved(this.pos);
+        }
+
+        this.links.remove(pos.toImmutable());
+        this.cachedMembers = null;
+        this.markDirty(true);
+
+        return AethumLink.Result.LINK_DESTROYED;
     }
 
     @Override
     public void addNodeLink(BlockPos pos) {
         this.links.put(pos.toImmutable(), AethumLink.Type.NORMAL);
+        this.markDirty(true);
+    }
+
+    @Override
+    public void removeNodeLink(BlockPos pos) {
+        this.links.remove(pos.toImmutable());
         this.markDirty(true);
     }
 

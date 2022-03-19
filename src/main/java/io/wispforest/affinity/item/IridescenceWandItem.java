@@ -46,6 +46,8 @@ public class IridescenceWandItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         final var playerStack = user.getStackInHand(hand);
         if (!user.isSneaking()) return TypedActionResult.pass(playerStack);
+
+        if (this.getStoredPos(playerStack) != null) return TypedActionResult.pass(playerStack);
         if (world.isClient) return TypedActionResult.success(playerStack);
 
         final var stackNbt = playerStack.getOrCreateNbt();
@@ -84,6 +86,8 @@ public class IridescenceWandItem extends Item {
         final var world = context.getWorld();
         final var pos = context.getBlockPos();
 
+        final var mode = Mode.byId(MODE.read(stack.getOrCreateNbt()));
+
         var nextMember = Affinity.AETHUM_MEMBER.find(world, pos, null);
         if (nextMember == null) return ActionResult.PASS;
         if (!nextMember.acceptsLinks()) return ActionResult.PASS;
@@ -96,7 +100,8 @@ public class IridescenceWandItem extends Item {
 
             beginLink(stack, pos, Element.of(nextMember), linkType);
 
-            context.getPlayer().sendMessage(new TranslatableText(linkType.translationKey, world.getBlockState(pos).getBlock().getName()), true);
+            context.getPlayer().sendMessage(new TranslatableText(mode == Mode.BIND ? linkType.translationKey : mode.initTranslationKey,
+                    world.getBlockState(pos).getBlock().getName()), true);
             return ActionResult.SUCCESS;
         }
 
@@ -104,23 +109,23 @@ public class IridescenceWandItem extends Item {
             return ActionResult.PASS;
         }
 
-        var result = executeLink(stack, world, existingElement, pos, nextMember);
+        var result = mode.processor.run(stack, world, existingElement, pos, nextMember);
         context.getPlayer().sendMessage(new TranslatableText(result.translationKey, world.getBlockState(pos).getBlock().getName()), true);
 
         return ActionResult.SUCCESS;
     }
 
     private BlockPos getStoredPos(ItemStack stack) {
-        return stack.getOrCreateNbt().contains("LinkingFrom", NbtElement.COMPOUND_TYPE) ?
-                BlockPos.fromLong(stack.getOrCreateNbt().getCompound("LinkingFrom").getLong("Position"))
+        return stack.getOrCreateNbt().contains("InitialMember", NbtElement.COMPOUND_TYPE) ?
+                BlockPos.fromLong(stack.getOrCreateNbt().getCompound("InitialMember").getLong("Position"))
                 : null;
     }
 
     private Element getLink(ItemStack stack) {
         var nbt = stack.getOrCreateNbt();
-        if (!nbt.contains("LinkingFrom", NbtElement.COMPOUND_TYPE)) return null;
+        if (!nbt.contains("InitialMember", NbtElement.COMPOUND_TYPE)) return null;
 
-        return Element.values()[nbt.getCompound("LinkingFrom").getInt("Element")];
+        return Element.values()[nbt.getCompound("InitialMember").getInt("Element")];
     }
 
     private void beginLink(ItemStack stack, BlockPos pos, Element element, Type type) {
@@ -129,15 +134,15 @@ public class IridescenceWandItem extends Item {
         nbt.putInt("Element", element.ordinal());
         nbt.putInt("Type", type.ordinal());
 
-        stack.getOrCreateNbt().put("LinkingFrom", nbt);
+        stack.getOrCreateNbt().put("InitialMember", nbt);
     }
 
-    private AethumLink.Result executeLink(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
-        var linkNbt = stack.getOrCreateNbt().getCompound("LinkingFrom");
+    private static AethumLink.Result executeBind(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
+        var linkNbt = stack.getOrCreateNbt().getCompound("InitialMember");
         var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
         var linkType = Type.values()[linkNbt.getInt("Type")];
 
-        stack.getOrCreateNbt().remove("LinkingFrom");
+        stack.getOrCreateNbt().remove("InitialMember");
 
         if (existingElement == Element.NODE) {
             var node = Affinity.AETHUM_NODE.find(world, existingPos, null);
@@ -147,20 +152,39 @@ public class IridescenceWandItem extends Item {
         }
     }
 
+    private static AethumLink.Result executeRelease(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
+        var linkNbt = stack.getOrCreateNbt().getCompound("InitialMember");
+        var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
+
+        stack.getOrCreateNbt().remove("InitialMember");
+
+        if (existingElement == Element.NODE) {
+            var node = Affinity.AETHUM_NODE.find(world, existingPos, null);
+            return node == null ? AethumLink.Result.NO_TARGET : node.destroyLink(nextPos);
+        } else {
+            return ((AethumNetworkNode) nextMember).destroyLink(existingPos);
+        }
+    }
+
     @Override
     public boolean hasGlint(ItemStack stack) {
-        return stack.getOrCreateNbt().contains("LinkingFrom");
+        return stack.getOrCreateNbt().contains("InitialMember");
     }
 
     public enum Mode {
-        BIND(0x721B26), RELEASE(0x11667C);
+        BIND(0x721B26, IridescenceWandItem::executeBind, null),
+        RELEASE(0x11667C, IridescenceWandItem::executeRelease, "message.affinity.linking.started_destroy");
 
         public final String id;
         public final int color;
+        public final MemberProcessor processor;
+        public final String initTranslationKey;
 
-        Mode(int color) {
+        Mode(int color, MemberProcessor processor, String initTranslationKey) {
             this.id = this.name().toLowerCase(Locale.ROOT);
             this.color = color;
+            this.processor = processor;
+            this.initTranslationKey = initTranslationKey;
         }
 
         public Mode next() {
@@ -170,5 +194,10 @@ public class IridescenceWandItem extends Item {
         public static Mode byId(String id) {
             return "release".equals(id) ? RELEASE : BIND;
         }
+    }
+
+    @FunctionalInterface
+    private interface MemberProcessor {
+        AethumLink.Result run(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember);
     }
 }
