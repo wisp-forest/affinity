@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "io.wispforest.affinity.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AbstractBlockMixin",
     "BoatEntityTypeMixin",
@@ -14,15 +14,13 @@
     "PotionItemMixin",
     "PotionUtilMixin",
     "StatusEffectMixin",
-    "StyleMixin",
     "access.BlockEntityTypeAccessor",
     "access.FilledMapItemInvoker",
     "access.MapStateAccessor",
     "access.OverworldBiomeCreatorInvoker",
     "access.SignTypeInvoker",
     "access.StructureFeatureAccessor",
-    "access.TreeFeatureConfigAccessor",
-    "client.MinecraftClientMixin"
+    "access.TreeFeatureConfigAccessor"
   ],
   "client": [
     "client.ClientPlayNetworkHandlerMixin",
@@ -31,7 +29,10 @@
     "client.DimensionTypeMixin",
     "client.EntityMixin",
     "client.HeldItemRendererMixin",
-    "client.InGameHudMixin"
+    "client.InGameHudMixin",
+    "client.ItemFrameEntityRendererMixin",
+    "client.MinecraftClientMixin",
+    "client.StyleMixin"
   ],
   "injectors": {
     "defaultRequire": 1
