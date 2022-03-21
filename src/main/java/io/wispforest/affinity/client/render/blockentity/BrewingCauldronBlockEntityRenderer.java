@@ -1,6 +1,7 @@
 package io.wispforest.affinity.client.render.blockentity;
 
 import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
+import io.wispforest.affinity.misc.util.MathUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
@@ -64,14 +65,9 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
             matrices.translate(0.125, entity.getFluidHeight(), 0.125);
 
             VertexConsumer consumer = WATER_TEXTURE.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getTranslucent());
+            float[] color = MathUtil.splitRGBToFloats(entity.storedPotion().color());
 
-            int color = entity.storedPotion().color();
-
-            float r = (color >> 16) / 255f;
-            float g = ((color & 0xFF00) >> 8) / 255f;
-            float b = (color & 0xFF) / 255f;
-
-            POTION_MODEL.render(matrices, consumer, light, overlay, r, g, b, 1);
+            POTION_MODEL.render(matrices, consumer, light, overlay, color[0], color[1], color[2], 1);
 
             matrices.pop();
         }

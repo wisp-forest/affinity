@@ -1,9 +1,12 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.misc.NbtKey;
+import io.wispforest.affinity.misc.recipe.AspenInfusionRecipe;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -14,11 +17,15 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("item", NbtKey.Type.ITEM_STACK);
     @NotNull private ItemStack item = ItemStack.EMPTY;
+
+    @Nullable
+    private AspenInfusionRecipe cachedRecipe = null;
 
     public AspRiteCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ASP_RITE_CORE, pos, state);
@@ -34,14 +41,23 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     }
 
     @Override
-    protected boolean onRitualCompleted() {
-        this.item = ItemStack.EMPTY;
+    protected boolean onRitualStart(RitualConfiguration configuration) {
+        if (this.item.isEmpty()) return false;
+
+        final var inventory = SocleInventory.resolve(this.world, configuration.socles());
+        final var recipeOptional = this.world.getRecipeManager()
+                .getFirstMatch(AffinityRecipeTypes.ASPEN_INFUSION, inventory, this.world);
+
+        if (recipeOptional.isEmpty()) return false;
+        this.cachedRecipe = recipeOptional.get();
+
         return true;
     }
 
     @Override
-    protected boolean checkRitualPreconditions() {
-        return !this.item.isEmpty();
+    protected boolean onRitualCompleted() {
+        this.item = this.cachedRecipe.getOutput();
+        return true;
     }
 
     @Override

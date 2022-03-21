@@ -1,0 +1,14 @@
+{
+  "type": "affinity:aspen_infusion",
+  "output": {
+    "item": "minecraft:diamond"
+  },
+  "inputs": [
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "tag": "minecraft:diamond_ores"
+    }
+  ]
+}

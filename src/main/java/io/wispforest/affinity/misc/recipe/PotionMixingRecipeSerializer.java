@@ -14,10 +14,9 @@ import java.util.ArrayList;
 
 public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixingRecipe> {
 
-    private PotionMixingRecipeSerializer() {}
-
     public static final PotionMixingRecipeSerializer INSTANCE = new PotionMixingRecipeSerializer();
-    public static final Identifier ID = PotionMixingRecipe.Type.ID;
+
+    private PotionMixingRecipeSerializer() {}
 
     @Override
     public PotionMixingRecipe read(Identifier id, JsonObject json) {

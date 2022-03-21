@@ -1,19 +1,21 @@
-package io.wispforest.affinity.blockentity.impl;
+package io.wispforest.affinity.blockentity.template;
 
-import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
-import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
-import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,14 +34,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     }
 
     /**
-     * Implemented by subclasses to indicate if an
-     * additional check to any socles being
-     * present succeeded
+     * Called when a ritual is about to start
      *
-     * @return {@code true} if the ritual may start
-     * according to the checked conditions
+     * @return {@code true} if the ritual can
+     * start given the current conditions
      */
-    protected abstract boolean checkRitualPreconditions();
+    protected abstract boolean onRitualStart(RitualConfiguration configuration);
 
     /**
      * Called every tick during a ritual, may well do nothing
@@ -68,11 +68,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     }
 
     public ActionResult tryStartRitual() {
-        if (!this.checkRitualPreconditions()) return ActionResult.PASS;
         if (this.world.isClient()) return ActionResult.SUCCESS;
 
         var configuration = examineConfiguration((ServerWorld) this.world, this.pos);
         if (configuration.isEmpty()) return ActionResult.PASS;
+
+        if (!this.onRitualStart(configuration)) return ActionResult.PASS;
 
         this.cachedConfiguration = configuration;
         Collections.shuffle(this.cachedConfiguration.socles(), this.world.random);
@@ -169,4 +170,70 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     }
 
     public record RitualSocleEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {}
+
+    public static class SocleInventory implements Inventory {
+
+        private final DefaultedList<ItemStack> items;
+
+        public SocleInventory(List<RitualSocleBlockEntity> socles) {
+            this.items = DefaultedList.ofSize(socles.size(), ItemStack.EMPTY);
+
+            for (int i = 0; i < socles.size(); i++) {
+                this.items.set(i, socles.get(i).getItem());
+            }
+        }
+
+        public static SocleInventory resolve(World world, List<RitualSocleEntry> entries) {
+            var socles = new ArrayList<RitualSocleBlockEntity>(entries.size());
+            for (var entry : entries) {
+                socles.add((RitualSocleBlockEntity) world.getBlockEntity(entry.position()));
+            }
+            return new SocleInventory(socles);
+        }
+
+        @Override
+        public int size() {
+            return this.items.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return this.items.isEmpty();
+        }
+
+        @Override
+        public ItemStack getStack(int slot) {
+            return this.items.get(slot);
+        }
+
+        @Override
+        @Deprecated
+        public ItemStack removeStack(int slot, int amount) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        @Deprecated
+        public ItemStack removeStack(int slot) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        @Deprecated
+        public boolean canPlayerUse(PlayerEntity player) {
+            return false;
+        }
+
+        @Override
+        @Deprecated
+        public void setStack(int slot, ItemStack stack) {}
+
+        @Override
+        @Deprecated
+        public void markDirty() {}
+
+        @Override
+        @Deprecated
+        public void clear() {}
+    }
 }

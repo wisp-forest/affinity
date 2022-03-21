@@ -1,6 +1,6 @@
 package io.wispforest.affinity.item;
 
-import io.wispforest.affinity.blockentity.impl.RitualCoreBlockEntity;
+import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
