@@ -68,7 +68,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.AETHUM_FLUX_NODE, AethumFluxNodeBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.AETHUM_FLUX_CACHE, AethumFluxCacheBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.RITUAL_SOCLE, RitualSocleBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(AffinityBlocks.Entities.RITUAL_CORE, RitualCoreBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(AffinityBlocks.Entities.ASP_RITE_CORE, AspRiteCoreBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {

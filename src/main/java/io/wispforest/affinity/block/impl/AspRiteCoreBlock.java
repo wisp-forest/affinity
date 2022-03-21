@@ -1,7 +1,7 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
-import io.wispforest.affinity.blockentity.impl.RitualCoreBlockEntity;
+import io.wispforest.affinity.blockentity.impl.AspRiteCoreBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -49,13 +49,13 @@ public class AspRiteCoreBlock extends AethumNetworkMemberBlock {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new RitualCoreBlockEntity(pos, state);
+        return new AspRiteCoreBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.RITUAL_CORE, TickedBlockEntity.ticker());
+        return checkType(type, AffinityBlocks.Entities.ASP_RITE_CORE, TickedBlockEntity.ticker());
     }
 
     @Override

@@ -34,10 +34,10 @@ public class AffinityParticleSystems {
     });
 
     public static final ParticleSystem<DissolveData> DISSOLVE_ITEM = CONTROLLER.register(DissolveData.class, (world, pos, data) -> {
-        world.addParticle(new BezierItemEmitterParticleEffect(data.stack(), data.suckWhere()), pos.x, pos.y, pos.z, 0, 0, 0);
+        world.addParticle(new BezierItemEmitterParticleEffect(data.suckWhat(), data.suckWhere()), pos.x, pos.y, pos.z, 0, 0, 0);
     });
 
-    public record DissolveData(ItemStack stack, Vec3d suckWhere) {}
+    public record DissolveData(ItemStack suckWhat, Vec3d suckWhere) {}
 
     public record LineData(Vec3d target, int color) {}
 

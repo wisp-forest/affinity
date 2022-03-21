@@ -38,7 +38,7 @@ public class WandOfInquiryItem extends Item {
 //        player.getItemCooldownManager().set(this, 100);
 
         if (!world.isClient()) {
-            var configuration = core.examineConfiguration();
+            var configuration = RitualCoreBlockEntity.examineConfiguration(core);
 
 //            int stability10 = (int) Math.round(configuration.stability() / 10);
 //            String stabilityBar = "▓".repeat(stability10) + "§" + "▒".repeat(10 - stability10);

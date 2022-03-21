@@ -85,7 +85,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<RitualSocleBlockEntity> RITUAL_SOCLE = FabricBlockEntityTypeBuilder.create(RitualSocleBlockEntity::new,
                 AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, AffinityBlocks.REFINED_RITUAL_SOCLE, AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE).build();
-        public static final BlockEntityType<RitualCoreBlockEntity> RITUAL_CORE = FabricBlockEntityTypeBuilder.create(RitualCoreBlockEntity::new,
+        public static final BlockEntityType<AspRiteCoreBlockEntity> ASP_RITE_CORE = FabricBlockEntityTypeBuilder.create(AspRiteCoreBlockEntity::new,
                 AffinityBlocks.ASP_RITE_CORE).build();
 
         public static final BlockEntityType<SundialBlockEntity> SUNDIAL = FabricBlockEntityTypeBuilder.create(SundialBlockEntity::new,
@@ -103,7 +103,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(BREWING_CAULDRON);
             Affinity.AETHUM_MEMBER.registerSelf(SUNDIAL);
             Affinity.AETHUM_MEMBER.registerSelf(ARBOREAL_ACCUMULATION_APPARATUS);
-            Affinity.AETHUM_MEMBER.registerSelf(RITUAL_CORE);
+            Affinity.AETHUM_MEMBER.registerSelf(ASP_RITE_CORE);
         }
 
         @Override
