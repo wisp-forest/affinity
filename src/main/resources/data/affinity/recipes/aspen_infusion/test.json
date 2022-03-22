@@ -3,6 +3,9 @@
   "output": {
     "item": "minecraft:diamond"
   },
+  "primary_input": {
+    "item": "affinity:azalea_flowers"
+  },
   "inputs": [
     {
       "item": "affinity:anthracite_powder"

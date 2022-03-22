@@ -19,6 +19,8 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("item", NbtKey.Type.ITEM_STACK);
@@ -44,7 +46,7 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     protected boolean onRitualStart(RitualConfiguration configuration) {
         if (this.item.isEmpty()) return false;
 
-        final var inventory = SocleInventory.resolve(this.world, configuration.socles());
+        final var inventory = new AspenInfusionInventory(configuration.resolveSocles(this.world), this.item);
         final var recipeOptional = this.world.getRecipeManager()
                 .getFirstMatch(AffinityRecipeTypes.ASPEN_INFUSION, inventory, this.world);
 
@@ -82,4 +84,18 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected void doRitualTick() {}
+
+    public static class AspenInfusionInventory extends SocleInventory {
+
+        private final ItemStack primaryInput;
+
+        public AspenInfusionInventory(List<RitualSocleBlockEntity> socles, ItemStack primaryInput) {
+            super(socles);
+            this.primaryInput = primaryInput.copy();
+        }
+
+        public ItemStack primaryInput() {
+            return primaryInput;
+        }
+    }
 }

@@ -1,13 +1,13 @@
 package io.wispforest.affinity.blockentity.template;
 
 import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
+import io.wispforest.affinity.misc.ReadOnlyInventory;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
@@ -167,13 +167,21 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         public boolean isEmpty() {
             return socles.isEmpty();
         }
+
+        public List<RitualSocleBlockEntity> resolveSocles(World world) {
+            var socleEntities = new ArrayList<RitualSocleBlockEntity>(this.socles.size());
+            for (var entry : this.socles) {
+                socleEntities.add((RitualSocleBlockEntity) world.getBlockEntity(entry.position()));
+            }
+            return socleEntities;
+        };
     }
 
     public record RitualSocleEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {}
 
-    public static class SocleInventory implements Inventory {
+    public static class SocleInventory implements ReadOnlyInventory.ListBacked {
 
-        private final DefaultedList<ItemStack> items;
+        protected final DefaultedList<ItemStack> items;
 
         public SocleInventory(List<RitualSocleBlockEntity> socles) {
             this.items = DefaultedList.ofSize(socles.size(), ItemStack.EMPTY);
@@ -183,57 +191,9 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
             }
         }
 
-        public static SocleInventory resolve(World world, List<RitualSocleEntry> entries) {
-            var socles = new ArrayList<RitualSocleBlockEntity>(entries.size());
-            for (var entry : entries) {
-                socles.add((RitualSocleBlockEntity) world.getBlockEntity(entry.position()));
-            }
-            return new SocleInventory(socles);
+        @Override
+        public List<ItemStack> delegate() {
+            return this.items;
         }
-
-        @Override
-        public int size() {
-            return this.items.size();
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return this.items.isEmpty();
-        }
-
-        @Override
-        public ItemStack getStack(int slot) {
-            return this.items.get(slot);
-        }
-
-        @Override
-        @Deprecated
-        public ItemStack removeStack(int slot, int amount) {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        @Deprecated
-        public ItemStack removeStack(int slot) {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        @Deprecated
-        public boolean canPlayerUse(PlayerEntity player) {
-            return false;
-        }
-
-        @Override
-        @Deprecated
-        public void setStack(int slot, ItemStack stack) {}
-
-        @Override
-        @Deprecated
-        public void markDirty() {}
-
-        @Override
-        @Deprecated
-        public void clear() {}
     }
 }
