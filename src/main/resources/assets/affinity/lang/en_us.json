@@ -85,6 +85,8 @@
   "message.affinity.linking.link_destroyed": "Link to %s destroyed",
   "message.affinity.linking.failed": "Could not link to %s",
 
+  "effect.affinity.dripping": "Dripping",
+
   "effect.affinity.life_leech": "Life Leech",
   "item.minecraft.potion.effect.life_leech": "Potion of Life Leech",
   "item.minecraft.splash_potion.effect.life_leech": "Splash Potion of Life Leech",

@@ -7,7 +7,9 @@ import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.affinity.object.wisps.AffinityWispTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.BoatItem;
+import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.SignItem;
 
@@ -26,7 +28,8 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item GEOLOGICAL_RESONATOR = new GeologicalResonatorItem();
     public static final Item COLLECTION_STAFF = new CollectionStaffItem();
 
-    public static final Item AZALEA_FLOWERS = new Item(settings(1));
+    public static final Item AZALEA_FLOWERS = new Item(settings(1).food(new FoodComponent.Builder().hunger(2).saturationModifier(.5f)
+            .statusEffect(new StatusEffectInstance(AffinityStatusEffects.DRIPPING, 1200), 1).build()));
 
     public static final Item INERT_WISP_MATTER = new WispMatterItem(AffinityWispTypes.INERT);
     public static final Item WISE_WISP_MATTER = new WispMatterItem(AffinityWispTypes.WISE);

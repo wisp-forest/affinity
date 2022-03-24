@@ -37,6 +37,13 @@ public class AffinityParticleSystems {
         world.addParticle(new BezierItemEmitterParticleEffect(data.suckWhat(), data.suckWhere()), pos.x, pos.y, pos.z, 0, 0, 0);
     });
 
+    public static final ParticleSystem<Void> DRIPPING_AZALEA = CONTROLLER.register(Void.class, (world, pos, data) -> {
+        ClientParticles.setParticleCount(5);
+        ClientParticles.spawnPrecise(ParticleTypes.FALLING_SPORE_BLOSSOM, world, pos, 1, 1.5, 1);
+        ClientParticles.setParticleCount(5);
+        ClientParticles.spawnPrecise(ParticleTypes.FALLING_NECTAR, world, pos, 1, 1.5, 1);
+    });
+
     public record DissolveData(ItemStack suckWhat, Vec3d suckWhere) {}
 
     public record LineData(Vec3d target, int color) {}
