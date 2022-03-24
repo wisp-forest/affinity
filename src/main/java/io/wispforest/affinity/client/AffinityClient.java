@@ -45,9 +45,6 @@ public class AffinityClient implements ClientModInitializer {
             return type == null ? 0xFFFFFF : type.glowColor();
         }, AffinityBlocks.REFINED_RITUAL_SOCLE, AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
 
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ((WispMatterItem) stack.getItem()).wispType().color(),
-                AffinityItems.INERT_WISP_MATTER, AffinityItems.WISE_WISP_MATTER, AffinityItems.VICIOUS_WISP_MATTER);
-
         EntityModelLayerRegistry.registerModelLayer(WispEntityModel.LAYER, WispEntityModel::createModelData);
 
         HandledScreens.register(AffinityScreenHandlerTypes.RITUAL_SOCLE_COMPOSER, RitualSocleComposerScreen::new);
