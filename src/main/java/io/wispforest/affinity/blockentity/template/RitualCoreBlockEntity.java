@@ -70,7 +70,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     public ActionResult tryStartRitual() {
         if (this.world.isClient()) return ActionResult.SUCCESS;
 
-        var configuration = examineConfiguration((ServerWorld) this.world, this.pos);
+        var configuration = examineConfiguration((ServerWorld) this.world, this.pos, false);
         if (configuration.isEmpty()) return ActionResult.PASS;
 
         if (!this.onRitualStart(configuration)) return ActionResult.PASS;
@@ -104,11 +104,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         }
     }
 
-    public static RitualConfiguration examineConfiguration(RitualCoreBlockEntity core) {
-        return examineConfiguration((ServerWorld) core.world, core.ritualCenterPos());
+    public static RitualConfiguration examineConfiguration(RitualCoreBlockEntity core, boolean includeEmptySocles) {
+        return examineConfiguration((ServerWorld) core.world, core.ritualCenterPos(), includeEmptySocles);
     }
 
-    public static RitualConfiguration examineConfiguration(ServerWorld world, BlockPos pos) {
+    @SuppressWarnings("ConstantConditions")
+    public static RitualConfiguration examineConfiguration(ServerWorld world, BlockPos pos, boolean includeEmptySocles) {
         var soclePOIs = world.getPointOfInterestStorage().getInCircle(type -> type == AffinityPoiTypes.RITUAL_SOCLE,
                 pos, 10, PointOfInterestStorage.OccupationStatus.ANY).filter(poi -> poi.getPos().getY() == pos.getY()).toList();
 
@@ -118,6 +119,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         var socles = new ArrayList<RitualSocleEntry>();
         for (var soclePOI : soclePOIs) {
+
+            if (!includeEmptySocles) {
+                if (!(world.getBlockEntity(soclePOI.getPos()) instanceof RitualSocleBlockEntity socle)) continue;
+                if (socle.getItem().isEmpty()) continue;
+            }
+
             double meanDistance = 0;
             double minDistance = Double.MAX_VALUE;
 
@@ -174,7 +181,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
                 socleEntities.add((RitualSocleBlockEntity) world.getBlockEntity(entry.position()));
             }
             return socleEntities;
-        };
+        }
     }
 
     public record RitualSocleEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {}

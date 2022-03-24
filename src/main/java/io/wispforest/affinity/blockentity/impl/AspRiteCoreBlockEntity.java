@@ -70,11 +70,13 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
         this.item = ITEM_KEY.get(nbt);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         ITEM_KEY.put(nbt, this.item);
     }
 

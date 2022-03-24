@@ -1,0 +1,23 @@
+{
+  "type": "affinity:aspen_infusion",
+  "output": {
+    "item": "affinity:greatly_attuned_amethyst_shard"
+  },
+  "primary_input": {
+    "item": "affinity:fairly_attuned_amethyst_shard"
+  },
+  "inputs": [
+    {
+      "item": "affinity:mildly_attuned_amethyst_shard"
+    },
+    {
+      "item": "affinity:mildly_attuned_amethyst_shard"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    }
+  ]
+}

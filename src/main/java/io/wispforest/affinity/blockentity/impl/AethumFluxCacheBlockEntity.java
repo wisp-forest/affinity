@@ -316,7 +316,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
     public static record RequestCacheChildrenPacket(BlockPos pos) {}
 
-    public static record CacheChildrenUpdatePacket(BlockPos cachePos, @ElementType(BlockPos.class) List<BlockPos> children) {
+    public static record CacheChildrenUpdatePacket(BlockPos cachePos, List<BlockPos> children) {
         public CacheChildrenUpdatePacket(AethumFluxCacheBlockEntity cache) {
             this(cache.pos, cache.childCache == null ? Collections.emptyList() : cache.childCache.stream().map(BlockEntity::getPos).toList());
         }

@@ -81,7 +81,7 @@ public class CollectionStaffItem extends Item {
         });
     }
 
-    public record BulkParticlesPacket(ParticleEffect particle, double deviation, @ElementType(Vec3d.class) List<Vec3d> positions) {
+    public record BulkParticlesPacket(ParticleEffect particle, double deviation, List<Vec3d> positions) {
 
         public <E extends Entity> BulkParticlesPacket(Collection<E> entities, ParticleEffect particle, double deviation) {
             this(particle, deviation, new ArrayList<>());

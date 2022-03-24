@@ -38,13 +38,14 @@ public class WandOfInquiryItem extends Item {
 //        player.getItemCooldownManager().set(this, 100);
 
         if (!world.isClient()) {
-            var configuration = RitualCoreBlockEntity.examineConfiguration(core);
+            var configuration = RitualCoreBlockEntity.examineConfiguration(core, true);
 
-//            int stability10 = (int) Math.round(configuration.stability() / 10);
-//            String stabilityBar = "▓".repeat(stability10) + "§" + "▒".repeat(10 - stability10);
+            int stability20 = (int) Math.round((configuration.stability() / 100) * 20);
+            String stabilityBar = "|".repeat(stability20) + "§" + "|".repeat(20 - stability20);
 
-            var text = TextOps.withColor("# §" + configuration.socles().size() + " | §⚡ §" + MathUtil.rounded(configuration.stability(), 2) + "%",
-                    0x1572A1, TextOps.color(Formatting.GRAY), 0xD885A3, TextOps.color(Formatting.GRAY));
+            var text = TextOps.withColor("# §" + configuration.socles().size() + " | §🛡 " + stabilityBar + "",
+                    0xD885A3, TextOps.color(Formatting.GRAY), 0x1572A1, TextOps.color(Formatting.GRAY));
+//            var text = TextOps.withColor(, 0x1572A1, TextOps.color(Formatting.GRAY));
             player.sendMessage(text, true);
 
             AffinityNetwork.CHANNEL.serverHandle(player).send(new SocleParticlesPacket(configuration.socles().stream()
@@ -77,6 +78,5 @@ public class WandOfInquiryItem extends Item {
         ClientParticles.reset();
     }
 
-    public record SocleParticlesPacket(@ElementType(BlockPos.class) List<BlockPos> soclePositions) {
-    }
+    public record SocleParticlesPacket(List<BlockPos> soclePositions) {}
 }
