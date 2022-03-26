@@ -14,10 +14,10 @@ public class BezierItemParticle extends CrackParticle {
 
     private final BezierSpline spline;
 
-    public BezierItemParticle(ClientWorld world, double x, double y, double z, ItemStack stack, Vec3d endpoint) {
+    public BezierItemParticle(ClientWorld world, double x, double y, double z, ItemStack stack, Vec3d endpoint, int travelDuration) {
         super(world, x, y, z, stack);
 
-        this.maxAge = 15;
+        this.maxAge = travelDuration;
         this.gravityStrength = 0;
 
         this.spline = makePath(new Vec3d(x, y, z), endpoint, this.maxAge);
@@ -46,7 +46,7 @@ public class BezierItemParticle extends CrackParticle {
         @Nullable
         @Override
         public Particle createParticle(BezierItemParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new BezierItemParticle(world, x, y, z, parameters.stack(), parameters.splineEndpoint());
+            return new BezierItemParticle(world, x, y, z, parameters.stack(), parameters.splineEndpoint(), parameters.travelDuration());
         }
     }
 }

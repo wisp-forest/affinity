@@ -34,7 +34,8 @@ public class AffinityParticleSystems {
     });
 
     public static final ParticleSystem<DissolveData> DISSOLVE_ITEM = CONTROLLER.register(DissolveData.class, (world, pos, data) -> {
-        world.addParticle(new BezierItemEmitterParticleEffect(data.suckWhat(), data.suckWhere()), pos.x, pos.y, pos.z, 0, 0, 0);
+        world.addParticle(new BezierItemEmitterParticleEffect(data.suckWhat(), data.suckWhere(), data.particleMaxAge(), data.duration()),
+                pos.x, pos.y, pos.z, 0, 0, 0);
     });
 
     public static final ParticleSystem<Void> DRIPPING_AZALEA = CONTROLLER.register(Void.class, (world, pos, data) -> {
@@ -44,7 +45,7 @@ public class AffinityParticleSystems {
         ClientParticles.spawnPrecise(ParticleTypes.FALLING_NECTAR, world, pos, 1, 1.5, 1);
     });
 
-    public record DissolveData(ItemStack suckWhat, Vec3d suckWhere) {}
+    public record DissolveData(ItemStack suckWhat, Vec3d suckWhere, int duration, int particleMaxAge) {}
 
     public record LineData(Vec3d target, int color) {}
 

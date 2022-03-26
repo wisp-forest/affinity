@@ -17,21 +17,23 @@ public class BezierItemEmitterParticle extends NoRenderParticle {
 
     private final ItemStack stack;
     private final Vec3d endpoint;
+    private final int travelDuration;
 
-    protected BezierItemEmitterParticle(ClientWorld world, double x, double y, double z, ItemStack stack, Vec3d endpoint) {
+    protected BezierItemEmitterParticle(ClientWorld world, double x, double y, double z, ItemStack stack, Vec3d endpoint, int emitterDuration, int travelDuration) {
         super(world, x, y, z);
         this.endpoint = endpoint;
 
-        this.maxAge = 25;
+        this.maxAge = emitterDuration;
         this.gravityStrength = 0;
         this.stack = stack;
+        this.travelDuration = travelDuration;
     }
 
     @Override
     public void tick() {
         var offset = VectorRandomUtils.getRandomOffset(this.world, Vec3d.ZERO, .25);
 
-        this.world.addParticle(new BezierItemParticleEffect(stack, this.endpoint),
+        this.world.addParticle(new BezierItemParticleEffect(stack, this.endpoint, this.travelDuration),
                 this.x + offset.x, this.y + offset.y, this.z + offset.z, 0, 0, 0);
         this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, this.stack),
                 this.x, this.y, this.z, offset.x, offset.y, offset.z);
@@ -48,7 +50,7 @@ public class BezierItemEmitterParticle extends NoRenderParticle {
         @Nullable
         @Override
         public Particle createParticle(BezierItemEmitterParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new BezierItemEmitterParticle(world, x, y, z, parameters.stack(), parameters.splineEndpoint());
+            return new BezierItemEmitterParticle(world, x, y, z, parameters.stack(), parameters.splineEndpoint(), parameters.emitterDuration(), parameters.travelDuration());
         }
     }
 }

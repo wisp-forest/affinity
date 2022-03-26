@@ -20,12 +20,14 @@ public class AspenInfusionRecipe implements Recipe<AspRiteCoreBlockEntity.AspenI
     private final Ingredient primaryInput;
     private final List<Ingredient> inputs;
     private final ItemStack output;
+    private final int duration;
 
-    public AspenInfusionRecipe(Identifier id, Ingredient primaryInput, List<Ingredient> inputs, ItemStack output) {
+    public AspenInfusionRecipe(Identifier id, Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, int duration) {
         this.id = id;
         this.primaryInput = primaryInput;
         this.inputs = inputs;
         this.output = output;
+        this.duration = duration;
     }
 
     @Override
@@ -61,6 +63,10 @@ public class AspenInfusionRecipe implements Recipe<AspRiteCoreBlockEntity.AspenI
         return this.output.copy();
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
     @Override
     public Identifier getId() {
         return this.id;
@@ -92,7 +98,9 @@ public class AspenInfusionRecipe implements Recipe<AspRiteCoreBlockEntity.AspenI
                 inputs.add(Ingredient.fromJson(inputElement));
             }
 
-            return new AspenInfusionRecipe(id, baseInput, inputs, output);
+            final int duration = JsonHelper.getInt(json, "duration", 100);
+
+            return new AspenInfusionRecipe(id, baseInput, inputs, output, duration);
         }
 
         @Override
@@ -100,7 +108,8 @@ public class AspenInfusionRecipe implements Recipe<AspRiteCoreBlockEntity.AspenI
             final var baseInput = Ingredient.fromPacket(buf);
             final var inputs = buf.readCollection(ArrayList::new, Ingredient::fromPacket);
             final var output = buf.readItemStack();
-            return new AspenInfusionRecipe(id, baseInput, inputs, output);
+            final int duration = buf.readVarInt();
+            return new AspenInfusionRecipe(id, baseInput, inputs, output, duration);
         }
 
         @Override
@@ -108,6 +117,7 @@ public class AspenInfusionRecipe implements Recipe<AspRiteCoreBlockEntity.AspenI
             recipe.primaryInput.write(buf);
             buf.writeCollection(recipe.inputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeItemStack(recipe.output);
+            buf.writeVarInt(recipe.duration);
         }
     }
 }

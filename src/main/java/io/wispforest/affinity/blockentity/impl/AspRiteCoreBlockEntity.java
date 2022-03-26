@@ -43,15 +43,17 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     }
 
     @Override
-    protected boolean onRitualStart(RitualConfiguration configuration) {
+    protected boolean onRitualStart(RitualSetup setup) {
         if (this.item.isEmpty()) return false;
 
-        final var inventory = new AspenInfusionInventory(configuration.resolveSocles(this.world), this.item);
+        final var inventory = new AspenInfusionInventory(setup.resolveSocles(this.world), this.item);
         final var recipeOptional = this.world.getRecipeManager()
                 .getFirstMatch(AffinityRecipeTypes.ASPEN_INFUSION, inventory, this.world);
 
         if (recipeOptional.isEmpty()) return false;
         this.cachedRecipe = recipeOptional.get();
+
+        setup.configureLength(this.cachedRecipe.getDuration());
 
         return true;
     }

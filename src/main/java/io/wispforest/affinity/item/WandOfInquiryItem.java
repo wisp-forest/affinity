@@ -6,7 +6,6 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import io.wispforest.owo.network.ClientAccess;
-import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.api.EnvType;
@@ -38,17 +37,17 @@ public class WandOfInquiryItem extends Item {
 //        player.getItemCooldownManager().set(this, 100);
 
         if (!world.isClient()) {
-            var configuration = RitualCoreBlockEntity.examineConfiguration(core, true);
+            var setup = RitualCoreBlockEntity.examineSetup(core, true);
 
-            int stability20 = (int) Math.round((configuration.stability() / 100) * 20);
+            int stability20 = (int) Math.round((setup.stability / 100) * 20);
             String stabilityBar = "|".repeat(stability20) + "§" + "|".repeat(20 - stability20);
 
-            var text = TextOps.withColor("# §" + configuration.socles().size() + " | §🛡 " + stabilityBar + "",
+            var text = TextOps.withColor("# §" + setup.socles.size() + " | §🛡 " + stabilityBar + "",
                     0xD885A3, TextOps.color(Formatting.GRAY), 0x1572A1, TextOps.color(Formatting.GRAY));
 //            var text = TextOps.withColor(, 0x1572A1, TextOps.color(Formatting.GRAY));
             player.sendMessage(text, true);
 
-            AffinityNetwork.CHANNEL.serverHandle(player).send(new SocleParticlesPacket(configuration.socles().stream()
+            AffinityNetwork.CHANNEL.serverHandle(player).send(new SocleParticlesPacket(setup.socles.stream()
                     .map(RitualCoreBlockEntity.RitualSocleEntry::position).toList()));
         }
 

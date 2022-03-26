@@ -12,10 +12,8 @@ public class AffinityParticleTypes implements AutoRegistryContainer<ParticleType
 
     public static final ParticleType<ColoredFlameParticleEffect> COLORED_FLAME = FabricParticleTypes.complex(ColoredFlameParticleEffect.FACTORY);
 
-    public static final ParticleType<BezierItemParticleEffect> BEZIER_ITEM
-            = FabricParticleTypes.complex(BezierItemParticleEffect.makeFactory(BezierItemParticleEffect::new));
-    public static final ParticleType<BezierItemEmitterParticleEffect> BEZIER_ITEM_EMITTER
-            = FabricParticleTypes.complex(BezierItemParticleEffect.makeFactory(BezierItemEmitterParticleEffect::new));
+    public static final ParticleType<BezierItemParticleEffect> BEZIER_ITEM = FabricParticleTypes.complex(BezierItemParticleEffect.FACTORY);
+    public static final ParticleType<BezierItemEmitterParticleEffect> BEZIER_ITEM_EMITTER = FabricParticleTypes.complex(BezierItemEmitterParticleEffect.FACTORY);
 
     @Override
     public Registry<ParticleType<?>> getRegistry() {

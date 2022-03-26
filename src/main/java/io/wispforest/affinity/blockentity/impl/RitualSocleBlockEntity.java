@@ -25,10 +25,13 @@ import java.util.Comparator;
 
 public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
-    private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("item", NbtKey.Type.ITEM_STACK);
+    private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
+    private final NbtKey<Integer> TICKS_KEY = new NbtKey<>("ExtractionTicks", NbtKey.Type.INT);
+    private final NbtKey<Integer> DURATION_KEY = new NbtKey<>("Duration", NbtKey.Type.INT);
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
     private int extractionTicks = 0;
+    private int extractionDuration = -1;
 
     public RitualSocleBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.RITUAL_SOCLE, pos, state);
@@ -43,7 +46,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
                     .min(Comparator.comparingDouble(value -> this.pos.getSquaredDistance(value.getPos())));
 
             if (core.isEmpty()) return ActionResult.SUCCESS;
-            beginExtraction(core.get().getPos());
+            beginExtraction(core.get().getPos(), 40);
 
             return ActionResult.SUCCESS;
         } else {
@@ -52,18 +55,22 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
         }
     }
 
-    public void beginExtraction(BlockPos corePosition) {
+    public void beginExtraction(BlockPos corePosition, int duration) {
+        final var travelDuration = Math.min(15, duration);
         AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, Vec3d.of(this.pos).add(.5, 1, .5),
-                new AffinityParticleSystems.DissolveData(this.getItem(), Vec3d.ofCenter(corePosition).add(0, .3, 0)));
+                new AffinityParticleSystems.DissolveData(this.getItem(), Vec3d.ofCenter(corePosition).add(0, .3, 0),
+                        duration - travelDuration, travelDuration));
         this.extractionTicks = 1;
+        this.extractionDuration = duration;
     }
 
     @Override
     public void tickServer() {
         if (this.extractionTicks < 1) return;
-        if (this.extractionTicks++ < 25) return;
+        if (this.extractionTicks++ < this.extractionDuration) return;
 
         this.extractionTicks = 0;
+        this.extractionDuration = -1;
         this.item = ItemStack.EMPTY;
         this.markDirty();
     }
@@ -71,11 +78,15 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
     @Override
     public void readNbt(NbtCompound nbt) {
         this.item = ITEM_KEY.get(nbt);
+        this.extractionTicks = TICKS_KEY.get(nbt);
+        this.extractionDuration = DURATION_KEY.get(nbt);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         ITEM_KEY.put(nbt, this.item);
+        TICKS_KEY.put(nbt, this.extractionTicks);
+        DURATION_KEY.put(nbt, this.extractionTicks);
     }
 
     public @NotNull ItemStack getItem() {
