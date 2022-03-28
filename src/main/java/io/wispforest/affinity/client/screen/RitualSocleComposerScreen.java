@@ -13,6 +13,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import static io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler.*;
+
 public class RitualSocleComposerScreen extends HandledScreen<RitualSocleComposerScreenHandler> {
 
     public final Identifier TEXTURE = Affinity.id("textures/gui/ritual_socle_composer.png");
@@ -32,14 +34,12 @@ public class RitualSocleComposerScreen extends HandledScreen<RitualSocleComposer
         this.playerInventoryTitleY = 82;
 
         this.mergeButton = new StatefulButtonWidget(this.x + 101, this.y + 20, 27, 13, 176, 13, 13, TEXTURE, button -> {
-            AffinityNetwork.CHANNEL.clientHandle().send(new RitualSocleComposerScreenHandler.ActionRequestPacket(
-                    RitualSocleComposerScreenHandler.Action.REQUEST_MERGE));
+            AffinityNetwork.CHANNEL.clientHandle().send(new ActionRequestPacket(Action.REQUEST_MERGE));
         });
         this.mergeButton.active = false;
 
         this.splitButton = new StatefulButtonWidget(this.x + 101, this.y + 63, 27, 13, 203, 13, 13, TEXTURE, button -> {
-            AffinityNetwork.CHANNEL.clientHandle().send(new RitualSocleComposerScreenHandler.ActionRequestPacket(
-                    RitualSocleComposerScreenHandler.Action.REQUEST_SPLIT));
+            AffinityNetwork.CHANNEL.clientHandle().send(new ActionRequestPacket(Action.REQUEST_SPLIT));
         });
         this.splitButton.active = false;
 
@@ -49,13 +49,13 @@ public class RitualSocleComposerScreen extends HandledScreen<RitualSocleComposer
 
     @Override
     protected void handledScreenTick() {
-        this.mergeButton.active = RitualSocleComposerScreenHandler.canMerge(this.handler.itemAt(RitualSocleComposerScreenHandler.ORNAMENT_INPUT_SLOT),
-                this.handler.itemAt(RitualSocleComposerScreenHandler.BLANK_SOCLE_INPUT_SLOT),
-                this.handler.itemAt(RitualSocleComposerScreenHandler.SOCLE_SLOT));
+        this.mergeButton.active = canMerge(this.handler.itemAt(ORNAMENT_INPUT_SLOT),
+                this.handler.itemAt(BLANK_SOCLE_INPUT_SLOT),
+                this.handler.itemAt(SOCLE_SLOT));
 
-        this.splitButton.active = RitualSocleComposerScreenHandler.canSplit(this.handler.itemAt(RitualSocleComposerScreenHandler.SOCLE_SLOT),
-                this.handler.itemAt(RitualSocleComposerScreenHandler.ORNAMENT_OUTPUT_SLOT),
-                this.handler.itemAt(RitualSocleComposerScreenHandler.BLANK_SOCLE_OUTPUT_SLOT));
+        this.splitButton.active = canSplit(this.handler.itemAt(SOCLE_SLOT),
+                this.handler.itemAt(ORNAMENT_OUTPUT_SLOT),
+                this.handler.itemAt(BLANK_SOCLE_OUTPUT_SLOT));
     }
 
     @Override
