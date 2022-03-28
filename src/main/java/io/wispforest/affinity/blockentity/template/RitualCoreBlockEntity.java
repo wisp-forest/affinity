@@ -74,7 +74,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         if (setup.isEmpty()) return ActionResult.PASS;
 
         if (!this.onRitualStart(setup)) return ActionResult.PASS;
-        if (setup.length() < 0) throw new IllegalStateException("No ritual length was configured. If you're a player, report this issue");
+        if (setup.duration() < 0) throw new IllegalStateException("No ritual length was configured. If you're a player, report this issue");
 
         this.cachedSetup = setup;
         Collections.shuffle(this.cachedSetup.socles, this.world.random);
@@ -87,14 +87,14 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     public void tickServer() {
         if (this.ritualTick < 0) return;
 
-        if (this.ritualTick % Math.floor(this.cachedSetup.length() * .15) == 0 && ++this.lastActivatedSocle < this.cachedSetup.socles.size()) {
+        if (this.cachedSetup.isSocleActivationTick(this.ritualTick) && ++this.lastActivatedSocle < this.cachedSetup.socles.size()) {
             var entity = this.world.getBlockEntity(this.cachedSetup.socles.get(this.lastActivatedSocle).position());
-            if (entity instanceof RitualSocleBlockEntity socle) socle.beginExtraction(this.pos, this.cachedSetup.lengthPerSocle());
+            if (entity instanceof RitualSocleBlockEntity socle) socle.beginExtraction(this.pos, this.cachedSetup.durationPerSocle());
         }
 
         this.doRitualTick();
 
-        if (this.ritualTick++ >= this.cachedSetup.length()) {
+        if (this.ritualTick++ >= this.cachedSetup.duration()) {
             this.ritualTick = -1;
             this.lastActivatedSocle = -1;
             this.cachedSetup = null;
@@ -175,8 +175,9 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         public final double stability;
         public final List<RitualSocleEntry> socles;
 
-        private int length = -1;
-        private int lengthPerSocle = -1;
+        private int duration = -1;
+        private int durationPerSocle = -1;
+        private int socleDelay = -1;
 
         public RitualSetup(double stability, List<RitualSocleEntry> socles) {
             this.stability = stability;
@@ -187,19 +188,23 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
             return socles.isEmpty();
         }
 
-        public int length() {
-            return this.length;
+        public int duration() {
+            return this.duration;
         }
 
-        public int lengthPerSocle() {
-            return this.lengthPerSocle;
+        public int durationPerSocle() {
+            return this.durationPerSocle;
+        }
+
+        public boolean isSocleActivationTick(int tick) {
+            return tick % this.socleDelay == 0;
         }
 
         public void configureLength(int length) {
-            this.length = length;
+            this.duration = length;
 
-            int socleDelay = (int) Math.floor(length * .15f);
-            this.lengthPerSocle = length - socleDelay * (this.socles.size() - 1);
+            this.socleDelay = (int) Math.floor(length * (1 / (this.socles.size() + 2f)));
+            this.durationPerSocle = length - this.socleDelay * (this.socles.size() - 1);
         }
 
         public List<RitualSocleBlockEntity> resolveSocles(World world) {
@@ -231,4 +236,14 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
             return this.items;
         }
     }
+
+//    public static class RitualMath {
+//        public static int socleRuntime(int socleCount, int ritualDuration) {
+//            return (int) (ritualDuration - Math.floor(ritualDuration * .15) * (socleCount - 1));
+//        }
+//
+//        public static int minRitualLength(int minSocleRuntime, int socleCount) {
+//            return (20 * minSocleRuntime) / (23 - 3 * socleCount);
+//        }
+//    }
 }
