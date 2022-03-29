@@ -26,8 +26,6 @@ import java.util.Comparator;
 public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
     private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
-    private final NbtKey<Integer> TICKS_KEY = new NbtKey<>("ExtractionTicks", NbtKey.Type.INT);
-    private final NbtKey<Integer> DURATION_KEY = new NbtKey<>("Duration", NbtKey.Type.INT);
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
     private int extractionTicks = 0;
@@ -78,15 +76,11 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
     @Override
     public void readNbt(NbtCompound nbt) {
         this.item = ITEM_KEY.get(nbt);
-        this.extractionTicks = TICKS_KEY.get(nbt);
-        this.extractionDuration = DURATION_KEY.get(nbt);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         ITEM_KEY.put(nbt, this.item);
-        TICKS_KEY.put(nbt, this.extractionTicks);
-        DURATION_KEY.put(nbt, this.extractionTicks);
     }
 
     public @NotNull ItemStack getItem() {
