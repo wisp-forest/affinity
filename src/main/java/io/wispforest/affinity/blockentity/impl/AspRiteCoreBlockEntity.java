@@ -65,6 +65,11 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     }
 
     @Override
+    protected boolean onRitualInterrupted() {
+        return false;
+    }
+
+    @Override
     public void onBroken() {
         super.onBroken();
         ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.getItem());

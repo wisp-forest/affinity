@@ -64,7 +64,7 @@ public class RitualSocleBlock extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
             if (world.getBlockEntity(pos) instanceof RitualSocleBlockEntity socle) {
-                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), socle.getItem());
+                socle.onBroken();
             }
             super.onStateReplaced(state, world, pos, newState, moved);
         }

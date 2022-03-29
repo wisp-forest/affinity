@@ -22,10 +22,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
-    @Nullable private RitualCoreBlockEntity.RitualSetup cachedSetup = null;
+    @Nullable private RitualSetup cachedSetup = null;
     private int ritualTick = -1;
     private int lastActivatedSocle = -1;
 
@@ -53,6 +54,15 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
      * and {@link #markDirty()} should be called
      */
     protected abstract boolean onRitualCompleted();
+
+    /**
+     * Called when a ritual is interrupted, usually
+     * because of a socle being removed
+     *
+     * @return {@code true} if state was modified
+     * and {@link #markDirty()} should be called
+     */
+    protected abstract boolean onRitualInterrupted();
 
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -95,14 +105,31 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         this.doRitualTick();
 
         if (this.ritualTick++ >= this.cachedSetup.duration()) {
-            this.ritualTick = -1;
-            this.lastActivatedSocle = -1;
-            this.cachedSetup = null;
-
-            if (this.onRitualCompleted()) {
-                this.markDirty();
-            }
+            this.doPostRunCleanup(this::onRitualCompleted);
         }
+    }
+
+    public void onSocleDestroyed(BlockPos pos, RitualSocleBlockEntity socle) {
+        if (this.cachedSetup == null) return;
+        if (!this.cachedSetup.hasSocleAt(pos)) return;
+
+        this.onRitualInterrupted();
+
+        this.doPostRunCleanup(this::onRitualInterrupted);
+    }
+
+    private void doPostRunCleanup(Supplier<Boolean> handlerImpl) {
+        this.ritualTick = -1;
+        this.lastActivatedSocle = -1;
+        this.cachedSetup = null;
+
+        if (handlerImpl.get()) {
+            this.markDirty();
+        }
+    }
+
+    public BlockPos ritualCenterPos() {
+        return this.pos;
     }
 
     public static RitualSetup examineSetup(RitualCoreBlockEntity core, boolean includeEmptySocles) {
@@ -167,10 +194,6 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         return new RitualSetup(stability, socles);
     }
 
-    public BlockPos ritualCenterPos() {
-        return this.pos;
-    }
-
     public static final class RitualSetup {
         public final double stability;
         public final List<RitualSocleEntry> socles;
@@ -198,6 +221,10 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         public boolean isSocleActivationTick(int tick) {
             return tick % this.socleDelay == 0;
+        }
+
+        public boolean hasSocleAt(BlockPos pos) {
+            return this.socles.stream().anyMatch(ritualSocleEntry -> ritualSocleEntry.position().equals(pos));
         }
 
         public void configureLength(int length) {
@@ -237,13 +264,4 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         }
     }
 
-//    public static class RitualMath {
-//        public static int socleRuntime(int socleCount, int ritualDuration) {
-//            return (int) (ritualDuration - Math.floor(ritualDuration * .15) * (socleCount - 1));
-//        }
-//
-//        public static int minRitualLength(int minSocleRuntime, int socleCount) {
-//            return (20 * minSocleRuntime) / (23 - 3 * socleCount);
-//        }
-//    }
 }
