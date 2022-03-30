@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
@@ -89,6 +90,8 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         this.cachedSetup = setup;
         Collections.shuffle(this.cachedSetup.socles, this.world.random);
 
+        this.cachedSetup.forEachSocle(world, socle -> socle.acquireRitualLock(this));
+
         this.ritualTick = 0;
         return ActionResult.SUCCESS;
     }
@@ -109,7 +112,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         }
     }
 
-    public void onSocleDestroyed(BlockPos pos, RitualSocleBlockEntity socle) {
+    public void onSocleDestroyed(BlockPos pos) {
         if (this.cachedSetup == null) return;
         if (!this.cachedSetup.hasSocleAt(pos)) return;
 
@@ -121,6 +124,8 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     private void doPostRunCleanup(Supplier<Boolean> handlerImpl) {
         this.ritualTick = -1;
         this.lastActivatedSocle = -1;
+
+        this.cachedSetup.forEachSocle(this.world, RitualSocleBlockEntity::releaseRitualLock);
         this.cachedSetup = null;
 
         if (handlerImpl.get()) {
@@ -148,8 +153,10 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         var socles = new ArrayList<RitualSocleEntry>();
         for (var soclePOI : soclePOIs) {
 
+            if (!(world.getBlockEntity(soclePOI.getPos()) instanceof RitualSocleBlockEntity socle)) continue;
+            if (socle.isLocked()) continue;
+
             if (!includeEmptySocles) {
-                if (!(world.getBlockEntity(soclePOI.getPos()) instanceof RitualSocleBlockEntity socle)) continue;
                 if (socle.getItem().isEmpty()) continue;
             }
 
@@ -240,6 +247,10 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
                 socleEntities.add((RitualSocleBlockEntity) world.getBlockEntity(entry.position()));
             }
             return socleEntities;
+        }
+
+        public void forEachSocle(World world, Consumer<RitualSocleBlockEntity> action) {
+            for (var socle : this.resolveSocles(world)) action.accept(socle);
         }
 
     }

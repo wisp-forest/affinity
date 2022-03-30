@@ -23,28 +23,23 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.poi.PointOfInterest;
 import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 
+@SuppressWarnings("UnusedReturnValue")
 public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
     private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
+
     private int extractionTicks = 0;
     private int extractionDuration = -1;
+    @Nullable private RitualCoreBlockEntity activeCore = null;
 
     public RitualSocleBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.RITUAL_SOCLE, pos, state);
-    }
-
-    public void onBroken() {
-        final var corePoi = this.closestCore(10);
-        if (corePoi != null && this.world.getBlockEntity(corePoi.getPos()) instanceof RitualCoreBlockEntity core) {
-            core.onSocleDestroyed(this.pos, this);
-        }
-
-        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.item);
     }
 
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -72,6 +67,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
         this.extractionDuration = duration;
     }
 
+    @SuppressWarnings("SameParameterValue")
     private PointOfInterest closestCore(int radius) {
         return ((ServerWorld) this.world).getPointOfInterestStorage()
                 .getInCircle(type -> type == AffinityPoiTypes.RITUAL_CORE, this.pos, radius, PointOfInterestStorage.OccupationStatus.ANY)
@@ -87,6 +83,31 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
         this.extractionDuration = -1;
         this.item = ItemStack.EMPTY;
         this.markDirty();
+    }
+
+    public boolean acquireRitualLock(RitualCoreBlockEntity core) {
+        if (this.activeCore != null) return false;
+
+        this.activeCore = core;
+        return true;
+    }
+
+    public boolean isLocked() {
+        return this.activeCore != null;
+    }
+
+    public boolean releaseRitualLock() {
+        boolean wasLockedBefore = this.activeCore != null;
+        this.activeCore = null;
+        return wasLockedBefore;
+    }
+
+    public void onBroken() {
+        if (this.activeCore != null) {
+            this.activeCore.onSocleDestroyed(this.pos);
+        }
+
+        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.item);
     }
 
     @Override
