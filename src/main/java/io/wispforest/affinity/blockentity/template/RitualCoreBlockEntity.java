@@ -125,7 +125,6 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
             this.finishRitual(this::onRitualCompleted);
         } else if (this.ritualTick == this.ritualFailureTick) {
             this.finishRitual(this::onRitualInterrupted);
-            this.world.getServer().getPlayerManager().broadcast(Text.of("we failen"), MessageType.SYSTEM, null);
         }
     }
 
