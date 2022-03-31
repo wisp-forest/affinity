@@ -9,7 +9,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.MessageType;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
@@ -28,7 +30,9 @@ import java.util.function.Supplier;
 public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
     @Nullable private RitualSetup cachedSetup = null;
+
     private int ritualTick = -1;
+    private int ritualFailureTick = -1;
     private int lastActivatedSocle = -1;
 
     public RitualCoreBlockEntity(BlockEntityType<? extends RitualCoreBlockEntity> type, BlockPos pos, BlockState state) {
@@ -77,7 +81,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     @Override
     public void onBroken() {
         super.onBroken();
-        this.doPostRunCleanup(this::onRitualInterrupted);
+        this.finishRitual(this::onRitualInterrupted);
     }
 
     protected ActionResult handleNormalUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -98,6 +102,10 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         this.cachedSetup.forEachSocle(world, socle -> socle.acquireRitualLock(this));
 
+        if (this.cachedSetup.stability / 100d < this.world.random.nextDouble()) {
+            this.ritualFailureTick = this.world.random.nextInt(this.cachedSetup.duration());
+        }
+
         this.ritualTick = 0;
         return ActionResult.SUCCESS;
     }
@@ -114,7 +122,10 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         this.doRitualTick();
 
         if (this.ritualTick++ >= this.cachedSetup.duration()) {
-            this.doPostRunCleanup(this::onRitualCompleted);
+            this.finishRitual(this::onRitualCompleted);
+        } else if (this.ritualTick == this.ritualFailureTick) {
+            this.finishRitual(this::onRitualInterrupted);
+            this.world.getServer().getPlayerManager().broadcast(Text.of("we failen"), MessageType.SYSTEM, null);
         }
     }
 
@@ -124,14 +135,15 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         this.onRitualInterrupted();
 
-        this.doPostRunCleanup(this::onRitualInterrupted);
+        this.finishRitual(this::onRitualInterrupted);
     }
 
-    private void doPostRunCleanup(Supplier<Boolean> handlerImpl) {
+    private void finishRitual(Supplier<Boolean> handlerImpl) {
         this.ritualTick = -1;
+        this.ritualFailureTick = -1;
         this.lastActivatedSocle = -1;
 
-        this.cachedSetup.forEachSocle(this.world, RitualSocleBlockEntity::releaseRitualLock);
+        if (this.cachedSetup != null) this.cachedSetup.forEachSocle(this.world, RitualSocleBlockEntity::releaseRitualLock);
         this.cachedSetup = null;
 
         if (handlerImpl.get()) {
