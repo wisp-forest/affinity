@@ -74,6 +74,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         }
     }
 
+    @Override
+    public void onBroken() {
+        super.onBroken();
+        this.doPostRunCleanup(this::onRitualInterrupted);
+    }
+
     protected ActionResult handleNormalUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         return ActionResult.PASS;
     }
