@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class CopperPlatedAethumFluxNodeBlock extends AbstractAethumFluxNodeBlock {
 
     private static final VoxelShape SHAPE = Stream.of(
-            Block.createCuboidShape(4, 0, 4, 12, 2, 12),
+            Block.createCuboidShape(4, 0, 4, 12, 3, 12),
             Block.createCuboidShape(5, 2, 5, 11, 8, 11),
             Block.createCuboidShape(7, 2, 11, 9, 8, 12),
             Block.createCuboidShape(4, 2, 7, 5, 8, 9),
