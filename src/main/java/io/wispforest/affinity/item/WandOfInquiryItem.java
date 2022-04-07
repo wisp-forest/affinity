@@ -37,14 +37,13 @@ public class WandOfInquiryItem extends Item {
 //        player.getItemCooldownManager().set(this, 100);
 
         if (!world.isClient()) {
-            var setup = RitualCoreBlockEntity.examineSetup(core, true);
+            var setup = RitualCoreBlockEntity.examineSetup(core, !player.isSneaking());
 
             int stability20 = (int) Math.round((setup.stability / 100) * 20);
             String stabilityBar = "|".repeat(stability20) + "§" + "|".repeat(20 - stability20);
 
             var text = TextOps.withColor("# §" + setup.socles.size() + " | §🛡 " + stabilityBar + "",
                     0xD885A3, TextOps.color(Formatting.GRAY), 0x1572A1, TextOps.color(Formatting.GRAY));
-//            var text = TextOps.withColor(, 0x1572A1, TextOps.color(Formatting.GRAY));
             player.sendMessage(text, true);
 
             AffinityNetwork.CHANNEL.serverHandle(player).send(new SocleParticlesPacket(setup.socles.stream()
