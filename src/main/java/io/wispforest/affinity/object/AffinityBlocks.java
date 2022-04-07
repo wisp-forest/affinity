@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.BlockItem;
@@ -40,6 +41,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(0) public static final Block REFINED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.REFINED);
     @Tab(0) public static final Block SOPHISTICATED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.SOPHISTICATED);
     @Tab(0) public static final Block ASP_RITE_CORE = new AspRiteCoreBlock();
+    @Tab(0) public static final Block ABERRANT_CALLING_CORE = new AberrantCallingCoreBlock();
     @Tab(0) public static final Block RITUAL_SOCLE_COMPOSER = new RitualSocleComposerBlock();
     @Tab(0) public static final Block AFFINE_INFUSER = new AffineInfuserBlock();
 
@@ -76,27 +78,36 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
     public static class Entities implements AutoRegistryContainer<BlockEntityType<?>> {
 
-        public static final BlockEntityType<BrewingCauldronBlockEntity> BREWING_CAULDRON = FabricBlockEntityTypeBuilder.create(BrewingCauldronBlockEntity::new,
-                AffinityBlocks.BREWING_CAULDRON).build();
+        public static final BlockEntityType<BrewingCauldronBlockEntity> BREWING_CAULDRON =
+                make(BrewingCauldronBlockEntity::new, AffinityBlocks.BREWING_CAULDRON);
 
-        public static final BlockEntityType<AethumFluxNodeBlockEntity> AETHUM_FLUX_NODE = FabricBlockEntityTypeBuilder.create(AethumFluxNodeBlockEntity::new,
-                AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_NODE, AffinityBlocks.STONE_BANDED_AETHUM_FLUX_NODE).build();
-        public static final BlockEntityType<AethumFluxCacheBlockEntity> AETHUM_FLUX_CACHE = FabricBlockEntityTypeBuilder.create(AethumFluxCacheBlockEntity::new,
-                AffinityBlocks.AETHUM_FLUX_CACHE).build();
+        public static final BlockEntityType<AethumFluxNodeBlockEntity> AETHUM_FLUX_NODE =
+                make(AethumFluxNodeBlockEntity::new,
+                        AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_NODE,
+                        AffinityBlocks.STONE_BANDED_AETHUM_FLUX_NODE);
 
-        public static final BlockEntityType<RitualSocleBlockEntity> RITUAL_SOCLE = FabricBlockEntityTypeBuilder.create(RitualSocleBlockEntity::new,
-                AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, AffinityBlocks.REFINED_RITUAL_SOCLE, AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE).build();
-        public static final BlockEntityType<AspRiteCoreBlockEntity> ASP_RITE_CORE = FabricBlockEntityTypeBuilder.create(AspRiteCoreBlockEntity::new,
-                AffinityBlocks.ASP_RITE_CORE).build();
+        public static final BlockEntityType<AethumFluxCacheBlockEntity> AETHUM_FLUX_CACHE =
+                make(AethumFluxCacheBlockEntity::new, AffinityBlocks.AETHUM_FLUX_CACHE);
 
-        public static final BlockEntityType<AffineInfuserBlockEntity> AFFINE_INFUSER = FabricBlockEntityTypeBuilder
-                .create(AffineInfuserBlockEntity::new, AffinityBlocks.AFFINE_INFUSER).build();
+        public static final BlockEntityType<RitualSocleBlockEntity> RITUAL_SOCLE =
+                make(RitualSocleBlockEntity::new,
+                        AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE,
+                        AffinityBlocks.REFINED_RITUAL_SOCLE,
+                        AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
 
-        public static final BlockEntityType<SundialBlockEntity> SUNDIAL = FabricBlockEntityTypeBuilder.create(SundialBlockEntity::new,
-                AffinityBlocks.SUNDIAL).build();
+        public static final BlockEntityType<AspRiteCoreBlockEntity> ASP_RITE_CORE =
+                make(AspRiteCoreBlockEntity::new, AffinityBlocks.ASP_RITE_CORE);
+        public static final BlockEntityType<AberrantCallingCoreBlockEntity> ABERRANT_CALLING_CORE =
+                make(AberrantCallingCoreBlockEntity::new, AffinityBlocks.ABERRANT_CALLING_CORE);
+
+        public static final BlockEntityType<AffineInfuserBlockEntity> AFFINE_INFUSER =
+                make(AffineInfuserBlockEntity::new, AffinityBlocks.AFFINE_INFUSER);
+
+        public static final BlockEntityType<SundialBlockEntity> SUNDIAL =
+                make(SundialBlockEntity::new, AffinityBlocks.SUNDIAL);
 
         public static final BlockEntityType<ArborealAccumulationApparatusBlockEntity> ARBOREAL_ACCUMULATION_APPARATUS =
-                FabricBlockEntityTypeBuilder.create(ArborealAccumulationApparatusBlockEntity::new, AffinityBlocks.ARBOREAL_ACCUMULATION_APPARATUS).build();
+                make(ArborealAccumulationApparatusBlockEntity::new, AffinityBlocks.ARBOREAL_ACCUMULATION_APPARATUS);
 
         @Override
         public void afterFieldProcessing() {
@@ -108,6 +119,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(SUNDIAL);
             Affinity.AETHUM_MEMBER.registerSelf(ARBOREAL_ACCUMULATION_APPARATUS);
             Affinity.AETHUM_MEMBER.registerSelf(ASP_RITE_CORE);
+            Affinity.AETHUM_MEMBER.registerSelf(ABERRANT_CALLING_CORE);
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_INFUSER);
         }
 
@@ -120,6 +132,10 @@ public class AffinityBlocks implements BlockRegistryContainer {
         @SuppressWarnings("unchecked")
         public Class<BlockEntityType<?>> getTargetFieldType() {
             return (Class<BlockEntityType<?>>) (Object) BlockEntityType.class;
+        }
+
+        private static <T extends BlockEntity> BlockEntityType<T> make(FabricBlockEntityTypeBuilder.Factory<T> factory, Block... blocks) {
+            return FabricBlockEntityTypeBuilder.create(factory, blocks).build();
         }
     }
 
