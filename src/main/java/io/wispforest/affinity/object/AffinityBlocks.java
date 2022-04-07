@@ -41,6 +41,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(0) public static final Block SOPHISTICATED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.SOPHISTICATED);
     @Tab(0) public static final Block ASP_RITE_CORE = new AspRiteCoreBlock();
     @Tab(0) public static final Block RITUAL_SOCLE_COMPOSER = new RitualSocleComposerBlock();
+    @Tab(0) public static final Block AFFINE_INFUSER = new AffineInfuserBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
 
@@ -88,6 +89,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<AspRiteCoreBlockEntity> ASP_RITE_CORE = FabricBlockEntityTypeBuilder.create(AspRiteCoreBlockEntity::new,
                 AffinityBlocks.ASP_RITE_CORE).build();
 
+        public static final BlockEntityType<AffineInfuserBlockEntity> AFFINE_INFUSER = FabricBlockEntityTypeBuilder
+                .create(AffineInfuserBlockEntity::new, AffinityBlocks.AFFINE_INFUSER).build();
+
         public static final BlockEntityType<SundialBlockEntity> SUNDIAL = FabricBlockEntityTypeBuilder.create(SundialBlockEntity::new,
                 AffinityBlocks.SUNDIAL).build();
 
@@ -104,6 +108,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(SUNDIAL);
             Affinity.AETHUM_MEMBER.registerSelf(ARBOREAL_ACCUMULATION_APPARATUS);
             Affinity.AETHUM_MEMBER.registerSelf(ASP_RITE_CORE);
+            Affinity.AETHUM_MEMBER.registerSelf(AFFINE_INFUSER);
         }
 
         @Override

@@ -1,5 +1,6 @@
 package io.wispforest.affinity.object;
 
+import io.wispforest.affinity.enchantment.AffineEnchantment;
 import io.wispforest.affinity.enchantment.HealthCurseEnchantment;
 import io.wispforest.affinity.enchantment.IlliteracyCurseEnchantment;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
@@ -10,6 +11,7 @@ public class AffinityEnchantments implements AutoRegistryContainer<Enchantment> 
 
     public static final Enchantment CURSE_OF_ILLITERACY = new IlliteracyCurseEnchantment();
     public static final Enchantment CURSE_OF_HEALTH = new HealthCurseEnchantment();
+    public static final Enchantment AFFINE = new AffineEnchantment();
 
     @Override
     public Registry<Enchantment> getRegistry() {

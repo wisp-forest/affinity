@@ -26,6 +26,7 @@
   "item.affinity.purpur_socle_ornament": "Purpur Socle Ornament",
   "block.affinity.asp_rite_core": "Asp Rite Core",
   "block.affinity.ritual_socle_composer": "Ritual Socle Composer",
+  "block.affinity.affine_infuser": "Affine Infuser",
 
   "block.affinity.azalea_planks": "Azalea Planks",
   "block.affinity.azalea_log": "Azalea Log",
@@ -72,6 +73,7 @@
 
   "enchantment.affinity.curse_of_illiteracy": "Curse of Illiteracy",
   "enchantment.affinity.curse_of_health": "Curse of Health",
+  "enchantment.affinity.affine": "Affine",
 
   "message.affinity.linking.started_create": "Creating link from %s",
   "message.affinity.linking.started_destroy": "Destroying link from %s",

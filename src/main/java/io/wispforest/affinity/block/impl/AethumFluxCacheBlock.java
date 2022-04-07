@@ -12,6 +12,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.ActionResult;
@@ -72,7 +73,7 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
     private static final VoxelShape STANDALONE_SHAPE = VoxelShapes.union(TOP_SHAPE, BOTTOM_SHAPE);
 
     public AethumFluxCacheBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10));
+        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10).sounds(BlockSoundGroup.COPPER));
         this.setDefaultState(this.getDefaultState().with(PART, Part.STANDALONE));
     }
 
