@@ -13,8 +13,14 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BezierItemEmitterParticle extends NoRenderParticle {
 
+    private static final Map<Vec3d, BezierItemEmitterParticle> ACTIVE_PARTICLES = new HashMap<>();
+
+    private final Vec3d position;
     private final ItemStack stack;
     private final Vec3d endpoint;
     private final int travelDuration;
@@ -23,10 +29,13 @@ public class BezierItemEmitterParticle extends NoRenderParticle {
         super(world, x, y, z);
         this.endpoint = endpoint;
 
+        this.position = new Vec3d(this.x, this.y, this.z);
         this.maxAge = emitterDuration;
         this.gravityStrength = 0;
         this.stack = stack;
         this.travelDuration = travelDuration;
+
+        ACTIVE_PARTICLES.put(this.position, this);
     }
 
     @Override
@@ -38,12 +47,24 @@ public class BezierItemEmitterParticle extends NoRenderParticle {
         this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, this.stack),
                 this.x, this.y, this.z, offset.x, offset.y, offset.z);
 
-
 //        offset = VectorRandomUtils.getRandomOffset(this.world, Vec3d.ZERO, .25);
 //        this.world.addParticle(new BezierItemParticleEffect(stack, this.endpoint),
 //                this.x + offset.x, this.y + offset.y, this.z + offset.z, 0, 0, 0);
 
         super.tick();
+    }
+
+    @Override
+    public void markDead() {
+        super.markDead();
+        ACTIVE_PARTICLES.remove(this.position);
+    }
+
+    public static void removeParticleAt(Vec3d position) {
+        if (!ACTIVE_PARTICLES.containsKey(position)) return;
+
+        var particle = ACTIVE_PARTICLES.get(position);
+        particle.age = particle.maxAge;
     }
 
     public static class Factory implements ParticleFactory<BezierItemEmitterParticleEffect> {

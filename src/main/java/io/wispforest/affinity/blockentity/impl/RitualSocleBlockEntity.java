@@ -60,7 +60,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
 
     public void beginExtraction(BlockPos corePosition, int duration) {
         final var travelDuration = Math.min(15, duration);
-        AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, Vec3d.of(this.pos).add(.5, 1, .5),
+        AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, particleOrigin(this.pos),
                 new AffinityParticleSystems.DissolveData(this.getItem(), Vec3d.ofCenter(corePosition).add(0, .3, 0),
                         duration - travelDuration, travelDuration));
         this.extractionTicks = 1;
@@ -108,6 +108,10 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
         }
 
         ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.item);
+    }
+
+    public static Vec3d particleOrigin(BlockPos soclePosition) {
+        return Vec3d.of(soclePosition).add(.5, 1, .5);
     }
 
     @Override

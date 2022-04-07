@@ -1,17 +1,17 @@
 package io.wispforest.affinity.blockentity.template;
 
 import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
+import io.wispforest.affinity.client.particle.BezierItemEmitterParticle;
 import io.wispforest.affinity.misc.ReadOnlyInventory;
 import io.wispforest.affinity.misc.util.MathUtil;
+import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.MessageType;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
@@ -142,7 +142,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         this.ritualFailureTick = -1;
         this.lastActivatedSocle = -1;
 
-        if (this.cachedSetup != null) this.cachedSetup.forEachSocle(this.world, RitualSocleBlockEntity::releaseRitualLock);
+        if (this.cachedSetup != null) {
+            AffinityNetwork.CHANNEL.serverHandle(this).send(new CancelRitualParticlesPacket(
+                    this.cachedSetup.socles.stream().map(RitualSocleEntry::position).toList()
+            ));
+            this.cachedSetup.forEachSocle(this.world, RitualSocleBlockEntity::releaseRitualLock);
+        }
         this.cachedSetup = null;
 
         if (handlerImpl.get()) {
@@ -273,6 +278,16 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     }
 
     public record RitualSocleEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {}
+
+    static {
+        AffinityNetwork.CHANNEL.registerClientbound(CancelRitualParticlesPacket.class, (message, access) -> {
+            for (var pos : message.soclePositions()) {
+                BezierItemEmitterParticle.removeParticleAt(RitualSocleBlockEntity.particleOrigin(pos));
+            }
+        });
+    }
+
+    public record CancelRitualParticlesPacket(List<BlockPos> soclePositions) {}
 
     public static class SocleInventory implements ReadOnlyInventory.ListBacked {
 
