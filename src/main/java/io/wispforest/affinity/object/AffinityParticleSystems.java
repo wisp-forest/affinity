@@ -33,6 +33,13 @@ public class AffinityParticleSystems {
         ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVector(data.color()), 1), world, pos, data.target(), .15f);
     });
 
+    public static final ParticleSystem<Vec3d> ABERRANT_CORE_HINT = CONTROLLER.register(Vec3d.class, (world, pos, data) -> {
+        var length = data.subtract(pos).length();
+
+        ClientParticles.setParticleCount((int) Math.round(length * 5));
+        ClientParticles.spawnLine(ParticleTypes.SMOKE, world, pos, data, .05f);
+    });
+
     public static final ParticleSystem<DissolveData> DISSOLVE_ITEM = CONTROLLER.register(DissolveData.class, (world, pos, data) -> {
         world.addParticle(new BezierItemEmitterParticleEffect(data.suckWhat(), data.suckWhere(), data.particleMaxAge(), data.duration()),
                 pos.x, pos.y, pos.z, 0, 0, 0);
