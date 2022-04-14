@@ -20,6 +20,7 @@ public class UnfloweringAzaleaLeavesBlock extends LeavesBlock {
 
     public UnfloweringAzaleaLeavesBlock() {
         super(FabricBlockSettings.copyOf(Blocks.FLOWERING_AZALEA_LEAVES));
+        this.setDefaultState(this.getDefaultState().with(PERSISTENT, true));
     }
 
     @Override

@@ -9,6 +9,7 @@ import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.misc.NbtKey;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.ops.TextOps;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class IridescenceWandItem extends Item {
+public class IridescenceWandItem extends Item implements DirectInteractionHandler {
 
     public static final NbtKey<String> MODE = new NbtKey<>("Mode", NbtKey.Type.STRING);
     public static final NbtKey<NbtCompound> LINK_DATA = new NbtKey<>("LinkData", NbtKey.Type.COMPOUND);
@@ -58,6 +59,11 @@ public class IridescenceWandItem extends Item {
         MODE.put(stackNbt, mode.next().id);
 
         return TypedActionResult.success(playerStack);
+    }
+
+    @Override
+    public boolean shouldHandleInteraction(World world, BlockPos pos, BlockState state) {
+        return Affinity.AETHUM_MEMBER.find(world, pos, null) != null;
     }
 
     @Override

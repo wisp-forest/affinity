@@ -35,7 +35,6 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected ActionResult handleNormalUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (player.getStackInHand(hand).isOf(AffinityItems.WAND_OF_INQUIRY)) return ActionResult.PASS;
         if (this.world.isClient()) return ActionResult.SUCCESS;
 
         return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,

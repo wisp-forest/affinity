@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.item.DirectInteractionHandler;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.block.AbstractBlock;
@@ -33,6 +34,20 @@ public class AbstractBlockMixin {
         }
 
         cir.setReturnValue(ActionResult.SUCCESS);
+    }
+
+    @Mixin(AbstractBlock.AbstractBlockState.class)
+    public static class AbstractBlockStateMixin {
+
+        @Inject(method = "onUse", at = @At("HEAD"), cancellable = true)
+        private void cancelInteractionIfAppropriate(World world, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
+            final var playerStack = player.getStackInHand(hand);
+            if (!(playerStack.getItem() instanceof DirectInteractionHandler handler)) return;
+
+            if (!handler.shouldHandleInteraction(world, hit.getBlockPos(), ((BlockState) (Object) this))) return;
+            cir.setReturnValue(ActionResult.PASS);
+        }
+
     }
 
 }

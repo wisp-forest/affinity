@@ -10,6 +10,7 @@ import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.DustParticleEffect;
@@ -17,10 +18,11 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import java.util.List;
 
-public class WandOfInquiryItem extends Item {
+public class WandOfInquiryItem extends Item implements DirectInteractionHandler {
 
     public WandOfInquiryItem() {
         super(AffinityItems.settings(0).maxCount(1));
@@ -51,6 +53,11 @@ public class WandOfInquiryItem extends Item {
         }
 
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public boolean shouldHandleInteraction(World world, BlockPos pos, BlockState state) {
+        return world.getBlockEntity(pos) instanceof RitualCoreBlockEntity;
     }
 
     static {
