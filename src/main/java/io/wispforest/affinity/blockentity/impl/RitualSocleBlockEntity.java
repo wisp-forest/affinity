@@ -23,7 +23,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.poi.PointOfInterest;
 import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 
@@ -36,7 +35,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
 
     private int extractionTicks = 0;
     private int extractionDuration = -1;
-    @Nullable private RitualCoreBlockEntity activeCore = null;
+    public final RitualLock<RitualCoreBlockEntity> ritualLock = new RitualLock<>();
 
     public RitualSocleBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.RITUAL_SOCLE, pos, state);
@@ -67,6 +66,11 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
         this.extractionDuration = duration;
     }
 
+    public void stopExtraction() {
+        this.extractionTicks = 0;
+        this.extractionDuration = -1;
+    }
+
     @SuppressWarnings("SameParameterValue")
     private PointOfInterest closestCore(int radius) {
         return ((ServerWorld) this.world).getPointOfInterestStorage()
@@ -79,32 +83,14 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
         if (this.extractionTicks < 1) return;
         if (this.extractionTicks++ < this.extractionDuration) return;
 
-        this.extractionTicks = 0;
-        this.extractionDuration = -1;
         this.item = ItemStack.EMPTY;
+        this.stopExtraction();
         this.markDirty();
     }
 
-    public boolean acquireRitualLock(RitualCoreBlockEntity core) {
-        if (this.activeCore != null) return false;
-
-        this.activeCore = core;
-        return true;
-    }
-
-    public boolean isLocked() {
-        return this.activeCore != null;
-    }
-
-    public boolean releaseRitualLock() {
-        boolean wasLockedBefore = this.activeCore != null;
-        this.activeCore = null;
-        return wasLockedBefore;
-    }
-
     public void onBroken() {
-        if (this.activeCore != null) {
-            this.activeCore.onSocleDestroyed(this.pos);
+        if (this.ritualLock.isActive()) {
+            this.ritualLock.holder().onSocleDestroyed(this.pos);
         }
 
         ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.item);

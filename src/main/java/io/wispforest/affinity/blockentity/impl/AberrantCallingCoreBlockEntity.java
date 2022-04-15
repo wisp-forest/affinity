@@ -29,6 +29,8 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     @Nullable private AberrantCallingRecipe cachedRecipe = null;
     @Nullable private AberrantCallingCoreBlockEntity[] cachedNeighbors = null;
 
+    public final RitualLock<AberrantCallingCoreBlockEntity> ritualLock = new RitualLock<>();
+
     public AberrantCallingCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ABERRANT_CALLING_CORE, pos, state);
     }
@@ -36,6 +38,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     @Override
     protected ActionResult handleNormalUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (this.world.isClient()) return ActionResult.SUCCESS;
+        if (this.ritualLock.isActive()) return ActionResult.PASS;
 
         return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
                 () -> this.item, stack -> this.item = stack, this::markDirty);
@@ -43,6 +46,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected boolean onRitualStart(RitualSetup setup) {
+        if (this.ritualLock.isActive()) return false;
         if (this.item.isEmpty()) return false;
 
         final var coreSet = AberrantCallingCoreBlock.findValidCoreSet(this.world, this.pos);
@@ -64,6 +68,10 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         this.cachedRecipe = recipeOptional.get();
 
         setup.configureLength(this.cachedRecipe.getDuration());
+        this.ritualLock.acquire(this);
+        for (var neighbor : this.cachedNeighbors) {
+            neighbor.ritualLock.acquire(this);
+        }
 
         return true;
     }
@@ -89,8 +97,14 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         entity.setPos(pos.x, pos.y + .5, pos.z);
         this.world.spawnEntity(entity);
 
+        this.ritualLock.release();
+
         this.item = ItemStack.EMPTY;
+        this.markDirty();
+
         for (var neighbor : this.cachedNeighbors) {
+            neighbor.ritualLock.release();
+
             neighbor.item = ItemStack.EMPTY;
             neighbor.markDirty();
         }
@@ -106,7 +120,23 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected boolean onRitualInterrupted() {
+        if (this.cachedNeighbors != null) {
+            for (var neighbor : this.cachedNeighbors) {
+                neighbor.ritualLock.release();
+            }
+
+            this.ritualLock.release();
+        }
+
         return false;
+    }
+
+    @Override
+    public void onBroken() {
+        super.onBroken();
+
+        if (!this.ritualLock.isActive()) return;
+        this.ritualLock.holder().finishRitual(this.ritualLock.holder()::onRitualInterrupted);
     }
 
     @Override
@@ -130,7 +160,6 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     public @NotNull ItemStack getItem() {
         return item;
     }
-
 
     public static class AberrantCallingInventory extends SocleInventory {
 

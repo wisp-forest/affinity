@@ -105,7 +105,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         this.cachedSetup = setup;
         Collections.shuffle(this.cachedSetup.socles, this.world.random);
 
-        this.cachedSetup.forEachSocle(world, socle -> socle.acquireRitualLock(this));
+        this.cachedSetup.forEachSocle(world, socle -> socle.ritualLock.acquire(this));
 
         if (this.cachedSetup.stability / 100d < this.world.random.nextDouble()) {
             this.ritualFailureTick = this.world.random.nextInt(this.cachedSetup.duration());
@@ -121,7 +121,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         if (this.cachedSetup.isSocleActivationTick(this.ritualTick) && ++this.lastActivatedSocle < this.cachedSetup.socles.size()) {
             var socle = this.cachedSetup.resolveSocle(world, this.lastActivatedSocle);
-            if (socle != null ) this.activateSocle(socle);
+            if (socle != null) this.activateSocle(socle);
         }
 
         this.doRitualTick();
@@ -142,7 +142,9 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         this.finishRitual(this::onRitualInterrupted);
     }
 
-    private void finishRitual(Supplier<Boolean> handlerImpl) {
+    protected void finishRitual(Supplier<Boolean> handlerImpl) {
+        if (this.ritualTick < 0) return;
+
         this.ritualTick = -1;
         this.ritualFailureTick = -1;
         this.lastActivatedSocle = -1;
@@ -151,7 +153,10 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
             AffinityNetwork.CHANNEL.serverHandle(this).send(new CancelRitualParticlesPacket(
                     this.cachedSetup.socles.stream().map(RitualSocleEntry::position).toList()
             ));
-            this.cachedSetup.forEachSocle(this.world, RitualSocleBlockEntity::releaseRitualLock);
+            this.cachedSetup.forEachSocle(this.world, socle -> {
+                socle.ritualLock.release();
+                socle.stopExtraction();
+            });
         }
         this.cachedSetup = null;
 
@@ -181,7 +186,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         for (var soclePOI : soclePOIs) {
 
             if (!(world.getBlockEntity(soclePOI.getPos()) instanceof RitualSocleBlockEntity socle)) continue;
-            if (socle.isLocked()) continue;
+            if (socle.ritualLock.isActive()) continue;
 
             if (!includeEmptySocles) {
                 if (socle.getItem().isEmpty()) continue;
