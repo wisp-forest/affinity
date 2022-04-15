@@ -8,13 +8,17 @@ import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.WispEntityModel;
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
 import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
-import io.wispforest.affinity.item.WispMatterItem;
-import io.wispforest.affinity.object.*;
+import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityEntities;
+import io.wispforest.affinity.object.AffinityParticleTypes;
+import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -22,6 +26,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 
 @Environment(EnvType.CLIENT)
 public class AffinityClient implements ClientModInitializer {
@@ -58,6 +64,18 @@ public class AffinityClient implements ClientModInitializer {
         EntityRendererRegistry.register(AffinityEntities.VICIOUS_WISP, WispEntityRenderer::new);
 
         ForcedTexturesLoader.load();
+
+        ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
+            final var tier = AttunedShardTiers.forItem(stack.getItem());
+            if (tier.isNone()) return;
+
+            lines.add(new TranslatableText("text.affinity.attuned_shard_max_transfer").formatted(Formatting.GRAY)
+                    .append(new TranslatableText("text.affinity.attuned_shard_max_transfer.value", tier.maxTransfer())
+                            .styled(style -> style.withColor(0x4D4C7D))));
+            lines.add(new TranslatableText("text.affinity.attuned_shard_range").formatted(Formatting.GRAY)
+                    .append(new TranslatableText("text.affinity.attuned_shard_range.value", tier.maxDistance())
+                            .styled(style -> style.withColor(0x4D4C7D))));
+        });
     }
 
     private void registerBlockEntityRenderers() {
