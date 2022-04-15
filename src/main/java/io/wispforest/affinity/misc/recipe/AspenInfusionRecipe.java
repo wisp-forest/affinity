@@ -6,7 +6,9 @@ import io.wispforest.affinity.misc.util.JsonUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.*;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
@@ -14,38 +16,20 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AspenInfusionRecipe implements Recipe<AspRiteCoreBlockEntity.AspenInfusionInventory> {
+public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.AspenInfusionInventory> {
 
-    private final Identifier id;
     private final Ingredient primaryInput;
-    private final List<Ingredient> inputs;
     private final ItemStack output;
-    private final int duration;
 
     public AspenInfusionRecipe(Identifier id, Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, int duration) {
-        this.id = id;
+        super(id, inputs, duration);
         this.primaryInput = primaryInput;
-        this.inputs = inputs;
         this.output = output;
-        this.duration = duration;
     }
 
     @Override
     public boolean matches(AspRiteCoreBlockEntity.AspenInfusionInventory inventory, World world) {
-        if (!this.primaryInput.test(inventory.primaryInput())) return false;
-
-        final var matcher = new RecipeMatcher();
-        int nonEmptyStacks = 0;
-
-        for (int j = 0; j < inventory.size(); ++j) {
-            ItemStack itemStack = inventory.getStack(j);
-            if (!itemStack.isEmpty()) {
-                ++nonEmptyStacks;
-                matcher.addInput(itemStack, 1);
-            }
-        }
-
-        return nonEmptyStacks == this.inputs.size() && matcher.match(this, null);
+        return this.primaryInput.test(inventory.primaryInput()) && this.soclesMatchInputs(inventory);
     }
 
     @Override
@@ -54,22 +38,8 @@ public class AspenInfusionRecipe implements Recipe<AspRiteCoreBlockEntity.AspenI
     }
 
     @Override
-    public boolean fits(int width, int height) {
-        return false;
-    }
-
-    @Override
     public ItemStack getOutput() {
         return this.output.copy();
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    @Override
-    public Identifier getId() {
-        return this.id;
     }
 
     @Override
@@ -92,11 +62,7 @@ public class AspenInfusionRecipe implements Recipe<AspRiteCoreBlockEntity.AspenI
         public AspenInfusionRecipe read(Identifier id, JsonObject json) {
             final var output = JsonUtil.readChadStack(json, "output");
             final var baseInput = Ingredient.fromJson(JsonHelper.getObject(json, "primary_input"));
-            final var inputs = new ArrayList<Ingredient>();
-
-            for (var inputElement : JsonHelper.getArray(json, "inputs")) {
-                inputs.add(Ingredient.fromJson(inputElement));
-            }
+            final var inputs = JsonUtil.readIngredientList(json, "inputs");
 
             final int duration = JsonHelper.getInt(json, "duration", 100);
 

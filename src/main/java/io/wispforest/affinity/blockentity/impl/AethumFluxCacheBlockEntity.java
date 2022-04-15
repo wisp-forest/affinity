@@ -9,9 +9,9 @@ import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemb
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
-import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,6 +22,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -261,6 +262,14 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         if (!this.isPrimaryStorage) return this.parentRef == null ? ActionResult.PASS : this.parentRef.entity.onUse(player, hand, hit);
 
         final var playerStack = player.getStackInHand(hand);
+
+        if (playerStack.isOf(Items.GLASS_BOTTLE) && this.flux() >= 1000) {
+            this.updateFlux(this.flux() - 1000);
+
+            ItemOps.decrementPlayerHandItem(player, hand);
+            player.getInventory().offerOrDrop(AffinityItems.AETHUM_FLUX_BOTTLE.getDefaultStack());
+            return ActionResult.SUCCESS;
+        }
 
         if (playerStack.isEmpty()) {
             if (this.shard.isEmpty()) return ActionResult.PASS;

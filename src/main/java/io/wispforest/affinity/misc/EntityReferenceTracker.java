@@ -89,6 +89,7 @@ public class EntityReferenceTracker {
     public interface Reference<E> {
         E get();
 
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         boolean present();
     }
 

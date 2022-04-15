@@ -1,0 +1,32 @@
+{
+  "type": "affinity:aberrant_calling",
+  "core_inputs": [
+    {
+      "item": "minecraft:beehive"
+    },
+    {
+      "item": "minecraft:beehive"
+    },
+    {
+      "item": "minecraft:beehive"
+    },
+    {
+      "item": "minecraft:beehive"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "item": "minecraft:golden_axe"
+    }
+  ],
+  "output": {
+    "item": "minecraft:barrier"
+  },
+  "entity": {
+    "id": "minecraft:bee",
+    "data": {
+      "CustomName": "{\"text\": \"Yeet\"}",
+      "Health": 0
+    }
+  }
+}

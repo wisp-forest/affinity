@@ -3,6 +3,7 @@ package io.wispforest.affinity.block.impl;
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
 import io.wispforest.affinity.blockentity.impl.AberrantCallingCoreBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
+import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -11,6 +12,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -24,11 +27,17 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class AberrantCallingCoreBlock extends AethumNetworkMemberBlock {
+
+    private static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
 
     private static final VoxelShape SHAPE = Stream.of(
             Block.createCuboidShape(5, 4, 12, 11, 11, 13),
@@ -100,8 +109,40 @@ public class AberrantCallingCoreBlock extends AethumNetworkMemberBlock {
         return positions;
     }
 
+    public static @Nullable CoreSet findValidCoreSet(World world, BlockPos corner) {
+        final var possibleSets = possibleValidCoreSets(corner);
+        for (var set : possibleSets) {
+            if (set.hasMissingCores(world)) continue;
+            return set;
+        }
+        return null;
+    }
+
+    private static List<CoreSet> possibleValidCoreSets(BlockPos corner) {
+        final var list = new ArrayList<CoreSet>();
+        for (var direction : HORIZONTAL_DIRECTIONS) {
+            list.add(new CoreSet(new BlockPos[]{
+                    corner.offset(direction, 2),
+                    corner.offset(direction, 2).offset(direction.rotateYClockwise(), 2),
+                    corner.offset(direction.rotateYClockwise(), 2)
+            }, corner.offset(direction).offset(direction.rotateYClockwise())));
+        }
+        return list;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, AffinityBlocks.Entities.ABERRANT_CALLING_CORE, TickedBlockEntity.ticker());
+    }
+
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+//        final var coreSet = findValidCoreSet(world, pos);
+//        if (coreSet != null && !world.isClient) {
+//            for (var corePos : coreSet) world.setBlockState(corePos.up(), Registry.BLOCK.get(world.random.nextInt(Registry.BLOCK.size())).getDefaultState());
+//        }
+
         return InteractableBlockEntity.tryHandle(world, pos, player, hand, hit);
     }
 
@@ -114,5 +155,29 @@ public class AberrantCallingCoreBlock extends AethumNetworkMemberBlock {
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new AberrantCallingCoreBlockEntity(pos, state);
+    }
+
+    public record CoreSet(BlockPos[] cores, BlockPos center) implements Iterable<BlockPos> {
+
+        public boolean hasMissingCores(World world) {
+            for (var pos : this.cores) {
+                if (AberrantCallingCoreBlock.noCoreAt(world, pos)) return true;
+            }
+            return false;
+        }
+
+        public AberrantCallingCoreBlockEntity[] resolve(World world) {
+            final var resolved = new AberrantCallingCoreBlockEntity[3];
+            for (int i = 0; i < cores.length; i++) {
+                resolved[i] = (AberrantCallingCoreBlockEntity) world.getBlockEntity(cores[i]);
+            }
+            return resolved;
+        }
+
+        @NotNull
+        @Override
+        public Iterator<BlockPos> iterator() {
+            return List.of(this.cores).iterator();
+        }
     }
 }

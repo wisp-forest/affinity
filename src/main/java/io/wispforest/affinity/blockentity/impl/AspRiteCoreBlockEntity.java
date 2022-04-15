@@ -5,7 +5,6 @@ import io.wispforest.affinity.misc.NbtKey;
 import io.wispforest.affinity.misc.recipe.AspenInfusionRecipe;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,11 +22,10 @@ import java.util.List;
 
 public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
-    private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("item", NbtKey.Type.ITEM_STACK);
+    private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
     @NotNull private ItemStack item = ItemStack.EMPTY;
 
-    @Nullable
-    private AspenInfusionRecipe cachedRecipe = null;
+    @Nullable private AspenInfusionRecipe cachedRecipe = null;
 
     public AspRiteCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ASP_RITE_CORE, pos, state);

@@ -1,9 +1,6 @@
 package io.wispforest.affinity.object;
 
-import io.wispforest.affinity.misc.recipe.AspenInfusionRecipe;
-import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
-import io.wispforest.affinity.misc.recipe.PotionMixingRecipeSerializer;
-import io.wispforest.affinity.misc.recipe.RitualSocleComposerConversionRecipe;
+import io.wispforest.affinity.misc.recipe.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
@@ -13,13 +10,15 @@ import net.minecraft.util.registry.Registry;
 public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>> {
 
     public static final SimpleType<PotionMixingRecipe> POTION_MIXING = new SimpleType<>();
-    public static final SimpleType<RitualSocleComposerConversionRecipe> RITUAL_SOCLE_COMPOSER_CONVERSION = new SimpleType<>();
     public static final SimpleType<AspenInfusionRecipe> ASPEN_INFUSION = new SimpleType<>();
+    public static final SimpleType<AberrantCallingRecipe> ABERRANT_CALLING = new SimpleType<>();
+    public static final SimpleType<RitualSocleComposerConversionRecipe> RITUAL_SOCLE_COMPOSER_CONVERSION = new SimpleType<>();
 
     public static class Serializers implements AutoRegistryContainer<RecipeSerializer<?>> {
 
         public static final RecipeSerializer<PotionMixingRecipe> POTION_MIXING = PotionMixingRecipeSerializer.INSTANCE;
         public static final RecipeSerializer<AspenInfusionRecipe> ASPEN_INFUSION = AspenInfusionRecipe.Serializer.INSTANCE;
+        public static final RecipeSerializer<AberrantCallingRecipe> ABERRANT_CALLING = AberrantCallingRecipe.Serializer.INSTANCE;
         public static final RecipeSerializer<RitualSocleComposerConversionRecipe> RITUAL_SOCLE_COMPOSER_CONVERSION
                 = RitualSocleComposerConversionRecipe.Serializer.INSTANCE;
 

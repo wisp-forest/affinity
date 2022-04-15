@@ -19,6 +19,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.poi.PointOfInterestStorage;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,11 +30,11 @@ import java.util.function.Supplier;
 
 public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
-    @Nullable private RitualSetup cachedSetup = null;
+    @Nullable protected RitualSetup cachedSetup = null;
 
-    private int ritualTick = -1;
-    private int ritualFailureTick = -1;
-    private int lastActivatedSocle = -1;
+    protected int ritualTick = -1;
+    protected int ritualFailureTick = -1;
+    protected int lastActivatedSocle = -1;
 
     public RitualCoreBlockEntity(BlockEntityType<? extends RitualCoreBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -88,6 +89,10 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         return ActionResult.PASS;
     }
 
+    protected void activateSocle(@NotNull RitualSocleBlockEntity socle) {
+        socle.beginExtraction(this.pos, this.cachedSetup.durationPerSocle());
+    }
+
     public ActionResult tryStartRitual() {
         if (this.world.isClient()) return ActionResult.SUCCESS;
 
@@ -115,8 +120,8 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         if (this.ritualTick < 0) return;
 
         if (this.cachedSetup.isSocleActivationTick(this.ritualTick) && ++this.lastActivatedSocle < this.cachedSetup.socles.size()) {
-            var entity = this.world.getBlockEntity(this.cachedSetup.socles.get(this.lastActivatedSocle).position());
-            if (entity instanceof RitualSocleBlockEntity socle) socle.beginExtraction(this.pos, this.cachedSetup.durationPerSocle());
+            var socle = this.cachedSetup.resolveSocle(world, this.lastActivatedSocle);
+            if (socle != null ) this.activateSocle(socle);
         }
 
         this.doRitualTick();
@@ -269,6 +274,11 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
                 socleEntities.add((RitualSocleBlockEntity) world.getBlockEntity(entry.position()));
             }
             return socleEntities;
+        }
+
+        public RitualSocleBlockEntity resolveSocle(World world, int index) {
+            final var entity = world.getBlockEntity(this.socles.get(index).position());
+            return entity instanceof RitualSocleBlockEntity socle ? socle : null;
         }
 
         public void forEachSocle(World world, Consumer<RitualSocleBlockEntity> action) {
