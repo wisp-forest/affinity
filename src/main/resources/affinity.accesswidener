@@ -2,6 +2,20 @@ accessWidener v1 named
 
 accessible method net/minecraft/client/particle/FlameParticle <init> (Lnet/minecraft/client/world/ClientWorld;DDDDDD)V
 
+extendable method net/minecraft/block/RedstoneWireBlock canRunOnTop (Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z
+extendable method net/minecraft/block/RedstoneWireBlock getPlacementState (Lnet/minecraft/world/BlockView;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;
+extendable method net/minecraft/block/RedstoneWireBlock isFullyConnected (Lnet/minecraft/block/BlockState;)Z
+extendable method net/minecraft/block/RedstoneWireBlock getRenderConnectionType (Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Lnet/minecraft/block/enums/WireConnection;
+extendable method net/minecraft/block/RedstoneWireBlock getRenderConnectionType (Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;Z)Lnet/minecraft/block/enums/WireConnection;
+extendable method net/minecraft/block/RedstoneWireBlock getReceivedRedstonePower (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)I
+extendable method net/minecraft/block/RedstoneWireBlock increasePower (Lnet/minecraft/block/BlockState;)I
+extendable method net/minecraft/block/RedstoneWireBlock updateNeighbors (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V
+extendable method net/minecraft/block/RedstoneWireBlock updateOffsetNeighbors (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V
+extendable method net/minecraft/block/RedstoneWireBlock getDefaultWireState (Lnet/minecraft/world/BlockView;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;
+extendable method net/minecraft/block/RedstoneWireBlock update (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V
+accessible field net/minecraft/block/RedstoneWireBlock dotState Lnet/minecraft/block/BlockState;
+accessible field net/minecraft/block/RedstoneWireBlock wiresGivePower Z
+
 accessible class net/minecraft/data/client/BlockStateModelGenerator$BlockTexturePool
 accessible class net/minecraft/data/client/BlockStateModelGenerator$LogTexturePool
 

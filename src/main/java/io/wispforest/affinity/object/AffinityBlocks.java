@@ -44,6 +44,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(0) public static final Block ABERRANT_CALLING_CORE = new AberrantCallingCoreBlock();
     @Tab(0) public static final Block RITUAL_SOCLE_COMPOSER = new RitualSocleComposerBlock();
     @Tab(0) public static final Block AFFINE_INFUSER = new AffineInfuserBlock();
+    @Tab(0) public static final Block RANTHRACITE_WIRE = new RanthraciteWireBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
 

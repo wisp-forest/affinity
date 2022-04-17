@@ -56,6 +56,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
         handheld(generator, COLLECTION_STAFF, WAND_OF_INQUIRY);
 
         generatedWithTexture(generator, Affinity.id("item/wisp_matter"), INERT_WISP_MATTER, WISE_WISP_MATTER, VICIOUS_WISP_MATTER);
+        generatedWithTexture(generator, Affinity.id("item/ranthracite_dust"), RANTHRACITE_WIRE.asItem());
 
         iridescenceWand(generator, EMERALD_WAND_OF_IRIDESCENCE, SAPPHIRE_WAND_OF_IRIDESCENCE);
 

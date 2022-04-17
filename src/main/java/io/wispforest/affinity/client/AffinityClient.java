@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client;
 
+import io.wispforest.affinity.block.impl.RanthraciteWireBlock;
 import io.wispforest.affinity.block.impl.RitualSocleBlock;
 import io.wispforest.affinity.client.particle.BezierItemEmitterParticle;
 import io.wispforest.affinity.client.particle.BezierItemParticle;
@@ -38,6 +39,10 @@ public class AffinityClient implements ClientModInitializer {
         this.assignBlockRenderLayers();
 
         AffinityModelPredicateProviders.applyDefaults();
+
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
+            return RanthraciteWireBlock.COLORS[state.get(RanthraciteWireBlock.POWER)];
+        }, AffinityBlocks.RANTHRACITE_WIRE);
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
             if (tintIndex != 0 || !(state.getBlock() instanceof RitualSocleBlock socle)) return 0xFFFFFF;
@@ -97,5 +102,6 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.REFINED_RITUAL_SOCLE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.RANTHRACITE_WIRE, RenderLayer.getCutout());
     }
 }
