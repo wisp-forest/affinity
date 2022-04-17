@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "affinity:crafting/ranthracite_wire"
+    ]
+  },
+  "criteria": {
+    "has_anthracite_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "affinity:anthracite_powder"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "affinity:crafting/ranthracite_wire"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_anthracite_powder",
+      "has_the_recipe"
+    ]
+  ]
+}

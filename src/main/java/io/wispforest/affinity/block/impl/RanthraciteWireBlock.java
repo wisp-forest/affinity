@@ -200,7 +200,6 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
 
     @Override
     protected void update(World world, BlockPos pos, BlockState state) {
-        final long startTime = System.nanoTime();
         final int previousPower = state.get(POWER);
 
         this.wiresGivePower = false;
@@ -256,10 +255,6 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
             }
             this.respondToBlockUpdates = true;
         }
-
-        final long duration = System.nanoTime() - startTime;
-        world.getServer().getPlayerManager().broadcast(
-                Text.of("Updated in " + duration / 1000000d + "ms"), MessageType.SYSTEM, null);
     }
 
     @Override

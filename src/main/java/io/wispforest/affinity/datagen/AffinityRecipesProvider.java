@@ -1,5 +1,6 @@
 package io.wispforest.affinity.datagen;
 
+import io.wispforest.affinity.object.AffinityBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipesProvider;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
@@ -30,6 +31,15 @@ public class AffinityRecipesProvider extends FabricRecipesProvider {
                 .input('m', Items.MAP)
                 .criterion(hasItem(ANTHRACITE_POWDER), conditionsFromItem(ANTHRACITE_POWDER))
                 .offerTo(exporter, craftingRecipe(AETHUM_MAP_PROTOTYPE));
+
+        ShapedRecipeJsonBuilder.create(AffinityBlocks.RANTHRACITE_WIRE, 9)
+                .pattern("rrr")
+                .pattern("rar")
+                .pattern("rrr")
+                .input('a', ANTHRACITE_POWDER)
+                .input('r', Items.REDSTONE)
+                .criterion(hasItem(ANTHRACITE_POWDER), conditionsFromItem(ANTHRACITE_POWDER))
+                .offerTo(exporter, craftingRecipe(AffinityBlocks.RANTHRACITE_WIRE));
     }
 
     private static Identifier craftingRecipe(ItemConvertible item) {
