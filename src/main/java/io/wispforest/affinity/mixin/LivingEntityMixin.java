@@ -1,19 +1,25 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.enchantment.EnchantmentEquipEventReceiver;
+import io.wispforest.affinity.enchantment.EnderScourgeEnchantment;
+import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -21,10 +27,17 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Map;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin {
+public abstract class LivingEntityMixin extends Entity {
+
+    public LivingEntityMixin(EntityType<?> type, World world) {
+        super(type, world);
+    }
 
     @Shadow
     public abstract boolean hasStatusEffect(StatusEffect effect);
+
+    @Shadow
+    private @Nullable LivingEntity attacker;
 
     @Inject(method = "applyDamage", at = @At("TAIL"))
     private void applyLifeLeech(DamageSource source, float amount, CallbackInfo ci) {
@@ -38,6 +51,19 @@ public abstract class LivingEntityMixin {
     private void doNotWearLeatherHats(CallbackInfoReturnable<Boolean> cir) {
         if (!this.hasStatusEffect(AffinityStatusEffects.FREEZING)) return;
         cir.setReturnValue(true);
+    }
+
+    @ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
+    private float increaseDamage(float amount, DamageSource source) {
+        if (!this.getType().isIn(EnderScourgeEnchantment.END_ENTITIES)) return amount;
+
+        final var entity = source.getAttacker();
+        if (!(entity instanceof LivingEntity attacker)) return amount;
+
+        final int enderScourgeLevel = EnchantmentHelper.getLevel(AffinityEnchantments.ENDER_SCOURGE, attacker.getMainHandStack());
+        if (enderScourgeLevel < 1) return amount;
+
+        return amount + enderScourgeLevel * 2.5f;
     }
 
     @Inject(method = "getEquipmentChanges", at = @At(value = "INVOKE",
