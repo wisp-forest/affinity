@@ -1,8 +1,7 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.enchantment.AffinityDamageEnchantment;
 import io.wispforest.affinity.enchantment.EnchantmentEquipEventReceiver;
-import io.wispforest.affinity.enchantment.EnderScourgeEnchantment;
-import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -55,15 +54,22 @@ public abstract class LivingEntityMixin extends Entity {
 
     @ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
     private float increaseDamage(float amount, DamageSource source) {
-        if (!this.getType().isIn(EnderScourgeEnchantment.END_ENTITIES)) return amount;
-
         final var entity = source.getAttacker();
         if (!(entity instanceof LivingEntity attacker)) return amount;
 
-        final int enderScourgeLevel = EnchantmentHelper.getLevel(AffinityEnchantments.ENDER_SCOURGE, attacker.getMainHandStack());
-        if (enderScourgeLevel < 1) return amount;
+        float extraDamage = 0;
 
-        return amount + enderScourgeLevel * 2.5f;
+        final var enchantments = EnchantmentHelper.get(attacker.getMainHandStack());
+        for (var enchantment : enchantments.keySet()) {
+            if (!(enchantment instanceof AffinityDamageEnchantment damageEnchantment)) continue;
+
+            final int level = enchantments.get(enchantment);
+            if (!damageEnchantment.shouldApplyDamage(level, attacker, (LivingEntity) (Object) this, amount)) continue;
+
+            extraDamage += damageEnchantment.getExtraDamage(level, attacker, (LivingEntity) (Object) this, amount);
+        }
+
+        return amount + extraDamage;
     }
 
     @Inject(method = "getEquipmentChanges", at = @At(value = "INVOKE",
