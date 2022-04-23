@@ -6,10 +6,8 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.WireConnection;
-import net.minecraft.network.MessageType;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -27,22 +25,10 @@ import java.util.*;
 public class RanthraciteWireBlock extends RedstoneWireBlock {
 
     public static final int[] COLORS = {
-            0x171717,
-            0x1e1e1e,
-            0x252525,
-            0x252525,
-            0x333333,
-            0x3a3a3a,
-            0x414141,
-            0x484848,
-            0x4f4f4f,
-            0x565656,
-            0x5d5d5d,
-            0x646464,
-            0x6b6b6b,
-            0x727272,
-            0x797979,
-            0x808080
+            0x171717, 0x191919, 0x1c1c1c, 0x1f1f1f,
+            0x222222, 0x252525, 0x272727, 0x2a2a2a,
+            0x2d2d2d, 0x303030, 0x333333, 0x353535,
+            0x383838, 0x3b3b3b, 0x3e3e3e, 0x414141
     };
 
     private static final Vec3d[] VEC_COLORS = Arrays.stream(COLORS).mapToObj(rgb ->

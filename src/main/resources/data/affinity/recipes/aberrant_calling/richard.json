@@ -1,0 +1,43 @@
+{
+  "type": "affinity:aberrant_calling",
+  "core_inputs": [
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:stick"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "item": "minecraft:snowball"
+    },
+    {
+      "item": "minecraft:snowball"
+    },
+    {
+      "item": "minecraft:snow_block"
+    },
+    {
+      "item": "minecraft:snow_block"
+    },
+    {
+      "item": "minecraft:carrot"
+    }
+  ],
+  "output": {
+    "item": "minecraft:barrier"
+  },
+  "entity": {
+    "id": "minecraft:pig",
+    "data": {
+      "CustomName": "{\"text\": \"Richard\"}"
+    }
+  }
+}

@@ -74,7 +74,7 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
         return entityType;
     }
 
-    public NbtCompound getEntityNbt() {
+    public @Nullable NbtCompound getEntityNbt() {
         return entityNbt;
     }
 
