@@ -17,10 +17,14 @@ public interface AffinityEntityAddon {
     }
 
     class DataKey<V> {
-        private DataKey(Class<V> valueType) {}
+        public final V defaultValue;
 
-        public static <V> DataKey<V> of(Class<V> valueType) {
-            return new DataKey<>(valueType);
+        private DataKey(V defaultValue) {
+            this.defaultValue = defaultValue;
+        }
+
+        public static <V> DataKey<V> of(V defaultValue) {
+            return new DataKey<>(defaultValue);
         }
     }
 

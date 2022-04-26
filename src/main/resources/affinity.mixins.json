@@ -12,6 +12,7 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "MapStateMixin",
+    "MobEntityMixin",
     "PlayerEntityMixin",
     "PotionItemMixin",
     "PotionUtilMixin",

@@ -42,4 +42,14 @@ public class EnderScourgeEnchantment extends DamageEnchantment implements Affini
         return level * 2.5f;
     }
 
+    @Override
+    public boolean isAvailableForEnchantedBookOffer() {
+        return false;
+    }
+
+    @Override
+    public boolean isAvailableForRandomSelection() {
+        return false;
+    }
+
 }

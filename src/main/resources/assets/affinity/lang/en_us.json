@@ -85,6 +85,8 @@
   "enchantment.affinity.affine.desc": "Repairs items on the ground, in your hand or in Item Frames when in range of an Affine Infuser",
   "enchantment.affinity.ender_scourge": "Ender Scourge",
   "enchantment.affinity.ender_scourge.desc": "Increased damage to creatures from the End",
+  "enchantment.affinity.berserker": "Berserker",
+  "enchantment.affinity.berserker.desc": "Writing descriptions is pain",
 
   "message.affinity.linking.started_create": "Creating link from %s",
   "message.affinity.linking.started_destroy": "Destroying link from %s",

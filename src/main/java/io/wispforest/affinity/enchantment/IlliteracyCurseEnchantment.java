@@ -1,6 +1,6 @@
 package io.wispforest.affinity.enchantment;
 
-import io.wispforest.affinity.misc.MixinStates;
+import io.wispforest.affinity.misc.MixinHooks;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -14,11 +14,11 @@ public class IlliteracyCurseEnchantment extends CurseEnchantment implements Ench
 
     @Override
     public void onEquip(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {
-        MixinStates.TEXT_OBFUSCATION = true;
+        MixinHooks.TEXT_OBFUSCATION = true;
     }
 
     @Override
     public void onUnequip(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {
-        MixinStates.TEXT_OBFUSCATION = false;
+        MixinHooks.TEXT_OBFUSCATION = false;
     }
 }

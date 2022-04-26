@@ -1,8 +1,10 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import io.wispforest.owo.ops.WorldOps;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -14,6 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
@@ -35,6 +38,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
         AffinityParticleSystems.FLIGHT_REMOVED.spawn(world, getPos());
         WorldOps.playSound(world, getPos(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.PLAYERS, .5f, 0f);
+    }
+
+    @ModifyVariable(method = "attack",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/entity/player/PlayerEntity;getAttackCooldownProgress(F)F"),
+            ordinal = 1)
+    private float applyExtraAttackDamage(float amount, Entity entity) {
+        return MixinHooks.getExtraAttackDamage(this, entity, amount);
     }
 
 }

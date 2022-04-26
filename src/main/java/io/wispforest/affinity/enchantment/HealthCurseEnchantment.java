@@ -23,7 +23,10 @@ public class HealthCurseEnchantment extends CurseEnchantment implements Enchantm
     @Override
     public void onEquip(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {
         if (!this.slotTypes.contains(slot)) return;
-        this.healthAttribute(entity).addTemporaryModifier(HEALTH_ADDITION);
+
+        if (!this.healthAttribute(entity).hasModifier(HEALTH_ADDITION)) {
+            this.healthAttribute(entity).addTemporaryModifier(HEALTH_ADDITION);
+        }
     }
 
     @Override

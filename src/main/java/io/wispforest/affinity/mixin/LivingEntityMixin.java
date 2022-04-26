@@ -1,7 +1,9 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.enchantment.AffinityDamageEnchantment;
+import io.wispforest.affinity.enchantment.BerserkerEnchantment;
 import io.wispforest.affinity.enchantment.EnchantmentEquipEventReceiver;
+import io.wispforest.affinity.misc.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -12,6 +14,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,9 +38,6 @@ public abstract class LivingEntityMixin extends Entity {
     @Shadow
     public abstract boolean hasStatusEffect(StatusEffect effect);
 
-    @Shadow
-    private @Nullable LivingEntity attacker;
-
     @Inject(method = "applyDamage", at = @At("TAIL"))
     private void applyLifeLeech(DamageSource source, float amount, CallbackInfo ci) {
         if (!(source.getAttacker() instanceof PlayerEntity player)) return;
@@ -50,26 +50,6 @@ public abstract class LivingEntityMixin extends Entity {
     private void doNotWearLeatherHats(CallbackInfoReturnable<Boolean> cir) {
         if (!this.hasStatusEffect(AffinityStatusEffects.FREEZING)) return;
         cir.setReturnValue(true);
-    }
-
-    @ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
-    private float increaseDamage(float amount, DamageSource source) {
-        final var entity = source.getAttacker();
-        if (!(entity instanceof LivingEntity attacker)) return amount;
-
-        float extraDamage = 0;
-
-        final var enchantments = EnchantmentHelper.get(attacker.getMainHandStack());
-        for (var enchantment : enchantments.keySet()) {
-            if (!(enchantment instanceof AffinityDamageEnchantment damageEnchantment)) continue;
-
-            final int level = enchantments.get(enchantment);
-            if (!damageEnchantment.shouldApplyDamage(level, attacker, (LivingEntity) (Object) this, amount)) continue;
-
-            extraDamage += damageEnchantment.getExtraDamage(level, attacker, (LivingEntity) (Object) this, amount);
-        }
-
-        return amount + extraDamage;
     }
 
     @Inject(method = "getEquipmentChanges", at = @At(value = "INVOKE",

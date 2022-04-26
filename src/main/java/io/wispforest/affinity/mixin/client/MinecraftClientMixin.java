@@ -1,6 +1,6 @@
 package io.wispforest.affinity.mixin.client;
 
-import io.wispforest.affinity.misc.MixinStates;
+import io.wispforest.affinity.misc.MixinHooks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,7 +13,7 @@ public class MinecraftClientMixin {
 
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
     private void onDisconnect(Screen screen, CallbackInfo ci) {
-        MixinStates.TEXT_OBFUSCATION = false;
+        MixinHooks.TEXT_OBFUSCATION = false;
     }
 
 }
