@@ -1,4 +1,4 @@
-package io.wispforest.affinity.enchantment;
+package io.wispforest.affinity.enchantment.impl;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;

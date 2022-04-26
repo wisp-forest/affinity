@@ -1,6 +1,7 @@
-package io.wispforest.affinity.enchantment;
+package io.wispforest.affinity.enchantment.impl;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
 import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.entity.*;
 import net.minecraft.tag.TagKey;

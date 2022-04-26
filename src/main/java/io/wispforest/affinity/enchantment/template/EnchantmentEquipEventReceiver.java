@@ -1,4 +1,4 @@
-package io.wispforest.affinity.enchantment;
+package io.wispforest.affinity.enchantment.template;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;

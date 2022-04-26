@@ -6,6 +6,7 @@
   "mixins": [
     "AbstractBlockMixin",
     "AbstractBlockMixin$AbstractBlockStateMixin",
+    "ActiveTargetGoalMixin",
     "BoatEntityTypeMixin",
     "EntityMixin",
     "ItemMixin",
@@ -17,6 +18,7 @@
     "PotionItemMixin",
     "PotionUtilMixin",
     "StatusEffectMixin",
+    "TrackTargetGoalMixin",
     "access.BlockEntityTypeAccessor",
     "access.FilledMapItemInvoker",
     "access.MapStateAccessor",

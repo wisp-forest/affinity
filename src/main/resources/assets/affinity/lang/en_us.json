@@ -87,6 +87,8 @@
   "enchantment.affinity.ender_scourge.desc": "Increased damage to creatures from the End",
   "enchantment.affinity.berserker": "Berserker",
   "enchantment.affinity.berserker.desc": "Writing descriptions is pain",
+  "enchantment.affinity.gravecaller": "Gravecaller",
+  "enchantment.affinity.gravecaller.desc": "Writing descriptions is pain",
 
   "message.affinity.linking.started_create": "Creating link from %s",
   "message.affinity.linking.started_destroy": "Destroying link from %s",

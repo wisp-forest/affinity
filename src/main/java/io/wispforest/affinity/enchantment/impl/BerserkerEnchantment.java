@@ -1,5 +1,7 @@
-package io.wispforest.affinity.enchantment;
+package io.wispforest.affinity.enchantment.impl;
 
+import io.wispforest.affinity.enchantment.template.AbsoluteEnchantment;
+import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
 import io.wispforest.affinity.misc.AffinityEntityAddon;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
@@ -17,7 +19,7 @@ public class BerserkerEnchantment extends AbsoluteEnchantment implements Enchant
     private static final EntityAttributeModifier HEALTH_ADDITION = new EntityAttributeModifier(UUID.fromString("a05c1e85-cfaa-49b2-a5f2-21962e769115"),
             "Berserker Health Boost", 10, EntityAttributeModifier.Operation.ADDITION);
 
-    public static final AffinityEntityAddon.DataKey<Boolean> BERSERK_KEY = AffinityEntityAddon.DataKey.of(false);
+    public static final AffinityEntityAddon.DataKey<Boolean> BERSERK_KEY = AffinityEntityAddon.DataKey.withDefaultConstant(false);
 
     public BerserkerEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentTarget.ARMOR, Type.ARMOR, 343);

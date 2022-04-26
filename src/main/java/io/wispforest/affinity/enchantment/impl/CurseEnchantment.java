@@ -1,5 +1,6 @@
-package io.wispforest.affinity.enchantment;
+package io.wispforest.affinity.enchantment.impl;
 
+import io.wispforest.affinity.enchantment.template.AffinityEnchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
 

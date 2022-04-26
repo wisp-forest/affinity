@@ -1,9 +1,7 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.enchantment.AffinityDamageEnchantment;
-import io.wispforest.affinity.enchantment.BerserkerEnchantment;
-import io.wispforest.affinity.enchantment.EnchantmentEquipEventReceiver;
-import io.wispforest.affinity.misc.AffinityEntityAddon;
+import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
+import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -14,14 +12,12 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -37,6 +33,11 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow
     public abstract boolean hasStatusEffect(StatusEffect effect);
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void onTickEnd(CallbackInfo ci) {
+        LivingEntityTickEvent.EVENT.invoker().onTick((LivingEntity) (Object) this);
+    }
 
     @Inject(method = "applyDamage", at = @At("TAIL"))
     private void applyLifeLeech(DamageSource source, float amount, CallbackInfo ci) {
