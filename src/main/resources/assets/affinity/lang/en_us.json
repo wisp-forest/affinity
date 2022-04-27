@@ -128,6 +128,13 @@
   "item.minecraft.lingering_potion.effect.freezing": "Lingering Potion of Winter",
   "item.minecraft.tipped_arrow.effect.freezing": "Arrow of Winter",
 
+  "effect.affinity.impending_doom": "Impending Doom",
+  "item.minecraft.potion.effect.impending_doom": "Potion of Doom",
+  "item.minecraft.splash_potion.effect.impending_doom": "Splash Potion of Doom",
+  "item.minecraft.lingering_potion.effect.impending_doom": "Lingering Potion of Doom",
+  "item.minecraft.tipped_arrow.effect.impending_doom": "Arrow of Doom",
+  "death.attack.doom_potion": "%1$s got ripped and torn",
+
   "item.minecraft.potion.effect.dubious": "Dubious Potion",
   "item.minecraft.splash_potion.effect.dubious": "Twhicc Splashy Potion",
   "item.minecraft.lingering_potion.effect.dubious": "Twhicc Goes-Everyhwere Potion",

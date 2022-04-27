@@ -4,10 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.misc.recipe.GlowingPotionDyeRecipe;
-import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
-import io.wispforest.affinity.statuseffects.DrippingStatusEffect;
-import io.wispforest.affinity.statuseffects.FlightStatusEffect;
-import io.wispforest.affinity.statuseffects.FreezingStatusEffect;
+import io.wispforest.affinity.statuseffects.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
@@ -30,11 +27,13 @@ public class AffinityStatusEffects {
     public static final StatusEffect FLIGHT = new FlightStatusEffect(StatusEffectCategory.BENEFICIAL, 0x6666FF);
     public static final StatusEffect FREEZING = new FreezingStatusEffect(StatusEffectCategory.HARMFUL, 0x000066);
     public static final StatusEffect DRIPPING = new DrippingStatusEffect(StatusEffectCategory.NEUTRAL, 0xa4568d);
+    public static final StatusEffect IMPENDING_DOOM = new ImpendingDoomStatusEffect(StatusEffectCategory.HARMFUL, 0x000000);
 
     public static void register() {
         registerEffectAndPotions(LIFE_LEECH, "life_leech", 2400, true, true);
         registerEffectAndPotions(STEADFAST, "steadfast", 4800, true, true);
         registerEffectAndPotions(FREEZING, "freezing", 600, true, true);
+        registerEffectAndPotions(IMPENDING_DOOM, "impending_doom", 1200, true, false);
 
         registerEffectAndPotions(FLIGHT, "flight", 2400, true, false);
 
