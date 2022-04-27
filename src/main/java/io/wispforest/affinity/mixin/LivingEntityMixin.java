@@ -2,6 +2,8 @@ package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
+import io.wispforest.affinity.misc.components.AffinityComponents;
+import io.wispforest.affinity.misc.components.EntityFlagComponent;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -70,6 +72,20 @@ public abstract class LivingEntityMixin extends Entity {
         for (var enchantment : EnchantmentHelper.get(itemStack).keySet()) {
             if (!(enchantment instanceof EnchantmentEquipEventReceiver receiver)) continue;
             receiver.onUnequip((LivingEntity) (Object) this, equipmentSlot, itemStack);
+        }
+    }
+
+    @Inject(method = "dropLoot", at = @At("HEAD"), cancellable = true)
+    private void disableLootIfNecessary(DamageSource source, boolean causedByPlayer, CallbackInfo ci) {
+        if (AffinityComponents.ENTITY_FLAGS.get(this).hasFlag(EntityFlagComponent.NO_DROPS)) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "dropXp", at = @At("HEAD"), cancellable = true)
+    private void disableXpIfNecessary(CallbackInfo ci) {
+        if (AffinityComponents.ENTITY_FLAGS.get(this).hasFlag(EntityFlagComponent.NO_DROPS)) {
+            ci.cancel();
         }
     }
 
