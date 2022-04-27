@@ -27,7 +27,10 @@ public abstract class TrackTargetGoalMixin extends Goal {
 
     @Inject(method = "shouldContinue", at = @At("TAIL"), cancellable = true)
     private void cancelIfUndeadAndHasMaster(CallbackInfoReturnable<Boolean> cir) {
-        if (this.target == AffinityEntityAddon.getData(this.mob, GravecallerEnchantment.MASTER_KEY)) {
+        if (this.target == null) return;
+
+        if (GravecallerEnchantment.isMaster(this.mob, this.target) ||
+                AffinityEntityAddon.haveIdenticalData(this.mob, this.target, GravecallerEnchantment.MASTER_KEY)) {
             cir.setReturnValue(false);
         }
     }

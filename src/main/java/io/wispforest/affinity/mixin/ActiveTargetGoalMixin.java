@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ActiveTargetGoal.class)
 public abstract class ActiveTargetGoalMixin extends TrackTargetGoal {
+
     @Shadow
     @Nullable
     protected LivingEntity targetEntity;
@@ -25,7 +26,8 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoal {
 
     @Inject(method = "canStart", at = @At("TAIL"), cancellable = true)
     private void cancelIfUndeadAndHasMaster(CallbackInfoReturnable<Boolean> cir) {
-        if (this.targetEntity == AffinityEntityAddon.getData(this.mob, GravecallerEnchantment.MASTER_KEY)) {
+        if (GravecallerEnchantment.isMaster(this.mob, this.targetEntity)
+                || AffinityEntityAddon.haveIdenticalData(this.mob, this.targetEntity, GravecallerEnchantment.MASTER_KEY)) {
             this.targetEntity = null;
             cir.setReturnValue(false);
         }

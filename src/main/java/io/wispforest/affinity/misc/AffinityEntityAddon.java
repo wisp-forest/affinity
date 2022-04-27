@@ -1,6 +1,7 @@
 package io.wispforest.affinity.misc;
 
 import net.minecraft.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -9,6 +10,8 @@ public interface AffinityEntityAddon {
     <V> V getData(DataKey<V> key);
 
     <V> void setData(DataKey<V> key, V value);
+
+    <V> V removeData(DataKey<V> key);
 
     <V> boolean hasData(DataKey<V> key);
 
@@ -26,12 +29,25 @@ public interface AffinityEntityAddon {
         return addon.getData(key);
     }
 
+    static <E extends Entity, V> void createDefaultData(E entity, DataKey<V> key) {
+        ((AffinityEntityAddon) entity).setData(key, key.makeDefaultValue());
+    }
+
     static <E extends Entity, V> void setData(E entity, DataKey<V> key, V value) {
         ((AffinityEntityAddon) entity).setData(key, value);
     }
 
+    static <E extends Entity, V> V removeData(E entity, DataKey<V> key) {
+        return ((AffinityEntityAddon) entity).removeData(key);
+    }
+
     static <E extends Entity, V> boolean hasData(E entity, DataKey<V> key) {
         return ((AffinityEntityAddon) entity).hasData(key);
+    }
+
+    static <E1 extends Entity, E2 extends Entity, V> boolean haveIdenticalData(@Nullable E1 entity1, @Nullable E2 entity2, DataKey<V> key) {
+        if (entity1 == null || entity2 == null) return false;
+        return hasData(entity1, key) && hasData(entity2, key) && getData(entity1, key) == getData(entity2, key);
     }
 
     class DataKey<V> {
@@ -57,6 +73,5 @@ public interface AffinityEntityAddon {
             return defaultValueFactory.get();
         }
     }
-
 }
 

@@ -1,7 +1,7 @@
 package io.wispforest.affinity.misc;
 
-import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
 import io.wispforest.affinity.enchantment.impl.BerserkerEnchantment;
+import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

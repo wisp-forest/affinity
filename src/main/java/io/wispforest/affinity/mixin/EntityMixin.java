@@ -35,6 +35,12 @@ public class EntityMixin implements AffinityEntityAddon {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <V> V removeData(DataKey<V> key) {
+        return hasData(key) ? (V) affinity$dataStorage.remove(key) : null;
+    }
+
+    @Override
     public <V> boolean hasData(DataKey<V> key) {
         return affinity$dataStorage != null && affinity$dataStorage.containsKey(key);
     }

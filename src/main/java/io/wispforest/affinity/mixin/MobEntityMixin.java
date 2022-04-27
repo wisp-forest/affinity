@@ -1,7 +1,9 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.enchantment.impl.GravecallerEnchantment;
 import io.wispforest.affinity.entity.goal.AttackWithMasterGoal;
 import io.wispforest.affinity.entity.goal.TrackMasterAttackerGoal;
+import io.wispforest.affinity.misc.AffinityEntityAddon;
 import io.wispforest.affinity.misc.MixinHooks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;
@@ -10,6 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,6 +28,12 @@ public abstract class MobEntityMixin extends LivingEntity {
     @Final
     protected GoalSelector targetSelector;
 
+    @Shadow
+    private @Nullable LivingEntity target;
+
+    @Shadow
+    public abstract void setTarget(@Nullable LivingEntity target);
+
     protected MobEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -36,6 +45,16 @@ public abstract class MobEntityMixin extends LivingEntity {
         final var mob = (MobEntity) (Object) this;
         this.targetSelector.add(-2, new TrackMasterAttackerGoal(mob));
         this.targetSelector.add(-1, new AttackWithMasterGoal(mob));
+    }
+
+    @Inject(method = "tickNewAi", at = @At("TAIL"))
+    private void afterTick(CallbackInfo ci) {
+        if (this.target == null) return;
+
+        if (GravecallerEnchantment.isMaster(this, this.target) ||
+                AffinityEntityAddon.haveIdenticalData(this, this.target, GravecallerEnchantment.MASTER_KEY)) {
+            this.setTarget(null);
+        }
     }
 
     @ModifyVariable(method = "tryAttack",
