@@ -7,8 +7,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Language;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.Optional;
 
 public abstract class AbsoluteEnchantment extends AffinityEnchantment {
 
@@ -29,7 +32,7 @@ public abstract class AbsoluteEnchantment extends AffinityEnchantment {
     @Override
     public Text getName(int level) {
         final var name = Language.getInstance().get(this.getTranslationKey()).toCharArray();
-        final var text = new LiteralText("");
+        final var text = new PhantomTranslatableText(this.getTranslationKey());
 
         float hue = this.nameHue / 360f;
         float lightness = 90;
@@ -71,6 +74,23 @@ public abstract class AbsoluteEnchantment extends AffinityEnchantment {
 
         Type(EquipmentSlot... slots) {
             this.slots = slots;
+        }
+    }
+
+    private static class PhantomTranslatableText extends TranslatableText {
+
+        public PhantomTranslatableText(String key) {
+            super(key);
+        }
+
+        @Override
+        public <T> Optional<T> visitSelf(StyledVisitor<T> visitor, Style style) {
+            return Optional.empty();
+        }
+
+        @Override
+        public <T> Optional<T> visitSelf(Visitor<T> visitor) {
+            return Optional.empty();
         }
     }
 }
