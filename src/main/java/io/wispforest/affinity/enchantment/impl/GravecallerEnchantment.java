@@ -56,6 +56,8 @@ public class GravecallerEnchantment extends AbsoluteEnchantment implements Encha
 
     @Override
     public void onUnequip(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {
+        if (!this.slotTypes.contains(slot)) return;
+
         if (!hasCompleteArmor(entity) && AffinityEntityAddon.hasData(entity, MINIONS_KEY)) {
             final var minions = AffinityEntityAddon.removeData(entity, MINIONS_KEY);
             for (var minion : minions) {
