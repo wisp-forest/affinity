@@ -14,6 +14,7 @@ public class AffinityEnchantments implements AutoRegistryContainer<Enchantment> 
     public static final BerserkerEnchantment BERSERKER = new BerserkerEnchantment();
     public static final GravecallerEnchantment GRAVECALLER = new GravecallerEnchantment();
     public static final BastionEnchantment BASTION = new BastionEnchantment();
+    public static final WoundingEnchantment WOUNDING = new WoundingEnchantment();
 
     @Override
     public Registry<Enchantment> getRegistry() {

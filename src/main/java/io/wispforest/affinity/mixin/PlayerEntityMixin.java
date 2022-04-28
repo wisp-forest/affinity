@@ -1,9 +1,11 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.misc.MixinHooks;
+import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import io.wispforest.owo.ops.WorldOps;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -48,4 +50,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         return MixinHooks.getExtraAttackDamage(this, entity, amount);
     }
 
+    @ModifyVariable(method = "attack",
+            at = @At(value = "CONSTANT", args = "floatValue=1.5", shift = At.Shift.BY, by = 3), ordinal = 0)
+    private float applyWoundingMultiplier(float damage, Entity entity) {
+        final int woundingLevel = EnchantmentHelper.getLevel(AffinityEnchantments.WOUNDING, this.getMainHandStack());
+        if (woundingLevel < 1) return damage;
+
+        return damage * ((1.5f + .1f * woundingLevel) / 1.5f);
+    }
 }
