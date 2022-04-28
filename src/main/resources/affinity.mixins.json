@@ -19,6 +19,7 @@
     "PotionItemMixin",
     "PotionUtilMixin",
     "StatusEffectMixin",
+    "StatusEffectUtilMixin",
     "TrackTargetGoalMixin",
     "access.BlockEntityTypeAccessor",
     "access.FilledMapItemInvoker",

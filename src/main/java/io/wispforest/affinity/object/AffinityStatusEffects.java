@@ -23,11 +23,18 @@ public class AffinityStatusEffects {
     private static final HashMap<Identifier, Potion> POTIONS = new HashMap<>();
 
     public static final StatusEffect LIFE_LEECH = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0xFF0000);
-    public static final StatusEffect STEADFAST = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x222222).addAttributeModifier(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, "ea838142-499a-4460-b92c-a12d1e329b77", 1, EntityAttributeModifier.Operation.ADDITION);
     public static final StatusEffect FLIGHT = new FlightStatusEffect(StatusEffectCategory.BENEFICIAL, 0x6666FF);
     public static final StatusEffect FREEZING = new FreezingStatusEffect(StatusEffectCategory.HARMFUL, 0x000066);
     public static final StatusEffect DRIPPING = new DrippingStatusEffect(StatusEffectCategory.NEUTRAL, 0xa4568d);
     public static final StatusEffect IMPENDING_DOOM = new ImpendingDoomStatusEffect(StatusEffectCategory.HARMFUL, 0x000000);
+    public static final StatusEffect BASTION_REGENERATION = new BastionRegeneration(StatusEffectCategory.BENEFICIAL, 0xfd5c5b);
+
+    public static final StatusEffect STEADFAST = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x222222)
+            .addAttributeModifier(
+                    EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,
+                    "ea838142-499a-4460-b92c-a12d1e329b77",
+                    1,
+                    EntityAttributeModifier.Operation.ADDITION);
 
     public static void register() {
         registerEffectAndPotions(LIFE_LEECH, "life_leech", 2400, true, true);
@@ -43,6 +50,7 @@ public class AffinityStatusEffects {
         registerPotions(StatusEffects.HUNGER, "hunger", 1200, true, true);
 
         Registry.register(Registry.STATUS_EFFECT, Affinity.id("dripping"), DRIPPING);
+        Registry.register(Registry.STATUS_EFFECT, Affinity.id("bastion_regeneration"), BASTION_REGENERATION);
 
         Registry.register(Registry.POTION, Affinity.id("dubious"), PotionMixture.DUBIOUS_POTION);
         Registry.register(Registry.RECIPE_SERIALIZER, Affinity.id("crafting_special_potiondye"), GlowingPotionDyeRecipe.SERIALIZER);

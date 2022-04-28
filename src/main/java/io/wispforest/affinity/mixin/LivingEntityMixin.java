@@ -1,6 +1,8 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.enchantment.impl.BastionEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
+import io.wispforest.affinity.misc.AffinityEntityAddon;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.misc.components.AffinityComponents;
 import io.wispforest.affinity.misc.components.EntityFlagComponent;
@@ -20,6 +22,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -72,6 +75,17 @@ public abstract class LivingEntityMixin extends Entity {
         for (var enchantment : EnchantmentHelper.get(itemStack).keySet()) {
             if (!(enchantment instanceof EnchantmentEquipEventReceiver receiver)) continue;
             receiver.onUnequip((LivingEntity) (Object) this, equipmentSlot, itemStack);
+        }
+    }
+
+    @ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
+    private float bastionDamagePenalty(float damage, DamageSource source) {
+        if (!(source.getAttacker() instanceof LivingEntity attacker)) return damage;
+
+        if (AffinityEntityAddon.hasData(attacker, BastionEnchantment.BASTION)) {
+            return damage * 0.5f;
+        } else {
+            return damage;
         }
     }
 

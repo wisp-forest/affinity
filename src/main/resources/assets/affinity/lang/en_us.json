@@ -105,6 +105,7 @@
   "message.affinity.linking.failed": "Could not link to %s",
 
   "effect.affinity.dripping": "Dripping",
+  "effect.affinity.bastion_regeneration": "Bastion",
 
   "effect.affinity.life_leech": "Life Leech",
   "item.minecraft.potion.effect.life_leech": "Potion of Life Leech",
