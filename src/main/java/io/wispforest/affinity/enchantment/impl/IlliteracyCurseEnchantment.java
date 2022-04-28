@@ -15,11 +15,13 @@ public class IlliteracyCurseEnchantment extends CurseEnchantment implements Ench
 
     @Override
     public void onEquip(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {
+        if (slot != EquipmentSlot.HEAD) return;
         MixinHooks.TEXT_OBFUSCATION = true;
     }
 
     @Override
     public void onUnequip(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {
+        if (slot != EquipmentSlot.HEAD) return;
         MixinHooks.TEXT_OBFUSCATION = false;
     }
 }
