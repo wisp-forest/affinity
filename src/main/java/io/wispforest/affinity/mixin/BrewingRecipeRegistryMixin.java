@@ -13,7 +13,7 @@ public class BrewingRecipeRegistryMixin {
 
     @Inject(method = "hasItemRecipe", at = @At("HEAD"), cancellable = true)
     private static void weDontSplashDoom(ItemStack input, ItemStack ingredient, CallbackInfoReturnable<Boolean> cir) {
-        if (!MixinHooks.isDoomPotion(ingredient)) return;
+        if (!MixinHooks.isDoomPotion(input)) return;
         cir.setReturnValue(false);
     }
 
