@@ -38,7 +38,7 @@
       "io.wispforest.affinity.misc.components.AffinityComponents"
     ],
     "terrablender": [
-      "io.wispforest.affinity.worldgen.AffinityWorldgen$TerraBlenderHook"
+      "io.wispforest.affinity.worldgen.AffinityWorldgen\u0024TerraBlenderHook"
     ]
   },
   "mixins": [

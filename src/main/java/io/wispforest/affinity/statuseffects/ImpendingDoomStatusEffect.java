@@ -7,7 +7,7 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 
 public class ImpendingDoomStatusEffect extends AffinityStatusEffect {
 
-    public static DamageSource DOOM_DAMAGE = new DoomDamageSource();
+    public static DamageSource DOOM_DAMAGE = new DoomDamageSource("doom_potion");
 
     public ImpendingDoomStatusEffect(StatusEffectCategory type, int color) {
         super(type, color);
@@ -18,9 +18,9 @@ public class ImpendingDoomStatusEffect extends AffinityStatusEffect {
         entity.damage(DOOM_DAMAGE, Float.MAX_VALUE);
     }
 
-    private static class DoomDamageSource extends DamageSource {
-        protected DoomDamageSource() {
-            super("doom_potion");
+    public static class DoomDamageSource extends DamageSource {
+        public DoomDamageSource(String name) {
+            super(name);
             this.setBypassesArmor();
             this.setOutOfWorld();
             this.setUsesMagic();

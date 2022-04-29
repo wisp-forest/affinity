@@ -40,7 +40,7 @@ public class AffinityStatusEffects {
         registerEffectAndPotions(LIFE_LEECH, "life_leech", 2400, true, true);
         registerEffectAndPotions(STEADFAST, "steadfast", 4800, true, true);
         registerEffectAndPotions(FREEZING, "freezing", 600, true, true);
-        registerEffectAndPotions(IMPENDING_DOOM, "impending_doom", 1200, true, false);
+        registerEffectAndPotions(IMPENDING_DOOM, "impending_doom", 1200, false, false);
 
         registerEffectAndPotions(FLIGHT, "flight", 2400, true, false);
 

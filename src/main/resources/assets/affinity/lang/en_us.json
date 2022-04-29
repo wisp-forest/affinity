@@ -139,6 +139,7 @@
   "item.minecraft.lingering_potion.effect.impending_doom": "Lingering Potion of Doom",
   "item.minecraft.tipped_arrow.effect.impending_doom": "Arrow of Doom",
   "death.attack.doom_potion": "%1$s got ripped and torn",
+  "death.attack.threw_doom_potion": "%1$s discovered a very powerful mechanic that sadly had to be disabled",
 
   "item.minecraft.potion.effect.dubious": "Dubious Potion",
   "item.minecraft.splash_potion.effect.dubious": "Twhicc Splashy Potion",

@@ -1,15 +1,25 @@
 package io.wispforest.affinity.misc;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.enchantment.impl.BerserkerEnchantment;
 import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
+import io.wispforest.affinity.statuseffects.ImpendingDoomStatusEffect;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionUtil;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class MixinHooks {
 
+    private static final Identifier IMPENDING_DOOM_ID = Affinity.id("impending_doom");
+
     public static boolean TEXT_OBFUSCATION = false;
+    public static final DamageSource THREW_DOOM_POTION_SOURCE = new ImpendingDoomStatusEffect.DoomDamageSource("threw_doom_potion");
 
     public static float getExtraAttackDamage(LivingEntity attacker, Entity entity, float baseAmount) {
         if (!(entity instanceof LivingEntity target)) return baseAmount;
@@ -32,6 +42,10 @@ public class MixinHooks {
         }
 
         return baseAmount + extraDamage;
+    }
+
+    public static boolean isDoomPotion(ItemStack stack) {
+        return PotionUtil.getPotion(stack) == Registry.POTION.get(IMPENDING_DOOM_ID);
     }
 
 }
