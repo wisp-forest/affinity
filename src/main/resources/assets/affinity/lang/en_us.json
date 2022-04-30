@@ -93,6 +93,8 @@
   "enchantment.affinity.bastion.desc": "Writing descriptions is pain",
   "enchantment.affinity.wounding": "Wounding",
   "enchantment.affinity.wounding.desc": "Increased critical hit damage",
+  "enchantment.affinity.critical_gamble": "Critical Gamble",
+  "enchantment.affinity.critical_gamble.desc": "Chance to instantly kill foes when performing a critical hit, at the cost of no increase in damage otherwise",
 
   "message.affinity.linking.started_create": "Creating link from %s",
   "message.affinity.linking.started_destroy": "Destroying link from %s",

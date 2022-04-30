@@ -1,6 +1,7 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.enchantment.impl.BastionEnchantment;
+import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
 import io.wispforest.affinity.misc.AffinityEntityAddon;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
@@ -38,6 +39,15 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow
     public abstract boolean hasStatusEffect(StatusEffect effect);
+
+    @Shadow
+    public abstract void kill();
+
+    @Shadow
+    public abstract boolean damage(DamageSource source, float amount);
+
+    @Shadow
+    private @Nullable LivingEntity attacker;
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTickEnd(CallbackInfo ci) {
@@ -86,6 +96,22 @@ public abstract class LivingEntityMixin extends Entity {
             return damage * 0.5f;
         } else {
             return damage;
+        }
+    }
+
+    @Inject(method = "damage", at = @At("TAIL"))
+    private void criticalGambleDeath(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (!(source.getAttacker() instanceof LivingEntity attacker)) return;
+
+        if (AffinityEntityAddon.hasData(attacker, CriticalGambleEnchantment.ACTIVATED_AT)) {
+            long critTick = AffinityEntityAddon.removeData(attacker, CriticalGambleEnchantment.ACTIVATED_AT);
+            if (critTick != this.world.getTime()) return;
+
+            if (attacker instanceof PlayerEntity player) {
+                this.damage(DamageSource.player(player), Float.MAX_VALUE);
+            } else {
+                this.damage(DamageSource.mob(attacker), Float.MAX_VALUE);
+            }
         }
     }
 
