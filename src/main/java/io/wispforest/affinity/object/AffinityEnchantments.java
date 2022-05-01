@@ -16,6 +16,7 @@ public class AffinityEnchantments implements AutoRegistryContainer<Enchantment> 
     public static final BastionEnchantment BASTION = new BastionEnchantment();
     public static final WoundingEnchantment WOUNDING = new WoundingEnchantment();
     public static final CriticalGambleEnchantment CRITICAL_GAMBLE = new CriticalGambleEnchantment();
+    public static final ExecuteEnchantment EXECUTE = new ExecuteEnchantment();
 
     @Override
     public Registry<Enchantment> getRegistry() {

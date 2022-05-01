@@ -1,6 +1,7 @@
 package io.wispforest.affinity.enchantment.template;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -26,7 +27,16 @@ public abstract class AbsoluteEnchantment extends AffinityEnchantment {
 
     public boolean hasCompleteArmor(LivingEntity entity) {
         if (type != Type.ARMOR) throw new IllegalStateException("hasCompleteArmor() called on non-armor enchantment");
-        return this.getEquipment(entity).size() == 4;
+        final var equipment = this.getEquipment(entity);
+        if (equipment.size() != 4) return false;
+
+        for (var stack : equipment.values()) {
+            if (EnchantmentHelper.getLevel(this, stack) < 1) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

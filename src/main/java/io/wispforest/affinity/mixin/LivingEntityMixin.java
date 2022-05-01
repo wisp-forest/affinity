@@ -7,6 +7,7 @@ import io.wispforest.affinity.misc.AffinityEntityAddon;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.misc.components.AffinityComponents;
 import io.wispforest.affinity.misc.components.EntityFlagComponent;
+import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -21,6 +22,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -47,7 +49,10 @@ public abstract class LivingEntityMixin extends Entity {
     public abstract boolean damage(DamageSource source, float amount);
 
     @Shadow
-    private @Nullable LivingEntity attacker;
+    public abstract float getHealth();
+
+    @Shadow
+    public abstract float getMaxHealth();
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTickEnd(CallbackInfo ci) {
@@ -105,13 +110,20 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (AffinityEntityAddon.hasData(attacker, CriticalGambleEnchantment.ACTIVATED_AT)) {
             long critTick = AffinityEntityAddon.removeData(attacker, CriticalGambleEnchantment.ACTIVATED_AT);
-            if (critTick != this.world.getTime()) return;
+            if (critTick != this.world.getTime() || this.getType().isIn(CriticalGambleEnchantment.BLACKLIST)) return;
 
-            if (attacker instanceof PlayerEntity player) {
-                this.damage(DamageSource.player(player), Float.MAX_VALUE);
-            } else {
-                this.damage(DamageSource.mob(attacker), Float.MAX_VALUE);
-            }
+            affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
+        }
+    }
+
+    @Inject(method = "damage", at = @At("TAIL"))
+    private void executeDeath(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (!(source.getAttacker() instanceof LivingEntity attacker)) return;
+
+        if (EnchantmentHelper.getLevel(AffinityEnchantments.EXECUTE, attacker.getMainHandStack()) > 0) {
+            if (this.getHealth() >= this.getMaxHealth() * .1) return;
+
+            affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
         }
     }
 
@@ -129,4 +141,12 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
+    @Unique
+    private static void affinity$killWithAttacker(LivingEntity victim, LivingEntity attacker) {
+        if (attacker instanceof PlayerEntity player) {
+            victim.damage(DamageSource.player(player), Float.MAX_VALUE);
+        } else {
+            victim.damage(DamageSource.mob(attacker), Float.MAX_VALUE);
+        }
+    }
 }
