@@ -2,6 +2,7 @@ package io.wispforest.affinity.datagen;
 
 import io.wispforest.affinity.object.AffinityBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipesProvider;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -15,7 +16,7 @@ import java.util.function.Consumer;
 import static io.wispforest.affinity.object.AffinityItems.AETHUM_MAP_PROTOTYPE;
 import static io.wispforest.affinity.object.AffinityItems.ANTHRACITE_POWDER;
 
-public class AffinityRecipesProvider extends FabricRecipesProvider {
+public class AffinityRecipesProvider extends FabricRecipeProvider {
 
     public AffinityRecipesProvider(FabricDataGenerator dataGenerator) {
         super(dataGenerator);

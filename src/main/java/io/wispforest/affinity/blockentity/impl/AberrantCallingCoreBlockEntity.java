@@ -2,11 +2,11 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.block.impl.AberrantCallingCoreBlock;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
-import io.wispforest.affinity.misc.NbtKey;
 import io.wispforest.affinity.misc.recipe.AberrantCallingRecipe;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
+import io.wispforest.owo.util.NbtKey;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

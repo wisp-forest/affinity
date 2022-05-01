@@ -17,7 +17,6 @@ import io.wispforest.owo.Owo;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
@@ -52,12 +51,12 @@ public class Affinity implements ModInitializer {
 
         FieldRegistrationHandler.register(AffinityRecipeTypes.class, MOD_ID, false);
         FieldRegistrationHandler.register(AffinityRecipeTypes.Serializers.class, MOD_ID, false);
+        FieldRegistrationHandler.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
 
         AffinityStatusEffects.register();
         AffinityNetwork.initialize();
         AffinityParticleSystems.initialize();
         AffinityPoiTypes.initialize();
-        AffinityScreenHandlerTypes.initialize();
 
         Registry.register(Registry.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
 

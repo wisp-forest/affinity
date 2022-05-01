@@ -1,7 +1,7 @@
 package io.wispforest.affinity.misc.components;
 
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
-import io.wispforest.affinity.misc.NbtKey;
+import io.wispforest.owo.util.NbtKey;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
