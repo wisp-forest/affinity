@@ -30,7 +30,7 @@ public abstract class TrackTargetGoalMixin extends Goal {
         if (this.target == null) return;
 
         if (GravecallerEnchantment.isMaster(this.mob, this.target) ||
-                AffinityEntityAddon.haveIdenticalData(this.mob, this.target, GravecallerEnchantment.MASTER_KEY)) {
+                AffinityEntityAddon.haveEqualData(this.mob, this.target, GravecallerEnchantment.MASTER_KEY)) {
             cir.setReturnValue(false);
         }
     }

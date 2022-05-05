@@ -22,7 +22,7 @@ public class GravecallerEnchantment extends AbsoluteEnchantment implements Encha
 
     public static final AffinityEntityAddon.DataKey<SpawnerLogic> SPAWNER_KEY = AffinityEntityAddon.DataKey.withDefaultFactory(SpawnerLogic::new);
     public static final AffinityEntityAddon.DataKey<Set<EntityReferenceTracker.Reference<Entity>>> MINIONS_KEY = AffinityEntityAddon.DataKey.withDefaultFactory(HashSet::new);
-    public static final AffinityEntityAddon.DataKey<LivingEntity> MASTER_KEY = AffinityEntityAddon.DataKey.withNullDefault();
+    public static final AffinityEntityAddon.DataKey<EntityReferenceTracker.Reference<LivingEntity>> MASTER_KEY = AffinityEntityAddon.DataKey.withNullDefault();
 
     public GravecallerEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentTarget.ARMOR, Type.ARMOR, 205);
@@ -35,8 +35,12 @@ public class GravecallerEnchantment extends AbsoluteEnchantment implements Encha
         for (var undead : undeadEntities) {
             if (AffinityEntityAddon.hasData(undead, MASTER_KEY)) continue;
 
-            AffinityEntityAddon.setData(undead, MASTER_KEY, bearer);
+            AffinityEntityAddon.setData(undead, MASTER_KEY, EntityReferenceTracker.tracked(bearer));
             minions.add(EntityReferenceTracker.tracked(undead));
+        }
+
+        if (undeadEntities.size() > 6 && bearer.world.getTime() % 20 == 0) {
+            bearer.heal(undeadEntities.size() - 6);
         }
 
         var spawner = AffinityEntityAddon.getDataOrSetDefault(bearer, SPAWNER_KEY);
@@ -50,7 +54,7 @@ public class GravecallerEnchantment extends AbsoluteEnchantment implements Encha
     private List<Entity> getUndeadEntities(LivingEntity master) {
         return master.world.getOtherEntities(
                 null,
-                master.getBoundingBox().expand(20),
+                master.getBoundingBox().expand(15),
                 entity -> entity instanceof LivingEntity living && living.getGroup() == EntityGroup.UNDEAD);
     }
 
@@ -71,7 +75,7 @@ public class GravecallerEnchantment extends AbsoluteEnchantment implements Encha
     public void onEquip(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {}
 
     public static boolean isMaster(Entity undead, Entity potentialMaster) {
-        return AffinityEntityAddon.hasData(undead, MASTER_KEY) && AffinityEntityAddon.getData(undead, MASTER_KEY) == potentialMaster;
+        return AffinityEntityAddon.hasData(undead, MASTER_KEY) && AffinityEntityAddon.getData(undead, MASTER_KEY).get() == potentialMaster;
     }
 
     static {

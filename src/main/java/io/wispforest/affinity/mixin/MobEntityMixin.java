@@ -52,7 +52,7 @@ public abstract class MobEntityMixin extends LivingEntity {
         if (this.target == null) return;
 
         if (GravecallerEnchantment.isMaster(this, this.target) ||
-                AffinityEntityAddon.haveIdenticalData(this, this.target, GravecallerEnchantment.MASTER_KEY)) {
+                AffinityEntityAddon.haveEqualData(this, this.target, GravecallerEnchantment.MASTER_KEY)) {
             this.setTarget(null);
         }
     }

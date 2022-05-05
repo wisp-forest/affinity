@@ -4,10 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.entity.Entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class EntityReferenceTracker {
 
@@ -58,6 +55,18 @@ public class EntityReferenceTracker {
             return entity;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            EntityReference<?> that = (EntityReference<?>) o;
+            return Objects.equals(entity, that.entity);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(entity);
+        }
     }
 
     private static class EntityGroupReference<E extends Entity> implements Releasable<E>, Reference<Collection<E>> {
@@ -83,6 +92,19 @@ public class EntityReferenceTracker {
         @Override
         public Collection<E> get() {
             return view;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            EntityGroupReference<?> that = (EntityGroupReference<?>) o;
+            return Objects.equals(entities, that.entities);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(entities);
         }
     }
 

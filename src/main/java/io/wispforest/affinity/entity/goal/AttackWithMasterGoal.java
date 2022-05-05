@@ -23,8 +23,13 @@ public class AttackWithMasterGoal extends TrackTargetGoal {
     @Override
     public boolean canStart() {
         if (AffinityEntityAddon.hasData(mob, GravecallerEnchantment.MASTER_KEY)) {
-            final var master = AffinityEntityAddon.getData(mob, GravecallerEnchantment.MASTER_KEY);
+            final var masterRef = AffinityEntityAddon.getData(mob, GravecallerEnchantment.MASTER_KEY);
+            if (!masterRef.present()) {
+                AffinityEntityAddon.removeData(mob, GravecallerEnchantment.MASTER_KEY);
+                return false;
+            }
 
+            final var master = masterRef.get();
             this.attacking = master.getAttacking();
             return master.getLastAttackTime() != this.lastAttackTime && this.canTrack(this.attacking, TargetPredicate.DEFAULT);
         } else {
@@ -35,9 +40,9 @@ public class AttackWithMasterGoal extends TrackTargetGoal {
     @Override
     public void start() {
         this.mob.setTarget(this.attacking);
-        final var master = AffinityEntityAddon.getData(mob, GravecallerEnchantment.MASTER_KEY);
-        if (master != null) {
-            this.lastAttackTime = master.getLastAttackTime();
+        final var masterRef = AffinityEntityAddon.getData(mob, GravecallerEnchantment.MASTER_KEY);
+        if (masterRef != null && masterRef.present()) {
+            this.lastAttackTime = masterRef.get().getLastAttackTime();
         }
 
         super.start();
