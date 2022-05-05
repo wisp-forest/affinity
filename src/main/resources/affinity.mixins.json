@@ -29,7 +29,11 @@
     "access.OverworldBiomeCreatorInvoker",
     "access.SignTypeInvoker",
     "access.StructureFeatureAccessor",
-    "access.TreeFeatureConfigAccessor"
+    "access.TreeFeatureConfigAccessor",
+    "client.ArmorFeatureRendererMixin",
+    "client.BufferBuilderStorageMixin",
+    "client.ItemRendererMixin",
+    "client.RenderLayerMixin"
   ],
   "client": [
     "client.ClientPlayNetworkHandlerMixin",

@@ -5,6 +5,7 @@ import io.wispforest.affinity.block.impl.RitualSocleBlock;
 import io.wispforest.affinity.client.particle.BezierItemEmitterParticle;
 import io.wispforest.affinity.client.particle.BezierItemParticle;
 import io.wispforest.affinity.client.particle.ColoredFlamedParticle;
+import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.WispEntityModel;
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
@@ -81,6 +82,8 @@ public class AffinityClient implements ClientModInitializer {
                     .append(new TranslatableText("text.affinity.attuned_shard_range.value", tier.maxDistance())
                             .styled(style -> style.withColor(0x4D4C7D))));
         });
+
+        AbsoluteEnchantmentGlintHandler.createLayers();
     }
 
     private void registerBlockEntityRenderers() {

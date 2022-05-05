@@ -61,6 +61,10 @@ public abstract class AbsoluteEnchantment extends AffinityEnchantment {
         return text;
     }
 
+    public int nameHue() {
+        return nameHue;
+    }
+
     @Override
     protected boolean canAccept(Enchantment other) {
         return false;

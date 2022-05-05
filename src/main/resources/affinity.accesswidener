@@ -2,6 +2,8 @@ accessWidener v1 named
 
 accessible method net/minecraft/client/particle/FlameParticle <init> (Lnet/minecraft/client/world/ClientWorld;DDDDDD)V
 
+accessible method net/minecraft/client/render/RenderLayer of (Ljava/lang/String;Lnet/minecraft/client/render/VertexFormat;Lnet/minecraft/client/render/VertexFormat$DrawMode;ILnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+
 extendable method net/minecraft/block/RedstoneWireBlock canRunOnTop (Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z
 extendable method net/minecraft/block/RedstoneWireBlock getPlacementState (Lnet/minecraft/world/BlockView;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;
 extendable method net/minecraft/block/RedstoneWireBlock isFullyConnected (Lnet/minecraft/block/BlockState;)Z
@@ -18,5 +20,7 @@ accessible field net/minecraft/block/RedstoneWireBlock wiresGivePower Z
 
 accessible class net/minecraft/data/client/BlockStateModelGenerator$BlockTexturePool
 accessible class net/minecraft/data/client/BlockStateModelGenerator$LogTexturePool
+
+accessible class net/minecraft/client/render/RenderPhase$Texture
 
 accessible field net/minecraft/data/client/ItemModelGenerator writer Ljava/util/function/BiConsumer;
