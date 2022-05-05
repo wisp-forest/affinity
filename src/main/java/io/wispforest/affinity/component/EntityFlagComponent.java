@@ -1,4 +1,4 @@
-package io.wispforest.affinity.misc.components;
+package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.nbt.NbtCompound;

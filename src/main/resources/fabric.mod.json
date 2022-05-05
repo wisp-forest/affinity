@@ -32,10 +32,10 @@
       "io.wispforest.affinity.datagen.AffinityDataGeneratorEntrypoint"
     ],
     "cardinal-components-entity": [
-      "io.wispforest.affinity.misc.components.AffinityComponents"
+      "io.wispforest.affinity.component.AffinityComponents"
     ],
     "cardinal-components-chunk": [
-      "io.wispforest.affinity.misc.components.AffinityComponents"
+      "io.wispforest.affinity.component.AffinityComponents"
     ],
     "terrablender": [
       "io.wispforest.affinity.worldgen.AffinityWorldgen\u0024TerraBlenderHook"

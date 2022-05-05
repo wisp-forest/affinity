@@ -1,8 +1,8 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.enchantment.impl.GravecallerEnchantment;
-import io.wispforest.affinity.misc.components.AffinityComponents;
-import io.wispforest.affinity.misc.components.EntityFlagComponent;
+import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

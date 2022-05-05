@@ -1,7 +1,7 @@
 package io.wispforest.affinity.misc;
 
-import io.wispforest.affinity.misc.components.AffinityComponents;
-import io.wispforest.affinity.misc.components.ChunkAethumComponent;
+import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.component.ChunkAethumComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkStatus;
 
