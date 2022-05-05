@@ -19,11 +19,11 @@ public class AffinityItemGroup extends OwoItemGroup {
         this.addTab(Icon.of(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE), "main", null);
         this.addTab(Icon.of(AffinityBlocks.AZALEA_LOG), "nature", null);
 
-        this.addButton(ItemGroupButton.github("https://github.com/gliscowo/affinity"));
+        this.addButton(ItemGroupButton.github("https://github.com/wisp-forest/affinity"));
     }
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(AffinityBlocks.SUNDIAL);
+        return new ItemStack(AffinityItems.WISE_WISP_MATTER);
     }
 }
