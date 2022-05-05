@@ -17,6 +17,7 @@ import net.minecraft.item.SignItem;
 public class AffinityItems implements ItemRegistryContainer {
 
     public static final Item AETHUM_FLUX_BOTTLE = new AethumFluxBottleItem();
+    public static final Item RESPLENDENT_GEM = new ResplendentGemItem();
 
     public static final Item MILDLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.MILDLY_ATTUNED);
     public static final Item FAIRLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.FAIRLY_ATTUNED);

@@ -64,6 +64,7 @@
   "item.affinity.geological_resonator": "Geological Resonator",
   "item.affinity.collection_staff": "Collection Staff",
   "item.affinity.aethum_flux_bottle": "Bottle of Aethum Flux",
+  "item.affinity.resplendent_gem": "Resplendent Gem",
 
   "text.affinity.attuned_shard_range": "Range: ",
   "text.affinity.attuned_shard_range.value": "%d blocks",

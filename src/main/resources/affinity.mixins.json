@@ -7,8 +7,10 @@
     "AbstractBlockMixin",
     "AbstractBlockMixin$AbstractBlockStateMixin",
     "ActiveTargetGoalMixin",
+    "AnvilScreenHandlerMixin",
     "BoatEntityTypeMixin",
     "BrewingRecipeRegistryMixin",
+    "EnchantmentHelperMixin",
     "EntityMixin",
     "ItemMixin",
     "ItemStackMixin",
@@ -29,13 +31,11 @@
     "access.OverworldBiomeCreatorInvoker",
     "access.SignTypeInvoker",
     "access.StructureFeatureAccessor",
-    "access.TreeFeatureConfigAccessor",
-    "client.ArmorFeatureRendererMixin",
-    "client.BufferBuilderStorageMixin",
-    "client.ItemRendererMixin",
-    "client.RenderLayerMixin"
+    "access.TreeFeatureConfigAccessor"
   ],
   "client": [
+    "client.ArmorFeatureRendererMixin",
+    "client.BufferBuilderStorageMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.ClientWorldMixin",
     "client.CrackParticleMixin",
@@ -44,7 +44,9 @@
     "client.HeldItemRendererMixin",
     "client.InGameHudMixin",
     "client.ItemFrameEntityRendererMixin",
+    "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
+    "client.RenderLayerMixin",
     "client.StyleMixin"
   ],
   "injectors": {
