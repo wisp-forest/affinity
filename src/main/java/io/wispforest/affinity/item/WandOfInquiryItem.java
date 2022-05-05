@@ -36,12 +36,13 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
         if (!(world.getBlockEntity(context.getBlockPos()) instanceof RitualCoreBlockEntity core))
             return ActionResult.PASS;
 
-//        player.getItemCooldownManager().set(this, 100);
+        player.getItemCooldownManager().set(this, 30);
 
         if (!world.isClient()) {
             var setup = RitualCoreBlockEntity.examineSetup(core, !player.isSneaking());
 
-            int stability20 = (int) Math.round((setup.stability / 100) * 20);
+            final double stability = !setup.isEmpty() ? setup.stability / 100 : 0;
+            int stability20 = (int) Math.round(stability * 20);
             String stabilityBar = "|".repeat(stability20) + "§" + "|".repeat(20 - stability20);
 
             var text = TextOps.withColor("# §" + setup.socles.size() + " | §🛡 " + stabilityBar + "",
