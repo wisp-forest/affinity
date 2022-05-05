@@ -5,6 +5,7 @@ import net.minecraft.client.render.entity.ItemFrameEntityRenderer;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,9 +17,16 @@ public class ItemFrameEntityRendererMixin<T extends ItemFrameEntity> {
     @Unique
     private static final ItemStack AFFINITY$MAP_STACK = Items.FILLED_MAP.getDefaultStack();
 
+    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(method = "render(Lnet/minecraft/entity/decoration/ItemFrameEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isOf(Lnet/minecraft/item/Item;)Z", shift = At.Shift.BY, by = 2),
-            ordinal = 1)
+            at = @At(
+                    value = "JUMP",
+                    opcode = Opcodes.IFEQ,
+                    shift = At.Shift.BEFORE,
+                    ordinal = 0
+            ),
+            ordinal = 1
+    )
     private boolean weRenderAethumMaps(boolean value, T entity) {
         if (!entity.getHeldItemStack().isOf(AffinityItems.REALIZED_AETHUM_MAP)) return value;
         return true;
