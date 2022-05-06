@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class AethumMapPrototypeItem extends Item {
 
     public AethumMapPrototypeItem() {
-        super(AffinityItems.settings(0));
+        super(AffinityItems.settings(AffinityItemGroup.MAIN));
     }
 
     @Override

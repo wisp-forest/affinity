@@ -22,7 +22,7 @@ public class WispMatterItem extends Item {
     private final WispType type;
 
     public WispMatterItem(WispType type) {
-        super(AffinityItems.settings(0));
+        super(AffinityItems.settings(AffinityItemGroup.MAIN));
         this.type = type;
     }
 

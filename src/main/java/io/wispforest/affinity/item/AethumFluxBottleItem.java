@@ -21,7 +21,7 @@ public class AethumFluxBottleItem extends Item implements DirectInteractionHandl
     private final List<Block> INTERACTION_OVERRIDES = List.of(Blocks.FLOWERING_AZALEA_LEAVES);
 
     public AethumFluxBottleItem() {
-        super(AffinityItems.settings(0).maxCount(7));
+        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(7));
     }
 
     @Override

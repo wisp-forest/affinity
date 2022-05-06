@@ -9,7 +9,7 @@ public class AttunedShardItem extends Item {
     private final AttunedShardTier tier;
 
     public AttunedShardItem(AttunedShardTier tier) {
-        super(AffinityItems.settings(0));
+        super(AffinityItems.settings(AffinityItemGroup.MAIN));
         this.tier = tier;
     }
 

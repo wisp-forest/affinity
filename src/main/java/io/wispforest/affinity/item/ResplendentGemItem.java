@@ -5,6 +5,7 @@ import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.collection.DefaultedList;
@@ -13,7 +14,7 @@ import net.minecraft.util.registry.Registry;
 public class ResplendentGemItem extends EnchantedBookItem {
 
     public ResplendentGemItem() {
-        super(AffinityItems.settings(0).rarity(Rarity.UNCOMMON).stackGenerator(ResplendentGemItem::generateStacks));
+        super(AffinityItems.settings(AffinityItemGroup.ENCHANTMENTS).rarity(Rarity.UNCOMMON).stackGenerator(ResplendentGemItem::generateStacks));
     }
 
     public static ItemStack make(AbsoluteEnchantment enchantment) {
@@ -28,4 +29,7 @@ public class ResplendentGemItem extends EnchantedBookItem {
                 .map(AbsoluteEnchantment.class::cast)
                 .forEach(enchantment -> stacks.add(make(enchantment)));
     }
+
+    @Override
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {}
 }

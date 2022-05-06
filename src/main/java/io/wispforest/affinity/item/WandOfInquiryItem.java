@@ -25,7 +25,7 @@ import java.util.List;
 public class WandOfInquiryItem extends Item implements DirectInteractionHandler {
 
     public WandOfInquiryItem() {
-        super(AffinityItems.settings(0).maxCount(1));
+        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
     }
 
     @Override

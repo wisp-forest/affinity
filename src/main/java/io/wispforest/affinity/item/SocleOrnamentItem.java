@@ -9,7 +9,7 @@ public class SocleOrnamentItem extends Item {
     private final RitualSocleType socleType;
 
     public SocleOrnamentItem(RitualSocleType socleType) {
-        super(AffinityItems.settings(0));
+        super(AffinityItems.settings(AffinityItemGroup.MAIN));
         this.socleType = socleType;
     }
 

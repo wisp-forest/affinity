@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.*;
 import io.wispforest.affinity.block.shadowed.*;
 import io.wispforest.affinity.blockentity.impl.*;
+import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.mixin.access.SignTypeInvoker;
 import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
@@ -30,21 +31,21 @@ import java.lang.reflect.Field;
 @SuppressWarnings("unused")
 public class AffinityBlocks implements BlockRegistryContainer {
 
-    @Tab(0) public static final Block BREWING_CAULDRON = new BrewingCauldronBlock();
-    @Tab(0) public static final Block COPPER_PLATED_AETHUM_FLUX_NODE = new CopperPlatedAethumFluxNodeBlock();
-    @Tab(0) public static final Block AETHUM_FLUX_CACHE = new AethumFluxCacheBlock();
-    @Tab(0) public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
-    @Tab(0) public static final Block SUNDIAL = new SundialBlock();
-    @Tab(0) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
-    @Tab(0) public static final Block BLANK_RITUAL_SOCLE = new BlankRitualSocleBlock();
-    @Tab(0) public static final Block RUDIMENTARY_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.RUDIMENTARY);
-    @Tab(0) public static final Block REFINED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.REFINED);
-    @Tab(0) public static final Block SOPHISTICATED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.SOPHISTICATED);
-    @Tab(0) public static final Block ASP_RITE_CORE = new AspRiteCoreBlock();
-    @Tab(0) public static final Block ABERRANT_CALLING_CORE = new AberrantCallingCoreBlock();
-    @Tab(0) public static final Block RITUAL_SOCLE_COMPOSER = new RitualSocleComposerBlock();
-    @Tab(0) public static final Block AFFINE_INFUSER = new AffineInfuserBlock();
-    @Tab(0) public static final Block RANTHRACITE_WIRE = new RanthraciteWireBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block BREWING_CAULDRON = new BrewingCauldronBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block COPPER_PLATED_AETHUM_FLUX_NODE = new CopperPlatedAethumFluxNodeBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block AETHUM_FLUX_CACHE = new AethumFluxCacheBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block SUNDIAL = new SundialBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block BLANK_RITUAL_SOCLE = new BlankRitualSocleBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block RUDIMENTARY_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.RUDIMENTARY);
+    @Tab(AffinityItemGroup.MAIN) public static final Block REFINED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.REFINED);
+    @Tab(AffinityItemGroup.MAIN) public static final Block SOPHISTICATED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.SOPHISTICATED);
+    @Tab(AffinityItemGroup.MAIN) public static final Block ASP_RITE_CORE = new AspRiteCoreBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block ABERRANT_CALLING_CORE = new AberrantCallingCoreBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block RITUAL_SOCLE_COMPOSER = new RitualSocleComposerBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block AFFINE_INFUSER = new AffineInfuserBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block RANTHRACITE_WIRE = new RanthraciteWireBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
 
@@ -144,7 +145,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public void postProcessField(String namespace, Block value, String identifier, Field field) {
         if (field.isAnnotationPresent(NoBlockItem.class)) return;
 
-        int tab = 1;
+        int tab = AffinityItemGroup.NATURE;
         if (field.isAnnotationPresent(Tab.class)) tab = field.getAnnotation(Tab.class).value();
 
         Registry.register(Registry.ITEM, new Identifier(namespace, identifier),

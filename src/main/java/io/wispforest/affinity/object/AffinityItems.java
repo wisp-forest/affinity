@@ -29,7 +29,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item GEOLOGICAL_RESONATOR = new GeologicalResonatorItem();
     public static final Item COLLECTION_STAFF = new CollectionStaffItem();
 
-    public static final Item AZALEA_FLOWERS = new Item(settings(1).food(new FoodComponent.Builder().hunger(2).saturationModifier(.5f)
+    public static final Item AZALEA_FLOWERS = new Item(settings(AffinityItemGroup.NATURE).food(new FoodComponent.Builder().hunger(2).saturationModifier(.5f)
             .statusEffect(new StatusEffectInstance(AffinityStatusEffects.DRIPPING, 1200), 1).build()));
 
     public static final Item INERT_WISP_MATTER = new WispMatterItem(AffinityWispTypes.INERT);
@@ -40,14 +40,12 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item PRISMARINE_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.REFINED);
     public static final Item PURPUR_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.SOPHISTICATED);
 
-    public static final Item ANTHRACITE_POWDER = new Item(settings(0));
+    public static final Item ANTHRACITE_POWDER = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item AETHUM_MAP_PROTOTYPE = new AethumMapPrototypeItem();
     public static final Item REALIZED_AETHUM_MAP = new RealizedAethumMapItem();
 
-    public static final Item AZALEA_SIGN = new SignItem(new OwoItemSettings().group(Affinity.AFFINITY_GROUP)
-            .maxCount(16).tab(1), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
-    public static final Item AZALEA_BOAT = new BoatItem(AffinityBlocks.AZALEA_BOAT_TYPE,
-            new OwoItemSettings().tab(1).group(Affinity.AFFINITY_GROUP).maxCount(1));
+    public static final Item AZALEA_SIGN = new SignItem(settings(AffinityItemGroup.NATURE).maxCount(16), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
+    public static final Item AZALEA_BOAT = new BoatItem(AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
 
     public static final Item ECHO_SHARD = new EchoShardItem();
 

@@ -31,7 +31,7 @@ import java.util.List;
 public class CollectionStaffItem extends Item {
 
     public CollectionStaffItem() {
-        super(AffinityItems.settings(0).maxCount(1));
+        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
     }
 
     @Override

@@ -12,6 +12,7 @@
     "ArrowEntityMixin",
     "BoatEntityTypeMixin",
     "BrewingRecipeRegistryMixin",
+    "EnchantedBookItemMixin",
     "EnchantmentHelperMixin",
     "EntityMixin",
     "ItemMixin",
