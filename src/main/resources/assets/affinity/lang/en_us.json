@@ -100,6 +100,8 @@
   "enchantment.affinity.critical_gamble.desc": "Chance to instantly kill foes when performing a critical hit, at the cost of no increase in damage otherwise",
   "enchantment.affinity.execute": "Execute",
   "enchantment.affinity.execute.desc": "Execute targets that would just have clung onto life otherwise",
+  "enchantment.affinity.prosecute": "Prosecute",
+  "enchantment.affinity.prosecute.desc": "Increased damage to enemies that are at full health",
 
   "message.affinity.linking.started_create": "Creating link from %s",
   "message.affinity.linking.started_destroy": "Destroying link from %s",

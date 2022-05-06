@@ -11,6 +11,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -52,7 +53,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                     target = "Lnet/minecraft/entity/player/PlayerEntity;getAttackCooldownProgress(F)F"),
             ordinal = 1)
     private float applyExtraAttackDamage(float amount, Entity entity) {
-        return MixinHooks.getExtraAttackDamage(this, entity, amount);
+        float baseAttackDamage = (float) this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+        return MixinHooks.getExtraAttackDamage(this, entity, baseAttackDamage) - baseAttackDamage;
     }
 
     @ModifyVariable(method = "attack",
