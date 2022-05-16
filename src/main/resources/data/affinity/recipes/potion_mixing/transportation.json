@@ -1,0 +1,16 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:transportation",
+  "effect_inputs": [
+    "minecraft:speed"
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "affinity:echo_shard",
+      "copy_nbt": true
+    }
+  ]
+}

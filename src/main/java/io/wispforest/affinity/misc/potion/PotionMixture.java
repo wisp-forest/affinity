@@ -23,18 +23,20 @@ import java.util.Objects;
  */
 public class PotionMixture {
 
-    public static final PotionMixture EMPTY = new PotionMixture(Potions.EMPTY, ImmutableList.of(), true);
+    public static final PotionMixture EMPTY = new PotionMixture(Potions.EMPTY, ImmutableList.of(), true, null);
     public static final Potion DUBIOUS_POTION = new Potion("dubious");
 
     private final Potion basePotion;
     private final List<StatusEffectInstance> effects;
     private final boolean pure;
     private final int color;
+    private final NbtCompound extraNbt;
 
-    public PotionMixture(Potion basePotion) {
+    public PotionMixture(Potion basePotion, NbtCompound extraNbt) {
         this.basePotion = basePotion;
         this.effects = ImmutableList.of();
         this.pure = true;
+        this.extraNbt = extraNbt;
 
         final var colorEffects = new ArrayList<>(effects);
         if (basePotion != Potions.EMPTY) colorEffects.addAll(basePotion.getEffects());
@@ -42,10 +44,11 @@ public class PotionMixture {
         this.color = PotionUtil.getColor(colorEffects);
     }
 
-    public PotionMixture(Potion basePotion, List<StatusEffectInstance> effects, boolean pure) {
+    public PotionMixture(Potion basePotion, List<StatusEffectInstance> effects, boolean pure, NbtCompound extraNbt) {
         this.basePotion = basePotion;
         this.effects = ImmutableList.copyOf(effects);
         this.pure = pure;
+        this.extraNbt = extraNbt;
 
         final var colorEffects = new ArrayList<>(effects);
         if (basePotion != Potions.EMPTY) colorEffects.addAll(basePotion.getEffects());
@@ -62,14 +65,14 @@ public class PotionMixture {
         effects.addAll(basePotion.getEffects());
         effects.addAll(other.basePotion.getEffects());
 
-        return new PotionMixture(Potions.EMPTY, effects, false);
+        return new PotionMixture(Potions.EMPTY, effects, false, null);
     }
 
     public static PotionMixture fromStack(ItemStack stack) {
         final var potion = PotionUtil.getPotion(stack);
         final var effects = PotionUtil.getCustomPotionEffects(stack);
 
-        return new PotionMixture(potion, effects, true);
+        return new PotionMixture(potion, effects, true, stack.hasNbt() && stack.getNbt().contains("ExtraPotionNbt", NbtElement.COMPOUND_TYPE) ? stack.getNbt().getCompound("ExtraPotionNbt") : null);
     }
 
     public static PotionMixture fromNbt(NbtCompound nbt) {
@@ -89,7 +92,13 @@ public class PotionMixture {
             }
         }
 
-        return new PotionMixture(potion, effects, nbt.getBoolean("Pure"));
+        NbtCompound extraNbt = null;
+
+        if (nbt.contains("ExtraNbt", NbtElement.COMPOUND_TYPE)) {
+            extraNbt = nbt.getCompound("ExtraNbt");
+        }
+
+        return new PotionMixture(potion, effects, nbt.getBoolean("Pure"), extraNbt);
     }
 
     public NbtCompound toNbt() {
@@ -126,6 +135,10 @@ public class PotionMixture {
             PotionUtil.setPotion(stack, DUBIOUS_POTION);
         }
 
+        if (extraNbt != null) {
+            stack.getOrCreateNbt().put("ExtraPotionNbt", extraNbt);
+        }
+
         return stack;
     }
 
@@ -143,6 +156,10 @@ public class PotionMixture {
 
     public Potion basePotion() {
         return basePotion;
+    }
+
+    public NbtCompound extraNbt() {
+        return extraNbt;
     }
 
     @Override

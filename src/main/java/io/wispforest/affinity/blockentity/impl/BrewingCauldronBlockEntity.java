@@ -129,15 +129,16 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
         world.playSound(null, pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1, 1);
 
+        this.storedPotion = cachedRecipe.craftPotion(items);
+
         for (var ingredient : cachedRecipe.getItemInputs()) {
             for (int i = 0; i < items.size(); i++) {
-                if (!ingredient.test(items.get(i))) continue;
+                if (!ingredient.ingredient().test(items.get(i))) continue;
                 items.set(i, ItemStack.EMPTY);
                 break;
             }
         }
 
-        this.storedPotion = new PotionMixture(cachedRecipe.getPotionOutput());
         this.markDirty(true);
 
         processTick = 0;

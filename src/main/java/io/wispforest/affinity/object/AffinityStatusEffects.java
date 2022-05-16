@@ -28,6 +28,7 @@ public class AffinityStatusEffects {
     public static final StatusEffect DRIPPING = new DrippingStatusEffect(StatusEffectCategory.NEUTRAL, 0xa4568d);
     public static final StatusEffect IMPENDING_DOOM = new ImpendingDoomStatusEffect(StatusEffectCategory.HARMFUL, 0x000000);
     public static final StatusEffect BASTION_REGENERATION = new BastionRegeneration(StatusEffectCategory.BENEFICIAL, 0xfd5c5b);
+    public static final StatusEffect TRANSPORTATION = new TransportationStatusEffect(StatusEffectCategory.BENEFICIAL, 0xc9b6b3);
 
     public static final StatusEffect STEADFAST = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x222222)
             .addAttributeModifier(
@@ -41,6 +42,7 @@ public class AffinityStatusEffects {
         registerEffectAndPotions(STEADFAST, "steadfast", 4800, true, true);
         registerEffectAndPotions(FREEZING, "freezing", 600, true, true);
         registerEffectAndPotions(IMPENDING_DOOM, "impending_doom", 1200, false, false);
+        registerEffectAndPotions(TRANSPORTATION, "transportation", 6000, true, false);
 
         registerEffectAndPotions(FLIGHT, "flight", 2400, true, false);
 

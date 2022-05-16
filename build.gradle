@@ -95,6 +95,7 @@ dependencies {
 
     modLocalRuntime "com.ptsmods:devlogin:2.0"
     modLocalRuntime "maven.modrinth:emoji-type:1.0.3"
+    modLocalRuntime "maven.modrinth:lazydfu:0.1.2"
 
     modLocalRuntime ("io.vram:canvas-fabric-mc118:${project.canvas_version}") {
         exclude group: "net.fabricmc.fabric-api"

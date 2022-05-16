@@ -58,7 +58,8 @@
       "affinity:glowing_color",
       "affinity:player_aethum",
       "affinity:chunk_aethum",
-      "affinity:entity_flags"
+      "affinity:entity_flags",
+      "affinity:transportation"
     ]
   }
 }

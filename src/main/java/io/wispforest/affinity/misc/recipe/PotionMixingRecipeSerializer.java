@@ -31,9 +31,15 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
             inputEffects.add(Registry.STATUS_EFFECT.getOrEmpty(Identifier.tryParse(element.getAsString())).orElseThrow(() -> new JsonSyntaxException("Invalid status effect: " + element.getAsString())));
         }
 
-        final var itemInputs = new ArrayList<Ingredient>();
+        final var itemInputs = new ArrayList<PotionMixingRecipe.InputData>();
         for (var element : itemInputsJson) {
-            itemInputs.add(Ingredient.fromJson(element));
+            var ingredient = Ingredient.fromJson(element);
+
+            boolean copyNbt = false;
+            if (element.isJsonObject())
+                 copyNbt = JsonHelper.getBoolean(element.getAsJsonObject(), "copy_nbt", false);
+
+            itemInputs.add(new PotionMixingRecipe.InputData(ingredient, copyNbt));
         }
 
         return new PotionMixingRecipe(id, itemInputs, inputEffects, outputPotion);
@@ -44,7 +50,7 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
         final var potion = Registry.POTION.get(buf.readVarInt());
 
         final var effectInputs = buf.readCollection(value -> new ArrayList<>(), buf1 -> Registry.STATUS_EFFECT.get(buf1.readVarInt()));
-        final var itemInputs = buf.readCollection(value -> new ArrayList<>(), Ingredient::fromPacket);
+        final var itemInputs = buf.readCollection(value -> new ArrayList<>(), buf1 -> new PotionMixingRecipe.InputData(Ingredient.fromPacket(buf1), false));
 
         return new PotionMixingRecipe(id, itemInputs, effectInputs, potion);
     }
@@ -54,6 +60,6 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
         buf.writeVarInt(Registry.POTION.getRawId(recipe.getPotionOutput()));
 
         buf.writeCollection(recipe.getEffectInputs(), (buf1, effect) -> buf1.writeVarInt(Registry.STATUS_EFFECT.getRawId(effect)));
-        buf.writeCollection(recipe.getItemInputs(), (buf1, ingredient) -> ingredient.write(buf1));
+        buf.writeCollection(recipe.getItemInputs(), (buf1, ingredient) -> ingredient.ingredient().write(buf1));
     }
 }
