@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "affinity:crafting/flowering_azalea"
+    ]
+  },
+  "criteria": {
+    "has_azalea_flowers": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "affinity:azalea_flowers"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "affinity:crafting/flowering_azalea"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_azalea_flowers",
+      "has_the_recipe"
+    ]
+  ]
+}
