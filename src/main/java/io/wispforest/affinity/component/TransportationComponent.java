@@ -1,6 +1,7 @@
 package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import io.wispforest.owo.util.VectorSerializer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
@@ -17,19 +18,13 @@ public class TransportationComponent implements Component {
     @Override
     public void readFromNbt(NbtCompound tag) {
         world = new Identifier(tag.getString("World"));
-        pos = new Vec3d(
-            tag.getDouble("X"),
-            tag.getDouble("Y"),
-            tag.getDouble("Z")
-        );
+        pos = VectorSerializer.get(tag, "Pos");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
         tag.putString("World", world.toString());
-        tag.putDouble("X", pos.getX());
-        tag.putDouble("Y", pos.getY());
-        tag.putDouble("Z", pos.getZ());
+        VectorSerializer.store(pos, tag, "Pos");
     }
 
     public Identifier getWorld() {

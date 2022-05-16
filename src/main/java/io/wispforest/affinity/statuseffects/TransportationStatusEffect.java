@@ -15,10 +15,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -71,13 +69,13 @@ public class TransportationStatusEffect extends AffinityStatusEffect {
         component.setPos(target.getPos());
         component.setWorld(target.getWorld().getRegistryKey().getValue());
 
-        var pos = NbtHelper.toBlockPos(extraData.getCompound("Pos"));
-        var targetWorldId = new Identifier(extraData.getString("World"));
+        var pos = EchoShardItem.POS.get(extraData);
+        var targetWorldId = EchoShardItem.WORLD.get(extraData);
         var targetWorld = target.getServer().getWorld(RegistryKey.of(Registry.WORLD_KEY, targetWorldId));
 
         ServerTaskScheduler.scheduleTask(server -> {
             createCloudFor(target);
-            var newEntity = EntityTeleporter.teleport(target, targetWorld, Vec3d.ofCenter(pos), target.getYaw(), target.getPitch());
+            var newEntity = EntityTeleporter.teleport(target, targetWorld, pos, target.getYaw(), target.getPitch());
             createCloudFor(newEntity);
             newEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 5 * 20));
         });
