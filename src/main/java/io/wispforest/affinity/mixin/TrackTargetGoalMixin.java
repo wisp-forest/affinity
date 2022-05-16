@@ -1,7 +1,7 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.enchantment.impl.GravecallerEnchantment;
-import io.wispforest.affinity.misc.AffinityEntityAddon;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.TrackTargetGoal;

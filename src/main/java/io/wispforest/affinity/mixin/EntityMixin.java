@@ -1,6 +1,6 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.misc.AffinityEntityAddon;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.EntityReferenceTracker;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;

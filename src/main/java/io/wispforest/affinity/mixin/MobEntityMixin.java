@@ -3,7 +3,7 @@ package io.wispforest.affinity.mixin;
 import io.wispforest.affinity.enchantment.impl.GravecallerEnchantment;
 import io.wispforest.affinity.entity.goal.AttackWithMasterGoal;
 import io.wispforest.affinity.entity.goal.TrackMasterAttackerGoal;
-import io.wispforest.affinity.misc.AffinityEntityAddon;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.MixinHooks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;

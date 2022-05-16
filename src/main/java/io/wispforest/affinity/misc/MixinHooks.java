@@ -3,6 +3,7 @@ package io.wispforest.affinity.misc;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.enchantment.impl.BerserkerEnchantment;
 import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
 import io.wispforest.affinity.statuseffects.ImpendingDoomStatusEffect;
 import net.minecraft.enchantment.EnchantmentHelper;

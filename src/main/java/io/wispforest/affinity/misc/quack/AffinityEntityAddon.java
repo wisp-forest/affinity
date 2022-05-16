@@ -1,4 +1,4 @@
-package io.wispforest.affinity.misc;
+package io.wispforest.affinity.misc.quack;
 
 import net.minecraft.entity.Entity;
 import org.jetbrains.annotations.Nullable;

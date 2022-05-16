@@ -2,7 +2,7 @@ package io.wispforest.affinity.enchantment.impl;
 
 import io.wispforest.affinity.enchantment.template.AbsoluteEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
-import io.wispforest.affinity.misc.AffinityEntityAddon;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;

@@ -1,7 +1,7 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
-import io.wispforest.affinity.misc.AffinityEntityAddon;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityParticleSystems;

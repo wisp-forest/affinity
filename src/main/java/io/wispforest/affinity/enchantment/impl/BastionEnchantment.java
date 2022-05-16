@@ -2,7 +2,7 @@ package io.wispforest.affinity.enchantment.impl;
 
 import io.wispforest.affinity.enchantment.template.AbsoluteEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
-import io.wispforest.affinity.misc.AffinityEntityAddon;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.enchantment.EnchantmentTarget;

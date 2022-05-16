@@ -2,7 +2,7 @@ package io.wispforest.affinity.enchantment.impl;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.enchantment.template.AffinityEnchantment;
-import io.wispforest.affinity.misc.AffinityEntityAddon;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
