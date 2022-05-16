@@ -6,6 +6,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.recipe.*;
@@ -15,16 +16,17 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Stream;
 
 public class PotionMixingRecipe implements Recipe<Inventory> {
 
-    private final List<Ingredient> itemInputs;
+    private final List<InputData> itemInputs;
     private final List<StatusEffect> effectInputs;
     private final Potion output;
 
     private final Identifier id;
 
-    public PotionMixingRecipe(Identifier id, List<Ingredient> itemInputs, List<StatusEffect> effectInputs, Potion output) {
+    public PotionMixingRecipe(Identifier id, List<InputData> itemInputs, List<StatusEffect> effectInputs, Potion output) {
         this.id = id;
 
         this.itemInputs = itemInputs;
@@ -49,7 +51,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
         for (var recipe : manager.listAllOfType(Type.INSTANCE)) {
 
-            final var effectInputs = inputMixture.effects().stream().map(StatusEffectInstance::getEffectType).toList();
+            final var effectInputs = Stream.concat(inputMixture.effects().stream(), inputMixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).toList();
             final var itemInputs = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
 
             if (effectInputs.size() != recipe.effectInputs.size() || itemInputs.size() != recipe.itemInputs.size()) continue;
@@ -58,7 +60,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
             for (var ingredient : recipe.itemInputs) {
                 for (var stack : itemInputs) {
-                    if (!ingredient.test(stack)) continue;
+                    if (!ingredient.ingredient.test(stack)) continue;
 
                     itemInputs.remove(stack);
                     confirmedItemInputs++;
@@ -99,7 +101,28 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
         return output;
     }
 
-    public List<Ingredient> getItemInputs() {
+    public PotionMixture craftPotion(List<ItemStack> inputStacks) {
+        NbtCompound extraNbt = null;
+
+        for (var ingredient : itemInputs) {
+            if (!ingredient.copyNbt) continue;
+
+            for (var stack : inputStacks) {
+                if (!ingredient.ingredient.test(stack)) continue;
+
+                if (extraNbt == null) extraNbt = new NbtCompound();
+
+                if (stack.hasNbt())
+                    extraNbt.copyFrom(stack.getNbt());
+
+                break;
+            }
+        }
+
+        return new PotionMixture(getPotionOutput(), extraNbt);
+    }
+
+    public List<InputData> getItemInputs() {
         return itemInputs;
     }
 
@@ -129,4 +152,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
         public static final Identifier ID = Affinity.id("potion_mixing");
     }
 
+    public record InputData(Ingredient ingredient, boolean copyNbt) {
+
+    }
 }

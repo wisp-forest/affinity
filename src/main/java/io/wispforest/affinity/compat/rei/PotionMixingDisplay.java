@@ -23,7 +23,7 @@ public class PotionMixingDisplay implements Display {
     public PotionMixingDisplay(PotionMixingRecipe recipe) {
 
         final var inputBuilder = new ImmutableList.Builder<EntryIngredient>();
-        recipe.getItemInputs().forEach(ingredient -> inputBuilder.add(EntryIngredients.ofIngredient(ingredient)));
+        recipe.getItemInputs().forEach(ingredient -> inputBuilder.add(EntryIngredients.ofIngredient(ingredient.ingredient())));
         inputs = inputBuilder.build();
 
         final var potionStack = new ItemStack(Items.POTION);

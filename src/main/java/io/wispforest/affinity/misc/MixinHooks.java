@@ -3,12 +3,15 @@ package io.wispforest.affinity.misc;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.enchantment.impl.BerserkerEnchantment;
 import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
+import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
 import io.wispforest.affinity.statuseffects.ImpendingDoomStatusEffect;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -46,6 +49,12 @@ public class MixinHooks {
 
     public static boolean isDoomPotion(ItemStack stack) {
         return PotionUtil.getPotion(stack) == Registry.POTION.get(IMPENDING_DOOM_ID);
+    }
+
+    public static void tryInvokePotionApplied(StatusEffectInstance effect, LivingEntity target, NbtCompound data) {
+        if (effect.getEffectType() instanceof AffinityStatusEffect ase) {
+            ase.onPotionApplied(target, data);
+        }
     }
 
 }
