@@ -32,8 +32,8 @@ public class AffinityTOPPlugin implements ITheOneProbePlugin {
                 final var suffix = TextOps.concat(Text.of(" / "), ElementProgress.format(member.fluxCapacity(), NumberFormat.COMPACT, Text.of("")));
                 probeInfo.progress(flux, member.fluxCapacity(),
                         probeInfo.defaultProgressStyle()
-                                .filledColor(0xffEB55BF)
-                                .alternateFilledColor(0xaeeb38bf)
+                                .filledColor(0xff6A67CE)
+                                .alternateFilledColor(0xae6A67CE)
                                 .numberFormat(NumberFormat.COMPACT)
                                 .suffix(suffix));
             }

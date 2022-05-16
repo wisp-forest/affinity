@@ -68,6 +68,11 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventor
     }
 
     @Override
+    public boolean isIgnoredInRecipeBook() {
+        return true;
+    }
+
+    @Override
     public Identifier getId() {
         return this.id;
     }

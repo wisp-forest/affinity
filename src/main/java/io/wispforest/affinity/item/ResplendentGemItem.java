@@ -14,7 +14,8 @@ import net.minecraft.util.registry.Registry;
 public class ResplendentGemItem extends EnchantedBookItem {
 
     public ResplendentGemItem() {
-        super(AffinityItems.settings(AffinityItemGroup.ENCHANTMENTS).rarity(Rarity.UNCOMMON).stackGenerator(ResplendentGemItem::generateStacks));
+        super(AffinityItems.settings(AffinityItemGroup.ENCHANTMENTS).rarity(Rarity.UNCOMMON)
+                .stackGenerator(ResplendentGemItem::generateStacks));
     }
 
     public static ItemStack make(AbsoluteEnchantment enchantment) {

@@ -61,6 +61,11 @@ public class RitualSocleComposerConversionRecipe implements Recipe<Inventory> {
         return AffinityRecipeTypes.RITUAL_SOCLE_COMPOSER_CONVERSION;
     }
 
+    @Override
+    public boolean isIgnoredInRecipeBook() {
+        return true;
+    }
+
     public static final class Serializer implements RecipeSerializer<RitualSocleComposerConversionRecipe> {
 
         public static final Serializer INSTANCE = new Serializer();
