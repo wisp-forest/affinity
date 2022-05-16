@@ -4,7 +4,7 @@ import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.TransportationComponent;
 import io.wispforest.affinity.item.EchoShardItem;
 import io.wispforest.affinity.misc.EntityTeleporter;
-import io.wispforest.affinity.misc.ServerTaskScheduler;
+import io.wispforest.affinity.misc.ServerScheduler;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -44,7 +44,7 @@ public class TransportationStatusEffect extends AffinityStatusEffect {
     public void onRemoved(final LivingEntity entity, AttributeContainer attributes, int amplifier) {
         if (entity.world.isClient) return;
 
-        ServerTaskScheduler.scheduleTask(server -> {
+        ServerScheduler.runInstantly(server -> {
             var e = entity;
 
             TransportationComponent component = AffinityComponents.TRANSPORTATION.get(e);
@@ -73,7 +73,7 @@ public class TransportationStatusEffect extends AffinityStatusEffect {
         var targetWorldId = EchoShardItem.WORLD.get(extraData);
         var targetWorld = target.getServer().getWorld(RegistryKey.of(Registry.WORLD_KEY, targetWorldId));
 
-        ServerTaskScheduler.scheduleTask(server -> {
+        ServerScheduler.runInstantly(server -> {
             createCloudFor(target);
             var newEntity = EntityTeleporter.teleport(target, targetWorld, pos, target.getYaw(), target.getPitch());
             createCloudFor(newEntity);

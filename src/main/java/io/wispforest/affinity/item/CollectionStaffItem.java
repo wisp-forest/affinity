@@ -1,10 +1,9 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.misc.EntityReferenceTracker;
-import io.wispforest.affinity.misc.ServerExecutionScheduler;
+import io.wispforest.affinity.misc.ServerScheduler;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
-import io.wispforest.owo.network.annotations.ElementType;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.entity.Entity;
@@ -45,7 +44,7 @@ public class CollectionStaffItem extends Item {
         WorldOps.playSound(serverWorld, triggerPos, SoundEvents.ENTITY_ENDER_DRAGON_FLAP, SoundCategory.PLAYERS, 1, 0);
 
         var ref = EntityReferenceTracker.tracked(getItems(user));
-        ServerExecutionScheduler.runFor(serverWorld, 25, () -> {
+        ServerScheduler.runFor(serverWorld, 25, () -> {
             if (!ref.present()) return false;
 
             AffinityNetwork.CHANNEL.serverHandle(serverWorld, triggerPos)
