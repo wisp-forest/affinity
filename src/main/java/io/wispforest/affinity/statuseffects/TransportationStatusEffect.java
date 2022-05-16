@@ -1,7 +1,6 @@
 package io.wispforest.affinity.statuseffects;
 
 import io.wispforest.affinity.component.AffinityComponents;
-import io.wispforest.affinity.component.TransportationComponent;
 import io.wispforest.affinity.item.EchoShardItem;
 import io.wispforest.affinity.misc.EntityTeleporter;
 import io.wispforest.affinity.misc.ServerScheduler;
@@ -16,13 +15,12 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.potion.PotionUtil;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import org.jetbrains.annotations.Nullable;
 
 public class TransportationStatusEffect extends AffinityStatusEffect {
+
     public TransportationStatusEffect(StatusEffectCategory category, int color) {
         super(category, color);
     }
@@ -36,25 +34,26 @@ public class TransportationStatusEffect extends AffinityStatusEffect {
         });
     }
 
-    public static void createCloudFor(LivingEntity entity) {
-        AffinityParticleSystems.TRANSPORTATION_CLOUD.spawn(entity.world, entity.getPos());
-    }
-
     @Override
-    public void onRemoved(final LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        if (entity.world.isClient) return;
+    public void onRemoved(final LivingEntity outerEntity, AttributeContainer attributes, int amplifier) {
+        if (outerEntity.world.isClient) return;
 
         ServerScheduler.runInstantly(server -> {
-            var e = entity;
+            var entity = outerEntity;
 
-            TransportationComponent component = AffinityComponents.TRANSPORTATION.get(e);
-            ServerWorld w = server.getWorld(RegistryKey.of(Registry.WORLD_KEY, component.getWorld()));
-            Vec3d pos = component.getPos();
-            createCloudFor(e);
-            e = EntityTeleporter.teleport(e, w, pos, e.getYaw(), e.getPitch());
-            createCloudFor(e);
-            e.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 5 * 20));
+            var component = AffinityComponents.TRANSPORTATION.get(entity);
+            var world = server.getWorld(RegistryKey.of(Registry.WORLD_KEY, component.dimension));
+
+            createCloudFor(entity);
+            entity = EntityTeleporter.teleport(entity, world, component.pos, entity.getYaw(), entity.getPitch());
+            createCloudFor(entity);
+
+            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 5 * 20));
         });
+    }
+
+    private static void createCloudFor(LivingEntity entity) {
+        AffinityParticleSystems.TRANSPORTATION_CLOUD.spawn(entity.world, entity.getPos());
     }
 
     @Override
@@ -66,8 +65,8 @@ public class TransportationStatusEffect extends AffinityStatusEffect {
             target.removeStatusEffectInternal(AffinityStatusEffects.TRANSPORTATION);
 
         var component = AffinityComponents.TRANSPORTATION.get(target);
-        component.setPos(target.getPos());
-        component.setWorld(target.getWorld().getRegistryKey().getValue());
+        component.pos = target.getPos();
+        component.dimension = target.getWorld().getRegistryKey().getValue();
 
         var pos = EchoShardItem.POS.get(extraData);
         var targetWorldId = EchoShardItem.WORLD.get(extraData);

@@ -21,8 +21,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class EchoShardItem extends Item {
-    public static final NbtKey<Vec3d> POS = new NbtKey<>("Pos", NbtKey.Type.of(NbtElement.LIST_TYPE, VectorSerializer::get, (tag, s, vec3d) -> VectorSerializer.store(vec3d, tag, s)));
-    public static final NbtKey<Identifier> WORLD = new NbtKey<>("World", NbtKey.Type.of(NbtElement.STRING_TYPE, (tag, s) -> new Identifier(tag.getString(s)), (tag, s, id) -> tag.putString(s, id.toString())));
+
+    public static final NbtKey.Type<Vec3d> VEC_3D_TYPE = NbtKey.Type.of(NbtElement.LIST_TYPE, VectorSerializer::get, (tag, s, vec3d) -> VectorSerializer.store(vec3d, tag, s));
+    public static final NbtKey.Type<Identifier> IDENTIFIER_TYPE = NbtKey.Type.of(NbtElement.STRING_TYPE, (tag, s) -> new Identifier(tag.getString(s)), (tag, s, id) -> tag.putString(s, id.toString()));
+
+    public static final NbtKey<Vec3d> POS = new NbtKey<>("Pos", VEC_3D_TYPE);
+    public static final NbtKey<Identifier> WORLD = new NbtKey<>("World", IDENTIFIER_TYPE);
 
     public EchoShardItem() {
         super(AffinityItems.settings(0));
