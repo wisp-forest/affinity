@@ -1,6 +1,7 @@
 package io.wispforest.affinity.misc.recipe;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.misc.Ingrediente;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -21,13 +22,13 @@ import java.util.stream.Stream;
 
 public class PotionMixingRecipe implements Recipe<Inventory> {
 
-    private final List<InputData> itemInputs;
+    private final List<Ingrediente<Boolean>> itemInputs;
     private final List<StatusEffect> effectInputs;
     private final Potion output;
 
     private final Identifier id;
 
-    public PotionMixingRecipe(Identifier id, List<InputData> itemInputs, List<StatusEffect> effectInputs, Potion output) {
+    public PotionMixingRecipe(Identifier id, List<Ingrediente<Boolean>> itemInputs, List<StatusEffect> effectInputs, Potion output) {
         this.id = id;
 
         this.itemInputs = itemInputs;
@@ -60,8 +61,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
             for (var input : recipe.itemInputs) {
                 for (var stack : itemInputs) {
-                    if (!input.ingredient.test(stack)) continue;
-                    if (input.requiredNbtElement != null && (stack.getNbt() == null || !stack.getNbt().contains(input.requiredNbtElement))) continue;
+                    if (!input.test(stack)) continue;
 
                     itemInputs.remove(stack);
                     confirmedItemInputs++;
@@ -106,10 +106,10 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
         NbtCompound extraNbt = null;
 
         for (var ingredient : itemInputs) {
-            if (!ingredient.copyNbt) continue;
+            if (!ingredient.extraData) continue;
 
             for (var stack : inputStacks) {
-                if (!ingredient.ingredient.test(stack)) continue;
+                if (!ingredient.test(stack)) continue;
 
                 if (extraNbt == null) extraNbt = new NbtCompound();
 
@@ -123,7 +123,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
         return new PotionMixture(getPotionOutput(), extraNbt);
     }
 
-    public List<InputData> getItemInputs() {
+    public List<Ingrediente<Boolean>> getItemInputs() {
         return itemInputs;
     }
 
@@ -152,6 +152,4 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
         public static final Type INSTANCE = new Type();
         public static final Identifier ID = Affinity.id("potion_mixing");
     }
-
-    public record InputData(Ingredient ingredient, boolean copyNbt, @Nullable String requiredNbtElement) {}
 }

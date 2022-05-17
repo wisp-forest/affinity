@@ -2,9 +2,9 @@ package io.wispforest.affinity.misc.recipe;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import io.wispforest.affinity.misc.Ingrediente;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
@@ -15,6 +15,12 @@ import java.util.ArrayList;
 public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixingRecipe> {
 
     public static final PotionMixingRecipeSerializer INSTANCE = new PotionMixingRecipeSerializer();
+
+    private static final Ingrediente.Serializer<Boolean> INGREDIENTE_SERIALIZER = Ingrediente.makeSerializer(
+            PacketByteBuf::writeBoolean,
+            PacketByteBuf::readBoolean,
+            object -> JsonHelper.getBoolean(object, "copy_nbt", false)
+    );
 
     private PotionMixingRecipeSerializer() {}
 
@@ -31,18 +37,9 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
             inputEffects.add(Registry.STATUS_EFFECT.getOrEmpty(Identifier.tryParse(element.getAsString())).orElseThrow(() -> new JsonSyntaxException("Invalid status effect: " + element.getAsString())));
         }
 
-        final var itemInputs = new ArrayList<PotionMixingRecipe.InputData>();
+        final var itemInputs = new ArrayList<Ingrediente<Boolean>>();
         for (var element : itemInputsJson) {
-            var ingredient = Ingredient.fromJson(element);
-
-            boolean copyNbt = false;
-            String requiredNbtElement = null;
-            if (element.isJsonObject()){
-                copyNbt = JsonHelper.getBoolean(element.getAsJsonObject(), "copy_nbt", false);
-                requiredNbtElement = JsonHelper.getString(element.getAsJsonObject(), "required_nbt_element", null);
-            }
-
-            itemInputs.add(new PotionMixingRecipe.InputData(ingredient, copyNbt, requiredNbtElement));
+            itemInputs.add(INGREDIENTE_SERIALIZER.fromJson(element));
         }
 
         return new PotionMixingRecipe(id, itemInputs, inputEffects, outputPotion);
@@ -53,7 +50,7 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
         final var potion = Registry.POTION.get(buf.readVarInt());
 
         final var effectInputs = buf.readCollection(value -> new ArrayList<>(), buf1 -> Registry.STATUS_EFFECT.get(buf1.readVarInt()));
-        final var itemInputs = buf.readCollection(value -> new ArrayList<>(), buf1 -> new PotionMixingRecipe.InputData(Ingredient.fromPacket(buf1), false, null));
+        final var itemInputs = buf.readCollection(value -> new ArrayList<>(), INGREDIENTE_SERIALIZER::fromPacket);
 
         return new PotionMixingRecipe(id, itemInputs, effectInputs, potion);
     }
@@ -63,6 +60,6 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
         buf.writeVarInt(Registry.POTION.getRawId(recipe.getPotionOutput()));
 
         buf.writeCollection(recipe.getEffectInputs(), (buf1, effect) -> buf1.writeVarInt(Registry.STATUS_EFFECT.getRawId(effect)));
-        buf.writeCollection(recipe.getItemInputs(), (buf1, ingredient) -> ingredient.ingredient().write(buf1));
+        buf.writeCollection(recipe.getItemInputs(), INGREDIENTE_SERIALIZER::writeToPacket);
     }
 }

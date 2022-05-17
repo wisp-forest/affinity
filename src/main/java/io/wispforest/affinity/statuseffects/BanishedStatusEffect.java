@@ -15,6 +15,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
             var world = server.getWorld(RegistryKey.of(Registry.WORLD_KEY, component.dimension));
 
             spawnCloud(entity);
-            entity = EntityTeleporter.teleport(entity, world, component.pos, entity.getYaw(), entity.getPitch());
+            entity = EntityTeleporter.teleport(entity, world, Vec3d.ofCenter(component.pos).add(0, .25, 0), entity.getYaw(), entity.getPitch());
             spawnCloud(entity);
 
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 5 * 20));
@@ -65,7 +66,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
             target.removeStatusEffectInternal(AffinityStatusEffects.BANISHED);
 
         var component = AffinityComponents.BANISHMENT.get(target);
-        component.pos = target.getPos();
+        component.pos = target.getBlockPos();
         component.dimension = target.getWorld().getRegistryKey().getValue();
 
         var pos = EchoShardItem.POS.get(extraData);
@@ -74,7 +75,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
 
         ServerScheduler.runInstantly(server -> {
             spawnCloud(target);
-            var newEntity = EntityTeleporter.teleport(target, targetWorld, pos, target.getYaw(), target.getPitch());
+            var newEntity = EntityTeleporter.teleport(target, targetWorld, Vec3d.ofCenter(pos), target.getYaw(), target.getPitch());
             spawnCloud(newEntity);
             newEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 5 * 20));
         });

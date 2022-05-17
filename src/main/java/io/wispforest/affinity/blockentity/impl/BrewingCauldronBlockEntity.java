@@ -133,7 +133,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
         for (var ingredient : cachedRecipe.getItemInputs()) {
             for (int i = 0; i < items.size(); i++) {
-                if (!ingredient.ingredient().test(items.get(i))) continue;
+                if (!ingredient.test(items.get(i))) continue;
                 items.set(i, ItemStack.EMPTY);
                 break;
             }

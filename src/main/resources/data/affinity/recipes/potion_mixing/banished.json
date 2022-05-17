@@ -11,7 +11,9 @@
     {
       "item": "affinity:echo_shard",
       "copy_nbt": true,
-      "required_nbt_element": "World"
+      "data": {
+        "Bound": true
+      }
     }
   ]
 }
