@@ -18,5 +18,4 @@ public class AffinityBlockFamilies {
             .group("wooden")
             .unlockCriterionName("has_planks")
             .build();
-
 }

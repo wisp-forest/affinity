@@ -2,6 +2,7 @@ package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.MixinHooks;
+import io.wispforest.affinity.misc.potion.PotionMixture;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PotionItem;
@@ -25,7 +26,8 @@ public class PotionItemMixin {
 
     @Inject(method = "finishUsing", at = @At("HEAD"))
     private void doPotionApplication(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
-        PotionUtil.getPotionEffects(stack).forEach(x -> MixinHooks.tryInvokePotionApplied(x, user, stack.getSubNbt("ExtraPotionNbt")));
+        if (!PotionMixture.EXTRA_DATA.maybeIsIn(stack.getNbt())) return;
+        PotionUtil.getPotionEffects(stack).forEach(effect -> MixinHooks.tryInvokePotionApplied(effect, user, PotionMixture.EXTRA_DATA.get(stack.getNbt())));
     }
 
 }

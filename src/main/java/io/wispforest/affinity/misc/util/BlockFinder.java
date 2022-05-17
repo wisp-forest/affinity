@@ -32,9 +32,15 @@ public class BlockFinder {
             foundBlocks.put(next, nextState);
             if (maxCount > -1 && foundBlocks.size() >= maxCount) break;
 
-            for (var neighbor : BlockPos.iterate(next.getX() - 1, next.getY() - 1, next.getZ() - 1,
-                    next.getX() + 1, next.getY() + 1, next.getZ() + 1)) {
+            final var neighbors = BlockPos.iterate(
+                    next.getX() - 1,
+                    next.getY() - 1,
+                    next.getZ() - 1,
+                    next.getX() + 1,
+                    next.getY() + 1,
+                    next.getZ() + 1);
 
+            for (var neighbor : neighbors) {
                 if (searchQueue.contains(neighbor) || foundBlocks.containsKey(neighbor)) continue;
 
                 if (shouldExplore.test(neighbor, world.getBlockState(neighbor))) {

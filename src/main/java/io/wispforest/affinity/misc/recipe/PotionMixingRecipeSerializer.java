@@ -36,10 +36,13 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
             var ingredient = Ingredient.fromJson(element);
 
             boolean copyNbt = false;
-            if (element.isJsonObject())
-                 copyNbt = JsonHelper.getBoolean(element.getAsJsonObject(), "copy_nbt", false);
+            String requiredNbtElement = null;
+            if (element.isJsonObject()){
+                copyNbt = JsonHelper.getBoolean(element.getAsJsonObject(), "copy_nbt", false);
+                requiredNbtElement = JsonHelper.getString(element.getAsJsonObject(), "required_nbt_element", null);
+            }
 
-            itemInputs.add(new PotionMixingRecipe.InputData(ingredient, copyNbt));
+            itemInputs.add(new PotionMixingRecipe.InputData(ingredient, copyNbt, requiredNbtElement));
         }
 
         return new PotionMixingRecipe(id, itemInputs, inputEffects, outputPotion);
@@ -50,7 +53,7 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
         final var potion = Registry.POTION.get(buf.readVarInt());
 
         final var effectInputs = buf.readCollection(value -> new ArrayList<>(), buf1 -> Registry.STATUS_EFFECT.get(buf1.readVarInt()));
-        final var itemInputs = buf.readCollection(value -> new ArrayList<>(), buf1 -> new PotionMixingRecipe.InputData(Ingredient.fromPacket(buf1), false));
+        final var itemInputs = buf.readCollection(value -> new ArrayList<>(), buf1 -> new PotionMixingRecipe.InputData(Ingredient.fromPacket(buf1), false, null));
 
         return new PotionMixingRecipe(id, itemInputs, effectInputs, potion);
     }

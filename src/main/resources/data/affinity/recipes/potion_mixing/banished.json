@@ -1,6 +1,6 @@
 {
   "type": "affinity:potion_mixing",
-  "output": "affinity:transportation",
+  "output": "affinity:banished",
   "effect_inputs": [
     "minecraft:speed"
   ],
@@ -10,7 +10,8 @@
     },
     {
       "item": "affinity:echo_shard",
-      "copy_nbt": true
+      "copy_nbt": true,
+      "required_nbt_element": "World"
     }
   ]
 }

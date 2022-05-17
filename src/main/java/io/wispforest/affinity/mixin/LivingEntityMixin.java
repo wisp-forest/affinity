@@ -1,12 +1,12 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.enchantment.impl.BastionEnchantment;
 import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
-import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
-import io.wispforest.affinity.component.AffinityComponents;
-import io.wispforest.affinity.component.EntityFlagComponent;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.enchantment.EnchantmentHelper;

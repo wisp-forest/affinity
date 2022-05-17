@@ -7,8 +7,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
-public class TransportationComponent implements Component {
+public class BanishmentComponent implements Component {
 
     public static final NbtKey<Identifier> DIMENSION = new NbtKey<>("Dimension", EchoShardItem.IDENTIFIER_TYPE);
     public static final NbtKey<Vec3d> POSITION = new NbtKey<>("Pos", EchoShardItem.VEC_3D_TYPE);
@@ -17,13 +18,13 @@ public class TransportationComponent implements Component {
     public Vec3d pos = Vec3d.ZERO;
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(@NotNull NbtCompound tag) {
         dimension = DIMENSION.get(tag);
         pos = POSITION.get(tag);
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(@NotNull NbtCompound tag) {
         DIMENSION.put(tag, this.dimension);
         POSITION.put(tag, this.pos);
     }

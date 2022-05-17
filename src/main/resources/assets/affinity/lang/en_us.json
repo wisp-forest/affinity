@@ -72,7 +72,7 @@
   "text.affinity.attuned_shard_range.value": "%d blocks",
   "text.affinity.attuned_shard_max_transfer": "Rate: ",
   "text.affinity.attuned_shard_max_transfer.value": "%d af/t",
-  "text.affinity.echo_shard_location": "Linked to %s @ %s, %s, %s",
+  "text.affinity.echo_shard_location": "Bound to %s in %s",
   "item.affinity.mildly_attuned_amethyst_shard": "Mildly Attuned Amethyst Shard",
   "item.affinity.fairly_attuned_amethyst_shard": "Fairly Attuned Amethyst Shard",
   "item.affinity.greatly_attuned_amethyst_shard": "Greatly Attuned Amethyst Shard",
@@ -151,11 +151,11 @@
   "death.attack.doom_potion": "%1$s got ripped and torn",
   "death.attack.threw_doom_potion": "%1$s discovered a very powerful mechanic that sadly had to be disabled",
 
-  "effect.affinity.transportation": "Transportation",
-  "item.minecraft.potion.effect.transportation": "Potion of Transportation",
-  "item.minecraft.splash_potion.effect.transportation": "Splash Potion of Transportation",
-  "item.minecraft.lingering_potion.effect.transportation": "Lingering Potion of Transportation",
-  "item.minecraft.tipped_arrow.effect.transportation": "Arrow of Transportation",
+  "effect.affinity.banished": "Banished",
+  "item.minecraft.potion.effect.banished": "Potion of Banishment",
+  "item.minecraft.splash_potion.effect.banished": "Splash Potion of Banishment",
+  "item.minecraft.lingering_potion.effect.banished": "Lingering Potion of Banishment",
+  "item.minecraft.tipped_arrow.effect.banished": "Arrow of Banishment",
 
   "item.minecraft.potion.effect.dubious": "Dubious Potion",
   "item.minecraft.splash_potion.effect.dubious": "Twhicc Splashy Potion",
@@ -181,7 +181,7 @@
   "item.minecraft.lingering_potion.effect.hunger": "Lingering Potion of Enervation",
   "item.minecraft.tipped_arrow.effect.hunger": "Arrow of Enervation",
 
-  "dimension.minecraft.overworld": "Overworld",
+  "dimension.minecraft.overworld": "The Overworld",
   "dimension.minecraft.the_nether": "The Nether",
   "dimension.minecraft.the_end": "The End"
 }

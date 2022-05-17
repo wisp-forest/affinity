@@ -59,7 +59,7 @@
       "affinity:player_aethum",
       "affinity:chunk_aethum",
       "affinity:entity_flags",
-      "affinity:transportation"
+      "affinity:banishment"
     ]
   }
 }

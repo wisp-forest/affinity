@@ -52,7 +52,7 @@ public class AffinityParticleSystems {
         ClientParticles.spawnPrecise(ParticleTypes.FALLING_NECTAR, world, pos, 1, 1.5, 1);
     });
 
-    public static final ParticleSystem<Void> TRANSPORTATION_CLOUD = CONTROLLER.register(Void.class, (world, pos, data) -> {
+    public static final ParticleSystem<Void> BANISHMENT_CLOUD = CONTROLLER.register(Void.class, (world, pos, data) -> {
         ClientParticles.setParticleCount(20);
         ClientParticles.spawn(ParticleTypes.EFFECT, world, pos, 0.5);
     });

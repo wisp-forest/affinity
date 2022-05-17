@@ -57,5 +57,4 @@ public class MixinHooks {
             ase.onPotionApplied(target, data);
         }
     }
-
 }

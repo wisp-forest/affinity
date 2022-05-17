@@ -12,6 +12,7 @@ import net.minecraft.potion.Potions;
 import net.minecraft.recipe.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +47,6 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
     }
 
     public static Optional<PotionMixingRecipe> getMatching(RecipeManager manager, PotionMixture inputMixture, List<ItemStack> inputStacks) {
-
         if (inputMixture.isEmpty()) return Optional.empty();
 
         for (var recipe : manager.listAllOfType(Type.INSTANCE)) {
@@ -58,9 +58,10 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
             int confirmedItemInputs = 0;
 
-            for (var ingredient : recipe.itemInputs) {
+            for (var input : recipe.itemInputs) {
                 for (var stack : itemInputs) {
-                    if (!ingredient.ingredient.test(stack)) continue;
+                    if (!input.ingredient.test(stack)) continue;
+                    if (input.requiredNbtElement != null && (stack.getNbt() == null || !stack.getNbt().contains(input.requiredNbtElement))) continue;
 
                     itemInputs.remove(stack);
                     confirmedItemInputs++;
@@ -152,7 +153,5 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
         public static final Identifier ID = Affinity.id("potion_mixing");
     }
 
-    public record InputData(Ingredient ingredient, boolean copyNbt) {
-
-    }
+    public record InputData(Ingredient ingredient, boolean copyNbt, @Nullable String requiredNbtElement) {}
 }

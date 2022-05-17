@@ -1,8 +1,8 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.enchantment.impl.GravecallerEnchantment;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
+import io.wispforest.affinity.enchantment.impl.GravecallerEnchantment;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -30,7 +30,7 @@ public class MobSpawnerLogicMixin {
     private void onEntitySpawn(ServerWorld world, BlockPos pos, CallbackInfo ci, boolean bl, int i, NbtCompound nbtCompound, Optional<EntityType<?>> optional, NbtList nbtList, int j, double d, double e, double f, Entity entity) {
         if (!((Object) this instanceof GravecallerEnchantment.SpawnerLogic)) return;
 
-        ((MobEntity)entity).addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.IMPENDING_DOOM, 3000));
+        ((MobEntity) entity).addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.IMPENDING_DOOM, 3000));
         entity.getItemsEquipped().forEach(stack -> stack.setCount(0));
 
         if (entity instanceof ZombieEntity zombie) {

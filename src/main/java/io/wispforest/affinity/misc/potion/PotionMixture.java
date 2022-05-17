@@ -1,6 +1,7 @@
 package io.wispforest.affinity.misc.potion;
 
 import com.google.common.collect.ImmutableList;
+import io.wispforest.owo.util.NbtKey;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -22,6 +23,8 @@ import java.util.Objects;
  * or simply a list of {@link net.minecraft.entity.effect.StatusEffectInstance}s
  */
 public class PotionMixture {
+
+    public static final NbtKey<NbtCompound> EXTRA_DATA = new NbtKey<>("ExtraPotionData", NbtKey.Type.COMPOUND);
 
     public static final PotionMixture EMPTY = new PotionMixture(Potions.EMPTY, ImmutableList.of(), true, null);
     public static final Potion DUBIOUS_POTION = new Potion("dubious");
@@ -72,7 +75,7 @@ public class PotionMixture {
         final var potion = PotionUtil.getPotion(stack);
         final var effects = PotionUtil.getCustomPotionEffects(stack);
 
-        return new PotionMixture(potion, effects, true, stack.hasNbt() && stack.getNbt().contains("ExtraPotionNbt", NbtElement.COMPOUND_TYPE) ? stack.getNbt().getCompound("ExtraPotionNbt") : null);
+        return new PotionMixture(potion, effects, true, EXTRA_DATA.maybeIsIn(stack.getNbt()) ? EXTRA_DATA.get(stack.getNbt()) : null);
     }
 
     public static PotionMixture fromNbt(NbtCompound nbt) {
@@ -94,8 +97,8 @@ public class PotionMixture {
 
         NbtCompound extraNbt = null;
 
-        if (nbt.contains("ExtraNbt", NbtElement.COMPOUND_TYPE)) {
-            extraNbt = nbt.getCompound("ExtraNbt");
+        if (EXTRA_DATA.isIn(nbt)) {
+            extraNbt = EXTRA_DATA.get(nbt);
         }
 
         return new PotionMixture(potion, effects, nbt.getBoolean("Pure"), extraNbt);
@@ -122,6 +125,10 @@ public class PotionMixture {
 
         nbt.putBoolean("Pure", pure);
 
+        if (extraNbt != null) {
+            EXTRA_DATA.put(nbt, extraNbt);
+        }
+
         return nbt;
     }
 
@@ -136,7 +143,7 @@ public class PotionMixture {
         }
 
         if (extraNbt != null) {
-            stack.getOrCreateNbt().put("ExtraPotionNbt", extraNbt);
+            EXTRA_DATA.put(stack.getOrCreateNbt(), extraNbt);
         }
 
         return stack;
@@ -167,11 +174,15 @@ public class PotionMixture {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PotionMixture that = (PotionMixture) o;
-        return basePotion.equals(that.basePotion) && effects.equals(that.effects);
+
+        return pure == that.pure && color == that.color
+                && Objects.equals(basePotion, that.basePotion)
+                && Objects.equals(effects, that.effects)
+                && Objects.equals(extraNbt, that.extraNbt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(basePotion, effects);
+        return Objects.hash(basePotion, effects, pure, color, extraNbt);
     }
 }

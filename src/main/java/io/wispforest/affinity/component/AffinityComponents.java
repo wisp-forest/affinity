@@ -21,8 +21,8 @@ public class AffinityComponents implements EntityComponentInitializer, ChunkComp
             ComponentRegistry.getOrCreate(Affinity.id("chunk_aethum"), ChunkAethumComponent.class);
     public static final ComponentKey<EntityFlagComponent> ENTITY_FLAGS =
             ComponentRegistry.getOrCreate(Affinity.id("entity_flags"), EntityFlagComponent.class);
-    public static final ComponentKey<TransportationComponent> TRANSPORTATION =
-            ComponentRegistry.getOrCreate(Affinity.id("transportation"), TransportationComponent.class);
+    public static final ComponentKey<BanishmentComponent> BANISHMENT =
+            ComponentRegistry.getOrCreate(Affinity.id("banishment"), BanishmentComponent.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
@@ -30,7 +30,7 @@ public class AffinityComponents implements EntityComponentInitializer, ChunkComp
         registry.registerForPlayers(PLAYER_AETHUM, PlayerAethumComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
 
         registry.registerFor(Entity.class, ENTITY_FLAGS, entity -> new EntityFlagComponent());
-        registry.registerFor(LivingEntity.class, TRANSPORTATION, player -> new TransportationComponent());
+        registry.registerFor(LivingEntity.class, BANISHMENT, player -> new BanishmentComponent());
     }
 
     @Override

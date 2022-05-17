@@ -17,7 +17,11 @@ import java.util.List;
 
 @Mixin(AreaEffectCloudEntity.class)
 public class AreaEffectCloudEntityMixin implements ExtendedAreaEffectCloudEntity {
-    @Shadow @Final private List<StatusEffectInstance> effects;
+
+    @Shadow
+    @Final
+    private List<StatusEffectInstance> effects;
+
     @Shadow private Potion potion;
     private NbtCompound affinity$extraPotionNbt;
 

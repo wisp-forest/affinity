@@ -12,15 +12,11 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.HashMap;
 import java.util.function.BiFunction;
 
 public class AffinityStatusEffects {
-
-    private static final HashMap<Identifier, Potion> POTIONS = new HashMap<>();
 
     public static final StatusEffect LIFE_LEECH = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0xFF0000);
     public static final StatusEffect FLIGHT = new FlightStatusEffect(StatusEffectCategory.BENEFICIAL, 0x6666FF);
@@ -28,7 +24,7 @@ public class AffinityStatusEffects {
     public static final StatusEffect DRIPPING = new DrippingStatusEffect(StatusEffectCategory.NEUTRAL, 0xa4568d);
     public static final StatusEffect IMPENDING_DOOM = new ImpendingDoomStatusEffect(StatusEffectCategory.HARMFUL, 0x000000);
     public static final StatusEffect BASTION_REGENERATION = new BastionRegeneration(StatusEffectCategory.BENEFICIAL, 0xfd5c5b);
-    public static final StatusEffect TRANSPORTATION = new TransportationStatusEffect(StatusEffectCategory.BENEFICIAL, 0xc9b6b3);
+    public static final StatusEffect BANISHED = new BanishedStatusEffect(StatusEffectCategory.BENEFICIAL, 0xc9b6b3);
 
     public static final StatusEffect STEADFAST = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x222222)
             .addAttributeModifier(
@@ -42,7 +38,7 @@ public class AffinityStatusEffects {
         registerEffectAndPotions(STEADFAST, "steadfast", 4800, true, true);
         registerEffectAndPotions(FREEZING, "freezing", 600, true, true);
         registerEffectAndPotions(IMPENDING_DOOM, "impending_doom", 1200, false, false);
-        registerEffectAndPotions(TRANSPORTATION, "transportation", 6000, true, false);
+        registerEffectAndPotions(BANISHED, "banished", 6000, true, false);
 
         registerEffectAndPotions(FLIGHT, "flight", 2400, true, false);
 

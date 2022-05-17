@@ -1,6 +1,7 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.misc.MixinHooks;
+import io.wispforest.affinity.misc.potion.PotionMixture;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
@@ -15,13 +16,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ArrowEntity.class)
 public class ArrowEntityMixin {
+
     @Shadow private Potion potion;
+
     private NbtCompound affinity$extraPotionNbt;
 
     @Inject(method = "initFromStack", at = @At("RETURN"))
     private void addExtraData(ItemStack stack, CallbackInfo ci) {
-        if (stack.hasNbt() && stack.getNbt().contains("ExtraPotionNbt", NbtElement.COMPOUND_TYPE)) {
-            affinity$extraPotionNbt = stack.getSubNbt("ExtraPotionNbt");
+        if (PotionMixture.EXTRA_DATA.maybeIsIn(stack.getNbt())) {
+            affinity$extraPotionNbt = PotionMixture.EXTRA_DATA.get(stack.getNbt());
         }
     }
 
