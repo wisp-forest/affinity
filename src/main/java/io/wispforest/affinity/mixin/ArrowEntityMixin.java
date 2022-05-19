@@ -23,9 +23,7 @@ public class ArrowEntityMixin {
 
     @Inject(method = "initFromStack", at = @At("RETURN"))
     private void addExtraData(ItemStack stack, CallbackInfo ci) {
-        if (PotionMixture.EXTRA_DATA.maybeIsIn(stack.getNbt())) {
-            affinity$extraPotionNbt = PotionMixture.EXTRA_DATA.get(stack.getNbt());
-        }
+        affinity$extraPotionNbt = stack.getOr(PotionMixture.EXTRA_DATA, null);
     }
 
     @Inject(method = "onHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/potion/Potion;getEffects()Ljava/util/List;"))

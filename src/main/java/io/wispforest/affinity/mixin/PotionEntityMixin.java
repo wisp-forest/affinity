@@ -26,8 +26,9 @@ public abstract class PotionEntityMixin extends ThrownItemEntity {
         if (!(otherEntity instanceof LivingEntity target)) return otherEntity;
 
         var stack = this.getStack();
-        if (PotionMixture.EXTRA_DATA.maybeIsIn(stack.getNbt())) {
-            PotionUtil.getPotionEffects(stack).forEach(x -> MixinHooks.tryInvokePotionApplied(x, target, PotionMixture.EXTRA_DATA.get(stack.getNbt())));
+        if (stack.has(PotionMixture.EXTRA_DATA)) {
+            final var extraData = stack.get(PotionMixture.EXTRA_DATA);
+            PotionUtil.getPotionEffects(stack).forEach(x -> MixinHooks.tryInvokePotionApplied(x, target, extraData));
         }
 
         return otherEntity;
@@ -37,8 +38,8 @@ public abstract class PotionEntityMixin extends ThrownItemEntity {
     private Entity addExtraData(Entity entity) {
         var stack = this.getStack();
 
-        if (PotionMixture.EXTRA_DATA.maybeIsIn(stack.getNbt())) {
-            ((ExtendedAreaEffectCloudEntity) entity).affinity$setExtraPotionNbt(PotionMixture.EXTRA_DATA.get(stack.getNbt()));
+        if (stack.has(PotionMixture.EXTRA_DATA)) {
+            ((ExtendedAreaEffectCloudEntity) entity).affinity$setExtraPotionNbt(stack.get(PotionMixture.EXTRA_DATA));
         }
 
         return entity;

@@ -1,7 +1,7 @@
 package io.wispforest.affinity.misc.potion;
 
 import com.google.common.collect.ImmutableList;
-import io.wispforest.owo.util.NbtKey;
+import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -75,7 +75,7 @@ public class PotionMixture {
         final var potion = PotionUtil.getPotion(stack);
         final var effects = PotionUtil.getCustomPotionEffects(stack);
 
-        return new PotionMixture(potion, effects, true, EXTRA_DATA.maybeIsIn(stack.getNbt()) ? EXTRA_DATA.get(stack.getNbt()) : null);
+        return new PotionMixture(potion, effects, true, stack.getOr(EXTRA_DATA, null));
     }
 
     public static PotionMixture fromNbt(NbtCompound nbt) {
@@ -95,13 +95,7 @@ public class PotionMixture {
             }
         }
 
-        NbtCompound extraNbt = null;
-
-        if (EXTRA_DATA.isIn(nbt)) {
-            extraNbt = EXTRA_DATA.get(nbt);
-        }
-
-        return new PotionMixture(potion, effects, nbt.getBoolean("Pure"), extraNbt);
+        return new PotionMixture(potion, effects, nbt.getBoolean("Pure"), nbt.getOr(EXTRA_DATA, null));
     }
 
     public NbtCompound toNbt() {
@@ -125,9 +119,7 @@ public class PotionMixture {
 
         nbt.putBoolean("Pure", pure);
 
-        if (extraNbt != null) {
-            EXTRA_DATA.put(nbt, extraNbt);
-        }
+        nbt.putIfNotNull(EXTRA_DATA, extraNbt);
 
         return nbt;
     }
@@ -142,9 +134,7 @@ public class PotionMixture {
             PotionUtil.setPotion(stack, DUBIOUS_POTION);
         }
 
-        if (extraNbt != null) {
-            EXTRA_DATA.put(stack.getOrCreateNbt(), extraNbt);
-        }
+        stack.putIfNotNull(EXTRA_DATA, extraNbt);
 
         return stack;
     }

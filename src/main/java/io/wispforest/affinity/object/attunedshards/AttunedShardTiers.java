@@ -5,10 +5,10 @@ import io.wispforest.affinity.item.AttunedShardItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.screen.PlayerScreenHandler;
 import org.jetbrains.annotations.NotNull;
 
 public enum AttunedShardTiers implements AttunedShardTier {
@@ -34,7 +34,7 @@ public enum AttunedShardTiers implements AttunedShardTier {
         this.translationKey = "shard_tier.affinity." + name;
 
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            this.sprite = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE,
+            this.sprite = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
                     Affinity.id("block/" + name + "_aethum_flux_node_shard"));
         }
     }

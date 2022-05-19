@@ -14,10 +14,7 @@ public class TippedArrowRecipeMixin {
 
     @Inject(method = "craft(Lnet/minecraft/inventory/CraftingInventory;)Lnet/minecraft/item/ItemStack;", at = @At(value = "RETURN", ordinal = 1))
     private void addExtraData(CraftingInventory craftingInventory, CallbackInfoReturnable<ItemStack> cir) {
-        ItemStack arrowStack = craftingInventory.getStack(1 + craftingInventory.getWidth());
-
-        if (PotionMixture.EXTRA_DATA.maybeIsIn(arrowStack.getNbt())) {
-            PotionMixture.EXTRA_DATA.put(cir.getReturnValue().getOrCreateNbt(), PotionMixture.EXTRA_DATA.get(arrowStack.getNbt()));
-        }
+        craftingInventory.getStack(1 + craftingInventory.getWidth())
+                .copyIfPresent(PotionMixture.EXTRA_DATA, cir.getReturnValue());
     }
 }

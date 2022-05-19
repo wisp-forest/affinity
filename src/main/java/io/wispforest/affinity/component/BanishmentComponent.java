@@ -2,7 +2,7 @@ package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import io.wispforest.affinity.item.EchoShardItem;
-import io.wispforest.owo.util.NbtKey;
+import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -19,13 +19,13 @@ public class BanishmentComponent implements Component {
 
     @Override
     public void readFromNbt(@NotNull NbtCompound tag) {
-        dimension = DIMENSION.get(tag);
-        pos = POSITION.get(tag);
+        this.dimension = tag.get(DIMENSION);
+        this.pos = tag.get(POSITION);
     }
 
     @Override
     public void writeToNbt(@NotNull NbtCompound tag) {
-        DIMENSION.put(tag, this.dimension);
-        POSITION.put(tag, this.pos);
+        tag.put(DIMENSION, this.dimension);
+        tag.put(POSITION, this.pos);
     }
 }

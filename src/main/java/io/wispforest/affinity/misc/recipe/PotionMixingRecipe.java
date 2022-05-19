@@ -10,10 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
-import net.minecraft.recipe.*;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeManager;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -103,24 +105,23 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
     }
 
     public PotionMixture craftPotion(List<ItemStack> inputStacks) {
-        NbtCompound extraNbt = null;
+        var extraNbt = new NbtCompound();
 
         for (var ingredient : itemInputs) {
-            if (!ingredient.extraData) continue;
+            if (!ingredient.extraData()) continue;
 
             for (var stack : inputStacks) {
                 if (!ingredient.test(stack)) continue;
 
-                if (extraNbt == null) extraNbt = new NbtCompound();
-
-                if (stack.hasNbt())
+                if (stack.hasNbt()) {
                     extraNbt.copyFrom(stack.getNbt());
+                }
 
                 break;
             }
         }
 
-        return new PotionMixture(getPotionOutput(), extraNbt);
+        return new PotionMixture(getPotionOutput(), extraNbt.isEmpty() ? null : extraNbt);
     }
 
     public List<Ingrediente<Boolean>> getItemInputs() {

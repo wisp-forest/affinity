@@ -28,10 +28,10 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
 
     static {
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-            if (!PotionUtil.getPotionEffects(stack).stream().anyMatch(x -> x.getEffectType() == AffinityStatusEffects.BANISHED)) return;
-            if (!PotionMixture.EXTRA_DATA.maybeIsIn(stack.getNbt())) return;
+            if (PotionUtil.getPotionEffects(stack).stream().noneMatch(x -> x.getEffectType() == AffinityStatusEffects.BANISHED)) return;
+            if (!stack.has(PotionMixture.EXTRA_DATA)) return;
 
-            EchoShardItem.formatLocationTooltip(PotionMixture.EXTRA_DATA.get(stack.getNbt()), lines);
+            EchoShardItem.formatLocationTooltip(stack.get(PotionMixture.EXTRA_DATA), lines);
         });
     }
 
@@ -69,8 +69,8 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
         component.pos = target.getBlockPos();
         component.dimension = target.getWorld().getRegistryKey().getValue();
 
-        var pos = EchoShardItem.POS.get(extraData);
-        var targetWorldId = EchoShardItem.WORLD.get(extraData);
+        var pos = extraData.get(EchoShardItem.POS);
+        var targetWorldId = extraData.get(EchoShardItem.WORLD);
         var targetWorld = target.getServer().getWorld(RegistryKey.of(Registry.WORLD_KEY, targetWorldId));
 
         ServerScheduler.runInstantly(server -> {

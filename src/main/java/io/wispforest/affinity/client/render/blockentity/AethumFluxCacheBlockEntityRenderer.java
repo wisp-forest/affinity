@@ -13,8 +13,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
@@ -55,7 +55,7 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
         }
 
         final var consumer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
-        final var sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(WATER_TEXTURE);
+        final var sprite = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(WATER_TEXTURE);
 
         if (entity.flux() > 1) {
             //noinspection ConstantConditions

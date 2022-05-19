@@ -39,18 +39,18 @@ public class WispMatterItem extends Item {
         if (!world.getBlockState(context.getBlockPos()).isOf(AffinityBlocks.AZALEA_LOG)) return ActionResult.PASS;
         if (world.isClient) return ActionResult.SUCCESS;
 
-        final var findResults = BlockFinder.findCapped(world, context.getBlockPos(), (blockPos, state) -> {
+        final var results = BlockFinder.findCapped(world, context.getBlockPos(), (blockPos, state) -> {
             if (state.isOf(Blocks.AZALEA_LEAVES) || state.isOf(Blocks.FLOWERING_AZALEA_LEAVES)) {
                 return !state.get(LeavesBlock.PERSISTENT);
             }
 
             return state.isOf(AffinityBlocks.AZALEA_LOG);
         }, 128);
-        final var result = findResults.byCount();
+        final var counted = results.byCount();
 
         final var player = context.getPlayer();
-        final int logCount = result.getOrDefault(AffinityBlocks.AZALEA_LOG, 0);
-        final int leavesCount = result.getOrDefault(Blocks.AZALEA_LEAVES, 0) + result.getOrDefault(Blocks.FLOWERING_AZALEA_LEAVES, 0);
+        final int logCount = counted.getOrDefault(AffinityBlocks.AZALEA_LOG, 0);
+        final int leavesCount = counted.getOrDefault(Blocks.AZALEA_LEAVES, 0) + counted.getOrDefault(Blocks.FLOWERING_AZALEA_LEAVES, 0);
 
         if (logCount > 5 && leavesCount > 40) {
             player.sendMessage(new LiteralText("yep, that is in fact a tree").formatted(Formatting.GREEN), false);
@@ -59,7 +59,7 @@ public class WispMatterItem extends Item {
         }
 
         if (this == AffinityItems.VICIOUS_WISP_MATTER) {
-            for (var pos : findResults.results().keySet()) {
+            for (var pos : results) {
                 world.breakBlock(pos, true);
             }
         }

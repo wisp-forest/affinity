@@ -7,8 +7,8 @@ import io.wispforest.affinity.aethumflux.net.AethumLink.Type;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
-import io.wispforest.owo.util.NbtKey;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +36,7 @@ import java.util.Objects;
 
 public class IridescenceWandItem extends Item implements DirectInteractionHandler {
 
-    public static final NbtKey<String> MODE = new NbtKey<>("Mode", NbtKey.Type.STRING);
+    public static final NbtKey<Mode> MODE = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
     public static final NbtKey<NbtCompound> LINK_DATA = new NbtKey<>("LinkData", NbtKey.Type.COMPOUND);
 
     private static final String WAND_OF_IRIDESCENCE_PREFIX = "item.affinity.wand_of_iridescence";
@@ -53,10 +53,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         if (this.getStoredPos(playerStack) != null) return TypedActionResult.pass(playerStack);
         if (world.isClient) return TypedActionResult.success(playerStack);
 
-        final var stackNbt = playerStack.getOrCreateNbt();
-        final var mode = Mode.byId(MODE.get(stackNbt));
-
-        MODE.put(stackNbt, mode.next().id);
+        playerStack.mutate(MODE, Mode::next);
 
         return TypedActionResult.success(playerStack);
     }
@@ -68,7 +65,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public Text getName(ItemStack stack) {
-        final var mode = Mode.byId(MODE.get(stack.getOrCreateNbt()));
+        final var mode = stack.get(MODE);
 
         return new TranslatableText(this.getTranslationKey()).append(new TranslatableText(WAND_OF_IRIDESCENCE_PREFIX + ".mode.template",
                 TextOps.translateWithColor(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id, mode.color)).formatted(Formatting.GRAY));
@@ -76,7 +73,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        final var mode = Mode.byId(MODE.get(stack.getOrCreateNbt()));
+        final var mode = stack.get(MODE);
 
         tooltip.add(Text.of(" "));
 
@@ -94,7 +91,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         final var world = context.getWorld();
         final var pos = context.getBlockPos();
 
-        final var mode = Mode.byId(MODE.get(stack.getOrCreateNbt()));
+        final var mode = stack.get(MODE);
 
         var nextMember = Affinity.AETHUM_MEMBER.find(world, pos, null);
         if (nextMember == null) return ActionResult.PASS;
@@ -102,7 +99,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
             final var isNode = nextMember instanceof AethumNetworkNode;
             if (mode == Mode.BIND && isNode) {
                 context.getPlayer().sendMessage(new TranslatableText(AethumLink.Result.TOO_MANY_LINKS.translationKey), true);
-                LINK_DATA.delete(stack.getOrCreateNbt());
+                stack.delete(LINK_DATA);
                 return ActionResult.SUCCESS;
             } else if (!isNode) {
                 return ActionResult.PASS;
@@ -129,7 +126,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         var result = mode.processor.run(stack, world, existingElement, pos, nextMember);
         context.getPlayer().sendMessage(new TranslatableText(result.translationKey, world.getBlockState(pos).getBlock().getName()), true);
 
-        LINK_DATA.delete(stack.getOrCreateNbt());
+        stack.delete(LINK_DATA);
 
         return ActionResult.SUCCESS;
     }
@@ -141,10 +138,9 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     }
 
     private Element getLink(ItemStack stack) {
-        var nbt = stack.getOrCreateNbt();
-        if (!LINK_DATA.isIn(nbt)) return null;
+        if (!stack.has(LINK_DATA)) return null;
 
-        return Element.values()[LINK_DATA.get(nbt).getInt("Element")];
+        return Element.values()[stack.get(LINK_DATA).getInt("Element")];
     }
 
     private void beginLink(ItemStack stack, BlockPos pos, Element element, Type type) {
@@ -153,11 +149,11 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         nbt.putInt("Element", element.ordinal());
         nbt.putInt("Type", type.ordinal());
 
-        LINK_DATA.put(stack.getOrCreateNbt(), nbt);
+        stack.put(LINK_DATA, nbt);
     }
 
     private static AethumLink.Result executeBind(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
-        var linkNbt = LINK_DATA.get(stack.getOrCreateNbt());
+        var linkNbt = stack.get(LINK_DATA);
         var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
         var linkType = Type.values()[linkNbt.getInt("Type")];
 
@@ -170,7 +166,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     }
 
     private static AethumLink.Result executeRelease(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
-        var linkNbt = LINK_DATA.get(stack.getOrCreateNbt());
+        var linkNbt = stack.get(LINK_DATA);
         var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
 
         if (existingElement == Element.NODE) {
@@ -183,7 +179,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public boolean hasGlint(ItemStack stack) {
-        return LINK_DATA.maybeIsIn(stack.getNbt());
+        return stack.has(LINK_DATA);
     }
 
     public enum Mode {

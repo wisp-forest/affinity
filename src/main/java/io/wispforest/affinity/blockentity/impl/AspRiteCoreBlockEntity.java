@@ -5,7 +5,7 @@ import io.wispforest.affinity.misc.recipe.AspenInfusionRecipe;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
-import io.wispforest.owo.util.NbtKey;
+import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -75,13 +75,13 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        this.item = ITEM_KEY.get(nbt);
+        this.item = nbt.get(ITEM_KEY);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        ITEM_KEY.put(nbt, this.item);
+        nbt.put(ITEM_KEY, this.item);
     }
 
     public @NotNull ItemStack getItem() {

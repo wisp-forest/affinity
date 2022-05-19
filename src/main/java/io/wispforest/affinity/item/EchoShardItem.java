@@ -1,10 +1,10 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.util.NbtKey;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -51,8 +51,8 @@ public class EchoShardItem extends Item {
     }
 
     public static void formatLocationTooltip(NbtCompound data, List<Text> tooltip) {
-        var pos = POS.get(data);
-        var targetWorld = WORLD.get(data);
+        var pos = data.get(POS);
+        var targetWorld = data.get(WORLD);
 
         var worldText = TextOps.translateWithColor(Util.createTranslationKey("dimension", targetWorld), 0x4D4C7D);
         var coordinateText = TextOps.withFormatting(pos.getX() + " " + pos.getY() + " " + pos.getZ(), Formatting.GRAY);
@@ -66,9 +66,9 @@ public class EchoShardItem extends Item {
         final var stack = context.getStack();
         final var pos = context.getBlockPos().up();
 
-        BOUND.put(stack.getOrCreateNbt(), true);
-        POS.put(stack.getOrCreateNbt(), pos);
-        WORLD.put(stack.getOrCreateNbt(), world.getRegistryKey().getValue());
+        stack.put(BOUND, true);
+        stack.put(POS, pos);
+        stack.put(WORLD, world.getRegistryKey().getValue());
 
         if (world.isClient) {
             ClientParticles.setParticleCount(4);
@@ -83,7 +83,7 @@ public class EchoShardItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (BOUND.maybeIsIn(stack.getNbt())) {
+        if (stack.has(BOUND)) {
             formatLocationTooltip(stack.getNbt(), tooltip);
         }
     }

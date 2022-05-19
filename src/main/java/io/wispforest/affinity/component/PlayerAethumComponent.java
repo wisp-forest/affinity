@@ -1,7 +1,7 @@
 package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
-import io.wispforest.owo.util.NbtKey;
+import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,15 +28,15 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
     @Override
     public void readFromNbt(@NotNull NbtCompound tag) {
         super.readFromNbt(tag);
-        this.maxAethum = MAX_AETHUM_KEY.getOr(tag, this.maxAethum);
-        this.naturalRegenSpeed = NATURAL_REGEN_SPEED_KEY.getOr(tag, this.naturalRegenSpeed);
+        this.maxAethum = tag.getOr(MAX_AETHUM_KEY, this.maxAethum);
+        this.naturalRegenSpeed = tag.getOr(NATURAL_REGEN_SPEED_KEY, this.naturalRegenSpeed);
     }
 
     @Override
     public void writeToNbt(@NotNull NbtCompound tag) {
         super.writeToNbt(tag);
-        MAX_AETHUM_KEY.put(tag, this.maxAethum);
-        NATURAL_REGEN_SPEED_KEY.put(tag, this.naturalRegenSpeed);
+        tag.put(MAX_AETHUM_KEY, this.maxAethum);
+        tag.put(NATURAL_REGEN_SPEED_KEY, this.naturalRegenSpeed);
     }
 
     public void setMaxAethum(double maxAethum) {

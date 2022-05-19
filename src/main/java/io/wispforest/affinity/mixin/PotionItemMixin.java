@@ -26,8 +26,10 @@ public class PotionItemMixin {
 
     @Inject(method = "finishUsing", at = @At("HEAD"))
     private void doPotionApplication(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
-        if (!PotionMixture.EXTRA_DATA.maybeIsIn(stack.getNbt())) return;
-        PotionUtil.getPotionEffects(stack).forEach(effect -> MixinHooks.tryInvokePotionApplied(effect, user, PotionMixture.EXTRA_DATA.get(stack.getNbt())));
+        if (!stack.has(PotionMixture.EXTRA_DATA)) return;
+
+        final var extraData = stack.get(PotionMixture.EXTRA_DATA);
+        PotionUtil.getPotionEffects(stack).forEach(effect -> MixinHooks.tryInvokePotionApplied(effect, user, extraData));
     }
 
 }

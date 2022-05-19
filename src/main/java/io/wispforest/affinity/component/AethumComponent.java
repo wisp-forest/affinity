@@ -3,7 +3,7 @@ package io.wispforest.affinity.component;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import io.wispforest.owo.util.NbtKey;
+import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,12 +26,12 @@ public abstract class AethumComponent<H> implements Component, AutoSyncedCompone
 
     @Override
     public void readFromNbt(@NotNull NbtCompound tag) {
-        this.aethum = AETHUM_KEY.getOr(tag, this.aethum);
+        this.aethum = tag.getOr(AETHUM_KEY, this.aethum);
     }
 
     @Override
     public void writeToNbt(@NotNull NbtCompound tag) {
-        AETHUM_KEY.put(tag, this.aethum);
+        tag.put(AETHUM_KEY, this.aethum);
     }
 
     public double addAethum(double value) {

@@ -15,21 +15,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class Ingrediente<T> implements Predicate<ItemStack> {
-
-    public final Ingredient itemPredicate;
-    public final int minCount;
-
-    public final @Nullable NbtCompound nbtModel;
-
-    public final T extraData;
-
-    public Ingrediente(Ingredient itemPredicate, int minCount, @Nullable NbtCompound nbtModel, T extraData) {
-        this.itemPredicate = itemPredicate;
-        this.minCount = minCount;
-        this.nbtModel = nbtModel;
-        this.extraData = extraData;
-    }
+public record Ingrediente<T>(Ingredient itemPredicate, int minCount, @Nullable NbtCompound nbtModel, T extraData) implements Predicate<ItemStack> {
 
     @Override
     public boolean test(ItemStack stack) {
