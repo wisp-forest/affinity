@@ -1,15 +1,21 @@
 package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.block.impl.AberrantCallingCoreBlock;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.particle.BezierItemEmitterParticleEffect;
+import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 
 public class AffinityParticleSystems {
 
@@ -55,6 +61,29 @@ public class AffinityParticleSystems {
     public static final ParticleSystem<Void> BANISHMENT_CLOUD = CONTROLLER.register(Void.class, (world, pos, data) -> {
         ClientParticles.setParticleCount(20);
         ClientParticles.spawn(ParticleTypes.EFFECT, world, pos, 0.5);
+    });
+
+    public static final ParticleSystem<Void> ABERRANT_CALLING_SUCCESS = CONTROLLER.register(Void.class, (world, pos, data) -> {
+        ClientParticles.spawn(new GenericEmitterParticleEffect(
+                ParticleTypes.LARGE_SMOKE, new Vec3d(0, .25, 0), 1, .5f, 8
+        ), world, pos, 0d);
+
+        ClientParticles.setParticleCount(10);
+        ClientParticles.spawn(ParticleTypes.LAVA, world, pos, .25);
+    });
+
+    public static final ParticleSystem<AberrantCallingCoreBlock.CoreSet> ABERRANT_CALLING_ACTIVE = CONTROLLER.register(AberrantCallingCoreBlock.CoreSet.class, (world, pos, data) -> {
+        var effect = new DustColorTransitionParticleEffect(new Vec3f(1, 0, 0), new Vec3f(1, .75f, .75f), 1);
+
+        ClientParticles.persist();
+        ClientParticles.setParticleCount(7);
+
+        ClientParticles.spawnLine(effect, world, pos, Vec3d.ofCenter(data.get(0)), .05f);
+        ClientParticles.spawnLine(effect, world, pos, Vec3d.ofCenter(data.get(2)), .05f);
+        ClientParticles.spawnLine(effect, world, Vec3d.ofCenter(data.get(1)), Vec3d.ofCenter(data.get(0)), .05f);
+        ClientParticles.spawnLine(effect, world, Vec3d.ofCenter(data.get(1)), Vec3d.ofCenter(data.get(2)), .05f);
+
+        ClientParticles.reset();
     });
 
     public record DissolveData(ItemStack suckWhat, Vec3d suckWhere, int duration, int particleMaxAge) {}

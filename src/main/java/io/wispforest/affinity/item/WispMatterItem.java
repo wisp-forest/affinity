@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.wisps.WispType;
 import io.wispforest.owo.ops.TextOps;
 import net.minecraft.block.Blocks;
@@ -18,6 +19,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +38,12 @@ public class WispMatterItem extends Item {
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         final var world = context.getWorld();
+
+        if (this == AffinityItems.INERT_WISP_MATTER) {
+            AffinityParticleSystems.ABERRANT_CALLING_SUCCESS.spawn(world, Vec3d.ofCenter(context.getBlockPos().up()));
+            return ActionResult.SUCCESS;
+        }
+
         if (!world.getBlockState(context.getBlockPos()).isOf(AffinityBlocks.AZALEA_LOG)) return ActionResult.PASS;
         if (world.isClient) return ActionResult.SUCCESS;
 

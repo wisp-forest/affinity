@@ -5,12 +5,20 @@ import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.misc.recipe.AberrantCallingRecipe;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -27,6 +35,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     private @NotNull ItemStack item = ItemStack.EMPTY;
 
     @Nullable private AberrantCallingRecipe cachedRecipe = null;
+    @Nullable private AberrantCallingCoreBlock.CoreSet neighborPositions = null;
     @Nullable private AberrantCallingCoreBlockEntity[] cachedNeighbors = null;
 
     public final RitualLock<AberrantCallingCoreBlockEntity> ritualLock = new RitualLock<>();
@@ -49,13 +58,13 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         if (this.ritualLock.isActive()) return false;
         if (this.item.isEmpty()) return false;
 
-        final var coreSet = AberrantCallingCoreBlock.findValidCoreSet(this.world, this.pos);
-        if (coreSet == null) return false;
+        this.neighborPositions = AberrantCallingCoreBlock.findValidCoreSet(this.world, this.pos);
+        if (this.neighborPositions == null) return false;
 
         final var coreItems = new ItemStack[4];
         coreItems[0] = this.item.copy();
 
-        this.cachedNeighbors = coreSet.resolve(this.world);
+        this.cachedNeighbors = this.neighborPositions.resolve(this.world);
         for (int i = 0; i < this.cachedNeighbors.length; i++) {
             coreItems[i + 1] = this.cachedNeighbors[i].item.copy();
         }
@@ -69,8 +78,11 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
 
         setup.configureLength(this.cachedRecipe.getDuration());
         this.ritualLock.acquire(this);
+        this.createDissolveParticle(this.item, this.pos, setup.duration());
+
         for (var neighbor : this.cachedNeighbors) {
             neighbor.ritualLock.acquire(this);
+            this.createDissolveParticle(neighbor.item, neighbor.pos, setup.duration());
         }
 
         return true;
@@ -78,13 +90,9 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected void doRitualTick() {
-//        if (this.ritualTick % 20 == 0) {
-//            final var bee = EntityType.BEE.create(this.world);
-//
-//            final var pos = Vec3d.ofCenter(this.ritualCenterPos());
-//            bee.updatePosition(pos.x, pos.y + 1, pos.z);
-//            this.world.spawnEntity(bee);
-//        }
+        if (this.ritualTick % 3 == 0) {
+            AffinityParticleSystems.ABERRANT_CALLING_ACTIVE.spawn(this.world, Vec3d.ofCenter(this.pos), this.neighborPositions);
+        }
     }
 
     @Override
@@ -94,8 +102,14 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         final var entity = this.cachedRecipe.getEntityType().create(world);
         if (this.cachedRecipe.getEntityNbt() != null) entity.readNbt(this.cachedRecipe.getEntityNbt());
 
-        entity.setPos(pos.x, pos.y + .5, pos.z);
+        entity.setPos(pos.x, pos.y + 1.5, pos.z);
+        entity.addVelocity(0, 1, 0);
+
         this.world.spawnEntity(entity);
+        if (entity instanceof LivingEntity living) {
+            living.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 50, 4, false, true));
+            if (living instanceof MobEntity mob) mob.playSpawnEffects();
+        }
 
         this.ritualLock.release();
 
@@ -109,13 +123,30 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
             neighbor.markDirty();
         }
         this.cachedNeighbors = null;
+        this.neighborPositions = null;
+
+        WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_ABERRANT_CALLING_CORE_RITUAL_SUCCESS, SoundCategory.BLOCKS);
+        AffinityParticleSystems.ABERRANT_CALLING_SUCCESS.spawn(world, pos.add(0, 2, 0));
 
         return true;
     }
 
     @Override
     protected void activateSocle(@NotNull RitualSocleBlockEntity socle) {
-        socle.beginExtraction(this.ritualCenterPos(), this.cachedSetup.durationPerSocle());
+        double shortestDistance = this.pos.getSquaredDistance(socle.getPos());
+        BlockPos closestCore = this.getPos();
+
+        for (var neighbor : this.cachedNeighbors) {
+            final var neighborPos = neighbor.getPos();
+            final var distance = neighborPos.getSquaredDistance(socle.getPos());
+
+            if (distance < shortestDistance) {
+                shortestDistance = distance;
+                closestCore = neighborPos;
+            }
+        }
+
+        socle.beginExtraction(closestCore, this.cachedSetup.durationPerSocle());
     }
 
     @Override
@@ -141,7 +172,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     public BlockPos ritualCenterPos() {
-        final var set = AberrantCallingCoreBlock.findValidCoreSet(this.world, this.pos);
+        final var set = neighborPositions != null ? neighborPositions : AberrantCallingCoreBlock.findValidCoreSet(this.world, this.pos);
         return set != null ? set.center() : this.pos;
     }
 
@@ -155,6 +186,11 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.put(ITEM_KEY, this.item);
+    }
+
+    private void createDissolveParticle(ItemStack item, BlockPos from, int duration) {
+        AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, Vec3d.ofCenter(from).add(0, .55, 0),
+                new AffinityParticleSystems.DissolveData(item, Vec3d.ofCenter(this.ritualCenterPos().up(2)), duration, 16));
     }
 
     public @NotNull ItemStack getItem() {

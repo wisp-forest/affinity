@@ -62,6 +62,9 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
         AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, particleOrigin(this.pos),
                 new AffinityParticleSystems.DissolveData(this.getItem(), Vec3d.ofCenter(corePosition).add(0, .3, 0),
                         duration - travelDuration, travelDuration));
+
+//        WorldOps.playSound(this.world, this.pos, AffinitySoundEvents.BLOCK_RITUAL_SOCLE_ACTIVATE, SoundCategory.BLOCKS);
+
         this.extractionTicks = 1;
         this.extractionDuration = duration;
     }

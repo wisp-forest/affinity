@@ -6,5 +6,15 @@
       "affinity:block/peculiar_clump_resonance_3",
       "affinity:block/peculiar_clump_resonance_4"
     ]
+  },
+  "block.ritual_socle.activate": {
+    "sounds": [
+      "affinity:block/ritual_socle_activate"
+    ]
+  },
+  "block.aberrant_calling_core.ritual_success": {
+    "sounds": [
+      "affinity:block/aberrant_calling_success"
+    ]
   }
 }

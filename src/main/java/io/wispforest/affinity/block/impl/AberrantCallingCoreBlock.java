@@ -174,6 +174,10 @@ public class AberrantCallingCoreBlock extends AethumNetworkMemberBlock {
             return resolved;
         }
 
+        public BlockPos get(int idx) {
+            return this.cores[idx];
+        }
+
         @NotNull
         @Override
         public Iterator<BlockPos> iterator() {

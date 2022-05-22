@@ -42,7 +42,6 @@ public class MixinHooks {
 
         if (AffinityEntityAddon.getData(attacker, BerserkerEnchantment.BERSERK_KEY)) {
             extraDamage += (1 - (attacker.getHealth() / attacker.getMaxHealth())) * (1 - (attacker.getHealth() / attacker.getMaxHealth())) * 15;
-            attacker.sendSystemMessage(Text.of("Extra damage: " + extraDamage), null);
         }
 
         return baseAmount + extraDamage;
