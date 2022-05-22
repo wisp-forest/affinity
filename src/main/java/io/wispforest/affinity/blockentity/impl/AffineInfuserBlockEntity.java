@@ -36,6 +36,8 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
         currentRepairCost.setValue(0);
 
         for (var entity : this.world.getNonSpectatingEntities(Entity.class, searchArea)) {
+            if (currentRepairCost.getValue() > this.flux() - REPAIR_COST_PER_ITEM) break;
+
             if (entity instanceof PlayerEntity) {
                 entity.getItemsEquipped().forEach(AffineInfuserBlockEntity::repairIfEnchanted);
             } else if (entity instanceof ItemFrameEntity frame) {
@@ -43,8 +45,6 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
             } else if (entity instanceof ItemEntity item) {
                 repairIfEnchanted(item.getStack());
             }
-
-            if (currentRepairCost.getValue() > this.flux() - REPAIR_COST_PER_ITEM) break;
         }
 
         this.updateFlux(this.flux() - currentRepairCost.getValue());
