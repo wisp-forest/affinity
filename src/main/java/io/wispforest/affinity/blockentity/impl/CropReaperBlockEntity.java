@@ -32,11 +32,11 @@ public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implem
         for (BlockPos pos : BlockPos.iterate(this.getPos().add(-8, -4, -8), this.pos.add(8, 4, 8))) {
             final var state = world.getBlockState(pos);
 
-            if (!(state.getBlock() instanceof CropBlock)) continue;
+            if (!(state.getBlock() instanceof CropBlock crop)) continue;
 
-            if (state.get(CropBlock.AGE) == 7) {
+            if (crop.isMature(state)) {
                 world.breakBlock(pos, false);
-                world.setBlockState(pos, state.with(CropBlock.AGE, 0));
+                world.setBlockState(pos, crop.withAge(0));
 
                 addedAethum += 200;
             }
