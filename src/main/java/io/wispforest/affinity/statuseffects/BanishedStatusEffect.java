@@ -3,7 +3,7 @@ package io.wispforest.affinity.statuseffects;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.item.EchoShardItem;
 import io.wispforest.affinity.misc.EntityTeleporter;
-import io.wispforest.affinity.misc.ServerScheduler;
+import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityStatusEffects;
@@ -39,7 +39,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
     public void onRemoved(final LivingEntity outerEntity, AttributeContainer attributes, int amplifier) {
         if (outerEntity.world.isClient) return;
 
-        ServerScheduler.runInstantly(server -> {
+        ServerTasks.doNext(server -> {
             var entity = outerEntity;
 
             var component = AffinityComponents.BANISHMENT.get(entity);
@@ -73,7 +73,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
         var targetWorldId = extraData.get(EchoShardItem.WORLD);
         var targetWorld = target.getServer().getWorld(RegistryKey.of(Registry.WORLD_KEY, targetWorldId));
 
-        ServerScheduler.runInstantly(server -> {
+        ServerTasks.doNext(server -> {
             spawnCloud(target);
             var newEntity = EntityTeleporter.teleport(target, targetWorld, Vec3d.ofCenter(pos), target.getYaw(), target.getPitch());
             spawnCloud(newEntity);

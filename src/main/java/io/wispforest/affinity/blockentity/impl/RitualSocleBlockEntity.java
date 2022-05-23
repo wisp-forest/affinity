@@ -29,6 +29,8 @@ import java.util.Comparator;
 @SuppressWarnings("UnusedReturnValue")
 public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
+    public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, 1, .5);
+
     private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
@@ -59,14 +61,21 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
 
     public void beginExtraction(BlockPos corePosition, int duration) {
         final var travelDuration = Math.min(15, duration);
+        final var emitDuration = duration - travelDuration;
+
         AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, particleOrigin(this.pos),
-                new AffinityParticleSystems.DissolveData(this.getItem(), Vec3d.ofCenter(corePosition).add(0, .3, 0),
-                        duration - travelDuration, travelDuration));
+                new AffinityParticleSystems.DissolveData(
+                        this.getItem(),
+                        Vec3d.ofCenter(corePosition).add(0, .3, 0),
+                        emitDuration,
+                        travelDuration
+                )
+        );
 
 //        WorldOps.playSound(this.world, this.pos, AffinitySoundEvents.BLOCK_RITUAL_SOCLE_ACTIVATE, SoundCategory.BLOCKS);
 
         this.extractionTicks = 1;
-        this.extractionDuration = duration;
+        this.extractionDuration = emitDuration;
     }
 
     public void stopExtraction() {
@@ -100,7 +109,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
     }
 
     public static Vec3d particleOrigin(BlockPos soclePosition) {
-        return Vec3d.of(soclePosition).add(.5, 1, .5);
+        return Vec3d.of(soclePosition).add(PARTICLE_OFFSET);
     }
 
     @Override

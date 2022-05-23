@@ -2,7 +2,7 @@ package io.wispforest.affinity.enchantment.impl;
 
 import io.wispforest.affinity.enchantment.template.AbsoluteEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
-import io.wispforest.affinity.misc.EntityReferenceTracker;
+import io.wispforest.affinity.misc.EntityReference;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEnchantments;
@@ -21,8 +21,8 @@ import java.util.Set;
 public class GravecallerEnchantment extends AbsoluteEnchantment implements EnchantmentEquipEventReceiver {
 
     public static final AffinityEntityAddon.DataKey<SpawnerLogic> SPAWNER_KEY = AffinityEntityAddon.DataKey.withDefaultFactory(SpawnerLogic::new);
-    public static final AffinityEntityAddon.DataKey<Set<EntityReferenceTracker.Reference<Entity>>> MINIONS_KEY = AffinityEntityAddon.DataKey.withDefaultFactory(HashSet::new);
-    public static final AffinityEntityAddon.DataKey<EntityReferenceTracker.Reference<LivingEntity>> MASTER_KEY = AffinityEntityAddon.DataKey.withNullDefault();
+    public static final AffinityEntityAddon.DataKey<Set<EntityReference<Entity>>> MINIONS_KEY = AffinityEntityAddon.DataKey.withDefaultFactory(HashSet::new);
+    public static final AffinityEntityAddon.DataKey<EntityReference<LivingEntity>> MASTER_KEY = AffinityEntityAddon.DataKey.withNullDefault();
 
     public GravecallerEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentTarget.ARMOR, Type.ARMOR, 205);
@@ -35,8 +35,8 @@ public class GravecallerEnchantment extends AbsoluteEnchantment implements Encha
         for (var undead : undeadEntities) {
             if (AffinityEntityAddon.hasData(undead, MASTER_KEY)) continue;
 
-            AffinityEntityAddon.setData(undead, MASTER_KEY, EntityReferenceTracker.tracked(bearer));
-            minions.add(EntityReferenceTracker.tracked(undead));
+            AffinityEntityAddon.setData(undead, MASTER_KEY, EntityReference.of(bearer));
+            minions.add(EntityReference.of(undead));
         }
 
         if (undeadEntities.size() > 6 && bearer.world.getTime() % 20 == 0) {

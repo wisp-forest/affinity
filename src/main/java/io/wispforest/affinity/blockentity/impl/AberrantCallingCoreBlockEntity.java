@@ -2,8 +2,11 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.block.impl.AberrantCallingCoreBlock;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
+import io.wispforest.affinity.misc.EntityReference;
+import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.recipe.AberrantCallingRecipe;
 import io.wispforest.affinity.misc.util.InteractionUtil;
+import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
@@ -11,13 +14,11 @@ import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -27,9 +28,14 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
+
+    public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, 0.85, .5);
 
     private static final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
     private @NotNull ItemStack item = ItemStack.EMPTY;
@@ -93,6 +99,18 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         if (this.ritualTick % 3 == 0) {
             AffinityParticleSystems.ABERRANT_CALLING_ACTIVE.spawn(this.world, Vec3d.ofCenter(this.pos), this.neighborPositions);
         }
+
+        if (this.ritualTick == this.cachedSetup.duration() - 10) {
+            this.item = ItemStack.EMPTY;
+            this.markDirty();
+
+            for (var neighbor : this.cachedNeighbors) {
+                neighbor.ritualLock.release();
+
+                neighbor.item = ItemStack.EMPTY;
+                neighbor.markDirty();
+            }
+        }
     }
 
     @Override
@@ -105,23 +123,17 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         entity.setPos(pos.x, pos.y + 1.5, pos.z);
         entity.addVelocity(0, 1, 0);
 
+        final var ref = EntityReference.of(entity);
+        entity.setInvulnerable(true);
+        ServerTasks.doDelayed((ServerWorld) this.world, 30, () -> {
+            ref.consume(e -> e.setInvulnerable(false));
+        });
+
         this.world.spawnEntity(entity);
-        if (entity instanceof LivingEntity living) {
-            living.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 50, 4, false, true));
-            if (living instanceof MobEntity mob) mob.playSpawnEffects();
-        }
+        if (entity instanceof MobEntity mob) mob.playSpawnEffects();
 
         this.ritualLock.release();
 
-        this.item = ItemStack.EMPTY;
-        this.markDirty();
-
-        for (var neighbor : this.cachedNeighbors) {
-            neighbor.ritualLock.release();
-
-            neighbor.item = ItemStack.EMPTY;
-            neighbor.markDirty();
-        }
         this.cachedNeighbors = null;
         this.neighborPositions = null;
 
@@ -129,6 +141,30 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         AffinityParticleSystems.ABERRANT_CALLING_SUCCESS.spawn(world, pos.add(0, 2, 0));
 
         return true;
+    }
+
+    @Override
+    protected boolean onRitualInterrupted() {
+        if (this.cachedNeighbors != null) {
+            for (var neighbor : this.cachedNeighbors) {
+                neighbor.ritualLock.release();
+            }
+
+            this.ritualLock.release();
+        }
+
+        return false;
+    }
+
+    @Override
+    protected void finishRitual(Supplier<Boolean> handlerImpl) {
+        if (this.ritualTick > 0) {
+            final var positions = new ArrayList<>(Arrays.asList(this.neighborPositions.cores()));
+            positions.add(this.pos);
+            AffinityNetwork.server(this).send(new CancelRitualParticlesPacket(positions, PARTICLE_OFFSET));
+        }
+
+        super.finishRitual(handlerImpl);
     }
 
     @Override
@@ -147,19 +183,6 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         }
 
         socle.beginExtraction(closestCore, this.cachedSetup.durationPerSocle());
-    }
-
-    @Override
-    protected boolean onRitualInterrupted() {
-        if (this.cachedNeighbors != null) {
-            for (var neighbor : this.cachedNeighbors) {
-                neighbor.ritualLock.release();
-            }
-
-            this.ritualLock.release();
-        }
-
-        return false;
     }
 
     @Override
@@ -189,8 +212,8 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     }
 
     private void createDissolveParticle(ItemStack item, BlockPos from, int duration) {
-        AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, Vec3d.ofCenter(from).add(0, .55, 0),
-                new AffinityParticleSystems.DissolveData(item, Vec3d.ofCenter(this.ritualCenterPos().up(2)), duration, 16));
+        AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, Vec3d.of(from).add(PARTICLE_OFFSET),
+                new AffinityParticleSystems.DissolveData(item, Vec3d.ofCenter(this.ritualCenterPos().up(2)), duration - 10, 16));
     }
 
     public @NotNull ItemStack getItem() {

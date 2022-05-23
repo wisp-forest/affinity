@@ -17,6 +17,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.NotNull;
@@ -151,7 +152,8 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         if (this.cachedSetup != null) {
             AffinityNetwork.CHANNEL.serverHandle(this).send(new CancelRitualParticlesPacket(
-                    this.cachedSetup.socles.stream().map(RitualSocleEntry::position).toList()
+                    this.cachedSetup.socles.stream().map(RitualSocleEntry::position).toList(),
+                    RitualSocleBlockEntity.PARTICLE_OFFSET
             ));
             this.cachedSetup.forEachSocle(this.world, socle -> {
                 socle.ritualLock.release();
@@ -297,12 +299,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     static {
         AffinityNetwork.CHANNEL.registerClientbound(CancelRitualParticlesPacket.class, (message, access) -> {
             for (var pos : message.soclePositions()) {
-                BezierItemEmitterParticle.removeParticleAt(RitualSocleBlockEntity.particleOrigin(pos));
+                BezierItemEmitterParticle.removeParticleAt(Vec3d.of(pos).add(message.offset()));
             }
         });
     }
 
-    public record CancelRitualParticlesPacket(List<BlockPos> soclePositions) {}
+    public record CancelRitualParticlesPacket(List<BlockPos> soclePositions, Vec3d offset) {}
 
     public static class SocleInventory implements ReadOnlyInventory.ListBacked {
 

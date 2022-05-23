@@ -1,6 +1,6 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.misc.EntityReferenceTracker;
+import io.wispforest.affinity.misc.EntityReference;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,9 +18,9 @@ public class EntityMixin implements AffinityEntityAddon {
     @Unique
     private Map<DataKey<?>, Object> affinity$dataStorage = null;
 
-    @Inject(method = "onRemoved", at = @At("TAIL"))
+    @Inject(method = "setRemoved", at = @At("TAIL"))
     private void hookRemove(CallbackInfo ci) {
-        EntityReferenceTracker.releaseAll((Entity) (Object) this);
+        EntityReference.dropAll((Entity) (Object) this);
     }
 
     @Override

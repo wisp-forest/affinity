@@ -1,7 +1,7 @@
 package io.wispforest.affinity.item;
 
-import io.wispforest.affinity.misc.EntityReferenceTracker;
-import io.wispforest.affinity.misc.ServerScheduler;
+import io.wispforest.affinity.misc.EntityReference;
+import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.ops.WorldOps;
@@ -43,8 +43,8 @@ public class CollectionStaffItem extends Item {
 
         WorldOps.playSound(serverWorld, triggerPos, SoundEvents.ENTITY_ENDER_DRAGON_FLAP, SoundCategory.PLAYERS, 1, 0);
 
-        var ref = EntityReferenceTracker.tracked(getItems(user));
-        ServerScheduler.runFor(serverWorld, 25, () -> {
+        var ref = EntityReference.of(getItems(user));
+        ServerTasks.doFor(serverWorld, 25, () -> {
             if (!ref.present()) return false;
 
             AffinityNetwork.CHANNEL.serverHandle(serverWorld, triggerPos)
@@ -52,15 +52,15 @@ public class CollectionStaffItem extends Item {
 
             return true;
         }, () -> {
-            if (!ref.present()) return;
+            ref.consume(itemEntities -> {
+                WorldOps.playSound(world, user.getPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1.5f);
+                AffinityNetwork.CHANNEL.serverHandle(serverWorld, triggerPos)
+                        .send(new BulkParticlesPacket(itemEntities, ParticleTypes.POOF, .25));
 
-            WorldOps.playSound(world, user.getPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1.5f);
-            AffinityNetwork.CHANNEL.serverHandle(serverWorld, triggerPos)
-                    .send(new BulkParticlesPacket(ref.get(), ParticleTypes.POOF, .25));
-
-            for (var item : ref.get()) {
-                item.updatePosition(user.getX(), user.getY(), user.getZ());
-            }
+                for (var item : itemEntities) {
+                    item.updatePosition(user.getX(), user.getY(), user.getZ());
+                }
+            });
         });
 
         return TypedActionResult.success(playerStack);
