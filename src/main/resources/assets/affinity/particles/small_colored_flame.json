@@ -1,0 +1,20 @@
+{
+  "textures": [
+    "affinity:white_flame",
+    "affinity:orange_flame",
+    "affinity:magenta_flame",
+    "affinity:light_blue_flame",
+    "affinity:yellow_flame",
+    "affinity:lime_flame",
+    "affinity:pink_flame",
+    "affinity:gray_flame",
+    "affinity:light_gray_flame",
+    "affinity:cyan_flame",
+    "affinity:purple_flame",
+    "affinity:blue_flame",
+    "affinity:brown_flame",
+    "affinity:green_flame",
+    "affinity:red_flame",
+    "affinity:black_flame"
+  ]
+}

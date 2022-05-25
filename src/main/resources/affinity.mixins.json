@@ -35,6 +35,7 @@
     "access.MapStateAccessor",
     "access.OverworldBiomeCreatorInvoker",
     "access.SignTypeInvoker",
+    "access.StatusEffectInstanceAccessor",
     "access.StructureFeatureAccessor",
     "access.TreeFeatureConfigAccessor"
   ],

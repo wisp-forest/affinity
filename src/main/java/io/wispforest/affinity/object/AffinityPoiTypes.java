@@ -12,5 +12,8 @@ public class AffinityPoiTypes {
     public static final PointOfInterestType RITUAL_SOCLE = PointOfInterestHelper.register(Affinity.id("ritual_socle"), 0, 1,
             AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, AffinityBlocks.REFINED_RITUAL_SOCLE, AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
 
+    public static final PointOfInterestType AFFINE_CANDLE = PointOfInterestHelper.register(Affinity.id("affine_candle"), 0, 1,
+            AffinityBlocks.AFFINE_CANDLE);
+
     public static void initialize() {}
 }

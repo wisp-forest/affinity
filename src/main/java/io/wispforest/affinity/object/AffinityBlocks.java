@@ -48,6 +48,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block RANTHRACITE_WIRE = new RanthraciteWireBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block CROP_REAPER = new CropReaperBlock();
 
+    @Tab(AffinityItemGroup.MAIN) public static final Block AFFINE_CANDLE = new AffineCandleBlock();
+
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
 
     public static final Block AZALEA_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
@@ -115,6 +117,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<CropReaperBlockEntity> CROP_REAPER =
                 make(CropReaperBlockEntity::new, AffinityBlocks.CROP_REAPER);
 
+        public static final BlockEntityType<AffineCandleBlockEntity> AFFINE_CANDLE =
+                make(AffineCandleBlockEntity::new, AffinityBlocks.AFFINE_CANDLE);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
@@ -128,6 +133,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(ABERRANT_CALLING_CORE);
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_INFUSER);
             Affinity.AETHUM_MEMBER.registerSelf(CROP_REAPER);
+            Affinity.AETHUM_MEMBER.registerSelf(AFFINE_CANDLE);
         }
 
         @Override
