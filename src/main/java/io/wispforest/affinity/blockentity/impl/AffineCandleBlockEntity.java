@@ -6,6 +6,7 @@ import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.ChunkAethumComponent;
 import io.wispforest.affinity.object.AffinityBlocks;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CandleBlock;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 
@@ -21,10 +22,20 @@ public class AffineCandleBlockEntity extends AethumNetworkMemberBlockEntity impl
 
     @Override
     public void tickServer() {
-        boolean shouldBeLit = this.fluxStorage.flux() > 0;
-        if (getCachedState().get(Properties.LIT) != shouldBeLit) {
-            world.setBlockState(getPos(), getCachedState().with(Properties.LIT, shouldBeLit));
+        boolean isLit = getCachedState().get(Properties.LIT);
+
+        if (!isLit) return;
+
+        long flux = this.fluxStorage.flux();
+
+        if (flux == 0) {
+            world.setBlockState(getPos(), getCachedState().with(Properties.LIT, false));
+            return;
         }
+
+        updateFlux(flux - 1);
+
+        if (getCachedState().get(CandleBlock.CANDLES) < 3) return;
 
         roundTime++;
 
@@ -32,7 +43,6 @@ public class AffineCandleBlockEntity extends AethumNetworkMemberBlockEntity impl
 
         roundTime = 0;
 
-        long flux = this.fluxStorage.flux();
 
         if (flux <= 50) return;
 

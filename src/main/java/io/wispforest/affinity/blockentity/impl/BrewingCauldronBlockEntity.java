@@ -129,7 +129,9 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
             affineCandleCount = ((ServerWorld) this.world).getPointOfInterestStorage()
                 .getInCircle(type -> type == AffinityPoiTypes.AFFINE_CANDLE, this.pos, 5, PointOfInterestStorage.OccupationStatus.ANY)
-                .mapToInt(x -> world.getBlockState(x.getPos()).get(Properties.CANDLES))
+                .map(x -> world.getBlockState(x.getPos()))
+                .filter(x -> x.get(Properties.LIT))
+                .mapToInt(x -> x.get(Properties.CANDLES))
                 .sum();
         }
 
