@@ -26,6 +26,8 @@ public class PotionMixture {
 
     public static final NbtKey<NbtCompound> EXTRA_DATA = new NbtKey<>("ExtraPotionData", NbtKey.Type.COMPOUND);
 
+    public static final NbtKey<Float> EXTEND_DURATION_BY = new NbtKey<>("ExtendDurationBy", NbtKey.Type.FLOAT);
+
     public static final PotionMixture EMPTY = new PotionMixture(Potions.EMPTY, ImmutableList.of(), true, null);
     public static final Potion DUBIOUS_POTION = new Potion("dubious");
 
@@ -33,7 +35,7 @@ public class PotionMixture {
     private final List<StatusEffectInstance> effects;
     private final boolean pure;
     private final int color;
-    private final NbtCompound extraNbt;
+    private NbtCompound extraNbt;
 
     public PotionMixture(Potion basePotion, NbtCompound extraNbt) {
         this.basePotion = basePotion;
@@ -156,6 +158,13 @@ public class PotionMixture {
     }
 
     public NbtCompound extraNbt() {
+        return extraNbt;
+    }
+
+    public NbtCompound getOrCreateExtraNbt() {
+        if (extraNbt == null)
+            extraNbt = new NbtCompound();
+
         return extraNbt;
     }
 

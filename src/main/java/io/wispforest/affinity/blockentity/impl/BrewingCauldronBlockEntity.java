@@ -6,6 +6,7 @@ import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.misc.util.ListUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.block.BlockState;
@@ -17,13 +18,16 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -33,6 +37,8 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     private PotionMixture storedPotion = PotionMixture.EMPTY;
     private int fillLevel = 0;
     private int processTick = 0;
+    private int candleScanTick = 0;
+    private int affineCandleCount = 0;
 
     private PotionMixingRecipe cachedRecipe = null;
     private BlockPos sporeBlossomPos = null;
@@ -116,6 +122,19 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
             world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1, 0.25f + world.random.nextFloat() * 0.5f);
         }
 
+        candleScanTick++;
+
+        if (candleScanTick >= 10) {
+            candleScanTick = 0;
+
+            affineCandleCount = ((ServerWorld) this.world).getPointOfInterestStorage()
+                .getInCircle(type -> type == AffinityPoiTypes.AFFINE_CANDLE, this.pos, 5, PointOfInterestStorage.OccupationStatus.ANY)
+                .map(x -> world.getBlockState(x.getPos()))
+                .filter(x -> x.get(Properties.LIT))
+                .mapToInt(x -> x.get(Properties.CANDLES))
+                .sum();
+        }
+
         updateCraftingPreconditions();
 
         if (processTick < 1) return;
@@ -130,6 +149,12 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         world.playSound(null, pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1, 1);
 
         this.storedPotion = cachedRecipe.craftPotion(items);
+
+        if (affineCandleCount > 0) {
+            var extraNbt = this.storedPotion.getOrCreateExtraNbt();
+
+            extraNbt.put(PotionMixture.EXTEND_DURATION_BY, 1 + Math.min(affineCandleCount * 0.05F, 0.45F));
+        }
 
         for (var ingredient : cachedRecipe.getItemInputs()) {
             for (int i = 0; i < items.size(); i++) {

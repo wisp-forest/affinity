@@ -1,6 +1,7 @@
 package io.wispforest.affinity.client.particle;
 
 import io.wispforest.affinity.particle.ColoredFlameParticleEffect;
+import io.wispforest.affinity.particle.SmallColoredFlameParticleEffect;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
@@ -26,6 +27,23 @@ public class ColoredFlamedParticle extends FlameParticle {
         public Particle createParticle(ColoredFlameParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             var particle = new ColoredFlamedParticle(world, x, y, z, velocityX, velocityY, velocityZ);
             particle.setSprite(this.spriteProvider.getSprite(parameters.dyeColorId(), 15));
+            return particle;
+        }
+    }
+
+    public static class SmallFactory implements ParticleFactory<SmallColoredFlameParticleEffect> {
+        private final SpriteProvider spriteProvider;
+
+        public SmallFactory(SpriteProvider spriteProvider) {
+            this.spriteProvider = spriteProvider;
+        }
+
+        @Nullable
+        @Override
+        public Particle createParticle(SmallColoredFlameParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+            var particle = new ColoredFlamedParticle(world, x, y, z, velocityX, velocityY, velocityZ);
+            particle.setSprite(this.spriteProvider.getSprite(parameters.dyeColorId(), 15));
+            particle.scale(0.5F);
             return particle;
         }
     }

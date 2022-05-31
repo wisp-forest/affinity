@@ -63,6 +63,7 @@ public class AffinityClient implements ClientModInitializer {
         HandledScreens.register(AffinityScreenHandlerTypes.RITUAL_SOCLE_COMPOSER, RitualSocleComposerScreen::new);
 
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.COLORED_FLAME, ColoredFlamedParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.SMALL_COLORED_FLAME, ColoredFlamedParticle.SmallFactory::new);
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.BEZIER_ITEM, new BezierItemParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.BEZIER_ITEM_EMITTER, new BezierItemEmitterParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.GENERIC_EMITTER, new GenericEmitterParticle.Factory());
