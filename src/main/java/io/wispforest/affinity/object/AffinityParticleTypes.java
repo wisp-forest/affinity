@@ -1,6 +1,5 @@
 package io.wispforest.affinity.object;
 
-import io.wispforest.affinity.client.particle.GenericEmitterParticle;
 import io.wispforest.affinity.particle.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -13,8 +12,8 @@ public class AffinityParticleTypes implements AutoRegistryContainer<ParticleType
     public static final ParticleType<SmallColoredFlameParticleEffect> SMALL_COLORED_FLAME = FabricParticleTypes.complex(SmallColoredFlameParticleEffect.FACTORY);
     public static final ParticleType<GenericEmitterParticleEffect> GENERIC_EMITTER = FabricParticleTypes.complex(GenericEmitterParticleEffect.FACTORY);
 
-    public static final ParticleType<BezierItemParticleEffect> BEZIER_ITEM = FabricParticleTypes.complex(BezierItemParticleEffect.FACTORY);
-    public static final ParticleType<BezierItemEmitterParticleEffect> BEZIER_ITEM_EMITTER = FabricParticleTypes.complex(BezierItemEmitterParticleEffect.FACTORY);
+    public static final ParticleType<BezierPathParticleEffect> BEZIER_PATH = FabricParticleTypes.complex(BezierPathParticleEffect.FACTORY);
+    public static final ParticleType<BezierPathEmitterParticleEffect> BEZIER_PATH_EMITTER = FabricParticleTypes.complex(BezierPathEmitterParticleEffect.FACTORY);
 
 
     @Override

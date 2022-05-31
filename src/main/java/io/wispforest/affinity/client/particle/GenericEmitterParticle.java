@@ -6,6 +6,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 public class GenericEmitterParticle extends NoRenderParticle {
@@ -23,7 +24,14 @@ public class GenericEmitterParticle extends NoRenderParticle {
     public void tick() {
         if (this.age % this.parameters.emitInterval() == 0) {
             final var deviation = this.parameters.emitDeviation();
-            final var velocity = this.parameters.emitVelocity();
+
+            final var velocityParam = this.parameters.emitVelocity();
+            final var velocity = this.parameters.randomizeVelocity()
+                    ? new Vec3d(
+                    this.random.nextFloat() * velocityParam.x,
+                    this.random.nextFloat() * velocityParam.y,
+                    this.random.nextFloat() * velocityParam.z)
+                    : velocityParam;
 
             this.world.addParticle(
                     emitParticle,

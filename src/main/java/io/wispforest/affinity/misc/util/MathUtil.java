@@ -71,8 +71,12 @@ public class MathUtil {
         return new BigDecimal(value).setScale(places, RoundingMode.HALF_UP).toString();
     }
 
-    public static Vec3f splitRGBToVector(int rgb) {
+    public static Vec3f splitRGBToVec3f(int rgb) {
         return new Vec3f((rgb >> 16) / 255f, ((rgb >> 8) & 0xFF) / 255f, (rgb & 0xFF) / 255f);
+    }
+
+    public static Vec3d splitRGBToVec3d(int rgb) {
+        return new Vec3d((rgb >> 16) / 255d, ((rgb >> 8) & 0xFF) / 255d, (rgb & 0xFF) / 255d);
     }
 
     public static float[] splitRGBToFloats(int rgb) {

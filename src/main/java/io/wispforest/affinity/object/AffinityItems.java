@@ -30,7 +30,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item COLLECTION_STAFF = new CollectionStaffItem();
 
     public static final Item AZALEA_FLOWERS = new Item(settings(AffinityItemGroup.NATURE).food(new FoodComponent.Builder().hunger(2).saturationModifier(.5f)
-            .statusEffect(new StatusEffectInstance(AffinityStatusEffects.DRIPPING, 1200), 1).build()));
+            .statusEffect(new StatusEffectInstance(AffinityStatusEffects.DRIPPING, 1200, 0, false, false, true), 1).build()));
 
     public static final Item INERT_WISP_MATTER = new WispMatterItem(AffinityWispTypes.INERT);
     public static final Item WISE_WISP_MATTER = new WispMatterItem(AffinityWispTypes.WISE);

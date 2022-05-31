@@ -87,4 +87,9 @@ public class AffineCandleBlock extends CandleBlock implements BlockEntityProvide
             super.onStateReplaced(state, world, pos, newState, moved);
         }
     }
+
+    @Override
+    public Iterable<Vec3d> getParticleOffsets(BlockState state) {
+        return super.getParticleOffsets(state);
+    }
 }

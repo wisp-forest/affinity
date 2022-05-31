@@ -8,7 +8,6 @@ import net.minecraft.block.CropBlock;
 import net.minecraft.util.math.BlockPos;
 
 public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity {
-    private int roundTime = 0;
 
     public CropReaperBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.CROP_REAPER, pos, state);
@@ -19,11 +18,7 @@ public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implem
 
     @Override
     public void tickServer() {
-        roundTime++;
-
-        if (roundTime < 20) return;
-
-        roundTime = 0;
+        if (this.world.getTime() % 20 != 0) return;
 
         if (this.fluxStorage.flux() >= this.fluxStorage.fluxCapacity()) return;
 

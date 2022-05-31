@@ -35,7 +35,7 @@ public abstract class WispEntity extends PathAwareEntity {
     public WispEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
 
-        this.particles = new DustParticleEffect(MathUtil.splitRGBToVector(this.type().color()), 1);
+        this.particles = new DustParticleEffect(MathUtil.splitRGBToVec3f(this.type().color()), 1);
         this.moveControl = new FlightMoveControl(this, 75, true);
     }
 

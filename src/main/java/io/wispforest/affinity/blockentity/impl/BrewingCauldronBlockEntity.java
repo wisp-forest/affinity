@@ -5,12 +5,15 @@ import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.misc.util.ListUtil;
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CandleBlock;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
@@ -22,6 +25,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -30,6 +34,8 @@ import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.stream.Stream;
+
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity {
 
@@ -37,8 +43,6 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     private PotionMixture storedPotion = PotionMixture.EMPTY;
     private int fillLevel = 0;
     private int processTick = 0;
-    private int candleScanTick = 0;
-    private int affineCandleCount = 0;
 
     private PotionMixingRecipe cachedRecipe = null;
     private BlockPos sporeBlossomPos = null;
@@ -84,11 +88,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         if (processTick < 1) return;
 
         if (processTick < 100) {
-            float r = (storedPotion.color() >> 16) / 255f;
-            float g = ((storedPotion.color() & 0xFF00) >> 8) / 255f;
-            float b = (storedPotion.color() & 0xFF) / 255f;
-
-            ClientParticles.setVelocity(new Vec3d(r, g, b));
+            ClientParticles.setVelocity(MathUtil.splitRGBToVec3d(storedPotion.color()));
             ClientParticles.setParticleCount(2);
             ClientParticles.spawnPrecise(ParticleTypes.ENTITY_EFFECT, world, Vec3d.of(pos).add(0.5, 0.8, 0.5), 0.6, 0.2, 0.6);
 
@@ -122,37 +122,25 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
             world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1, 0.25f + world.random.nextFloat() * 0.5f);
         }
 
-        candleScanTick++;
-
-        if (candleScanTick >= 10) {
-            candleScanTick = 0;
-
-            affineCandleCount = ((ServerWorld) this.world).getPointOfInterestStorage()
-                .getInCircle(type -> type == AffinityPoiTypes.AFFINE_CANDLE, this.pos, 5, PointOfInterestStorage.OccupationStatus.ANY)
-                .map(x -> world.getBlockState(x.getPos()))
-                .filter(x -> x.get(Properties.LIT))
-                .mapToInt(x -> x.get(Properties.CANDLES))
-                .sum();
-        }
-
         updateCraftingPreconditions();
 
         if (processTick < 1) return;
+        if (processTick++ < 100) {
+            if (this.processTick % 20 == 0) {
+                this.spawnCandleParticles();
+            }
 
-        if (processTick < 100) {
-            processTick++;
             return;
         }
 
         if (cachedRecipe == null) return;
 
         world.playSound(null, pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1, 1);
-
         this.storedPotion = cachedRecipe.craftPotion(items);
 
+        int affineCandleCount = this.countCandles();
         if (affineCandleCount > 0) {
             var extraNbt = this.storedPotion.getOrCreateExtraNbt();
-
             extraNbt.put(PotionMixture.EXTEND_DURATION_BY, 1 + Math.min(affineCandleCount * 0.05F, 0.45F));
         }
 
@@ -193,7 +181,35 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
         if (processTick != 0) return;
 
+        this.spawnCandleParticles();
         this.processTick = 1;
+    }
+
+    private int countCandles() {
+        return this.getCandles().mapToInt(value -> value.state.get(CandleBlock.CANDLES)).sum();
+    }
+
+    private void spawnCandleParticles() {
+        var particleOrigins = this.getCandles()
+                .map(candle -> Vec3d.of(candle.pos)
+                        .add(Util.getRandom(
+                                CandleBlock.CANDLES_TO_PARTICLE_OFFSETS.get(candle.state.get(CandleBlock.CANDLES)),
+                                this.world.random
+                        ))
+                ).toList();
+
+        AffinityParticleSystems.AFFINE_CANDLE_BREWING.spawn(
+                world,
+                Vec3d.ofCenter(this.pos),
+                new AffinityParticleSystems.CandleData(particleOrigins)
+        );
+    }
+
+    private Stream<Candle> getCandles() {
+        return ((ServerWorld) this.world).getPointOfInterestStorage()
+                .getInCircle(type -> type == AffinityPoiTypes.AFFINE_CANDLE, this.pos, 5, PointOfInterestStorage.OccupationStatus.ANY)
+                .map(poi -> new Candle(poi.getPos(), world.getBlockState(poi.getPos())))
+                .filter(candle -> candle.state.get(Properties.LIT));
     }
 
     public ItemStack extractOneBottle() {
@@ -245,4 +261,6 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     public DefaultedList<ItemStack> getItems() {
         return items;
     }
+
+    private record Candle(BlockPos pos, BlockState state) {}
 }

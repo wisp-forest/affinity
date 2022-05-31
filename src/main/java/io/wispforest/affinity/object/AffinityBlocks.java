@@ -48,7 +48,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block RANTHRACITE_WIRE = new RanthraciteWireBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block CROP_REAPER = new CropReaperBlock();
 
-    @Tab(AffinityItemGroup.MAIN) public static final Block AFFINE_CANDLE = new AffineCandleBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
 

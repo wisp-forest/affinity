@@ -3,19 +3,20 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.AberrantCallingCoreBlock;
 import io.wispforest.affinity.misc.util.MathUtil;
-import io.wispforest.affinity.particle.BezierItemEmitterParticleEffect;
+import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
 import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+
+import java.util.List;
 
 public class AffinityParticleSystems {
 
@@ -36,7 +37,7 @@ public class AffinityParticleSystems {
         var length = data.target().subtract(pos).length();
 
         ClientParticles.setParticleCount((int) Math.round(length * 5));
-        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVector(data.color()), 1), world, pos, data.target(), .15f);
+        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVec3f(data.color()), 1), world, pos, data.target(), .15f);
     });
 
     public static final ParticleSystem<Vec3d> ABERRANT_CORE_HINT = CONTROLLER.register(Vec3d.class, (world, pos, data) -> {
@@ -47,8 +48,13 @@ public class AffinityParticleSystems {
     });
 
     public static final ParticleSystem<DissolveData> DISSOLVE_ITEM = CONTROLLER.register(DissolveData.class, (world, pos, data) -> {
-        world.addParticle(new BezierItemEmitterParticleEffect(data.suckWhat(), data.suckWhere(), data.particleMaxAge(), data.duration()),
+        world.addParticle(BezierPathEmitterParticleEffect.item(data.suckWhat(), data.suckWhere(), data.particleMaxAge(), data.duration()),
                 pos.x, pos.y, pos.z, 0, 0, 0);
+
+        world.addParticle(new GenericEmitterParticleEffect(
+                        new ItemStackParticleEffect(ParticleTypes.ITEM, data.suckWhat()),
+                        new Vec3d(.05f, 0.2f, .05f), 1, .15f, true, data.duration()
+                ), pos.x, pos.y, pos.z, 0, 0, 0);
     });
 
     public static final ParticleSystem<Void> DRIPPING_AZALEA = CONTROLLER.register(Void.class, (world, pos, data) -> {
@@ -65,7 +71,7 @@ public class AffinityParticleSystems {
 
     public static final ParticleSystem<Void> ABERRANT_CALLING_SUCCESS = CONTROLLER.register(Void.class, (world, pos, data) -> {
         ClientParticles.spawn(new GenericEmitterParticleEffect(
-                ParticleTypes.LARGE_SMOKE, new Vec3d(0, .25, 0), 1, .5f, 8
+                ParticleTypes.LARGE_SMOKE, new Vec3d(0, .25, 0), 1, .5f, false, 8
         ), world, pos, 0d);
 
         ClientParticles.setParticleCount(10);
@@ -73,7 +79,7 @@ public class AffinityParticleSystems {
     });
 
     public static final ParticleSystem<AberrantCallingCoreBlock.CoreSet> ABERRANT_CALLING_ACTIVE = CONTROLLER.register(AberrantCallingCoreBlock.CoreSet.class, (world, pos, data) -> {
-        var effect = new DustColorTransitionParticleEffect(new Vec3f(1, 0, 0), new Vec3f(1, .75f, .75f), 1);
+        var effect = new DustColorTransitionParticleEffect(new Vec3f(1, 0, 0), new Vec3f(1, .25f, .75f), 1);
 
         ClientParticles.persist();
         ClientParticles.setParticleCount(7);
@@ -86,9 +92,17 @@ public class AffinityParticleSystems {
         ClientParticles.reset();
     });
 
+    public static final ParticleSystem<CandleData> AFFINE_CANDLE_BREWING = CONTROLLER.register(CandleData.class, (world, pos, data) -> {
+        for (var candle : data.candles()) {
+            ClientParticles.spawn(new BezierPathEmitterParticleEffect(ParticleTypes.REVERSE_PORTAL, pos, 30, 20), world, candle, .15f);
+        }
+    });
+
     public record DissolveData(ItemStack suckWhat, Vec3d suckWhere, int duration, int particleMaxAge) {}
 
     public record LineData(Vec3d target, int color) {}
+
+    public record CandleData(List<Vec3d> candles) {}
 
     public static void initialize() {}
 }

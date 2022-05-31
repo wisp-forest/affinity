@@ -43,7 +43,7 @@ public class UnfloweringAzaleaLeavesBlock extends LeavesBlock {
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        final var dust = new DustParticleEffect(MathUtil.splitRGBToVector(0x5548ce), 1);
+        final var dust = new DustParticleEffect(MathUtil.splitRGBToVec3f(0x5548ce), 1);
 
         ClientParticles.setParticleCount(15);
         ClientParticles.spawnCenteredOnBlock(dust, world, pos, 1.25);

@@ -2,8 +2,8 @@ package io.wispforest.affinity.client;
 
 import io.wispforest.affinity.block.impl.RanthraciteWireBlock;
 import io.wispforest.affinity.block.impl.RitualSocleBlock;
-import io.wispforest.affinity.client.particle.BezierItemEmitterParticle;
-import io.wispforest.affinity.client.particle.BezierItemParticle;
+import io.wispforest.affinity.client.particle.BezierPathEmitterParticle;
+import io.wispforest.affinity.client.particle.BezierPathParticle;
 import io.wispforest.affinity.client.particle.ColoredFlamedParticle;
 import io.wispforest.affinity.client.particle.GenericEmitterParticle;
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
@@ -64,8 +64,8 @@ public class AffinityClient implements ClientModInitializer {
 
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.COLORED_FLAME, ColoredFlamedParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.SMALL_COLORED_FLAME, ColoredFlamedParticle.SmallFactory::new);
-        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.BEZIER_ITEM, new BezierItemParticle.Factory());
-        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.BEZIER_ITEM_EMITTER, new BezierItemEmitterParticle.Factory());
+        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.BEZIER_PATH, new BezierPathParticle.Factory());
+        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.BEZIER_PATH_EMITTER, new BezierPathEmitterParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.GENERIC_EMITTER, new GenericEmitterParticle.Factory());
 
         EntityRendererRegistry.register(AffinityEntities.INERT_WISP, WispEntityRenderer::new);

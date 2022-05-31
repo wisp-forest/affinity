@@ -1,7 +1,7 @@
 package io.wispforest.affinity.blockentity.template;
 
 import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
-import io.wispforest.affinity.client.particle.BezierItemEmitterParticle;
+import io.wispforest.affinity.client.particle.BezierPathEmitterParticle;
 import io.wispforest.affinity.misc.ReadOnlyInventory;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -299,7 +299,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     static {
         AffinityNetwork.CHANNEL.registerClientbound(CancelRitualParticlesPacket.class, (message, access) -> {
             for (var pos : message.soclePositions()) {
-                BezierItemEmitterParticle.removeParticleAt(Vec3d.of(pos).add(message.offset()));
+                BezierPathEmitterParticle.removeParticleAt(Vec3d.of(pos).add(message.offset()));
             }
         });
     }
