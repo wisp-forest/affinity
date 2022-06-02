@@ -4,10 +4,12 @@ import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntit
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEnchantments;
+import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -37,6 +39,11 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
 
         for (var entity : this.world.getNonSpectatingEntities(Entity.class, searchArea)) {
             if (currentRepairCost.getValue() > this.flux() - REPAIR_COST_PER_ITEM) break;
+
+            if (entity instanceof LivingEntity living && living.hasStatusEffect(AffinityStatusEffects.AFFINE) && living.getMaxHealth() > living.getHealth()) {
+                ((LivingEntity) entity).heal(1);
+                currentRepairCost.add(REPAIR_COST_PER_ITEM);
+            }
 
             if (entity instanceof PlayerEntity) {
                 entity.getItemsEquipped().forEach(AffineInfuserBlockEntity::repairIfEnchanted);

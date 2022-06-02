@@ -69,6 +69,7 @@
   "item.affinity.aethum_flux_bottle": "Bottle of Aethum Flux",
   "item.affinity.resplendent_gem": "Resplendent Gem",
   "item.affinity.echo_shard": "Echo Shard",
+  "item.affinity.affinitea": "Affinitea",
 
   "text.affinity.attuned_shard_range": "Range: ",
   "text.affinity.attuned_shard_range.value": "%d blocks",
@@ -120,6 +121,7 @@
 
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.bastion_regeneration": "Bastion",
+  "effect.affinity.affine": "Affine",
 
   "effect.affinity.life_leech": "Life Leech",
   "item.minecraft.potion.effect.life_leech": "Potion of Life Leech",
