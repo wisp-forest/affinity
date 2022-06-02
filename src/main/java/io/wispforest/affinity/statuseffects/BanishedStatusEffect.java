@@ -7,7 +7,9 @@ import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityStatusEffects;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -27,12 +29,13 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
     }
 
     static {
-        ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-            if (PotionUtil.getPotionEffects(stack).stream().noneMatch(x -> x.getEffectType() == AffinityStatusEffects.BANISHED)) return;
-            if (!stack.has(PotionMixture.EXTRA_DATA)) return;
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+            ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
+                if (PotionUtil.getPotionEffects(stack).stream().noneMatch(x -> x.getEffectType() == AffinityStatusEffects.BANISHED)) return;
+                if (!stack.has(PotionMixture.EXTRA_DATA)) return;
 
-            EchoShardItem.formatLocationTooltip(stack.get(PotionMixture.EXTRA_DATA), lines);
-        });
+                EchoShardItem.formatLocationTooltip(stack.get(PotionMixture.EXTRA_DATA), lines);
+            });
     }
 
     @Override
