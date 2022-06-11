@@ -8,6 +8,11 @@ import java.util.Set;
 public interface AethumNetworkMember extends AethumFluxContainer {
 
     /**
+     * Sets the member's flux amount to {@code flux}.
+     */
+    void updateFlux(long flux);
+
+    /**
      * @return The positions of all network members
      */
     Set<BlockPos> linkedMembers();

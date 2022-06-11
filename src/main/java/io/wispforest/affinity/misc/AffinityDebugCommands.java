@@ -2,20 +2,25 @@ package io.wispforest.affinity.misc;
 
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
+import io.wispforest.affinity.aethumflux.storage.AethumFluxContainer;
 import io.wispforest.affinity.component.AethumComponent;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.PlayerAethumComponent;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 import javax.imageio.ImageIO;
@@ -61,7 +66,40 @@ public class AffinityDebugCommands {
                                             .then(setPlayerAethumNode(PlayerAethumType.MAX))
                                             .then(setPlayerAethumNode(PlayerAethumType.REGEN))))));
 
+            dispatcher.register(literal("aethumflux")
+                    .then(argument("position", BlockPosArgumentType.blockPos())
+                            .then(literal("get").executes(AffinityDebugCommands::getAethumFluxAt))
+                            .then(literal("set")
+                                    .then(argument("flux", LongArgumentType.longArg(0)).executes(AffinityDebugCommands::setAethumFluxAt)))));
         });
+    }
+
+    private static int setAethumFluxAt(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        BlockPos pos = BlockPosArgumentType.getLoadedBlockPos(context, "position");
+        long flux = LongArgumentType.getLong(context, "flux");
+
+        BlockEntity be = context.getSource().getWorld().getBlockEntity(pos);
+
+        if (be instanceof AethumNetworkMember member) {
+            member.updateFlux(flux);
+            context.getSource().sendFeedback(simpleFeedback("block flux updated"), true);
+        }
+
+        return 0;
+    }
+
+    private static int getAethumFluxAt(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        BlockPos pos = BlockPosArgumentType.getLoadedBlockPos(context, "position");
+
+        BlockEntity be = context.getSource().getWorld().getBlockEntity(pos);
+
+        if (be instanceof AethumNetworkMember member) {
+            context.getSource().sendFeedback(valueFeedback("block flux", member.flux()), true);
+
+            return (int) member.flux();
+        }
+
+        return 0;
     }
 
     private static LiteralArgumentBuilder<ServerCommandSource> setPlayerAethumNode(PlayerAethumType type) {
@@ -176,7 +214,7 @@ public class AffinityDebugCommands {
         return TextOps.withColor("affinity §> " + message, AFFINITY_COLOR, TextOps.color(Formatting.GRAY));
     }
 
-    private static Text valueFeedback(String message, double value) {
+    private static Text valueFeedback(String message, Object value) {
         return TextOps.withColor("affinity §> " + message + ": §" + value, AFFINITY_COLOR, TextOps.color(Formatting.GRAY), VALUE_COLOR);
     }
 
