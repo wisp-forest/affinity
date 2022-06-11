@@ -19,6 +19,7 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "MapStateMixin",
+    "MinecraftServerMixin",
     "MobEntityMixin",
     "MobSpawnerLogicMixin",
     "PlayerEntityMixin",

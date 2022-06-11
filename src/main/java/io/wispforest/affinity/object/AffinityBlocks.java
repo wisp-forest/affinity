@@ -47,6 +47,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block AFFINE_INFUSER = new AffineInfuserBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block RANTHRACITE_WIRE = new RanthraciteWireBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block CROP_REAPER = new CropReaperBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block WORLD_PIN = new WorldPinBlock();
 
     @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 
@@ -120,6 +121,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<AffineCandleBlockEntity> AFFINE_CANDLE =
                 make(AffineCandleBlockEntity::new, AffinityBlocks.AFFINE_CANDLE);
 
+        public static final BlockEntityType<WorldPinBlockEntity> WORLD_PIN =
+                make(WorldPinBlockEntity::new, AffinityBlocks.WORLD_PIN);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
@@ -134,6 +138,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_INFUSER);
             Affinity.AETHUM_MEMBER.registerSelf(CROP_REAPER);
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_CANDLE);
+            Affinity.AETHUM_MEMBER.registerSelf(WORLD_PIN);
         }
 
         @Override
