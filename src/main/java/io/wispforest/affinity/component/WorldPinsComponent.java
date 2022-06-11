@@ -1,10 +1,13 @@
 package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import io.wispforest.affinity.mixin.access.ChunkTicketManagerAccessor;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.server.world.ChunkTicket;
+import net.minecraft.server.world.ChunkTicketManager;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -16,13 +19,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorldPinsComponent implements Component {
-    private static final ChunkTicketType<BlockPos> WORLD_PIN = ChunkTicketType.create("affinity:world_pin", Comparator.comparingLong(BlockPos::asLong));
+    public static final ChunkTicketType<BlockPos> TICKET_TYPE = ChunkTicketType.create("affinity:world_pin", Comparator.comparingLong(BlockPos::asLong));
 
     private final World w;
     private final Map<BlockPos, Integer> pins = new HashMap<>();
 
     public WorldPinsComponent(World w) {
         this.w = w;
+    }
+
+    public static boolean shouldTick(ChunkTicketManager manager, ChunkPos pos) {
+        var ticketSet = ((ChunkTicketManagerAccessor) manager).getTicketsByPosition().get(pos.toLong());
+
+        if (ticketSet == null) return false;
+
+        for (ChunkTicket<?> ticket : ticketSet) {
+            if (ticket.getType() == WorldPinsComponent.TICKET_TYPE)
+                return true;
+        }
+
+        return false;
     }
 
     public void addPin(BlockPos pin, int radius) {
@@ -34,14 +50,14 @@ public class WorldPinsComponent implements Component {
     public void removePin(BlockPos pin, int radius) {
         if (pins.remove(pin) != null) {
             ChunkPos.stream(new ChunkPos(pin), radius).forEach(chunkPos -> {
-                ((ServerWorld) w).getChunkManager().removeTicket(WORLD_PIN, chunkPos, 1, pin);
+                ((ServerWorld) w).getChunkManager().removeTicket(TICKET_TYPE, chunkPos, 1, pin);
             });
         }
     }
 
     private void addPinTickets(BlockPos pin, int radius) {
         ChunkPos.stream(new ChunkPos(pin), radius).forEach(chunkPos -> {
-            ((ServerWorld) w).getChunkManager().addTicket(WORLD_PIN, chunkPos, 1, pin);
+            ((ServerWorld) w).getChunkManager().addTicket(TICKET_TYPE, chunkPos, 1, pin);
         });
     }
 
