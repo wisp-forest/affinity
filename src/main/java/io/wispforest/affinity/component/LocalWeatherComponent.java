@@ -22,7 +22,7 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
     private final @NotNull WorldChunk c;
     private float rainGradient;
     private float thunderGradient;
-    private float ambientDarkness;
+    private int ambientDarkness;
     private long lastTick;
 
     private final Set<BlockPos> monoliths = new HashSet<>();
@@ -43,14 +43,17 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
     }
 
     public float getRainGradient() {
+        serverTick();
         return rainGradient;
     }
 
     public float getThunderGradient() {
+        serverTick();
         return thunderGradient;
     }
 
-    public float getAmbientDarkness() {
+    public int getAmbientDarkness() {
+        serverTick();
         return ambientDarkness;
     }
 
@@ -82,14 +85,16 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
         }
 
         monoliths.add(monolithPos);
+        c.setNeedsSaving(true);
     }
 
     public void removeMonolith(BlockPos monolithPos) {
         monoliths.remove(monolithPos);
+        c.setNeedsSaving(true);
     }
 
     private static float flatInterpolate(float current, float target, long ticksPassed) {
-        if (Math.abs(current - target) < 0.01f * ticksPassed)
+        if (Math.abs(current - target) < 0.01f * (ticksPassed + 1))
             return target;
 
         float newCurrent;
@@ -99,8 +104,15 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
         else
             newCurrent = current - 0.01f * ticksPassed;
 
-        if (newCurrent > 1.0F || newCurrent < 0.0F)
-            System.out.println("wtf");
+        if (newCurrent > 1.0F || newCurrent < 0.0F) {
+            // This is fine.
+            // I'm okay with the events that are unfolding currently.
+            // That's OK.
+            // Things are gonna be OK.
+
+            return target;
+        }
+
 
         return newCurrent;
     }
@@ -109,8 +121,11 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
     public void serverTick() {
         World w = c.getWorld();
 
-        if (lastTick == 0)
+        if (lastTick == 0 || lastTick > w.getTime())
             lastTick = w.getTime() - 1;
+
+        if (lastTick == w.getTime())
+            return;
 
         if (monoliths.isEmpty()) {
             float targetRainGradient = w.isRaining() ? 1.0f : 0.0f;

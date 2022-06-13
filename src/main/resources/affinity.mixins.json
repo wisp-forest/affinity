@@ -34,6 +34,7 @@
         "TippedArrowRecipeMixin",
         "TrackTargetGoalMixin",
         "WorldChunkMixin",
+        "WorldViewMixin",
         "access.BlockEntityTypeAccessor",
         "access.ChunkTicketManagerAccessor",
         "access.FilledMapItemInvoker",
