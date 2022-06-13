@@ -58,7 +58,9 @@
       "affinity:chunk_aethum",
       "affinity:entity_flags",
       "affinity:banishment",
-      "affinity:world_pins"
+      "affinity:world_pins",
+      "affinity:local_weather",
+      "affinity:player_weather_tracker"
     ]
   }
 }

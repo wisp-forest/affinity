@@ -34,6 +34,7 @@
     "ThrowablePotionItemMixin",
     "TippedArrowRecipeMixin",
     "TrackTargetGoalMixin",
+    "WorldChunkMixin",
     "access.BlockEntityTypeAccessor",
     "access.ChunkTicketManagerAccessor",
     "access.FilledMapItemInvoker",
