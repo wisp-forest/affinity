@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "required": true,
   "minVersion": "0.8",
   "package": "io.wispforest.affinity.mixin",
@@ -35,6 +36,7 @@
     "TippedArrowRecipeMixin",
     "TrackTargetGoalMixin",
     "WorldChunkMixin",
+    "WorldViewMixin",
     "access.BlockEntityTypeAccessor",
     "access.ChunkTicketManagerAccessor",
     "access.FilledMapItemInvoker",
