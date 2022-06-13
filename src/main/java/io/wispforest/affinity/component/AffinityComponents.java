@@ -25,14 +25,18 @@ public class AffinityComponents implements EntityComponentInitializer, ChunkComp
             ComponentRegistry.getOrCreate(Affinity.id("entity_flags"), EntityFlagComponent.class);
     public static final ComponentKey<BanishmentComponent> BANISHMENT =
             ComponentRegistry.getOrCreate(Affinity.id("banishment"), BanishmentComponent.class);
-
     public static final ComponentKey<WorldPinsComponent> WORLD_PINS =
             ComponentRegistry.getOrCreate(Affinity.id("world_pins"), WorldPinsComponent.class);
+    public static final ComponentKey<LocalWeatherComponent> LOCAL_WEATHER =
+            ComponentRegistry.getOrCreate(Affinity.id("local_weather"), LocalWeatherComponent.class);
+    public static final ComponentKey<PlayerWeatherTrackerComponent> PLAYER_WEATHER_TRACKER =
+            ComponentRegistry.getOrCreate(Affinity.id("player_weather_tracker"), PlayerWeatherTrackerComponent.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.registerForPlayers(GLOWING_COLOR, GlowingColorComponent::new, RespawnCopyStrategy.NEVER_COPY);
         registry.registerForPlayers(PLAYER_AETHUM, PlayerAethumComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
+        registry.registerForPlayers(PLAYER_WEATHER_TRACKER, PlayerWeatherTrackerComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
 
         registry.registerFor(Entity.class, ENTITY_FLAGS, entity -> new EntityFlagComponent());
         registry.registerFor(LivingEntity.class, BANISHMENT, player -> new BanishmentComponent());
@@ -41,6 +45,7 @@ public class AffinityComponents implements EntityComponentInitializer, ChunkComp
     @Override
     public void registerChunkComponentFactories(ChunkComponentFactoryRegistry registry) {
         registry.register(CHUNK_AETHUM, ChunkAethumComponent::new);
+        registry.register(LOCAL_WEATHER, LocalWeatherComponent::new);
     }
 
     @Override
