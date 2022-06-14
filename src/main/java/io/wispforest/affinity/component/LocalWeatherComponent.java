@@ -2,12 +2,10 @@ package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -37,9 +35,16 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
     }
 
     public void init() {
-        rainGradient = c.getWorld().getRainGradient(1);
-        thunderGradient = c.getWorld().getThunderGradient(1);
-        ambientDarkness = c.getWorld().getAmbientDarkness();
+        if (monoliths.isEmpty()) {
+            rainGradient = c.getWorld().getRainGradient(1);
+            thunderGradient = c.getWorld().getThunderGradient(1);
+            ambientDarkness = c.getWorld().getAmbientDarkness();
+        } else {
+            rainGradient = 0.f;
+            thunderGradient = 0.f;
+            double f = 0.5 + 2.0 * MathHelper.clamp(MathHelper.cos(c.getWorld().getSkyAngle(1.0F) * (float) (Math.PI * 2)), -0.25, 0.25);
+            ambientDarkness = (int)((1.0 - f) * 11.0);
+        }
     }
 
     public float getRainGradient() {
@@ -148,5 +153,9 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
         }
 
         lastTick = w.getTime();
+    }
+
+    public boolean hasMonolith() {
+        return !monoliths.isEmpty();
     }
 }
