@@ -24,14 +24,16 @@ public class WorldPinBlockEntity extends AethumNetworkMemberBlockEntity implemen
         if (shouldBeEnabled != getCachedState().get(Properties.ENABLED)) {
             world.setBlockState(pos, getCachedState().with(Properties.ENABLED, shouldBeEnabled));
 
-            if (shouldBeEnabled)
+            if (shouldBeEnabled) {
                 AffinityComponents.WORLD_PINS.get(world).addPin(pos, 4);
-            else
+            } else {
                 AffinityComponents.WORLD_PINS.get(world).removePin(pos, 4);
+            }
         }
 
-        if (shouldBeEnabled)
+        if (shouldBeEnabled) {
             updateFlux(flux - 4);
+        }
     }
 
 

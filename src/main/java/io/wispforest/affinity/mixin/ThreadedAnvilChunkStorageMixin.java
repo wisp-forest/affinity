@@ -16,7 +16,8 @@ public class ThreadedAnvilChunkStorageMixin {
 
     @Inject(method = "shouldTick", at = @At("HEAD"), cancellable = true)
     private void enableTicksFromWorldPin(ChunkPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (WorldPinsComponent.shouldTick(ticketManager, pos))
+        if (WorldPinsComponent.shouldTick(ticketManager, pos)) {
             cir.setReturnValue(true);
+        }
     }
 }
