@@ -34,8 +34,9 @@ public class WorldPinsComponent implements Component {
         if (ticketSet == null) return false;
 
         for (ChunkTicket<?> ticket : ticketSet) {
-            if (ticket.getType() == WorldPinsComponent.TICKET_TYPE)
+            if (ticket.getType() == WorldPinsComponent.TICKET_TYPE) {
                 return true;
+            }
         }
 
         return false;

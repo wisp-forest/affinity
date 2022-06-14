@@ -26,14 +26,16 @@ public class SunshineMonolithBlockEntity extends AethumNetworkMemberBlockEntity 
         if (shouldBeEnabled != getCachedState().get(Properties.ENABLED)) {
             world.setBlockState(pos, getCachedState().with(Properties.ENABLED, shouldBeEnabled));
 
-            if (shouldBeEnabled)
+            if (shouldBeEnabled) {
                 addMonolithToChunks();
-            else
+            } else {
                 removeMonolithFromChunks();
+            }
         }
 
-        if (shouldBeEnabled && world.isRaining())
+        if (shouldBeEnabled && world.isRaining()) {
             updateFlux(flux - 1);
+        }
     }
 
 

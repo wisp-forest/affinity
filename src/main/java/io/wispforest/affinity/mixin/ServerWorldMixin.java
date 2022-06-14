@@ -36,8 +36,9 @@ public abstract class ServerWorldMixin extends World {
 
     @Inject(method = "shouldTick(Lnet/minecraft/util/math/ChunkPos;)Z", at = @At("HEAD"), cancellable = true)
     private void worldPinTick(ChunkPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (WorldPinsComponent.shouldTick(((ServerChunkManagerAccessor) this.chunkManager).getTicketManager(), pos))
+        if (WorldPinsComponent.shouldTick(((ServerChunkManagerAccessor) this.chunkManager).getTicketManager(), pos)) {
             cir.setReturnValue(true);
+        }
     }
 
     @Inject(method = "tickWeather", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;rainGradientPrev:F", opcode = Opcodes.GETFIELD), cancellable = true)
@@ -53,8 +54,9 @@ public abstract class ServerWorldMixin extends World {
 
         var component = AffinityComponents.LOCAL_WEATHER.get(chunk);
 
-        if (component.hasMonolith())
+        if (component.hasMonolith()) {
             return new BlockPos(0, -255, 0);
+        }
 
         return pos;
     }

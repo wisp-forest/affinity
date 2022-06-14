@@ -6,8 +6,10 @@ import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerWeatherTrackerComponent implements TransientComponent, ServerTickingComponent, CopyableComponent<PlayerWeatherTrackerComponent> {
+    @NotNull
     private final ServerPlayerEntity player;
 
     private float rainGradient;
@@ -15,16 +17,16 @@ public class PlayerWeatherTrackerComponent implements TransientComponent, Server
     private boolean hasTicked = false;
 
     public PlayerWeatherTrackerComponent(PlayerEntity player) {
-        if (player instanceof ServerPlayerEntity spe)
+        if (player instanceof ServerPlayerEntity spe) {
             this.player = spe;
-        else
+        } else {
+            //noinspection ConstantConditions
             this.player = null;
+        }
     }
 
     @Override
     public void serverTick() {
-        assert player != null;
-
         var chunkWeather = AffinityComponents.LOCAL_WEATHER.get(player.world.getChunk(player.getBlockPos()));
 
         if (!hasTicked) {

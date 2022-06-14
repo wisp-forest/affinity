@@ -99,15 +99,17 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
     }
 
     private static float flatInterpolate(float current, float target, long ticksPassed) {
-        if (Math.abs(current - target) < 0.01f * (ticksPassed + 1))
+        if (Math.abs(current - target) < 0.01f * (ticksPassed + 1)) {
             return target;
+        }
 
         float newCurrent;
 
-        if (target > current)
+        if (target > current) {
             newCurrent = current + 0.01f * ticksPassed;
-        else
+        } else {
             newCurrent = current - 0.01f * ticksPassed;
+        }
 
         if (newCurrent > 1.0F || newCurrent < 0.0F) {
             // This is fine.
@@ -126,11 +128,13 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
     public void serverTick() {
         World w = c.getWorld();
 
-        if (lastTick == 0 || lastTick > w.getTime())
+        if (lastTick == 0 || lastTick > w.getTime()) {
             lastTick = w.getTime() - 1;
+        }
 
-        if (lastTick == w.getTime())
+        if (lastTick == w.getTime()) {
             return;
+        }
 
         if (monoliths.isEmpty()) {
             float targetRainGradient = w.isRaining() ? 1.0f : 0.0f;
