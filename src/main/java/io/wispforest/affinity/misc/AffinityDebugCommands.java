@@ -80,8 +80,8 @@ public class AffinityDebugCommands {
 
         BlockEntity be = context.getSource().getWorld().getBlockEntity(pos);
 
-        if (be instanceof AethumNetworkMember member) {
-            member.updateFlux(flux);
+        if (be instanceof AethumFluxContainer container) {
+            container.updateFlux(flux);
             context.getSource().sendFeedback(simpleFeedback("block flux updated"), true);
         }
 
@@ -93,10 +93,10 @@ public class AffinityDebugCommands {
 
         BlockEntity be = context.getSource().getWorld().getBlockEntity(pos);
 
-        if (be instanceof AethumNetworkMember member) {
-            context.getSource().sendFeedback(valueFeedback("block flux", member.flux()), true);
+        if (be instanceof AethumFluxContainer container) {
+            context.getSource().sendFeedback(valueFeedback("block flux", container.flux()), true);
 
-            return (int) member.flux();
+            return (int) container.flux();
         }
 
         return 0;
