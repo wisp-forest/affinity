@@ -1,22 +1,38 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.WorldPinsComponent;
 import io.wispforest.affinity.mixin.access.ServerChunkManagerAccessor;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.MutableWorldProperties;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.EmptyChunk;
+import net.minecraft.world.dimension.DimensionType;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.function.Supplier;
+
 @Mixin(ServerWorld.class)
-public class ServerWorldMixin {
+public abstract class ServerWorldMixin extends World {
     @Shadow @Final private ServerChunkManager chunkManager;
+
+    protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, RegistryEntry<DimensionType> registryEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed) {
+        super(properties, registryRef, registryEntry, profiler, isClient, debugWorld, seed);
+    }
 
     @Inject(method = "shouldTick(Lnet/minecraft/util/math/ChunkPos;)Z", at = @At("HEAD"), cancellable = true)
     private void worldPinTick(ChunkPos pos, CallbackInfoReturnable<Boolean> cir) {
@@ -27,5 +43,19 @@ public class ServerWorldMixin {
     @Inject(method = "tickWeather", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;rainGradientPrev:F", opcode = Opcodes.GETFIELD), cancellable = true)
     private void disableVanillaPacketSending(CallbackInfo ci) {
         ci.cancel();
+    }
+
+    @ModifyArg(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;hasRain(Lnet/minecraft/util/math/BlockPos;)Z"))
+    private BlockPos makeSunshineMonolithsStopThunder(BlockPos pos) {
+        var chunk = getWorldChunk(pos);
+
+        if (chunk instanceof EmptyChunk) return pos;
+
+        var component = AffinityComponents.LOCAL_WEATHER.get(chunk);
+
+        if (component.hasMonolith())
+            return new BlockPos(0, -255, 0);
+
+        return pos;
     }
 }

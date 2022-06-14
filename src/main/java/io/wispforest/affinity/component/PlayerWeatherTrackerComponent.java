@@ -12,6 +12,7 @@ public class PlayerWeatherTrackerComponent implements TransientComponent, Server
 
     private float rainGradient;
     private float thunderGradient;
+    private boolean hasTicked = false;
 
     public PlayerWeatherTrackerComponent(PlayerEntity player) {
         if (player instanceof ServerPlayerEntity spe)
@@ -25,6 +26,13 @@ public class PlayerWeatherTrackerComponent implements TransientComponent, Server
         assert player != null;
 
         var chunkWeather = AffinityComponents.LOCAL_WEATHER.get(player.world.getChunk(player.getBlockPos()));
+
+        if (!hasTicked) {
+            hasTicked = true;
+
+            rainGradient = chunkWeather.getRainGradient();
+            thunderGradient = chunkWeather.getThunderGradient();
+        }
 
         float prevRainGradient = rainGradient;
         float prevThunderGradient = thunderGradient;
