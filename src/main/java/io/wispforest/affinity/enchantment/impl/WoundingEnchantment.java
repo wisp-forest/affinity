@@ -19,6 +19,6 @@ public class WoundingEnchantment extends AffinityEnchantment {
 
     @Override
     protected boolean canAccept(Enchantment other) {
-        return other != AffinityEnchantments.CRITICAL_GAMBLE;
+        return other != AffinityEnchantments.CRITICAL_GAMBLE && super.canAccept(other);
     }
 }

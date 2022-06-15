@@ -3,6 +3,7 @@ package io.wispforest.affinity.client.render.blockentity;
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
@@ -44,14 +45,19 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
         for (var linkedMember : node.linkedMembers()) {
             var offset = Vec3d.ofCenter(linkedMember).subtract(Vec3d.of(node.getPos()));
 
+            final var cameraPos = MinecraftClient.getInstance().player.getClientCameraPosVec(0);
+            var normal = cameraPos.subtract(Vec3d.ofCenter(node.getPos()));
+
             vertexConsumers.getBuffer(RenderLayer.LINES)
                     .vertex(matrices.peek().getPositionMatrix(), .5f, .5f, .5f)
                     .color(startColor)
-                    .normal(1, 0, 1).next();
+                    .normal((float) normal.x, (float) normal.y, (float) normal.z).next();
+
+            normal = cameraPos.subtract(offset);
             vertexConsumers.getBuffer(RenderLayer.LINES)
                     .vertex(matrices.peek().getPositionMatrix(), (float) offset.x, (float) offset.y, (float) offset.z)
                     .color(endColor)
-                    .normal(1, 0, 1).next();
+                    .normal((float) normal.x, (float) normal.y, (float) normal.z).next();
         }
 
         // -------------------------

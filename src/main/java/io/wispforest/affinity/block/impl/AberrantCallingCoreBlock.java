@@ -40,12 +40,13 @@ public class AberrantCallingCoreBlock extends AethumNetworkMemberBlock {
     private static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
 
     private static final VoxelShape SHAPE = Stream.of(
-            Block.createCuboidShape(5, 4, 12, 11, 11, 13),
-            Block.createCuboidShape(2, 0, 2, 14, 3, 14),
-            Block.createCuboidShape(4, 3, 4, 12, 12, 12),
-            Block.createCuboidShape(3, 4, 5, 4, 11, 11),
-            Block.createCuboidShape(12, 4, 5, 13, 11, 11),
-            Block.createCuboidShape(5, 4, 3, 11, 11, 4)
+            Block.createCuboidShape(4, 4, 4, 12, 12, 12),
+            Block.createCuboidShape(3, 1, 3, 13, 4, 13),
+            Block.createCuboidShape(4, 0, 4, 12, 1, 12),
+            Block.createCuboidShape(2, 2, 6, 4, 6, 10),
+            Block.createCuboidShape(12, 2, 6, 14, 6, 10),
+            Block.createCuboidShape(6, 2, 2, 10, 6, 4),
+            Block.createCuboidShape(6, 2, 12, 10, 6, 14)
     ).reduce(VoxelShapes::union).get();
 
     public AberrantCallingCoreBlock() {

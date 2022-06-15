@@ -55,6 +55,9 @@ repositories {
     // canvas
     maven { url "https://maven.vram.io/" }
 
+    // --> spruceui
+    maven { url 'https://maven.gegy.dev' }
+
     // emoji-type
     maven {
         url "https://api.modrinth.com/maven"

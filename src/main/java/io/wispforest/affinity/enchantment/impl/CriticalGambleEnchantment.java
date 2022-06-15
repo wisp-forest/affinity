@@ -27,6 +27,6 @@ public class CriticalGambleEnchantment extends AffinityEnchantment {
 
     @Override
     protected boolean canAccept(Enchantment other) {
-        return other != AffinityEnchantments.WOUNDING;
+        return other != AffinityEnchantments.WOUNDING && super.canAccept(other);
     }
 }

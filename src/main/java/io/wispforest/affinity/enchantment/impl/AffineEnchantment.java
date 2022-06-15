@@ -28,6 +28,6 @@ public class AffineEnchantment extends Enchantment {
 
     @Override
     protected boolean canAccept(Enchantment other) {
-        return other != Enchantments.MENDING;
+        return other != Enchantments.MENDING && super.canAccept(other);
     }
 }

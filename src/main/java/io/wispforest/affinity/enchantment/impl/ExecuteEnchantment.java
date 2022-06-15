@@ -14,6 +14,6 @@ public class ExecuteEnchantment extends AffinityEnchantment {
 
     @Override
     protected boolean canAccept(Enchantment other) {
-        return other != AffinityEnchantments.PROSECUTE;
+        return other != AffinityEnchantments.PROSECUTE && super.canAccept(other);
     }
 }

@@ -16,7 +16,7 @@ public class ProsecuteEnchantment extends AffinityEnchantment implements Affinit
 
     @Override
     protected boolean canAccept(Enchantment other) {
-        return other != AffinityEnchantments.EXECUTE;
+        return other != AffinityEnchantments.EXECUTE && super.canAccept(other);
     }
 
     @Override
