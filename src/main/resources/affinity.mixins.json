@@ -1,5 +1,6 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   "required": true,
   "minVersion": "0.8",
   "package": "io.wispforest.affinity.mixin",
@@ -35,6 +36,7 @@
     "ThrowablePotionItemMixin",
     "TippedArrowRecipeMixin",
     "TrackTargetGoalMixin",
+    "WorldMixin",
     "WorldChunkMixin",
     "WorldViewMixin",
     "access.BlockEntityTypeAccessor",

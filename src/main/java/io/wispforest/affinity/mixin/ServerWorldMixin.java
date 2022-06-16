@@ -18,9 +18,7 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -41,9 +39,19 @@ public abstract class ServerWorldMixin extends World {
         }
     }
 
-    @Inject(method = "tickWeather", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;rainGradientPrev:F", opcode = Opcodes.GETFIELD), cancellable = true)
-    private void disableVanillaPacketSending(CallbackInfo ci) {
-        ci.cancel();
+    @Redirect(method = "tickWeather", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;rainGradientPrev:F", opcode = Opcodes.GETFIELD))
+    private float disableRainGradientSending(ServerWorld instance) {
+        return rainGradient;
+    }
+
+    @Redirect(method = "tickWeather", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;thunderGradientPrev:F", opcode = Opcodes.GETFIELD))
+    private float disableThunderGradientSending(ServerWorld instance) {
+        return thunderGradient;
+    }
+
+    @ModifyVariable(method = "tickWeather", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToDimension(Lnet/minecraft/network/Packet;Lnet/minecraft/util/registry/RegistryKey;)V", ordinal = 1, shift = At.Shift.BY, by = 2))
+    private boolean disableRainingSending(boolean old) {
+        return isRaining();
     }
 
     @ModifyArg(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;hasRain(Lnet/minecraft/util/math/BlockPos;)Z"))
