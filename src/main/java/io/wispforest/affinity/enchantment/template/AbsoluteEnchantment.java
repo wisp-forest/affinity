@@ -5,10 +5,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Language;
 import net.minecraft.util.math.MathHelper;
 
@@ -42,7 +39,7 @@ public abstract class AbsoluteEnchantment extends AffinityEnchantment {
     @Override
     public Text getName(int level) {
         final var name = Language.getInstance().get(this.getTranslationKey()).toCharArray();
-        final var text = new PhantomTranslatableText(this.getTranslationKey());
+        final var text = MutableText.of(new PhantomTranslatableText(this.getTranslationKey()));
 
         float hue = this.nameHue / 360f;
         float lightness = 90;
@@ -54,7 +51,7 @@ public abstract class AbsoluteEnchantment extends AffinityEnchantment {
             int highlightDistance = Math.abs(highlightLetter - i);
             float effectiveLightness = Math.max(52, lightness - highlightDistance * 7) / 100;
 
-            text.append(new LiteralText(String.valueOf(name[i]))
+            text.append(Text.literal(String.valueOf(name[i]))
                     .setStyle(Style.EMPTY.withColor(MathHelper.hsvToRgb(hue, 0.5f, effectiveLightness))));
         }
 
@@ -91,19 +88,19 @@ public abstract class AbsoluteEnchantment extends AffinityEnchantment {
         }
     }
 
-    private static class PhantomTranslatableText extends TranslatableText {
+    private static class PhantomTranslatableText extends TranslatableTextContent {
 
         public PhantomTranslatableText(String key) {
             super(key);
         }
 
         @Override
-        public <T> Optional<T> visitSelf(StyledVisitor<T> visitor, Style style) {
+        public <T> Optional<T> visit(StringVisitable.StyledVisitor<T> visitor, Style style) {
             return Optional.empty();
         }
 
         @Override
-        public <T> Optional<T> visitSelf(Visitor<T> visitor) {
+        public <T> Optional<T> visit(StringVisitable.Visitor<T> visitor) {
             return Optional.empty();
         }
     }

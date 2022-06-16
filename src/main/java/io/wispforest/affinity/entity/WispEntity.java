@@ -17,18 +17,17 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public abstract class WispEntity extends PathAwareEntity {
 
-    private static final TranslatableText DEFAULT_NAME = new TranslatableText(Util.createTranslationKey("entity", Affinity.id("wisp")));
+    private static final MutableText DEFAULT_NAME = Text.translatable(Util.createTranslationKey("entity", Affinity.id("wisp")));
 
     private final DustParticleEffect particles;
 
@@ -52,7 +51,7 @@ public abstract class WispEntity extends PathAwareEntity {
 
     @Override
     public Text getName() {
-        return new TranslatableText(type().translationKey()).append(" ").append(super.getName());
+        return Text.translatable(type().translationKey()).append(" ").append(super.getName());
     }
 
     @Override

@@ -9,7 +9,7 @@ import io.wispforest.affinity.component.AethumComponent;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.PlayerAethumComponent;
 import io.wispforest.owo.ops.TextOps;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -34,7 +34,7 @@ public class AffinityDebugCommands {
     public static final int VALUE_COLOR = 0x2FDD92;
 
     public static void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+        CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> {
             dispatcher.register(literal("aethum")
                     .then(literal("world")
                             .then(argument("position", BlockPosArgumentType.blockPos())

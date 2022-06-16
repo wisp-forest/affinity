@@ -29,7 +29,7 @@ public class AffinityTOPPlugin implements ITheOneProbePlugin {
 
                 apiInstance.getStyleManager().progressStyleLife();
 
-                final var suffix = TextOps.concat(Text.of(" / "), ElementProgress.format(member.fluxCapacity(), NumberFormat.COMPACT, Text.of("")));
+                final var suffix = TextOps.concat(Text.of(" / "), ElementProgress.format(member.fluxCapacity(), NumberFormat.COMPACT, Text.empty()));
                 probeInfo.progress(flux, member.fluxCapacity(),
                         probeInfo.defaultProgressStyle()
                                 .filledColor(0xff6A67CE)

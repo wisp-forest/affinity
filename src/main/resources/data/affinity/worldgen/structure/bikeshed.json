@@ -1,10 +1,7 @@
 {
   "type": "affinity:bikeshed",
-  "config": {
-    "start_pool": "affinity:bikeshed/pool",
-    "size": 1
-  },
+  "step": "surface_structures",
   "biomes": "#affinity:has_structure/bikeshed",
-  "adapt_noise": true,
+  "terrain_adaptation": "beard_box",
   "spawn_overrides": {}
 }

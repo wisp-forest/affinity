@@ -38,28 +38,27 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
         generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(BUDDING_AZALEA_LEAVES).coordinate(variantMap));
         generator.registerParentedItemModel(BUDDING_AZALEA_LEAVES.asItem(), ModelIds.getBlockSubModelId(BUDDING_AZALEA_LEAVES, "_0"));
 
-        cubeAllWithParentedItem(generator, PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, ASP_RITE_CORE);
+        cubeAllWithParentedItem(generator, PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES);
 
         simpleStateWithParentedItem(generator, COPPER_PLATED_AETHUM_FLUX_NODE, STONE_BANDED_AETHUM_FLUX_NODE,
                 ARBOREAL_ACCUMULATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE,
-                REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, RITUAL_SOCLE_COMPOSER, ABERRANT_CALLING_CORE);
+                REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, RITUAL_SOCLE_COMPOSER, ABERRANT_CALLING_CORE, ASP_RITE_CORE);
         simpleStateWithGeneratedItem(generator, SUNDIAL, BREWING_CAULDRON);
     }
 
     @Override
     public void generateItemModels(ItemModelGenerator generator) {
-        generated(generator, AZALEA_FLOWERS, AETHUM_FLUX_BOTTLE, AZALEA_BOAT,
+        generated(generator, AZALEA_FLOWERS, AETHUM_FLUX_BOTTLE, AZALEA_BOAT, AZALEA_CHEST_BOAT,
                 MILDLY_ATTUNED_AMETHYST_SHARD, FAIRLY_ATTUNED_AMETHYST_SHARD, GREATLY_ATTUNED_AMETHYST_SHARD,
                 STONE_SOCLE_ORNAMENT, PRISMARINE_SOCLE_ORNAMENT, PURPUR_SOCLE_ORNAMENT,
-                AETHUM_MAP_PROTOTYPE, REALIZED_AETHUM_MAP, ANTHRACITE_POWDER, RESPLENDENT_GEM, ECHO_SHARD,
-                AFFINITEA);
+                AETHUM_MAP_PROTOTYPE, REALIZED_AETHUM_MAP, ANTHRACITE_POWDER, RESPLENDENT_GEM,
+                AFFINITEA, INERT_WISP_MATTER, WISE_WISP_MATTER, VICIOUS_WISP_MATTER);
 
         handheld(generator, COLLECTION_STAFF, WAND_OF_INQUIRY);
 
-        generatedWithTexture(generator, Affinity.id("item/wisp_matter"), INERT_WISP_MATTER, WISE_WISP_MATTER, VICIOUS_WISP_MATTER);
         generatedWithTexture(generator, Affinity.id("item/ranthracite_dust"), RANTHRACITE_WIRE.asItem());
 
-        iridescenceWand(generator, EMERALD_WAND_OF_IRIDESCENCE, SAPPHIRE_WAND_OF_IRIDESCENCE);
+//        iridescenceWand(generator, EMERALD_WAND_OF_IRIDESCENCE, SAPPHIRE_WAND_OF_IRIDESCENCE);
 
         generator.register(GEOLOGICAL_RESONATOR, Models.HANDHELD);
     }

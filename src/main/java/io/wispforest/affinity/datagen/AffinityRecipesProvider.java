@@ -48,6 +48,9 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
                 .input(Blocks.AZALEA)
                 .criterion(hasItem(AZALEA_FLOWERS), conditionsFromItem(AZALEA_FLOWERS))
                 .offerTo(exporter, craftingRecipe(Blocks.FLOWERING_AZALEA));
+
+
+        offerChestBoatRecipe(exporter, AZALEA_CHEST_BOAT, AZALEA_BOAT);
     }
 
     private static Identifier craftingRecipe(ItemConvertible item) {

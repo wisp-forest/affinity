@@ -9,10 +9,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Pair;
 import net.minecraft.util.StringHelper;
@@ -34,7 +32,7 @@ public class PotionUtilMixin {
     private static float affinity$durationMultiplier;
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
-    @Inject(method = "buildTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/TranslatableText;<init>(Ljava/lang/String;[Ljava/lang/Object;)V", ordinal = 1, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "buildTooltip", at = @At(value = "INVOKE", target = "net/minecraft/text/Text.translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;", ordinal = 1, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void storeStack(ItemStack stack, List<?> list, float durationMultiplier, CallbackInfo ci, List<?> list2, List<?> list3, Iterator<?> var5, StatusEffectInstance statusEffectInstance, MutableText mutableText, StatusEffect statusEffect) {
         affinity$itemStack = stack;
         affinity$statusEffectInstance = statusEffectInstance;
@@ -42,7 +40,7 @@ public class PotionUtilMixin {
     }
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
-    @ModifyArg(method = "buildTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/TranslatableText;<init>(Ljava/lang/String;[Ljava/lang/Object;)V", ordinal = 1), index = 1)
+    @ModifyArg(method = "buildTooltip", at = @At(value = "INVOKE", target = "net/minecraft/text/Text.translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;", ordinal = 1), index = 1)
     private static Object[] addLengthMultiplier(Object[] args) {
         String durationText = (String) args[1];
 
@@ -66,10 +64,10 @@ public class PotionUtilMixin {
     private static void addFuniFlightText(ItemStack stack, List<Text> list, float f, CallbackInfo ci, List<StatusEffectInstance> list2, List<Pair<EntityAttribute, EntityAttributeModifier>> list3) {
         if (list2.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffectType() == AffinityStatusEffects.FLIGHT)) return;
         if (list3.isEmpty()) {
-            list.add(LiteralText.EMPTY);
-            list.add((new TranslatableText("potion.whenDrank")).formatted(Formatting.DARK_PURPLE));
+            list.add(Text.empty());
+            list.add((Text.translatable("potion.whenDrank")).formatted(Formatting.DARK_PURPLE));
         }
-        list.add(new LiteralText("-9.81 Gravity").formatted(Formatting.BLUE));
+        list.add(Text.literal("-9.81 Gravity").formatted(Formatting.BLUE));
     }
 
 }

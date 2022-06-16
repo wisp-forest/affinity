@@ -105,7 +105,6 @@ public class AffinityWorldgen {
 
         return new Biome.Builder()
                 .precipitation(Biome.Precipitation.RAIN)
-                .category(Biome.Category.FOREST)
                 .temperature(.7f)
                 .downfall(.4f)
                 .effects(effects)

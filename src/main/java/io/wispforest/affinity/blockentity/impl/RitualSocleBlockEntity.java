@@ -86,7 +86,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
     @SuppressWarnings("SameParameterValue")
     private PointOfInterest closestCore(int radius) {
         return ((ServerWorld) this.world).getPointOfInterestStorage()
-                .getInCircle(type -> type == AffinityPoiTypes.RITUAL_CORE, this.pos, radius, PointOfInterestStorage.OccupationStatus.ANY)
+                .getInCircle(type -> type.value() == AffinityPoiTypes.RITUAL_CORE, this.pos, radius, PointOfInterestStorage.OccupationStatus.ANY)
                 .min(Comparator.comparingDouble(value -> this.pos.getSquaredDistance(value.getPos()))).orElse(null);
     }
 

@@ -29,7 +29,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 @Environment(EnvType.CLIENT)
@@ -78,11 +78,11 @@ public class AffinityClient implements ClientModInitializer {
             final var tier = AttunedShardTiers.forItem(stack.getItem());
             if (tier.isNone()) return;
 
-            lines.add(new TranslatableText("text.affinity.attuned_shard_max_transfer").formatted(Formatting.GRAY)
-                    .append(new TranslatableText("text.affinity.attuned_shard_max_transfer.value", tier.maxTransfer())
+            lines.add(Text.translatable("text.affinity.attuned_shard_max_transfer").formatted(Formatting.GRAY)
+                    .append(Text.translatable("text.affinity.attuned_shard_max_transfer.value", tier.maxTransfer())
                             .styled(style -> style.withColor(0x4D4C7D))));
-            lines.add(new TranslatableText("text.affinity.attuned_shard_range").formatted(Formatting.GRAY)
-                    .append(new TranslatableText("text.affinity.attuned_shard_range.value", tier.maxDistance())
+            lines.add(Text.translatable("text.affinity.attuned_shard_range").formatted(Formatting.GRAY)
+                    .append(Text.translatable("text.affinity.attuned_shard_range.value", tier.maxDistance())
                             .styled(style -> style.withColor(0x4D4C7D))));
         });
 

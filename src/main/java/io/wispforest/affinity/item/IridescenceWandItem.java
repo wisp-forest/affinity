@@ -17,10 +17,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -67,7 +65,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     public Text getName(ItemStack stack) {
         final var mode = stack.get(MODE);
 
-        return new TranslatableText(this.getTranslationKey()).append(new TranslatableText(WAND_OF_IRIDESCENCE_PREFIX + ".mode.template",
+        return Text.translatable(this.getTranslationKey()).append(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".mode.template",
                 TextOps.translateWithColor(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id, mode.color)).formatted(Formatting.GRAY));
     }
 
@@ -78,11 +76,11 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         tooltip.add(Text.of(" "));
 
         tooltip.add(TextOps.translateWithColor(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id, mode.color)
-                .append(new LiteralText(": ").formatted(Formatting.GRAY))
-                .append(new TranslatableText(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id + ".description").formatted(Formatting.GRAY)));
+                .append(Text.literal(": ").formatted(Formatting.GRAY))
+                .append(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id + ".description").formatted(Formatting.GRAY)));
 
-        tooltip.add(new TranslatableText(WAND_OF_IRIDESCENCE_PREFIX + ".help.template",
-                new TranslatableText(WAND_OF_IRIDESCENCE_PREFIX + ".help").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(mode.color)));
+        tooltip.add(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".help.template",
+                Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".help").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(mode.color)));
     }
 
     @Override
@@ -98,7 +96,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         if (!nextMember.acceptsLinks()) {
             final var isNode = nextMember instanceof AethumNetworkNode;
             if (mode == Mode.BIND && isNode) {
-                context.getPlayer().sendMessage(new TranslatableText(AethumLink.Result.TOO_MANY_LINKS.translationKey), true);
+                context.getPlayer().sendMessage(Text.translatable(AethumLink.Result.TOO_MANY_LINKS.translationKey), true);
                 stack.delete(LINK_DATA);
                 return ActionResult.SUCCESS;
             } else if (!isNode) {
@@ -114,7 +112,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
             beginLink(stack, pos, Element.of(nextMember), linkType);
 
-            context.getPlayer().sendMessage(new TranslatableText(mode == Mode.BIND ? linkType.translationKey : mode.initTranslationKey,
+            context.getPlayer().sendMessage(Text.translatable(mode == Mode.BIND ? linkType.translationKey : mode.initTranslationKey,
                     world.getBlockState(pos).getBlock().getName()), true);
             return ActionResult.SUCCESS;
         }
@@ -124,7 +122,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         }
 
         var result = mode.processor.run(stack, world, existingElement, pos, nextMember);
-        context.getPlayer().sendMessage(new TranslatableText(result.translationKey, world.getBlockState(pos).getBlock().getName()), true);
+        context.getPlayer().sendMessage(Text.translatable(result.translationKey, world.getBlockState(pos).getBlock().getName()), true);
 
         stack.delete(LINK_DATA);
 

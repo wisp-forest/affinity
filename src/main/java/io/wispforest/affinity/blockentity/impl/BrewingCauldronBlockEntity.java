@@ -207,7 +207,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
     private Stream<Candle> getCandles() {
         return ((ServerWorld) this.world).getPointOfInterestStorage()
-                .getInCircle(type -> type == AffinityPoiTypes.AFFINE_CANDLE, this.pos, 5, PointOfInterestStorage.OccupationStatus.ANY)
+                .getInCircle(type -> type.value() == AffinityPoiTypes.AFFINE_CANDLE, this.pos, 5, PointOfInterestStorage.OccupationStatus.ANY)
                 .map(poi -> new Candle(poi.getPos(), world.getBlockState(poi.getPos())))
                 .filter(candle -> candle.state.get(Properties.LIT));
     }

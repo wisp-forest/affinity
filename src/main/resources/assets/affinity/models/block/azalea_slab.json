@@ -2,7 +2,7 @@
   "parent": "minecraft:block/slab",
   "textures": {
     "bottom": "affinity:block/azalea_planks",
-    "top": "affinity:block/azalea_planks",
-    "side": "affinity:block/azalea_planks"
+    "side": "affinity:block/azalea_planks",
+    "top": "affinity:block/azalea_planks"
   }
 }

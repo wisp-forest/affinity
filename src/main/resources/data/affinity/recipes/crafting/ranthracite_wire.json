@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "rrr",
-    "rar",
-    "rrr"
-  ],
   "key": {
     "a": {
       "item": "affinity:anthracite_powder"
@@ -13,8 +8,13 @@
       "item": "minecraft:redstone"
     }
   },
+  "pattern": [
+    "rrr",
+    "rar",
+    "rrr"
+  ],
   "result": {
-    "item": "affinity:ranthracite_wire",
-    "count": 9
+    "count": 9,
+    "item": "affinity:ranthracite_wire"
   }
 }

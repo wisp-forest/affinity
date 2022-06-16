@@ -45,9 +45,9 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item REALIZED_AETHUM_MAP = new RealizedAethumMapItem();
 
     public static final Item AZALEA_SIGN = new SignItem(settings(AffinityItemGroup.NATURE).maxCount(16), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
-    public static final Item AZALEA_BOAT = new BoatItem(AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
+    public static final Item AZALEA_BOAT = new BoatItem(false, AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
+    public static final Item AZALEA_CHEST_BOAT = new BoatItem(true, AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
 
-    public static final Item ECHO_SHARD = new EchoShardItem();
     public static final Item AFFINITEA = new AffiniteaItem();
 
     public static OwoItemSettings settings(int tab) {

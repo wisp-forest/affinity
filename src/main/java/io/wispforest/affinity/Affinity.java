@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.item.AffinityItemGroup;
+import io.wispforest.affinity.item.EchoShardExtension;
 import io.wispforest.affinity.misc.AffinityDebugCommands;
 import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
 import io.wispforest.affinity.mixin.access.BlockEntityTypeAccessor;
@@ -57,6 +58,8 @@ public class Affinity implements ModInitializer {
         AffinityNetwork.initialize();
         AffinityParticleSystems.initialize();
         AffinityPoiTypes.initialize();
+
+        EchoShardExtension.apply();
 
         Registry.register(Registry.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
 

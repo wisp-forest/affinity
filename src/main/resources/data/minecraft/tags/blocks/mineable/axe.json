@@ -3,15 +3,15 @@
   "values": [
     "affinity:stone_banded_aethum_flux_node",
     "affinity:arboreal_accumulation_apparatus",
+    "affinity:azalea_slab",
     "affinity:azalea_fence_gate",
     "affinity:azalea_pressure_plate",
+    "affinity:azalea_sign",
+    "affinity:azalea_trapdoor",
     "affinity:azalea_door",
     "affinity:azalea_fence",
     "affinity:azalea_wall_sign",
-    "affinity:azalea_slab",
-    "affinity:azalea_sign",
     "affinity:azalea_stairs",
-    "affinity:azalea_button",
-    "affinity:azalea_trapdoor"
+    "affinity:azalea_button"
   ]
 }

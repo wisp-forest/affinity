@@ -1,7 +1,7 @@
 package io.wispforest.affinity.statuseffects;
 
 import io.wispforest.affinity.component.AffinityComponents;
-import io.wispforest.affinity.item.EchoShardItem;
+import io.wispforest.affinity.item.EchoShardExtension;
 import io.wispforest.affinity.misc.EntityTeleporter;
 import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.potion.PotionMixture;
@@ -34,7 +34,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
                 if (PotionUtil.getPotionEffects(stack).stream().noneMatch(x -> x.getEffectType() == AffinityStatusEffects.BANISHED)) return;
                 if (!stack.has(PotionMixture.EXTRA_DATA)) return;
 
-                EchoShardItem.formatLocationTooltip(stack.get(PotionMixture.EXTRA_DATA), lines);
+                EchoShardExtension.formatLocationTooltip(stack.get(PotionMixture.EXTRA_DATA), lines);
             });
     }
 
@@ -72,8 +72,8 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
         component.pos = target.getBlockPos();
         component.dimension = target.getWorld().getRegistryKey().getValue();
 
-        var pos = extraData.get(EchoShardItem.POS);
-        var targetWorldId = extraData.get(EchoShardItem.WORLD);
+        var pos = extraData.get(EchoShardExtension.POS);
+        var targetWorldId = extraData.get(EchoShardExtension.WORLD);
         var targetWorld = target.getServer().getWorld(RegistryKey.of(Registry.WORLD_KEY, targetWorldId));
 
         ServerTasks.doNext(server -> {

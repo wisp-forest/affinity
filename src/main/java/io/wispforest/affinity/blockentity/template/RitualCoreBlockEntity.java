@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -104,7 +105,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         if (setup.duration() < 0) throw new IllegalStateException("No ritual length was configured. If you're a player, report this issue");
 
         this.cachedSetup = setup;
-        Collections.shuffle(this.cachedSetup.socles, this.world.random);
+        Collections.shuffle(this.cachedSetup.socles, ThreadLocalRandom.current());
 
         this.cachedSetup.forEachSocle(world, socle -> socle.ritualLock.acquire(this));
 
@@ -177,7 +178,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
     @SuppressWarnings("ConstantConditions")
     public static RitualSetup examineSetup(ServerWorld world, BlockPos pos, boolean includeEmptySocles) {
-        var soclePOIs = world.getPointOfInterestStorage().getInCircle(type -> type == AffinityPoiTypes.RITUAL_SOCLE,
+        var soclePOIs = world.getPointOfInterestStorage().getInCircle(type -> type.value() == AffinityPoiTypes.RITUAL_SOCLE,
                 pos, 10, PointOfInterestStorage.OccupationStatus.ANY).filter(poi -> poi.getPos().getY() == pos.getY()).toList();
 
         double stability = 75;

@@ -11,7 +11,6 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
         final var widgets = new ArrayList<Widget>();
 
         for (int i = 0; i < display.getInputEntries().size(); i++) {
-            widgets.add(Widgets.createSlot(new Point(origin.x + 5, origin.y - 25 + 20 * i)).entries(display.getInputEntries().get(i)));
+            widgets.add(Widgets.createSlot(new Point(origin.x + 5, origin.y + 5 + 20 * i)).entries(display.getInputEntries().get(i)));
         }
 
         widgets.add(Widgets.createSlot(new Point(origin.x + 110, origin.y + 32)).entries(display.getOutputEntries().get(0)).disableBackground());
@@ -37,8 +36,8 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
 
         for (int i = 0; i < display.getEffects().size(); i++) {
             final var effect = display.getEffects().get(i);
-            final var text = new TranslatableText(effect.getTranslationKey());
-            widgets.add(Widgets.createLabel(new Point(origin.x + 70, origin.y - 20 + 10 * i), text).noShadow().color(0x3F3F3F));
+            final var text = Text.translatable(effect.getTranslationKey());
+            widgets.add(Widgets.createLabel(new Point(origin.x + 70, origin.y + 5 + 10 * i), text).noShadow().color(0x3F3F3F));
         }
 
         return widgets;

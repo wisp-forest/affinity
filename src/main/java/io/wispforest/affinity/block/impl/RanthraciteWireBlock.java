@@ -17,6 +17,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.math.random.Random;
 
 import java.util.*;
 

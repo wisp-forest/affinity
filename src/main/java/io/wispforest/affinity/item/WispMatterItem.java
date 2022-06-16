@@ -13,9 +13,8 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
@@ -27,7 +26,7 @@ import java.util.List;
 
 public class WispMatterItem extends Item {
 
-    private static final TranslatableText TRANSLATED_NAME = new TranslatableText(Util.createTranslationKey("item", Affinity.id("wisp_matter")));
+    private static final MutableText TRANSLATED_NAME = Text.translatable(Util.createTranslationKey("item", Affinity.id("wisp_matter")));
     private final WispType type;
 
     public WispMatterItem(WispType type) {
@@ -61,9 +60,9 @@ public class WispMatterItem extends Item {
         final int leavesCount = counted.getOrDefault(Blocks.AZALEA_LEAVES, 0) + counted.getOrDefault(Blocks.FLOWERING_AZALEA_LEAVES, 0);
 
         if (logCount > 5 && leavesCount > 40) {
-            player.sendMessage(new LiteralText("yep, that is in fact a tree").formatted(Formatting.GREEN), false);
+            player.sendMessage(Text.literal("yep, that is in fact a tree").formatted(Formatting.GREEN), false);
         } else {
-            player.sendMessage(new LiteralText("nope, not a tree. no.").formatted(Formatting.RED), false);
+            player.sendMessage(Text.literal("nope, not a tree. no.").formatted(Formatting.RED), false);
         }
 
         if (this == AffinityItems.VICIOUS_WISP_MATTER) {
@@ -87,7 +86,7 @@ public class WispMatterItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(TextOps.withColor(type.icon(), type.color()).append(" ").append(new TranslatableText(type.translationKey()).formatted(Formatting.GRAY)));
+        tooltip.add(TextOps.withColor(type.icon(), type.color()).append(" ").append(Text.translatable(type.translationKey()).formatted(Formatting.GRAY)));
     }
 
     public WispType wispType() {

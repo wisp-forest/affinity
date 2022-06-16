@@ -12,7 +12,5 @@ public class AffinityStatusEffect extends StatusEffect {
         super(type, color);
     }
 
-    public void onPotionApplied(LivingEntity target, @Nullable NbtCompound extraData) {
-
-    }
+    public void onPotionApplied(LivingEntity target, @Nullable NbtCompound extraData) {}
 }
