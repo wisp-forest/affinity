@@ -9,7 +9,8 @@ import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 
-public record GenericEmitterParticleEffect(ParticleEffect effect, Vec3d emitVelocity, int emitInterval, float emitDeviation, boolean randomizeVelocity, int emitterLifetime) implements ParticleEffect {
+public record GenericEmitterParticleEffect(ParticleEffect effect, Vec3d emitVelocity, int emitInterval, float emitDeviation, boolean randomizeVelocity,
+                                           int emitterLifetime) implements ParticleEffect {
 
     private static final RecordSerializer<GenericEmitterParticleEffect> SERIALIZER = RecordSerializer.create(GenericEmitterParticleEffect.class);
 

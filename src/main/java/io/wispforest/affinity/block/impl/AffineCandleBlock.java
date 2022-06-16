@@ -13,15 +13,10 @@ import net.minecraft.block.CandleBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -50,32 +45,32 @@ public class AffineCandleBlock extends CandleBlock implements BlockEntityProvide
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (state.get(LIT)) {
             this.getParticleOffsets(state)
-                .forEach(offset -> {
-                    double x = offset.x + pos.getX();
-                    double y = offset.y + pos.getY();
-                    double z = offset.z + pos.getZ();
+                    .forEach(offset -> {
+                        double x = offset.x + pos.getX();
+                        double y = offset.y + pos.getY();
+                        double z = offset.z + pos.getZ();
 
-                    float f = random.nextFloat();
-                    if (f < 0.3F) {
-                        ClientParticles.randomizeVelocity(0.3);
-                        ClientParticles.spawn(ParticleTypes.REVERSE_PORTAL, world, new Vec3d(x, y, z), 0.2);
-                        if (f < 0.17F) {
-                            world.playSound(
-                                x + 0.5,
-                                y + 0.5,
-                                z + 0.5,
-                                SoundEvents.BLOCK_CANDLE_AMBIENT,
-                                SoundCategory.BLOCKS,
-                                1.0F + random.nextFloat(),
-                                random.nextFloat() * 0.7F + 0.3F,
-                                false
-                            );
+                        float f = random.nextFloat();
+                        if (f < 0.3F) {
+                            ClientParticles.randomizeVelocity(0.3);
+                            ClientParticles.spawn(ParticleTypes.REVERSE_PORTAL, world, new Vec3d(x, y, z), 0.2);
+                            if (f < 0.17F) {
+                                world.playSound(
+                                        x + 0.5,
+                                        y + 0.5,
+                                        z + 0.5,
+                                        SoundEvents.BLOCK_CANDLE_AMBIENT,
+                                        SoundCategory.BLOCKS,
+                                        1.0F + random.nextFloat(),
+                                        random.nextFloat() * 0.7F + 0.3F,
+                                        false
+                                );
+                            }
                         }
-                    }
 
-                    // TODO: make this better™
-                    world.addParticle(new SmallColoredFlameParticleEffect(DyeColor.PURPLE), x, y, z, 0.0, 0.0, 0.0);
-                });
+                        // TODO: make this better™
+                        world.addParticle(new SmallColoredFlameParticleEffect(DyeColor.PURPLE), x, y, z, 0.0, 0.0, 0.0);
+                    });
         }
     }
 

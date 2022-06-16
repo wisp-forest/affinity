@@ -12,10 +12,10 @@ import net.minecraft.util.UseAction;
 public class AffiniteaItem extends Item {
     public AffiniteaItem() {
         super(AffinityItems.settings(0)
-            .food(new FoodComponent.Builder()
-                .statusEffect(new StatusEffectInstance(AffinityStatusEffects.AFFINE, 300 * 20), 1.0F)
-                .alwaysEdible()
-                .build()));
+                .food(new FoodComponent.Builder()
+                        .statusEffect(new StatusEffectInstance(AffinityStatusEffects.AFFINE, 300 * 20), 1.0F)
+                        .alwaysEdible()
+                        .build()));
     }
 
     @Override

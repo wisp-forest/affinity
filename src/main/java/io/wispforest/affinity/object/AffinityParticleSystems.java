@@ -52,9 +52,9 @@ public class AffinityParticleSystems {
                 pos.x, pos.y, pos.z, 0, 0, 0);
 
         world.addParticle(new GenericEmitterParticleEffect(
-                        new ItemStackParticleEffect(ParticleTypes.ITEM, data.suckWhat()),
-                        new Vec3d(.05f, 0.2f, .05f), 1, .15f, true, data.duration()
-                ), pos.x, pos.y, pos.z, 0, 0, 0);
+                new ItemStackParticleEffect(ParticleTypes.ITEM, data.suckWhat()),
+                new Vec3d(.05f, 0.2f, .05f), 1, .15f, true, data.duration()
+        ), pos.x, pos.y, pos.z, 0, 0, 0);
     });
 
     public static final ParticleSystem<Void> DRIPPING_AZALEA = CONTROLLER.register(Void.class, (world, pos, data) -> {
