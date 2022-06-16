@@ -151,6 +151,11 @@ public class AethumFluxStorage extends SnapshotParticipant<Long> implements Aeth
         return changed;
     }
 
+    @Override
+    public void updateFlux(long flux) {
+        setFlux(flux);
+    }
+
     public void setFluxCapacity(long capacity) {
         this.capacity = capacity;
     }
