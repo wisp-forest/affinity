@@ -55,17 +55,13 @@ repositories {
     // canvas
     maven { url "https://maven.vram.io/" }
 
-    // --> spruceui
-    maven { url 'https://maven.gegy.dev' }
-
-    // emoji-type
+    // emoji-type and lazydfu
     maven {
         url "https://api.modrinth.com/maven"
         content {
             includeGroup "maven.modrinth"
         }
     }
-    mavenCentral()
 }
 
 dependencies {
@@ -98,12 +94,10 @@ dependencies {
     modImplementation "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"
 
     modLocalRuntime 'com.ptsmods:devlogin:2.1'
-//    modLocalRuntime "maven.modrinth:emoji-type:1.0.3"
+    modLocalRuntime "maven.modrinth:emoji-type:2.0.0+1.19"
     modLocalRuntime "maven.modrinth:lazydfu:0.1.3"
 
-//    modLocalRuntime ("io.vram:canvas-fabric-mc119:${project.canvas_version}") {
-//        exclude group: "net.fabricmc.fabric-api"
-//    }
+    modLocalRuntime "io.vram:canvas-fabric-mc119:${project.canvas_version}"
 }
 
 processResources {
