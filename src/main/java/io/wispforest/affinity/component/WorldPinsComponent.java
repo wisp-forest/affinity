@@ -1,6 +1,7 @@
 package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import io.wispforest.affinity.mixin.access.ChunkTicketManagerAccessor;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -18,7 +19,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorldPinsComponent implements Component {
+public class WorldPinsComponent implements Component, ServerTickingComponent {
     public static final ChunkTicketType<BlockPos> TICKET_TYPE = ChunkTicketType.create("affinity:world_pin", Comparator.comparingLong(BlockPos::asLong));
 
     private final World w;
@@ -51,14 +52,14 @@ public class WorldPinsComponent implements Component {
     public void removePin(BlockPos pin, int radius) {
         if (pins.remove(pin) != null) {
             ChunkPos.stream(new ChunkPos(pin), radius).forEach(chunkPos -> {
-                ((ServerWorld) w).getChunkManager().removeTicket(TICKET_TYPE, chunkPos, 1, pin);
+                ((ServerWorld) w).getChunkManager().removeTicket(TICKET_TYPE, chunkPos, 2, pin);
             });
         }
     }
 
     private void addPinTickets(BlockPos pin, int radius) {
         ChunkPos.stream(new ChunkPos(pin), radius).forEach(chunkPos -> {
-            ((ServerWorld) w).getChunkManager().addTicket(TICKET_TYPE, chunkPos, 1, pin);
+            ((ServerWorld) w).getChunkManager().addTicket(TICKET_TYPE, chunkPos, 2, pin);
         });
     }
 
@@ -95,5 +96,11 @@ public class WorldPinsComponent implements Component {
             pinTag.put("PinPos", NbtHelper.fromBlockPos(entry.getKey()));
             pinTag.putInt("Radius", entry.getValue());
         }
+    }
+
+    @Override
+    public void serverTick() {
+        if (!pins.isEmpty())
+            ((ServerWorld) w).resetIdleTimeout();
     }
 }
