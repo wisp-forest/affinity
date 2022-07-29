@@ -7,9 +7,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 
 public final class EntityTeleporter {
-    private EntityTeleporter() {
 
-    }
+    private EntityTeleporter() {}
 
     @SuppressWarnings("unchecked")
     public static <E extends Entity> E teleport(E entity, ServerWorld to, Vec3d pos, float yaw, float pitch) {

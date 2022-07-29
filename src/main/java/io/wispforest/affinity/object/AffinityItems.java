@@ -49,6 +49,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item AZALEA_CHEST_BOAT = new BoatItem(true, AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
 
     public static final Item AFFINITEA = new AffiniteaItem();
+    public static final Item DRAGON_DROP = new Item(settings(AffinityItemGroup.MAIN));
 
     public static OwoItemSettings settings(int tab) {
         return new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP);

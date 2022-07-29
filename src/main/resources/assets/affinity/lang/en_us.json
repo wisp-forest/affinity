@@ -71,6 +71,7 @@
   "item.affinity.resplendent_gem": "Resplendent Gem",
   "item.affinity.echo_shard": "Echo Shard",
   "item.affinity.affinitea": "Affinitea",
+  "item.affinity.dragon_drop": "Dragon Drop",
 
   "text.affinity.attuned_shard_range": "Range: ",
   "text.affinity.attuned_shard_range.value": "%d blocks",

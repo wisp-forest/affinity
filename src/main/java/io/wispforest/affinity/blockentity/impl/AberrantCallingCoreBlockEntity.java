@@ -161,7 +161,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         if (this.ritualTick > 0) {
             final var positions = new ArrayList<>(Arrays.asList(this.neighborPositions.cores()));
             positions.add(this.pos);
-            AffinityNetwork.server(this).send(new CancelRitualParticlesPacket(positions, PARTICLE_OFFSET));
+            AffinityNetwork.server(this).send(new RemoveBezierEmitterParticlesPacket(positions, PARTICLE_OFFSET));
         }
 
         super.finishRitual(handlerImpl);

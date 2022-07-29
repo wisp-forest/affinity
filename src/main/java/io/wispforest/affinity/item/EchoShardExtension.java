@@ -11,7 +11,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -29,11 +28,7 @@ import java.util.List;
 
 public class EchoShardExtension {
 
-    public static final NbtKey.Type<BlockPos> BLOCK_POS_TYPE = NbtKey.Type.of(
-            NbtElement.LONG_TYPE,
-            (nbt, s) -> BlockPos.fromLong(nbt.getLong(s)),
-            (nbt, s, pos) -> nbt.putLong(s, pos.asLong())
-    );
+    public static final NbtKey.Type<BlockPos> BLOCK_POS_TYPE = NbtKey.Type.LONG.then(BlockPos::fromLong, BlockPos::asLong);
 
     public static final NbtKey<BlockPos> POS = new NbtKey<>("Pos", BLOCK_POS_TYPE);
     public static final NbtKey<Identifier> WORLD = new NbtKey<>("World", NbtKey.Type.IDENTIFIER);

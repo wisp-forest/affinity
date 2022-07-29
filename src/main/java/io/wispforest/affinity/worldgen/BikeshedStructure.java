@@ -37,7 +37,7 @@ public class BikeshedStructure extends Structure {
         var centerPos = context.chunkPos().getCenterAtY(0);
         var poolRegistry = context.dynamicRegistryManager().get(Registry.STRUCTURE_POOL_KEY);
 
-        var structurePosition = StructurePoolBasedGenerator.generate(
+        return StructurePoolBasedGenerator.generate(
                 context,
                 RegistryAccess.getEntry(poolRegistry, Affinity.id("bikeshed/pool")),
                 Optional.empty(),
@@ -47,10 +47,6 @@ public class BikeshedStructure extends Structure {
                 Optional.of(Heightmap.Type.WORLD_SURFACE_WG),
                 16
         );
-
-        if (structurePosition.isPresent()) Affinity.LOGGER.info("Bikeshed at {}", centerPos);
-
-        return structurePosition;
     }
 
     @Override

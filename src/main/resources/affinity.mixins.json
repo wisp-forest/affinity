@@ -14,6 +14,7 @@
     "BrewingRecipeRegistryMixin",
     "EnchantedBookItemMixin",
     "EnchantmentHelperMixin",
+    "EnderDragonEntityMixin",
     "EntityMixin",
     "ItemMixin",
     "ItemStackMixin",

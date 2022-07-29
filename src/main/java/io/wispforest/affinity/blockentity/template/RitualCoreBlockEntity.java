@@ -152,7 +152,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         this.lastActivatedSocle = -1;
 
         if (this.cachedSetup != null) {
-            AffinityNetwork.CHANNEL.serverHandle(this).send(new CancelRitualParticlesPacket(
+            AffinityNetwork.CHANNEL.serverHandle(this).send(new RemoveBezierEmitterParticlesPacket(
                     this.cachedSetup.socles.stream().map(RitualSocleEntry::position).toList(),
                     RitualSocleBlockEntity.PARTICLE_OFFSET
             ));
@@ -298,14 +298,14 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     public record RitualSocleEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {}
 
     static {
-        AffinityNetwork.CHANNEL.registerClientbound(CancelRitualParticlesPacket.class, (message, access) -> {
+        AffinityNetwork.CHANNEL.registerClientbound(RemoveBezierEmitterParticlesPacket.class, (message, access) -> {
             for (var pos : message.soclePositions()) {
                 BezierPathEmitterParticle.removeParticleAt(Vec3d.of(pos).add(message.offset()));
             }
         });
     }
 
-    public record CancelRitualParticlesPacket(List<BlockPos> soclePositions, Vec3d offset) {}
+    public record RemoveBezierEmitterParticlesPacket(List<BlockPos> soclePositions, Vec3d offset) {}
 
     public static class SocleInventory implements ReadOnlyInventory.ListBacked {
 
