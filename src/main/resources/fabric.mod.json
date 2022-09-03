@@ -31,10 +31,7 @@
     "fabric-datagen": [
       "io.wispforest.affinity.datagen.AffinityDataGeneratorEntrypoint"
     ],
-    "cardinal-components-entity": [
-      "io.wispforest.affinity.component.AffinityComponents"
-    ],
-    "cardinal-components-chunk": [
+    "cardinal-components": [
       "io.wispforest.affinity.component.AffinityComponents"
     ],
     "terrablender": [
@@ -60,7 +57,10 @@
       "affinity:player_aethum",
       "affinity:chunk_aethum",
       "affinity:entity_flags",
-      "affinity:banishment"
+      "affinity:banishment",
+      "affinity:world_pins",
+      "affinity:local_weather",
+      "affinity:player_weather_tracker"
     ]
   }
 }
