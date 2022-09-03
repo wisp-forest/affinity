@@ -51,7 +51,8 @@
     "trinkets": ">=3.0.0",
     "owo": ">=0.7.0+1.18",
     "terrablender": "*",
-    "cardinal-components-entity": ">=4.0.0"
+    "cardinal-components-entity": ">=4.0.0",
+    "cardinal-components-chunk": ">=4.0.0"
   },
   "custom": {
     "cardinal-components": [

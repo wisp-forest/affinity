@@ -11,11 +11,11 @@ public class CollectionUtil {
     }
 
     public static <K, E> List<E> getOrAddList(Map<K, List<E>> map, K key) {
-        return map.computeIfAbsent(key, k -> new ArrayList<>());
+        return map.computeIfAbsent(key, instance(ArrayList::new));
     }
 
     public static <K, E> Set<E> getOrAddSet(Map<K, Set<E>> map, K key) {
-        return map.computeIfAbsent(key, k -> new HashSet<>());
+        return map.computeIfAbsent(key, instance(HashSet::new));
     }
 
 }
