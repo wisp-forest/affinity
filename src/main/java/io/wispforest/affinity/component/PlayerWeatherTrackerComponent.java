@@ -17,8 +17,8 @@ public class PlayerWeatherTrackerComponent implements TransientComponent, Server
     private boolean hasTicked = false;
 
     public PlayerWeatherTrackerComponent(PlayerEntity player) {
-        if (player instanceof ServerPlayerEntity spe) {
-            this.player = spe;
+        if (player instanceof ServerPlayerEntity serverPlayer) {
+            this.player = serverPlayer;
         } else {
             //noinspection ConstantConditions
             this.player = null;
@@ -29,32 +29,32 @@ public class PlayerWeatherTrackerComponent implements TransientComponent, Server
     public void serverTick() {
         var chunkWeather = AffinityComponents.LOCAL_WEATHER.get(player.world.getChunk(player.getBlockPos()));
 
-        if (!hasTicked) {
-            hasTicked = true;
+        if (!this.hasTicked) {
+            this.hasTicked = true;
 
-            rainGradient = chunkWeather.getRainGradient();
-            thunderGradient = chunkWeather.getThunderGradient();
+            this.rainGradient = chunkWeather.getRainGradient();
+            this.thunderGradient = chunkWeather.getThunderGradient();
         }
 
-        float prevRainGradient = rainGradient;
-        float prevThunderGradient = thunderGradient;
+        float prevRainGradient = this.rainGradient;
+        float prevThunderGradient = this.thunderGradient;
 
-        boolean wasRaining = rainGradient != 0;
+        boolean wasRaining = this.rainGradient != 0;
 
-        rainGradient += Math.signum(chunkWeather.getRainGradient() - rainGradient) * 0.01f;
-        thunderGradient += Math.signum(chunkWeather.getThunderGradient() - thunderGradient) * 0.01f;
+        this.rainGradient += Math.signum(chunkWeather.getRainGradient() - this.rainGradient) * 0.01f;
+        this.thunderGradient += Math.signum(chunkWeather.getThunderGradient() - this.thunderGradient) * 0.01f;
 
-        if (wasRaining && rainGradient == 0) {
+        if (wasRaining && this.rainGradient == 0) {
             player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.RAIN_STARTED, 0));
-        } else if (!wasRaining && rainGradient != 0) {
+        } else if (!wasRaining && this.rainGradient != 0) {
             player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.RAIN_STOPPED, 0));
         }
 
-        if (rainGradient != prevRainGradient) {
+        if (this.rainGradient != prevRainGradient) {
             player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.RAIN_GRADIENT_CHANGED, rainGradient));
         }
 
-        if (thunderGradient != prevThunderGradient) {
+        if (this.thunderGradient != prevThunderGradient) {
             player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.THUNDER_GRADIENT_CHANGED, thunderGradient));
         }
     }

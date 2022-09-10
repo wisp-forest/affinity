@@ -113,7 +113,7 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public void appendTooltipEntries(List<Entry> entries) {
-        entries.add(new Entry(Text.of("" + this.visualFlux()), 0, 0));
+        entries.add(new Entry(Text.of(String.valueOf(this.visualFlux())), 0, 0));
     }
 
     public void updateFlux(long flux) {

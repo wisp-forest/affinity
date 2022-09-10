@@ -20,18 +20,18 @@ public class AffineCandleBlockEntity extends AethumNetworkMemberBlockEntity impl
 
     @Override
     public void tickServer() {
-        if (!getCachedState().get(Properties.LIT)) return;
+        if (!this.getCachedState().get(Properties.LIT)) return;
 
         long flux = this.fluxStorage.flux();
-        if (flux > 0) updateFlux(flux - 1);
+        if (flux > 0) this.updateFlux(flux - 1);
 
-        if (getCachedState().get(CandleBlock.CANDLES) < 3) return;
+        if (this.getCachedState().get(CandleBlock.CANDLES) < 3) return;
         if (this.world.getTime() % 80 != 0) return;
         if (flux <= 50) return;
 
-        var component = AffinityComponents.CHUNK_AETHUM.get(world.getChunk(pos));
+        var component = AffinityComponents.CHUNK_AETHUM.get(this.world.getChunk(this.pos));
         component.setAethum(component.getAethum() + 0.1);
 
-        updateFlux(flux - 50);
+        this.updateFlux(flux - 50);
     }
 }

@@ -162,8 +162,9 @@ public class PotionMixture {
     }
 
     public NbtCompound getOrCreateExtraNbt() {
-        if (extraNbt == null)
+        if (extraNbt == null) {
             extraNbt = new NbtCompound();
+        }
 
         return extraNbt;
     }

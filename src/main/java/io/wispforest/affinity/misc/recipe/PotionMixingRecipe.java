@@ -100,7 +100,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
         return ItemStack.EMPTY;
     }
 
-    public Potion getPotionOutput() {
+    public Potion potionOutput() {
         return output;
     }
 
@@ -121,7 +121,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
             }
         }
 
-        return new PotionMixture(getPotionOutput(), extraNbt.isEmpty() ? null : extraNbt);
+        return new PotionMixture(this.potionOutput(), extraNbt.isEmpty() ? null : extraNbt);
     }
 
     public List<Ingrediente<Boolean>> getItemInputs() {

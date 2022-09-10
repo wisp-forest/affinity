@@ -8,7 +8,6 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +16,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class LocalWeatherComponent implements Component, ServerTickingComponent {
-    private final @NotNull WorldChunk c;
+
+    private final @NotNull WorldChunk chunk;
     private float rainGradient;
     private float thunderGradient;
     private int ambientDarkness;
@@ -25,52 +25,52 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
 
     private final Set<BlockPos> monoliths = new HashSet<>();
 
-    public LocalWeatherComponent(Chunk c) {
-        if (c instanceof WorldChunk wc) {
-            this.c = wc;
+    public LocalWeatherComponent(Chunk chunk) {
+        if (chunk instanceof WorldChunk worldChunk) {
+            this.chunk = worldChunk;
         } else {
             //noinspection ConstantConditions
-            this.c = null;
+            this.chunk = null;
         }
     }
 
     public void init() {
-        if (monoliths.isEmpty()) {
-            rainGradient = c.getWorld().getRainGradient(1);
-            thunderGradient = c.getWorld().getThunderGradient(1);
-            ambientDarkness = c.getWorld().getAmbientDarkness();
+        if (this.monoliths.isEmpty()) {
+            this.rainGradient = chunk.getWorld().getRainGradient(1);
+            this.thunderGradient = chunk.getWorld().getThunderGradient(1);
+            this.ambientDarkness = chunk.getWorld().getAmbientDarkness();
         } else {
-            rainGradient = 0.f;
-            thunderGradient = 0.f;
-            double f = 0.5 + 2.0 * MathHelper.clamp(MathHelper.cos(c.getWorld().getSkyAngle(1.0F) * (float) (Math.PI * 2)), -0.25, 0.25);
-            ambientDarkness = (int)((1.0 - f) * 11.0);
+            this.rainGradient = 0.f;
+            this.thunderGradient = 0.f;
+            double f = 0.5 + 2.0 * MathHelper.clamp(MathHelper.cos(chunk.getWorld().getSkyAngle(1.0F) * (float) (Math.PI * 2)), -0.25, 0.25);
+            this.ambientDarkness = (int) ((1.0 - f) * 11.0);
         }
     }
 
     public float getRainGradient() {
-        serverTick();
-        return rainGradient;
+        this.serverTick();
+        return this.rainGradient;
     }
 
     public float getThunderGradient() {
-        serverTick();
-        return thunderGradient;
+        this.serverTick();
+        return this.thunderGradient;
     }
 
     public int getAmbientDarkness() {
-        serverTick();
-        return ambientDarkness;
+        this.serverTick();
+        return this.ambientDarkness;
     }
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        monoliths.clear();
+        this.monoliths.clear();
 
         NbtList monolithsTag = tag.getList("Monoliths", NbtElement.COMPOUND_TYPE);
         for (int i = 0; i < monolithsTag.size(); i++) {
             NbtCompound monolithTag = monolithsTag.getCompound(i);
 
-            monoliths.add(NbtHelper.toBlockPos(monolithTag));
+            this.monoliths.add(NbtHelper.toBlockPos(monolithTag));
         }
     }
 
@@ -79,23 +79,62 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
         NbtList monolithsTag = new NbtList();
         tag.put("Monoliths", monolithsTag);
 
-        for (BlockPos monolithPos : monoliths) {
+        for (BlockPos monolithPos : this.monoliths) {
             monolithsTag.add(NbtHelper.fromBlockPos(monolithPos));
         }
     }
 
     public void addMonolith(BlockPos monolithPos) {
-        if (monoliths.isEmpty()) {
-            init();
+        if (this.monoliths.isEmpty()) {
+            this.init();
         }
 
-        monoliths.add(monolithPos);
-        c.setNeedsSaving(true);
+        this.monoliths.add(monolithPos);
+        this.chunk.setNeedsSaving(true);
     }
 
     public void removeMonolith(BlockPos monolithPos) {
-        monoliths.remove(monolithPos);
-        c.setNeedsSaving(true);
+        this.monoliths.remove(monolithPos);
+        this.chunk.setNeedsSaving(true);
+    }
+
+    @Override
+    public void serverTick() {
+        var world = chunk.getWorld();
+
+        if (this.lastTick == 0 || this.lastTick > world.getTime()) {
+            this.lastTick = world.getTime() - 1;
+        }
+
+        if (this.lastTick == world.getTime()) {
+            return;
+        }
+
+        if (this.monoliths.isEmpty()) {
+            float targetRainGradient = world.isRaining() ? 1.0f : 0.0f;
+            float targetThunderGradient = world.isThundering() ? 1.0f : 0.0f;
+
+            this.rainGradient = flatInterpolate(this.rainGradient, targetRainGradient, world.getTime() - this.lastTick);
+            this.thunderGradient = flatInterpolate(this.thunderGradient, targetThunderGradient, world.getTime() - this.lastTick);
+        } else {
+            this.rainGradient = flatInterpolate(this.rainGradient, 0, world.getTime() - this.lastTick);
+            this.thunderGradient = flatInterpolate(this.thunderGradient, 0, world.getTime() - this.lastTick);
+        }
+
+        if (this.rainGradient == world.getRainGradient(1) && this.thunderGradient == world.getThunderGradient(1)) {
+            ambientDarkness = world.getAmbientDarkness();
+        } else {
+            double d = 1.0 - (double) (this.rainGradient * 5.0F) / 16.0;
+            double e = 1.0 - (double) (this.thunderGradient * 5.0F) / 16.0;
+            double f = 0.5 + 2.0 * MathHelper.clamp(MathHelper.cos(world.getSkyAngle(1.0F) * (float) (Math.PI * 2)), -0.25, 0.25);
+            this.ambientDarkness = (int) ((1.0 - f * d * e) * 11.0);
+        }
+
+        this.lastTick = world.getTime();
+    }
+
+    public boolean hasMonolith() {
+        return !this.monoliths.isEmpty();
     }
 
     private static float flatInterpolate(float current, float target, long ticksPassed) {
@@ -122,44 +161,5 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
 
 
         return newCurrent;
-    }
-
-    @Override
-    public void serverTick() {
-        World w = c.getWorld();
-
-        if (lastTick == 0 || lastTick > w.getTime()) {
-            lastTick = w.getTime() - 1;
-        }
-
-        if (lastTick == w.getTime()) {
-            return;
-        }
-
-        if (monoliths.isEmpty()) {
-            float targetRainGradient = w.isRaining() ? 1.0f : 0.0f;
-            float targetThunderGradient = w.isThundering() ? 1.0f : 0.0f;
-
-            rainGradient = flatInterpolate(rainGradient, targetRainGradient, w.getTime() - lastTick);
-            thunderGradient = flatInterpolate(thunderGradient, targetThunderGradient, w.getTime() - lastTick);
-        } else {
-            rainGradient = flatInterpolate(rainGradient, 0, w.getTime() - lastTick);
-            thunderGradient = flatInterpolate(thunderGradient, 0, w.getTime() - lastTick);
-        }
-
-        if (rainGradient == w.getRainGradient(1) && thunderGradient == w.getThunderGradient(1)) {
-            ambientDarkness = w.getAmbientDarkness();
-        } else {
-            double d = 1.0 - (double)(rainGradient * 5.0F) / 16.0;
-            double e = 1.0 - (double)(thunderGradient * 5.0F) / 16.0;
-            double f = 0.5 + 2.0 * MathHelper.clamp(MathHelper.cos(w.getSkyAngle(1.0F) * (float) (Math.PI * 2)), -0.25, 0.25);
-            ambientDarkness = (int)((1.0 - f * d * e) * 11.0);
-        }
-
-        lastTick = w.getTime();
-    }
-
-    public boolean hasMonolith() {
-        return !monoliths.isEmpty();
     }
 }

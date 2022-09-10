@@ -77,7 +77,7 @@ dependencies {
 
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
     modLocalRuntime "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
-    modLocalRuntime "dev.architectury:architectury-fabric:6.1.41"
+    modLocalRuntime "dev.architectury:architectury-fabric:6.2.43"
 
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 

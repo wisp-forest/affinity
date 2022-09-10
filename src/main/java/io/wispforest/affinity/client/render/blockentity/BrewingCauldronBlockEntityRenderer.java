@@ -62,7 +62,7 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
 
         if (!entity.storedPotion().isEmpty()) {
             matrices.push();
-            matrices.translate(0.125, entity.getFluidHeight(), 0.125);
+            matrices.translate(0.125, entity.fluidHeight(), 0.125);
 
             VertexConsumer consumer = WATER_TEXTURE.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getTranslucent());
             float[] color = MathUtil.splitRGBToFloats(entity.storedPotion().color());

@@ -27,7 +27,7 @@ public class PotionMixingDisplay implements Display {
         inputs = inputBuilder.build();
 
         final var potionStack = new ItemStack(Items.POTION);
-        PotionUtil.setPotion(potionStack, recipe.getPotionOutput());
+        PotionUtil.setPotion(potionStack, recipe.potionOutput());
         output = EntryIngredients.of(potionStack);
 
         effects = recipe.getEffectInputs();

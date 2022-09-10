@@ -57,7 +57,7 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
 
     @Override
     public void write(PacketByteBuf buf, PotionMixingRecipe recipe) {
-        buf.writeVarInt(Registry.POTION.getRawId(recipe.getPotionOutput()));
+        buf.writeVarInt(Registry.POTION.getRawId(recipe.potionOutput()));
 
         buf.writeCollection(recipe.getEffectInputs(), (buf1, effect) -> buf1.writeVarInt(Registry.STATUS_EFFECT.getRawId(effect)));
         buf.writeCollection(recipe.getItemInputs(), INGREDIENTE_SERIALIZER::writeToPacket);

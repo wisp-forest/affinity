@@ -15,7 +15,8 @@ public class AffiniteaItem extends Item {
                 .food(new FoodComponent.Builder()
                         .statusEffect(new StatusEffectInstance(AffinityStatusEffects.AFFINE, 300 * 20), 1.0F)
                         .alwaysEdible()
-                        .build()));
+                        .build())
+        );
     }
 
     @Override
@@ -25,6 +26,6 @@ public class AffiniteaItem extends Item {
 
     @Override
     public SoundEvent getEatSound() {
-        return getDrinkSound();
+        return this.getDrinkSound();
     }
 }

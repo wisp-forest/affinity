@@ -157,7 +157,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         if (!isPrimaryStorage) return;
         if (this.childCache == null) this.updateChildCache();
 
-        var pushTargets = findPushTargets();
+        var pushTargets = this.findPushTargets();
 
         long totalFlux = this.fluxStorage.flux();
         if (!this.childCache.isEmpty()) totalFlux += this.childCache.stream().mapToLong(value -> value.fluxStorage.flux()).sum();
