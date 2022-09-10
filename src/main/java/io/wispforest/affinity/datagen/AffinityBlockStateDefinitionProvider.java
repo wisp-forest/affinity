@@ -54,7 +54,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
                 AETHUM_MAP_PROTOTYPE, REALIZED_AETHUM_MAP, ANTHRACITE_POWDER, RESPLENDENT_GEM,
                 AFFINITEA, INERT_WISP_MATTER, WISE_WISP_MATTER, VICIOUS_WISP_MATTER, DRAGON_DROP);
 
-        handheld(generator, COLLECTION_STAFF, WAND_OF_INQUIRY);
+        handheld(generator, COLLECTION_STAFF, NIMBLE_STAFF, WAND_OF_INQUIRY);
 
         generatedWithTexture(generator, Affinity.id("item/ranthracite_dust"), RANTHRACITE_WIRE.asItem());
 

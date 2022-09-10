@@ -69,15 +69,6 @@ public class AffinityParticleSystems {
         ClientParticles.spawn(ParticleTypes.EFFECT, world, pos, 0.5);
     });
 
-    public static final ParticleSystem<Void> ABERRANT_CALLING_SUCCESS = CONTROLLER.register(Void.class, (world, pos, data) -> {
-        ClientParticles.spawn(new GenericEmitterParticleEffect(
-                ParticleTypes.LARGE_SMOKE, new Vec3d(0, .25, 0), 1, .5f, false, 8
-        ), world, pos, 0d);
-
-        ClientParticles.setParticleCount(10);
-        ClientParticles.spawn(ParticleTypes.LAVA, world, pos, .25);
-    });
-
     public static final ParticleSystem<AberrantCallingCoreBlock.CoreSet> ABERRANT_CALLING_ACTIVE = CONTROLLER.register(AberrantCallingCoreBlock.CoreSet.class, (world, pos, data) -> {
         var effect = new DustColorTransitionParticleEffect(new Vec3f(1, 0, 0), new Vec3f(1, .25f, .75f), 1);
 
@@ -91,6 +82,16 @@ public class AffinityParticleSystems {
 
         ClientParticles.reset();
     });
+
+    public static final ParticleSystem<Void> ABERRANT_CALLING_SUCCESS = CONTROLLER.register(Void.class, (world, pos, data) -> {
+        ClientParticles.spawn(new GenericEmitterParticleEffect(
+                ParticleTypes.LARGE_SMOKE, new Vec3d(0, .25, 0), 1, .5f, false, 8
+        ), world, pos, 0d);
+
+        ClientParticles.setParticleCount(10);
+        ClientParticles.spawn(ParticleTypes.LAVA, world, pos, .25);
+    });
+
 
     public static final ParticleSystem<CandleData> AFFINE_CANDLE_BREWING = CONTROLLER.register(CandleData.class, (world, pos, data) -> {
         for (var candle : data.candles()) {

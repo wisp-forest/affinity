@@ -69,6 +69,7 @@
   "item.affinity.wand_of_inquiry": "Wand of Inquiry",
   "item.affinity.geological_resonator": "Geological Resonator",
   "item.affinity.collection_staff": "Collection Staff",
+  "item.affinity.nimble_staff": "Nimble Staff",
   "item.affinity.aethum_flux_bottle": "Bottle of Aethum Flux",
   "item.affinity.resplendent_gem": "Resplendent Gem",
   "item.affinity.echo_shard": "Echo Shard",
@@ -89,7 +90,9 @@
   "item.affinity.realized_aethum_map": "Realized Aethum Map",
 
   "enchantment.affinity.curse_of_illiteracy": "Curse of Illiteracy",
-  "enchantment.affinity.curse_of_illiteracy.desc": "§kit turns out dashloader is cringe",
+  "enchantment.affinity.curse_of_illiteracy.desc": [
+    {"text": "it turns out dashloader is cringe", "obfuscated": true}
+  ],
   "enchantment.affinity.curse_of_health": "Curse of Health",
   "enchantment.affinity.curse_of_health.desc": "Increases your health when put on. Taking off is not recommended",
   "enchantment.affinity.affine": "Affine",
