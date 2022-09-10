@@ -12,7 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ThreadedAnvilChunkStorage.class)
 public class ThreadedAnvilChunkStorageMixin {
-    @Shadow @Final private ThreadedAnvilChunkStorage.TicketManager ticketManager;
+    @Shadow
+    @Final
+    private ThreadedAnvilChunkStorage.TicketManager ticketManager;
 
     @Inject(method = "shouldTick", at = @At("HEAD"), cancellable = true)
     private void enableTicksFromWorldPin(ChunkPos pos, CallbackInfoReturnable<Boolean> cir) {

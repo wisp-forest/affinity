@@ -12,7 +12,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(World.class)
 public abstract class WorldMixin {
-    @Shadow public abstract WorldChunk getWorldChunk(BlockPos pos);
+    @Shadow
+    public abstract WorldChunk getWorldChunk(BlockPos pos);
 
     @Redirect(method = "hasRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isRaining()Z"))
     private boolean useLocalWeather(World instance, BlockPos pos) {
