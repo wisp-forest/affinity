@@ -5,19 +5,17 @@ import net.minecraft.client.particle.NoRenderParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 public class GenericEmitterParticle extends NoRenderParticle {
 
-    private final ParticleEffect emitParticle;
     private final GenericEmitterParticleEffect parameters;
 
-    public GenericEmitterParticle(ClientWorld clientWorld, double x, double y, double z, ParticleEffect emitParticle, GenericEmitterParticleEffect parameters) {
+    public GenericEmitterParticle(ClientWorld clientWorld, double x, double y, double z, GenericEmitterParticleEffect parameters) {
         super(clientWorld, x, y, z);
-        this.emitParticle = emitParticle;
         this.parameters = parameters;
+        this.maxAge = parameters.emitterLifetime();
     }
 
     @Override
@@ -34,7 +32,7 @@ public class GenericEmitterParticle extends NoRenderParticle {
                     : velocityParam;
 
             this.world.addParticle(
-                    emitParticle,
+                    this.parameters.effect(),
                     this.x + this.random.nextFloat() * deviation - deviation * .5,
                     this.y + this.random.nextFloat() * deviation - deviation * .5,
                     this.z + this.random.nextFloat() * deviation - deviation * .5,
@@ -54,7 +52,7 @@ public class GenericEmitterParticle extends NoRenderParticle {
         @Nullable
         @Override
         public Particle createParticle(GenericEmitterParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new GenericEmitterParticle(world, x, y, z, parameters.effect(), parameters);
+            return new GenericEmitterParticle(world, x, y, z, parameters);
         }
     }
 }

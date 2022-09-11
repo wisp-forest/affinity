@@ -2,10 +2,7 @@ package io.wispforest.affinity.client;
 
 import io.wispforest.affinity.block.impl.RanthraciteWireBlock;
 import io.wispforest.affinity.block.impl.RitualSocleBlock;
-import io.wispforest.affinity.client.particle.BezierPathEmitterParticle;
-import io.wispforest.affinity.client.particle.BezierPathParticle;
-import io.wispforest.affinity.client.particle.ColoredFlamedParticle;
-import io.wispforest.affinity.client.particle.GenericEmitterParticle;
+import io.wispforest.affinity.client.particle.*;
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.WispEntityModel;
@@ -67,6 +64,7 @@ public class AffinityClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.BEZIER_PATH, new BezierPathParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.BEZIER_PATH_EMITTER, new BezierPathEmitterParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.GENERIC_EMITTER, new GenericEmitterParticle.Factory());
+        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.ORBITING_EMITTER, new OrbitingEmitterParticle.Factory());
 
         EntityRendererRegistry.register(AffinityEntities.INERT_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.WISE_WISP, WispEntityRenderer::new);
