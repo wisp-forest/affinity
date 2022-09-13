@@ -15,5 +15,8 @@ public class AffinityPoiTypes {
     public static final PointOfInterestType AFFINE_CANDLE = PointOfInterestHelper.register(Affinity.id("affine_candle"), 0, 1,
             AffinityBlocks.AFFINE_CANDLE);
 
+    public static final PointOfInterestType ARCANE_TREETAP = PointOfInterestHelper.register(Affinity.id("arcane_treetap"), 0, 1,
+            AffinityBlocks.ARCANE_TREETAP);
+
     public static void initialize() {}
 }

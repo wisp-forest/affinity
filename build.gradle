@@ -97,7 +97,6 @@ dependencies {
 
     modImplementation "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"
 
-//    modLocalRuntime 'com.ptsmods:devlogin:2.1'
     modLocalRuntime "maven.modrinth:emoji-type:2.0.0+1.19"
     modLocalRuntime "maven.modrinth:lazydfu:0.1.3"
 

@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "affinity:block/arcane_treetap",
+      "x": -90
+    },
+    "facing=south": {
+      "model": "affinity:block/arcane_treetap",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "affinity:block/arcane_treetap",
+      "x": -90,
+      "y": 90
+    },
+    "facing=west": {
+      "model": "affinity:block/arcane_treetap",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

@@ -13,6 +13,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -43,15 +44,15 @@ public class WispMatterItem extends Item {
             return ActionResult.SUCCESS;
         }
 
-        if (!world.getBlockState(context.getBlockPos()).isOf(AffinityBlocks.AZALEA_LOG)) return ActionResult.PASS;
+        if (!world.getBlockState(context.getBlockPos()).isIn(BlockTags.LOGS)) return ActionResult.PASS;
         if (world.isClient) return ActionResult.SUCCESS;
 
         final var results = BlockFinder.findCapped(world, context.getBlockPos(), (blockPos, state) -> {
-            if (state.isOf(Blocks.AZALEA_LEAVES) || state.isOf(Blocks.FLOWERING_AZALEA_LEAVES)) {
+            if (state.isIn(BlockTags.LEAVES)) {
                 return !state.get(LeavesBlock.PERSISTENT);
             }
 
-            return state.isOf(AffinityBlocks.AZALEA_LOG);
+            return state.isIn(BlockTags.LOGS);
         }, 128);
         final var counted = results.byCount();
 

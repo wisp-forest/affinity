@@ -30,6 +30,8 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
         parentedItem(generator, AZALEA_LOG, AZALEA_WOOD, STRIPPED_AZALEA_LOG, STRIPPED_AZALEA_WOOD);
         parentedItem(generator, AZALEA_PLANKS, AZALEA_FENCE_GATE, AZALEA_PRESSURE_PLATE);
 
+        parentedItem(generator, ARCANE_TREETAP);
+
         var variantMap = BlockStateVariantMap.create(Properties.AGE_2)
                 .register(integer -> {
                     var id = generator.createSubModel(BUDDING_AZALEA_LEAVES, "_" + integer, Models.CUBE_ALL, TextureMap::all);
