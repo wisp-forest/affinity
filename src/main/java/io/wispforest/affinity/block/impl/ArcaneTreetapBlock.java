@@ -18,6 +18,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,6 +64,12 @@ public class ArcaneTreetapBlock extends HorizontalFacingBlock {
                 || world.getBlockState(pos.south()).isIn(BlockTags.LOGS)
                 || world.getBlockState(pos.east()).isIn(BlockTags.LOGS)
                 || world.getBlockState(pos.west()).isIn(BlockTags.LOGS);
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (direction != state.get(FACING)) return state;
+        return world.getBlockState(neighborPos).isIn(BlockTags.LOGS) ? state : Blocks.AIR.getDefaultState();
     }
 
     @Nullable

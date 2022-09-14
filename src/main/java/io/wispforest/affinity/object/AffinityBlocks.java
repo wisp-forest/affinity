@@ -3,6 +3,7 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.*;
 import io.wispforest.affinity.block.shadowed.*;
+import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.*;
 import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.mixin.access.SignTypeInvoker;
@@ -18,6 +19,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.SignType;
 import net.minecraft.util.registry.Registry;
@@ -27,6 +29,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.util.function.BiFunction;
 
 @SuppressWarnings("unused")
 public class AffinityBlocks implements BlockRegistryContainer {
@@ -50,6 +53,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block WORLD_PIN = new WorldPinBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block SUNSHINE_MONOLITH = new SunshineMonolithBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block ARCANE_TREETAP = new ArcaneTreetapBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block ASSEMBLY_AUGMENT = new AssemblyAugmentBlock();
 
     @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 
@@ -129,6 +133,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<SunshineMonolithBlockEntity> SUNSHINE_MONOLITH =
                 make(SunshineMonolithBlockEntity::new, AffinityBlocks.SUNSHINE_MONOLITH);
 
+        public static final BlockEntityType<AssemblyAugmentBlockEntity> ASSEMBLY_AUGMENT =
+                make(AssemblyAugmentBlockEntity::new, AffinityBlocks.ASSEMBLY_AUGMENT);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
@@ -170,8 +177,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
         int tab = AffinityItemGroup.NATURE;
         if (field.isAnnotationPresent(Tab.class)) tab = field.getAnnotation(Tab.class).value();
 
+        BiFunction<Block, OwoItemSettings, Item> factory = value instanceof BlockItemProvider provider
+                ? provider::createBlockItem
+                : BlockItem::new;
+
         Registry.register(Registry.ITEM, new Identifier(namespace, identifier),
-                new BlockItem(value, new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP)));
+                factory.apply(value, new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP)));
     }
 
     @Retention(RetentionPolicy.RUNTIME)
