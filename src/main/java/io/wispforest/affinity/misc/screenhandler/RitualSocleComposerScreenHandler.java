@@ -8,6 +8,7 @@ import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import io.wispforest.owo.client.screens.ScreenUtils;
+import io.wispforest.owo.client.screens.SlotGenerator;
 import io.wispforest.owo.client.screens.ValidatingSlot;
 import io.wispforest.owo.ops.ItemOps;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,7 +47,7 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
         return new RitualSocleComposerScreenHandler(syncId, inventory, ScreenHandlerContext.EMPTY);
     }
 
-    public RitualSocleComposerScreenHandler(int syncId, PlayerInventory inventory, ScreenHandlerContext context) {
+    public RitualSocleComposerScreenHandler(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
         super(AffinityScreenHandlerTypes.RITUAL_SOCLE_COMPOSER, syncId);
         this.context = context;
         this.inventory = new SimpleInventory(5);
@@ -55,7 +56,7 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
         this.resultInventory = new CraftingResultInventory();
 
         this.addSlot(new Slot(craftingInventory, ORNAMENT_INGREDIENT_SLOT, 26, 62));
-        this.addSlot(new OrnamentResultSlot(inventory.player, this.craftingInventory, this.resultInventory,
+        this.addSlot(new OrnamentResultSlot(playerInventory.player, this.craftingInventory, this.resultInventory,
                 ORNAMENT_CRAFT_SLOT - 1, 26, 20));
 
         this.addSlot(new ValidatingSlot(this.inventory, SOCLE_SLOT + INVENTORY_SHIFT, 107, 40,
@@ -69,7 +70,7 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
         this.addSlot(new ValidatingSlot(this.inventory, ORNAMENT_OUTPUT_SLOT + INVENTORY_SHIFT, 143, 20, stack -> false));
         this.addSlot(new ValidatingSlot(this.inventory, BLANK_SOCLE_OUTPUT_SLOT + INVENTORY_SHIFT, 143, 60, stack -> false));
 
-        ScreenUtils.generatePlayerSlots(8, 93, inventory, this::addSlot);
+        SlotGenerator.begin(this::addSlot, 8, 93).playerInventory(playerInventory);
     }
 
     @Override

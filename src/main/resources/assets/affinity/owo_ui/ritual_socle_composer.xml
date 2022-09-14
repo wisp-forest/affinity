@@ -1,0 +1,36 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.19/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <flow-layout direction="vertical">
+                    <children>
+                        <texture texture="affinity:textures/gui/ritual_socle_composer.png" region-width="176" region-height="175"/>
+                        <label>
+                            <text translate="true">block.affinity.ritual_socle_composer</text>
+                            <color>#404040</color>
+                            <positioning type="relative">50,3</positioning>
+                        </label>
+                        
+                        <textured-button texture="affinity:textures/gui/ritual_socle_composer.png" width="27" height="13" u="176" id="merge-button">
+                            <positioning type="absolute">101,20</positioning>
+                            <active>false</active>
+                        </textured-button>
+
+                        <textured-button texture="affinity:textures/gui/ritual_socle_composer.png" width="27" height="13" u="176" id="split-button">
+                            <positioning type="absolute">101,63</positioning>
+                            <active>false</active>
+                        </textured-button>
+                    </children>
+                </flow-layout>
+            </children>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+        </flow-layout>
+    </components>
+</owo-ui>
