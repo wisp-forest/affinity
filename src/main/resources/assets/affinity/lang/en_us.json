@@ -128,6 +128,9 @@
   "message.affinity.linking.link_destroyed": "Link to %s destroyed",
   "message.affinity.linking.failed": "Could not link to %s",
 
+  "gui.affinity.augmented_crafting_table.title": "Augmented Crafting Table",
+  "gui.affinity.augmented_crafting_table.treetap_count": "Treetaps: %d",
+
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.bastion_regeneration": "Bastion",
   "effect.affinity.affine": "Affine",
@@ -145,6 +148,7 @@
   "item.minecraft.tipped_arrow.effect.steadfast": "Arrow of Knockback Resistance",
 
   "effect.affinity.flight": "Flight",
+  "effect.affinity.gravity_modifier": "-9.81 Gravity",
   "item.minecraft.potion.effect.flight": "Potion of Paragravity",
   "item.minecraft.splash_potion.effect.flight": "Splash Potion of Paragravity",
   "item.minecraft.lingering_potion.effect.flight": "Lingering Potion of Paragravity",

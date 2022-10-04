@@ -61,13 +61,14 @@ public class PotionUtilMixin {
     }
 
     @Inject(method = "buildTooltip", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void addFuniFlightText(ItemStack stack, List<Text> list, float f, CallbackInfo ci, List<StatusEffectInstance> list2, List<Pair<EntityAttribute, EntityAttributeModifier>> list3) {
-        if (list2.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffectType() == AffinityStatusEffects.FLIGHT)) return;
-        if (list3.isEmpty()) {
-            list.add(Text.empty());
-            list.add((Text.translatable("potion.whenDrank")).formatted(Formatting.DARK_PURPLE));
+    private static void addFuniFlightText(ItemStack stack, List<Text> tooltip, float f, CallbackInfo ci, List<StatusEffectInstance> effects, List<Pair<EntityAttribute, EntityAttributeModifier>> attributeModifiers) {
+        if (effects.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffectType() == AffinityStatusEffects.FLIGHT)) return;
+
+        if (attributeModifiers.isEmpty()) {
+            tooltip.add(Text.empty());
+            tooltip.add((Text.translatable("potion.whenDrank")).formatted(Formatting.DARK_PURPLE));
         }
-        list.add(Text.literal("-9.81 Gravity").formatted(Formatting.BLUE));
+        tooltip.add(Text.translatable("effect.affinity.gravity_modifier").formatted(Formatting.BLUE));
     }
 
 }

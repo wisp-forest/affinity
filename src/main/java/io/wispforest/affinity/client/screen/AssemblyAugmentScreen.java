@@ -14,6 +14,7 @@ public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, 
 
     public AssemblyAugmentScreen(AssemblyAugmentScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.file("../src/main/resources/assets/affinity/owo_ui/assembly_augment.xml"));
+        this.titleY = 69420;
     }
 
     @Override
@@ -23,6 +24,6 @@ public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, 
 
     @Override
     protected void handledScreenTick() {
-        this.treetapCount.text(Text.literal(String.valueOf(this.handler.treetapCount())));
+        this.treetapCount.text(Text.translatable("gui.affinity.augmented_crafting_table.treetap_count", this.handler.treetapCount()));
     }
 }

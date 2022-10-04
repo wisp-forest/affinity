@@ -115,7 +115,7 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
                 player.openHandledScreen(new NamedScreenHandlerFactory() {
                     @Override
                     public Text getDisplayName() {
-                        return augment.getCachedState().getBlock().getName();
+                        return Text.translatable("gui.affinity.augmented_crafting_table.title");
                     }
 
                     @Override

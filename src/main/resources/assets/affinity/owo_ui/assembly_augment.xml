@@ -7,6 +7,12 @@
                     <children>
                         <texture texture="textures/gui/container/crafting_table.png" region-width="176" region-height="166"/>
 
+                        <label>
+                            <text translate="true">gui.affinity.augmented_crafting_table.title</text>
+                            <color>#404040</color>
+                            <positioning type="relative">50,3</positioning>
+                        </label>
+
                         <label id="treetap-count">
                             <positioning type="absolute">108,62</positioning>
                             <color>dark-gray</color>
