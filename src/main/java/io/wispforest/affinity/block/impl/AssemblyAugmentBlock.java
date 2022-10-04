@@ -2,18 +2,31 @@ package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.AssemblyAugmentBlockEntity;
+import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.item.DirectInteractionHandler;
+import io.wispforest.affinity.misc.screenhandler.AssemblyAugmentScreenHandler;
+import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
@@ -65,6 +78,12 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
         return new AssemblyAugmentBlockEntity(pos, state);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, AffinityBlocks.Entities.ASSEMBLY_AUGMENT, TickedBlockEntity.ticker());
+    }
+
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
@@ -85,5 +104,28 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
         public Collection<Block> interactionOverrideCandidates() {
             return Set.of(Blocks.CRAFTING_TABLE);
         }
+    }
+
+    static {
+        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+            if (!world.getBlockState(hitResult.getBlockPos()).isOf(Blocks.CRAFTING_TABLE)) return ActionResult.PASS;
+            if (!(world.getBlockEntity(hitResult.getBlockPos().up()) instanceof AssemblyAugmentBlockEntity augment)) return ActionResult.PASS;
+
+            if (!world.isClient) {
+                player.openHandledScreen(new NamedScreenHandlerFactory() {
+                    @Override
+                    public Text getDisplayName() {
+                        return augment.getCachedState().getBlock().getName();
+                    }
+
+                    @Override
+                    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                        return AssemblyAugmentScreenHandler.server(syncId, inv, augment);
+                    }
+                });
+            }
+
+            return ActionResult.SUCCESS;
+        });
     }
 }

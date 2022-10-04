@@ -22,6 +22,7 @@ public class MixinHooks {
     private static final Identifier IMPENDING_DOOM_ID = Affinity.id("impending_doom");
 
     public static boolean TEXT_OBFUSCATION = false;
+    public static boolean INJECT_ASSEMBLY_AUGMENT_SCREEN = false;
     public static final DamageSource THREW_DOOM_POTION_SOURCE = new ImpendingDoomStatusEffect.DoomDamageSource("threw_doom_potion");
 
     public static float getExtraAttackDamage(LivingEntity attacker, Entity entity, float baseAmount) {

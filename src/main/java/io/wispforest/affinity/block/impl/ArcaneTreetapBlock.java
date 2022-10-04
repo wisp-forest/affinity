@@ -100,7 +100,17 @@ public class ArcaneTreetapBlock extends HorizontalFacingBlock {
     public ActionResult onUse(BlockState clickedState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) return ActionResult.SUCCESS;
 
-        final var results = BlockFinder.findCapped(world, pos.offset(clickedState.get(FACING)), (blockPos, state) -> {
+        if (isProperlyAttached(world, pos)) {
+            player.sendMessage(Text.literal("yep, that is in fact a tree").formatted(Formatting.GREEN), false);
+        } else {
+            player.sendMessage(Text.literal("nope, not a tree. no.").formatted(Formatting.RED), false);
+        }
+
+        return ActionResult.SUCCESS;
+    }
+
+    public static boolean isProperlyAttached(World world, BlockPos pos) {
+        final var results = BlockFinder.findCapped(world, pos.offset(world.getBlockState(pos).get(FACING)), (blockPos, state) -> {
             if (state.isIn(BlockTags.LEAVES)) {
                 return !state.get(LeavesBlock.PERSISTENT);
             }
@@ -116,12 +126,6 @@ public class ArcaneTreetapBlock extends HorizontalFacingBlock {
                 .filter(block -> block.getRegistryEntry().isIn(BlockTags.LEAVES))
                 .mapToInt(counted::get).sum();
 
-        if (logCount > 5 && leavesCount > 40) {
-            player.sendMessage(Text.literal("yep, that is in fact a tree").formatted(Formatting.GREEN), false);
-        } else {
-            player.sendMessage(Text.literal("nope, not a tree. no.").formatted(Formatting.RED), false);
-        }
-
-        return ActionResult.SUCCESS;
+        return logCount > 5 && leavesCount > 40;
     }
 }
