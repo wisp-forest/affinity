@@ -10,6 +10,7 @@ import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -49,8 +50,10 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
                 .criterion(hasItem(AZALEA_FLOWERS), conditionsFromItem(AZALEA_FLOWERS))
                 .offerTo(exporter, craftingRecipe(Blocks.FLOWERING_AZALEA));
 
-
+        offerBoatRecipe(exporter, AZALEA_BOAT, AffinityBlocks.AZALEA_PLANKS);
         offerChestBoatRecipe(exporter, AZALEA_CHEST_BOAT, AZALEA_BOAT);
+        offerPlanksRecipe(exporter, AffinityBlocks.AZALEA_PLANKS, TagKey.of(Registry.ITEM_KEY, Affinity.id("azalea_logs")));
+        generateFamily(exporter, AffinityBlockFamilies.AZALEA);
     }
 
     private static Identifier craftingRecipe(ItemConvertible item) {
