@@ -104,6 +104,7 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
 
         if (this.lastTick == 0 || this.lastTick > world.getTime()) {
             this.lastTick = world.getTime() - 1;
+            init();
         }
 
         if (this.lastTick == world.getTime()) {

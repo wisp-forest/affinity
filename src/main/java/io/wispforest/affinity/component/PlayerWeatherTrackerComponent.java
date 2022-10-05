@@ -14,6 +14,8 @@ public class PlayerWeatherTrackerComponent implements TransientComponent, Server
 
     private float rainGradient;
     private float thunderGradient;
+    private float syncedRainGradient = -1;
+    private float syncedThunderGradient = -1;
     private boolean hasTicked = false;
 
     public PlayerWeatherTrackerComponent(PlayerEntity player) {
@@ -36,26 +38,23 @@ public class PlayerWeatherTrackerComponent implements TransientComponent, Server
             this.thunderGradient = chunkWeather.getThunderGradient();
         }
 
-        float prevRainGradient = this.rainGradient;
-        float prevThunderGradient = this.thunderGradient;
-
-        boolean wasRaining = this.rainGradient != 0;
-
         this.rainGradient += Math.signum(chunkWeather.getRainGradient() - this.rainGradient) * 0.01f;
         this.thunderGradient += Math.signum(chunkWeather.getThunderGradient() - this.thunderGradient) * 0.01f;
 
-        if (wasRaining && this.rainGradient == 0) {
-            player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.RAIN_STARTED, 0));
-        } else if (!wasRaining && this.rainGradient != 0) {
-            player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.RAIN_STOPPED, 0));
-        }
+        if (this.rainGradient != this.syncedRainGradient) {
+            if (this.syncedRainGradient == 0) {
+                player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.RAIN_STARTED, 0));
+            } else if (this.rainGradient == 0) {
+                player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.RAIN_STOPPED, 0));
+            }
 
-        if (this.rainGradient != prevRainGradient) {
             player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.RAIN_GRADIENT_CHANGED, rainGradient));
+            this.syncedRainGradient = this.rainGradient;
         }
 
-        if (this.thunderGradient != prevThunderGradient) {
+        if (this.thunderGradient != this.syncedThunderGradient) {
             player.networkHandler.sendPacket(new GameStateChangeS2CPacket(GameStateChangeS2CPacket.THUNDER_GRADIENT_CHANGED, thunderGradient));
+            this.syncedThunderGradient = this.thunderGradient;
         }
     }
 
