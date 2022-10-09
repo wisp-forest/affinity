@@ -29,6 +29,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item GEOLOGICAL_RESONATOR = new GeologicalResonatorItem();
     public static final Item COLLECTION_STAFF = new CollectionStaffItem();
     public static final Item NIMBLE_STAFF = new NimbleStaffItem();
+    public static final Item TIME_STAFF = new TimeStaffItem();
 
     public static final Item AZALEA_FLOWERS = new Item(settings(AffinityItemGroup.NATURE).food(new FoodComponent.Builder().hunger(2).saturationModifier(.5f)
             .statusEffect(new StatusEffectInstance(AffinityStatusEffects.DRIPPING, 1200, 0, false, false, true), 1).build()));
