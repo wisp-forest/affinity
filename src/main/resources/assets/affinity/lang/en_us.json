@@ -11,6 +11,8 @@
   "wispType.affinity.wise": "Wise",
   "wispType.affinity.vicious": "Vicious",
 
+  "category.affinity.assembly": "Assembly",
+
   "block.affinity.brewing_cauldron": "Brewing Cauldron",
   "block.affinity.sundial": "Sundial",
   "block.affinity.copper_plated_aethum_flux_node": "Copper Plated Aethum Flux Node",

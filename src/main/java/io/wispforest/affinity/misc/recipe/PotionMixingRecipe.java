@@ -3,6 +3,7 @@ package io.wispforest.affinity.misc.recipe;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.Ingrediente;
 import io.wispforest.affinity.misc.potion.PotionMixture;
+import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.Inventory;
@@ -52,7 +53,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
     public static Optional<PotionMixingRecipe> getMatching(RecipeManager manager, PotionMixture inputMixture, List<ItemStack> inputStacks) {
         if (inputMixture.isEmpty()) return Optional.empty();
 
-        for (var recipe : manager.listAllOfType(Type.INSTANCE)) {
+        for (var recipe : manager.listAllOfType(AffinityRecipeTypes.POTION_MIXING)) {
 
             final var effectInputs = Stream.concat(inputMixture.effects().stream(), inputMixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).toList();
             final var itemInputs = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
@@ -144,13 +145,6 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
     @Override
     public RecipeType<?> getType() {
-        return Type.INSTANCE;
-    }
-
-    public static class Type implements RecipeType<PotionMixingRecipe> {
-        private Type() {}
-
-        public static final Type INSTANCE = new Type();
-        public static final Identifier ID = Affinity.id("potion_mixing");
+        return AffinityRecipeTypes.POTION_MIXING;
     }
 }

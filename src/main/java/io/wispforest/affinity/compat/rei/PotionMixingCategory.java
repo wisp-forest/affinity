@@ -1,6 +1,5 @@
 package io.wispforest.affinity.compat.rei;
 
-import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -16,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay> {
-
-    public static final CategoryIdentifier<PotionMixingDisplay> ID = CategoryIdentifier.of(Affinity.id("potion_mixing"));
 
     @Override
     public List<Widget> setupDisplay(PotionMixingDisplay display, Rectangle bounds) {
@@ -55,6 +52,6 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
 
     @Override
     public CategoryIdentifier<? extends PotionMixingDisplay> getCategoryIdentifier() {
-        return ID;
+        return AffinityReiCommonPlugin.POTION_MIXING_ID;
     }
 }

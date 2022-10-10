@@ -23,7 +23,10 @@
       "io.wispforest.affinity.Affinity"
     ],
     "rei_client": [
-      "io.wispforest.affinity.compat.rei.AffinityReiPlugin"
+      "io.wispforest.affinity.compat.rei.AffinityReiClientPlugin"
+    ],
+    "rei_common": [
+      "io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin"
     ],
     "top_plugin": [
       "io.wispforest.affinity.compat.top.AffinityTOPPlugin"
