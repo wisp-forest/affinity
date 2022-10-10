@@ -31,7 +31,7 @@ public class NimbleStaffItem extends Item {
                 user.isOnGround()
                         ? 0.15
                         : user.isFallFlying() ? 0.025 : 0.1
-                );
+        );
         user.addVelocity(velocity.x, velocity.y, velocity.z);
 
         if (world.isClient) return TypedActionResult.success(playerStack);

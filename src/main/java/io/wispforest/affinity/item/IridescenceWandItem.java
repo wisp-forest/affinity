@@ -73,7 +73,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         final var mode = stack.get(MODE);
 
-        tooltip.add(Text.of(" "));
+        tooltip.add(Text.empty());
 
         tooltip.add(TextOps.translateWithColor(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id, mode.color)
                 .append(Text.literal(": ").formatted(Formatting.GRAY))
