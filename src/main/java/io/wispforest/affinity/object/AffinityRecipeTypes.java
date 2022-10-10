@@ -2,9 +2,7 @@ package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.misc.recipe.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.*;
 import net.minecraft.util.registry.Registry;
 
 public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>> {
@@ -13,6 +11,7 @@ public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>>
     public static final SimpleType<AspenInfusionRecipe> ASPEN_INFUSION = new SimpleType<>();
     public static final SimpleType<AberrantCallingRecipe> ABERRANT_CALLING = new SimpleType<>();
     public static final SimpleType<RitualSocleComposerConversionRecipe> RITUAL_SOCLE_COMPOSER_CONVERSION = new SimpleType<>();
+    public static final SimpleType<CraftingRecipe> ASSEMBLY = new SimpleType<>();
 
     public static class Serializers implements AutoRegistryContainer<RecipeSerializer<?>> {
 
@@ -21,6 +20,8 @@ public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>>
         public static final RecipeSerializer<AberrantCallingRecipe> ABERRANT_CALLING = AberrantCallingRecipe.Serializer.INSTANCE;
         public static final RecipeSerializer<RitualSocleComposerConversionRecipe> RITUAL_SOCLE_COMPOSER_CONVERSION
                 = RitualSocleComposerConversionRecipe.Serializer.INSTANCE;
+        public static final RecipeSerializer<ShapedRecipe> ASSEMBLY_SHAPED = new ShapedAssemblyRecipe.Serializer();
+        public static final RecipeSerializer<ShapelessRecipe> ASSEMBLY_SHAPELESS = new ShapelessAssemblyRecipe.Serializer();
 
         @Override
         public Registry<RecipeSerializer<?>> getRegistry() {

@@ -5,7 +5,7 @@
             <children>
                 <flow-layout direction="vertical">
                     <children>
-                        <texture texture="textures/gui/container/crafting_table.png" region-width="176" region-height="166"/>
+                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="176" region-height="166"/>
 
                         <label>
                             <text translate="true">gui.affinity.augmented_crafting_table.title</text>
@@ -17,6 +17,21 @@
                             <positioning type="absolute">108,62</positioning>
                             <color>dark-gray</color>
                         </label>
+
+                        <texture texture="affinity:textures/gui/assembly_augment.png" region-height="30" region-width="30" u="176" id="crafting-overlay">
+                            <positioning type="absolute">117,28</positioning>
+                            <blend>true</blend>
+                            <visible-area>
+                                <height>0</height>
+                            </visible-area>
+                        </texture>
+
+                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="22" region-height="16" u="176" v="30" id="progress-indicator">
+                            <positioning type="absolute">90,35</positioning>
+                            <visible-area>
+                                <width>0</width>
+                            </visible-area>
+                        </texture>
                     </children>
                 </flow-layout>
             </children>

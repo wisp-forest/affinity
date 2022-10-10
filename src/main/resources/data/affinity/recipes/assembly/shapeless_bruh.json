@@ -1,0 +1,15 @@
+{
+  "type": "affinity:assembly_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:emerald"
+    },
+    {
+      "item": "minecraft:emerald"
+    }
+  ],
+  "result": {
+    "item": "minecraft:baked_potato",
+    "count": 16
+  }
+}

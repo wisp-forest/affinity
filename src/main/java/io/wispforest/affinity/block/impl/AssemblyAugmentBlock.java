@@ -21,6 +21,7 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -92,6 +93,16 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
     @Override
     public Item createBlockItem(Block block, OwoItemSettings settings) {
         return new AssemblyAugmentItem(block, settings);
+    }
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.isOf(newState.getBlock()) && world.getBlockEntity(pos) instanceof AssemblyAugmentBlockEntity augment) {
+            ItemScatterer.spawn(world, pos, augment.craftingInput());
+            ItemScatterer.spawn(world, pos, augment.outputInventory());
+        }
+
+        super.onStateReplaced(state, world, pos, newState, moved);
     }
 
     private static class AssemblyAugmentItem extends BlockItem implements DirectInteractionHandler {

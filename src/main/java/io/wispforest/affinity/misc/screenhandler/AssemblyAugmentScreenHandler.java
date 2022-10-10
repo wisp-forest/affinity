@@ -5,9 +5,11 @@ import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.mixin.access.CraftingInventoryAccessor;
 import io.wispforest.affinity.mixin.access.CraftingScreenHandlerAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.owo.client.screens.ValidatingSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.PropertyDelegate;
@@ -33,10 +35,14 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
         super(syncId, inventory, augment == null ? ScreenHandlerContext.EMPTY : ScreenHandlerContext.create(augment.getWorld(), augment.getPos()));
         this.augment = augment;
 
-        this.properties = augment == null ? new ArrayPropertyDelegate(1) : new PropertyDelegate() {
+        this.properties = augment == null ? new ArrayPropertyDelegate(2) : new PropertyDelegate() {
             @Override
             public int get(int index) {
-                return augment.treetapCache().size();
+                return switch (index) {
+                    case 0 -> augment.treetapCache().size();
+                    case 1 -> augment.craftingTick();
+                    default -> 0;
+                };
             }
 
             @Override
@@ -44,10 +50,12 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
 
             @Override
             public int size() {
-                return 1;
+                return 2;
             }
         };
         this.addProperties(this.properties);
+
+        this.addSlot(new ValidatingSlot(this.augment != null ? this.augment.outputInventory() : new SimpleInventory(1), 0, this.getSlot(0).x, this.getSlot(0).y, stack -> false));
 
         if (this.augment != null) {
             ((CraftingInventoryAccessor) ((CraftingScreenHandlerAccessor) this).affinity$getInput()).affinity$setStacks(
@@ -69,6 +77,10 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
 
     public int treetapCount() {
         return this.properties.get(0);
+    }
+
+    public float craftingProgress() {
+        return this.properties.get(1) / 40f;
     }
 
     @Override
