@@ -30,7 +30,9 @@ import net.minecraft.world.poi.PointOfInterest;
 import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -38,6 +40,8 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
 
     private static final int[] DOWN_SLOTS = new int[]{0};
     private static final int[] NO_SLOTS = new int[0];
+
+    private static final Map<BlockPos, BlockPos> BLOCKED_TREETAPS = new HashMap<>();
 
     private static final NbtKey<ItemStack> OUTPUT_KEY = new NbtKey<>("Output", NbtKey.Type.ITEM_STACK);
 
@@ -60,6 +64,20 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
         var outputStack = this.outputInventory.getStack(0);
 
         if (currentRecipe.isPresent() && ItemOps.canStack(outputStack, currentRecipe.get().getOutput())) {
+            if (this.craftingTick == 0) {
+                for (var treetap : this.treetapCache) {
+                    if (BLOCKED_TREETAPS.containsKey(treetap)) continue;
+                    BLOCKED_TREETAPS.put(treetap, this.pos);
+                }
+            }
+
+            if (this.craftingTick % 20 == 0) {
+                AffinityParticleSystems.AFFINE_CANDLE_BREWING.spawn(this.world, Vec3d.ofCenter(this.pos),
+                        new AffinityParticleSystems.CandleData(this.treetapCache.stream().filter(blockPos -> BLOCKED_TREETAPS.get(blockPos) == this.pos).map(Vec3d::ofCenter).toList())
+                );
+            }
+
+            // TODO make this depend on treetaps
             if (this.craftingTick++ > 40) {
                 for (int i = 0; i < this.craftingInput.stacks.size(); i++) {
                     if (!ItemOps.emptyAwareDecrement(this.craftingInput.stacks.get(i))) {
@@ -76,10 +94,17 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                 this.craftingTick = 0;
             }
         } else {
+            if (this.craftingTick != 0) {
+                for (var treetap : this.treetapCache) {
+                    if (!this.getPos().equals(BLOCKED_TREETAPS.get(treetap))) continue;
+                    BLOCKED_TREETAPS.remove(treetap);
+                }
+            }
+
             this.craftingTick = 0;
         }
 
-        if (this.world.getTime() % 20 != 0) return;
+        if (this.world.getTime() % 20 != 0 || this.craftingTick != 0) return;
 
         this.treetapCache.clear();
         ((ServerWorld) this.world).getPointOfInterestStorage()
@@ -87,10 +112,6 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                 .map(PointOfInterest::getPos)
                 .filter(poi -> ArcaneTreetapBlock.isProperlyAttached(this.world, poi))
                 .forEach(this.treetapCache::add);
-
-        AffinityParticleSystems.AFFINE_CANDLE_BREWING.spawn(this.world, Vec3d.ofCenter(this.pos),
-                new AffinityParticleSystems.CandleData(this.treetapCache.stream().map(Vec3d::ofCenter).toList())
-        );
     }
 
     @Override

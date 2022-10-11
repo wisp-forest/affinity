@@ -37,6 +37,7 @@ public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
 
+        // TODO properly communicate the actual value of this and how it happens
         this.treetapCount.text(Text.translatable("gui.affinity.augmented_crafting_table.treetap_count", this.handler.treetapCount()));
 
         if (this.augmentOutputSlot.hasStack()) {

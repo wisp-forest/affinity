@@ -21,7 +21,9 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -55,6 +57,15 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
 
     public AssemblyAugmentBlock() {
         super(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque());
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!world.isClient && world.getBlockEntity(pos) instanceof AssemblyAugmentBlockEntity augment) {
+            openScreen(player, augment);
+        }
+
+        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -105,6 +116,33 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
         super.onStateReplaced(state, world, pos, newState, moved);
     }
 
+    private static void openScreen(PlayerEntity player, AssemblyAugmentBlockEntity augment) {
+        player.openHandledScreen(new NamedScreenHandlerFactory() {
+            @Override
+            public Text getDisplayName() {
+                return Text.translatable("gui.affinity.augmented_crafting_table.title");
+            }
+
+            @Override
+            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                return AssemblyAugmentScreenHandler.server(syncId, inv, augment);
+            }
+        });
+    }
+
+    static {
+        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+            if (!world.getBlockState(hitResult.getBlockPos()).isOf(Blocks.CRAFTING_TABLE)) return ActionResult.PASS;
+            if (!(world.getBlockEntity(hitResult.getBlockPos().up()) instanceof AssemblyAugmentBlockEntity augment)) return ActionResult.PASS;
+
+            if (!world.isClient) {
+                openScreen(player, augment);
+            }
+
+            return ActionResult.SUCCESS;
+        });
+    }
+
     private static class AssemblyAugmentItem extends BlockItem implements DirectInteractionHandler {
 
         public AssemblyAugmentItem(Block block, Settings settings) {
@@ -115,28 +153,5 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
         public Collection<Block> interactionOverrideCandidates() {
             return Set.of(Blocks.CRAFTING_TABLE);
         }
-    }
-
-    static {
-        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            if (!world.getBlockState(hitResult.getBlockPos()).isOf(Blocks.CRAFTING_TABLE)) return ActionResult.PASS;
-            if (!(world.getBlockEntity(hitResult.getBlockPos().up()) instanceof AssemblyAugmentBlockEntity augment)) return ActionResult.PASS;
-
-            if (!world.isClient) {
-                player.openHandledScreen(new NamedScreenHandlerFactory() {
-                    @Override
-                    public Text getDisplayName() {
-                        return Text.translatable("gui.affinity.augmented_crafting_table.title");
-                    }
-
-                    @Override
-                    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                        return AssemblyAugmentScreenHandler.server(syncId, inv, augment);
-                    }
-                });
-            }
-
-            return ActionResult.SUCCESS;
-        });
     }
 }

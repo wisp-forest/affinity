@@ -2,18 +2,16 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"4": "block/oak_log",
+		"4": "minecraft:block/oak_log",
 		"5": "affinity:block/crude_aethum_flux_node_shard",
-		"particle": "block/oak_log"
+		"particle": "minecraft:block/oak_log"
 	},
 	"elements": [
 		{
 			"from": [-1, 0, 3],
 			"to": [3, 3, 13],
 			"faces": {
-				"north": {"uv": [13, 2, 16, 5], "texture": "#missing"},
 				"east": {"uv": [3, 2, 13, 5], "texture": "#4"},
-				"south": {"uv": [0, 2, 3, 5], "texture": "#missing"},
 				"west": {"uv": [3, 2, 13, 5], "texture": "#4"},
 				"up": {"uv": [0, 3, 3, 13], "texture": "#4"},
 				"down": {"uv": [0, 3, 3, 13], "texture": "#4"}
@@ -89,7 +87,6 @@
 				"east": {"uv": [13, 5, 16, 8], "texture": "#4"},
 				"south": {"uv": [13, 5, 16, 8], "texture": "#4"},
 				"west": {"uv": [0, 5, 3, 8], "texture": "#4"},
-				"up": {"uv": [13, 0, 16, 3], "texture": "#missing"},
 				"down": {"uv": [13, 13, 16, 16], "texture": "#4"}
 			}
 		},
@@ -101,7 +98,6 @@
 				"east": {"uv": [0, 5, 3, 8], "texture": "#4"},
 				"south": {"uv": [13, 5, 16, 8], "texture": "#4"},
 				"west": {"uv": [13, 5, 16, 8], "texture": "#4"},
-				"up": {"uv": [13, 13, 16, 16], "texture": "#missing"},
 				"down": {"uv": [13, 0, 16, 3], "texture": "#4"}
 			}
 		},
@@ -113,7 +109,6 @@
 				"east": {"uv": [0, 5, 3, 8], "texture": "#4"},
 				"south": {"uv": [0, 5, 3, 8], "texture": "#4"},
 				"west": {"uv": [13, 5, 16, 8], "texture": "#4"},
-				"up": {"uv": [0, 13, 3, 16], "texture": "#missing"},
 				"down": {"uv": [0, 0, 3, 3], "texture": "#4"}
 			}
 		},
@@ -125,7 +120,6 @@
 				"east": {"uv": [13, 5, 16, 8], "texture": "#4"},
 				"south": {"uv": [0, 5, 3, 8], "texture": "#4"},
 				"west": {"uv": [0, 5, 3, 8], "texture": "#4"},
-				"up": {"uv": [0, 0, 3, 3], "texture": "#missing"},
 				"down": {"uv": [0, 13, 3, 16], "texture": "#4"}
 			}
 		},
@@ -145,13 +139,23 @@
 			"from": [13, 0, 3],
 			"to": [17, 3, 13],
 			"faces": {
-				"north": {"uv": [0, 2, 3, 5], "texture": "#missing"},
 				"east": {"uv": [3, 2, 13, 5], "texture": "#4"},
-				"south": {"uv": [13, 2, 16, 5], "texture": "#missing"},
 				"west": {"uv": [3, 2, 13, 5], "texture": "#4"},
 				"up": {"uv": [13, 3, 16, 13], "texture": "#4"},
 				"down": {"uv": [13, 3, 16, 13], "texture": "#4"}
 			}
 		}
-	]
+	],
+	"display": {
+		"gui": {
+			"rotation": [30, -135, 0],
+			"translation": [0, 5.75, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"thirdperson_righthand": {
+			"rotation": [ 75, 45, 0 ],
+			"translation": [ 0, 2.5, 2.25],
+			"scale": [ 0.375, 0.375, 0.375 ]
+		}
+	}
 }
