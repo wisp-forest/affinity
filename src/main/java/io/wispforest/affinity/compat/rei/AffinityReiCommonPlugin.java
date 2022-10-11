@@ -12,7 +12,7 @@ import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
 
 public class AffinityReiCommonPlugin implements REIServerPlugin {
 
-    public static final CategoryIdentifier<PotionMixingDisplay> POTION_MIXING_ID = CategoryIdentifier.of(Affinity.id("potion_mixing"));
+    public static final CategoryIdentifier<PotionMixingDisplay> POTION_MIXING = CategoryIdentifier.of(Affinity.id("potion_mixing"));
     public static final CategoryIdentifier<DefaultCraftingDisplay<?>> ASSEMBLY = CategoryIdentifier.of(Affinity.id("assembly"));
 
     @Override

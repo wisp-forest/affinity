@@ -45,7 +45,7 @@ public class PotionMixingDisplay implements Display {
 
     @Override
     public CategoryIdentifier<?> getCategoryIdentifier() {
-        return AffinityReiCommonPlugin.POTION_MIXING_ID;
+        return AffinityReiCommonPlugin.POTION_MIXING;
     }
 
     public List<StatusEffect> getEffects() {

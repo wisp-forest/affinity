@@ -52,6 +52,6 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
 
     @Override
     public CategoryIdentifier<? extends PotionMixingDisplay> getCategoryIdentifier() {
-        return AffinityReiCommonPlugin.POTION_MIXING_ID;
+        return AffinityReiCommonPlugin.POTION_MIXING;
     }
 }
