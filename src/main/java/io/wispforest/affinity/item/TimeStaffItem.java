@@ -8,11 +8,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
@@ -21,8 +23,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class TimeStaffItem extends Item implements DirectInteractionHandler {
+
     public static final NbtKey<Mode> MODE = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
 
     public TimeStaffItem() {
@@ -33,9 +39,7 @@ public class TimeStaffItem extends Item implements DirectInteractionHandler {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (user.isSneaking()) {
             var stack = user.getStackInHand(hand);
-
-            stack.mutate(MODE, Mode::next);
-
+            if (!world.isClient) stack.mutate(MODE, Mode::next);
             return TypedActionResult.success(stack, world.isClient);
         }
 
@@ -46,6 +50,24 @@ public class TimeStaffItem extends Item implements DirectInteractionHandler {
     @Override
     public int getMaxUseTime(ItemStack stack) {
         return 72000;
+    }
+
+    @Override
+    public Text getName(ItemStack stack) {
+        var mode = stack.get(MODE);
+        return Text.translatable(this.getTranslationKey()).append(Text.translatable(
+                this.getTranslationKey() + ".mode_suffix",
+                Text.translatable(this.getTranslationKey() + ".mode." + mode.id, mode.repeatTicks + 1)
+        ));
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        final var mode = stack.get(MODE);
+        tooltip.add(Text.translatable(
+                this.getTranslationKey() + ".tooltip",
+                Text.translatable(this.getTranslationKey() + ".mode." + mode.id, mode.repeatTicks + 1)
+        ));
     }
 
     @SuppressWarnings("unchecked")
@@ -64,7 +86,7 @@ public class TimeStaffItem extends Item implements DirectInteractionHandler {
 
         if (world.random.nextInt(4) == 0)
             AffinityParticleSystems.WISP_ATTACK.spawn(world, user.getEyePos(), new AffinityParticleSystems.LineData(
-                Vec3d.ofCenter(res.getBlockPos()), 0xFFFFFF
+                    Vec3d.ofCenter(res.getBlockPos()), 0xFFFFFF
             ));
 
         for (int i = 0; i < mode.repeatTicks; i++) {
@@ -75,7 +97,7 @@ public class TimeStaffItem extends Item implements DirectInteractionHandler {
                 BlockEntityTicker<BlockEntity> ticker = state.getBlockEntityTicker(world, (BlockEntityType<BlockEntity>) be.getType());
 
                 if (ticker != null) {
-                      ticker.tick(world, res.getBlockPos(), state, be);
+                    ticker.tick(world, res.getBlockPos(), state, be);
                 }
             }
 

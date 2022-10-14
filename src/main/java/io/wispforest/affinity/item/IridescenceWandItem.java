@@ -65,8 +65,10 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     public Text getName(ItemStack stack) {
         final var mode = stack.get(MODE);
 
-        return Text.translatable(this.getTranslationKey()).append(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".mode.template",
-                TextOps.translateWithColor(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id, mode.color)).formatted(Formatting.GRAY));
+        return Text.translatable(this.getTranslationKey()).append(Text.translatable(
+                WAND_OF_IRIDESCENCE_PREFIX + ".mode_suffix",
+                TextOps.translateWithColor(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id, mode.color)
+        ));
     }
 
     @Override
@@ -76,11 +78,11 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         tooltip.add(Text.empty());
 
         tooltip.add(TextOps.translateWithColor(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id, mode.color)
-                .append(Text.literal(": ").formatted(Formatting.GRAY))
-                .append(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id + ".description").formatted(Formatting.GRAY)));
+                .append(TextOps.withFormatting(": ", Formatting.GRAY))
+                .append(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".mode." + mode.id + ".description")));
 
         tooltip.add(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".help.template",
-                Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".help").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(mode.color)));
+                Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".help")).setStyle(Style.EMPTY.withColor(mode.color)));
     }
 
     @Override

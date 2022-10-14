@@ -63,19 +63,45 @@
 
   "item.affinity.emerald_wand_of_iridescence": "Emerald Wand of Iridescence",
   "item.affinity.sapphire_wand_of_iridescence": "Sapphire Wand of Iridescence",
-  "item.affinity.wand_of_iridescence.help": "Sneak-Click to cycle modes",
+  "item.affinity.wand_of_iridescence.mode_suffix": [
+    { "text": " [", "color": "gray" },
+    { "index": 0 },
+    "]"
+  ],
+  "item.affinity.wand_of_iridescence.help": {
+    "text": "Sneak-Click to cycle modes",
+    "color": "gray"
+  },
   "item.affinity.wand_of_iridescence.help.template": "⇄ %s",
-  "item.affinity.wand_of_iridescence.mode.template": " [%s]",
   "item.affinity.wand_of_iridescence.mode.bind": "Bind",
-  "item.affinity.wand_of_iridescence.mode.bind.description": "Link machines together",
+  "item.affinity.wand_of_iridescence.mode.bind.description": {
+    "text": "Link machines together",
+    "color": "gray"
+  },
   "item.affinity.wand_of_iridescence.mode.release": "Release",
-  "item.affinity.wand_of_iridescence.mode.release.description": "Remove links between machines",
+  "item.affinity.wand_of_iridescence.mode.release.description": {
+    "text": "Remove links between machines",
+    "color": "gray"
+  },
+
+  "item.affinity.time_staff": "Time Staff",
+  "item.affinity.time_staff.mode_suffix": [
+    { "text": " [", "color": "gray" },
+    { "index": 0, "color": "dark_gray" },
+    "]"
+  ],
+  "item.affinity.time_staff.mode.normal": "Normal (x%s)",
+  "item.affinity.time_staff.mode.fast": "Fast (x%s)",
+  "item.affinity.time_staff.mode.ludicrous": "Ludicrous (x%s)",
+  "item.affinity.time_staff.tooltip": [
+    { "text": "☄ ", "color": "#c624ed" },
+    { "index": 0, "color": "dark_gray" }
+  ],
 
   "item.affinity.wand_of_inquiry": "Wand of Inquiry",
   "item.affinity.geological_resonator": "Geological Resonator",
   "item.affinity.collection_staff": "Collection Staff",
   "item.affinity.nimble_staff": "Nimble Staff",
-  "item.affinity.time_staff": "Time Staff",
   "item.affinity.aethum_flux_bottle": "Bottle of Aethum Flux",
   "item.affinity.resplendent_gem": "Resplendent Gem",
   "item.affinity.echo_shard": "Echo Shard",
