@@ -51,7 +51,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
             ).margins(Insets.of(1)));
         }
 
-        if (!(display.getEffects().isEmpty() || display.getInputEntries().isEmpty())) {
+        if (!(display.getEffects().isEmpty() || display.getRecipe().getItemInputs().isEmpty())) {
             inputContainer.child(
                     Components.box(Sizing.fixed(70), Sizing.fixed(1))
                             .color(Color.ofFormatting(Formatting.GRAY))
