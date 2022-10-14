@@ -78,9 +78,14 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
         this.extractionDuration = emitDuration;
     }
 
-    public void stopExtraction() {
+    public void stopExtraction(boolean destroyItem) {
         this.extractionTicks = 0;
         this.extractionDuration = -1;
+
+        if (destroyItem && !this.item.isEmpty()) {
+            this.item = ItemStack.EMPTY;
+            this.markDirty();
+        }
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -95,9 +100,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
         if (this.extractionTicks < 1) return;
         if (this.extractionTicks++ < this.extractionDuration) return;
 
-        this.item = ItemStack.EMPTY;
-        this.stopExtraction();
-        this.markDirty();
+        this.stopExtraction(true);
     }
 
     public void onBroken() {

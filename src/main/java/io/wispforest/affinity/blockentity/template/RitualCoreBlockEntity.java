@@ -158,7 +158,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
             ));
             this.cachedSetup.forEachSocle(this.world, socle -> {
                 socle.ritualLock.release();
-                socle.stopExtraction();
+                socle.stopExtraction(true);
             });
         }
         this.cachedSetup = null;
