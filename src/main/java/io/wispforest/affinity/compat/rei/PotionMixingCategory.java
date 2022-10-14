@@ -1,7 +1,12 @@
 package io.wispforest.affinity.compat.rei;
 
+import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
+import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityBlocks;
-import me.shedaniel.math.Point;
+import io.wispforest.owo.compat.rei.ReiUIAdapter;
+import io.wispforest.owo.ui.component.Components;
+import io.wispforest.owo.ui.container.Containers;
+import io.wispforest.owo.ui.core.*;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
@@ -9,7 +14,13 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,26 +29,104 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
 
     @Override
     public List<Widget> setupDisplay(PotionMixingDisplay display, Rectangle bounds) {
-        Point origin = bounds.getLocation();
+        var adapter = new ReiUIAdapter<>(bounds, Containers::horizontalFlow);
+        var root = adapter.rootComponent();
+        root.verticalAlignment(VerticalAlignment.CENTER).horizontalAlignment(HorizontalAlignment.CENTER);
+        root.allowOverflow(true);
 
-        final var widgets = new ArrayList<Widget>();
+        root.child(adapter.wrap(Widgets.createRecipeBase(bounds)).positioning(Positioning.absolute(0, 0)));
 
-        for (int i = 0; i < display.getInputEntries().size(); i++) {
-            widgets.add(Widgets.createSlot(new Point(origin.x + 5, origin.y + 5 + 20 * i)).entries(display.getInputEntries().get(i)));
+        // --> Inputs
+
+        var inputContainer = Containers.verticalFlow(Sizing.content(), Sizing.content());
+        root.child(inputContainer.horizontalAlignment(HorizontalAlignment.CENTER));
+
+        var effectContainer = Containers.horizontalFlow(Sizing.content(), Sizing.content());
+        inputContainer.child(effectContainer);
+
+        for (var effect : display.getEffects()) {
+            var sprite = MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(effect);
+            var tooltip = new ArrayList<Text>();
+            tooltip.add(effect.getName());
+
+            if (MinecraftClient.getInstance().options.advancedItemTooltips) {
+                tooltip.add(Text.literal(Registry.STATUS_EFFECT.getId(effect).toString()).formatted(Formatting.DARK_GRAY));
+            }
+
+            effectContainer.child(
+                    Components.sprite(sprite).tooltip(tooltip)
+            );
         }
 
-        widgets.add(Widgets.createSlot(new Point(origin.x + 110, origin.y + 32)).entries(display.getOutputEntries().get(0)).disableBackground());
-        widgets.add(Widgets.createResultSlotBackground(new Point(origin.x + 110, origin.y + 32)));
-
-        widgets.add(Widgets.createArrow(new Point(origin.x + 59, origin.y + 30)).animationDurationTicks(100));
-
-        for (int i = 0; i < display.getEffects().size(); i++) {
-            final var effect = display.getEffects().get(i);
-            final var text = Text.translatable(effect.getTranslationKey());
-            widgets.add(Widgets.createLabel(new Point(origin.x + 70, origin.y + 5 + 10 * i), text).noShadow().color(0x3F3F3F));
+        if (!(display.getEffects().isEmpty() || display.getInputEntries().isEmpty())) {
+            inputContainer.child(
+                    Components.box(Sizing.fixed(70), Sizing.fixed(1))
+                            .color(Color.ofFormatting(Formatting.GRAY))
+                            .margins(Insets.vertical(5))
+            );
         }
 
-        return widgets;
+        var inputs = display.getInputEntries();
+        inputs:
+        for (int row = 0; row < MathHelper.ceilDiv(inputs.size(), 3); row++) {
+            var rowContainer = Containers.horizontalFlow(Sizing.content(), Sizing.content());
+            inputContainer.child(rowContainer);
+
+            for (int column = 0; column < 3; column++) {
+                int idx = row * 3 + column;
+                if (idx >= inputs.size()) break inputs;
+
+                rowContainer.child(adapter.wrap(
+                        Widgets::createSlot,
+                        slot -> slot.entries(inputs.get(idx)).markInput()
+                ).margins(Insets.of(1)));
+            }
+        }
+
+        // --> Le Arròw
+
+        root.child(adapter.wrap(
+                Widgets::createArrow,
+                arrow -> arrow.animationDurationTicks(100)
+        ).margins(Insets.horizontal(5)));
+
+
+        // --> Outputs
+
+        var potionNbt = new NbtCompound();
+        potionNbt.put(BrewingCauldronBlockEntity.FILL_LEVEL_KEY, 3);
+        potionNbt.put(
+                BrewingCauldronBlockEntity.STORED_POTION_KEY,
+                new PotionMixture(display.getPotionOutput(), null)
+        );
+
+        root.child(
+                Containers.verticalFlow(Sizing.content(), Sizing.content())
+                        .child(Components.block(Blocks.SPORE_BLOSSOM.getDefaultState())
+                                .sizing(Sizing.fixed(40))
+                                .margins(Insets.bottom(-10))
+                        )
+                        .child(adapter.wrap(
+                                Widgets::createSlot,
+                                slot -> slot.entries(display.getOutputEntries().get(0)).markOutput().disableBackground()
+                        ).margins(Insets.of(0, 5, 0, 1)))
+                        .child(Components.block(AffinityBlocks.BREWING_CAULDRON.getDefaultState(), potionNbt)
+                                .sizing(Sizing.fixed(40))
+                        ).horizontalAlignment(HorizontalAlignment.CENTER)
+        );
+
+        adapter.prepare();
+        return List.of(adapter);
+    }
+
+    @Override
+    public int getDisplayHeight() {
+        return 105;
+    }
+
+    @Override
+    public int getDisplayWidth(PotionMixingDisplay display) {
+        return 165;
     }
 
     @Override
@@ -47,7 +136,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
 
     @Override
     public Text getTitle() {
-        return Text.of("potion mixin™");
+        return Text.translatable("category.affinity.potion_mixing");
     }
 
     @Override

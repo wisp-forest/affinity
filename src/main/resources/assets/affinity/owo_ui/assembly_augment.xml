@@ -27,7 +27,7 @@
                         </texture>
 
                         <texture texture="affinity:textures/gui/assembly_augment.png" region-width="22" region-height="16" u="176" v="30" id="progress-indicator">
-                            <positioning type="absolute">90,35</positioning>
+                            <positioning type="absolute">90,34</positioning>
                             <visible-area>
                                 <width>0</width>
                             </visible-area>

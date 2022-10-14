@@ -9,6 +9,7 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 
 import java.util.Collections;
@@ -19,6 +20,7 @@ public class PotionMixingDisplay implements Display {
     private final List<EntryIngredient> inputs;
     private final EntryIngredient output;
     private final List<StatusEffect> effects;
+    private final Potion potionOutput;
 
     public PotionMixingDisplay(PotionMixingRecipe recipe) {
 
@@ -31,6 +33,7 @@ public class PotionMixingDisplay implements Display {
         output = EntryIngredients.of(potionStack);
 
         effects = recipe.getEffectInputs();
+        potionOutput = recipe.potionOutput();
     }
 
     @Override
@@ -50,5 +53,9 @@ public class PotionMixingDisplay implements Display {
 
     public List<StatusEffect> getEffects() {
         return effects;
+    }
+
+    public Potion getPotionOutput() {
+        return this.potionOutput;
     }
 }
