@@ -50,9 +50,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
             }
         }
 
-        for (Map.Entry<StatusEffect, List<Potion>> entry : effectToPotion.entrySet()) {
-            registry.add(new ContainedPotionsDisplay(entry.getKey(), entry.getValue()));
-        }
+        effectToPotion.forEach((key, value) -> registry.add(new ContainedPotionsDisplay(key, value)));
     }
 
     @Override
