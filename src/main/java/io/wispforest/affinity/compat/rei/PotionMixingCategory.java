@@ -13,16 +13,14 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay> {
@@ -45,17 +43,12 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
         inputContainer.child(effectContainer);
 
         for (var effect : display.getEffects()) {
-            var sprite = MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(effect);
-            var tooltip = new ArrayList<Text>();
-            tooltip.add(effect.getName());
+            var ingredient = EntryIngredients.of(AffinityReiCommonPlugin.EFFECT_ENTRY_TYPE, List.of(effect));
 
-            if (MinecraftClient.getInstance().options.advancedItemTooltips) {
-                tooltip.add(Text.literal(Registry.STATUS_EFFECT.getId(effect).toString()).formatted(Formatting.DARK_GRAY));
-            }
-
-            effectContainer.child(
-                    Components.sprite(sprite).tooltip(tooltip)
-            );
+            effectContainer.child(adapter.wrap(
+                Widgets::createSlot,
+                slot -> slot.entries(ingredient).markInput().disableBackground().disableHighlight()
+            ).margins(Insets.of(1)));
         }
 
         if (!(display.getEffects().isEmpty() || display.getInputEntries().isEmpty())) {
@@ -66,7 +59,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
             );
         }
 
-        var inputs = display.getInputEntries();
+        var inputs = display.getRecipe().getItemInputs();
         inputs:
         for (int row = 0; row < MathHelper.ceilDiv(inputs.size(), 3); row++) {
             var rowContainer = Containers.horizontalFlow(Sizing.content(), Sizing.content());
@@ -78,7 +71,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
 
                 rowContainer.child(adapter.wrap(
                         Widgets::createSlot,
-                        slot -> slot.entries(inputs.get(idx)).markInput()
+                        slot -> slot.entries(EntryIngredients.ofIngredient(inputs.get(idx).itemPredicate())).markInput()
                 ).margins(Insets.of(1)));
             }
         }
