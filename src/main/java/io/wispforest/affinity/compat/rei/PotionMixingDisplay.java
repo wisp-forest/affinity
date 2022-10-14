@@ -17,6 +17,7 @@ import java.util.List;
 
 public class PotionMixingDisplay implements Display {
 
+    private final PotionMixingRecipe recipe;
     private final List<EntryIngredient> inputs;
     private final EntryIngredient output;
     private final List<StatusEffect> effects;
@@ -26,7 +27,10 @@ public class PotionMixingDisplay implements Display {
 
         final var inputBuilder = new ImmutableList.Builder<EntryIngredient>();
         recipe.getItemInputs().forEach(ingredient -> inputBuilder.add(EntryIngredients.ofIngredient(ingredient.itemPredicate())));
+        recipe.getEffectInputs().forEach(effect -> inputBuilder.add(EntryIngredients.of(AffinityReiCommonPlugin.EFFECT_ENTRY_TYPE, List.of(effect))));
         inputs = inputBuilder.build();
+
+        this.recipe = recipe;
 
         final var potionStack = new ItemStack(Items.POTION);
         PotionUtil.setPotion(potionStack, recipe.potionOutput());
@@ -34,6 +38,10 @@ public class PotionMixingDisplay implements Display {
 
         effects = recipe.getEffectInputs();
         potionOutput = recipe.potionOutput();
+    }
+
+    public PotionMixingRecipe getRecipe() {
+        return recipe;
     }
 
     @Override
