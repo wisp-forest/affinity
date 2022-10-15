@@ -13,7 +13,7 @@
 
   "category.affinity.assembly": "Assembly",
   "category.affinity.potion_mixing": "Potion Mixing",
-  "category.affinity.contained_potions": "Contained Potions",
+  "category.affinity.containing_potions": "Containing Potions",
 
   "block.affinity.brewing_cauldron": "Brewing Cauldron",
   "block.affinity.sundial": "Sundial",

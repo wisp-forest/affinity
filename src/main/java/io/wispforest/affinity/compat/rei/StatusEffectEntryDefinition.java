@@ -128,7 +128,7 @@ public class StatusEffectEntryDefinition implements EntryDefinition<StatusEffect
             var sprite = MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(entry.getValue());
 
             RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
-            Drawer.drawSprite(matrices, bounds.x - 1, bounds.y - 1, 0, bounds.width + 1, bounds.height + 1, sprite);
+            Drawer.drawSprite(matrices, bounds.x - 1, bounds.y - 1, 0, bounds.width + 2, bounds.height + 2, sprite);
         }
 
         @Override

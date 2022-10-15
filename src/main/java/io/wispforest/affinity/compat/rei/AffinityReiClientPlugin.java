@@ -27,7 +27,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
     public void registerCategories(CategoryRegistry registry) {
         registry.add(new PotionMixingCategory());
         registry.add(new AssemblyCategory());
-        registry.add(new ContainedPotionsCategory());
+        registry.add(new ContainingPotionsCategory());
 
         registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(AffinityBlocks.BREWING_CAULDRON));
         registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(Blocks.SPORE_BLOSSOM));
@@ -50,7 +50,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
             }
         }
 
-        effectToPotion.forEach((key, value) -> registry.add(new ContainedPotionsDisplay(key, value)));
+        effectToPotion.forEach((key, value) -> registry.add(new ContainingPotionsDisplay(key, value)));
     }
 
     @Override

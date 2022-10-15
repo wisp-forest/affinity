@@ -12,11 +12,11 @@ import net.minecraft.potion.PotionUtil;
 
 import java.util.List;
 
-public class ContainedPotionsDisplay implements Display {
+public class ContainingPotionsDisplay implements Display {
     private final List<EntryIngredient> inputs;
     private final List<EntryIngredient> outputs;
 
-    public ContainedPotionsDisplay(StatusEffect effect, List<Potion> potions) {
+    public ContainingPotionsDisplay(StatusEffect effect, List<Potion> potions) {
         inputs = potions
             .stream()
             .map(x -> {
@@ -42,6 +42,6 @@ public class ContainedPotionsDisplay implements Display {
 
     @Override
     public CategoryIdentifier<?> getCategoryIdentifier() {
-        return AffinityReiCommonPlugin.CONTAINED_POTIONS;
+        return AffinityReiCommonPlugin.CONTAINING_POTIONS;
     }
 }

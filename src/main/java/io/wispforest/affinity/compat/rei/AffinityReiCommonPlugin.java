@@ -16,7 +16,7 @@ import net.minecraft.entity.effect.StatusEffect;
 public class AffinityReiCommonPlugin implements REIServerPlugin {
 
     public static final CategoryIdentifier<PotionMixingDisplay> POTION_MIXING = CategoryIdentifier.of(Affinity.id("potion_mixing"));
-    public static final CategoryIdentifier<ContainedPotionsDisplay> CONTAINED_POTIONS = CategoryIdentifier.of(Affinity.id("contained_potions"));
+    public static final CategoryIdentifier<ContainingPotionsDisplay> CONTAINING_POTIONS = CategoryIdentifier.of(Affinity.id("containing_potions"));
     public static final CategoryIdentifier<DefaultCraftingDisplay<?>> ASSEMBLY = CategoryIdentifier.of(Affinity.id("assembly"));
 
     public static final EntryType<StatusEffect> EFFECT_ENTRY_TYPE = EntryType.deferred(Affinity.id("status_effect"));
