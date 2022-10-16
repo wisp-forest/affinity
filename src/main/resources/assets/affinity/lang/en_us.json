@@ -160,7 +160,13 @@
   "message.affinity.linking.failed": "Could not link to %s",
 
   "gui.affinity.augmented_crafting_table.title": "Augmented Crafting Table",
-  "gui.affinity.augmented_crafting_table.treetap_count": "Treetaps: %d",
+  "gui.affinity.augmented_crafting_table.treetap_count": [
+    {"text": "Treetaps: ", "color": "dark_gray"},
+    { "index": 0 },
+    { "text": " (", "color": "gray" },
+    { "index": 1, "color": "gray" },
+    { "text": ")", "color": "gray" }
+  ],
 
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.bastion_regeneration": "Bastion",

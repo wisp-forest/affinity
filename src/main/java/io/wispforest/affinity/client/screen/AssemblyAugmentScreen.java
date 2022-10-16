@@ -3,7 +3,6 @@ package io.wispforest.affinity.client.screen;
 import io.wispforest.affinity.misc.screenhandler.AssemblyAugmentScreenHandler;
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
-import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.component.TextureComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.PositionedRectangle;
@@ -14,7 +13,7 @@ import net.minecraft.text.Text;
 
 public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, AssemblyAugmentScreenHandler> {
 
-    private LabelComponent treetapCount;
+    private TextureComponent treetapOverlay;
     private TextureComponent craftingOverlay;
     private TextureComponent progressIndicator;
 
@@ -28,7 +27,7 @@ public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, 
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        this.treetapCount = rootComponent.childById(LabelComponent.class, "treetap-count");
+        this.treetapOverlay = rootComponent.childById(TextureComponent.class, "treetap-overlay");
         this.craftingOverlay = rootComponent.childById(TextureComponent.class, "crafting-overlay");
         this.progressIndicator = rootComponent.childById(TextureComponent.class, "progress-indicator");
     }
@@ -36,9 +35,6 @@ public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-
-        // TODO properly communicate the actual value of this and how it happens
-        this.treetapCount.text(Text.translatable("gui.affinity.augmented_crafting_table.treetap_count", this.handler.treetapCount()));
 
         if (this.augmentOutputSlot.hasStack()) {
             this.disableSlot(this.craftingOutputSlot.id);
@@ -54,6 +50,11 @@ public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, 
         float progress = this.handler.craftingProgress();
         this.progressIndicator.visibleArea(PositionedRectangle.of(
                 0, 0, (int) (this.progressIndicator.width() * progress), this.progressIndicator.height()
+        ));
+
+        float treetapProgress = this.handler.treetapCount() / 5f;
+        this.treetapOverlay.visibleArea(PositionedRectangle.of(
+                0, 0, this.treetapOverlay.width(), (int) (this.treetapOverlay.height() * treetapProgress)
         ));
 
         if (this.augmentOutputSlot.hasStack()) {

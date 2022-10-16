@@ -35,12 +35,14 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
         super(syncId, inventory, augment == null ? ScreenHandlerContext.EMPTY : ScreenHandlerContext.create(augment.getWorld(), augment.getPos()));
         this.augment = augment;
 
-        this.properties = augment == null ? new ArrayPropertyDelegate(2) : new PropertyDelegate() {
+        this.addProperties(this.properties = augment == null ? new ArrayPropertyDelegate(4) : new PropertyDelegate() {
             @Override
             public int get(int index) {
                 return switch (index) {
-                    case 0 -> augment.treetapCache().size();
-                    case 1 -> augment.craftingTick();
+                    case 0 -> augment.potentialTreetaps();
+                    case 1 -> augment.activeTreetaps();
+                    case 2 -> augment.craftingTick();
+                    case 3 -> augment.craftingDuration();
                     default -> 0;
                 };
             }
@@ -50,10 +52,9 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
 
             @Override
             public int size() {
-                return 2;
+                return 4;
             }
-        };
-        this.addProperties(this.properties);
+        });
 
         this.addSlot(new ValidatingSlot(this.augment != null ? this.augment.outputInventory() : new SimpleInventory(1), 0, this.getSlot(0).x, this.getSlot(0).y, stack -> false));
 
@@ -76,11 +77,15 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
     }
 
     public int treetapCount() {
+        return this.properties.get(1);
+    }
+
+    public int potentialTreetaps() {
         return this.properties.get(0);
     }
 
     public float craftingProgress() {
-        return this.properties.get(1) / 40f;
+        return this.properties.get(2) / (float) this.properties.get(3);
     }
 
     @Override

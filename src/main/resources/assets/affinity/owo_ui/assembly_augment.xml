@@ -13,12 +13,12 @@
                             <positioning type="relative">50,3</positioning>
                         </label>
 
-                        <label id="treetap-count">
-                            <positioning type="absolute">108,62</positioning>
-                            <color>dark-gray</color>
-                        </label>
+                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="4" region-height="33" u="176" v="46" id="treetap-overlay">
+                            <positioning type="absolute">157,27</positioning>
+                        </texture>
 
-                        <texture texture="affinity:textures/gui/assembly_augment.png" region-height="30" region-width="30" u="176" id="crafting-overlay">
+
+                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="30" region-height="30" u="176" id="crafting-overlay">
                             <positioning type="absolute">117,28</positioning>
                             <blend>true</blend>
                             <visible-area>

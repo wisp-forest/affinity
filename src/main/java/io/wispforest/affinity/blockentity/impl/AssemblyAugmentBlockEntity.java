@@ -46,6 +46,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
     private static final NbtKey<ItemStack> OUTPUT_KEY = new NbtKey<>("Output", NbtKey.Type.ITEM_STACK);
 
     private final Set<BlockPos> treetapCache = new HashSet<>();
+    private int activeTreetaps = 0;
 
     private final SimpleInventory craftingInput = new SimpleInventory(9);
     private final InputInventory craftingView = new InputInventory(this.craftingInput.stacks);
@@ -64,12 +65,14 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
         var outputStack = this.outputInventory.getStack(0);
 
         if (currentRecipe.isPresent() && ItemOps.canStack(outputStack, currentRecipe.get().getOutput())) {
-            if (this.craftingTick == 0) {
-                for (var treetap : this.treetapCache) {
-                    if (BLOCKED_TREETAPS.containsKey(treetap)) continue;
-                    BLOCKED_TREETAPS.put(treetap, this.pos);
-                }
+
+            this.activeTreetaps = 0;
+            for (var treetap : this.treetapCache) {
+                if (BLOCKED_TREETAPS.containsKey(treetap) && BLOCKED_TREETAPS.get(treetap) != this.pos) continue;
+                BLOCKED_TREETAPS.put(treetap, this.pos);
+                if (++this.activeTreetaps >= 5) break;
             }
+
 
             if (this.craftingTick % 20 == 0) {
                 AffinityParticleSystems.AFFINE_CANDLE_BREWING.spawn(this.world, Vec3d.ofCenter(this.pos),
@@ -77,8 +80,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                 );
             }
 
-            // TODO make this depend on treetaps
-            if (this.craftingTick++ > 40) {
+            if (this.craftingTick++ > this.craftingDuration()) {
                 for (int i = 0; i < this.craftingInput.stacks.size(); i++) {
                     if (!ItemOps.emptyAwareDecrement(this.craftingInput.stacks.get(i))) {
                         this.craftingInput.stacks.set(i, ItemStack.EMPTY);
@@ -91,10 +93,11 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                     outputStack.increment(currentRecipe.get().getOutput().getCount());
                 }
 
-                this.craftingTick = 0;
+                this.craftingTick = 1;
             }
         } else {
             if (this.craftingTick != 0) {
+                this.activeTreetaps = 0;
                 for (var treetap : this.treetapCache) {
                     if (!this.getPos().equals(BLOCKED_TREETAPS.get(treetap))) continue;
                     BLOCKED_TREETAPS.remove(treetap);
@@ -158,8 +161,12 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
         this.world.markDirty(this.pos);
     }
 
-    public Set<BlockPos> treetapCache() {
-        return this.treetapCache;
+    public int potentialTreetaps() {
+        return this.treetapCache.size();
+    }
+
+    public int activeTreetaps() {
+        return this.activeTreetaps;
     }
 
     public SimpleInventory craftingInput() {
@@ -168,6 +175,10 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
 
     public int craftingTick() {
         return this.craftingTick;
+    }
+
+    public int craftingDuration() {
+        return 100 - this.activeTreetaps * 20;
     }
 
     public SimpleInventory outputInventory() {
