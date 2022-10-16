@@ -84,7 +84,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     @Override
     public void onBroken() {
         super.onBroken();
-        this.finishRitual(this::onRitualInterrupted);
+        this.finishRitual(this::onRitualInterrupted, false);
     }
 
     protected ActionResult handleNormalUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -129,9 +129,9 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         this.doRitualTick();
 
         if (this.ritualTick++ >= this.cachedSetup.duration()) {
-            this.finishRitual(this::onRitualCompleted);
+            this.finishRitual(this::onRitualCompleted, true);
         } else if (this.ritualTick == this.ritualFailureTick) {
-            this.finishRitual(this::onRitualInterrupted);
+            this.finishRitual(this::onRitualInterrupted, false);
         }
     }
 
@@ -141,10 +141,10 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         this.onRitualInterrupted();
 
-        this.finishRitual(this::onRitualInterrupted);
+        this.finishRitual(this::onRitualInterrupted, false);
     }
 
-    protected void finishRitual(Supplier<Boolean> handlerImpl) {
+    protected void finishRitual(Supplier<Boolean> handlerImpl, boolean clearItems) {
         if (this.ritualTick < 0) return;
 
         this.ritualTick = -1;
@@ -158,7 +158,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
             ));
             this.cachedSetup.forEachSocle(this.world, socle -> {
                 socle.ritualLock.release();
-                socle.stopExtraction(true);
+                socle.stopExtraction(clearItems);
             });
         }
         this.cachedSetup = null;

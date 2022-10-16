@@ -157,14 +157,14 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     }
 
     @Override
-    protected void finishRitual(Supplier<Boolean> handlerImpl) {
+    protected void finishRitual(Supplier<Boolean> handlerImpl, boolean clearItems) {
         if (this.ritualTick > 0) {
             final var positions = new ArrayList<>(Arrays.asList(this.neighborPositions.cores()));
             positions.add(this.pos);
             AffinityNetwork.server(this).send(new RemoveBezierEmitterParticlesPacket(positions, PARTICLE_OFFSET));
         }
 
-        super.finishRitual(handlerImpl);
+        super.finishRitual(handlerImpl, clearItems);
     }
 
     @Override
@@ -190,7 +190,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         super.onBroken();
 
         if (!this.ritualLock.isActive()) return;
-        this.ritualLock.holder().finishRitual(this.ritualLock.holder()::onRitualInterrupted);
+        this.ritualLock.holder().finishRitual(this.ritualLock.holder()::onRitualInterrupted, false);
     }
 
     @Override
