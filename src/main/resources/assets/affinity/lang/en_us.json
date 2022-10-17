@@ -146,6 +146,8 @@
   "enchantment.affinity.execute.desc": "Execute targets that would just have clung onto life otherwise",
   "enchantment.affinity.prosecute": "Prosecute",
   "enchantment.affinity.prosecute.desc": "Increased damage to enemies that are at full health",
+  "enchantment.affinity.updog": "Updog",
+  "enchantment.affinity.updog.desc": "Damage is increased if your opponent has much more health than you",
 
   "message.affinity.linking.started_create": "Creating link from %s",
   "message.affinity.linking.started_destroy": "Destroying link from %s",
