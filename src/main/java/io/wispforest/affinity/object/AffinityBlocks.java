@@ -1,6 +1,7 @@
 package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.block.impl.MangroveBasketBlock;
 import io.wispforest.affinity.block.impl.*;
 import io.wispforest.affinity.block.shadowed.*;
 import io.wispforest.affinity.block.template.BlockItemProvider;
@@ -54,6 +55,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block SUNSHINE_MONOLITH = new SunshineMonolithBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block ARCANE_TREETAP = new ArcaneTreetapBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block ASSEMBLY_AUGMENT = new AssemblyAugmentBlock();
+    @NoBlockItem @Tab(AffinityItemGroup.MAIN) public static final Block MANGROVE_BASKET = new MangroveBasketBlock();
 
     @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 
@@ -135,6 +137,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<AssemblyAugmentBlockEntity> ASSEMBLY_AUGMENT =
                 make(AssemblyAugmentBlockEntity::new, AffinityBlocks.ASSEMBLY_AUGMENT);
+
+        public static final BlockEntityType<MangroveBasketBlockEntity> MANGROVE_BASKET =
+                make(MangroveBasketBlockEntity::new, AffinityBlocks.MANGROVE_BASKET);
 
         @Override
         public void afterFieldProcessing() {

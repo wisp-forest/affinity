@@ -38,6 +38,8 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
             member.onLinkTargetRemoved(this.pos);
         }
+
+        this.links.clear();
     }
 
     @Override

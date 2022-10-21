@@ -9,10 +9,8 @@ import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particle.DustColorTransitionParticleEffect;
-import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.particle.ItemStackParticleEffect;
-import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 
@@ -97,6 +95,14 @@ public class AffinityParticleSystems {
         for (var candle : data.candles()) {
             ClientParticles.spawn(new BezierPathEmitterParticleEffect(ParticleTypes.REVERSE_PORTAL, pos, 30, 20), world, candle, .15f);
         }
+    });
+
+    public static final ParticleSystem<Void> LIGHT_BLOCK = CONTROLLER.register(Void.class, (world, pos, data) -> {
+        ClientParticles.setParticleCount(6);
+        ClientParticles.spawnCenteredOnBlock(ParticleTypes.FLAME, world, new BlockPos(pos), 1.25);
+
+        ClientParticles.setParticleCount(15);
+        ClientParticles.spawnCenteredOnBlock(ParticleTypes.SMOKE, world, new BlockPos(pos), 1.25);
     });
 
     public record DissolveData(ItemStack suckWhat, Vec3d suckWhere, int duration, int particleMaxAge) {}

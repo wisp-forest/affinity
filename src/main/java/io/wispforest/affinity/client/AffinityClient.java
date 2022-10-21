@@ -9,10 +9,7 @@ import io.wispforest.affinity.client.render.entity.WispEntityModel;
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
 import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
 import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
-import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.affinity.object.AffinityEntities;
-import io.wispforest.affinity.object.AffinityParticleTypes;
-import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
+import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import net.fabricmc.api.ClientModInitializer;
@@ -21,10 +18,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
@@ -96,6 +90,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.RITUAL_SOCLE, RitualSocleBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.ASP_RITE_CORE, AspRiteCoreBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.ABERRANT_CALLING_CORE, AberrantCallingCoreBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(AffinityBlocks.Entities.MANGROVE_BASKET, MangroveBasketBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {
@@ -109,5 +104,6 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.RANTHRACITE_WIRE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.MANGROVE_BASKET, RenderLayer.getCutout());
     }
 }
