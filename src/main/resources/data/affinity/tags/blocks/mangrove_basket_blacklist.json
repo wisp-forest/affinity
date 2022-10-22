@@ -1,6 +1,7 @@
 {
     "replace": false,
     "values": [
-        "#minecraft:beds"
+        "#minecraft:beds",
+        "affinity:mangrove_basket"
     ]
 }

@@ -7,11 +7,18 @@ import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.*;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.tag.TagKey;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class MangroveBasketItem extends BlockItem {
     public static final TagKey<Block> MANGROVE_BASKET_BLACKLIST = TagKey.of(Registry.BLOCK_KEY, Affinity.id("mangrove_basket_blacklist"));
@@ -43,6 +50,20 @@ public class MangroveBasketItem extends BlockItem {
         }
 
         return super.getPlacementState(context);
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        var nbt = BlockItem.getBlockEntityNbt(stack);
+
+        if (nbt != null) {
+            var state = NbtHelper.toBlockState(nbt.getCompound("ContainedState"));
+
+            tooltip.add(Text.literal("• ")
+                .formatted(Formatting.GRAY)
+                .append(state.getBlock().getName()
+                    .formatted(Formatting.WHITE)));
+        }
     }
 
     @Override

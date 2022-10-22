@@ -19,6 +19,8 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
     public void init(BlockState state, BlockEntity blockEntity) {
         containedState = state;
         containedBlockEntity = blockEntity;
+
+        containedBlockEntity.setWorld(world);
     }
 
     public BlockState getContainedState() {
@@ -33,6 +35,8 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
     public void readNbt(NbtCompound nbt) {
         containedState = NbtHelper.toBlockState(nbt.getCompound("ContainedState"));
         containedBlockEntity = BlockEntity.createFromNbt(pos, containedState, nbt.getCompound("ContainedBlockEntity"));
+
+        containedBlockEntity.setWorld(world);
     }
 
     @Override

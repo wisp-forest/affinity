@@ -19,6 +19,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,6 +85,22 @@ public class MangroveBasketBlock extends BlockWithEntity {
         }
 
         return list;
+    }
+
+    @Override
+    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getPickStack(world, pos, state);
+        var blockEntity = world.getBlockEntity(pos);
+
+        if (blockEntity != null)
+            blockEntity.setStackNbt(stack);
+
+        return stack;
     }
 
     @Nullable
