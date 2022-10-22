@@ -1,13 +1,14 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.blockentity.impl.MangroveBasketBlockEntity;
-import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.context.LootContext;
@@ -35,10 +36,7 @@ public class MangroveBasketBlock extends BlockWithEntity {
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity blockEntity) {
             if (!world.isClient && player.isCreative()) {
-                ItemStack itemStack = AffinityItems.MANGROVE_BASKET.getDefaultStack();
-                blockEntity.setStackNbt(itemStack);
-
-                ItemEntity itemEntity = new ItemEntity(world, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, itemStack);
+                ItemEntity itemEntity = new ItemEntity(world, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, blockEntity.toItem());
                 itemEntity.setToDefaultPickupDelay();
                 world.spawnEntity(itemEntity);
             }
@@ -70,6 +68,16 @@ public class MangroveBasketBlock extends BlockWithEntity {
     }
 
     @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        if (world.isClient) return;
+        if (BlockItem.getBlockEntityNbt(itemStack) == null) return;
+
+        if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity blockEntity) {
+            blockEntity.onPlaced(placer);
+        }
+    }
+
+    @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
@@ -79,9 +87,7 @@ public class MangroveBasketBlock extends BlockWithEntity {
         var list = super.getDroppedStacks(state, builder);
 
         if (builder.getNullable(LootContextParameters.BLOCK_ENTITY) instanceof MangroveBasketBlockEntity blockEntity) {
-            ItemStack boxStack = AffinityItems.MANGROVE_BASKET.getDefaultStack();
-            blockEntity.setStackNbt(boxStack);
-            list.add(boxStack);
+            list.add(blockEntity.toItem());
         }
 
         return list;
@@ -94,13 +100,10 @@ public class MangroveBasketBlock extends BlockWithEntity {
 
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        ItemStack stack = super.getPickStack(world, pos, state);
-        var blockEntity = world.getBlockEntity(pos);
+        if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity blockEntity)
+            return blockEntity.toItem();
 
-        if (blockEntity != null)
-            blockEntity.setStackNbt(stack);
-
-        return stack;
+        return super.getPickStack(world, pos, state);
     }
 
     @Nullable

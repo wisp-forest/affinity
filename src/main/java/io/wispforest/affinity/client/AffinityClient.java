@@ -7,6 +7,7 @@ import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.WispEntityModel;
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
+import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
 import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
 import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
 import io.wispforest.affinity.object.*;
@@ -31,6 +32,8 @@ public class AffinityClient implements ClientModInitializer {
     public void onInitializeClient() {
         this.registerBlockEntityRenderers();
         this.assignBlockRenderLayers();
+
+        BuiltinItemRendererRegistry.INSTANCE.register(AffinityItems.MANGROVE_BASKET, new MangroveBasketItemRenderer());
 
         AffinityModelPredicateProviders.applyDefaults();
 

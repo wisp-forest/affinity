@@ -2,11 +2,19 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.enums.ChestType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 
 public class MangroveBasketBlockEntity extends SyncedBlockEntity {
     private BlockState containedState = null;
@@ -20,6 +28,9 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
         containedState = state;
         containedBlockEntity = blockEntity;
 
+        if (containedState.contains(Properties.CHEST_TYPE))
+            containedState = containedState.with(Properties.CHEST_TYPE, ChestType.SINGLE);
+
         containedBlockEntity.setWorld(world);
     }
 
@@ -29,6 +40,31 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
     public BlockEntity getContainedBlockEntity() {
         return containedBlockEntity;
+    }
+
+    public ItemStack toItem() {
+        ItemStack stack = new ItemStack(AffinityItems.MANGROVE_BASKET);
+
+        NbtCompound nbt = new NbtCompound();
+
+        if (containedState != null) {
+            var newState = containedState;
+
+            if (newState.contains(Properties.HORIZONTAL_FACING))
+                newState = newState.with(Properties.HORIZONTAL_FACING, Direction.NORTH);
+
+            if (newState.contains(Properties.FACING))
+                newState = newState.with(Properties.FACING, Direction.NORTH);
+
+            nbt.put("ContainedState", NbtHelper.fromBlockState(newState));
+        }
+
+        if (containedBlockEntity != null)
+            nbt.put("ContainedBlockEntity", containedBlockEntity.createNbtWithId());
+
+        BlockItem.setBlockEntityNbt(stack, this.getType(), nbt);
+
+        return stack;
     }
 
     @Override
@@ -46,5 +82,24 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
         if (containedBlockEntity != null)
             nbt.put("ContainedBlockEntity", containedBlockEntity.createNbtWithId());
+    }
+
+    public void onPlaced(LivingEntity placer) {
+        if (containedState == null)
+            return;
+
+        var newState = containedState;
+
+        if (newState.contains(Properties.HORIZONTAL_FACING))
+            newState = newState.with(Properties.HORIZONTAL_FACING, placer.getHorizontalFacing().getOpposite());
+
+        if (newState.contains(Properties.FACING))
+            newState =
+                newState.with(Properties.FACING, Direction.getEntityFacingOrder(placer)[0].getOpposite().getOpposite());
+
+        if (!containedState.equals(newState)) {
+            containedState = newState;
+            markDirty();
+        }
     }
 }

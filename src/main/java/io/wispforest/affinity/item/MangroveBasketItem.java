@@ -60,9 +60,8 @@ public class MangroveBasketItem extends BlockItem {
             var state = NbtHelper.toBlockState(nbt.getCompound("ContainedState"));
 
             tooltip.add(Text.literal("• ")
-                .formatted(Formatting.GRAY)
-                .append(state.getBlock().getName()
-                    .formatted(Formatting.WHITE)));
+                .formatted(Formatting.DARK_GRAY)
+                .append(state.getBlock().getName()));
         }
     }
 
