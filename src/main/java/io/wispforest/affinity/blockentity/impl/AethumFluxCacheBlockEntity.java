@@ -233,6 +233,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         if (this.childCache == null) this.childCache = new ArrayList<>();
         this.childCache.clear();
         this.parentRef = new ParentStorageReference(this, -1);
+        this.isPrimaryStorage = true;
 
         for (var childPos : children) {
             if (!(world.getBlockEntity(childPos) instanceof AethumFluxCacheBlockEntity child)) return;

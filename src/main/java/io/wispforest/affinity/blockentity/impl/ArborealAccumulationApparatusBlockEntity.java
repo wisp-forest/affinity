@@ -31,7 +31,7 @@ public class ArborealAccumulationApparatusBlockEntity extends AethumNetworkMembe
 
     @Override
     public void tickServer() {
-        if (this.generationFactor == -1 || this.world.getTime() % 200 == 0) updateGenerationFactor();
+        if (this.generationFactor == -1 || this.world.getTime() % 200 == 0) this.updateGenerationFactor();
 
         var flux = this.fluxStorage.flux();
         if (flux < this.fluxStorage.fluxCapacity()) {
@@ -57,5 +57,5 @@ public class ArborealAccumulationApparatusBlockEntity extends AethumNetworkMembe
         });
     }
 
-    public static record GenerationFactorPacket(BlockPos pos, Integer factor) {}
+    public record GenerationFactorPacket(BlockPos pos, Integer factor) {}
 }

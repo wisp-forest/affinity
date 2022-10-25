@@ -12,6 +12,7 @@
     "ArrowEntityMixin",
     "BoatEntityTypeMixin",
     "BrewingRecipeRegistryMixin",
+    "ChainRestrictedNeighborUpdaterMixin",
     "CraftingScreenHandlerMixin",
     "EnchantedBookItemMixin",
     "EnchantmentHelperMixin",
@@ -49,7 +50,8 @@
     "access.SignTypeInvoker",
     "access.StatusEffectInstanceAccessor",
     "access.StructureFeatureAccessor",
-    "access.TreeFeatureConfigAccessor"
+    "access.TreeFeatureConfigAccessor",
+    "access.WorldAccessor"
   ],
   "client": [
     "access.ParticleManagerInvoker",

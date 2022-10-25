@@ -2,6 +2,8 @@ package io.wispforest.affinity.block.impl;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import io.wispforest.affinity.misc.quack.AffinityChainRestrictedNeighborUpdaterExtension;
+import io.wispforest.affinity.mixin.access.WorldAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -19,6 +21,7 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.ref.WeakReference;
 import java.util.*;
 
 // This class contains quite a lot of the {@link RedstoneWireBlock} code
@@ -35,6 +38,8 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
     private static final Vec3d[] VEC_COLORS = Arrays.stream(COLORS).mapToObj(rgb ->
             new Vec3d((rgb >> 16) / 255d, ((rgb >> 8) & 0xFF) / 255d, (rgb & 0xFF) / 255d)
     ).toList().toArray(Vec3d[]::new);
+
+    private static final Map<ChunkPos, WeakReference<Chunk>> CHUNK_CACHE = new HashMap<>();
 
     private static final VoxelShape DOT_SHAPE = Block.createCuboidShape(3.0, 15, 3.0, 13.0, 16, 13.0);
 
@@ -190,12 +195,11 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
         final int previousPower = state.get(POWER);
 
         this.wiresGivePower = false;
-        if (previousPower == world.getReceivedRedstonePower(pos)) {
-            this.wiresGivePower = true;
-            return;
-        }
+//        if (previousPower == world.getReceivedRedstonePower(pos)) {
+//            this.wiresGivePower = true;
+//            return;
+//        }
 
-        final var chunkCache = new HashMap<ChunkPos, Chunk>();
         final var foundNodes = new ArrayList<BlockPos>();
         final var searchQueue = new ArrayDeque<BlockPos>();
 
@@ -206,8 +210,8 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
             if (!world.isChunkLoaded(nextPos)) continue;
             if (searchQueue.contains(nextPos) || foundNodes.contains(nextPos)) continue;
 
-            final var nextState = chunkCache.computeIfAbsent(new ChunkPos(nextPos), chunkPos -> world.getChunk(nextPos))
-                    .getBlockState(nextPos);
+            final var nextState = CHUNK_CACHE.computeIfAbsent(new ChunkPos(nextPos), chunkPos -> new WeakReference<>(world.getChunk(nextPos)))
+                    .get().getBlockState(nextPos);
             if (!nextState.isOf(this)) continue;
             foundNodes.add(nextPos);
 
@@ -234,12 +238,22 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
 
         if (networkPower != previousPower) {
             this.respondToBlockUpdates = false;
+
+            if (((WorldAccessor) world).affinity$getNeighborUpdater() instanceof AffinityChainRestrictedNeighborUpdaterExtension extension) {
+                extension.affinity$beginGroup();
+            }
+
             for (var node : foundNodes) {
-                world.setBlockState(node, chunkCache.get(new ChunkPos(node)).getBlockState(node).with(POWER, networkPower));
+                world.setBlockState(node, CHUNK_CACHE.get(new ChunkPos(node)).get().getBlockState(node).with(POWER, networkPower));
                 for (var dir : DIRECTIONS) {
                     world.updateNeighborsAlways(node.offset(dir), this);
                 }
             }
+
+            if (((WorldAccessor) world).affinity$getNeighborUpdater() instanceof AffinityChainRestrictedNeighborUpdaterExtension extension) {
+                extension.affinity$submitGroup();
+            }
+
             this.respondToBlockUpdates = true;
         }
     }
