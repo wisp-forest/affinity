@@ -2,6 +2,7 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.MangroveBasketBlockEntity;
+import io.wispforest.affinity.misc.PreMangroveBasketCallback;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.block.Block;
@@ -75,6 +76,10 @@ public class MangroveBasketItem extends BlockItem {
 
         BlockState old = context.getWorld().getBlockState(context.getBlockPos());
         BlockEntity oldBlockEntity = context.getWorld().getBlockEntity(context.getBlockPos());
+
+        if (!PreMangroveBasketCallback.EVENT.invoker().preMangroveBasket(context.getWorld(), context.getBlockPos(), old, oldBlockEntity)) {
+            return false;
+        }
 
         context.getWorld().removeBlockEntity(context.getBlockPos());
 
