@@ -13,6 +13,7 @@
     "BoatEntityTypeMixin",
     "BrewingRecipeRegistryMixin",
     "CraftingScreenHandlerMixin",
+    "DamageEnchantmentMixin",
     "EnchantedBookItemMixin",
     "EnchantmentHelperMixin",
     "EnderDragonEntityMixin",

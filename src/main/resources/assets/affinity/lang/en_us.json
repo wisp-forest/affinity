@@ -214,6 +214,12 @@
   "item.minecraft.lingering_potion.effect.banished": "Lingering Potion of Banishment",
   "item.minecraft.tipped_arrow.effect.banished": "Arrow of Banishment",
 
+  "effect.affinity.unholy": "Unholy",
+  "item.minecraft.potion.effect.unholy": "Unholy Water",
+  "item.minecraft.splash_potion.effect.unholy": "Splash Unholy Water",
+  "item.minecraft.lingering_potion.effect.unholy": "Lingering Unholy Water",
+  "item.minecraft.tipped_arrow.effect.unholy": "Unholy Arrow",
+
   "item.minecraft.potion.effect.dubious": "Dubious Potion",
   "item.minecraft.splash_potion.effect.dubious": "Twhicc Splashy Potion",
   "item.minecraft.lingering_potion.effect.dubious": "Twhicc Goes-Everyhwere Potion",
