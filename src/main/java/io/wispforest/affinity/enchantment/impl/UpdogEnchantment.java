@@ -26,6 +26,6 @@ public class UpdogEnchantment extends AffinityEnchantment implements AffinityDam
         float attackerPercent = attacker.getHealth() / attacker.getMaxHealth();
         float targetPercent = target.getHealth() / target.getMaxHealth();
 
-        return Math.max(0, targetPercent - attackerPercent) * (level + 1) * incomingDamage;
+        return Math.max(0, targetPercent - attackerPercent) * level * incomingDamage;
     }
 }
