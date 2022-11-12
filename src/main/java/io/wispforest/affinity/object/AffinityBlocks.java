@@ -55,7 +55,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block SUNSHINE_MONOLITH = new SunshineMonolithBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block ARCANE_TREETAP = new ArcaneTreetapBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block ASSEMBLY_AUGMENT = new AssemblyAugmentBlock();
-    @NoBlockItem @Tab(AffinityItemGroup.MAIN) public static final Block MANGROVE_BASKET = new MangroveBasketBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block MANGROVE_BASKET = new MangroveBasketBlock();
 
     @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 

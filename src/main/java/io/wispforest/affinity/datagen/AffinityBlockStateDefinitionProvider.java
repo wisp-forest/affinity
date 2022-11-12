@@ -1,7 +1,6 @@
 package io.wispforest.affinity.datagen;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.object.AffinityItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.block.Block;
@@ -65,7 +64,6 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
 //        iridescenceWand(generator, EMERALD_WAND_OF_IRIDESCENCE, SAPPHIRE_WAND_OF_IRIDESCENCE);
 
         generator.register(GEOLOGICAL_RESONATOR, Models.HANDHELD);
-        generator.register(AffinityItems.MANGROVE_BASKET, Models.GENERATED);
     }
 
     private void generated(ItemModelGenerator generator, Item... items) {

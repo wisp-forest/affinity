@@ -2,13 +2,11 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -43,7 +41,7 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
     }
 
     public ItemStack toItem() {
-        ItemStack stack = new ItemStack(AffinityItems.MANGROVE_BASKET);
+        ItemStack stack = new ItemStack(AffinityBlocks.MANGROVE_BASKET);
 
         NbtCompound nbt = new NbtCompound();
 

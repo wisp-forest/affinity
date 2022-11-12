@@ -1,7 +1,10 @@
 package io.wispforest.affinity.block.impl;
 
+import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.MangroveBasketBlockEntity;
+import io.wispforest.affinity.item.MangroveBasketItem;
 import io.wispforest.affinity.object.AffinityParticleSystems;
+import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -9,6 +12,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.context.LootContext;
@@ -26,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MangroveBasketBlock extends BlockWithEntity {
+public class MangroveBasketBlock extends BlockWithEntity implements BlockItemProvider {
 
     public MangroveBasketBlock() {
         super(FabricBlockSettings.copyOf(Blocks.MANGROVE_ROOTS));
@@ -110,5 +114,10 @@ public class MangroveBasketBlock extends BlockWithEntity {
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new MangroveBasketBlockEntity(pos, state);
+    }
+
+    @Override
+    public Item createBlockItem(Block block, OwoItemSettings settings) {
+        return new MangroveBasketItem(block, settings);
     }
 }

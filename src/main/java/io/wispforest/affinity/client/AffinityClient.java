@@ -33,7 +33,7 @@ public class AffinityClient implements ClientModInitializer {
         this.registerBlockEntityRenderers();
         this.assignBlockRenderLayers();
 
-        BuiltinItemRendererRegistry.INSTANCE.register(AffinityItems.MANGROVE_BASKET, new MangroveBasketItemRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.MANGROVE_BASKET, new MangroveBasketItemRenderer());
 
         AffinityModelPredicateProviders.applyDefaults();
 
