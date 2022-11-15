@@ -47,8 +47,7 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public boolean preMangroveBasket(World world, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        onBroken();
-
+        this.onBroken();
         return true;
     }
 

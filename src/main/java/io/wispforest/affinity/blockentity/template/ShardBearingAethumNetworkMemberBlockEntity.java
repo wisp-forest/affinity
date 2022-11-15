@@ -49,7 +49,6 @@ public abstract class ShardBearingAethumNetworkMemberBlockEntity extends AethumN
     @Override
     public boolean preMangroveBasket(World world, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         super.onBroken();
-
         return true;
     }
 

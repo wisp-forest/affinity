@@ -133,12 +133,25 @@
   "enchantment.affinity.affine.desc": "Repairs items on the ground, in your hand or in Item Frames when in range of an Affine Infuser",
   "enchantment.affinity.ender_scourge": "Ender Scourge",
   "enchantment.affinity.ender_scourge.desc": "Increased damage to creatures from the End",
+  "text.affinity.absolute_enchantment_prefix": [
+    { "text": "Absolute", "color": "#541690" },
+    { "text": " | ", "color": "gray" }
+  ],
   "enchantment.affinity.berserker": "Berserker",
-  "enchantment.affinity.berserker.desc": "Writing descriptions is pain",
+  "enchantment.affinity.berserker.desc": [
+    { "translate": "text.affinity.absolute_enchantment_prefix" },
+    { "text": "Increased maximum health and higher attack damage the lower your health" }
+  ],
   "enchantment.affinity.gravecaller": "Gravecaller",
-  "enchantment.affinity.gravecaller.desc": "Writing descriptions is pain",
+  "enchantment.affinity.gravecaller.desc": [
+    { "translate": "text.affinity.absolute_enchantment_prefix" },
+    { "text": "Your armor conjures undead minions and subdues other undead in range" }
+  ],
   "enchantment.affinity.bastion": "Bastion",
-  "enchantment.affinity.bastion.desc": "Writing descriptions is pain",
+  "enchantment.affinity.bastion.desc": [
+    { "translate": "text.affinity.absolute_enchantment_prefix" },
+    { "text": "Extreme, health-based regeneration at the cost of halving your damage output" }
+  ],
   "enchantment.affinity.wounding": "Wounding",
   "enchantment.affinity.wounding.desc": "Increased critical hit damage",
   "enchantment.affinity.critical_gamble": "Critical Gamble",
@@ -148,7 +161,7 @@
   "enchantment.affinity.prosecute": "Prosecute",
   "enchantment.affinity.prosecute.desc": "Increased damage to enemies that are at full health",
   "enchantment.affinity.updog": "Updog",
-  "enchantment.affinity.updog.desc": "Damage is increased if your opponent has much more health than you",
+  "enchantment.affinity.updog.desc": "Increased damage to opponents with much more health than you",
 
   "message.affinity.linking.started_create": "Creating link from %s",
   "message.affinity.linking.started_destroy": "Destroying link from %s",
