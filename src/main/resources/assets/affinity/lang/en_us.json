@@ -40,6 +40,7 @@
   "block.affinity.sunshine_monolith": "Sunshine Monolith",
   "block.affinity.arcane_treetap": "Arcane Treetap",
   "block.affinity.assembly_augment": "Assembly Augment",
+  "block.affinity.mangrove_basket": "Mangrove Basket",
 
   "block.affinity.azalea_planks": "Azalea Planks",
   "block.affinity.azalea_log": "Azalea Log",
@@ -146,6 +147,8 @@
   "enchantment.affinity.execute.desc": "Execute targets that would just have clung onto life otherwise",
   "enchantment.affinity.prosecute": "Prosecute",
   "enchantment.affinity.prosecute.desc": "Increased damage to enemies that are at full health",
+  "enchantment.affinity.updog": "Updog",
+  "enchantment.affinity.updog.desc": "Damage is increased if your opponent has much more health than you",
 
   "message.affinity.linking.started_create": "Creating link from %s",
   "message.affinity.linking.started_destroy": "Destroying link from %s",
@@ -210,6 +213,12 @@
   "item.minecraft.splash_potion.effect.banished": "Splash Potion of Banishment",
   "item.minecraft.lingering_potion.effect.banished": "Lingering Potion of Banishment",
   "item.minecraft.tipped_arrow.effect.banished": "Arrow of Banishment",
+
+  "effect.affinity.unholy": "Unholy",
+  "item.minecraft.potion.effect.unholy": "Unholy Water",
+  "item.minecraft.splash_potion.effect.unholy": "Splash Unholy Water",
+  "item.minecraft.lingering_potion.effect.unholy": "Lingering Unholy Water",
+  "item.minecraft.tipped_arrow.effect.unholy": "Unholy Arrow",
 
   "item.minecraft.potion.effect.dubious": "Dubious Potion",
   "item.minecraft.splash_potion.effect.dubious": "Twhicc Splashy Potion",

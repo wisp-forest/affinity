@@ -27,6 +27,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -134,6 +135,17 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         super.onBroken();
         if (!(this.world.getBlockEntity(this.pos.up()) instanceof AethumFluxCacheBlockEntity child)) return;
         moveSelfLinksOntoChild(child);
+    }
+
+    @Override
+    public boolean preMangroveBasket(World world, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        super.onBroken();
+
+        if (this.world.getBlockEntity(this.pos.up()) instanceof AethumFluxCacheBlockEntity child) {
+            moveSelfLinksOntoChild(child);
+        }
+
+        return true;
     }
 
     @Override

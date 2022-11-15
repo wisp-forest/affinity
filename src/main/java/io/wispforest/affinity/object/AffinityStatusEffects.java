@@ -26,6 +26,7 @@ public class AffinityStatusEffects {
     public static final StatusEffect BASTION_REGENERATION = new BastionRegeneration(StatusEffectCategory.BENEFICIAL, 0xfd5c5b);
     public static final StatusEffect BANISHED = new BanishedStatusEffect(StatusEffectCategory.BENEFICIAL, 0xc9b6b3);
     public static final StatusEffect AFFINE = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x0000ff);
+    public static final StatusEffect UNHOLY = new AffinityStatusEffect(StatusEffectCategory.HARMFUL, 0x000000);
 
     public static final StatusEffect STEADFAST = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x222222)
             .addAttributeModifier(
@@ -40,6 +41,7 @@ public class AffinityStatusEffects {
         registerEffectAndPotions(FREEZING, "freezing", 600, true, true);
         registerEffectAndPotions(IMPENDING_DOOM, "impending_doom", 1200, false, false);
         registerEffectAndPotions(BANISHED, "banished", 6000, true, false);
+        registerEffectAndPotions(UNHOLY, "unholy", 300, true, true);
 
         registerEffectAndPotions(FLIGHT, "flight", 2400, true, false);
 

@@ -18,6 +18,7 @@ public class AffinityEnchantments implements AutoRegistryContainer<Enchantment> 
     public static final CriticalGambleEnchantment CRITICAL_GAMBLE = new CriticalGambleEnchantment();
     public static final ExecuteEnchantment EXECUTE = new ExecuteEnchantment();
     public static final ProsecuteEnchantment PROSECUTE = new ProsecuteEnchantment();
+    public static final UpdogEnchantment UPDOG = new UpdogEnchantment();
 
     @Override
     public Registry<Enchantment> getRegistry() {

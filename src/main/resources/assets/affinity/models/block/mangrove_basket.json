@@ -1,0 +1,94 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"elements": [
+		{
+			"name": "bottom",
+			"from": [0, 0, 0],
+			"to": [16, 1, 16],
+			"color": 0,
+			"faces": {
+				"north": {"uv": [0, 0, 16, 1], "texture": "#based"},
+				"east": {"uv": [0, 0, 16, 1], "texture": "#based"},
+				"south": {"uv": [0, 0, 16, 1], "texture": "#based"},
+				"west": {"uv": [0, 0, 16, 1], "texture": "#based"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#based"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#based"}
+			}
+		},
+		{
+			"name": "side1",
+			"from": [0, 1, 0],
+			"to": [16, 15, 1],
+			"color": 7,
+			"faces": {
+				"north": {"uv": [0, 0, 16, 14], "texture": "#based"},
+				"east": {"uv": [0, 0, 1, 14], "texture": "#based"},
+				"south": {"uv": [0, 0, 16, 14], "texture": "#based"},
+				"west": {"uv": [0, 0, 1, 14], "texture": "#based"},
+				"up": {"uv": [0, 0, 16, 1], "texture": "#based"},
+				"down": {"uv": [0, 0, 16, 1], "texture": "#based"}
+			}
+		},
+		{
+			"name": "side2",
+			"from": [0, 1, 15],
+			"to": [16, 15, 16],
+			"color": 7,
+			"faces": {
+				"north": {"uv": [0, 0, 16, 14], "texture": "#based"},
+				"east": {"uv": [0, 0, 1, 14], "texture": "#based"},
+				"south": {"uv": [0, 0, 16, 14], "texture": "#based"},
+				"west": {"uv": [0, 0, 1, 14], "texture": "#based"},
+				"up": {"uv": [0, 0, 16, 1], "texture": "#based"},
+				"down": {"uv": [0, 0, 16, 1], "texture": "#based"}
+			}
+		},
+		{
+			"name": "side3",
+			"from": [0, 1, 1],
+			"to": [1, 15, 15],
+			"color": 3,
+			"faces": {
+				"north": {"uv": [0, 0, 1, 14], "texture": "#based"},
+				"east": {"uv": [0, 0, 14, 14], "texture": "#based"},
+				"south": {"uv": [0, 0, 1, 14], "texture": "#based"},
+				"west": {"uv": [0, 0, 14, 14], "texture": "#based"},
+				"up": {"uv": [0, 0, 1, 14], "texture": "#based"},
+				"down": {"uv": [0, 0, 1, 14], "texture": "#based"}
+			}
+		},
+		{
+			"name": "side4",
+			"from": [15, 1, 1],
+			"to": [16, 15, 15],
+			"color": 3,
+			"faces": {
+				"north": {"uv": [0, 0, 1, 14], "texture": "#based"},
+				"east": {"uv": [0, 0, 14, 14], "texture": "#based"},
+				"south": {"uv": [0, 0, 1, 14], "texture": "#based"},
+				"west": {"uv": [0, 0, 14, 14], "texture": "#based"},
+				"up": {"uv": [0, 0, 1, 14], "texture": "#based"},
+				"down": {"uv": [0, 0, 1, 14], "texture": "#based"}
+			}
+		},
+		{
+			"name": "top",
+			"from": [0, 15, 0],
+			"to": [16, 16, 16],
+			"color": 0,
+			"faces": {
+				"north": {"uv": [0, 0, 16, 1], "texture": "#based"},
+				"east": {"uv": [0, 0, 16, 1], "texture": "#based"},
+				"south": {"uv": [0, 0, 16, 1], "texture": "#based"},
+				"west": {"uv": [0, 0, 16, 1], "texture": "#based"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#based"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#based"}
+			}
+		}
+	],
+	"textures": {
+		"based": "minecraft:block/mangrove_roots_side",
+		"particle": "#based"
+	}
+}
