@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.RanthraciteWireBlock;
 import io.wispforest.affinity.block.impl.RitualSocleBlock;
 import io.wispforest.affinity.client.particle.*;
@@ -10,13 +11,24 @@ import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
 import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
 import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
 import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
-import io.wispforest.affinity.object.*;
+import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.misc.util.MathUtil;
+import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityEntities;
+import io.wispforest.affinity.object.AffinityParticleTypes;
+import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
+import io.wispforest.owo.ui.component.Components;
+import io.wispforest.owo.ui.component.LabelComponent;
+import io.wispforest.owo.ui.core.Insets;
+import io.wispforest.owo.ui.core.Positioning;
+import io.wispforest.owo.ui.hud.Hud;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
@@ -70,6 +82,27 @@ public class AffinityClient implements ClientModInitializer {
         EntityRendererRegistry.register(AffinityEntities.VICIOUS_WISP, WispEntityRenderer::new);
 
         ForcedTexturesLoader.load();
+
+        Hud.add(Affinity.id("player_aethum"), () -> {
+            return Components.label(Text.empty())
+                    .shadow(true)
+                    .margins(Insets.of(5))
+                    .positioning(Positioning.relative(0, 50));
+        });
+
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
+            var possibleComponent = Hud.getComponent(Affinity.id("player_aethum"));
+            if (!(possibleComponent instanceof LabelComponent aethumDisplay)) return;
+
+            if (client.player == null) return;
+            var aethum = AffinityComponents.PLAYER_AETHUM.get(client.player);
+
+            aethumDisplay.text(Text.literal(
+                    "Aethum: "
+                            + MathUtil.rounded(aethum.getAethum(), 1) + "/" + MathUtil.rounded(aethum.getMaxAethum(), 1)
+                            + " (" + (int) (aethum.getAethum() / aethum.getMaxAethum() * 100) + "%)"
+            ));
+        });
 
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
             final var tier = AttunedShardTiers.forItem(stack.getItem());
