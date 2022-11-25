@@ -8,7 +8,8 @@
     "glisco"
   ],
   "contributors": [
-    "Pois1x"
+    "Pois1x",
+    "BasiqueEvangelist"
   ],
   "contact": {},
   "license": "MIT",
@@ -28,8 +29,8 @@
     "rei_common": [
       "io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin"
     ],
-    "top_plugin": [
-      "io.wispforest.affinity.compat.top.AffinityTOPPlugin"
+    "owo-whats-this-plugin": [
+      "io.wispforest.affinity.compat.owowhatsthis.AffinityOwoWhatsThisPlugin"
     ],
     "fabric-datagen": [
       "io.wispforest.affinity.datagen.AffinityDataGeneratorEntrypoint"

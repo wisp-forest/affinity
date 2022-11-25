@@ -5,6 +5,7 @@ import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandle
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
+import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,7 +15,7 @@ import static io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScree
 
 public class RitualSocleComposerScreen extends BaseUIModelHandledScreen<FlowLayout, RitualSocleComposerScreenHandler> {
 
-    private ButtonWidget mergeButton, splitButton;
+    private ButtonComponent mergeButton, splitButton;
 
     public RitualSocleComposerScreen(RitualSocleComposerScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.asset(Affinity.id("ritual_socle_composer")));
@@ -26,10 +27,10 @@ public class RitualSocleComposerScreen extends BaseUIModelHandledScreen<FlowLayo
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        this.mergeButton = rootComponent.childById(ButtonWidget.class, "merge-button");
+        this.mergeButton = rootComponent.childById(ButtonComponent.class, "merge-button");
         this.mergeButton.onPress(button -> AffinityNetwork.CHANNEL.clientHandle().send(new ActionRequestPacket(Action.REQUEST_MERGE)));
 
-        this.splitButton = rootComponent.childById(ButtonWidget.class, "split-button");
+        this.splitButton = rootComponent.childById(ButtonComponent.class, "split-button");
         this.splitButton.onPress(button -> AffinityNetwork.CHANNEL.clientHandle().send(new ActionRequestPacket(Action.REQUEST_SPLIT)));
     }
 

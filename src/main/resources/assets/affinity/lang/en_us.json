@@ -2,8 +2,8 @@
   "itemGroup.affinity.affinity": "Affinity",
   "itemGroup.affinity.affinity.button.github": "GitHub",
   "itemGroup.affinity.affinity.tab.main": "Affinity",
-  "itemGroup.affinity.affinity.tab.nature": "Affinity - Nature",
-  "itemGroup.affinity.affinity.tab.enchantments": "Affinity - Enchantments",
+  "itemGroup.affinity.affinity.tab.nature": "Nature",
+  "itemGroup.affinity.affinity.tab.enchantments": "Enchantments",
 
   "entity.affinity.wisp": "Wisp",
   "item.affinity.wisp_matter": "Wisp Matter",

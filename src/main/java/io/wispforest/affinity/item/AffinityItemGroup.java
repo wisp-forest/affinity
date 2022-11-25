@@ -27,9 +27,9 @@ public class AffinityItemGroup extends OwoItemGroup {
 
     @Override
     protected void setup() {
-        this.addTab(Icon.of(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE), "main", null);
-        this.addTab(Icon.of(AffinityBlocks.AZALEA_LOG), "nature", null);
-        this.addTab(Icon.of(AffinityItems.RESPLENDENT_GEM), "enchantments", null);
+        this.addTab(Icon.of(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE), "main", null, true);
+        this.addTab(Icon.of(AffinityBlocks.AZALEA_LOG), "nature", null, false);
+        this.addTab(Icon.of(AffinityItems.RESPLENDENT_GEM), "enchantments", null, false);
 
         this.addButton(ItemGroupButton.github("https://github.com/wisp-forest/affinity"));
     }
