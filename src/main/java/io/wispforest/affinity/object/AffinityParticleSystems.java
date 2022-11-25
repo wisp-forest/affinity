@@ -5,6 +5,7 @@ import io.wispforest.affinity.block.impl.AberrantCallingCoreBlock;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
 import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
+import io.wispforest.affinity.particle.OrbitingEmitterParticleEffect;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
@@ -13,6 +14,7 @@ import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 
@@ -38,6 +40,21 @@ public class AffinityParticleSystems {
 
         ClientParticles.setParticleCount((int) Math.round(length * 5));
         ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVec3f(data.color()), 1), world, pos, data.target(), .15f);
+    });
+
+    public static final ParticleSystem<BlockPos> TIME_STAFF_ACCELERATE = CONTROLLER.register(BlockPos.class, (world, pos, data) -> {
+        ClientParticles.spawn(
+                new OrbitingEmitterParticleEffect(
+                        new DustParticleEffect(MathUtil.splitRGBToVec3f(0x3955E5), .75f),
+                        ParticleTypes.ASH,
+                        new Vec3f(Vec3d.ofCenter(data).subtract(pos).multiply(1f / 20f)),
+                        .1f, 1, 45, 20
+                ),
+                world, pos, 0
+        );
+
+        ClientParticles.setParticleCount(5);
+        ClientParticles.spawnCubeOutline(new DustParticleEffect(MathUtil.splitRGBToVec3f(0x7743DB), .6f), world, Vec3d.of(data), 1, .05f);
     });
 
     public static final ParticleSystem<Vec3d> ABERRANT_CORE_HINT = CONTROLLER.register(Vec3d.class, (world, pos, data) -> {
