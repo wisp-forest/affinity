@@ -40,6 +40,7 @@
   "block.affinity.sunshine_monolith": "Sunshine Monolith",
   "block.affinity.arcane_treetap": "Arcane Treetap",
   "block.affinity.assembly_augment": "Assembly Augment",
+  "block.affinity.mangrove_basket": "Mangrove Basket",
 
   "block.affinity.azalea_planks": "Azalea Planks",
   "block.affinity.azalea_log": "Azalea Log",
@@ -132,12 +133,25 @@
   "enchantment.affinity.affine.desc": "Repairs items on the ground, in your hand or in Item Frames when in range of an Affine Infuser",
   "enchantment.affinity.ender_scourge": "Ender Scourge",
   "enchantment.affinity.ender_scourge.desc": "Increased damage to creatures from the End",
+  "text.affinity.absolute_enchantment_prefix": [
+    { "text": "Absolute", "color": "#541690" },
+    { "text": " | ", "color": "gray" }
+  ],
   "enchantment.affinity.berserker": "Berserker",
-  "enchantment.affinity.berserker.desc": "Writing descriptions is pain",
+  "enchantment.affinity.berserker.desc": [
+    { "translate": "text.affinity.absolute_enchantment_prefix" },
+    { "text": "Increased maximum health and higher attack damage the lower your health" }
+  ],
   "enchantment.affinity.gravecaller": "Gravecaller",
-  "enchantment.affinity.gravecaller.desc": "Writing descriptions is pain",
+  "enchantment.affinity.gravecaller.desc": [
+    { "translate": "text.affinity.absolute_enchantment_prefix" },
+    { "text": "Your armor conjures undead minions and subdues other undead in range" }
+  ],
   "enchantment.affinity.bastion": "Bastion",
-  "enchantment.affinity.bastion.desc": "Writing descriptions is pain",
+  "enchantment.affinity.bastion.desc": [
+    { "translate": "text.affinity.absolute_enchantment_prefix" },
+    { "text": "Extreme, health-based regeneration at the cost of halving your damage output" }
+  ],
   "enchantment.affinity.wounding": "Wounding",
   "enchantment.affinity.wounding.desc": "Increased critical hit damage",
   "enchantment.affinity.critical_gamble": "Critical Gamble",
@@ -146,6 +160,8 @@
   "enchantment.affinity.execute.desc": "Execute targets that would just have clung onto life otherwise",
   "enchantment.affinity.prosecute": "Prosecute",
   "enchantment.affinity.prosecute.desc": "Increased damage to enemies that are at full health",
+  "enchantment.affinity.updog": "Updog",
+  "enchantment.affinity.updog.desc": "Increased damage to opponents with much more health than you",
 
   "message.affinity.linking.started_create": "Creating link from %s",
   "message.affinity.linking.started_destroy": "Destroying link from %s",
@@ -210,6 +226,12 @@
   "item.minecraft.splash_potion.effect.banished": "Splash Potion of Banishment",
   "item.minecraft.lingering_potion.effect.banished": "Lingering Potion of Banishment",
   "item.minecraft.tipped_arrow.effect.banished": "Arrow of Banishment",
+
+  "effect.affinity.unholy": "Unholy",
+  "item.minecraft.potion.effect.unholy": "Unholy Water",
+  "item.minecraft.splash_potion.effect.unholy": "Splash Unholy Water",
+  "item.minecraft.lingering_potion.effect.unholy": "Lingering Unholy Water",
+  "item.minecraft.tipped_arrow.effect.unholy": "Unholy Arrow",
 
   "item.minecraft.potion.effect.dubious": "Dubious Potion",
   "item.minecraft.splash_potion.effect.dubious": "Twhicc Splashy Potion",

@@ -24,6 +24,7 @@ public class MixinHooks {
     public static boolean TEXT_OBFUSCATION = false;
     public static boolean INJECT_ASSEMBLY_AUGMENT_SCREEN = false;
     public static final DamageSource THREW_DOOM_POTION_SOURCE = new ImpendingDoomStatusEffect.DoomDamageSource("threw_doom_potion");
+    public static final ThreadLocal<PotionUtilData> POTION_UTIL_DATA = new ThreadLocal<>();
 
     public static float getExtraAttackDamage(LivingEntity attacker, Entity entity, float baseAmount) {
         if (!(entity instanceof LivingEntity target)) return baseAmount;
@@ -56,4 +57,6 @@ public class MixinHooks {
             ase.onPotionApplied(target, data);
         }
     }
+
+    public record PotionUtilData(ItemStack stack, StatusEffectInstance effectInst, float durationMultiplier) {}
 }

@@ -3,6 +3,7 @@ package io.wispforest.affinity.blockentity.template;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -12,6 +13,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ShardBearingAethumNetworkMemberBlockEntity extends AethumNetworkMemberBlockEntity {
@@ -42,6 +44,12 @@ public abstract class ShardBearingAethumNetworkMemberBlockEntity extends AethumN
     public void onBroken() {
         super.onBroken();
         ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.shard);
+    }
+
+    @Override
+    public boolean preMangroveBasket(World world, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        super.onBroken();
+        return true;
     }
 
     @Override

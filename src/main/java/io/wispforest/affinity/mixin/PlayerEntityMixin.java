@@ -54,7 +54,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             ordinal = 1)
     private float applyExtraAttackDamage(float amount, Entity entity) {
         float baseAttackDamage = (float) this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-        return MixinHooks.getExtraAttackDamage(this, entity, baseAttackDamage) - baseAttackDamage;
+        return amount + MixinHooks.getExtraAttackDamage(this, entity, baseAttackDamage) - baseAttackDamage;
     }
 
     @ModifyVariable(method = "attack",
