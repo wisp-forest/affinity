@@ -10,14 +10,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -27,23 +25,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CollectionStaffItem extends Item {
+public class CollectionStaffItem extends StaffItem {
 
     public CollectionStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        final var playerStack = user.getStackInHand(hand);
-        final var triggerPos = user.getBlockPos();
+    protected float getAethumConsumption(ItemStack stack) {
+        return 1;
+    }
 
-        user.getItemCooldownManager().set(playerStack.getItem(), 30);
-        if (!(user.world instanceof ServerWorld serverWorld)) return TypedActionResult.success(playerStack);
+    @Override
+    protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks) {
+        final var triggerPos = player.getBlockPos();
+
+        player.getItemCooldownManager().set(stack.getItem(), 30);
+        if (!(player.world instanceof ServerWorld serverWorld)) return TypedActionResult.success(stack);
 
         WorldOps.playSound(serverWorld, triggerPos, SoundEvents.ENTITY_ENDER_DRAGON_FLAP, SoundCategory.PLAYERS, 1, 0);
 
-        var ref = EntityReference.of(getItems(user));
+        var ref = EntityReference.of(getItems(player));
         ServerTasks.doFor(serverWorld, 25, () -> {
             if (!ref.present()) return false;
 
@@ -53,17 +55,17 @@ public class CollectionStaffItem extends Item {
             return true;
         }, () -> {
             ref.consume(itemEntities -> {
-                WorldOps.playSound(world, user.getPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1.5f);
+                WorldOps.playSound(world, player.getPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1.5f);
                 AffinityNetwork.CHANNEL.serverHandle(serverWorld, triggerPos)
                         .send(new BulkParticlesPacket(itemEntities, ParticleTypes.POOF, .25));
 
                 for (var item : itemEntities) {
-                    item.updatePosition(user.getX(), user.getY(), user.getZ());
+                    item.updatePosition(player.getX(), player.getY(), player.getZ());
                 }
             });
         });
 
-        return TypedActionResult.success(playerStack);
+        return TypedActionResult.success(stack);
     }
 
     private static Collection<ItemEntity> getItems(LivingEntity entity) {

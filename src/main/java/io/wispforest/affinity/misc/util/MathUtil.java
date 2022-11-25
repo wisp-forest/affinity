@@ -68,7 +68,7 @@ public class MathUtil {
     }
 
     public static String rounded(double value, int places) {
-        return new BigDecimal(value).setScale(places, RoundingMode.HALF_UP).toString();
+        return new BigDecimal(value).setScale(places, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
     }
 
     public static Vec3f splitRGBToVec3f(int rgb) {

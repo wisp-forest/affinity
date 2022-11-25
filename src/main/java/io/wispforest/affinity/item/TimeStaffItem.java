@@ -1,37 +1,40 @@
 package io.wispforest.affinity.item;
 
-import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public class TimeStaffItem extends Item implements DirectInteractionHandler {
+public class TimeStaffItem extends StaffItem implements DirectInteractionHandler {
 
     public static final NbtKey<Mode> MODE = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
 
     public TimeStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+    }
+
+    @Override
+    protected float getAethumConsumption(ItemStack stack) {
+        return stack.get(MODE).aethumDrain;
+    }
+
+    @Override
+    protected boolean isContinuous(ItemStack stack) {
+        return true;
     }
 
     @Override
@@ -42,56 +45,27 @@ public class TimeStaffItem extends Item implements DirectInteractionHandler {
             return TypedActionResult.success(stack, world.isClient);
         }
 
-        user.setCurrentHand(hand);
-        return TypedActionResult.consume(user.getStackInHand(hand));
+        return super.use(world, user, hand);
     }
 
     @Override
-    public int getMaxUseTime(ItemStack stack) {
-        return 72000;
-    }
+    protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks) {
+        if (world.isClient) return TypedActionResult.consume(stack);
 
-    @Override
-    public Text getName(ItemStack stack) {
+        var res = (BlockHitResult) player.raycast(5, 0, false);
+
+        if (world.random.nextInt(4) == 0)
+            AffinityParticleSystems.WISP_ATTACK.spawn(world, player.getEyePos(), new AffinityParticleSystems.LineData(
+                    Vec3d.ofCenter(res.getBlockPos()), 0xFFFFFF
+            ));
+
         var mode = stack.get(MODE);
-        return Text.translatable(this.getTranslationKey()).append(Text.translatable(
-                this.getTranslationKey() + ".mode_suffix",
-                Text.translatable(this.getTranslationKey() + ".mode." + mode.id, mode.repeatTicks + 1)
-        ));
-    }
-
-    @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        final var mode = stack.get(MODE);
-        tooltip.add(Text.translatable(
-                this.getTranslationKey() + ".tooltip",
-                Text.translatable(this.getTranslationKey() + ".mode." + mode.id, mode.repeatTicks + 1)
-        ));
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        Mode mode = stack.get(MODE);
-
-        var aethum = AffinityComponents.PLAYER_AETHUM.get(user);
-        if (aethum.getAethum() < mode.aethumDrain) return;
-
-        aethum.setAethum(aethum.getAethum() - mode.aethumDrain);
-
-        if (world.isClient) return;
-
-        var res = (BlockHitResult) user.raycast(5, 0, false);
-
-        if (world.random.nextInt(7) == 0)
-            AffinityParticleSystems.TIME_STAFF_ACCELERATE.spawn(world, user.getPos().add(0, 1.25, 0), res.getBlockPos());
-
         for (int i = 0; i < mode.repeatTicks; i++) {
             BlockState state = world.getBlockState(res.getBlockPos());
             BlockEntity be = world.getBlockEntity(res.getBlockPos());
 
             if (be != null) {
-                BlockEntityTicker<BlockEntity> ticker = state.getBlockEntityTicker(world, (BlockEntityType<BlockEntity>) be.getType());
+                var ticker = state.getBlockEntityTicker(world, (BlockEntityType<BlockEntity>) be.getType());
 
                 if (ticker != null) {
                     ticker.tick(world, res.getBlockPos(), state, be);
@@ -106,11 +80,13 @@ public class TimeStaffItem extends Item implements DirectInteractionHandler {
                 }
             }
         }
+        return TypedActionResult.consume(stack);
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.BOW;
+    protected @Nullable Text getModeName(ItemStack stack) {
+        var mode = stack.get(MODE);
+        return Text.translatable(this.getTranslationKey() + ".mode." + mode.id, mode.repeatTicks + 1);
     }
 
     @Override
