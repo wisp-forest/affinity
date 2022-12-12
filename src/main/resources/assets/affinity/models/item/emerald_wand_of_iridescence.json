@@ -6,7 +6,7 @@
   "overrides": [
     {
       "predicate": {
-        "affinity:mode": 1
+        "affinity:mode": 0.5
       },
       "model": "affinity:item/emerald_wand_of_iridescence_release"
     }

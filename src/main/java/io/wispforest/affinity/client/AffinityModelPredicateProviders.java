@@ -8,7 +8,6 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 
 public class AffinityModelPredicateProviders {
 
-    // TODO adjust wand model
     public static final ClampedModelPredicateProvider IRIDESCENCE_WAND_MODE =
             (stack, world, entity, seed) -> stack.get(IridescenceWandItem.MODE).ordinal() / (float) IridescenceWandItem.Mode.values().length;
 

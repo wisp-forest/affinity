@@ -15,10 +15,10 @@
     "ChainRestrictedNeighborUpdaterMixin",
     "CraftingScreenHandlerMixin",
     "DamageEnchantmentMixin",
-    "EnchantedBookItemMixin",
     "EnchantmentHelperMixin",
     "EnderDragonEntityMixin",
     "EntityMixin",
+    "ItemGroupEntriesMixin",
     "ItemMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
@@ -51,7 +51,6 @@
     "access.SignTypeInvoker",
     "access.StatusEffectInstanceAccessor",
     "access.StructureFeatureAccessor",
-    "access.TreeFeatureConfigAccessor",
     "access.WorldAccessor"
   ],
   "client": [

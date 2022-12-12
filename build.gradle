@@ -21,14 +21,13 @@ loom {
             ideConfigGenerated = true
             runDir "build/datagen"
         }
-        datagenClient {
-            client()
-            name "Data Generation"
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${file("src/generated")}"
+    }
+}
 
-            ideConfigGenerated = true
-            runDir "build/datagen"
+sourceSets {
+    main {
+        resources {
+            srcDirs += [ "src/generated" ]
         }
     }
 }

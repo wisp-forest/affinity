@@ -48,12 +48,12 @@
   "depends": {
     "fabricloader": ">=0.11.6",
     "fabric": "*",
-    "minecraft": ">=1.18",
+    "minecraft": ">=1.19.3",
     "trinkets": ">=3.0.0",
-    "owo": ">=0.7.0+1.18",
+    "owo": ">=0.9.3+1.9.3",
     "terrablender": "*",
-    "cardinal-components-entity": ">=4.0.0",
-    "cardinal-components-chunk": ">=4.0.0"
+    "cardinal-components-entity": ">=5.1.0",
+    "cardinal-components-chunk": ">=5.1.0"
   },
   "custom": {
     "cardinal-components": [

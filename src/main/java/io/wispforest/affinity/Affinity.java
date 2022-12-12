@@ -61,13 +61,7 @@ public class Affinity implements ModInitializer {
 
         Registry.register(Registries.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
 
-        // TODO pain, TreeConfiguredFeatures mixin time
-//        //noinspection ConstantConditions
-//        var azaleaConfig = (TreeFeatureConfigAccessor) BuiltinRegistries.CONFIGURED_FEATURE.get(new Identifier("azalea_tree")).config();
-//        azaleaConfig.setAzaleaTree(BlockStateProvider.of(AffinityBlocks.AZALEA_LOG));
-
         AffinityStructures.register();
-        AffinityWorldgen.initialize();
 
         // Inject our sign block into the BE type
         var signBlocks = ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$getBlocks();
