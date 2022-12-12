@@ -6,7 +6,6 @@ import net.minecraft.client.render.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;

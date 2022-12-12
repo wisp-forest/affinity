@@ -18,14 +18,14 @@ public class ContainingPotionsDisplay implements Display {
 
     public ContainingPotionsDisplay(StatusEffect effect, List<Potion> potions) {
         inputs = potions
-            .stream()
-            .map(x -> {
-                var stack = new ItemStack(Items.POTION);
-                PotionUtil.setPotion(stack, x);
-                return stack;
-            })
-            .map(EntryIngredients::of)
-            .toList();
+                .stream()
+                .map(x -> {
+                    var stack = new ItemStack(Items.POTION);
+                    PotionUtil.setPotion(stack, x);
+                    return stack;
+                })
+                .map(EntryIngredients::of)
+                .toList();
 
         outputs = List.of(EntryIngredients.of(AffinityReiCommonPlugin.EFFECT_ENTRY_TYPE, List.of(effect)));
     }

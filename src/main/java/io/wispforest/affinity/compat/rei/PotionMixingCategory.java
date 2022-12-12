@@ -46,8 +46,8 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
             var ingredient = EntryIngredients.of(AffinityReiCommonPlugin.EFFECT_ENTRY_TYPE, List.of(effect));
 
             effectContainer.child(adapter.wrap(
-                Widgets::createSlot,
-                slot -> slot.entries(ingredient).markInput().disableBackground().disableHighlight()
+                    Widgets::createSlot,
+                    slot -> slot.entries(ingredient).markInput().disableBackground().disableHighlight()
             ).margins(Insets.of(1)));
         }
 

@@ -5,7 +5,6 @@ import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.enchantment.impl.GravecallerEnchantment;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;

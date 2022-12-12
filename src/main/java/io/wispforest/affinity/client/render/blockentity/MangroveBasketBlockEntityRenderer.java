@@ -11,7 +11,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class MangroveBasketBlockEntityRenderer implements BlockEntityRenderer<MangroveBasketBlockEntity> {
-    public MangroveBasketBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) { }
+    public MangroveBasketBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
 
     @Override
     public void render(MangroveBasketBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {

@@ -40,7 +40,7 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity blockEntity) {
             if (!world.isClient && player.isCreative()) {
-                ItemEntity itemEntity = new ItemEntity(world, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, blockEntity.toItem());
+                ItemEntity itemEntity = new ItemEntity(world, (double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5, blockEntity.toItem());
                 itemEntity.setToDefaultPickupDelay();
                 world.spawnEntity(itemEntity);
             }

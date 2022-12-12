@@ -11,7 +11,9 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(DamageEnchantment.class)
 public class DamageEnchantmentMixin implements AffinityDamageEnchantment {
 
-    @Shadow @Final public int typeIndex;
+    @Shadow
+    @Final
+    public int typeIndex;
 
     @Override
     public boolean shouldApplyDamage(int level, LivingEntity attacker, LivingEntity target, float incomingDamage) {

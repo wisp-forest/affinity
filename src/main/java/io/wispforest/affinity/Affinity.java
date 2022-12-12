@@ -12,7 +12,6 @@ import io.wispforest.affinity.mixin.access.SignTypeInvoker;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
-import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.Owo;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;

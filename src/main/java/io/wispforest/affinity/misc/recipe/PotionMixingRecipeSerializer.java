@@ -9,7 +9,6 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.minecraft.registry.Registry;
 
 import java.util.ArrayList;
 

@@ -9,7 +9,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.collection.DefaultedList;
 
 public class ResplendentGemItem extends EnchantedBookItem {
 

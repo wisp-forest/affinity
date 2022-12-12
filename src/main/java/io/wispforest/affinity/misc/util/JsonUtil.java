@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.minecraft.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
