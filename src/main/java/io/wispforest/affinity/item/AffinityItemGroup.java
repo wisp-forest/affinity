@@ -7,7 +7,6 @@ import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.itemgroup.Icon;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.itemgroup.gui.ItemGroupButton;
-import io.wispforest.owo.itemgroup.gui.ItemGroupTab;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.EnchantedBookItem;
@@ -23,21 +22,15 @@ public class AffinityItemGroup {
     public static final OwoItemGroup GROUP = OwoItemGroup.builder(Affinity.id("affinity"), () -> Icon.of(AffinityItems.WISE_WISP_MATTER)).initializer(group -> {
         group.addTab(Icon.of(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE), "main", null, true);
         group.addTab(Icon.of(AffinityBlocks.AZALEA_LOG), "nature", null, false);
-
-        group.tabs.add(new ItemGroupTab(
-                Icon.of(AffinityItems.RESPLENDENT_GEM),
-                OwoItemGroup.ButtonDefinition.tooltipFor(group, "tab", "enchantments"),
-                (enabledFeatures, entries, hasPermissions) -> {
-                    Registries.ENCHANTMENT.getIds().stream()
-                            .filter(id -> id.getNamespace().equals(Affinity.MOD_ID))
-                            .map(Registries.ENCHANTMENT::get)
-                            .filter(enchantment -> !(enchantment instanceof AbsoluteEnchantment))
-                            .map(enchantment -> new EnchantmentLevelEntry(enchantment, enchantment.getMaxLevel()))
-                            .map(EnchantedBookItem::forEnchantment)
-                            .forEach(entries::add);
-                },
-                ItemGroupTab.DEFAULT_TEXTURE, false
-        ));
+        group.addCustomTab(Icon.of(AffinityItems.RESPLENDENT_GEM), "enchantments", (enabledFeatures, entries, hasPermissions) -> {
+            Registries.ENCHANTMENT.getIds().stream()
+                    .filter(id -> id.getNamespace().equals(Affinity.MOD_ID))
+                    .map(Registries.ENCHANTMENT::get)
+                    .filter(enchantment -> !(enchantment instanceof AbsoluteEnchantment))
+                    .map(enchantment -> new EnchantmentLevelEntry(enchantment, enchantment.getMaxLevel()))
+                    .map(EnchantedBookItem::forEnchantment)
+                    .forEach(entries::add);
+        }, false);
 
         group.addButton(ItemGroupButton.github(group, "https://github.com/wisp-forest/affinity"));
     }).build();

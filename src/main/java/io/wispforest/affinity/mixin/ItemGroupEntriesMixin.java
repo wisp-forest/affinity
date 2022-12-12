@@ -5,6 +5,7 @@ import io.wispforest.affinity.item.AffinityItemGroup;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import org.spongepowered.asm.mixin.Final;
@@ -23,7 +24,7 @@ public class ItemGroupEntriesMixin {
 
     @Inject(method = "add", at = @At("HEAD"), cancellable = true)
     private void yeetAffinityEnchantments(ItemStack stack, ItemGroup.StackVisibility visibility, CallbackInfo ci) {
-        if (this.group == AffinityItemGroup.GROUP) return;
+        if (this.group == AffinityItemGroup.GROUP || this.group == ItemGroups.getSearchGroup()) return;
         if (!(stack.getItem() instanceof EnchantedBookItem)) return;
 
         for (var enchantment : EnchantmentHelper.get(stack).keySet()) {
