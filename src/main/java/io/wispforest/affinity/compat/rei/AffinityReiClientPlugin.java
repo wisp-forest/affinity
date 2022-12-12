@@ -14,7 +14,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
 
         Map<StatusEffect, List<Potion>> effectToPotion = new HashMap<>();
 
-        for (Potion potion : Registry.POTION) {
+        for (Potion potion : Registries.POTION) {
             for (StatusEffectInstance effectInst : potion.getEffects()) {
                 effectToPotion.computeIfAbsent(effectInst.getEffectType(), unused -> new ArrayList<>()).add(potion);
             }
@@ -55,7 +56,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerEntries(EntryRegistry registry) {
-        for (StatusEffect effect : Registry.STATUS_EFFECT) {
+        for (StatusEffect effect : Registries.STATUS_EFFECT) {
             registry.addEntry(EntryStack.of(AffinityReiCommonPlugin.EFFECT_ENTRY_TYPE, effect));
         }
     }

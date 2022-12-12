@@ -15,7 +15,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 
 public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<BrewingCauldronBlockEntity> {
 
@@ -48,7 +48,7 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
 
                 final var itemAngle = (float) (angle + i * 0.4 * Math.PI);
                 matrices.translate(0.5 * MathHelper.cos(itemAngle), MathHelper.sin(itemAngle + angle) * 0.2, 0.5 * MathHelper.sin(itemAngle));
-                matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(itemAngle));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotation(itemAngle));
 
                 MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, 0);
 

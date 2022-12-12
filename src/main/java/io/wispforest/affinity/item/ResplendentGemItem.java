@@ -7,9 +7,9 @@ import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
 
 public class ResplendentGemItem extends EnchantedBookItem {
 
@@ -24,13 +24,10 @@ public class ResplendentGemItem extends EnchantedBookItem {
         return itemStack;
     }
 
-    private static void generateStacks(Item item, DefaultedList<ItemStack> stacks) {
-        Registry.ENCHANTMENT.stream()
+    private static void generateStacks(Item item, ItemGroup.Entries stacks) {
+        Registries.ENCHANTMENT.stream()
                 .filter(AbsoluteEnchantment.class::isInstance)
                 .map(AbsoluteEnchantment.class::cast)
                 .forEach(enchantment -> stacks.add(make(enchantment)));
     }
-
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {}
 }

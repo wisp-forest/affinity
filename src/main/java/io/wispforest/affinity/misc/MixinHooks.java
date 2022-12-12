@@ -14,8 +14,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class MixinHooks {
 
@@ -24,6 +24,8 @@ public class MixinHooks {
     public static boolean TEXT_OBFUSCATION = false;
     public static boolean INJECT_ASSEMBLY_AUGMENT_SCREEN = false;
     public static final DamageSource THREW_DOOM_POTION_SOURCE = new ImpendingDoomStatusEffect.DoomDamageSource("threw_doom_potion");
+
+    public static final ThreadLocal<ItemStack> POTION_UTIL_STACK = new ThreadLocal<>();
     public static final ThreadLocal<PotionUtilData> POTION_UTIL_DATA = new ThreadLocal<>();
 
     public static float getExtraAttackDamage(LivingEntity attacker, Entity entity, float baseAmount) {
@@ -49,7 +51,7 @@ public class MixinHooks {
     }
 
     public static boolean isDoomPotion(ItemStack stack) {
-        return PotionUtil.getPotion(stack) == Registry.POTION.get(IMPENDING_DOOM_ID);
+        return PotionUtil.getPotion(stack) == Registries.POTION.get(IMPENDING_DOOM_ID);
     }
 
     public static void tryInvokePotionApplied(StatusEffectInstance effect, LivingEntity target, NbtCompound data) {
@@ -58,5 +60,5 @@ public class MixinHooks {
         }
     }
 
-    public record PotionUtilData(ItemStack stack, StatusEffectInstance effectInst, float durationMultiplier) {}
+    public record PotionUtilData(StatusEffectInstance effectInst, float durationMultiplier) {}
 }

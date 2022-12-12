@@ -8,20 +8,24 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class MangroveBasketItem extends BlockItem {
-    public static final TagKey<Block> MANGROVE_BASKET_BLACKLIST = TagKey.of(Registry.BLOCK_KEY, Affinity.id("mangrove_basket_blacklist"));
+    public static final TagKey<Block> MANGROVE_BASKET_BLACKLIST = TagKey.of(RegistryKeys.BLOCK, Affinity.id("mangrove_basket_blacklist"));
 
     public MangroveBasketItem(Block block, OwoItemSettings settings) {
         super(block, settings);
@@ -57,11 +61,11 @@ public class MangroveBasketItem extends BlockItem {
         var nbt = BlockItem.getBlockEntityNbt(stack);
 
         if (nbt != null) {
-            var state = NbtHelper.toBlockState(nbt.getCompound("ContainedState"));
+            var state = NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), nbt.getCompound("ContainedState"));
 
             tooltip.add(Text.literal("• ")
-                .formatted(Formatting.DARK_GRAY)
-                .append(state.getBlock().getName()));
+                    .formatted(Formatting.DARK_GRAY)
+                    .append(state.getBlock().getName()));
         }
     }
 

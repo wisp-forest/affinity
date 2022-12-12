@@ -5,7 +5,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.render.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
@@ -25,11 +26,11 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
     }
 
     public static void createLayers() {
-        Registry.ENCHANTMENT.stream()
+        Registries.ENCHANTMENT.stream()
                 .filter(enchantment -> enchantment instanceof AbsoluteEnchantment)
                 .map(AbsoluteEnchantment.class::cast)
                 .forEach(enchantment -> {
-                    final var id = Registry.ENCHANTMENT.getId(enchantment).getPath();
+                    final var id = Registries.ENCHANTMENT.getId(enchantment).getPath();
                     LAYERS.put(enchantment, makeGlintLayers(id.toLowerCase(Locale.ROOT), enchantment.nameHue()));
                 });
     }
@@ -61,19 +62,19 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
 
     private static List<RenderLayer> makeGlintLayers(String name, int hue) {
         return List.of(
-                makeGlintLayer(ARMOR_GLINT_SHADER, GLINT_TEXTURING, "armor_" + name, false, true, hue),
-                makeGlintLayer(ARMOR_ENTITY_GLINT_SHADER, ENTITY_GLINT_TEXTURING, "armor_entity_" + name, false, true, hue),
-                makeGlintLayer(TRANSLUCENT_GLINT_SHADER, GLINT_TEXTURING, "translucent" + name, true, false, hue),
-                makeGlintLayer(GLINT_SHADER, GLINT_TEXTURING, "normal" + name, false, false, hue),
-                makeGlintLayer(DIRECT_GLINT_SHADER, GLINT_TEXTURING, "direct" + name, false, false, hue),
-                makeGlintLayer(ENTITY_GLINT_SHADER, ENTITY_GLINT_TEXTURING, "entity" + name, true, false, hue),
-                makeGlintLayer(DIRECT_ENTITY_GLINT_SHADER, ENTITY_GLINT_TEXTURING, "direct_entity" + name, false, false, hue)
+                makeGlintLayer(ARMOR_GLINT_PROGRAM, GLINT_TEXTURING, "armor_" + name, false, true, hue),
+                makeGlintLayer(ARMOR_ENTITY_GLINT_PROGRAM, ENTITY_GLINT_TEXTURING, "armor_entity_" + name, false, true, hue),
+                makeGlintLayer(TRANSLUCENT_GLINT_PROGRAM, GLINT_TEXTURING, "translucent" + name, true, false, hue),
+                makeGlintLayer(GLINT_PROGRAM, GLINT_TEXTURING, "normal" + name, false, false, hue),
+                makeGlintLayer(DIRECT_GLINT_PROGRAM, GLINT_TEXTURING, "direct" + name, false, false, hue),
+                makeGlintLayer(ENTITY_GLINT_PROGRAM, ENTITY_GLINT_TEXTURING, "entity" + name, true, false, hue),
+                makeGlintLayer(DIRECT_ENTITY_GLINT_PROGRAM, ENTITY_GLINT_TEXTURING, "direct_entity" + name, false, false, hue)
         );
     }
 
-    private static RenderLayer makeGlintLayer(RenderPhase.Shader shader, RenderPhase.Texturing texturing, String name, boolean itemTarget, boolean layered, int hue) {
+    private static RenderLayer makeGlintLayer(RenderPhase.ShaderProgram shaderProgram, RenderPhase.Texturing texturing, String name, boolean itemTarget, boolean layered, int hue) {
         final var parameters = MultiPhaseParameters.builder()
-                .shader(shader)
+                .program(shaderProgram)
                 .texture(new AbsoluteEnchantmentGlintTexture(hue))
                 .writeMaskState(COLOR_MASK)
                 .cull(DISABLE_CULLING)

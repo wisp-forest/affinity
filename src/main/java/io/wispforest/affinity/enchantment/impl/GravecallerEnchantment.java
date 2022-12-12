@@ -9,13 +9,17 @@ import io.wispforest.affinity.object.AffinityEnchantments;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.MobSpawnerEntry;
 import net.minecraft.world.MobSpawnerLogic;
 import net.minecraft.world.World;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class GravecallerEnchantment extends AbsoluteEnchantment implements EnchantmentEquipEventReceiver {
@@ -93,7 +97,9 @@ public class GravecallerEnchantment extends AbsoluteEnchantment implements Encha
     public static class SpawnerLogic extends MobSpawnerLogic {
 
         private SpawnerLogic() {
-            this.setEntityId(EntityType.ZOMBIE);
+            var nbt = new NbtCompound();
+            nbt.putString("id", Registries.ENTITY_TYPE.getId(EntityType.ZOMBIE).toString());
+            this.setSpawnEntry(null, null, new MobSpawnerEntry(nbt, Optional.empty()));
         }
 
         @Override

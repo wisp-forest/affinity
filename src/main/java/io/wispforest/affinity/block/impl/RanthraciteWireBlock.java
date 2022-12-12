@@ -20,6 +20,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.chunk.Chunk;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -324,7 +325,7 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
             double y = 0.5 + (0.4375F * direction.getOffsetY()) + (randomOffset * direction2.getOffsetY());
             double z = 0.5 + (0.4375F * direction.getOffsetZ()) + (randomOffset * direction2.getOffsetZ());
 
-            world.addParticle(new DustParticleEffect(new Vec3f(color), 1), pos.getX() + x, pos.getY() + y, pos.getZ() + z,
+            world.addParticle(new DustParticleEffect(color.toVector3f(), 1), pos.getX() + x, pos.getY() + y, pos.getZ() + z,
                     0.0, 0.0, 0.0);
         }
     }

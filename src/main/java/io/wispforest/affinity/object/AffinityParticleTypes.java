@@ -4,7 +4,8 @@ import io.wispforest.affinity.particle.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.particle.ParticleType;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 public class AffinityParticleTypes implements AutoRegistryContainer<ParticleType<?>> {
 
@@ -16,10 +17,9 @@ public class AffinityParticleTypes implements AutoRegistryContainer<ParticleType
     public static final ParticleType<BezierPathParticleEffect> BEZIER_PATH = FabricParticleTypes.complex(BezierPathParticleEffect.FACTORY);
     public static final ParticleType<BezierPathEmitterParticleEffect> BEZIER_PATH_EMITTER = FabricParticleTypes.complex(BezierPathEmitterParticleEffect.FACTORY);
 
-
     @Override
     public Registry<ParticleType<?>> getRegistry() {
-        return Registry.PARTICLE_TYPE;
+        return Registries.PARTICLE_TYPE;
     }
 
     @Override

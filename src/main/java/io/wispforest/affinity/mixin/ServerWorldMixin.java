@@ -8,8 +8,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.profiler.Profiler;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.MutableWorldProperties;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.EmptyChunk;
@@ -50,7 +50,7 @@ public abstract class ServerWorldMixin extends World {
         return thunderGradient;
     }
 
-    @ModifyVariable(method = "tickWeather", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToDimension(Lnet/minecraft/network/Packet;Lnet/minecraft/util/registry/RegistryKey;)V", ordinal = 1, shift = At.Shift.BY, by = 2))
+    @ModifyVariable(method = "tickWeather", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToDimension(Lnet/minecraft/network/Packet;Lnet/minecraft/registry/RegistryKey;)V", ordinal = 1, shift = At.Shift.BY, by = 2))
     private boolean disableRainingSending(boolean old) {
         return isRaining();
     }

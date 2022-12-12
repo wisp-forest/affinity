@@ -3,8 +3,9 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.misc.screenhandler.AssemblyAugmentScreenHandler;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.registry.Registry;
 
 public class AffinityScreenHandlerTypes implements AutoRegistryContainer<ScreenHandlerType<?>> {
 
@@ -13,7 +14,7 @@ public class AffinityScreenHandlerTypes implements AutoRegistryContainer<ScreenH
 
     @Override
     public Registry<ScreenHandlerType<?>> getRegistry() {
-        return Registry.SCREEN_HANDLER;
+        return Registries.SCREEN_HANDLER;
     }
 
     @Override

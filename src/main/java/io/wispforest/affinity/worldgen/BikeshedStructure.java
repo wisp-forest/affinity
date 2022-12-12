@@ -3,8 +3,8 @@ package io.wispforest.affinity.worldgen;
 import com.mojang.serialization.Codec;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.owo.util.RegistryAccess;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureType;
@@ -35,7 +35,7 @@ public class BikeshedStructure extends Structure {
         if (!isFeatureChunk(context)) return Optional.empty();
 
         var centerPos = context.chunkPos().getCenterAtY(0);
-        var poolRegistry = context.dynamicRegistryManager().get(Registry.STRUCTURE_POOL_KEY);
+        var poolRegistry = context.dynamicRegistryManager().get(RegistryKeys.TEMPLATE_POOL);
 
         return StructurePoolBasedGenerator.generate(
                 context,

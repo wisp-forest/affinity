@@ -8,8 +8,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 
 public record BezierPathParticleEffect(ParticleEffect effect, Vec3d splineEndpoint, int travelDuration) implements ParticleEffect {
 
@@ -27,7 +27,7 @@ public record BezierPathParticleEffect(ParticleEffect effect, Vec3d splineEndpoi
 
     @Override
     public String asString() {
-        return String.valueOf(Registry.PARTICLE_TYPE.getId(this.getType()));
+        return String.valueOf(Registries.PARTICLE_TYPE.getId(this.getType()));
     }
 
     public static final Factory<BezierPathParticleEffect> FACTORY = new Factory<>() {

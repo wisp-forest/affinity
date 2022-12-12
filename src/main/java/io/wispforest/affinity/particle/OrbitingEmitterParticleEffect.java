@@ -8,9 +8,9 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
-public record OrbitingEmitterParticleEffect(ParticleEffect outerEffect, ParticleEffect innerEffect, Vec3f speed, float radius, int emitInterval,
+public record OrbitingEmitterParticleEffect(ParticleEffect outerEffect, ParticleEffect innerEffect, Vector3f speed, float radius, int emitInterval,
                                             int orbitSpeed, int lifetime) implements ParticleEffect {
 
     private static final RecordSerializer<OrbitingEmitterParticleEffect> SERIALIZER = RecordSerializer.create(OrbitingEmitterParticleEffect.class);
@@ -20,7 +20,7 @@ public record OrbitingEmitterParticleEffect(ParticleEffect outerEffect, Particle
         public OrbitingEmitterParticleEffect read(ParticleType<OrbitingEmitterParticleEffect> type, StringReader reader) {
             return new OrbitingEmitterParticleEffect(
                     new DustParticleEffect(MathUtil.splitRGBToVec3f(0x4C0033), .65f), new DustParticleEffect(MathUtil.splitRGBToVec3f(0xFEF5AC), .65f),
-                    new Vec3f(.2f, 0, 0), .1f, 1, 25, 100
+                    new Vector3f(.2f, 0, 0), .1f, 1, 25, 100
             );
         }
 

@@ -11,9 +11,9 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -89,7 +89,7 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
             final int duration = JsonHelper.getInt(json, "duration", 100);
 
             final var entityObject = JsonHelper.getObject(json, "entity");
-            final var entityType = JsonUtil.readFromRegistry(entityObject, "id", Registry.ENTITY_TYPE);
+            final var entityType = JsonUtil.readFromRegistry(entityObject, "id", Registries.ENTITY_TYPE);
             final var entityNbt = entityObject.has("data") ? JsonUtil.readNbt(entityObject, "data") : null;
 
             return new AberrantCallingRecipe(id, coreInputs, socleInputs, entityType, entityNbt, duration);
@@ -101,7 +101,7 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
             final var socleInputs = buf.readCollection(ArrayList::new, Ingredient::fromPacket);
             final int duration = buf.readVarInt();
 
-            final var entityType = Registry.ENTITY_TYPE.get(buf.readVarInt());
+            final var entityType = Registries.ENTITY_TYPE.get(buf.readVarInt());
             final var entityNbt = buf.readOptional(PacketByteBuf::readNbt).orElse(null);
 
             return new AberrantCallingRecipe(id, coreInputs, socleInputs, entityType, entityNbt, duration);
@@ -113,7 +113,7 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
             buf.writeCollection(recipe.inputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeVarInt(recipe.duration);
 
-            buf.writeVarInt(Registry.ENTITY_TYPE.getRawId(recipe.entityType));
+            buf.writeVarInt(Registries.ENTITY_TYPE.getRawId(recipe.entityType));
             buf.writeOptional(Optional.ofNullable(recipe.entityNbt), PacketByteBuf::writeNbt);
         }
     }

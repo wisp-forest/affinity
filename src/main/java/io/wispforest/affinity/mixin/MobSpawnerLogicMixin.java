@@ -14,6 +14,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.MobSpawnerEntry;
 import net.minecraft.world.MobSpawnerLogic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,7 +28,7 @@ import java.util.Optional;
 public class MobSpawnerLogicMixin {
 
     @Inject(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;playSpawnEffects()V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onEntitySpawn(ServerWorld world, BlockPos pos, CallbackInfo ci, boolean bl, int i, NbtCompound nbtCompound, Optional<EntityType<?>> optional, NbtList nbtList, int j, Random random, double d, double e, double f, BlockPos localPos, Entity entity) {
+    private void onEntitySpawn(ServerWorld world, BlockPos pos, CallbackInfo ci, boolean bl, Random random, MobSpawnerEntry mobSpawnerEntry, int i, NbtCompound nbtCompound, Optional optional, NbtList nbtList, int j, double d, double e, double f, BlockPos blockPos, Entity entity) {
         if (!((Object) this instanceof GravecallerEnchantment.SpawnerLogic)) return;
 
         ((MobEntity) entity).addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.IMPENDING_DOOM, 3000));

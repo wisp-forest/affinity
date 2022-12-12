@@ -10,7 +10,8 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.world.Heightmap;
 
 public class AffinityEntities implements AutoRegistryContainer<EntityType<?>> {
@@ -30,7 +31,7 @@ public class AffinityEntities implements AutoRegistryContainer<EntityType<?>> {
 
     @Override
     public Registry<EntityType<?>> getRegistry() {
-        return Registry.ENTITY_TYPE;
+        return Registries.ENTITY_TYPE;
     }
 
     @Override

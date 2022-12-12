@@ -10,8 +10,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.LightType;
 
 import java.util.Random;
@@ -81,7 +81,7 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
         matrices.push();
 
         matrices.translate(.0625, 0, .0625);
-        matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(-angle));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotation(-angle));
         matrices.translate(-.0625, 0, -.0625);
 
         var consumer = node.tier().sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
@@ -105,7 +105,7 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
                 var shardAngle = node.renderShardCount + (float) (angle + i * (2 / node.renderShardCount) * Math.PI);
 
                 matrices.translate(.0625, 0, .0625);
-                matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(shardAngle));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotation(shardAngle));
                 matrices.translate(.35 - .0625, Math.sin(shardAngle + angle) * .05, -.0625);
 
                 FLOATING_SHARD.render(matrices, consumer, packedLight, overlay);

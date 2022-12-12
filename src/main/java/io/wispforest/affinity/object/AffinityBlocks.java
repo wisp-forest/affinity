@@ -1,9 +1,7 @@
 package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.block.impl.MangroveBasketBlock;
 import io.wispforest.affinity.block.impl.*;
-import io.wispforest.affinity.block.shadowed.*;
 import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.*;
 import io.wispforest.affinity.item.AffinityItemGroup;
@@ -21,9 +19,11 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.SignType;
-import net.minecraft.util.registry.Registry;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -68,12 +68,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block STRIPPED_AZALEA_WOOD = new PillarBlock(FabricBlockSettings.copyOf(Blocks.STRIPPED_OAK_WOOD));
     public static final Block AZALEA_SLAB = new SlabBlock(FabricBlockSettings.copyOf(Blocks.OAK_SLAB));
     public static final Block AZALEA_FENCE = new FenceBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE));
-    public static final Block AZALEA_STAIRS = new AffinityStairsBlock(AZALEA_PLANKS.getDefaultState(), FabricBlockSettings.copyOf(Blocks.OAK_STAIRS));
-    public static final Block AZALEA_BUTTON = new AffinityWoodenButtonBlock(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON));
-    public static final Block AZALEA_PRESSURE_PLATE = new AffinityPressurePlateBlock(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE));
-    public static final Block AZALEA_DOOR = new AffinityDoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_DOOR));
-    public static final Block AZALEA_TRAPDOOR = new AffinityTrapdoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR));
-    public static final Block AZALEA_FENCE_GATE = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
+    public static final Block AZALEA_STAIRS = new StairsBlock(AZALEA_PLANKS.getDefaultState(), FabricBlockSettings.copyOf(Blocks.OAK_STAIRS));
+    public static final Block AZALEA_BUTTON = new ButtonBlock(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON), 30, true, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_OFF, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_ON);
+    public static final Block AZALEA_PRESSURE_PLATE = new PressurePlateBlock(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE), SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_ON);
+    public static final Block AZALEA_DOOR = new DoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_DOOR), SoundEvents.BLOCK_WOODEN_DOOR_CLOSE, SoundEvents.BLOCK_WOODEN_DOOR_OPEN);
+    public static final Block AZALEA_TRAPDOOR = new TrapdoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR), SoundEvents.BLOCK_WOODEN_DOOR_CLOSE, SoundEvents.BLOCK_WOODEN_DOOR_OPEN);
+    public static final Block AZALEA_FENCE_GATE = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), SoundEvents.BLOCK_FENCE_GATE_CLOSE, SoundEvents.BLOCK_FENCE_GATE_OPEN);
 
     public static final SignType AZALEA_SIGN_TYPE = SignTypeInvoker.affinity$invokeNew("azalea");
     @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_SIGN_TYPE);
@@ -161,7 +161,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         @Override
         public Registry<BlockEntityType<?>> getRegistry() {
-            return Registry.BLOCK_ENTITY_TYPE;
+            return Registries.BLOCK_ENTITY_TYPE;
         }
 
         @Override
@@ -186,7 +186,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
                 ? provider::createBlockItem
                 : BlockItem::new;
 
-        Registry.register(Registry.ITEM, new Identifier(namespace, identifier),
+        Registry.register(Registries.ITEM, new Identifier(namespace, identifier),
                 factory.apply(value, new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP)));
     }
 

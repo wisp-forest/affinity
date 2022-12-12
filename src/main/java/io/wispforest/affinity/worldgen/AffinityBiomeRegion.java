@@ -2,8 +2,8 @@ package io.wispforest.affinity.worldgen;
 
 import com.mojang.datafixers.util.Pair;
 import io.wispforest.affinity.Affinity;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
@@ -20,8 +20,8 @@ public class AffinityBiomeRegion extends Region {
 
     @Override
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> mapper) {
-        this.addModifiedVanillaOverworldBiomes(mapper, builder -> {
-            builder.replaceBiome(BiomeKeys.FOREST, AffinityWorldgen.WISP_FOREST_KEY);
-        });
+//        this.addModifiedVanillaOverworldBiomes(mapper, builder -> {
+//            builder.replaceBiome(BiomeKeys.FOREST, AffinityWorldgen.WISP_FOREST_KEY);
+//        });
     }
 }

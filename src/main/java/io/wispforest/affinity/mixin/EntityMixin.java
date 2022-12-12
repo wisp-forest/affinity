@@ -26,7 +26,10 @@ public class EntityMixin implements AffinityEntityAddon {
     @Override
     @SuppressWarnings("unchecked")
     public <V> V getData(DataKey<V> key) {
-        return (V) affinity$getStorage().getOrDefault(key, key.makeDefaultValue());
+        final var data = this.affinity$getStorage().get(key);
+        return data != null
+                ? (V) data
+                : key.makeDefaultValue();
     }
 
     @Override

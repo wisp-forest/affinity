@@ -11,6 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.BlockPos;
 
 public class MangroveBasketItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
@@ -24,7 +25,7 @@ public class MangroveBasketItemRenderer implements BuiltinItemRendererRegistry.D
 
         if (nbt == null) return;
 
-        var containedState = NbtHelper.toBlockState(nbt.getCompound("ContainedState"));
+        var containedState = NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), nbt.getCompound("ContainedState"));
         var pos = BlockPos.ORIGIN;
 
         if (client.getCameraEntity() != null)

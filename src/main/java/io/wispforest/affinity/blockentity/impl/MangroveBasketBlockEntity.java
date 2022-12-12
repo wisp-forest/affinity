@@ -10,6 +10,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -67,7 +68,7 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        containedState = NbtHelper.toBlockState(nbt.getCompound("ContainedState"));
+        containedState = NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), nbt.getCompound("ContainedState"));
         containedBlockEntity = BlockEntity.createFromNbt(pos, containedState, nbt.getCompound("ContainedBlockEntity"));
 
         containedBlockEntity.setWorld(world);
@@ -93,7 +94,7 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
         if (newState.contains(Properties.FACING))
             newState =
-                newState.with(Properties.FACING, Direction.getEntityFacingOrder(placer)[0].getOpposite().getOpposite());
+                    newState.with(Properties.FACING, Direction.getEntityFacingOrder(placer)[0].getOpposite().getOpposite());
 
         if (!containedState.equals(newState)) {
             containedState = newState;

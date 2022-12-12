@@ -3,7 +3,8 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.enchantment.impl.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 public class AffinityEnchantments implements AutoRegistryContainer<Enchantment> {
 
@@ -22,7 +23,7 @@ public class AffinityEnchantments implements AutoRegistryContainer<Enchantment> 
 
     @Override
     public Registry<Enchantment> getRegistry() {
-        return Registry.ENCHANTMENT;
+        return Registries.ENCHANTMENT;
     }
 
     @Override

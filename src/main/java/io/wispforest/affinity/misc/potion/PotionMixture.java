@@ -11,15 +11,15 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Container for a potion. This could be a {@link net.minecraft.potion.Potion} contained in {@link net.minecraft.util.registry.Registry#POTION}
+ * Container for a potion. This could be a {@link net.minecraft.potion.Potion} contained in {@link net.minecraft.registry.Registries#POTION}
  * or simply a list of {@link net.minecraft.entity.effect.StatusEffectInstance}s
  */
 public class PotionMixture {
@@ -87,7 +87,7 @@ public class PotionMixture {
 
         if (nbt.contains("Potion", NbtElement.COMPOUND_TYPE)) {
             final var potionNbt = nbt.getCompound("Potion");
-            potion = Registry.POTION.get(Identifier.tryParse(potionNbt.getString("id")));
+            potion = Registries.POTION.get(Identifier.tryParse(potionNbt.getString("id")));
         }
 
         if (nbt.contains("Effects", NbtElement.LIST_TYPE)) {
@@ -105,7 +105,7 @@ public class PotionMixture {
 
         if (basePotion != Potions.EMPTY) {
             final var potionNbt = new NbtCompound();
-            potionNbt.putString("id", Registry.POTION.getId(basePotion).toString());
+            potionNbt.putString("id", Registries.POTION.getId(basePotion).toString());
 
             nbt.put("Potion", potionNbt);
         }

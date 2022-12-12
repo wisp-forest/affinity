@@ -5,7 +5,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 
 public interface RotatingItemRenderer {
 
@@ -18,7 +18,7 @@ public interface RotatingItemRenderer {
 
         matrices.translate(x, depthModel ? y - .05 : y, z);
         matrices.scale(scale, scale, scale);
-        matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion((float) ((System.currentTimeMillis() / speedDivisor) % (2 * Math.PI))));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) ((System.currentTimeMillis() / speedDivisor))));
         client.getItemRenderer().renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, consumers, 0);
 
         matrices.pop();

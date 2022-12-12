@@ -81,8 +81,6 @@ public class AffinityClient implements ClientModInitializer {
         EntityRendererRegistry.register(AffinityEntities.WISE_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.VICIOUS_WISP, WispEntityRenderer::new);
 
-        ForcedTexturesLoader.load();
-
         Hud.add(Affinity.id("player_aethum"), () -> {
             return Components.label(Text.empty())
                     .shadow(true)

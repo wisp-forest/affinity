@@ -8,13 +8,14 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.ShapedRecipe;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 
 public class ShapedAssemblyRecipe extends ShapedRecipe {
 
-    public ShapedAssemblyRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> input, ItemStack output) {
-        super(id, group, width, height, input, output);
+    public ShapedAssemblyRecipe(Identifier id, String group, CraftingRecipeCategory category, int width, int height, DefaultedList<Ingredient> input, ItemStack output) {
+        super(id, group, category, width, height, input, output);
     }
 
     @Override
@@ -32,13 +33,13 @@ public class ShapedAssemblyRecipe extends ShapedRecipe {
         @Override
         public ShapedAssemblyRecipe read(Identifier identifier, JsonObject jsonObject) {
             final var recipe = super.read(identifier, jsonObject);
-            return new ShapedAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getWidth(), recipe.getHeight(), recipe.getIngredients(), recipe.getOutput());
+            return new ShapedAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), recipe.getWidth(), recipe.getHeight(), recipe.getIngredients(), recipe.getOutput());
         }
 
         @Override
         public ShapedAssemblyRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
             final var recipe = super.read(identifier, packetByteBuf);
-            return new ShapedAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getWidth(), recipe.getHeight(), recipe.getIngredients(), recipe.getOutput());
+            return new ShapedAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), recipe.getWidth(), recipe.getHeight(), recipe.getIngredients(), recipe.getOutput());
         }
     }
 

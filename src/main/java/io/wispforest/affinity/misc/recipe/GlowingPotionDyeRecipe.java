@@ -9,6 +9,7 @@ import net.minecraft.potion.PotionUtil;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.recipe.SpecialRecipeSerializer;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -16,8 +17,8 @@ public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
 
     public static final SpecialRecipeSerializer<GlowingPotionDyeRecipe> SERIALIZER = new SpecialRecipeSerializer<>(GlowingPotionDyeRecipe::new);
 
-    protected GlowingPotionDyeRecipe(Identifier id) {
-        super(id);
+    protected GlowingPotionDyeRecipe(Identifier id, CraftingRecipeCategory category) {
+        super(id, category);
     }
 
     @Override

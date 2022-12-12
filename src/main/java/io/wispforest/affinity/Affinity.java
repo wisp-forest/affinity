@@ -9,7 +9,6 @@ import io.wispforest.affinity.misc.AffinityDebugCommands;
 import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
 import io.wispforest.affinity.mixin.access.BlockEntityTypeAccessor;
 import io.wispforest.affinity.mixin.access.SignTypeInvoker;
-import io.wispforest.affinity.mixin.access.TreeFeatureConfigAccessor;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
@@ -21,10 +20,9 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,7 +31,7 @@ public class Affinity implements ModInitializer {
     public static final String MOD_ID = "affinity";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    public static final OwoItemGroup AFFINITY_GROUP = new AffinityItemGroup(id("affinity"));
+    public static final OwoItemGroup AFFINITY_GROUP = AffinityItemGroup.GROUP;
 
     public static final BlockApiLookup<AethumNetworkMember, Void> AETHUM_MEMBER = BlockApiLookup.get(id("aethum_member"), AethumNetworkMember.class, Void.class);
     public static final BlockApiLookup<AethumNetworkNode, Void> AETHUM_NODE = BlockApiLookup.get(id("aethum_node"), AethumNetworkNode.class, Void.class);
@@ -61,11 +59,12 @@ public class Affinity implements ModInitializer {
 
         EchoShardExtension.apply();
 
-        Registry.register(Registry.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
+        Registry.register(Registries.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
 
-        //noinspection ConstantConditions
-        var azaleaConfig = (TreeFeatureConfigAccessor) BuiltinRegistries.CONFIGURED_FEATURE.get(new Identifier("azalea_tree")).config();
-        azaleaConfig.setAzaleaTree(BlockStateProvider.of(AffinityBlocks.AZALEA_LOG));
+        // TODO pain, TreeConfiguredFeatures mixin time
+//        //noinspection ConstantConditions
+//        var azaleaConfig = (TreeFeatureConfigAccessor) BuiltinRegistries.CONFIGURED_FEATURE.get(new Identifier("azalea_tree")).config();
+//        azaleaConfig.setAzaleaTree(BlockStateProvider.of(AffinityBlocks.AZALEA_LOG));
 
         AffinityStructures.register();
         AffinityWorldgen.initialize();

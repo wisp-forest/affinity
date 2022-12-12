@@ -6,6 +6,8 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.world.ClientWorld;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class OrbitingEmitterParticle extends NoRenderParticle {
 
@@ -15,9 +17,9 @@ public class OrbitingEmitterParticle extends NoRenderParticle {
         super(clientWorld, x, y, z);
         this.parameters = parameters;
 
-        this.velocityX = parameters.speed().getX();
-        this.velocityY = parameters.speed().getY();
-        this.velocityZ = parameters.speed().getZ();
+        this.velocityX = parameters.speed().x();
+        this.velocityY = parameters.speed().y();
+        this.velocityZ = parameters.speed().z();
 
         this.gravityStrength = 0;
         this.velocityMultiplier = 1;
@@ -29,18 +31,18 @@ public class OrbitingEmitterParticle extends NoRenderParticle {
     public void tick() {
         if (this.age % this.parameters.emitInterval() == 0) {
 
-            var other = this.parameters.speed().copy();
+            var other = new Vector3f(this.parameters.speed());
             other.add(34, 35, 69);
 
-            var offset = this.parameters.speed().copy();
+            var offset = new Vector3f(this.parameters.speed());
             offset.cross(other);
             offset.normalize();
-            offset.scale(this.parameters.radius());
+            offset.mul(this.parameters.radius());
 
             final var axis = this.parameters.speed();
             axis.normalize();
 
-            offset.rotate(axis.getDegreesQuaternion((this.age * this.parameters.orbitSpeed()) % 360));
+            offset.rotate(new Quaternionf().rotateAxis(this.age * this.parameters.orbitSpeed() % 360, axis));
 
             this.world.addParticle(
                     this.parameters.innerEffect(),
@@ -50,7 +52,7 @@ public class OrbitingEmitterParticle extends NoRenderParticle {
 
             this.world.addParticle(
                     this.parameters.outerEffect(),
-                    this.x + offset.getX(), this.y + offset.getY(), this.z + offset.getZ(),
+                    this.x + offset.x(), this.y + offset.y(), this.z + offset.z(),
                     0, 0, 0
             );
         }

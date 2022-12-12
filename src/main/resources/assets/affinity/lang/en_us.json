@@ -179,6 +179,8 @@
   "message.affinity.linking.link_destroyed": "Link to %s destroyed",
   "message.affinity.linking.failed": "Could not link to %s",
 
+  "text.affinity.tooltip.aethum_storage": "Flux: %d/%d",
+
   "gui.affinity.augmented_crafting_table.title": "Augmented Crafting Table",
   "gui.affinity.augmented_crafting_table.treetap_count": [
     {"text": "Treetaps: ", "color": "dark_gray"},

@@ -14,7 +14,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -55,9 +54,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
         var res = (BlockHitResult) player.raycast(5, 0, false);
 
         if (world.random.nextInt(4) == 0)
-            AffinityParticleSystems.WISP_ATTACK.spawn(world, player.getEyePos(), new AffinityParticleSystems.LineData(
-                    Vec3d.ofCenter(res.getBlockPos()), 0xFFFFFF
-            ));
+            AffinityParticleSystems.TIME_STAFF_ACCELERATE.spawn(world, player.getPos().add(0, 1.25, 0), res.getBlockPos());
 
         var mode = stack.get(MODE);
         for (int i = 0; i < mode.repeatTicks; i++) {

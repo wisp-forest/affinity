@@ -4,12 +4,12 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
 import net.minecraft.enchantment.DamageEnchantment;
 import net.minecraft.entity.*;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 
 public class EnderScourgeEnchantment extends DamageEnchantment implements AffinityDamageEnchantment {
 
-    public static final TagKey<EntityType<?>> END_ENTITIES = TagKey.of(Registry.ENTITY_TYPE_KEY, Affinity.id("end_entities"));
+    public static final TagKey<EntityType<?>> END_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE, Affinity.id("end_entities"));
 
     public EnderScourgeEnchantment() {
         super(Rarity.RARE, -1, EquipmentSlot.MAINHAND);

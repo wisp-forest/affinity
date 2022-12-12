@@ -18,11 +18,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class StatusEffectEntryDefinition implements EntryDefinition<StatusEffect
 
     @Override
     public @Nullable Identifier getIdentifier(EntryStack<StatusEffect> entry, StatusEffect value) {
-        return Registry.STATUS_EFFECT.getId(value);
+        return Registries.STATUS_EFFECT.getId(value);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class StatusEffectEntryDefinition implements EntryDefinition<StatusEffect
 
     @Override
     public Stream<? extends TagKey<?>> getTagsFor(EntryStack<StatusEffect> entry, StatusEffect value) {
-        return RegistryAccess.getEntry(Registry.STATUS_EFFECT, value).streamTags();
+        return RegistryAccess.getEntry(Registries.STATUS_EFFECT, value).streamTags();
     }
 
     @Override
@@ -109,14 +109,14 @@ public class StatusEffectEntryDefinition implements EntryDefinition<StatusEffect
     public NbtCompound save(EntryStack<StatusEffect> entry, StatusEffect value) {
         NbtCompound mald = new NbtCompound();
 
-        mald.putString("id", String.valueOf(Registry.STATUS_EFFECT.getId(value)));
+        mald.putString("id", String.valueOf(Registries.STATUS_EFFECT.getId(value)));
 
         return mald;
     }
 
     @Override
     public StatusEffect read(NbtCompound tag) {
-        return Registry.STATUS_EFFECT.get(new Identifier(tag.getString("id")));
+        return Registries.STATUS_EFFECT.get(new Identifier(tag.getString("id")));
     }
 
     @Environment(EnvType.CLIENT)
@@ -127,7 +127,7 @@ public class StatusEffectEntryDefinition implements EntryDefinition<StatusEffect
         public void render(EntryStack<StatusEffect> entry, MatrixStack matrices, Rectangle bounds, int mouseX, int mouseY, float delta) {
             var sprite = MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(entry.getValue());
 
-            RenderSystem.setShaderTexture(0, sprite.getAtlas().getId());
+            RenderSystem.setShaderTexture(0, sprite.getAtlasId());
             Drawer.drawSprite(matrices, bounds.x - 1, bounds.y - 1, 0, bounds.width + 2, bounds.height + 2, sprite);
         }
 
@@ -137,7 +137,7 @@ public class StatusEffectEntryDefinition implements EntryDefinition<StatusEffect
             tooltip.add(entry.getValue().getName());
 
             if (MinecraftClient.getInstance().options.advancedItemTooltips) {
-                tooltip.add(Text.literal(Registry.STATUS_EFFECT.getId(entry.getValue()).toString()).formatted(Formatting.DARK_GRAY));
+                tooltip.add(Text.literal(Registries.STATUS_EFFECT.getId(entry.getValue()).toString()).formatted(Formatting.DARK_GRAY));
             }
 
             return Tooltip.create(tooltip);

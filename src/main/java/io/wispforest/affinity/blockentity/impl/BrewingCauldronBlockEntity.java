@@ -31,9 +31,9 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -100,7 +100,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
             ClientParticles.setParticleCount(2);
             ClientParticles.spawnPrecise(ParticleTypes.ENTITY_EFFECT, world, Vec3d.of(pos).add(0.5, 0.8, 0.5), 0.6, 0.2, 0.6);
 
-            ParticleEffect dust = new DustParticleEffect(new Vec3f(233 / 255f, 100 / 255f, 178 / 255f), 1);
+            ParticleEffect dust = new DustParticleEffect(new Vector3f(233 / 255f, 100 / 255f, 178 / 255f), 1);
             final var sporeBlossomOffset = sporeBlossomPos.subtract(pos).getY() + 1;
 
             ClientParticles.setParticleCount(sporeBlossomOffset * 2);

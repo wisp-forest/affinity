@@ -1,7 +1,7 @@
 package io.wispforest.affinity.datagen;
 
 import io.wispforest.affinity.Affinity;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.*;
@@ -18,8 +18,8 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
 
     private static final Model IRIDESCENCE_WAND_MODEL = new Model(Optional.of(Affinity.id("item/iridescence_wand")), Optional.empty(), TextureKey.LAYER0);
 
-    public AffinityBlockStateDefinitionProvider(FabricDataGenerator dataGenerator) {
-        super(dataGenerator);
+    public AffinityBlockStateDefinitionProvider(FabricDataOutput dataOutput) {
+        super(dataOutput);
     }
 
     @Override

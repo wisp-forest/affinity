@@ -1,7 +1,4 @@
-package io.wispforest.affinity.client.render.entity;// Made with Blockbench 4.0.5
-// Exported for Minecraft version 1.17 with Mojang mappings
-// Paste this class into your mod and generate all required imports
-
+package io.wispforest.affinity.client.render.entity;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.entity.WispEntity;

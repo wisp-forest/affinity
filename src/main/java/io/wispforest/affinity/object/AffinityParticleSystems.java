@@ -9,11 +9,12 @@ import io.wispforest.affinity.particle.OrbitingEmitterParticleEffect;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class AffinityParticleSystems {
                 new OrbitingEmitterParticleEffect(
                         new DustParticleEffect(MathUtil.splitRGBToVec3f(0x3955E5), .75f),
                         ParticleTypes.ASH,
-                        new Vec3f(Vec3d.ofCenter(data).subtract(pos).multiply(1f / 20f)),
+                        Vec3d.ofCenter(data).subtract(pos).multiply(1f / 20f).toVector3f(),
                         .1f, 1, 45, 20
                 ),
                 world, pos, 0
@@ -84,7 +85,7 @@ public class AffinityParticleSystems {
     });
 
     public static final ParticleSystem<AberrantCallingCoreBlock.CoreSet> ABERRANT_CALLING_ACTIVE = CONTROLLER.register(AberrantCallingCoreBlock.CoreSet.class, (world, pos, data) -> {
-        var effect = new DustColorTransitionParticleEffect(new Vec3f(1, 0, 0), new Vec3f(1, .25f, .75f), 1);
+        var effect = new DustColorTransitionParticleEffect(new Vector3f(1, 0, 0), new Vector3f(1, .25f, .75f), 1);
 
         ClientParticles.persist();
         ClientParticles.setParticleCount(7);

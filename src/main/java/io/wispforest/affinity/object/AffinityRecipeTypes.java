@@ -3,7 +3,8 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.misc.recipe.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.minecraft.recipe.*;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>> {
 
@@ -25,7 +26,7 @@ public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>>
 
         @Override
         public Registry<RecipeSerializer<?>> getRegistry() {
-            return Registry.RECIPE_SERIALIZER;
+            return Registries.RECIPE_SERIALIZER;
         }
 
         @Override
@@ -37,7 +38,7 @@ public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>>
 
     @Override
     public Registry<RecipeType<?>> getRegistry() {
-        return Registry.RECIPE_TYPE;
+        return Registries.RECIPE_TYPE;
     }
 
     @Override
