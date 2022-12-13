@@ -1,5 +1,11 @@
 package io.wispforest.affinity.compat.rei;
 
+import io.wispforest.affinity.compat.rei.category.AspenInfusionCategory;
+import io.wispforest.affinity.compat.rei.category.AssemblyCategory;
+import io.wispforest.affinity.compat.rei.category.ContainingPotionsCategory;
+import io.wispforest.affinity.compat.rei.category.PotionMixingCategory;
+import io.wispforest.affinity.compat.rei.display.*;
+import io.wispforest.affinity.misc.recipe.AspenInfusionRecipe;
 import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.misc.recipe.ShapedAssemblyRecipe;
 import io.wispforest.affinity.misc.recipe.ShapelessAssemblyRecipe;
@@ -28,9 +34,12 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         registry.add(new PotionMixingCategory());
         registry.add(new AssemblyCategory());
         registry.add(new ContainingPotionsCategory());
+        registry.add(new AspenInfusionCategory());
 
         registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(AffinityBlocks.BREWING_CAULDRON));
         registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(Blocks.SPORE_BLOSSOM));
+
+        registry.addWorkstations(AffinityReiCommonPlugin.ASPEN_INFUSION, EntryStacks.of(AffinityBlocks.ASP_RITE_CORE));
 
         registry.addWorkstations(AffinityReiCommonPlugin.ASSEMBLY, EntryStacks.of(Blocks.CRAFTING_TABLE), EntryStacks.of(AffinityBlocks.ASSEMBLY_AUGMENT));
     }
@@ -38,6 +47,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
     @Override
     public void registerDisplays(DisplayRegistry registry) {
         registry.registerFiller(PotionMixingRecipe.class, PotionMixingDisplay::new);
+        registry.registerFiller(AspenInfusionRecipe.class, AspenInfusionDisplay::new);
 
         registry.registerFiller(ShapedAssemblyRecipe.class, ShapedAssemblyDisplay::new);
         registry.registerFiller(ShapelessAssemblyRecipe.class, ShapelessAssemblyDisplay::new);

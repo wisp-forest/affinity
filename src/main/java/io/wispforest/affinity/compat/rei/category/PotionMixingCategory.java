@@ -1,6 +1,8 @@
-package io.wispforest.affinity.compat.rei;
+package io.wispforest.affinity.compat.rei.category;
 
 import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
+import io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin;
+import io.wispforest.affinity.compat.rei.display.PotionMixingDisplay;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.compat.rei.ReiUIAdapter;

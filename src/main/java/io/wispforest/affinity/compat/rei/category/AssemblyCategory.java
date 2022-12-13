@@ -1,5 +1,6 @@
-package io.wispforest.affinity.compat.rei;
+package io.wispforest.affinity.compat.rei.category;
 
+import io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin;
 import io.wispforest.affinity.object.AffinityBlocks;
 import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;

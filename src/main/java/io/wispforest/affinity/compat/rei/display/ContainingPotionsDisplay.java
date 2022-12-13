@@ -1,5 +1,6 @@
-package io.wispforest.affinity.compat.rei;
+package io.wispforest.affinity.compat.rei.display;
 
+import io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -17,8 +18,7 @@ public class ContainingPotionsDisplay implements Display {
     private final List<EntryIngredient> outputs;
 
     public ContainingPotionsDisplay(StatusEffect effect, List<Potion> potions) {
-        inputs = potions
-                .stream()
+        inputs = potions.stream()
                 .map(x -> {
                     var stack = new ItemStack(Items.POTION);
                     PotionUtil.setPotion(stack, x);

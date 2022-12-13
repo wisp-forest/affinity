@@ -1,5 +1,7 @@
-package io.wispforest.affinity.compat.rei;
+package io.wispforest.affinity.compat.rei.category;
 
+import io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin;
+import io.wispforest.affinity.compat.rei.display.ContainingPotionsDisplay;
 import io.wispforest.owo.compat.rei.ReiUIAdapter;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.core.*;
