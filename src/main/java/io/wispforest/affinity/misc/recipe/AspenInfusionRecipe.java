@@ -18,7 +18,7 @@ import java.util.List;
 
 public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.AspenInfusionInventory> {
 
-    private final Ingredient primaryInput;
+    public final Ingredient primaryInput;
     private final ItemStack output;
 
     public AspenInfusionRecipe(Identifier id, Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, int duration) {

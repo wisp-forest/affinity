@@ -7,6 +7,7 @@ import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AspenInfusionDisplay implements Display {
@@ -17,7 +18,10 @@ public class AspenInfusionDisplay implements Display {
 
     public AspenInfusionDisplay(AspenInfusionRecipe recipe) {
         this.recipe = recipe;
-        this.inputs = recipe.getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
+
+        this.inputs = new ArrayList<>(recipe.getIngredients().stream().map(EntryIngredients::ofIngredient).toList());
+        this.inputs.add(0, EntryIngredients.ofIngredient(recipe.primaryInput));
+
         this.outputs = List.of(EntryIngredients.of(recipe.getOutput()));
     }
 

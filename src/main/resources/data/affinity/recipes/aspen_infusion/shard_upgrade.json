@@ -18,6 +18,9 @@
     },
     {
       "item": "minecraft:amethyst_shard"
+    },
+    {
+      "tag": "minecraft:candles"
     }
   ],
   "duration": 200
