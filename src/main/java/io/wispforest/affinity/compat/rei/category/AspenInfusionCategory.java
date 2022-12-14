@@ -91,7 +91,7 @@ public class AspenInfusionCategory implements DisplayCategory<AspenInfusionDispl
         soclePreviewFlow.child(adapter.wrap(Widgets::createSlot, slot -> {
             slot.entries(EntryIngredients.ofItemTag(RECIPE_RITUAL_SOCLE_PREVIEW).stream().map(entryStack -> {
                 var stack = entryStack.<ItemStack>castValue().copy();
-                stack.setCount(display.getInputEntries().size());
+                stack.setCount(display.getInputEntries().size() - 1);
                 return EntryStack.of(VanillaEntryTypes.ITEM, stack);
             }).toList());
         }));

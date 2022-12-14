@@ -1,0 +1,71 @@
+{
+  "type": "affinity:aspen_infusion",
+  "output": {
+    "item": "minecraft:diamond"
+  },
+  "primary_input": {
+    "item": "affinity:azalea_flowers"
+  },
+  "duration": 1380,
+  "inputs": [
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },{
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ]
+}

@@ -18,7 +18,7 @@ public interface RotatingItemRenderer {
 
         matrices.translate(x, depthModel ? y - .05 : y, z);
         matrices.scale(scale, scale, scale);
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) ((System.currentTimeMillis() / speedDivisor))));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) ((System.currentTimeMillis() / speedDivisor) % (2 * Math.PI))));
         client.getItemRenderer().renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, consumers, 0);
 
         matrices.pop();
