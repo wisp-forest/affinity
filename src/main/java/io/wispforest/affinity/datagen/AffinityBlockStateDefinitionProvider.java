@@ -45,7 +45,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
         simpleStateWithParentedItem(generator, COPPER_PLATED_AETHUM_FLUX_NODE, STONE_BANDED_AETHUM_FLUX_NODE,
                 ARBOREAL_ACCUMULATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE,
                 REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, RITUAL_SOCLE_COMPOSER, ABERRANT_CALLING_CORE,
-                ASP_RITE_CORE, ASSEMBLY_AUGMENT);
+                ASP_RITE_CORE, ASSEMBLY_AUGMENT, STAFF_PEDESTAL);
         simpleStateWithGeneratedItem(generator, SUNDIAL, BREWING_CAULDRON);
     }
 

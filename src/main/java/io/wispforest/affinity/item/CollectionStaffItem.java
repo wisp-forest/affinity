@@ -1,5 +1,6 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.misc.EntityReference;
 import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -17,6 +18,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -34,6 +36,19 @@ public class CollectionStaffItem extends StaffItem {
     @Override
     protected float getAethumConsumption(ItemStack stack) {
         return 1;
+    }
+
+    @Override
+    public boolean canBePlacedOnPedestal() {
+        return true;
+    }
+
+    @Override
+    public void pedestalTickServer(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        if (world.getTime() % 30 != 0) return;
+
+        var spawnPos = Vec3d.ofCenter(pos).add(world.random.nextDouble() * 10 - 5, world.random.nextDouble() * 3 - .5, world.random.nextDouble() * 10 - 5);
+        world.spawnEntity(new ItemEntity(world, spawnPos.x, spawnPos.y, spawnPos.z, AffinityItems.SOUP_OF_BEE.getDefaultStack()));
     }
 
     @Override

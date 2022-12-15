@@ -56,6 +56,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block ARCANE_TREETAP = new ArcaneTreetapBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block ASSEMBLY_AUGMENT = new AssemblyAugmentBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block MANGROVE_BASKET = new MangroveBasketBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block STAFF_PEDESTAL = new StaffPedestalBlock();
 
     @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 
@@ -141,6 +142,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<MangroveBasketBlockEntity> MANGROVE_BASKET =
                 make(MangroveBasketBlockEntity::new, AffinityBlocks.MANGROVE_BASKET);
 
+        public static final BlockEntityType<StaffPedestalBlockEntity> STAFF_PEDESTAL =
+                make(StaffPedestalBlockEntity::new, AffinityBlocks.STAFF_PEDESTAL);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
@@ -157,6 +161,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_CANDLE);
             Affinity.AETHUM_MEMBER.registerSelf(WORLD_PIN);
             Affinity.AETHUM_MEMBER.registerSelf(SUNSHINE_MONOLITH);
+            Affinity.AETHUM_MEMBER.registerSelf(STAFF_PEDESTAL);
         }
 
         @Override

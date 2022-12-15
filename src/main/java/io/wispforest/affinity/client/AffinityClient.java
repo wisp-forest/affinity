@@ -125,6 +125,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.ASP_RITE_CORE, AspRiteCoreBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.ABERRANT_CALLING_CORE, AberrantCallingCoreBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(AffinityBlocks.Entities.MANGROVE_BASKET, MangroveBasketBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(AffinityBlocks.Entities.STAFF_PEDESTAL, StaffPedestalBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {

@@ -1,5 +1,6 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import net.minecraft.client.item.TooltipContext;
@@ -11,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +35,13 @@ public abstract class StaffItem extends Item {
     protected @Nullable Text getModeName(ItemStack stack) {
         return null;
     }
+
+    public boolean canBePlacedOnPedestal() {
+        return false;
+    }
+
+    public void pedestalTickServer(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
+    public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
