@@ -16,7 +16,7 @@ public interface AethumFluxContainer {
     long fluxCapacity();
 
     /**
-     * Sets the member's flux amount to {@code flux}.
+     * Update the amount of flux stored in this container {@code flux}.
      */
     void updateFlux(long flux);
 

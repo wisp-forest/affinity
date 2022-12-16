@@ -124,55 +124,55 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public void appendTooltipEntries(List<Entry> entries) {
-        entries.add(new Entry(Text.of(String.valueOf(this.visualFlux())), 0, 0));
+        entries.add(new Entry(Text.of(String.valueOf(this.displayFlux())), 0, 0));
     }
 
     public void updateFlux(long flux) {
         if (this.fluxStorage.setFlux(flux)) this.sendFluxUpdate();
     }
 
-    public long visualFlux() {
-        return flux();
+    public long displayFlux() {
+        return this.flux();
     }
 
     @Override
     public long flux() {
-        return fluxStorage.flux();
+        return this.fluxStorage.flux();
     }
 
     @Override
     public long fluxCapacity() {
-        return fluxStorage.fluxCapacity();
+        return this.fluxStorage.fluxCapacity();
     }
 
     @Override
     public long insert(long max, TransactionContext transaction) {
-        return fluxStorage.insert(max, transaction);
+        return this.fluxStorage.insert(max, transaction);
     }
 
     @Override
     public boolean canInsert() {
-        return fluxStorage.canInsert();
+        return this.fluxStorage.canInsert();
     }
 
     @Override
     public long maxInsert() {
-        return fluxStorage.maxInsert();
+        return this.fluxStorage.maxInsert();
     }
 
     @Override
     public long extract(long max, TransactionContext transaction) {
-        return fluxStorage.extract(max, transaction);
+        return this.fluxStorage.extract(max, transaction);
     }
 
     @Override
     public long maxExtract() {
-        return fluxStorage.maxExtract();
+        return this.fluxStorage.maxExtract();
     }
 
     @Override
     public boolean canExtract() {
-        return fluxStorage.canExtract();
+        return this.fluxStorage.canExtract();
     }
 
     @Override

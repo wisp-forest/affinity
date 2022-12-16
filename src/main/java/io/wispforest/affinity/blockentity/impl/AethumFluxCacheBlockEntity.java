@@ -232,11 +232,11 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     }
 
     @Override
-    public long visualFlux() {
-        if (this.parentRef == null) return super.visualFlux();
+    public long displayFlux() {
+        if (this.parentRef == null) return super.displayFlux();
         final var parent = parentRef.entity;
 
-        if (parent.childCache == null || parent.childCache.isEmpty()) return super.visualFlux();
+        if (parent.childCache == null || parent.childCache.isEmpty()) return super.displayFlux();
         return parent.flux() + parent.childCache.stream().mapToLong(AethumNetworkMemberBlockEntity::flux).sum();
     }
 
