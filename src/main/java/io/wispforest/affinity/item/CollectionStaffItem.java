@@ -65,7 +65,7 @@ public class CollectionStaffItem extends StaffItem {
 
             try (var transaction = Transaction.openOuter()) {
                 long transferred = storage.insert(ItemVariant.of(stack), stack.getCount(), transaction);
-                if (transferred < 1) {
+                if (transferred < 1 || !pedestal.hasFlux(transferred * 8L)) {
                     iter.remove();
                     continue;
                 }
@@ -76,6 +76,7 @@ public class CollectionStaffItem extends StaffItem {
                     item.setStack(stack.copyWithCount(stack.getCount() - (int) transferred));
                 }
 
+                pedestal.consumeFlux(transferred * 8);
                 transaction.commit();
             }
         }
@@ -86,7 +87,11 @@ public class CollectionStaffItem extends StaffItem {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void pedestalTickClient(ClientWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        if (pedestal.flux() < 8) return;
+        if (ItemStorage.SIDED.find(world, pos.down(), Direction.UP) == null) return;
+
         for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos).expand(5, 2, 5), Entity::isAlive)) {
             ClientParticles.spawn(ParticleTypes.WITCH, world, item.getPos().add(0, .125, 0), .25);
         }
