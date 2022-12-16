@@ -19,10 +19,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
 public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback, CrosshairStatProvider, PreMangroveBasketCallback {
@@ -91,6 +88,15 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     // -------
     // Linking
     // -------
+
+    protected Set<BlockPos> getLinksByType(AethumLink.Type type) {
+        var result = new HashSet<BlockPos>();
+        for (var entry : this.links.entrySet()) {
+            if (entry.getValue() != type) continue;
+            result.add(entry.getKey());
+        }
+        return result;
+    }
 
     @Override
     public Set<BlockPos> linkedMembers() {

@@ -38,6 +38,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block BREWING_CAULDRON = new BrewingCauldronBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block COPPER_PLATED_AETHUM_FLUX_NODE = new CopperPlatedAethumFluxNodeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block AETHUM_FLUX_CACHE = new AethumFluxCacheBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block CREATIVE_AETHUM_FLUX_CACHE = new CreativeAethumFluxCacheBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block SUNDIAL = new SundialBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
@@ -104,6 +105,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<AethumFluxCacheBlockEntity> AETHUM_FLUX_CACHE =
                 make(AethumFluxCacheBlockEntity::new, AffinityBlocks.AETHUM_FLUX_CACHE);
 
+        public static final BlockEntityType<CreativeAethumFluxCacheBlockEntity> CREATIVE_AETHUM_FLUX_CACHE =
+                make(CreativeAethumFluxCacheBlockEntity::new, AffinityBlocks.CREATIVE_AETHUM_FLUX_CACHE);
+
         public static final BlockEntityType<RitualSocleBlockEntity> RITUAL_SOCLE =
                 make(RitualSocleBlockEntity::new,
                         AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE,
@@ -151,6 +155,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_NODE.registerSelf(AETHUM_FLUX_NODE);
 
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_CACHE);
+            Affinity.AETHUM_MEMBER.registerSelf(CREATIVE_AETHUM_FLUX_CACHE);
             Affinity.AETHUM_MEMBER.registerSelf(BREWING_CAULDRON);
             Affinity.AETHUM_MEMBER.registerSelf(SUNDIAL);
             Affinity.AETHUM_MEMBER.registerSelf(ARBOREAL_ACCUMULATION_APPARATUS);

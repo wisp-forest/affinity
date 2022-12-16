@@ -32,6 +32,8 @@ public class Affinity implements ModInitializer {
 
     public static final OwoItemGroup AFFINITY_GROUP = AffinityItemGroup.GROUP;
 
+    public static final int AETHUM_FLUX_COLOR = 0x6A67CE;
+
     public static final BlockApiLookup<AethumNetworkMember, Void> AETHUM_MEMBER = BlockApiLookup.get(id("aethum_member"), AethumNetworkMember.class, Void.class);
     public static final BlockApiLookup<AethumNetworkNode, Void> AETHUM_NODE = BlockApiLookup.get(id("aethum_node"), AethumNetworkNode.class, Void.class);
 

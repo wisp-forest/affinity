@@ -51,7 +51,7 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
 
             return new ColoredProgressBarComponent(fuelText)
                     .progress(data.stored / (float) data.capacity)
-                    .color(Color.ofRgb(0x6A67CE));
+                    .color(Color.ofRgb(Affinity.AETHUM_FLUX_COLOR));
         };
     }
 }

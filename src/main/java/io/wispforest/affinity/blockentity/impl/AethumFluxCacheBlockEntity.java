@@ -169,7 +169,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         if (!isPrimaryStorage) return;
         if (this.childCache == null) this.updateChildCache();
 
-        var pushTargets = this.findPushTargets();
+        var pushTargets = this.getLinksByType(AethumLink.Type.PUSH);
 
         long totalFlux = this.fluxStorage.flux();
         if (!this.childCache.isEmpty()) totalFlux += this.childCache.stream().mapToLong(value -> value.fluxStorage.flux()).sum();
@@ -225,10 +225,6 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
     private long directInsert(long max, TransactionContext transaction) {
         return super.insert(max, transaction);
-    }
-
-    private Set<BlockPos> findPushTargets() {
-        return links.entrySet().stream().filter(entry -> entry.getValue() == AethumLink.Type.PUSH).map(Map.Entry::getKey).collect(Collectors.toSet());
     }
 
     @Override

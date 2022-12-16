@@ -38,7 +38,7 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
 
     public static final EnumProperty<Part> PART = EnumProperty.of("part", Part.class);
 
-    private static final VoxelShape MIDDLE_SHAPE = Stream.of(
+    public static final VoxelShape MIDDLE_SHAPE = Stream.of(
             Block.createCuboidShape(2, 0, 2, 14, 16, 14),
             Block.createCuboidShape(4, 0, 0, 6, 16, 2),
             Block.createCuboidShape(10, 0, 0, 12, 16, 2),
@@ -50,7 +50,7 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
             Block.createCuboidShape(4, 0, 14, 6, 16, 16)
     ).reduce(VoxelShapes::union).get();
 
-    private static final VoxelShape BOTTOM_SHAPE = Stream.of(MIDDLE_SHAPE,
+    public static final VoxelShape BOTTOM_SHAPE = Stream.of(MIDDLE_SHAPE,
             Block.createCuboidShape(2, 0, 0, 14, 4, 16),
             Block.createCuboidShape(14, 0, 14, 16, 2, 16),
             Block.createCuboidShape(0, 0, 14, 2, 2, 16),
@@ -60,7 +60,7 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
             Block.createCuboidShape(14, 0, 2, 16, 4, 14)
     ).reduce(VoxelShapes::union).get();
 
-    private static final VoxelShape TOP_SHAPE = Stream.of(MIDDLE_SHAPE,
+    public static final VoxelShape TOP_SHAPE = Stream.of(MIDDLE_SHAPE,
             Block.createCuboidShape(2, 12, 0, 14, 16, 16),
             Block.createCuboidShape(0, 14, 14, 2, 16, 16),
             Block.createCuboidShape(0, 12, 2, 2, 16, 14),
@@ -70,7 +70,7 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
             Block.createCuboidShape(14, 14, 14, 16, 16, 16)
     ).reduce(VoxelShapes::union).get();
 
-    private static final VoxelShape STANDALONE_SHAPE = VoxelShapes.union(TOP_SHAPE, BOTTOM_SHAPE);
+    public static final VoxelShape STANDALONE_SHAPE = VoxelShapes.union(TOP_SHAPE, BOTTOM_SHAPE);
 
     public AethumFluxCacheBlock() {
         super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10).sounds(BlockSoundGroup.COPPER));

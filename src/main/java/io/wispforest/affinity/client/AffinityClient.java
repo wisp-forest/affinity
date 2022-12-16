@@ -58,6 +58,11 @@ public class AffinityClient implements ClientModInitializer {
             return socle.glowColor();
         }, AffinityBlocks.REFINED_RITUAL_SOCLE, AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE, AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
 
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
+            if (tintIndex != 1) return 0xFFFFFF;
+            return Affinity.AETHUM_FLUX_COLOR;
+        }, AffinityBlocks.CREATIVE_AETHUM_FLUX_CACHE);
+
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
             if (tintIndex != 0) return 0xFFFFFF;
 
@@ -131,6 +136,7 @@ public class AffinityClient implements ClientModInitializer {
     private void assignBlockRenderLayers() {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.SUNDIAL, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.AETHUM_FLUX_CACHE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.CREATIVE_AETHUM_FLUX_CACHE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.AZALEA_DOOR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.AZALEA_TRAPDOOR, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.UNFLOWERING_AZALEA_LEAVES, RenderLayer.getCutout());

@@ -68,7 +68,7 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
         this.tickCounter++;
 
         if (this.item.isEmpty() || !(this.item.getItem() instanceof StaffItem staff)) return;
-        staff.pedestalTickClient((ClientWorld) this.world, this.pos, this);
+        staff.pedestalTickClient(this.world, this.pos, this);
     }
 
     public @NotNull ItemStack getItem() {

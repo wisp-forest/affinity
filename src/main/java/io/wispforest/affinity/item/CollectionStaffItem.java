@@ -10,7 +10,6 @@ import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -88,7 +87,7 @@ public class CollectionStaffItem extends StaffItem {
 
     @Override
     @SuppressWarnings("UnstableApiUsage")
-    public void pedestalTickClient(ClientWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+    public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
         if (pedestal.flux() < 8) return;
         if (ItemStorage.SIDED.find(world, pos.down(), Direction.UP) == null) return;
 

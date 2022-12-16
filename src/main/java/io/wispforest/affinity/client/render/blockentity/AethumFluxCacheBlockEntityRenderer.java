@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client.render.blockentity;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
 import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
 import io.wispforest.affinity.misc.util.MathUtil;
@@ -28,7 +29,7 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
 
     @Override
     public void render(AethumFluxCacheBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        final float[] rgb = MathUtil.splitRGBToFloats(0x6A67CE);
+        final float[] rgb = MathUtil.splitRGBToFloats(Affinity.AETHUM_FLUX_COLOR);
 
         final var cachePart = entity.getCachedState().get(AethumFluxCacheBlock.PART);
         final var bottomY = cachePart.isBase ? 0.25f : 0;

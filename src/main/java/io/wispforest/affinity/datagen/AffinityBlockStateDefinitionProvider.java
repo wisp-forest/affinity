@@ -9,14 +9,10 @@ import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 
-import java.util.Optional;
-
 import static io.wispforest.affinity.object.AffinityBlocks.*;
 import static io.wispforest.affinity.object.AffinityItems.*;
 
 public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
-
-    private static final Model IRIDESCENCE_WAND_MODEL = new Model(Optional.of(Affinity.id("item/iridescence_wand")), Optional.empty(), TextureKey.LAYER0);
 
     public AffinityBlockStateDefinitionProvider(FabricDataOutput dataOutput) {
         super(dataOutput);
@@ -42,11 +38,12 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
 
         cubeAllWithParentedItem(generator, PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES);
 
+        simpleStateWithGeneratedItem(generator, SUNDIAL, BREWING_CAULDRON);
         simpleStateWithParentedItem(generator, COPPER_PLATED_AETHUM_FLUX_NODE, STONE_BANDED_AETHUM_FLUX_NODE,
                 ARBOREAL_ACCUMULATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE,
                 REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, RITUAL_SOCLE_COMPOSER, ABERRANT_CALLING_CORE,
-                ASP_RITE_CORE, ASSEMBLY_AUGMENT, STAFF_PEDESTAL);
-        simpleStateWithGeneratedItem(generator, SUNDIAL, BREWING_CAULDRON);
+                ASP_RITE_CORE, ASSEMBLY_AUGMENT, STAFF_PEDESTAL, CREATIVE_AETHUM_FLUX_CACHE
+        );
     }
 
     @Override
@@ -55,13 +52,12 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
                 MILDLY_ATTUNED_AMETHYST_SHARD, FAIRLY_ATTUNED_AMETHYST_SHARD, GREATLY_ATTUNED_AMETHYST_SHARD,
                 STONE_SOCLE_ORNAMENT, PRISMARINE_SOCLE_ORNAMENT, PURPUR_SOCLE_ORNAMENT, SOUP_OF_BEE,
                 AETHUM_MAP_PROTOTYPE, REALIZED_AETHUM_MAP, ANTHRACITE_POWDER, RESPLENDENT_GEM,
-                AFFINITEA, INERT_WISP_MATTER, WISE_WISP_MATTER, VICIOUS_WISP_MATTER, DRAGON_DROP);
+                AFFINITEA, INERT_WISP_MATTER, WISE_WISP_MATTER, VICIOUS_WISP_MATTER, DRAGON_DROP
+        );
 
         handheld(generator, COLLECTION_STAFF, NIMBLE_STAFF, TIME_STAFF, WAND_OF_INQUIRY);
 
         generatedWithTexture(generator, Affinity.id("item/ranthracite_dust"), RANTHRACITE_WIRE.asItem());
-
-//        iridescenceWand(generator, EMERALD_WAND_OF_IRIDESCENCE, SAPPHIRE_WAND_OF_IRIDESCENCE);
 
         generator.register(GEOLOGICAL_RESONATOR, Models.HANDHELD);
     }
@@ -75,12 +71,6 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
     private void handheld(ItemModelGenerator generator, Item... items) {
         for (var item : items) {
             generator.register(item, Models.HANDHELD);
-        }
-    }
-
-    private void iridescenceWand(ItemModelGenerator generator, Item... items) {
-        for (var item : items) {
-            generator.register(item, IRIDESCENCE_WAND_MODEL);
         }
     }
 
