@@ -48,10 +48,12 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         final var playerStack = user.getStackInHand(hand);
         if (!user.isSneaking()) return TypedActionResult.pass(playerStack);
 
-        if (this.getStoredPos(playerStack) != null) return TypedActionResult.pass(playerStack);
         if (world.isClient) return TypedActionResult.success(playerStack);
-
-        playerStack.mutate(MODE, Mode::next);
+        if (this.getStoredPos(playerStack) != null) {
+            playerStack.delete(LINK_DATA);
+        } else {
+            playerStack.mutate(MODE, Mode::next);
+        }
 
         return TypedActionResult.success(playerStack);
     }
