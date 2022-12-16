@@ -7,6 +7,10 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -20,6 +24,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -44,11 +49,47 @@ public class CollectionStaffItem extends StaffItem {
     }
 
     @Override
-    public void pedestalTickServer(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        if (world.getTime() % 30 != 0) return;
+    @SuppressWarnings("UnstableApiUsage")
+    public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        if (pedestal.tickCounter() % 20 != 0) return;
 
-        var spawnPos = Vec3d.ofCenter(pos).add(world.random.nextDouble() * 10 - 5, world.random.nextDouble() * 3 - .5, world.random.nextDouble() * 10 - 5);
-        world.spawnEntity(new ItemEntity(world, spawnPos.x, spawnPos.y, spawnPos.z, AffinityItems.SOUP_OF_BEE.getDefaultStack()));
+        var storage = ItemStorage.SIDED.find(world, pos.down(), Direction.UP);
+        if (storage == null) return;
+
+        final var items = world.getEntitiesByClass(ItemEntity.class, new Box(pos).expand(5, 2, 5), Entity::isAlive);
+        final var iter = items.iterator();
+
+        while (iter.hasNext()) {
+            var item = iter.next();
+            var stack = item.getStack();
+
+            try (var transaction = Transaction.openOuter()) {
+                long transferred = storage.insert(ItemVariant.of(stack), stack.getCount(), transaction);
+                if (transferred < 1) {
+                    iter.remove();
+                    continue;
+                }
+
+                if (transferred == stack.getCount()) {
+                    item.discard();
+                } else {
+                    item.setStack(stack.copyWithCount(stack.getCount() - (int) transferred));
+                }
+
+                transaction.commit();
+            }
+        }
+
+        if (!items.isEmpty()) {
+            AffinityNetwork.CHANNEL.serverHandle(world, pos).send(new BulkParticlesPacket(items, ParticleTypes.POOF, .25));
+        }
+    }
+
+    @Override
+    public void pedestalTickClient(ClientWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos).expand(5, 2, 5), Entity::isAlive)) {
+            ClientParticles.spawn(ParticleTypes.WITCH, world, item.getPos().add(0, .125, 0), .25);
+        }
     }
 
     @Override

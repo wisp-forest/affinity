@@ -6,7 +6,6 @@ import io.wispforest.affinity.compat.rei.display.AspenInfusionDisplay;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.compat.rei.ReiUIAdapter;
-import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.core.*;
 import me.shedaniel.math.Point;
