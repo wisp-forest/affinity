@@ -15,6 +15,6 @@ public class StaffPedestalBlockEntityRenderer implements BlockEntityRenderer<Sta
         final var stack = entity.getItem();
         if (stack.isEmpty()) return;
 
-        this.renderItem(matrices, vertexConsumers, stack, 6000, .75f, .5f, 1.15f, .5f, light, overlay);
+        this.renderItem(matrices, vertexConsumers, stack, 6000, .75f, .5f, 1.15f, .5f, 45f, light, overlay);
     }
 }

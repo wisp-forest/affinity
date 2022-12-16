@@ -4,10 +4,12 @@ import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -40,8 +42,8 @@ public abstract class StaffItem extends Item {
         return false;
     }
 
-    public void pedestalTickServer(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
-    public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
+    public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
+    public void pedestalTickClient(ClientWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {

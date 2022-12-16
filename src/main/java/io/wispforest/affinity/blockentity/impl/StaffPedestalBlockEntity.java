@@ -8,9 +8,11 @@ import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -22,6 +24,7 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
     private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
+    private int tickCounter = 0;
 
     public StaffPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.STAFF_PEDESTAL, pos, state);
@@ -41,18 +44,26 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
 
     @Override
     public void tickServer() {
+        this.tickCounter++;
+
         if (this.item.isEmpty() || !(this.item.getItem() instanceof StaffItem staff)) return;
-        staff.pedestalTickServer(this.world, this.pos, this);
+        staff.pedestalTickServer((ServerWorld) this.world, this.pos, this);
     }
 
     @Override
     public void tickClient() {
+        this.tickCounter++;
+
         if (this.item.isEmpty() || !(this.item.getItem() instanceof StaffItem staff)) return;
-        staff.pedestalTickClient(this.world, this.pos, this);
+        staff.pedestalTickClient((ClientWorld) this.world, this.pos, this);
     }
 
     public @NotNull ItemStack getItem() {
         return this.item;
+    }
+
+    public int tickCounter() {
+        return this.tickCounter;
     }
 
     @Override
