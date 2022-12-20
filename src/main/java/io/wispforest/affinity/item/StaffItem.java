@@ -1,6 +1,7 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import net.minecraft.client.item.TooltipContext;
@@ -25,6 +26,10 @@ public abstract class StaffItem extends Item {
         super(settings);
     }
 
+    // -------
+    // In Hand
+    // -------
+
     protected abstract TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks);
 
     protected abstract float getAethumConsumption(ItemStack stack);
@@ -37,12 +42,22 @@ public abstract class StaffItem extends Item {
         return null;
     }
 
+    // -----------
+    // On Pedestal
+    // -----------
+
     public boolean canBePlacedOnPedestal() {
         return false;
     }
 
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
+
+    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {}
+
+    // --------------
+    // Implementation
+    // --------------
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {

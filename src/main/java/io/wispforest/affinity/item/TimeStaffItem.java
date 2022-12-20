@@ -1,6 +1,7 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
@@ -19,6 +20,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class TimeStaffItem extends StaffItem implements DirectInteractionHandler {
 
@@ -41,6 +44,11 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     @Override
     public boolean canBePlacedOnPedestal() {
         return true;
+    }
+
+    @Override
+    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {
+        entries.add(new CrosshairStatProvider.Entry(this.getModeName(pedestal.getItem()), 8, 0));
     }
 
     @Override

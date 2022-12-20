@@ -10,7 +10,6 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.util.ImplementedInventory;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
@@ -24,6 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, ImplementedInventory, SidedInventory {
 
@@ -79,12 +80,21 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
         return this.tickCounter;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean hasFlux(long flux) {
         return this.fluxStorage.flux() >= flux;
     }
 
     public void consumeFlux(long flux) {
         this.updateFlux(this.flux() - flux);
+    }
+
+    @Override
+    public void appendTooltipEntries(List<Entry> entries) {
+        super.appendTooltipEntries(entries);
+
+        if (this.item.isEmpty() || !(this.item.getItem() instanceof StaffItem staff)) return;
+        staff.appendTooltipEntries(this.world, this.pos, this, entries);
     }
 
     @Override

@@ -26,9 +26,6 @@ public abstract class InGameHudMixin {
     private int scaledHeight;
 
     @Shadow
-    public abstract void clear();
-
-    @Shadow
     @Final
     private MinecraftClient client;
 
@@ -36,17 +33,15 @@ public abstract class InGameHudMixin {
             target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V",
             ordinal = 0))
     private void afterCrosshair(MatrixStack matrices, CallbackInfo ci) {
-        final var client = MinecraftClient.getInstance();
+        if (!(this.client.crosshairTarget instanceof BlockHitResult hit)) return;
 
-        if (!(client.crosshairTarget instanceof BlockHitResult hit)) return;
-
-        final var blockEntity = client.world.getBlockEntity(hit.getBlockPos());
+        final var blockEntity = this.client.world.getBlockEntity(hit.getBlockPos());
         if (!(blockEntity instanceof CrosshairStatProvider provider)) return;
 
         var entries = new ArrayList<CrosshairStatProvider.Entry>();
         provider.appendTooltipEntries(entries);
 
-        final int halfFontHeight = client.textRenderer.fontHeight / 2;
+        final int halfFontHeight = this.client.textRenderer.fontHeight / 2;
 
         RenderSystem.disableBlend();
         for (int i = 0; i < entries.size(); i++) {
@@ -55,7 +50,7 @@ public abstract class InGameHudMixin {
             RenderSystem.setShaderTexture(0, entry.texture());
 
             DrawableHelper.drawTexture(matrices, this.scaledWidth / 2 + 10, this.scaledHeight / 2 + i * 10 - halfFontHeight, entry.x(), entry.y(), 8, 8, 32, 32);
-            client.textRenderer.draw(matrices, entry.text(), this.scaledWidth / 2f + 10 + 15, this.scaledHeight / 2f + i * 10 - halfFontHeight, 0xFFFFFF);
+            this.client.textRenderer.draw(matrices, entry.text(), this.scaledWidth / 2f + 10 + 15, this.scaledHeight / 2f + i * 10 - halfFontHeight, 0xFFFFFF);
         }
 
         RenderSystem.enableBlend();
