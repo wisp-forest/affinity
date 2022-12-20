@@ -40,7 +40,7 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
     public StaffPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.STAFF_PEDESTAL, pos, state);
         this.fluxStorage.setFluxCapacity(16000);
-        this.fluxStorage.setMaxInsert(128);
+        this.fluxStorage.setMaxInsert(4000);
     }
 
     @Override

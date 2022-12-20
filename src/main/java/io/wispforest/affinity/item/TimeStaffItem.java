@@ -1,5 +1,7 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.nbt.NbtKey;
@@ -37,6 +39,29 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     }
 
     @Override
+    public boolean canBePlacedOnPedestal() {
+        return true;
+    }
+
+    @Override
+    public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        var mode = pedestal.getItem().get(MODE);
+        var costPerBlock = (long) (mode.aethumDrain * 100);
+
+        for (var targetPos : BlockPos.iterate(pos.add(-2, -1, -2), pos.add(2, 1, 2))) {
+            if (targetPos.equals(pos)) continue;
+
+            if (!pedestal.hasFlux(costPerBlock)) {
+                return;
+            }
+
+            if (accelerate(world, targetPos, mode.repeatTicks)) {
+                pedestal.consumeFlux(costPerBlock);
+            }
+        }
+    }
+
+    @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (user.isSneaking()) {
             var stack = user.getStackInHand(hand);
@@ -57,27 +82,40 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
             AffinityParticleSystems.TIME_STAFF_ACCELERATE.spawn(world, player.getPos().add(0, 1.25, 0), res.getBlockPos());
 
         var mode = stack.get(MODE);
-        for (int i = 0; i < mode.repeatTicks; i++) {
-            BlockState state = world.getBlockState(res.getBlockPos());
-            BlockEntity be = world.getBlockEntity(res.getBlockPos());
+        accelerate(world, res.getBlockPos(), mode.repeatTicks);
+
+        return TypedActionResult.consume(stack);
+    }
+
+    protected static boolean accelerate(World world, BlockPos pos, int ticks) {
+        boolean ticked = false;
+
+        for (int i = 0; i < ticks; i++) {
+            BlockState state = world.getBlockState(pos);
+            BlockEntity be = world.getBlockEntity(pos);
 
             if (be != null) {
                 var ticker = state.getBlockEntityTicker(world, (BlockEntityType<BlockEntity>) be.getType());
 
                 if (ticker != null) {
-                    ticker.tick(world, res.getBlockPos(), state, be);
+                    ticker.tick(world, pos, state, be);
+                    ticked = true;
                 }
             }
 
             if (state.hasRandomTicks()) {
                 int randomTickPeriod = 4096 / world.getGameRules().getInt(GameRules.RANDOM_TICK_SPEED);
 
+                ticked = true;
                 if (world.random.nextInt(randomTickPeriod) == 0) {
-                    state.randomTick((ServerWorld) world, res.getBlockPos(), world.random);
+                    state.randomTick((ServerWorld) world, pos, world.random);
                 }
             }
+
+            if (!ticked) return false;
         }
-        return TypedActionResult.consume(stack);
+
+        return ticked;
     }
 
     @Override
@@ -88,7 +126,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
 
     @Override
     public boolean shouldHandleInteraction(World world, BlockPos pos, BlockState state) {
-        return true;
+        return !state.isOf(AffinityBlocks.STAFF_PEDESTAL);
     }
 
     public enum Mode {
