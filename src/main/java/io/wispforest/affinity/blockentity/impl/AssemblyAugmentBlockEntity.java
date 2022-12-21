@@ -64,16 +64,16 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
         var currentRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world);
         var outputStack = this.outputInventory.getStack(0);
 
-        if (currentRecipe.isPresent() && ItemOps.canStack(outputStack, currentRecipe.get().getOutput())) {
-
-            this.activeTreetaps = 0;
+        this.activeTreetaps = 0;
+        if (currentRecipe.isPresent()) {
             for (var treetap : this.treetapCache) {
                 if (BLOCKED_TREETAPS.containsKey(treetap) && BLOCKED_TREETAPS.get(treetap) != this.pos) continue;
                 BLOCKED_TREETAPS.put(treetap, this.pos);
                 if (++this.activeTreetaps >= 5) break;
             }
+        }
 
-
+        if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipe.get().getOutput())) {
             if (this.craftingTick % 20 == 0) {
                 AffinityParticleSystems.AFFINE_CANDLE_BREWING.spawn(this.world, Vec3d.ofCenter(this.pos),
                         new AffinityParticleSystems.CandleData(this.treetapCache.stream().filter(blockPos -> BLOCKED_TREETAPS.get(blockPos) == this.pos).map(Vec3d::ofCenter).toList())
@@ -107,13 +107,25 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
             this.craftingTick = 0;
         }
 
-        if (this.world.getTime() % 20 != 0 || this.craftingTick != 0) return;
+        if (this.world.getTime() % 20 != 0) return;
 
         this.treetapCache.clear();
+        var occupiedLogs = new HashSet<BlockPos>();
+
         ((ServerWorld) this.world).getPointOfInterestStorage()
                 .getInCircle(type -> type.value() == AffinityPoiTypes.ARCANE_TREETAP, this.pos, 10, PointOfInterestStorage.OccupationStatus.ANY)
                 .map(PointOfInterest::getPos)
-                .filter(poi -> ArcaneTreetapBlock.isProperlyAttached(this.world, poi))
+                .filter(poi -> {
+                    if (!ArcaneTreetapBlock.isProperlyAttached(this.world, poi)) return false;
+                    var tree = ArcaneTreetapBlock.walkConnectedTree(world, poi);
+
+                    for (var block : tree) {
+                        if (occupiedLogs.add(block)) continue;
+                        return false;
+                    }
+
+                    return true;
+                })
                 .forEach(this.treetapCache::add);
     }
 

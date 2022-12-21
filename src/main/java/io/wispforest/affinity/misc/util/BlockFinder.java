@@ -63,6 +63,10 @@ public class BlockFinder {
             return map;
         }
 
+        public boolean isEmpty() {
+            return this.results.isEmpty();
+        }
+
         @NotNull
         @Override
         public Iterator<BlockPos> iterator() {
