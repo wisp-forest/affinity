@@ -1,9 +1,11 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
+import io.wispforest.affinity.block.template.ScrollInteractionReceiver;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.object.AffinityBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -22,11 +24,12 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class StaffPedestalBlock extends AethumNetworkMemberBlock {
+public class StaffPedestalBlock extends AethumNetworkMemberBlock implements ScrollInteractionReceiver {
 
     private static final VoxelShape SHAPE = Stream.of(
             Block.createCuboidShape(2, 9, 2, 4, 16, 4),
@@ -65,5 +68,14 @@ public class StaffPedestalBlock extends AethumNetworkMemberBlock {
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new StaffPedestalBlockEntity(pos, state);
+    }
+
+    @Override
+    public @NotNull ActionResult onScroll(World world, BlockState state, BlockPos pos, PlayerEntity player, boolean direction) {
+        if (world.getBlockEntity(pos) instanceof StaffPedestalBlockEntity pedestal && pedestal.getItem().getItem() instanceof StaffItem staff) {
+            return staff.onPedestalScrolled(world, pos, pedestal, direction);
+        } else {
+            return ActionResult.PASS;
+        }
     }
 }

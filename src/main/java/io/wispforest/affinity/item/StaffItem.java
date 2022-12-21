@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
@@ -54,6 +55,10 @@ public abstract class StaffItem extends Item {
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
 
     public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {}
+
+    public ActionResult onPedestalScrolled(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, boolean direction) {
+        return ActionResult.PASS;
+    }
 
     // --------------
     // Implementation

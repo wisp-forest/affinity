@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -49,6 +50,16 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     @Override
     public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {
         entries.add(new CrosshairStatProvider.Entry(this.getModeName(pedestal.getItem()), 8, 0));
+    }
+
+    @Override
+    public ActionResult onPedestalScrolled(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, boolean direction) {
+        if (!world.isClient) {
+            pedestal.getItem().mutate(MODE, mode -> mode.cycle(direction));
+            pedestal.markDirty();
+        }
+
+        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -153,7 +164,15 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
         }
 
         public Mode next() {
-            return Mode.values()[(this.ordinal() + 1) % Mode.values().length];
+            return this.cycle(true);
+        }
+
+        public Mode cycle(boolean direction) {
+            int idx = this.ordinal() + (direction ? 1 : -1);
+            if (idx < 0) idx += Mode.values().length;
+            if (idx > Mode.values().length - 1) idx -= Mode.values().length;
+
+            return Mode.values()[idx];
         }
 
         public static Mode byId(String id) {

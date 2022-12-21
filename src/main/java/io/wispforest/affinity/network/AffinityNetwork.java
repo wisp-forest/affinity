@@ -1,6 +1,7 @@
 package io.wispforest.affinity.network;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.block.template.ScrollInteractionReceiver;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.owo.network.OwoNetChannel;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Collection;
@@ -44,6 +46,19 @@ public class AffinityNetwork {
                 if (!(chunk.getBlockEntity(pos) instanceof AethumNetworkMemberBlockEntity member)) return;
                 member.readFluxUpdate(flux);
             });
+        });
+
+        CHANNEL.registerServerbound(ScrollInteractionReceiver.InteractionPacket.class, (message, access) -> {
+            var player = access.player();
+            var world = player.world;
+
+            if (!world.canPlayerModifyAt(player, message.pos())) return;
+
+            var state = world.getBlockState(message.pos());
+            if (!(state.getBlock() instanceof ScrollInteractionReceiver receiver)) return;
+
+            receiver.onScroll(world, state, message.pos(), player, message.direction());
+            player.swingHand(Hand.MAIN_HAND);
         });
 
         RitualSocleComposerScreenHandler.initNetwork();

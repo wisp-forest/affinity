@@ -67,6 +67,7 @@
     "client.ItemFrameEntityRendererMixin",
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
+    "client.MouseMixin",
     "client.RenderLayerMixin",
     "client.StyleMixin"
   ],
