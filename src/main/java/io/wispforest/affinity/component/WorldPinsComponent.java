@@ -22,11 +22,11 @@ import java.util.Map;
 public class WorldPinsComponent implements Component, ServerTickingComponent {
     public static final ChunkTicketType<BlockPos> TICKET_TYPE = ChunkTicketType.create("affinity:world_pin", Comparator.comparingLong(BlockPos::asLong));
 
-    private final World w;
+    private final World world;
     private final Map<BlockPos, Integer> pins = new HashMap<>();
 
-    public WorldPinsComponent(World w) {
-        this.w = w;
+    public WorldPinsComponent(World world) {
+        this.world = world;
     }
 
     public static boolean shouldTick(ChunkTicketManager manager, ChunkPos pos) {
@@ -44,28 +44,28 @@ public class WorldPinsComponent implements Component, ServerTickingComponent {
     }
 
     public void addPin(BlockPos pin, int radius) {
-        pins.put(pin, radius);
+        this.pins.put(pin, radius);
 
-        addPinTickets(pin, radius);
+        this.addPinTickets(pin, radius);
     }
 
     public void removePin(BlockPos pin, int radius) {
         if (pins.remove(pin) != null) {
             ChunkPos.stream(new ChunkPos(pin), radius).forEach(chunkPos -> {
-                ((ServerWorld) w).getChunkManager().removeTicket(TICKET_TYPE, chunkPos, 2, pin);
+                ((ServerWorld) this.world).getChunkManager().removeTicket(TICKET_TYPE, chunkPos, 2, pin);
             });
         }
     }
 
     private void addPinTickets(BlockPos pin, int radius) {
         ChunkPos.stream(new ChunkPos(pin), radius).forEach(chunkPos -> {
-            ((ServerWorld) w).getChunkManager().addTicket(TICKET_TYPE, chunkPos, 2, pin);
+            ((ServerWorld) this.world).getChunkManager().addTicket(TICKET_TYPE, chunkPos, 2, pin);
         });
     }
 
     public void addAllPins() {
         for (Map.Entry<BlockPos, Integer> pinEntry : pins.entrySet()) {
-            addPinTickets(pinEntry.getKey(), pinEntry.getValue());
+            this.addPinTickets(pinEntry.getKey(), pinEntry.getValue());
         }
     }
 
@@ -100,7 +100,8 @@ public class WorldPinsComponent implements Component, ServerTickingComponent {
 
     @Override
     public void serverTick() {
-        if (!pins.isEmpty())
-            ((ServerWorld) w).resetIdleTimeout();
+        if (!pins.isEmpty()) {
+            ((ServerWorld) world).resetIdleTimeout();
+        }
     }
 }

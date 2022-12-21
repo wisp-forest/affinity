@@ -15,14 +15,39 @@ import java.util.function.Supplier;
 
 public class InteractionUtil {
 
-    public static ActionResult handleSingleItemContainer(World world, BlockPos pos, PlayerEntity player, Hand hand,
-                                                         Supplier<ItemStack> itemProvider, Consumer<ItemStack> itemManipulator, Runnable changeHandler) {
-        return handleSingleItemContainer(world, pos, player, hand, stack -> true, InvalidBehaviour.DROP, itemProvider, itemManipulator, changeHandler);
+    public static ActionResult handleSingleItemContainer(
+            World world,
+            BlockPos pos,
+            PlayerEntity player,
+            Hand hand,
+            Supplier<ItemStack> itemProvider,
+            Consumer<ItemStack> itemManipulator,
+            Runnable changeHandler
+    ) {
+        return handleSingleItemContainer(
+                world,
+                pos,
+                player,
+                hand,
+                stack -> true,
+                InvalidBehaviour.DROP,
+                itemProvider,
+                itemManipulator,
+                changeHandler
+        );
     }
 
-    public static ActionResult handleSingleItemContainer(World world, BlockPos pos, PlayerEntity player, Hand hand, Predicate<ItemStack> validator,
-                                                         InvalidBehaviour invalidBehaviour, Supplier<ItemStack> itemProvider,
-                                                         Consumer<ItemStack> itemManipulator, Runnable changeHandler) {
+    public static ActionResult handleSingleItemContainer(
+            World world,
+            BlockPos pos,
+            PlayerEntity player,
+            Hand hand,
+            Predicate<ItemStack> validator,
+            InvalidBehaviour invalidBehaviour,
+            Supplier<ItemStack> itemProvider,
+            Consumer<ItemStack> itemManipulator,
+            Runnable changeHandler
+    ) {
         var playerStack = player.getStackInHand(hand);
         var item = itemProvider.get();
 
@@ -49,11 +74,10 @@ public class InteractionUtil {
                     playerStack.increment(1);
                 } else {
                     switch (invalidBehaviour) {
-                        case DROP:
-                            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item);
-                            break;
-                        case DO_NOTHING:
+                        case DROP -> ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item);
+                        case DO_NOTHING -> {
                             return ActionResult.PASS;
+                        }
                     }
                 }
 

@@ -30,8 +30,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity {

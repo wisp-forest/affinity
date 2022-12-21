@@ -41,7 +41,7 @@ public class NimbleStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-       moveEntities(world, pos, pedestal);
+        moveEntities(world, pos, pedestal);
     }
 
     protected static void moveEntities(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
