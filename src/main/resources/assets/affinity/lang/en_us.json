@@ -70,8 +70,8 @@
   "item.affinity.emerald_wand_of_iridescence": "Emerald Wand of Iridescence",
   "item.affinity.sapphire_wand_of_iridescence": "Sapphire Wand of Iridescence",
   "item.affinity.wand_of_iridescence.mode_suffix": [
-    { "text": " [", "color": "dark_gray" },
-    { "index": 0 },
+    {"text": " [", "color": "dark_gray"},
+    {"index": 0},
     "]"
   ],
   "item.affinity.wand_of_iridescence.help": {
@@ -95,14 +95,34 @@
   "item.affinity.time_staff.mode.fast": "Fast (x%s)",
   "item.affinity.time_staff.mode.ludicrous": "Ludicrous (x%s)",
   "item.affinity.time_staff.tooltip": [
-    { "text": "☄ ", "color": "#c624ed" },
-    { "index": 0, "color": "gray" }
+    {"text": "☄ ", "color": "#c624ed"},
+    {"index": 0, "color": "gray"}
   ],
 
   "item.affinity.wand_of_inquiry": "Wand of Inquiry",
   "item.affinity.geological_resonator": "Geological Resonator",
   "item.affinity.collection_staff": "Collection Staff",
   "item.affinity.nimble_staff": "Nimble Staff",
+  "item.affinity.nimble_staff.direction.north": [
+    "",
+    {"text": "↑ ", "color": "#FEF5AC"},
+    "North"
+  ],
+  "item.affinity.nimble_staff.direction.south": [
+    "",
+    {"text": "↓ ", "color": "#FEF5AC"},
+    "South"
+  ],
+  "item.affinity.nimble_staff.direction.east": [
+    "",
+    {"text": "→ ", "color": "#FEF5AC"},
+    "East"
+  ],
+  "item.affinity.nimble_staff.direction.west": [
+    "",
+    {"text": "← ", "color": "#FEF5AC"},
+    "West"
+  ],
   "item.affinity.aethum_flux_bottle": "Bottle of Aethum Flux",
   "item.affinity.resplendent_gem": "Resplendent Gem",
   "item.affinity.echo_shard": "Echo Shard",
@@ -110,8 +130,8 @@
   "item.affinity.dragon_drop": "Dragon Drop",
 
   "item.affinity.staff.mode_template": [
-    { "text": " [", "color": "dark_gray" },
-    { "index": 0, "color": "gray" },
+    {"text": " [", "color": "dark_gray"},
+    {"index": 0, "color": "gray"},
     "]"
   ],
   "item.affinity.staff.tooltip.consumption_per_use": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per use", "color": "gray"}],
@@ -142,23 +162,23 @@
   "enchantment.affinity.ender_scourge": "Ender Scourge",
   "enchantment.affinity.ender_scourge.desc": "Increased damage to creatures from the End",
   "text.affinity.absolute_enchantment_prefix": [
-    { "text": "Absolute", "color": "#541690" },
-    { "text": " | ", "color": "gray" }
+    {"text": "Absolute", "color": "#541690"},
+    {"text": " | ", "color": "gray"}
   ],
   "enchantment.affinity.berserker": "Berserker",
   "enchantment.affinity.berserker.desc": [
-    { "translate": "text.affinity.absolute_enchantment_prefix" },
-    { "text": "Increased maximum health and higher attack damage the lower your health" }
+    {"translate": "text.affinity.absolute_enchantment_prefix"},
+    {"text": "Increased maximum health and higher attack damage the lower your health"}
   ],
   "enchantment.affinity.gravecaller": "Gravecaller",
   "enchantment.affinity.gravecaller.desc": [
-    { "translate": "text.affinity.absolute_enchantment_prefix" },
-    { "text": "Your armor conjures undead minions and subdues other undead in range" }
+    {"translate": "text.affinity.absolute_enchantment_prefix"},
+    {"text": "Your armor conjures undead minions and subdues other undead in range"}
   ],
   "enchantment.affinity.bastion": "Bastion",
   "enchantment.affinity.bastion.desc": [
-    { "translate": "text.affinity.absolute_enchantment_prefix" },
-    { "text": "Extreme, health-based regeneration at the cost of halving your damage output" }
+    {"translate": "text.affinity.absolute_enchantment_prefix"},
+    {"text": "Extreme, health-based regeneration at the cost of halving your damage output"}
   ],
   "enchantment.affinity.wounding": "Wounding",
   "enchantment.affinity.wounding.desc": "Increased critical hit damage",
@@ -193,10 +213,10 @@
   "gui.affinity.augmented_crafting_table.title": "Augmented Crafting Table",
   "gui.affinity.augmented_crafting_table.treetap_count": [
     {"text": "Treetaps: ", "color": "dark_gray"},
-    { "index": 0 },
-    { "text": " (", "color": "gray" },
-    { "index": 1, "color": "gray" },
-    { "text": ")", "color": "gray" }
+    {"index": 0},
+    {"text": " (", "color": "gray"},
+    {"index": 1, "color": "gray"},
+    {"text": ")", "color": "gray"}
   ],
 
   "effect.affinity.dripping": "Dripping",

@@ -1,18 +1,97 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
+import io.wispforest.owo.nbt.NbtKey;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class NimbleStaffItem extends StaffItem {
+
+    public static final NbtKey<Direction> DIRECTION = new NbtKey<>("Direction", NbtKey.Type.STRING.then(Direction::byName, Direction::asString));
 
     public NimbleStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+    }
+
+    @Override
+    public boolean canBePlacedOnPedestal() {
+        return true;
+    }
+
+    @Override
+    public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        moveEntities(world, pos, pedestal);
+    }
+
+    @Override
+    public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+       moveEntities(world, pos, pedestal);
+    }
+
+    protected static void moveEntities(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        final var direction = getDirection(pedestal.getItem());
+
+        var pushDelta = Vec3d.of(direction.getVector()).multiply(.2);
+        var stuckPosition = Vec3d.ofCenter(pos.offset(direction.getOpposite()));
+        var unstuckDelta = pushDelta.rotateY(45);
+
+        for (var entity : world.getNonSpectatingEntities(Entity.class, new Box(pos).expand(4, 2, 4))) {
+            if (entity.isSneaking()) continue;
+
+            if (entity.getPos().isInRange(stuckPosition, 1.5)) {
+                entity.addVelocity(unstuckDelta);
+            } else {
+                entity.addVelocity(pushDelta);
+            }
+        }
+    }
+
+    @Override
+    public ActionResult onPedestalScrolled(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, boolean direction) {
+        if (!world.isClient) {
+            var storedDirection = getDirection(pedestal.getItem());
+            if (storedDirection.getAxis() == Direction.Axis.Y) {
+                storedDirection = Direction.NORTH;
+            } else {
+                storedDirection = direction
+                        ? storedDirection.rotateYClockwise()
+                        : storedDirection.rotateYCounterclockwise();
+            }
+
+            pedestal.getItem().put(DIRECTION, storedDirection);
+            pedestal.markDirty();
+        }
+
+        return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {
+        var direction = getDirection(pedestal.getItem());
+        entries.add(new CrosshairStatProvider.Entry(
+                Text.translatable(this.getTranslationKey() + ".direction." + direction.asString()),
+                24, 24
+        ));
+    }
+
+    protected static Direction getDirection(ItemStack stack) {
+        return stack.getOr(DIRECTION, Direction.NORTH);
     }
 
     @Override
