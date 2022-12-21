@@ -5,21 +5,21 @@ import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.mixin.access.CraftingInventoryAccessor;
 import io.wispforest.affinity.mixin.access.CraftingScreenHandlerAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.owo.client.screens.SyncedProperty;
 import io.wispforest.owo.client.screens.ValidatingSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.CraftingScreenHandler;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandlerContext;
 import org.jetbrains.annotations.Nullable;
 
 public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
 
     private final @Nullable AssemblyAugmentBlockEntity augment;
-    private final PropertyDelegate properties;
+    private final SyncedProperty<Integer> displayTreetaps;
+    private final SyncedProperty<Float> craftingProgress;
 
     public static AssemblyAugmentScreenHandler client(int syncId, PlayerInventory inventory) {
         MixinHooks.INJECT_ASSEMBLY_AUGMENT_SCREEN = true;
@@ -35,26 +35,8 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
         super(syncId, inventory, augment == null ? ScreenHandlerContext.EMPTY : ScreenHandlerContext.create(augment.getWorld(), augment.getPos()));
         this.augment = augment;
 
-        this.addProperties(this.properties = augment == null ? new ArrayPropertyDelegate(4) : new PropertyDelegate() {
-            @Override
-            public int get(int index) {
-                return switch (index) {
-                    case 0 -> augment.potentialTreetaps();
-                    case 1 -> augment.activeTreetaps();
-                    case 2 -> augment.craftingTick();
-                    case 3 -> augment.craftingDuration();
-                    default -> 0;
-                };
-            }
-
-            @Override
-            public void set(int index, int value) {}
-
-            @Override
-            public int size() {
-                return 4;
-            }
-        });
+        this.displayTreetaps = this.createProperty(int.class, 0);
+        this.craftingProgress = this.createProperty(float.class, 0f);
 
         this.addSlot(new ValidatingSlot(this.augment != null ? this.augment.outputInventory() : new SimpleInventory(1), 0, this.getSlot(0).x, this.getSlot(0).y, stack -> false));
 
@@ -76,16 +58,22 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
         if (this.augment != null) this.augment.markDirty();
     }
 
-    public int treetapCount() {
-        return this.properties.get(1);
+    @Override
+    public void sendContentUpdates() {
+        if (this.augment != null) {
+            this.craftingProgress.set(this.augment.craftingTick() / (float) this.augment.craftingDuration());
+            this.displayTreetaps.set(this.augment.displayTreetaps());
+        }
+
+        super.sendContentUpdates();
     }
 
-    public int potentialTreetaps() {
-        return this.properties.get(0);
+    public int treetapCount() {
+        return this.displayTreetaps.get();
     }
 
     public float craftingProgress() {
-        return this.properties.get(2) / (float) this.properties.get(3);
+        return this.craftingProgress.get();
     }
 
     @Override

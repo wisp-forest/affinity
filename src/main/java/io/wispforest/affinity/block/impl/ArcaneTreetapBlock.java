@@ -22,7 +22,6 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -112,21 +111,7 @@ public class ArcaneTreetapBlock extends HorizontalFacingBlock {
     }
 
     public static Set<BlockPos> walkConnectedTree(World world, BlockPos pos) {
-        final var results = BlockFinder.findCapped(world, pos.offset(world.getBlockState(pos).get(FACING)), (blockPos, state) -> {
-            if (state.isIn(BlockTags.LEAVES)) {
-                return !state.get(LeavesBlock.PERSISTENT);
-            }
-
-            return state.isIn(BlockTags.LOGS);
-        }, 128);
-
-        var logs = new HashSet<BlockPos>();
-        results.results().forEach((blockPos, state) -> {
-            if (!state.isIn(BlockTags.LOGS)) return;
-            logs.add(blockPos);
-        });
-
-        return logs;
+        return BlockFinder.findCapped(world, pos.offset(world.getBlockState(pos).get(FACING)), (blockPos, state) -> state.isIn(BlockTags.LOGS), 128).results().keySet();
     }
 
     public static boolean isProperlyAttached(World world, BlockPos pos) {

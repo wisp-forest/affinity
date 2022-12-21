@@ -13,10 +13,12 @@
                             <positioning type="relative">50,3</positioning>
                         </label>
 
-                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="4" region-height="33" u="176" v="46" id="treetap-overlay">
+                        <affinity.alpha-wrapper id="progress-alpha">
+                            <texture texture="affinity:textures/gui/assembly_augment.png" region-width="4" region-height="33" u="176" v="46"
+                                     id="treetap-overlay">
+                            </texture>
                             <positioning type="absolute">157,27</positioning>
-                        </texture>
-
+                        </affinity.alpha-wrapper>
 
                         <texture texture="affinity:textures/gui/assembly_augment.png" region-width="30" region-height="30" u="176" id="crafting-overlay">
                             <positioning type="absolute">117,28</positioning>
@@ -26,12 +28,14 @@
                             </visible-area>
                         </texture>
 
-                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="22" region-height="16" u="176" v="30" id="progress-indicator">
+                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="22" region-height="16" u="176" v="30"
+                                 id="progress-indicator">
                             <positioning type="absolute">90,34</positioning>
                             <visible-area>
                                 <width>0</width>
                             </visible-area>
                         </texture>
+
                     </children>
                 </flow-layout>
             </children>

@@ -67,7 +67,9 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
         this.activeTreetaps = 0;
         if (currentRecipe.isPresent()) {
             for (var treetap : this.treetapCache) {
-                if (BLOCKED_TREETAPS.containsKey(treetap) && BLOCKED_TREETAPS.get(treetap) != this.pos) continue;
+                if (BLOCKED_TREETAPS.containsKey(treetap) && BLOCKED_TREETAPS.get(treetap) != this.pos) {
+                    continue;
+                }
                 BLOCKED_TREETAPS.put(treetap, this.pos);
                 if (++this.activeTreetaps >= 5) break;
             }
@@ -117,14 +119,9 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                 .map(PointOfInterest::getPos)
                 .filter(poi -> {
                     if (!ArcaneTreetapBlock.isProperlyAttached(this.world, poi)) return false;
+
                     var tree = ArcaneTreetapBlock.walkConnectedTree(world, poi);
-
-                    for (var block : tree) {
-                        if (occupiedLogs.add(block)) continue;
-                        return false;
-                    }
-
-                    return true;
+                    return tree.stream().allMatch(occupiedLogs::add);
                 })
                 .forEach(this.treetapCache::add);
     }
@@ -173,12 +170,10 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
         this.world.markDirty(this.pos);
     }
 
-    public int potentialTreetaps() {
-        return this.treetapCache.size();
-    }
-
-    public int activeTreetaps() {
-        return this.activeTreetaps;
+    public int displayTreetaps() {
+        return (int) this.treetapCache.stream()
+                .filter(blockPos -> !BLOCKED_TREETAPS.containsKey(blockPos) || BLOCKED_TREETAPS.get(blockPos) == this.pos)
+                .count();
     }
 
     public SimpleInventory craftingInput() {
