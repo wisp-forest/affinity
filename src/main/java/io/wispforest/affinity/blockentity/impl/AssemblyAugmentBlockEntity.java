@@ -194,7 +194,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
 
     static {
         ItemStorage.SIDED.registerFallback((tableWorld, tablePos, state, blockEntity, context) -> {
-            if (tableWorld.getBlockState(tablePos).isOf(Blocks.CRAFTING_TABLE) && tableWorld.getBlockEntity(tablePos.up()) instanceof AssemblyAugmentBlockEntity augment) {
+            if (state.isOf(Blocks.CRAFTING_TABLE) && tableWorld.getBlockEntity(tablePos.up()) instanceof AssemblyAugmentBlockEntity augment) {
                 return InventoryStorage.of(augment, Direction.DOWN);
             } else {
                 return null;

@@ -10,15 +10,19 @@ import net.minecraft.util.math.RotationAxis;
 public interface RotatingItemRenderer {
 
     default void renderItem(MatrixStack matrices, VertexConsumerProvider consumers, ItemStack stack, double speedDivisor, float scale, float x, float y, float z, int light, int overlay) {
-        this.renderItem(matrices, consumers, stack, speedDivisor, scale, x, y, z, 0, light, overlay);
+        this.renderItem(matrices, consumers, stack, speedDivisor, scale, x, y, z, 0, 0, light, overlay);
     }
 
-    default void renderItem(MatrixStack matrices, VertexConsumerProvider consumers, ItemStack stack, double speedDivisor, float scale, float x, float y, float z, float zRotation, int light, int overlay) {
+    default void renderItem(MatrixStack matrices, VertexConsumerProvider consumers, ItemStack stack, double speedDivisor, float scale, float x, float y, float z, float zRotation, float bobMultiplier, int light, int overlay) {
         matrices.push();
 
         final var client = MinecraftClient.getInstance();
         final var depthModel = client.getItemRenderer().getModel(stack, client.world, null, 0).hasDepth();
         if (depthModel) scale = scale * 1.2f;
+
+        if (bobMultiplier != 0) {
+            matrices.translate(0, Math.sin(System.currentTimeMillis() / speedDivisor) * bobMultiplier, 0);
+        }
 
         matrices.translate(x, depthModel ? y - .05 : y, z);
         matrices.scale(scale, scale, scale);

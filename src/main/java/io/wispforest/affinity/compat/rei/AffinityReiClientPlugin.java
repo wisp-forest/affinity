@@ -36,12 +36,12 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         registry.add(new ContainingPotionsCategory());
         registry.add(new AspenInfusionCategory());
 
-        registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(AffinityBlocks.BREWING_CAULDRON));
         registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(Blocks.SPORE_BLOSSOM));
+        registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(AffinityBlocks.BREWING_CAULDRON));
 
         registry.addWorkstations(AffinityReiCommonPlugin.ASPEN_INFUSION, EntryStacks.of(AffinityBlocks.ASP_RITE_CORE));
 
-        registry.addWorkstations(AffinityReiCommonPlugin.ASSEMBLY, EntryStacks.of(Blocks.CRAFTING_TABLE), EntryStacks.of(AffinityBlocks.ASSEMBLY_AUGMENT));
+        registry.addWorkstations(AffinityReiCommonPlugin.ASSEMBLY, EntryStacks.of(AffinityBlocks.ASSEMBLY_AUGMENT), EntryStacks.of(Blocks.CRAFTING_TABLE));
     }
 
     @Override
