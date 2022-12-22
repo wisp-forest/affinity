@@ -237,6 +237,15 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         return parent.flux() + parent.childCache.stream().mapToLong(AethumNetworkMemberBlockEntity::flux).sum();
     }
 
+    @Override
+    public long displayFluxCapacity() {
+        if (this.parentRef == null) return super.displayFluxCapacity();
+        final var parent = parentRef.entity;
+
+        if (parent.childCache == null || parent.childCache.isEmpty()) return super.displayFluxCapacity();
+        return parent.fluxCapacity() + parent.childCache.stream().mapToLong(AethumNetworkMemberBlockEntity::fluxCapacity).sum();
+    }
+
     @Environment(EnvType.CLIENT)
     public void readChildren(List<BlockPos> children) {
         if (this.childCache == null) this.childCache = new ArrayList<>();

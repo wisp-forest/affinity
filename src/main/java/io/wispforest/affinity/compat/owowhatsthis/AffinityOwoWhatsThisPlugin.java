@@ -1,6 +1,7 @@
 package io.wispforest.affinity.compat.owowhatsthis;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owowhatsthis.NumberFormatter;
 import io.wispforest.owowhatsthis.OwoWhatsThis;
@@ -34,7 +35,9 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
                 var member = Affinity.AETHUM_MEMBER.find(world, target.pos(), null);
                 if (member == null) return null;
 
-                return new AethumStorageData(member.flux(), member.fluxCapacity());
+                return member instanceof AethumNetworkMemberBlockEntity be
+                        ? new AethumStorageData(be.displayFlux(), be.displayFluxCapacity())
+                        : new AethumStorageData(member.flux(), member.fluxCapacity());
             }
     );
 

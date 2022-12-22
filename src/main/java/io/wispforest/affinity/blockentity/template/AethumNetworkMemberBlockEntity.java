@@ -137,6 +137,11 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
         if (this.fluxStorage.setFlux(flux)) this.sendFluxUpdate();
     }
 
+    /**
+     * @return The amount of flux to display
+     * when looking at this member. Potentially different
+     * from the true stored amount
+     */
     public long displayFlux() {
         return this.flux();
     }
@@ -144,6 +149,15 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     @Override
     public long flux() {
         return this.fluxStorage.flux();
+    }
+
+    /**
+     * @return The flux capacity to display
+     * when looking at this member. Potentially different
+     * from the true capacity
+     */
+    public long displayFluxCapacity() {
+        return this.fluxCapacity();
     }
 
     @Override
