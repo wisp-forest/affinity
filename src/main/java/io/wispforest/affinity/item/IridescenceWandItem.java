@@ -16,7 +16,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -134,8 +133,8 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     }
 
     private BlockPos getStoredPos(ItemStack stack) {
-        return stack.getOrCreateNbt().contains("LinkData", NbtElement.COMPOUND_TYPE) ?
-                BlockPos.fromLong(stack.getOrCreateNbt().getCompound("LinkData").getLong("Position"))
+        return stack.has(LINK_DATA) ?
+                BlockPos.fromLong(stack.get(LINK_DATA).getLong("Position"))
                 : null;
     }
 
