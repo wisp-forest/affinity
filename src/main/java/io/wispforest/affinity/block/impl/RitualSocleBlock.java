@@ -45,7 +45,7 @@ public class RitualSocleBlock extends BlockWithEntity {
     }
 
     public RitualSocleType type() {
-        return type;
+        return this.type;
     }
 
     @Override

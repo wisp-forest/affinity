@@ -74,7 +74,7 @@ public class RealizedAethumMapItem extends FilledMapItem {
 
     public static int makeCenter(int coordinate) {
         int sideLength = 128;
-        int magic = MathHelper.floor((coordinate + 64.0) / sideLength);
+        int magic = MathHelper.floor((coordinate + 64d) / sideLength);
         return magic * sideLength + sideLength / 2 - 64;
     }
 

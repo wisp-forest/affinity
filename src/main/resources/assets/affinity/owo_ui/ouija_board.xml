@@ -1,0 +1,36 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.19.3/owo-ui.xsd">
+
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <flow-layout direction="vertical">
+                    <children>
+                        <texture texture="affinity:textures/gui/ouija_board.png" region-width="176" region-height="166"/>
+
+                        <button id="curse-button">
+                            <text>curse!</text>
+                            <positioning type="absolute">60,14</positioning>
+                            <sizing>
+                                <horizontal method="fixed">108</horizontal>
+                                <vertical method="fixed">19</vertical>
+                            </sizing>
+                            
+                            <renderer>
+                                <texture texture="affinity:textures/gui/ouija_board.png" u="0" v="166" texture-width="256" texture-height="256"/>
+                            </renderer>
+                        </button>
+                    </children>
+                </flow-layout>
+            </children>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+
+</owo-ui>

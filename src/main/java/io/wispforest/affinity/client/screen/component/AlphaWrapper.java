@@ -6,8 +6,6 @@ import io.wispforest.owo.ui.core.Component;
 import io.wispforest.owo.ui.core.Sizing;
 import net.minecraft.client.util.math.MatrixStack;
 
-import java.util.List;
-
 public class AlphaWrapper<C extends Component> extends WrappingParentComponent<C> {
 
     protected float alpha = 1f;
@@ -20,15 +18,15 @@ public class AlphaWrapper<C extends Component> extends WrappingParentComponent<C
     public void draw(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta) {
         super.draw(matrices, mouseX, mouseY, partialTicks, delta);
 
-        var color = new float[4];
-        System.arraycopy(RenderSystem.getShaderColor(), 0, color, 0, 4);
-
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        RenderSystem.setShaderColor(color[0], color[1], color[2], alpha * color[3]);
-        this.drawChildren(matrices, mouseX, mouseY, partialTicks, delta, List.of(this.child));
-        RenderSystem.setShaderColor(color[0], color[1], color[2], color[3]);
+        var color = RenderSystem.getShaderColor();
+        var previousAlpha = color[3];
+
+        color[3] = alpha * color[3];
+        this.drawChildren(matrices, mouseX, mouseY, partialTicks, delta, this.childView);
+        color[3] = previousAlpha;
 
         RenderSystem.disableBlend();
     }

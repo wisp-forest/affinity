@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.client.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
@@ -27,6 +28,8 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
         parentedItem(generator, AZALEA_PLANKS, AZALEA_FENCE_GATE, AZALEA_PRESSURE_PLATE);
 
         parentedItem(generator, ARCANE_TREETAP);
+
+        generator.registerParented(Blocks.ENCHANTING_TABLE, OUIJA_BOARD);
 
         var variantMap = BlockStateVariantMap.create(Properties.AGE_2)
                 .register(integer -> {
