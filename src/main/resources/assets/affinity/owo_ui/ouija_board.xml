@@ -8,18 +8,21 @@
                     <children>
                         <texture texture="affinity:textures/gui/ouija_board.png" region-width="176" region-height="166"/>
 
-                        <button id="curse-button">
-                            <text>curse!</text>
-                            <positioning type="absolute">60,14</positioning>
-                            <sizing>
-                                <horizontal method="fixed">108</horizontal>
-                                <vertical method="fixed">19</vertical>
-                            </sizing>
-                            
-                            <renderer>
-                                <texture texture="affinity:textures/gui/ouija_board.png" u="0" v="166" texture-width="256" texture-height="256"/>
-                            </renderer>
-                        </button>
+                        <template name="curse-button">
+                            <position>60,14</position>
+                            <index>1</index>
+                            <u>0</u>
+                        </template>
+                        <template name="curse-button">
+                            <position>60,33</position>
+                            <index>2</index>
+                            <u>16</u>
+                        </template>
+                        <template name="curse-button">
+                            <position>60,52</position>
+                            <index>3</index>
+                            <u>32</u>
+                        </template>
                     </children>
                 </flow-layout>
             </children>
@@ -32,5 +35,51 @@
             </surface>
         </flow-layout>
     </components>
+
+    <templates>
+        <curse-button>
+            <flow-layout direction="vertical">
+                <children>
+                    <label id="curse-label-{{index}}">
+                        <text>curse</text>
+                        <color>#675d49</color>
+                        <positioning type="absolute">20,2</positioning>
+                    </label>
+
+                    <label>
+                        <text>5</text>
+                        <shadow>true</shadow>
+
+                        <color>#80ff20</color>
+                        <positioning type="relative">100,100</positioning>
+
+                        <margins>
+                            <bottom>1</bottom>
+                            <right>2</right>
+                        </margins>
+                    </label>
+
+                    <texture texture="affinity:textures/gui/ouija_board.png" u="{{u}}" v="223" region-width="16" region-height="16">
+                        <positioning type="absolute">1,1</positioning>
+                    </texture>
+
+                    <button id="curse-button-{{index}}">
+                        <z-index>-1</z-index>
+                        <sizing>
+                            <horizontal method="fixed">108</horizontal>
+                            <vertical method="fixed">19</vertical>
+                        </sizing>
+
+                        <renderer>
+                            <texture texture="affinity:textures/gui/ouija_board.png" u="0" v="166" texture-width="256" texture-height="256"/>
+                        </renderer>
+                    </button>
+                </children>
+
+                <z-index>1</z-index>
+                <positioning type="absolute">{{position}}</positioning>
+            </flow-layout>
+        </curse-button>
+    </templates>
 
 </owo-ui>
