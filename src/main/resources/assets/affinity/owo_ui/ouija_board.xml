@@ -6,22 +6,19 @@
             <children>
                 <flow-layout direction="vertical">
                     <children>
-                        <texture texture="affinity:textures/gui/ouija_board.png" region-width="176" region-height="166"/>
+                        <texture texture="affinity:textures/gui/ouija_board.png" region-width="176" region-height="168"/>
 
                         <template name="curse-button">
-                            <position>60,14</position>
+                            <position>60,16</position>
                             <index>1</index>
-                            <u>0</u>
                         </template>
                         <template name="curse-button">
-                            <position>60,33</position>
+                            <position>60,35</position>
                             <index>2</index>
-                            <u>16</u>
                         </template>
                         <template name="curse-button">
-                            <position>60,52</position>
+                            <position>60,54</position>
                             <index>3</index>
-                            <u>32</u>
                         </template>
                     </children>
                 </flow-layout>
@@ -40,17 +37,18 @@
         <curse-button>
             <flow-layout direction="vertical">
                 <children>
-                    <label id="curse-label-{{index}}">
-                        <text>curse</text>
-                        <color>#675d49</color>
+                    <affinity.trimmed-label id="curse-label-{{index}}">
                         <positioning type="absolute">20,2</positioning>
-                    </label>
 
-                    <label>
-                        <text>5</text>
+                        <sizing>
+                            <horizontal method="fixed">70</horizontal>
+                            <vertical method="fixed">11</vertical>
+                        </sizing>
+                    </affinity.trimmed-label>
+
+                    <label id="cost-label-{{index}}">
                         <shadow>true</shadow>
 
-                        <color>#80ff20</color>
                         <positioning type="relative">100,100</positioning>
 
                         <margins>
@@ -59,7 +57,7 @@
                         </margins>
                     </label>
 
-                    <texture texture="affinity:textures/gui/ouija_board.png" u="{{u}}" v="223" region-width="16" region-height="16">
+                    <texture texture="affinity:textures/gui/ouija_board.png" u="0" v="225" region-width="16" region-height="16">
                         <positioning type="absolute">1,1</positioning>
                     </texture>
 
@@ -71,7 +69,7 @@
                         </sizing>
 
                         <renderer>
-                            <texture texture="affinity:textures/gui/ouija_board.png" u="0" v="166" texture-width="256" texture-height="256"/>
+                            <texture texture="affinity:textures/gui/ouija_board.png" u="0" v="168" texture-width="256" texture-height="256"/>
                         </renderer>
                     </button>
                 </children>

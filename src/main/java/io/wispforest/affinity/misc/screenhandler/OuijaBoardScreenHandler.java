@@ -6,11 +6,11 @@ import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
 import io.wispforest.owo.client.screens.ScreenUtils;
 import io.wispforest.owo.client.screens.SlotGenerator;
 import io.wispforest.owo.client.screens.SyncedProperty;
-import io.wispforest.owo.client.screens.ValidatingSlot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -18,8 +18,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.util.Util;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.random.Random;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class OuijaBoardScreenHandler extends ScreenHandler {
 
@@ -37,18 +40,14 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
         super(AffinityScreenHandlerTypes.OUIJA_BOARD, syncId);
         this.context = context;
 
-        this.addSlot(new ValidatingSlot(this.inventory, 0, 23, 34, ItemStack::isEnchantable));
-        SlotGenerator.begin(this::addSlot, 8, 84).playerInventory(playerInventory);
+        this.addSlot(new Slot(this.inventory, 0, 23, 36));
+        SlotGenerator.begin(this::addSlot, 8, 86).playerInventory(playerInventory);
 
         this.addServerboundMessage(CurseMessage.class, this::executeCurse);
 
         this.seed = this.createProperty(int.class, -1);
-        this.seed.observe(integer -> {
-            this.updateCurses();
-
-            if (this.context != ScreenHandlerContext.EMPTY) return;
-            this.updateScreen();
-        });
+        this.seed.observe(integer -> this.updateCurses());
+        this.inventory.addListener(sender -> this.updateCurses());
 
         this.seed.set(playerInventory.player.getEnchantmentTableSeed());
     }
@@ -56,25 +55,56 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
     public void executeCurse(CurseMessage message) {
         if (this.context != ScreenHandlerContext.EMPTY) {
             var selectedCurse = this.currentCurses[message.level - 1];
+
+            int cost = this.enchantmentCost(selectedCurse);
+            if (!this.canAfford(cost)) return;
+
             this.inventory.getStack(0).addEnchantment(selectedCurse, 1);
 
-            this.player().applyEnchantmentCosts(this.inventory.getStack(0), message.level);
+            this.player().applyEnchantmentCosts(this.inventory.getStack(0), cost);
             this.seed.set(this.player().getEnchantmentTableSeed());
         } else {
             this.sendMessage(message);
         }
     }
 
+    public int enchantmentCost(Enchantment curse) {
+        int baseCost = switch (curse.getRarity()) {
+            case COMMON -> 1;
+            case UNCOMMON -> 2;
+            case RARE -> 4;
+            case VERY_RARE -> 8;
+        };
+
+        return baseCost + this.inventory.getStack(0).getEnchantments().size() * 4;
+    }
+
+    public boolean canAfford(int levels) {
+        return this.player().experienceLevel >= levels;
+    }
+
     private void updateCurses() {
+        var stack = this.inventory.getStack(0);
+
         var curses = Registries.ENCHANTMENT.stream()
                 .filter(Enchantment::isCursed)
                 .filter(Enchantment::isAvailableForRandomSelection)
-                .toList();
+                .filter(enchantment -> enchantment.isAcceptableItem(stack))
+                .filter(enchantment -> EnchantmentHelper.getLevel(enchantment, stack) < 1)
+                .collect(Collectors.toList());
 
-        var random = Random.create(this.seed.get());
-        this.currentCurses[0] = Util.getRandom(curses, random);
-        this.currentCurses[1] = Util.getRandom(curses, random);
-        this.currentCurses[2] = Util.getRandom(curses, random);
+        Arrays.fill(this.currentCurses, null);
+
+        if (!curses.isEmpty()) {
+            var random = Random.create(this.seed.get());
+
+            for (int i = 0; i < Math.min(3, curses.size()); i++) {
+                this.currentCurses[i] = curses.remove(random.nextInt(curses.size()));
+            }
+        }
+
+        if (this.context != ScreenHandlerContext.EMPTY) return;
+        this.updateScreen();
     }
 
     @Environment(EnvType.CLIENT)
