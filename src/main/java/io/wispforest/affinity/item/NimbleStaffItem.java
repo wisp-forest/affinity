@@ -90,7 +90,7 @@ public class NimbleStaffItem extends StaffItem {
         ));
     }
 
-    protected static Direction getDirection(ItemStack stack) {
+    public static Direction getDirection(ItemStack stack) {
         return stack.getOr(DIRECTION, Direction.NORTH);
     }
 

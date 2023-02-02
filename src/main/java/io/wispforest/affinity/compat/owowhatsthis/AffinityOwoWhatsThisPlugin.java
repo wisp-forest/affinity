@@ -55,7 +55,7 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
                 var item = pedestal.getItem();
                 if (!(item.isOf(AffinityItems.NIMBLE_STAFF))) return null;
 
-                var direction = item.get(NimbleStaffItem.DIRECTION);
+                var direction = NimbleStaffItem.getDirection(item);
                 return Text.translatable(item.getTranslationKey() + ".direction." + direction.asString());
             }
     );
