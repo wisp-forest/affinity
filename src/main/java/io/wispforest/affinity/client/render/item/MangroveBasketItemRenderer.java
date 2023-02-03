@@ -17,22 +17,20 @@ import net.minecraft.util.math.BlockPos;
 public class MangroveBasketItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
     @Override
     public void render(ItemStack stack, ModelTransformation.Mode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        MinecraftClient client = MinecraftClient.getInstance();
-
+        var client = MinecraftClient.getInstance();
         client.getBlockRenderManager().renderBlockAsEntity(AffinityBlocks.MANGROVE_BASKET.getDefaultState(), matrices, vertexConsumers, light, overlay);
 
         var nbt = BlockItem.getBlockEntityNbt(stack);
-
         if (nbt == null) return;
 
         var containedState = NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), nbt.getCompound("ContainedState"));
         var pos = BlockPos.ORIGIN;
 
-        if (client.getCameraEntity() != null)
+        if (client.getCameraEntity() != null) {
             pos = client.getCameraEntity().getBlockPos();
+        }
 
         var containedBlockEntity = BlockEntity.createFromNbt(pos, containedState, nbt.getCompound("ContainedBlockEntity"));
-
         containedBlockEntity.setWorld(MinecraftClient.getInstance().world);
 
         MangroveBasketBlockEntityRenderer.renderContents(containedState, containedBlockEntity, client.getTickDelta(), matrices, vertexConsumers, light, overlay);
