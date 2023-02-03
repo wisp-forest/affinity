@@ -132,16 +132,20 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         return ActionResult.SUCCESS;
     }
 
-    private BlockPos getStoredPos(ItemStack stack) {
+    public BlockPos getStoredPos(ItemStack stack) {
         return stack.has(LINK_DATA) ?
                 BlockPos.fromLong(stack.get(LINK_DATA).getLong("Position"))
                 : null;
     }
 
-    private Element getLink(ItemStack stack) {
+    public Element getLink(ItemStack stack) {
         if (!stack.has(LINK_DATA)) return null;
-
         return Element.values()[stack.get(LINK_DATA).getInt("Element")];
+    }
+
+    public Type getType(ItemStack stack) {
+        if (!stack.has(LINK_DATA)) return null;
+        return Type.values()[stack.get(LINK_DATA).getInt("Type")];
     }
 
     private void beginLink(ItemStack stack, BlockPos pos, Element element, Type type) {

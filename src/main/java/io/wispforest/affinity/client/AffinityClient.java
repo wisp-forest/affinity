@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client;
 
+import com.google.common.base.Suppliers;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.RanthraciteWireBlock;
 import io.wispforest.affinity.block.impl.RitualSocleBlock;
@@ -13,6 +14,7 @@ import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
 import io.wispforest.affinity.client.screen.OuijaBoardScreen;
 import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
 import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.item.IridescenceWandItem;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEntities;
@@ -22,8 +24,12 @@ import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.LabelComponent;
+import io.wispforest.owo.ui.container.Containers;
+import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.core.Component;
 import io.wispforest.owo.ui.core.Insets;
 import io.wispforest.owo.ui.core.Positioning;
+import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.hud.Hud;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -37,14 +43,18 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class AffinityClient implements ClientModInitializer {
+
+    public static final Identifier LINKING_HUD_ID = Affinity.id("aethum_linking");
 
     @Override
     public void onInitializeClient() {
         this.registerBlockEntityRenderers();
         this.assignBlockRenderLayers();
+        this.registerLinkingHud();
 
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.MANGROVE_BASKET, new MangroveBasketItemRenderer());
 
@@ -122,6 +132,55 @@ public class AffinityClient implements ClientModInitializer {
         });
 
         AbsoluteEnchantmentGlintHandler.createLayers();
+    }
+
+    private void registerLinkingHud() {
+        var component = Suppliers.<Component>memoize(() -> {
+            return Containers.verticalFlow(Sizing.content(), Sizing.content())
+                    .positioning(Positioning.relative(50, 50))
+                    .margins(Insets.right(32));
+        });
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.world == null) return;
+
+            var stack = client.player.getMainHandStack();
+            if (stack.getItem() instanceof IridescenceWandItem wand) {
+                if (!Hud.hasComponent(LINKING_HUD_ID)) Hud.add(LINKING_HUD_ID, component);
+
+                var potentialComponent = Hud.getComponent(LINKING_HUD_ID);
+                if (!(potentialComponent instanceof FlowLayout container)) return;
+
+                var storedPos = wand.getStoredPos(stack);
+                var blockEntity = storedPos != null
+                        ? client.world.getBlockEntity(storedPos)
+                        : null;
+
+                container.<FlowLayout>configure(layout -> {
+                    layout.clearChildren();
+
+                    if (blockEntity != null) {
+                        layout.child(Components.block(blockEntity.getCachedState().getBlock().getDefaultState(), blockEntity)
+                                .sizing(Sizing.fixed(16)));
+
+                        var linkActionLabel = switch (stack.get(IridescenceWandItem.MODE)) {
+                            case BIND -> switch (wand.getType(stack)) {
+                                case PUSH -> Text.literal("→").styled(style -> style.withColor(0x3955E5));
+                                case NORMAL -> Text.literal("+").styled(style -> style.withColor(0x28FFBF));
+                            };
+                            case RELEASE -> Text.literal("-").styled(style -> style.withColor(0xEB1D36));
+                        };
+
+                        layout.child(Components.label(linkActionLabel)
+                                .shadow(true)
+                                .positioning(Positioning.relative(100, 100))
+                                .zIndex(750));
+                    }
+                });
+            } else {
+                Hud.remove(LINKING_HUD_ID);
+            }
+        });
     }
 
     private void registerBlockEntityRenderers() {
