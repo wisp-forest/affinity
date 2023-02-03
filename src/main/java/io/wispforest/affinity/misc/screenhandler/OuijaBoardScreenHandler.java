@@ -58,15 +58,14 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
         int cost = this.enchantmentCost(selectedCurse);
         if (!this.canAfford(cost)) return;
 
+        this.player().applyEnchantmentCosts(this.inventory.getStack(0), cost);
+
         if (this.context != ScreenHandlerContext.EMPTY) {
             this.inventory.getStack(0).addEnchantment(selectedCurse, 1);
-
             this.seed.set(this.player().getEnchantmentTableSeed());
         } else {
             this.sendMessage(message);
         }
-
-        this.player().applyEnchantmentCosts(this.inventory.getStack(0), cost);
     }
 
     public int enchantmentCost(Enchantment curse) {
