@@ -53,19 +53,20 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
     }
 
     public void executeCurse(CurseMessage message) {
+        var selectedCurse = this.currentCurses[message.level - 1];
+
+        int cost = this.enchantmentCost(selectedCurse);
+        if (!this.canAfford(cost)) return;
+
         if (this.context != ScreenHandlerContext.EMPTY) {
-            var selectedCurse = this.currentCurses[message.level - 1];
-
-            int cost = this.enchantmentCost(selectedCurse);
-            if (!this.canAfford(cost)) return;
-
             this.inventory.getStack(0).addEnchantment(selectedCurse, 1);
 
-            this.player().applyEnchantmentCosts(this.inventory.getStack(0), cost);
             this.seed.set(this.player().getEnchantmentTableSeed());
         } else {
             this.sendMessage(message);
         }
+
+        this.player().applyEnchantmentCosts(this.inventory.getStack(0), cost);
     }
 
     public int enchantmentCost(Enchantment curse) {
@@ -80,7 +81,7 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
     }
 
     public boolean canAfford(int levels) {
-        return this.player().experienceLevel >= levels;
+        return this.player().isCreative() || this.player().experienceLevel >= levels;
     }
 
     private void updateCurses() {
@@ -98,7 +99,8 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
         if (!curses.isEmpty()) {
             var random = Random.create(this.seed.get());
 
-            for (int i = 0; i < Math.min(3, curses.size()); i++) {
+            for (int i = 0; i < 3; i++) {
+                if (curses.isEmpty()) break;
                 this.currentCurses[i] = curses.remove(random.nextInt(curses.size()));
             }
         }

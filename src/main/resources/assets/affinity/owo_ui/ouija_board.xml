@@ -57,10 +57,6 @@
                         </margins>
                     </label>
 
-                    <texture texture="affinity:textures/gui/ouija_board.png" u="0" v="225" region-width="16" region-height="16">
-                        <positioning type="absolute">1,1</positioning>
-                    </texture>
-
                     <button id="curse-button-{{index}}">
                         <z-index>-1</z-index>
                         <sizing>
