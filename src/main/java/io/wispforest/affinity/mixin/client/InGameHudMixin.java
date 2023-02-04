@@ -2,6 +2,7 @@ package io.wispforest.affinity.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -57,4 +58,13 @@ public abstract class InGameHudMixin {
         RenderSystem.setShaderTexture(0, InGameHud.GUI_ICONS_TEXTURE);
     }
 
+    @Inject(method = "render", at = @At("HEAD"))
+    private void disableLinkRendering(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
+        AethumFluxNodeBlockEntityRenderer.enableLinkRendering = false;
+    }
+
+    @Inject(method = "render", at = @At("RETURN"))
+    private void enableLinkRendering(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
+        AethumFluxNodeBlockEntityRenderer.enableLinkRendering = true;
+    }
 }

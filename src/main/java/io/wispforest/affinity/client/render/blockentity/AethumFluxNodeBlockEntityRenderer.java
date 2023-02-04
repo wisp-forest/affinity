@@ -18,6 +18,8 @@ import java.util.Random;
 
 public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<AethumFluxNodeBlockEntity> {
 
+    public static boolean enableLinkRendering = true;
+
     public static final ModelPart FLOATING_SHARD;
     private static final Random RANDOM = new Random();
 
@@ -38,22 +40,24 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
         // Link rendering
         // --------------
 
-        int startColor = node.hasShard() ? 0xff4FC1E9 : 0xffff0000;
-        int endColor = node.hasShard() ? 0xff7A57D1 : 0xffff0000;
+        if (enableLinkRendering) {
+            int startColor = node.hasShard() ? 0xff4FC1E9 : 0xffff0000;
+            int endColor = node.hasShard() ? 0xff7A57D1 : 0xffff0000;
 
-        for (var linkedMember : node.linkedMembers()) {
-            var offset = Vec3d.ofCenter(linkedMember).subtract(Vec3d.of(node.getPos()));
-            var normal = offset.normalize();
+            for (var linkedMember : node.linkedMembers()) {
+                var offset = Vec3d.ofCenter(linkedMember).subtract(Vec3d.of(node.getPos()));
+                var normal = offset.normalize();
 
-            vertexConsumers.getBuffer(RenderLayer.LINES)
-                    .vertex(matrices.peek().getPositionMatrix(), .5f, .5f, .5f)
-                    .color(startColor)
-                    .normal((float) normal.x, (float) normal.y, (float) normal.z).next();
+                vertexConsumers.getBuffer(RenderLayer.LINES)
+                        .vertex(matrices.peek().getPositionMatrix(), .5f, .5f, .5f)
+                        .color(startColor)
+                        .normal((float) normal.x, (float) normal.y, (float) normal.z).next();
 
-            vertexConsumers.getBuffer(RenderLayer.LINES)
-                    .vertex(matrices.peek().getPositionMatrix(), (float) offset.x, (float) offset.y, (float) offset.z)
-                    .color(endColor)
-                    .normal((float) normal.x, (float) normal.y, (float) normal.z).next();
+                vertexConsumers.getBuffer(RenderLayer.LINES)
+                        .vertex(matrices.peek().getPositionMatrix(), (float) offset.x, (float) offset.y, (float) offset.z)
+                        .color(endColor)
+                        .normal((float) normal.x, (float) normal.y, (float) normal.z).next();
+            }
         }
 
         // -------------------------
