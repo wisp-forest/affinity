@@ -20,16 +20,18 @@ public class AethumMapPrototypeItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemOps.decrementPlayerHandItem(user, hand);
+        if (!world.isClient) {
+            ItemOps.decrementPlayerHandItem(user, hand);
 
-        var mapStack = AffinityItems.REALIZED_AETHUM_MAP.getDefaultStack();
-        FilledMapItemInvoker.affinity$createMapState(mapStack, world, user.getBlockX(), user.getBlockZ(), 0,
-                true, false, world.getRegistryKey());
-        var stateAccess = (MapStateAccessor) FilledMapItem.getOrCreateMapState(mapStack, world);
-        stateAccess.affinity$setCenterX(RealizedAethumMapItem.makeCenter((int) user.getX()));
-        stateAccess.affinity$setCenterZ(RealizedAethumMapItem.makeCenter((int) user.getZ()));
+            var mapStack = AffinityItems.REALIZED_AETHUM_MAP.getDefaultStack();
+            FilledMapItemInvoker.affinity$createMapState(mapStack, world, user.getBlockX(), user.getBlockZ(), 0,
+                    true, false, world.getRegistryKey());
+            var stateAccess = (MapStateAccessor) FilledMapItem.getOrCreateMapState(mapStack, world);
+            stateAccess.affinity$setCenterX(RealizedAethumMapItem.makeCenter((int) user.getX()));
+            stateAccess.affinity$setCenterZ(RealizedAethumMapItem.makeCenter((int) user.getZ()));
 
-        user.getInventory().offerOrDrop(mapStack);
+            user.getInventory().offerOrDrop(mapStack);
+        }
 
         return TypedActionResult.success(user.getStackInHand(hand));
     }
