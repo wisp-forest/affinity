@@ -19,7 +19,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import org.w3c.dom.Element;
@@ -43,20 +42,13 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        rootComponent.childById(ButtonComponent.class, "curse-button-1").onPress(button -> {
-            this.handler.executeCurse(new OuijaBoardScreenHandler.CurseMessage(1));
-        });
-
-        rootComponent.childById(ButtonComponent.class, "curse-button-2").onPress(button -> {
-            this.handler.executeCurse(new OuijaBoardScreenHandler.CurseMessage(2));
-        });
-
-        rootComponent.childById(ButtonComponent.class, "curse-button-3").onPress(button -> {
-            this.handler.executeCurse(new OuijaBoardScreenHandler.CurseMessage(3));
-        });
-
         for (int i = 0; i < 3; i++) {
             int index = i + 1;
+
+            rootComponent.childById(ButtonComponent.class, "curse-button-" + index).onPress(button -> {
+                this.handler.executeCurse(new OuijaBoardScreenHandler.CurseMessage(index));
+            });
+
             this.curseLabels[i] = rootComponent.childById(TrimmedLabelComponent.class, "curse-label-" + index);
             this.costLabels[i] = rootComponent.childById(LabelComponent.class, "cost-label-" + index);
 
@@ -87,7 +79,7 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
 
             this.curseLabels[i]
                     .text(curseName.copy().styled(style -> Style.EMPTY.withFont(SGA_FONT)))
-                    .textColor(canAfford ? Color.ofRgb(0x663333) : Color.ofRgb(0x331a1a));
+                    .color(canAfford ? Color.ofRgb(0x663333) : Color.ofRgb(0x331a1a));
 
             this.costLabels[i]
                     .text(Text.literal(String.valueOf(cost)))
@@ -126,12 +118,12 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
             return text;
         }
 
-        public TrimmedLabelComponent textColor(Color textColor) {
+        public TrimmedLabelComponent color(Color textColor) {
             this.textColor = textColor;
             return this;
         }
 
-        public Color textColor() {
+        public Color color() {
             return textColor;
         }
 
@@ -140,7 +132,7 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
             super.parseProperties(model, element, children);
 
             UIParsing.apply(children, "text", UIParsing::parseText, this::text);
-            UIParsing.apply(children, "text-color", Color::parse, this::textColor);
+            UIParsing.apply(children, "color", Color::parse, this::color);
         }
     }
 

@@ -246,7 +246,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             double xScaling = (1d / this.scale.get()) * (this.client.getWindow().getWidth() / (float) this.client.getWindow().getScaledWidth());
             double yScaling = (1d / this.scale.get()) * (this.client.getWindow().getHeight() / (float) this.client.getWindow().getScaledHeight());
 
