@@ -2,6 +2,7 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
+import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
@@ -31,11 +32,12 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
-public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity {
+public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity, MultiblockAethumNetworkMember {
 
     @Environment(EnvType.CLIENT) public float renderFluxY = 0;
     @Environment(EnvType.CLIENT) public boolean tickedOnce = false;
@@ -226,6 +228,17 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
     private long directInsert(long max, TransactionContext transaction) {
         return super.insert(max, transaction);
+    }
+
+    @Override
+    public Collection<BlockPos> memberBlocks() {
+        if (this.parentRef == null || this.parentRef.entity.childCache == null) return List.of();
+        return this.parentRef.entity.childCache.stream().map(BlockEntity::getPos).toList();
+    }
+
+    @Override
+    public boolean isParent() {
+        return this.parentRef != null && this.parentRef.entity == this;
     }
 
     @Override
