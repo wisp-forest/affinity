@@ -99,6 +99,8 @@ dependencies {
 
     modImplementation "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"
 
+    modImplementation "io.wispforest:worldmesher:${project.worldmesher_version}"
+
     // dev utils
 
     modLocalRuntime "maven.modrinth:emoji-type:2.0.0+1.19"

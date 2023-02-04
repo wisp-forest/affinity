@@ -132,15 +132,15 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         var visitedNodes = new ArrayList<BlockPos>();
         visitedNodes.add(this.pos);
 
-        var queue = new ArrayDeque<>(links.keySet());
+        var queue = new ArrayDeque<>(this.links.keySet());
 
         while (!queue.isEmpty()) {
             var memberPos = queue.poll();
-            if (!(Affinity.AETHUM_NODE.find(world, memberPos, null) instanceof AethumFluxNodeBlockEntity node)) continue;
+            if (!(Affinity.AETHUM_NODE.find(this.world, memberPos, null) instanceof AethumFluxNodeBlockEntity node)) continue;
             if (!node.validForTransfer()) continue;
 
             visitedNodes.add(memberPos);
-            node.lastTick = world.getTime();
+            node.lastTick = this.world.getTime();
 
             for (var neighbor : node.linkedMembers()) {
                 if (visitedNodes.contains(neighbor) || queue.contains(neighbor)) continue;
@@ -242,11 +242,11 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         return this.links.size() < this.maxConnections();
     }
 
-    private int maxConnections() {
+    public int maxConnections() {
         return 5 + this.outerShardCount * 2;
     }
 
-    private boolean validForTransfer() {
+    public boolean validForTransfer() {
         return this.hasShard() && this.allLinksValid && this.links.size() <= this.maxConnections();
     }
 

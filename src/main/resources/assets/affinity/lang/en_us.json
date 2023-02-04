@@ -220,6 +220,13 @@
     {"text": ")", "color": "gray"}
   ],
 
+  "gui.affinity.flux_network_visualizer.network_statistics": "Network statistics",
+  "gui.affinity.flux_network_visualizer.member_count": ["Member count: ", {"index": 0, "color": "blue"}],
+  "gui.affinity.flux_network_visualizer.node_count": ["Node count: ", {"index": 0, "color": "blue"}],
+  "gui.affinity.flux_network_visualizer.flux_capacity": ["Flux capacity: ", {"index": 0, "color": "blue"}],
+  "gui.affinity.flux_network_visualizer.rotate_hint": ["Mouse 1/2 to ", { "text": "rotate", "color": "yellow" }],
+  "gui.affinity.flux_network_visualizer.move_hint": ["Mouse 3 to ", { "text": "move", "color": "yellow" }],
+
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.bastion_regeneration": "Bastion",
   "effect.affinity.affine": "Affine",

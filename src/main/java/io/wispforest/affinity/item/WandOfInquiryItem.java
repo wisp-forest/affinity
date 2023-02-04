@@ -1,6 +1,9 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
+import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
+import io.wispforest.affinity.client.screen.FluxNetworkVisualizerScreen;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
@@ -11,6 +14,7 @@ import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.DustParticleEffect;
@@ -32,28 +36,44 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
     public ActionResult useOnBlock(ItemUsageContext context) {
         final var world = context.getWorld();
         final var player = context.getPlayer();
+        final var pos = context.getBlockPos();
 
-        if (!(world.getBlockEntity(context.getBlockPos()) instanceof RitualCoreBlockEntity core))
-            return ActionResult.PASS;
+        final var blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof RitualCoreBlockEntity core) {
+            player.getItemCooldownManager().set(this, 30);
 
-        player.getItemCooldownManager().set(this, 30);
+            if (!world.isClient()) {
+                var setup = RitualCoreBlockEntity.examineSetup(core, !player.isSneaking());
 
-        if (!world.isClient()) {
-            var setup = RitualCoreBlockEntity.examineSetup(core, !player.isSneaking());
+                final double stability = !setup.isEmpty() ? setup.stability / 100 : 0;
+                int stability20 = (int) Math.round(stability * 20);
+                String stabilityBar = "|".repeat(stability20) + "§" + "|".repeat(20 - stability20);
 
-            final double stability = !setup.isEmpty() ? setup.stability / 100 : 0;
-            int stability20 = (int) Math.round(stability * 20);
-            String stabilityBar = "|".repeat(stability20) + "§" + "|".repeat(20 - stability20);
+                var text = TextOps.withColor("# §" + setup.socles.size() + " | §🛡 " + stabilityBar + "",
+                        0xD885A3, TextOps.color(Formatting.GRAY), 0x1572A1, TextOps.color(Formatting.GRAY));
+                player.sendMessage(text, true);
 
-            var text = TextOps.withColor("# §" + setup.socles.size() + " | §🛡 " + stabilityBar + "",
-                    0xD885A3, TextOps.color(Formatting.GRAY), 0x1572A1, TextOps.color(Formatting.GRAY));
-            player.sendMessage(text, true);
+                AffinityNetwork.CHANNEL.serverHandle(player).send(new SocleParticlesPacket(setup.socles.stream()
+                        .map(RitualCoreBlockEntity.RitualSocleEntry::position).toList()));
+            }
 
-            AffinityNetwork.CHANNEL.serverHandle(player).send(new SocleParticlesPacket(setup.socles.stream()
-                    .map(RitualCoreBlockEntity.RitualSocleEntry::position).toList()));
+            return ActionResult.SUCCESS;
+        } else if (blockEntity instanceof AethumNetworkMemberBlockEntity member) {
+            if (member instanceof MultiblockAethumNetworkMember multiblock && !multiblock.isParent()) return ActionResult.PASS;
+
+            if (world.isClient) {
+                this.openVisualizerScreen(member);
+            }
+
+            return ActionResult.SUCCESS;
         }
 
-        return ActionResult.SUCCESS;
+        return ActionResult.PASS;
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void openVisualizerScreen(AethumNetworkMemberBlockEntity member) {
+        MinecraftClient.getInstance().setScreen(new FluxNetworkVisualizerScreen(member));
     }
 
     @Override
