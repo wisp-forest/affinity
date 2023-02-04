@@ -114,9 +114,6 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
             var linkType = context.getPlayer().isSneaking() ? nextMember.specialLinkType() : Type.NORMAL;
 
             beginLink(stack, pos, Element.of(nextMember), linkType);
-
-            context.getPlayer().sendMessage(Text.translatable(mode == Mode.BIND ? linkType.translationKey : mode.initTranslationKey,
-                    world.getBlockState(pos).getBlock().getName()), true);
             return ActionResult.SUCCESS;
         }
 
@@ -125,7 +122,9 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         }
 
         var result = mode.processor.run(stack, world, existingElement, pos, nextMember);
-        context.getPlayer().sendMessage(Text.translatable(result.translationKey, world.getBlockState(pos).getBlock().getName()), true);
+        if (result.translationKey != null) {
+            context.getPlayer().sendMessage(Text.translatable(result.translationKey, world.getBlockState(pos).getBlock().getName()), true);
+        }
 
         stack.delete(LINK_DATA);
 
@@ -188,19 +187,17 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     }
 
     public enum Mode {
-        BIND(0x721B26, IridescenceWandItem::executeBind, null),
-        RELEASE(0x11667C, IridescenceWandItem::executeRelease, "message.affinity.linking.started_destroy");
+        BIND(0x721B26, IridescenceWandItem::executeBind),
+        RELEASE(0x11667C, IridescenceWandItem::executeRelease);
 
         public final String id;
         public final int color;
         public final MemberProcessor processor;
-        public final String initTranslationKey;
 
-        Mode(int color, MemberProcessor processor, String initTranslationKey) {
+        Mode(int color, MemberProcessor processor) {
             this.id = this.name().toLowerCase(Locale.ROOT);
             this.color = color;
             this.processor = processor;
-            this.initTranslationKey = initTranslationKey;
         }
 
         public Mode next() {
