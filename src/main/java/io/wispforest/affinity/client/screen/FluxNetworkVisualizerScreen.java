@@ -6,11 +6,10 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
-import io.wispforest.owo.ui.base.BaseOwoScreen;
-import io.wispforest.owo.ui.component.Components;
-import io.wispforest.owo.ui.container.Containers;
+import io.wispforest.owo.ui.base.BaseUIModelScreen;
+import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
-import io.wispforest.owo.ui.core.*;
+import io.wispforest.owo.ui.core.Surface;
 import io.wispforest.owo.ui.util.Drawer;
 import io.wispforest.worldmesher.WorldMesh;
 import net.minecraft.block.BlockState;
@@ -26,16 +25,13 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.biome.ColorResolver;
 import net.minecraft.world.chunk.light.LightingProvider;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
@@ -46,7 +42,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FluxNetworkVisualizerScreen extends BaseOwoScreen<FlowLayout> {
+public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
     private static final Surface TOOLTIP_SURFACE = (matrices, component) -> {
         var buffer = Tessellator.getInstance().getBuffer();
@@ -74,6 +70,8 @@ public class FluxNetworkVisualizerScreen extends BaseOwoScreen<FlowLayout> {
     private int scale;
 
     public FluxNetworkVisualizerScreen(AethumNetworkMemberBlockEntity initialMember) {
+        super(FlowLayout.class, DataSource.file("../src/main/resources/assets/affinity/owo_ui/flux_network_visualizer.xml"));
+
         var members = new HashSet<BlockPos>();
 
         var queue = new ArrayDeque<BlockPos>();
@@ -121,37 +119,15 @@ public class FluxNetworkVisualizerScreen extends BaseOwoScreen<FlowLayout> {
     }
 
     @Override
-    protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
-        return OwoUIAdapter.create(this, Containers::verticalFlow);
-    }
-
-    @Override
     protected void build(FlowLayout rootComponent) {
-        rootComponent.child(
-                Containers.verticalFlow(Sizing.content(), Sizing.content())
-                        .child(Components.label(text("network_statistics")).shadow(true).margins(Insets.bottom(4)))
-                        .child(Components.label(text("member_count", this.networkMembers).formatted(Formatting.GRAY)).shadow(true))
-                        .child(Components.label(text("node_count", this.networkNodes).formatted(Formatting.GRAY)).shadow(true))
-                        .child(Components.label(text("flux_capacity", this.networkCapacity).formatted(Formatting.GRAY)).shadow(true))
-                        .gap(3)
-                        .padding(Insets.of(6))
-                        .surface(TOOLTIP_SURFACE)
-                        .margins(Insets.of(0, 25, 25, 0))
-                        .positioning(Positioning.relative(0, 100))
-        );
+        rootComponent.childById(FlowLayout.class, "stats-tooltip").surface(TOOLTIP_SURFACE);
 
-        rootComponent.child(
-                Containers.verticalFlow(Sizing.content(), Sizing.content())
-                        .child(Components.label(text("rotate_hint")))
-                        .child(Components.label(text("move_hint")))
-                        .gap(3)
-                        .margins(Insets.of(0, 25, 0, 25))
-                        .positioning(Positioning.relative(100, 100))
-        );
-    }
-
-    protected MutableText text(String key, Object... arguments) {
-        return Text.translatable("gui.affinity.flux_network_visualizer." + key, arguments);
+        rootComponent.childById(LabelComponent.class, "member-count-label").text(
+                Text.translatable("gui.affinity.flux_network_visualizer.member_count", this.networkMembers));
+        rootComponent.childById(LabelComponent.class, "node-count-label").text(
+                Text.translatable("gui.affinity.flux_network_visualizer.node_count", this.networkNodes));
+        rootComponent.childById(LabelComponent.class, "flux-capacity-label").text(
+                Text.translatable("gui.affinity.flux_network_visualizer.flux_capacity", this.networkCapacity));
     }
 
     @Override
