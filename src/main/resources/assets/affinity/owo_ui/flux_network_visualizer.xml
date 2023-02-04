@@ -46,6 +46,14 @@
                         <label>
                             <text translate="true">gui.affinity.flux_network_visualizer.move_hint</text>
                         </label>
+
+                        <label>
+                            <text translate="true">gui.affinity.flux_network_visualizer.reset_hint</text>
+
+                            <margins>
+                                <top>4</top>
+                            </margins>
+                        </label>
                     </children>
 
                     <gap>3</gap>

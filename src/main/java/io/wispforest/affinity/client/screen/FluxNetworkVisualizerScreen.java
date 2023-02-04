@@ -9,13 +9,18 @@ import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntit
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.core.Easing;
 import io.wispforest.owo.ui.core.Surface;
+import io.wispforest.owo.ui.event.WindowResizeCallback;
+import io.wispforest.owo.ui.util.Delta;
 import io.wispforest.owo.ui.util.Drawer;
 import io.wispforest.worldmesher.WorldMesh;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
@@ -35,7 +40,7 @@ import net.minecraft.world.chunk.light.LightingProvider;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30C;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -57,6 +62,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         Tessellator.getInstance().draw();
     };
 
+    private static Framebuffer networkFramebuffer = null;
+
     private final WorldMesh mesh;
     private final double xSize, ySize, zSize;
 
@@ -64,10 +71,13 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
     private int networkNodes = 0;
     private int networkCapacity = 0;
 
-    private int xOffset = 0, yOffset = 0;
-    private int rotation = 45, slant = 30;
+    private final Interpolator xOffset = new Interpolator(0), yOffset = new Interpolator(0);
+    private final Interpolator rotation = new Interpolator(45), slant = new Interpolator(30);
 
-    private int scale;
+    private final Interpolator scale;
+
+    private float age = 0;
+    private long lastClickTime = 0;
 
     public FluxNetworkVisualizerScreen(AethumNetworkMemberBlockEntity initialMember) {
         super(FlowLayout.class, DataSource.file("../src/main/resources/assets/affinity/owo_ui/flux_network_visualizer.xml"));
@@ -115,7 +125,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         this.ySize = this.mesh.dimensions().getYLength() + 1;
         this.zSize = this.mesh.dimensions().getZLength() + 1;
 
-        this.scale = (int) Math.min(1500 / (Math.max(xSize, Math.max(ySize, zSize))), 500);
+        this.scale = new Interpolator(Math.min(15 / (Math.max(xSize, Math.max(ySize, zSize))), 5));
     }
 
     @Override
@@ -135,6 +145,9 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         this.renderBackground(matrices);
 
         if (this.mesh.canRender()) {
+
+            // Begin model view / projection crimes
+
             float aspectRatio = this.client.getWindow().getFramebufferWidth() / (float) this.client.getWindow().getFramebufferHeight();
 
             RenderSystem.backupProjectionMatrix();
@@ -144,13 +157,13 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             modelViewStack.push();
             modelViewStack.loadIdentity();
 
-            float scale = this.scale / 1000f;
+            float scale = this.scale.get() / 10f;
             modelViewStack.scale(scale, scale, scale);
 
-            modelViewStack.translate(this.xOffset / 2600d, this.yOffset / -2600d, 0);
+            modelViewStack.translate(this.xOffset.get() / 2600d, this.yOffset.get() / -2600d, 0);
 
-            modelViewStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(this.slant));
-            modelViewStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(this.rotation));
+            modelViewStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(this.slant.get()));
+            modelViewStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(this.rotation.get()));
 
             RenderSystem.applyModelViewMatrix();
 
@@ -161,6 +174,10 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             //noinspection deprecation
             RenderSystem.runAsFancy(() -> {
+                int prevFramebuffer = GlStateManager.getBoundFramebuffer();
+                networkFramebuffer().clear(MinecraftClient.IS_SYSTEM_MAC);
+                networkFramebuffer.beginWrite(false);
+
                 mesh.getRenderInfo().getBlockEntities().forEach((blockPos, entity) -> {
                     matrices.push();
                     matrices.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
@@ -172,6 +189,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
                 modelViewStack.translate(-this.xSize / 2f, -this.ySize / 2f, -this.zSize / 2f);
                 this.mesh.render(modelViewStack);
+
+                GlStateManager._glBindFramebuffer(GL30C.GL_FRAMEBUFFER, prevFramebuffer);
             });
 
             matrices.pop();
@@ -180,26 +199,63 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             RenderSystem.applyModelViewMatrix();
 
             RenderSystem.restoreProjectionMatrix();
+
+            // End model view / projection crimes
+
+            float ageScalar = Math.min(1, this.age / 20f);
+            float visualizerScale = .75f + Easing.EXPO.apply(ageScalar) * .25f;
+
+            matrices.push();
+            RenderSystem.setShaderColor(1, 1, 1, Easing.SINE.apply(ageScalar));
+
+            matrices.translate(this.width / 2d, this.height / 2d, 0);
+            matrices.scale(visualizerScale, visualizerScale, visualizerScale);
+            matrices.translate(this.width / -2d, this.height / -2d, 0);
+
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+
+            RenderSystem.setShaderTexture(0, networkFramebuffer.getColorAttachment());
+            Drawer.drawTexture(
+                    matrices,
+                    0, 0,
+                    this.width, this.height,
+                    0, networkFramebuffer.textureHeight,
+                    networkFramebuffer.textureWidth, -networkFramebuffer.textureHeight,
+                    networkFramebuffer.textureWidth, networkFramebuffer.textureHeight
+            );
+
+            RenderSystem.setShaderColor(1, 1, 1, 1);
+            matrices.pop();
         }
 
-        GlStateManager._clear(GL11.GL_DEPTH_BUFFER_BIT, MinecraftClient.IS_SYSTEM_MAC);
         super.render(matrices, mouseX, mouseY, delta);
+
+        this.age += delta;
+        Interpolator.update(delta * .75f, this.scale, this.rotation, this.slant, this.xOffset, this.yOffset);
+    }
+
+    private Framebuffer networkFramebuffer() {
+        if (networkFramebuffer == null) {
+            networkFramebuffer = new SimpleFramebuffer(this.client.getFramebuffer().textureWidth, this.client.getFramebuffer().textureHeight, true, MinecraftClient.IS_SYSTEM_MAC);
+            WindowResizeCallback.EVENT.register((client_, window) -> networkFramebuffer.resize(window.getFramebufferWidth(), window.getFramebufferHeight(), MinecraftClient.IS_SYSTEM_MAC));
+        }
+
+        return networkFramebuffer;
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            double xScaling = (100d / this.scale) * (this.client.getWindow().getWidth() / (float) this.client.getWindow().getScaledWidth());
-            double yScaling = (100d / this.scale) * (this.client.getWindow().getHeight() / (float) this.client.getWindow().getScaledHeight());
+            double xScaling = (1d / this.scale.get()) * (this.client.getWindow().getWidth() / (float) this.client.getWindow().getScaledWidth());
+            double yScaling = (1d / this.scale.get()) * (this.client.getWindow().getHeight() / (float) this.client.getWindow().getScaledHeight());
 
-            this.xOffset += (int) (50 * deltaX * xScaling);
-            this.yOffset += (int) (50 * deltaY * yScaling);
+            this.xOffset.targetAdd(50 * deltaX * xScaling);
+            this.yOffset.targetAdd(50 * deltaY * yScaling);
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            this.rotation += (int) (deltaX * 2);
-            return true;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            this.slant += (int) (deltaY * 2);
+            this.rotation.targetAdd(deltaX * 2);
+            this.slant.targetAdd(deltaY * 2);
             return true;
         }
 
@@ -208,8 +264,60 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        this.scale += (int) (amount * Math.max(1, this.scale * 0.075));
+        this.scale.targetAdd(amount * .15 * this.scale.get());
         return true;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (super.mouseClicked(mouseX, mouseY, button)) return true;
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (System.currentTimeMillis() - this.lastClickTime < 250) {
+                Interpolator.reset(this.scale, this.rotation, this.slant, this.xOffset, this.yOffset);
+            }
+
+            this.lastClickTime = System.currentTimeMillis();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static class Interpolator {
+
+        private final float defaultValue;
+
+        private float value;
+        private float target;
+
+        public Interpolator(double value) {
+            this.defaultValue = this.target = this.value = (float) value;
+        }
+
+        public static void update(float delta, Interpolator... interpolators) {
+            for (var interpolator : interpolators) {
+                interpolator.value += Delta.compute(interpolator.value, interpolator.target, delta);
+            }
+        }
+
+        public static void reset(Interpolator... interpolators) {
+            for (var interpolator : interpolators) {
+                interpolator.target = interpolator.defaultValue;
+            }
+        }
+
+        public void targetAdd(double value) {
+            this.target += value;
+        }
+
+        public void set(double value) {
+            this.target = this.value = (float) value;
+        }
+
+        public float get() {
+            return this.value;
+        }
     }
 
     private static class RenderView implements BlockRenderView {
