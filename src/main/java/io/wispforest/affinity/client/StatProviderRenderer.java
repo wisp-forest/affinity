@@ -60,8 +60,6 @@ public class StatProviderRenderer {
                 matrices.translate(50, 0, 60);
                 matrices.multiply(RotationAxis.POSITIVE_X.rotation((float) (verticalAngle)));
 
-                final int halfFontHeight = client.textRenderer.fontHeight / 2;
-
                 for (int i = 0; i < entries.size(); i++) {
                     var entry = entries.get(i);
                     float progress = MathHelper.clamp((targetViewTime - 5 - i * 2) / 15, 0, 1);
@@ -73,9 +71,9 @@ public class StatProviderRenderer {
                     RenderSystem.setShaderColor(1, 1, 1, progress);
                     RenderSystem.setShaderTexture(0, entry.texture());
                     RenderSystem.enableDepthTest();
-                    Drawer.drawTexture(matrices, 0, i * 10 - halfFontHeight, entry.x(), entry.y(), 8, 8, 32, 32);
+                    Drawer.drawTexture(matrices, 0, i * 10, entry.x(), entry.y(), 8, 8, 32, 32);
 
-                    client.textRenderer.draw(matrices, entry.text(), 15, i * 10 - halfFontHeight, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
+                    client.textRenderer.draw(matrices, entry.text(), 15, i * 10, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
                     matrices.pop();
                 }
 
