@@ -43,6 +43,7 @@ public class AffinityClient implements ClientModInitializer {
 
         AethumNetworkLinkingHud.initialize();
         PlayerAethumHud.initialize();
+        StatProviderRenderer.initialize();
 
         AffinityModelPredicateProviders.applyDefaults();
 
