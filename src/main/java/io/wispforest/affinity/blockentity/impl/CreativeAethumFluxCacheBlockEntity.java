@@ -7,7 +7,10 @@ import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.List;
 
 public class CreativeAethumFluxCacheBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity {
 
@@ -33,6 +36,14 @@ public class CreativeAethumFluxCacheBlockEntity extends AethumNetworkMemberBlock
                 transaction.commit();
             }
         }
+    }
+
+    @Override
+    public void appendTooltipEntries(List<Entry> entries) {
+        super.appendTooltipEntries(entries);
+
+        entries.remove(0);
+        entries.add(0, new Entry(Text.translatable("text.affinity.tooltip.creative_flux_cache_flux_level"), 0, 0));
     }
 
     @Override

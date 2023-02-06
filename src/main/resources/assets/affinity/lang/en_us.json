@@ -211,6 +211,7 @@
   ],
 
   "text.affinity.tooltip.aethum_storage": "Flux: %d/%d",
+  "text.affinity.tooltip.creative_flux_cache_flux_level": "All of it, really",
 
   "gui.affinity.augmented_crafting_table.title": "Augmented Crafting Table",
   "gui.affinity.augmented_crafting_table.treetap_count": [
