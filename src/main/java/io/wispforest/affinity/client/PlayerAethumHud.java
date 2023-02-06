@@ -24,7 +24,9 @@ public class PlayerAethumHud {
 
             private double displayAethum = 1f;
             private double slowDisplayAethum = 1f;
+
             private float alpha = 0;
+            private float warningColorWeight = 0;
 
             @Override
             public void draw(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta) {
@@ -38,6 +40,7 @@ public class PlayerAethumHud {
                 this.slowDisplayAethum += Delta.compute(this.slowDisplayAethum, aethumProgress, delta * .1f);
 
                 this.alpha += Delta.compute(this.alpha, aethumProgress == 1 ? 0 : 10, delta * .25f);
+                this.warningColorWeight += Delta.compute(this.warningColorWeight, component.getAethum() < 3 ? 1 : 0, delta * .25f);
 
                 RenderSystem.setShaderColor(1, 1, 1, Math.min(this.alpha, 1));
 
@@ -45,15 +48,15 @@ public class PlayerAethumHud {
                         matrices,
                         this.x + this.width / 2,
                         this.y + this.height / 2,
-                        50,
-                        3, 8,
+                        50, 3, 8,
                         Color.ofArgb(0x7f000000), Color.ofArgb(0x7f000000)
                 );
 
                 if (this.slowDisplayAethum > this.displayAethum) {
-                    this.drawAethumRing(matrices, this.slowDisplayAethum, Color.ofRgb(0xce2424));
+                    this.drawAethumRing(matrices, this.slowDisplayAethum, Color.ofArgb(0x7f000000 | 0xFCE22A));
                 }
-                this.drawAethumRing(matrices, this.displayAethum, Color.ofRgb(Affinity.AETHUM_FLUX_COLOR));
+
+                this.drawAethumRing(matrices, this.displayAethum, Affinity.AETHUM_FLUX_COLOR.interpolate(Color.ofRgb(0xce2424), this.warningColorWeight));
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }

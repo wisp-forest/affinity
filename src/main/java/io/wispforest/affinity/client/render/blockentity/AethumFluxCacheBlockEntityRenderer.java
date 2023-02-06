@@ -29,8 +29,6 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
 
     @Override
     public void render(AethumFluxCacheBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        final float[] rgb = MathUtil.splitRGBToFloats(Affinity.AETHUM_FLUX_COLOR);
-
         final var cachePart = entity.getCachedState().get(AethumFluxCacheBlock.PART);
         final var bottomY = cachePart.isBase ? 0.25f : 0;
         final var topY = (cachePart.hasCap ? 0.75f : 1);
@@ -63,25 +61,32 @@ public class AethumFluxCacheBlockEntityRenderer implements BlockEntityRenderer<A
             var quadEmitter = RendererAccess.INSTANCE.getRenderer().meshBuilder().getEmitter();
             for (var direction : Direction.values()) {
                 if (direction.getAxis().isVertical()) continue;
-                fluxQuad(direction, quadEmitter, consumer, matrices, sprite, rgb, .13f, bottomY, .87f, entity.renderFluxY, .13f, light, overlay);
+                fluxQuad(direction, quadEmitter, consumer, matrices, sprite, .13f, bottomY, .87f, entity.renderFluxY, .13f, light, overlay);
             }
 
             if (targetFluxY != topY || noFluxAbove) {
-                fluxQuad(Direction.UP, quadEmitter, consumer, matrices, sprite, rgb, .13f, .13f, .87f, .87f, 1 - entity.renderFluxY, light, overlay);
+                fluxQuad(Direction.UP, quadEmitter, consumer, matrices, sprite, .13f, .13f, .87f, .87f, 1 - entity.renderFluxY, light, overlay);
             }
 
             if (parent != null && parent.previousIsNotFull()) {
-                fluxQuad(Direction.DOWN, quadEmitter, consumer, matrices, sprite, rgb, .13f, .13f, .87f, .87f, bottomY, light, overlay);
+                fluxQuad(Direction.DOWN, quadEmitter, consumer, matrices, sprite, .13f, .13f, .87f, .87f, bottomY, light, overlay);
             }
         }
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static void fluxQuad(Direction direction, QuadEmitter emitter, VertexConsumer consumer, MatrixStack matrices, Sprite sprite, float[] rgb, float left, float bottom, float right, float top, float depth, int light, int overlay) {
+    private static void fluxQuad(Direction direction, QuadEmitter emitter, VertexConsumer consumer, MatrixStack matrices, Sprite sprite, float left, float bottom, float right, float top, float depth, int light, int overlay) {
         emitter.square(direction, left, bottom, right, top, depth);
         emitter.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV);
 
-        consumer.quad(matrices.peek(), emitter.toBakedQuad(0, sprite, false), rgb[0], rgb[1], rgb[2], light, overlay);
+        consumer.quad(
+                matrices.peek(),
+                emitter.toBakedQuad(0, sprite, false),
+                Affinity.AETHUM_FLUX_COLOR.red(),
+                Affinity.AETHUM_FLUX_COLOR.green(),
+                Affinity.AETHUM_FLUX_COLOR.blue(),
+                light, overlay
+        );
     }
 
 }

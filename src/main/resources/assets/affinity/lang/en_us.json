@@ -199,6 +199,17 @@
   "message.affinity.linking.too_many_links": "This node cannot carry any more links",
   "message.affinity.linking.failed": "Could not link to %s",
 
+  "death.attack.aethum_drain": [
+    {
+      "index": 0,
+      "hoverEvent": {
+        "action": "show_text",
+        "contents": "Pretty careless"
+      }
+    },
+    " ran out of juice"
+  ],
+
   "text.affinity.tooltip.aethum_storage": "Flux: %d/%d",
 
   "gui.affinity.augmented_crafting_table.title": "Augmented Crafting Table",

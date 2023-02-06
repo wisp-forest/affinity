@@ -90,7 +90,7 @@ public class AffinityClient implements ClientModInitializer {
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
             if (tintIndex != 1) return 0xFFFFFF;
-            return Affinity.AETHUM_FLUX_COLOR;
+            return Affinity.AETHUM_FLUX_COLOR.rgb();
         }, AffinityBlocks.CREATIVE_AETHUM_FLUX_CACHE);
 
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {

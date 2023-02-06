@@ -15,6 +15,7 @@ import io.wispforest.affinity.worldgen.AffinityStructures;
 import io.wispforest.owo.Owo;
 import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
+import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.block.Block;
@@ -32,7 +33,7 @@ public class Affinity implements ModInitializer {
 
     public static final OwoItemGroup AFFINITY_GROUP = AffinityItemGroup.GROUP;
 
-    public static final int AETHUM_FLUX_COLOR = 0x6A67CE;
+    public static final Color AETHUM_FLUX_COLOR = Color.ofRgb(0x6A67CE);
 
     public static final BlockApiLookup<AethumNetworkMember, Void> AETHUM_MEMBER = BlockApiLookup.get(id("aethum_member"), AethumNetworkMember.class, Void.class);
     public static final BlockApiLookup<AethumNetworkNode, Void> AETHUM_NODE = BlockApiLookup.get(id("aethum_node"), AethumNetworkNode.class, Void.class);
