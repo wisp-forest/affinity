@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity, MultiblockAethumNetworkMember {
@@ -233,7 +234,10 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     @Override
     public Collection<BlockPos> memberBlocks() {
         if (this.parentRef == null || this.parentRef.entity.childCache == null) return List.of();
-        return this.parentRef.entity.childCache.stream().map(BlockEntity::getPos).toList();
+
+        var members = this.parentRef.entity.childCache.stream().map(BlockEntity::getPos).collect(Collectors.toList());
+        members.add(this.parentRef.entity.pos);
+        return members;
     }
 
     @Override
