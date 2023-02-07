@@ -300,12 +300,16 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     private HitResult raycast(Matrix4f projection, Matrix4f viewMatrix, double mouseX, double mouseY) {
-        if (scale.value < 1) return BlockHitResult.createMissed(Vec3d.ZERO, Direction.NORTH, BlockPos.ORIGIN);
+        // If the scale is too low, we don't bother raycasting for two reasons
+        // - the ray attains ungodly length (in excess of 100k+ blocks)
+        // - the user can't really precisely aim at anything anyways
+        if (scale.value < .75f) return BlockHitResult.createMissed(Vec3d.ZERO, Direction.NORTH, BlockPos.ORIGIN);
 
         var window = MinecraftClient.getInstance().getWindow();
+        float x = (float) ((2f * window.getScaleFactor() * mouseX) / window.getFramebufferWidth() - 1f);
+        float y = (float) (1f - (2f * window.getScaleFactor() * mouseY) / window.getFramebufferHeight());
 
-        float x = (float) ((2 * window.getScaleFactor() * mouseX) / window.getFramebufferWidth() - 1.0f);
-        float y = (float) (1.0f - (2 * window.getScaleFactor() * mouseY) / window.getFramebufferHeight());
+        // Unproject and compute ray enter/exit positions
 
         var invProj = new Matrix4f(projection).invert();
         var invView = new Matrix4f(viewMatrix).invert();
@@ -313,8 +317,22 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         var near = new Vector4f(x, y, -1, 1).mul(invProj).mul(invView);
         var far = new Vector4f(x, y, 1, 1).mul(invProj).mul(invView);
 
-        var origin = this.mesh.startPos();
+        // Since the ray points we get are at bogus positions very, very far away due to the
+        // orthographic projection we compute the ray and move the points in by 20% and 65% respectively
+        // to eliminate about 85% of the problem space. This is a fine optimization to make since
+        // no real network will (or even can) ever extend over 20k blocks
+        //
+        // This results in about a 2x performance gain (170 -> 350FPS on my machine)
 
+        var ray = new Vector4f(far).sub(near);
+
+        near.add(ray.mul(.2f));
+        far.add(ray.mul(1f / .2f * -.65f));
+
+        // Now that we have somewhat sane ray points, we just hand off to vanilla raycasting
+        // in the masked block render view we created for meshing the network in the first place
+
+        var origin = this.mesh.startPos();
         return this.world.raycast(new RaycastContext(
                 new Vec3d(origin.getX() + near.x, origin.getY() + near.y, origin.getZ() + near.z),
                 new Vec3d(origin.getX() + far.x, origin.getY() + far.y, origin.getZ() + far.z),
