@@ -12,6 +12,7 @@ import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.mob.MobEntity;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -197,6 +199,38 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     public BlockPos ritualCenterPos() {
         final var set = neighborPositions != null ? neighborPositions : AberrantCallingCoreBlock.findValidCoreSet(this.world, this.pos);
         return set != null ? set.center() : this.pos;
+    }
+
+    @Override
+    public void appendTooltipEntries(List<Entry> entries) {
+        super.appendTooltipEntries(entries);
+
+        var possibleCoreSets = AberrantCallingCoreBlock.possibleValidCoreSets(this.pos);
+
+        var mostCompleteSet = possibleCoreSets.get(0);
+        for (var set : possibleCoreSets) {
+            if (set.validCoreCount(this.world) > mostCompleteSet.validCoreCount(this.world)) {
+                mostCompleteSet = set;
+            }
+        }
+
+        int missingCoreCount = 3 - mostCompleteSet.validCoreCount(this.world);
+        if (missingCoreCount != 0) {
+            entries.add(Entry.text(
+                    TextOps.withColor("❌ ", 0xEB1D36),
+                    Text.translatable(
+                            missingCoreCount == 1
+                                    ? "block.affinity.aberrant_calling_core.tooltip.incomplete.singular"
+                                    : "block.affinity.aberrant_calling_core.tooltip.incomplete.plural",
+                            missingCoreCount
+                    )
+            ));
+        } else {
+            entries.add(Entry.text(
+                    TextOps.withColor("✔", 0x28FFBF),
+                    Text.translatable("block.affinity.aberrant_calling_core.tooltip.complete")
+            ));
+        }
     }
 
     @Override

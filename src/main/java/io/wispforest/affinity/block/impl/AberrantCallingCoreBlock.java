@@ -119,7 +119,7 @@ public class AberrantCallingCoreBlock extends AethumNetworkMemberBlock {
         return null;
     }
 
-    private static List<CoreSet> possibleValidCoreSets(BlockPos corner) {
+    public static List<CoreSet> possibleValidCoreSets(BlockPos corner) {
         final var list = new ArrayList<CoreSet>();
         for (var direction : HORIZONTAL_DIRECTIONS) {
             list.add(new CoreSet(new BlockPos[]{
@@ -139,11 +139,6 @@ public class AberrantCallingCoreBlock extends AethumNetworkMemberBlock {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-//        final var coreSet = findValidCoreSet(world, pos);
-//        if (coreSet != null && !world.isClient) {
-//            for (var corePos : coreSet) world.setBlockState(corePos.up(), Registry.BLOCK.get(world.random.nextInt(Registry.BLOCK.size())).getDefaultState());
-//        }
-
         return InteractableBlockEntity.tryHandle(world, pos, player, hand, hit);
     }
 
@@ -161,10 +156,18 @@ public class AberrantCallingCoreBlock extends AethumNetworkMemberBlock {
     public record CoreSet(BlockPos[] cores, BlockPos center) implements Iterable<BlockPos> {
 
         public boolean hasMissingCores(World world) {
+            return this.validCoreCount(world) != 3;
+        }
+
+        public int validCoreCount(World world) {
+            int validCores = 0;
+
             for (var pos : this.cores) {
-                if (AberrantCallingCoreBlock.noCoreAt(world, pos)) return true;
+                if (AberrantCallingCoreBlock.noCoreAt(world, pos)) continue;
+                validCores++;
             }
-            return false;
+
+            return validCores;
         }
 
         public AberrantCallingCoreBlockEntity[] resolve(World world) {

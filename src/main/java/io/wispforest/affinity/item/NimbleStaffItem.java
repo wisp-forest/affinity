@@ -1,10 +1,12 @@
 package io.wispforest.affinity.item;
 
+import com.google.common.collect.ImmutableMap;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.ops.TextOps;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -20,10 +22,18 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Map;
 
 public class NimbleStaffItem extends StaffItem {
 
     public static final NbtKey<Direction> DIRECTION = new NbtKey<>("Direction", NbtKey.Type.STRING.then(Direction::byName, Direction::asString));
+
+    private static final Map<Direction, Text> ARROW_BY_DIRECTION = new ImmutableMap.Builder<Direction, Text>()
+            .put(Direction.NORTH, TextOps.withColor("↑", 0xFEF5AC))
+            .put(Direction.SOUTH, TextOps.withColor("↓", 0xFEF5AC))
+            .put(Direction.EAST, TextOps.withColor("→", 0xFEF5AC))
+            .put(Direction.WEST, TextOps.withColor("←", 0xFEF5AC))
+            .build();
 
     public NimbleStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
@@ -84,9 +94,9 @@ public class NimbleStaffItem extends StaffItem {
     @Override
     public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {
         var direction = getDirection(pedestal.getItem());
-        entries.add(new CrosshairStatProvider.Entry(
-                Text.translatable(this.getTranslationKey() + ".direction." + direction.asString()),
-                24, 24
+        entries.add(CrosshairStatProvider.Entry.text(
+                ARROW_BY_DIRECTION.get(direction),
+                Text.translatable(this.getTranslationKey() + ".direction." + direction.asString())
         ));
     }
 

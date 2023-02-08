@@ -43,7 +43,7 @@ public class CreativeAethumFluxCacheBlockEntity extends AethumNetworkMemberBlock
         super.appendTooltipEntries(entries);
 
         entries.remove(0);
-        entries.add(0, new Entry(Text.translatable("text.affinity.tooltip.creative_flux_cache_flux_level"), 0, 0));
+        entries.add(0, Entry.icon(Text.translatable("text.affinity.tooltip.creative_flux_cache_flux_level"), 0, 0));
     }
 
     @Override

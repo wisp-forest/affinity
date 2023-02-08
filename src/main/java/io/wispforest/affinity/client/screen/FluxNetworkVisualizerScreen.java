@@ -259,7 +259,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                     var entries = new ArrayList<CrosshairStatProvider.Entry>();
                     statProvider.appendTooltipEntries(entries);
 
-                    entries.add(0, new CrosshairStatProvider.Entry(blockEntity.getCachedState().getBlock().getName(), 24, 24));
+                    entries.add(0, CrosshairStatProvider.Entry.text(Text.empty(), blockEntity.getCachedState().getBlock().getName()));
 
                     for (int i = 0; i < entries.size(); i++) {
                         var entry = entries.get(i);
@@ -268,13 +268,17 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                         int yOffset = i * 10;
                         if (i > 0) yOffset += 3;
 
-                        RenderSystem.enableBlend();
-                        RenderSystem.setShaderColor(1, 1, 1, progress);
-                        RenderSystem.setShaderTexture(0, entry.texture());
-                        RenderSystem.enableDepthTest();
-                        Drawer.drawTexture(matrices, mouseX + 10, mouseY + yOffset, entry.x(), entry.y(), 8, 8, 32, 32);
+                        if (entry instanceof CrosshairStatProvider.TextEntry textEntry) {
+                            client.textRenderer.draw(matrices, textEntry.icon(), mouseX + 10 + 1, mouseY + yOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
+                        } else if (entry instanceof CrosshairStatProvider.TextAndIconEntry iconEntry) {
+                            RenderSystem.enableBlend();
+                            RenderSystem.setShaderColor(1, 1, 1, progress);
+                            RenderSystem.setShaderTexture(0, iconEntry.texture());
+                            RenderSystem.enableDepthTest();
+                            Drawer.drawTexture(matrices, mouseX + 10, mouseY + yOffset, iconEntry.u(), iconEntry.v(), 8, 8, 32, 32);
+                        }
 
-                        client.textRenderer.drawWithShadow(matrices, entry.text(), mouseX + 10 + 15, mouseY + yOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
+                        client.textRenderer.drawWithShadow(matrices, entry.label(), mouseX + 10 + 15, mouseY + yOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
                     }
                 }
 
@@ -323,6 +327,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         // no real network will (or even can) ever extend over 20k blocks
         //
         // This results in about a 2x performance gain (170 -> 350FPS on my machine)
+        // glisco, 07.02.2023
 
         var ray = new Vector4f(far).sub(near);
 

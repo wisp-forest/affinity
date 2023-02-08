@@ -49,7 +49,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
 
     @Override
     public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {
-        entries.add(new CrosshairStatProvider.Entry(this.getModeName(pedestal.getItem()), 8, 0));
+        entries.add(CrosshairStatProvider.Entry.icon(this.getModeName(pedestal.getItem()), 8, 0));
     }
 
     @Override

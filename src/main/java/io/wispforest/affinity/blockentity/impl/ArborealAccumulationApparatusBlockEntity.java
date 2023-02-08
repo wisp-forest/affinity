@@ -26,7 +26,7 @@ public class ArborealAccumulationApparatusBlockEntity extends AethumNetworkMembe
     @Override
     public void appendTooltipEntries(List<Entry> entries) {
         super.appendTooltipEntries(entries);
-        entries.add(new Entry(Text.of(this.generationFactor + "/t"), 8, 0));
+        entries.add(Entry.icon(Text.of(this.generationFactor + "/t"), 8, 0));
     }
 
     @Override

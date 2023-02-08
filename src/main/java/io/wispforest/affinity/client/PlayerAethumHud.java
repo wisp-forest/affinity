@@ -53,7 +53,7 @@ public class PlayerAethumHud {
                 );
 
                 if (this.slowDisplayAethum > this.displayAethum) {
-                    this.drawAethumRing(matrices, this.slowDisplayAethum, Color.ofArgb(0x7f000000 | 0xFCE22A));
+                    this.drawAethumRing(matrices, this.slowDisplayAethum, Color.ofArgb(0x7f03C988));
                 }
 
                 this.drawAethumRing(matrices, this.displayAethum, Affinity.AETHUM_FLUX_COLOR.interpolate(Color.ofRgb(0xce2424), this.warningColorWeight));

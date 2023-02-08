@@ -67,13 +67,17 @@ public class StatProviderRenderer {
                     matrices.push();
                     matrices.translate(0, 0, Easing.CUBIC.apply(1 - progress) * -25);
 
-                    RenderSystem.enableBlend();
-                    RenderSystem.setShaderColor(1, 1, 1, progress);
-                    RenderSystem.setShaderTexture(0, entry.texture());
-                    RenderSystem.enableDepthTest();
-                    Drawer.drawTexture(matrices, 0, i * 10, entry.x(), entry.y(), 8, 8, 32, 32);
+                    if (entry instanceof CrosshairStatProvider.TextEntry textEntry) {
+                        client.textRenderer.draw(matrices, textEntry.icon(), 1, i * 10, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
+                    } else if (entry instanceof CrosshairStatProvider.TextAndIconEntry iconEntry) {
+                        RenderSystem.enableBlend();
+                        RenderSystem.setShaderColor(1, 1, 1, progress);
+                        RenderSystem.setShaderTexture(0, iconEntry.texture());
+                        RenderSystem.enableDepthTest();
+                        Drawer.drawTexture(matrices, 0, i * 10, iconEntry.u(), iconEntry.v(), 8, 8, 32, 32);
+                    }
 
-                    client.textRenderer.draw(matrices, entry.text(), 15, i * 10, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
+                    client.textRenderer.draw(matrices, entry.label(), 15, i * 10, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
                     matrices.pop();
                 }
 

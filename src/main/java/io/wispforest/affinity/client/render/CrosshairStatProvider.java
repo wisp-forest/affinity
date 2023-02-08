@@ -3,7 +3,6 @@ package io.wispforest.affinity.client.render;
 import io.wispforest.affinity.Affinity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -27,13 +26,26 @@ public interface CrosshairStatProvider {
      */
     void appendTooltipEntries(List<Entry> entries);
 
-    record Entry(Text text, @Nullable Identifier texture, int x, int y) {
+    sealed interface Entry permits TextEntry, TextAndIconEntry {
+        Text label();
 
-        public static final Identifier DEFAULT_TEXTURE = Affinity.id("textures/gui/tooltip_icons.png");
-
-        public Entry(Text text, int x, int y) {
-            this(text, DEFAULT_TEXTURE, x, y);
+        static Entry icon(Text text, int u, int v) {
+            return new TextAndIconEntry(text, TextAndIconEntry.DEFAULT_TEXTURE, u, v);
         }
+
+        static Entry icon(Text text, Identifier texture, int u, int v) {
+            return new TextAndIconEntry(text, texture, u, v);
+        }
+
+        static Entry text(Text icon, Text text) {
+            return new TextEntry(icon, text);
+        }
+    }
+
+    record TextEntry(Text icon, Text label) implements Entry {}
+
+    record TextAndIconEntry(Text label, Identifier texture, int u, int v) implements Entry {
+        public static final Identifier DEFAULT_TEXTURE = Affinity.id("textures/gui/tooltip_icons.png");
     }
 
 }

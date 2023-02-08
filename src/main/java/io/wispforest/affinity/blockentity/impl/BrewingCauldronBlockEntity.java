@@ -167,11 +167,6 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         this.cachedRecipe = null;
     }
 
-    @Override
-    public void appendTooltipEntries(List<Entry> entries) {
-        super.appendTooltipEntries(entries);
-    }
-
     private void updateCraftingState() {
         this.cachedRecipe = PotionMixingRecipe.getMatching(this.world.getRecipeManager(), this.storedPotion, this.items).orElse(null);
         if (this.cachedRecipe == null) {
