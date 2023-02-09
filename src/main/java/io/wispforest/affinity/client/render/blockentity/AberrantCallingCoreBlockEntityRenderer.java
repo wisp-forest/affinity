@@ -15,6 +15,6 @@ public class AberrantCallingCoreBlockEntityRenderer implements BlockEntityRender
         final var stack = entity.getItem();
         if (stack.isEmpty()) return;
 
-        this.renderItem(matrices, vertexConsumers, stack, 3000, .7f, .5f, .9f, .5f, light, overlay);
+        this.renderItem(entity, matrices, vertexConsumers, stack, 3000, .7f, .5f, .9f, .5f, light, overlay);
     }
 }

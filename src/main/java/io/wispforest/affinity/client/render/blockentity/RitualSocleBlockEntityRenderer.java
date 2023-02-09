@@ -15,6 +15,6 @@ public class RitualSocleBlockEntityRenderer implements BlockEntityRenderer<Ritua
         final var stack = entity.getItem();
         if (stack.isEmpty()) return;
 
-        this.renderItem(matrices, vertexConsumers, stack, 3000, .5f, .5f, .935f, .5f, light, overlay);
+        this.renderItem(entity, matrices, vertexConsumers, stack, 3000, .5f, .5f, .935f, .5f, light, overlay);
     }
 }

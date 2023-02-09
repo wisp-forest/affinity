@@ -12,6 +12,6 @@ public class AspRiteCoreBlockEntityRenderer implements BlockEntityRenderer<AspRi
 
     @Override
     public void render(AspRiteCoreBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        this.renderItem(matrices, vertexConsumers, entity.getItem(), 5000, .65f, .5f, .75f, .5f, light, overlay);
+        this.renderItem(entity, matrices, vertexConsumers, entity.getItem(), 5000, .65f, .5f, .75f, .5f, light, overlay);
     }
 }

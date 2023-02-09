@@ -175,7 +175,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                 mesh.getRenderInfo().getBlockEntities().forEach((blockPos, entity) -> {
                     matrices.push();
                     matrices.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                    client.getBlockEntityRenderDispatcher().render(entity, 0, matrices, this.client.getBufferBuilders().getEntityVertexConsumers());
+                    this.client.getBlockEntityRenderDispatcher().render(entity, 0, matrices, this.client.getBufferBuilders().getEntityVertexConsumers());
                     matrices.pop();
                 });
 
@@ -415,12 +415,12 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         }
     }
 
-    private static class RenderView implements BlockRenderView {
+    public static class RenderView implements BlockRenderView {
 
         private final Set<BlockPos> passthroughPositions;
         private final ClientWorld world;
 
-        private RenderView(Collection<BlockPos> passthroughPositions) {
+        public RenderView(Collection<BlockPos> passthroughPositions) {
             this.passthroughPositions = new HashSet<>(passthroughPositions);
             this.world = MinecraftClient.getInstance().world;
         }
