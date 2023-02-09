@@ -2,7 +2,7 @@ package io.wispforest.affinity.client.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
@@ -45,7 +45,10 @@ import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30C;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
@@ -86,40 +89,15 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
     public FluxNetworkVisualizerScreen(AethumNetworkMemberBlockEntity initialMember) {
         super(FlowLayout.class, DataSource.file("../src/main/resources/assets/affinity/owo_ui/flux_network_visualizer.xml"));
 
-        // is this BFS in a constructor?
-        // yes, yes it is
-        var members = new HashSet<BlockPos>();
-
-        var queue = new ArrayDeque<BlockPos>();
-        queue.add(initialMember.getPos());
-
-        while (!queue.isEmpty()) {
-            var memberPos = queue.poll();
-
-            var peer = Affinity.AETHUM_MEMBER.find(MinecraftClient.getInstance().world, memberPos, null);
-            if (peer == null) continue;
-
-            members.add(memberPos);
-            if (peer instanceof MultiblockAethumNetworkMember multiblock) {
-                for (var multiblockMemberPos : multiblock.memberBlocks()) {
-                    members.add(multiblockMemberPos);
-
-                    var multiblockMember = Affinity.AETHUM_MEMBER.find(MinecraftClient.getInstance().world, multiblockMemberPos, null);
-                    if (multiblockMember == null) continue;
-
-                    this.networkCapacity += multiblockMember.fluxCapacity();
-                }
+        var members = AethumNetworkMember.traverseNetwork(MinecraftClient.getInstance().world, initialMember.getPos(), (peer, isMultiblockChild) -> {
+            if (!isMultiblockChild) {
+                this.networkMembers++;
+                this.networkCapacity += peer.fluxCapacity();
+                if (peer instanceof AethumNetworkNode) this.networkNodes++;
+            } else {
+                this.networkCapacity += peer.fluxCapacity();
             }
-
-            this.networkMembers++;
-            this.networkCapacity += peer.fluxCapacity();
-            if (peer instanceof AethumNetworkNode) this.networkNodes++;
-
-            for (var neighbor : peer.linkedMembers()) {
-                if (members.contains(neighbor) || queue.contains(neighbor)) continue;
-                queue.add(neighbor);
-            }
-        }
+        });
 
         int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
         int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
