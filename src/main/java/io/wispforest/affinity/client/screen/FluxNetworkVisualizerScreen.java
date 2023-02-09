@@ -100,7 +100,16 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             if (peer == null) continue;
 
             members.add(memberPos);
-            if (peer instanceof MultiblockAethumNetworkMember multiblock) members.addAll(multiblock.memberBlocks());
+            if (peer instanceof MultiblockAethumNetworkMember multiblock) {
+                for (var multiblockMemberPos : multiblock.memberBlocks()) {
+                    members.add(multiblockMemberPos);
+
+                    var multiblockMember = Affinity.AETHUM_MEMBER.find(MinecraftClient.getInstance().world, multiblockMemberPos, null);
+                    if (multiblockMember == null) continue;
+
+                    this.networkCapacity += multiblockMember.fluxCapacity();
+                }
+            }
 
             this.networkMembers++;
             this.networkCapacity += peer.fluxCapacity();
