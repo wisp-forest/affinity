@@ -1,16 +1,20 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.nbt.NbtKey;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -27,6 +31,8 @@ import java.util.List;
 public class TimeStaffItem extends StaffItem implements DirectInteractionHandler {
 
     public static final NbtKey<Mode> MODE = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
+
+    public static final TagKey<Block> IMMUNE_BLOCKS = TagKey.of(RegistryKeys.BLOCK, Affinity.id("time_staff_immune"));
 
     public TimeStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
@@ -74,7 +80,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
                 return;
             }
 
-            if (accelerate(world, targetPos, mode.repeatTicks)) {
+            if (this.accelerate(world, targetPos, mode.repeatTicks)) {
                 pedestal.consumeFlux(costPerBlock);
             }
         }
@@ -97,21 +103,25 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
 
         var res = (BlockHitResult) player.raycast(5, 0, false);
 
-        if (world.random.nextInt(4) == 0)
+        if (world.random.nextInt(4) == 0) {
             AffinityParticleSystems.TIME_STAFF_ACCELERATE.spawn(world, player.getPos().add(0, 1.25, 0), res.getBlockPos());
+        }
 
         var mode = stack.get(MODE);
-        accelerate(world, res.getBlockPos(), mode.repeatTicks);
+        this.accelerate(world, res.getBlockPos(), mode.repeatTicks);
 
         return TypedActionResult.consume(stack);
     }
 
-    protected static boolean accelerate(World world, BlockPos pos, int ticks) {
+    protected boolean accelerate(World world, BlockPos pos, int ticks) {
         boolean ticked = false;
 
         for (int i = 0; i < ticks; i++) {
             BlockState state = world.getBlockState(pos);
             BlockEntity be = world.getBlockEntity(pos);
+
+            if (state.isIn(IMMUNE_BLOCKS)) return ticked;
+            if (be instanceof StaffPedestalBlockEntity pedestal && pedestal.getItem().isOf(this)) return ticked;
 
             if (be != null) {
                 var ticker = state.getBlockEntityTicker(world, (BlockEntityType<BlockEntity>) be.getType());
