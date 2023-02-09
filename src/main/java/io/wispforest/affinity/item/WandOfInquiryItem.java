@@ -1,5 +1,6 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
@@ -78,7 +79,7 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
 
     @Override
     public boolean shouldHandleInteraction(World world, BlockPos pos, BlockState state) {
-        return world.getBlockEntity(pos) instanceof RitualCoreBlockEntity;
+        return world.getBlockEntity(pos) instanceof RitualCoreBlockEntity || Affinity.AETHUM_MEMBER.find(world, pos, null) != null;
     }
 
     static {
