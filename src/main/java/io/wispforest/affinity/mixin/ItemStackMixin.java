@@ -1,10 +1,18 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
+import io.wispforest.owo.ui.core.Color;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,14 +22,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
 
+    private static final TagKey<Item> AFFINITY$CANNOT_USE_IN_DYING_CHUNKS = TagKey.of(RegistryKeys.ITEM, Affinity.id("cannot_use_in_dying_chunks"));
+
     @Inject(method = "getName", at = @At("RETURN"), cancellable = true)
     private void injectNameColorForIncandescence(CallbackInfoReturnable<Text> cir) {
         final var stack = (ItemStack) (Object) this;
         if (!(PotionUtil.getPotion(stack) instanceof GlowingPotion)) return;
 
-        var color = DyeColor.byName(stack.getOrCreateNbt().getString("Color"), DyeColor.WHITE).getColorComponents();
+        var color = DyeColor.byName(stack.getOrCreateNbt().getString("Color"), DyeColor.WHITE);
         cir.setReturnValue(cir.getReturnValue().copy().setStyle(
-                Style.EMPTY.withColor(((int) (color[0] * 255)) << 16 | ((int) (color[1] * 255)) << 8 | ((int) (color[2] * 255)))));
+                Style.EMPTY.withColor(Color.ofDye(color).rgb())));
+    }
+
+    @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)
+    private void cancelInteractionsInDyingChunks(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
+        if (!context.getStack().isIn(AFFINITY$CANNOT_USE_IN_DYING_CHUNKS)) return;
+
+        var component = AffinityComponents.CHUNK_AETHUM.get(context.getWorld().getChunk(context.getBlockPos()));
+        if (component.getAethum() > 60) return;
+
+        cir.setReturnValue(ActionResult.PASS);
     }
 
 }
