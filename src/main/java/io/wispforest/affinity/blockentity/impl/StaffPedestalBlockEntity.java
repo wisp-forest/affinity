@@ -17,6 +17,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -107,6 +108,12 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.put(ITEM_KEY, this.item);
+    }
+
+    @Override
+    public void onBroken() {
+        super.onBroken();
+        ItemScatterer.spawn(this.world, this.pos, this.inventoryProvider);
     }
 
     @Override
