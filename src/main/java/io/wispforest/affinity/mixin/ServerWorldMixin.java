@@ -52,7 +52,7 @@ public abstract class ServerWorldMixin extends World {
         if (!state.isIn(AFFINITY$NO_RANDOM_TICKS)) return state;
 
         var component = AffinityComponents.CHUNK_AETHUM.get(chunk);
-        if (component.hasEffectActive(ChunkAethumComponent.INFERTILITY)) return state;
+        if (!component.hasEffectActive(ChunkAethumComponent.INFERTILITY)) return state;
 
         return AFFINITY$MOCK_STATE;
     }
