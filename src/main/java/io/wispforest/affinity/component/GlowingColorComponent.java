@@ -2,16 +2,15 @@ package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import io.wispforest.affinity.misc.potion.GlowingPotion;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.DyeColor;
 
-import java.util.Objects;
-
 public class GlowingColorComponent implements Component, AutoSyncedComponent {
 
     private final PlayerEntity provider;
-    private String color = "none";
+    private DyeColor color = null;
 
     public GlowingColorComponent(PlayerEntity provider) {
         this.provider = provider;
@@ -19,24 +18,24 @@ public class GlowingColorComponent implements Component, AutoSyncedComponent {
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        this.color = tag.getString("Color");
+        this.color = tag.getOr(GlowingPotion.COLOR_KEY, null);
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-        tag.putString("Color", this.color);
+        tag.putIfNotNull(GlowingPotion.COLOR_KEY, this.color);
     }
 
-    public DyeColor getColor() {
-        return Objects.equals(color, "none") ? null : DyeColor.byName(color, DyeColor.WHITE);
+    public DyeColor color() {
+        return this.color;
     }
 
     public void reset() {
-        this.color = "none";
+        this.color = null;
         AffinityComponents.GLOWING_COLOR.sync(provider);
     }
 
-    public void setColor(String color) {
+    public void setColor(DyeColor color) {
         this.color = color;
         AffinityComponents.GLOWING_COLOR.sync(provider);
     }

@@ -2,6 +2,7 @@ package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.component.ChunkAethumComponent;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.owo.ui.core.Color;
 import net.minecraft.item.Item;
@@ -10,10 +11,8 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,10 +27,10 @@ public abstract class ItemStackMixin {
     private void injectNameColorForIncandescence(CallbackInfoReturnable<Text> cir) {
         final var stack = (ItemStack) (Object) this;
         if (!(PotionUtil.getPotion(stack) instanceof GlowingPotion)) return;
+        if (!stack.has(GlowingPotion.COLOR_KEY)) return;
 
-        var color = DyeColor.byName(stack.getOrCreateNbt().getString("Color"), DyeColor.WHITE);
-        cir.setReturnValue(cir.getReturnValue().copy().setStyle(
-                Style.EMPTY.withColor(Color.ofDye(color).rgb())));
+        var color = stack.get(GlowingPotion.COLOR_KEY);
+        cir.setReturnValue(cir.getReturnValue().copy().styled(style -> style.withColor(Color.ofDye(color).rgb())));
     }
 
     @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)

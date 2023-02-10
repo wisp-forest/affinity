@@ -15,7 +15,7 @@ public class EntityMixin {
     private void injectGlowingColor(CallbackInfoReturnable<Integer> cir) {
         if (!((Object) this instanceof PlayerEntity player)) return;
 
-        var color = AffinityComponents.GLOWING_COLOR.get(player).getColor();
+        var color = AffinityComponents.GLOWING_COLOR.get(player).color();
         if (color == null) return;
 
         cir.setReturnValue(color.getSignColor());
