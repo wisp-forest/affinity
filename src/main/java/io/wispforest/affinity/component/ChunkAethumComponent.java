@@ -1,8 +1,15 @@
 package io.wispforest.affinity.component;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.AethumAcquisitionCache;
+import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
@@ -11,16 +18,16 @@ import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ChunkAethumComponent extends AethumComponent<Chunk> implements ServerTickingComponent {
 
     public static final LatchingAethumEffect INFERTILITY = new LatchingAethumEffect(40, 60);
-    private static final List<LatchingAethumEffect> EFFECT_REGISTRY = new ArrayList<>();
+
+    private static final NbtKey<NbtList> ACTIVE_EFFECTS_KEY = new NbtKey.ListKey<>("ActiveEffects", NbtKey.Type.STRING);
+    private static final BiMap<Identifier, LatchingAethumEffect> EFFECT_REGISTRY = HashBiMap.create();
 
     private static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
 
@@ -64,7 +71,13 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
             this.neighborsCached = true;
         }
 
-        this.updateEffects();
+        for (var effect : EFFECT_REGISTRY.values()) {
+            if (this.activeEffects.contains(effect)) {
+                if (this.aethum >= effect.releaseThreshold) this.activeEffects.remove(effect);
+            } else {
+                if (this.aethum <= effect.triggerThreshold) this.activeEffects.add(effect);
+            }
+        }
 
         if (world.getRandom().nextDouble() > .05) return;
 
@@ -83,16 +96,6 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         }
 
         if (this.aethum != previousAethum) this.setAethum(this.aethum);
-    }
-
-    private void updateEffects() {
-        for (var effect : EFFECT_REGISTRY) {
-            if (this.activeEffects.contains(effect)) {
-                if (this.aethum >= effect.releaseThreshold) this.activeEffects.remove(effect);
-            } else {
-                if (this.aethum <= effect.triggerThreshold) this.activeEffects.add(effect);
-            }
-        }
     }
 
     public double adjustedAethum() {
@@ -190,18 +193,35 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     }
 
     @Override
-    public void readFromNbt(@NotNull NbtCompound tag) {
-        super.readFromNbt(tag);
-        this.updateEffects();
+    public void writeToNbt(@NotNull NbtCompound tag) {
+        super.writeToNbt(tag);
+
+        var effectList = new NbtList();
+        for (var effect : this.activeEffects) {
+            effectList.add(NbtString.of(EFFECT_REGISTRY.inverse().get(effect).toString()));
+        }
+
+        tag.put(ACTIVE_EFFECTS_KEY, effectList);
     }
 
-    public static void registerAethumEffect(LatchingAethumEffect effect) {
-        EFFECT_REGISTRY.add(effect);
+    @Override
+    public void readFromNbt(@NotNull NbtCompound tag) {
+        super.readFromNbt(tag);
+
+        this.activeEffects.clear();
+        var effectList = tag.get(ACTIVE_EFFECTS_KEY);
+        for (var effectId : effectList) {
+            this.activeEffects.add(EFFECT_REGISTRY.get(new Identifier(effectId.asString())));
+        }
+    }
+
+    public static void registerAethumEffect(Identifier id, LatchingAethumEffect effect) {
+        EFFECT_REGISTRY.put(id, effect);
     }
 
     public record LatchingAethumEffect(double triggerThreshold, double releaseThreshold) {}
 
     static {
-        registerAethumEffect(INFERTILITY);
+        registerAethumEffect(Affinity.id("infertility"), INFERTILITY);
     }
 }
