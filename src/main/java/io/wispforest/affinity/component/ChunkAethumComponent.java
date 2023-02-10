@@ -25,6 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ChunkAethumComponent extends AethumComponent<Chunk> implements ServerTickingComponent {
 
     public static final LatchingAethumEffect INFERTILITY = new LatchingAethumEffect(40, 60);
+    public static final LatchingAethumEffect NO_NATURAL_REGEN = new LatchingAethumEffect(30, 45);
 
     private static final NbtKey<NbtList> ACTIVE_EFFECTS_KEY = new NbtKey.ListKey<>("ActiveEffects", NbtKey.Type.STRING);
     private static final BiMap<Identifier, LatchingAethumEffect> EFFECT_REGISTRY = HashBiMap.create();
@@ -223,5 +224,6 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
 
     static {
         registerAethumEffect(Affinity.id("infertility"), INFERTILITY);
+        registerAethumEffect(Affinity.id("no_natural_regen"), NO_NATURAL_REGEN);
     }
 }
