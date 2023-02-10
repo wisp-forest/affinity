@@ -39,7 +39,7 @@ public abstract class ItemStackMixin {
         if (!context.getStack().isIn(AFFINITY$CANNOT_USE_IN_DYING_CHUNKS)) return;
 
         var component = AffinityComponents.CHUNK_AETHUM.get(context.getWorld().getChunk(context.getBlockPos()));
-        if (component.getAethum() > 60) return;
+        if (!component.hasEffectActive(ChunkAethumComponent.INFERTILITY)) return;
 
         cir.setReturnValue(ActionResult.PASS);
     }

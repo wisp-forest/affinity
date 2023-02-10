@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.component.ChunkAethumComponent;
 import io.wispforest.affinity.component.WorldPinsComponent;
 import io.wispforest.affinity.mixin.access.ServerChunkManagerAccessor;
 import net.minecraft.block.Block;
@@ -51,7 +52,7 @@ public abstract class ServerWorldMixin extends World {
         if (!state.isIn(AFFINITY$NO_RANDOM_TICKS)) return state;
 
         var component = AffinityComponents.CHUNK_AETHUM.get(chunk);
-        if (component.getAethum() > 60) return state;
+        if (component.hasEffectActive(ChunkAethumComponent.INFERTILITY)) return state;
 
         return AFFINITY$MOCK_STATE;
     }

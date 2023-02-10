@@ -2,22 +2,33 @@ package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import io.wispforest.affinity.misc.AethumAcquisitionCache;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ChunkAethumComponent extends AethumComponent<Chunk> implements ServerTickingComponent {
+
+    public static final LatchingAethumEffect INFERTILITY = new LatchingAethumEffect(40, 60);
+    private static final List<LatchingAethumEffect> EFFECT_REGISTRY = new ArrayList<>();
 
     private static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
 
     private final ChunkPos pos;
     private boolean neighborsCached = false;
     private final ChunkAethumComponent[] neighbors = new ChunkAethumComponent[4];
+
+    private final Set<LatchingAethumEffect> activeEffects = new HashSet<>();
 
     public ChunkAethumComponent(Chunk chunk) {
         super(AffinityComponents.CHUNK_AETHUM, chunk);
@@ -28,6 +39,10 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     public void setAethum(double aethum) {
         super.setAethum(aethum);
         this.holder.setNeedsSaving(true);
+    }
+
+    public boolean hasEffectActive(LatchingAethumEffect effect) {
+        return this.activeEffects.contains(effect);
     }
 
     @Override
@@ -49,6 +64,8 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
             this.neighborsCached = true;
         }
 
+        this.updateEffects();
+
         if (world.getRandom().nextDouble() > .05) return;
 
         final double previousAethum = this.aethum;
@@ -66,6 +83,16 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         }
 
         if (this.aethum != previousAethum) this.setAethum(this.aethum);
+    }
+
+    private void updateEffects() {
+        for (var effect : EFFECT_REGISTRY) {
+            if (this.activeEffects.contains(effect)) {
+                if (this.aethum >= effect.releaseThreshold) this.activeEffects.remove(effect);
+            } else {
+                if (this.aethum <= effect.triggerThreshold) this.activeEffects.add(effect);
+            }
+        }
     }
 
     public double adjustedAethum() {
@@ -160,5 +187,21 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     @Override
     double initialValue() {
         return ThreadLocalRandom.current().nextDouble(60, 85);
+    }
+
+    @Override
+    public void readFromNbt(@NotNull NbtCompound tag) {
+        super.readFromNbt(tag);
+        this.updateEffects();
+    }
+
+    public static void registerAethumEffect(LatchingAethumEffect effect) {
+        EFFECT_REGISTRY.add(effect);
+    }
+
+    public record LatchingAethumEffect(double triggerThreshold, double releaseThreshold) {}
+
+    static {
+        registerAethumEffect(INFERTILITY);
     }
 }
