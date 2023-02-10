@@ -16,15 +16,18 @@ import net.minecraft.world.World;
 public class RealizedAethumMapItem extends FilledMapItem {
 
     private static final byte[] COLORS = {
+            MapColor.BLACK.getRenderColorByte(MapColor.Brightness.LOWEST),
             MapColor.BLACK.getRenderColorByte(MapColor.Brightness.LOW),
             MapColor.BLACK.getRenderColorByte(MapColor.Brightness.NORMAL),
             MapColor.BLACK.getRenderColorByte(MapColor.Brightness.HIGH),
             MapColor.GRAY.getRenderColorByte(MapColor.Brightness.LOWEST),
             MapColor.GRAY.getRenderColorByte(MapColor.Brightness.LOW),
             MapColor.GRAY.getRenderColorByte(MapColor.Brightness.NORMAL),
-            MapColor.LIGHT_GRAY.getRenderColorByte(MapColor.Brightness.LOWEST),
-            MapColor.LIGHT_GRAY.getRenderColorByte(MapColor.Brightness.LOW),
+            MapColor.STONE_GRAY.getRenderColorByte(MapColor.Brightness.LOW),
+            MapColor.STONE_GRAY.getRenderColorByte(MapColor.Brightness.NORMAL),
+            MapColor.STONE_GRAY.getRenderColorByte(MapColor.Brightness.HIGH),
             MapColor.LIGHT_GRAY.getRenderColorByte(MapColor.Brightness.NORMAL),
+            MapColor.IRON_GRAY.getRenderColorByte(MapColor.Brightness.NORMAL),
             MapColor.LIGHT_GRAY.getRenderColorByte(MapColor.Brightness.HIGH),
             MapColor.WHITE.getRenderColorByte(MapColor.Brightness.LOW),
             MapColor.WHITE.getRenderColorByte(MapColor.Brightness.NORMAL),
@@ -56,8 +59,11 @@ public class RealizedAethumMapItem extends FilledMapItem {
                 final var component = cache.getComponentFrom(pos.getX() >> 4, pos.getZ() >> 4);
 
                 final byte color = component == null ? COLORS[0] :
-                        COLORS[MathHelper.clamp((int) Math.round((component
-                                .fastAethumAt(cache, pos.getX(), pos.getZ()) - 60) / 25 * 12), 0, 12)];
+                        COLORS[MathHelper.clamp(
+                                (int) Math.round((component.fastAethumAt(cache, pos.getX(), pos.getZ()) - 30) / 50 * 15),
+                                0,
+                                15
+                        )];
 
                 for (int i = 0; i < 4; i++) {
                     state.putColor(x + i % 2, z + i / 2, color);
