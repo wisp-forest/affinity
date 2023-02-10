@@ -172,7 +172,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                 visualizerFramebuffer().clear(MinecraftClient.IS_SYSTEM_MAC);
                 visualizerFramebuffer.beginWrite(false);
 
-                mesh.getRenderInfo().getBlockEntities().forEach((blockPos, entity) -> {
+                this.mesh.renderInfo().blockEntities().forEach((blockPos, entity) -> {
                     matrices.push();
                     matrices.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                     this.client.getBlockEntityRenderDispatcher().render(entity, 0, matrices, this.client.getBufferBuilders().getEntityVertexConsumers());
