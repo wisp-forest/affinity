@@ -4,6 +4,7 @@ import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -22,7 +23,7 @@ public class HeldItemRendererMixin {
         return AFFINITY$FILLED_MAP;
     }
 
-    @ModifyVariable(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 1), argsOnly = true)
+    @ModifyVariable(method = "renderFirstPersonItem", at = @At(value = "JUMP", opcode = Opcodes.IFEQ, ordinal = 4), argsOnly = true)
     private ItemStack restoreMap(ItemStack value) {
         if (this.affinity$cachedItem == null) return value;
         var item = this.affinity$cachedItem;
