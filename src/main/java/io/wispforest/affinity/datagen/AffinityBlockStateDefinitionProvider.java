@@ -58,7 +58,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
                 AFFINITEA, INERT_WISP_MATTER, WISE_WISP_MATTER, VICIOUS_WISP_MATTER, DRAGON_DROP
         );
 
-        handheld(generator, COLLECTION_STAFF, NIMBLE_STAFF, TIME_STAFF, WAND_OF_INQUIRY);
+        handheld(generator, COLLECTION_STAFF, NIMBLE_STAFF, TIME_STAFF, KINESIS_STAFF, WAND_OF_INQUIRY);
 
         generatedWithTexture(generator, Affinity.id("item/ranthracite_dust"), RANTHRACITE_WIRE.asItem());
 
