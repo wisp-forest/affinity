@@ -1,20 +1,25 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class KinesisStaffItem extends StaffItem {
 
     private static final NbtKey<Integer> ACTIVE_TARGET_ENTITY = new NbtKey<>("TargetEntity", NbtKey.Type.INT);
+    private static final TagKey<EntityType<?>> IMMUNE_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE, Affinity.id("kinesis_staff_immune"));
 
     public KinesisStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
@@ -37,7 +42,10 @@ public class KinesisStaffItem extends StaffItem {
                     player.getEyePos(),
                     player.getEyePos().add(maxReach),
                     player.getBoundingBox().stretch(maxReach),
-                    candidate -> !candidate.isSpectator() && !(candidate instanceof PlayerEntity candidatePlayer && candidatePlayer.isCreative()),
+                    candidate -> {
+                        if (candidate.isSpectator()) return false;
+                        return !candidate.getType().isIn(IMMUNE_ENTITIES);
+                    },
                     reach * reach
             );
             MixinHooks.INCREASED_TARGETING_MARGIN = false;
