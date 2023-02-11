@@ -73,8 +73,13 @@ public abstract class StaffItem extends Item {
 
         if (this.isContinuous(stack)) {
             if (aethum.getAethum() < consumption * 20) return TypedActionResult.pass(stack);
-            user.setCurrentHand(hand);
-            return TypedActionResult.consume(stack);
+
+            if (this.executeSpell(world, user, stack, this.getMaxUseTime(stack)).getResult().isAccepted()) {
+                user.setCurrentHand(hand);
+                return TypedActionResult.consume(stack);
+            } else {
+                return TypedActionResult.pass(stack);
+            }
         } else {
             if (aethum.getAethum() < consumption) return TypedActionResult.pass(stack);
 
