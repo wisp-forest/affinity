@@ -1,28 +1,80 @@
 package io.wispforest.affinity.item;
 
+import com.google.common.collect.ImmutableMultimap;
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.misc.MixinHooks;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class KinesisStaffItem extends StaffItem {
 
     private static final NbtKey<Integer> ACTIVE_TARGET_ENTITY = new NbtKey<>("TargetEntity", NbtKey.Type.INT);
     private static final TagKey<EntityType<?>> IMMUNE_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE, Affinity.id("kinesis_staff_immune"));
 
+    private static final EntityAttributeModifier MODIFIER = new EntityAttributeModifier(UUID.fromString("bc21b17e-2832-4762-acef-361df22a96f1"), "", -0.65, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+    private static final AffinityEntityAddon.DataKey<Long> MODIFIER_APPLIED_TICK = AffinityEntityAddon.DataKey.withNullDefault();
+
     public KinesisStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+    }
+
+    @Override
+    public boolean canBePlacedOnPedestal() {
+        return true;
+    }
+
+    @Override
+    public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        slowDownEntities(world, pos);
+    }
+
+    @Override
+    public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        slowDownEntities(world, pos);
+    }
+
+    protected static void slowDownEntities(World world, BlockPos pos) {
+        for (var entity : world.getNonSpectatingEntities(Entity.class, new Box(pos).expand(4, 4, 4))) {
+            if (entity.isSneaking() || !(entity instanceof LivingEntity living)) continue;
+
+            var attributes = living.getAttributes();
+            if (!attributes.hasModifierForAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED, MODIFIER.getId())) {
+                attributes.addTemporaryModifiers(ImmutableMultimap.of(EntityAttributes.GENERIC_MOVEMENT_SPEED, MODIFIER));
+            }
+
+            AffinityEntityAddon.setData(living, MODIFIER_APPLIED_TICK, world.getTime());
+
+            var drag = entity.getVelocity().multiply(.35f);
+            var dragMagnitude = drag.horizontalLength();
+
+            if (dragMagnitude > .1) {
+                drag = drag.multiply(.1 / dragMagnitude, 1, .1 / dragMagnitude);
+            }
+
+            entity.setVelocity(entity.getVelocity().subtract(drag));
+            entity.fallDistance = 0;
+        }
     }
 
     @Override
@@ -99,6 +151,15 @@ public class KinesisStaffItem extends StaffItem {
             player.getItemCooldownManager().set(AffinityItems.KINESIS_STAFF, 10);
 
             targetEntity.addVelocity(player.getRotationVec(0).multiply(2.5f));
+        });
+
+        LivingEntityTickEvent.EVENT.register(entity -> {
+            if (!AffinityEntityAddon.hasData(entity, MODIFIER_APPLIED_TICK)) return;
+
+            if (entity.world.getTime() - AffinityEntityAddon.getData(entity, MODIFIER_APPLIED_TICK) > 2) {
+                AffinityEntityAddon.removeData(entity, MODIFIER_APPLIED_TICK);
+                entity.getAttributes().removeModifiers(ImmutableMultimap.of(EntityAttributes.GENERIC_MOVEMENT_SPEED, MODIFIER));
+            }
         });
     }
 
