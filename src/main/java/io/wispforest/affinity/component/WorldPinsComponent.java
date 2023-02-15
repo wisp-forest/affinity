@@ -50,7 +50,7 @@ public class WorldPinsComponent implements Component, ServerTickingComponent {
     }
 
     public void removePin(BlockPos pin, int radius) {
-        if (pins.remove(pin) != null) {
+        if (this.pins.remove(pin) != null) {
             ChunkPos.stream(new ChunkPos(pin), radius).forEach(chunkPos -> {
                 ((ServerWorld) this.world).getChunkManager().removeTicket(TICKET_TYPE, chunkPos, 2, pin);
             });
@@ -64,7 +64,7 @@ public class WorldPinsComponent implements Component, ServerTickingComponent {
     }
 
     public void addAllPins() {
-        for (Map.Entry<BlockPos, Integer> pinEntry : pins.entrySet()) {
+        for (Map.Entry<BlockPos, Integer> pinEntry : this.pins.entrySet()) {
             this.addPinTickets(pinEntry.getKey(), pinEntry.getValue());
         }
     }
@@ -73,14 +73,14 @@ public class WorldPinsComponent implements Component, ServerTickingComponent {
     public void readFromNbt(NbtCompound tag) {
         NbtList pinsTag = tag.getList("Pins", NbtElement.COMPOUND_TYPE);
 
-        pins.clear();
+        this.pins.clear();
         for (int i = 0; i < pinsTag.size(); i++) {
             NbtCompound pinTag = pinsTag.getCompound(i);
 
             var pos = NbtHelper.toBlockPos(pinTag.getCompound("PinPos"));
             var radius = pinTag.getInt("Radius");
 
-            pins.put(pos, radius);
+            this.pins.put(pos, radius);
         }
     }
 
@@ -89,7 +89,7 @@ public class WorldPinsComponent implements Component, ServerTickingComponent {
         NbtList pinsTag = new NbtList();
         tag.put("Pins", pinsTag);
 
-        for (Map.Entry<BlockPos, Integer> entry : pins.entrySet()) {
+        for (Map.Entry<BlockPos, Integer> entry : this.pins.entrySet()) {
             NbtCompound pinTag = new NbtCompound();
             pinsTag.add(pinTag);
 
@@ -100,7 +100,7 @@ public class WorldPinsComponent implements Component, ServerTickingComponent {
 
     @Override
     public void serverTick() {
-        if (!pins.isEmpty()) {
+        if (!this.pins.isEmpty()) {
             ((ServerWorld) world).resetIdleTimeout();
         }
     }

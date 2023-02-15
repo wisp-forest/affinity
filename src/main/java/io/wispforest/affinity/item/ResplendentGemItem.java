@@ -13,7 +13,7 @@ import net.minecraft.util.Rarity;
 public class ResplendentGemItem extends EnchantedBookItem {
 
     public ResplendentGemItem() {
-        super(AffinityItems.settings(AffinityItemGroup.ENCHANTMENTS).rarity(Rarity.UNCOMMON)
+        super(AffinityItems.settings(AffinityItemGroup.ENCHANTMENTS).rarity(Rarity.UNCOMMON).maxCount(1)
                 .stackGenerator(ResplendentGemItem::generateStacks));
     }
 
