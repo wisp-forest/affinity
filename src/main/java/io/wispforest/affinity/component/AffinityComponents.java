@@ -34,10 +34,10 @@ public class AffinityComponents implements EntityComponentInitializer, ChunkComp
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.registerForPlayers(GLOWING_COLOR, GlowingColorComponent::new, RespawnCopyStrategy.NEVER_COPY);
         registry.registerForPlayers(PLAYER_AETHUM, PlayerAethumComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
         registry.registerForPlayers(PLAYER_WEATHER_TRACKER, PlayerWeatherTrackerComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
 
+        registry.registerFor(Entity.class, GLOWING_COLOR, GlowingColorComponent::new);
         registry.registerFor(Entity.class, ENTITY_FLAGS, entity -> new EntityFlagComponent());
         registry.registerFor(LivingEntity.class, BANISHMENT, player -> new BanishmentComponent());
     }

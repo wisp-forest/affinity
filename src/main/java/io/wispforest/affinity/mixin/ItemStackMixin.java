@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.ChunkAethumComponent;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
+import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.owo.ui.core.Color;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,9 +28,9 @@ public abstract class ItemStackMixin {
     private void injectNameColorForIncandescence(CallbackInfoReturnable<Text> cir) {
         final var stack = (ItemStack) (Object) this;
         if (!(PotionUtil.getPotion(stack) instanceof GlowingPotion)) return;
-        if (!stack.has(GlowingPotion.COLOR_KEY)) return;
+        if (!stack.has(PotionMixture.EXTRA_DATA) || !stack.get(PotionMixture.EXTRA_DATA).has(GlowingPotion.COLOR_KEY)) return;
 
-        var color = stack.get(GlowingPotion.COLOR_KEY);
+        var color = stack.get(PotionMixture.EXTRA_DATA).get(GlowingPotion.COLOR_KEY);
         cir.setReturnValue(cir.getReturnValue().copy().styled(style -> style.withColor(Color.ofDye(color).rgb())));
     }
 

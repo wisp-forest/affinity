@@ -34,16 +34,15 @@ public class AreaEffectCloudEntityMixin implements ExtendedAreaEffectCloudEntity
     private Object doPotionApplication(Object e) {
         var entity = (LivingEntity) e;
 
-        potion.getEffects().forEach(x -> MixinHooks.tryInvokePotionApplied(x, entity, affinity$extraPotionNbt));
-        effects.forEach(x -> MixinHooks.tryInvokePotionApplied(x, entity, affinity$extraPotionNbt));
+        this.potion.getEffects().forEach(x -> MixinHooks.potionApplied(x, entity, affinity$extraPotionNbt));
+        this.effects.forEach(x -> MixinHooks.potionApplied(x, entity, affinity$extraPotionNbt));
 
         return e;
     }
 
     @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/effect/StatusEffectInstance;<init>(Lnet/minecraft/entity/effect/StatusEffect;IIZZ)V"), index = 1)
     private int changeDuration(int duration) {
-        duration *= affinity$extraPotionNbt.getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
-
+        duration *= this.affinity$extraPotionNbt.getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
         return duration;
     }
 }

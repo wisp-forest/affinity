@@ -1,8 +1,10 @@
 package io.wispforest.affinity.misc;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.enchantment.impl.BerserkerEnchantment;
 import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
+import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
 import io.wispforest.affinity.statuseffects.ImpendingDoomStatusEffect;
@@ -11,11 +13,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 public class MixinHooks {
 
@@ -55,9 +59,13 @@ public class MixinHooks {
         return PotionUtil.getPotion(stack) == Registries.POTION.get(IMPENDING_DOOM_ID);
     }
 
-    public static void tryInvokePotionApplied(StatusEffectInstance effect, LivingEntity target, NbtCompound data) {
-        if (effect.getEffectType() instanceof AffinityStatusEffect ase) {
-            ase.onPotionApplied(target, data);
+    public static void potionApplied(StatusEffectInstance effect, LivingEntity target, @Nullable  NbtCompound data) {
+        if (effect.getEffectType() == StatusEffects.GLOWING && data != null && data.has(GlowingPotion.COLOR_KEY)) {
+            AffinityComponents.GLOWING_COLOR.get(target).setColor(data.get(GlowingPotion.COLOR_KEY));
+        }
+
+        if (effect.getEffectType() instanceof AffinityStatusEffect affinityEffect) {
+            affinityEffect.onPotionApplied(target, data);
         }
     }
 

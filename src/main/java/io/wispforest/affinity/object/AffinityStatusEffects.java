@@ -73,13 +73,13 @@ public class AffinityStatusEffects {
         registerPotions(effect, baseName, baseDuration, registerLong, registerStrong, Potion::new);
     }
 
-    private static void registerPotions(StatusEffect effect, String baseName, int baseDuration, boolean registerLong, boolean registerStrong, BiFunction<String, StatusEffectInstance, Potion> potionCreator) {
-        Registry.register(Registries.POTION, Affinity.id(baseName), potionCreator.apply(baseName, new StatusEffectInstance(effect, baseDuration)));
+    private static void registerPotions(StatusEffect effect, String baseName, int baseDuration, boolean registerLong, boolean registerStrong, BiFunction<String, StatusEffectInstance, Potion> potionFactory) {
+        Registry.register(Registries.POTION, Affinity.id(baseName), potionFactory.apply(baseName, new StatusEffectInstance(effect, baseDuration)));
 
         if (registerLong)
-            Registry.register(Registries.POTION, Affinity.id("long_" + baseName), new Potion(baseName, new StatusEffectInstance(effect, baseDuration * 2)));
+            Registry.register(Registries.POTION, Affinity.id("long_" + baseName), potionFactory.apply(baseName, new StatusEffectInstance(effect, baseDuration * 2)));
         if (registerStrong)
-            Registry.register(Registries.POTION, Affinity.id("strong_" + baseName), new Potion(baseName, new StatusEffectInstance(effect, (int) (baseDuration * 0.5), 1)));
+            Registry.register(Registries.POTION, Affinity.id("strong_" + baseName), potionFactory.apply(baseName, new StatusEffectInstance(effect, (int) (baseDuration * 0.5), 1)));
     }
 
 }

@@ -3,16 +3,16 @@ package io.wispforest.affinity.component;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.DyeColor;
 
 public class GlowingColorComponent implements Component, AutoSyncedComponent {
 
-    private final PlayerEntity provider;
+    private final Entity provider;
     private DyeColor color = null;
 
-    public GlowingColorComponent(PlayerEntity provider) {
+    public GlowingColorComponent(Entity provider) {
         this.provider = provider;
     }
 

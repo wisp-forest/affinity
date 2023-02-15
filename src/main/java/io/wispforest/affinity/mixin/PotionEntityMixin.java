@@ -24,27 +24,23 @@ public abstract class PotionEntityMixin extends ThrownItemEntity {
     }
 
     @ModifyArg(method = "applySplashPotion", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/thrown/PotionEntity;squaredDistanceTo(Lnet/minecraft/entity/Entity;)D"))
-    private Entity doPotionApplication(Entity otherEntity) {
-        if (!(otherEntity instanceof LivingEntity target)) return otherEntity;
+    private Entity doPotionApplication(Entity entity) {
+        if (!(entity instanceof LivingEntity target)) return entity;
 
         var stack = this.getStack();
-        if (stack.has(PotionMixture.EXTRA_DATA)) {
-            final var extraData = stack.get(PotionMixture.EXTRA_DATA);
-            PotionUtil.getPotionEffects(stack).forEach(x -> MixinHooks.tryInvokePotionApplied(x, target, extraData));
-        }
+        final var extraData = stack.getOr(PotionMixture.EXTRA_DATA, null);
+        PotionUtil.getPotionEffects(stack).forEach(x -> MixinHooks.potionApplied(x, target, extraData));
 
-        return otherEntity;
+        return entity;
     }
 
     @Redirect(method = "applySplashPotion", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/effect/StatusEffectInstance;getDuration()I"))
     private int extendDuration(StatusEffectInstance instance) {
-        var stack = getStack();
+        var stack = this.getStack();
         int duration = instance.getDuration();
 
         if (stack.has(PotionMixture.EXTRA_DATA)) {
-            var extraData = stack.get(PotionMixture.EXTRA_DATA);
-
-            duration *= extraData.getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
+            duration *= stack.get(PotionMixture.EXTRA_DATA).getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
         }
 
         return duration;

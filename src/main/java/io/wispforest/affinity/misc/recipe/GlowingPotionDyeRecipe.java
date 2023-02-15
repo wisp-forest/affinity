@@ -1,10 +1,12 @@
 package io.wispforest.affinity.misc.recipe;
 
 import io.wispforest.affinity.misc.potion.GlowingPotion;
+import io.wispforest.affinity.misc.potion.PotionMixture;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.PotionItem;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
@@ -28,7 +30,7 @@ public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
 
         for (int i = 0; i < inventory.size(); i++) {
             var stack = inventory.getStack(i);
-            if (stack.isOf(Items.POTION) && PotionUtil.getPotion(stack) instanceof GlowingPotion) {
+            if (stack.getItem() instanceof PotionItem && PotionUtil.getPotion(stack) instanceof GlowingPotion) {
                 if (!isValid(potion)) {
                     potion = stack;
                 } else {
@@ -62,15 +64,16 @@ public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
 
         for (int i = 0; i < inventory.size(); i++) {
             var stack = inventory.getStack(i);
-            if (stack.isOf(Items.POTION)) {
+            if (stack.getItem() instanceof PotionItem) {
                 potion = stack.copy();
             } else if (stack.getItem() instanceof DyeItem) {
                 dye = stack;
             }
         }
 
-        var nbt = potion.getOrCreateNbt();
-        nbt.putString("Color", ((DyeItem) dye.getItem()).getColor().asString());
+        var data = new NbtCompound();
+        data.put(GlowingPotion.COLOR_KEY, ((DyeItem) dye.getItem()).getColor());
+        potion.put(PotionMixture.EXTRA_DATA, data);
 
         return potion;
     }

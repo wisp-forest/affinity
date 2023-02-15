@@ -23,17 +23,17 @@ public class ArrowEntityMixin {
 
     @Inject(method = "initFromStack", at = @At("RETURN"))
     private void addExtraData(ItemStack stack, CallbackInfo ci) {
-        affinity$extraPotionNbt = stack.getOr(PotionMixture.EXTRA_DATA, null);
+        this.affinity$extraPotionNbt = stack.getOr(PotionMixture.EXTRA_DATA, null);
     }
 
     @Inject(method = "onHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/potion/Potion;getEffects()Ljava/util/List;"))
     private void doPotionApplication(LivingEntity target, CallbackInfo ci) {
-        potion.getEffects().forEach(x -> MixinHooks.tryInvokePotionApplied(x, target, affinity$extraPotionNbt));
+        this.potion.getEffects().forEach(x -> MixinHooks.potionApplied(x, target, this.affinity$extraPotionNbt));
     }
 
     @ModifyArg(method = "onHit", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(II)I"), index = 0)
     private int addDuration(int duration) {
-        duration *= affinity$extraPotionNbt.getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
+        duration *= this.affinity$extraPotionNbt.getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
 
         return duration;
     }
