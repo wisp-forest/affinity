@@ -247,6 +247,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     }
 
     public boolean validForTransfer() {
+        if (this.world.getReceivedRedstonePower(this.pos) > 0) return false;
         return this.hasShard() && this.allLinksValid && this.links.size() <= this.maxConnections();
     }
 
