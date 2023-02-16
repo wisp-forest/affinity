@@ -1,18 +1,13 @@
 package io.wispforest.affinity.component;
 
-import dev.onyxstudios.cca.api.v3.component.CopyableComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.affinity.object.AffinityEntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.NotNull;
 
-public class PlayerAethumComponent extends AethumComponent<PlayerEntity> implements CommonTickingComponent, CopyableComponent<PlayerAethumComponent> {
-
-    public static final NbtKey<Double> MAX_AETHUM_KEY = new NbtKey<>("MaxAethum", NbtKey.Type.DOUBLE);
-    public static final NbtKey<Double> NATURAL_REGEN_SPEED_KEY = new NbtKey<>("NaturalRegenSpeed", NbtKey.Type.DOUBLE);
+public class PlayerAethumComponent extends AethumComponent<PlayerEntity> implements CommonTickingComponent {
 
     public static final DamageSource AETHUM_DRAIN_DAMAGE = new DamageSource("aethum_drain").setUsesMagic().setBypassesArmor();
 
@@ -29,38 +24,31 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
             this.holder.damage(AETHUM_DRAIN_DAMAGE, (float) (5d - this.aethum));
         }
 
-        if (this.aethum >= this.maxAethum) return;
+        if (!this.holder.world.isClient && this.maxAethum != this.maxAethum() || this.naturalRegenSpeed != this.naturalRegenSpeed()) {
+            this.maxAethum = this.maxAethum();
+            this.naturalRegenSpeed = this.naturalRegenSpeed();
+
+            this.key.sync(this.holder);
+        }
+
+        if (this.aethum >= this.maxAethum) {
+            this.aethum = this.maxAethum;
+            return;
+        }
+
         this.aethum = Math.min(this.aethum + this.naturalRegenSpeed, this.maxAethum);
     }
 
-    @Override
-    public void readFromNbt(@NotNull NbtCompound tag) {
-        super.readFromNbt(tag);
-        this.maxAethum = tag.getOr(MAX_AETHUM_KEY, this.maxAethum);
-        this.naturalRegenSpeed = tag.getOr(NATURAL_REGEN_SPEED_KEY, this.naturalRegenSpeed);
+    public double maxAethum() {
+        return this.holder.world.isClient
+                ? this.maxAethum
+                : this.holder.getAttributeValue(AffinityEntityAttributes.MAX_AETHUM);
     }
 
-    @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {
-        super.writeToNbt(tag);
-        tag.put(MAX_AETHUM_KEY, this.maxAethum);
-        tag.put(NATURAL_REGEN_SPEED_KEY, this.naturalRegenSpeed);
-    }
-
-    public void setMaxAethum(double maxAethum) {
-        this.maxAethum = maxAethum;
-    }
-
-    public double getMaxAethum() {
-        return maxAethum;
-    }
-
-    public void setNaturalRegenSpeed(double naturalRegenSpeed) {
-        this.naturalRegenSpeed = naturalRegenSpeed;
-    }
-
-    public double getNaturalRegenSpeed() {
-        return naturalRegenSpeed;
+    public double naturalRegenSpeed() {
+        return this.holder.world.isClient
+                ? this.naturalRegenSpeed
+                : this.holder.getAttributeValue(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED);
     }
 
     @Override
@@ -74,8 +62,16 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
     }
 
     @Override
-    public void copyFrom(PlayerAethumComponent other) {
-        this.maxAethum = other.maxAethum;
-        this.naturalRegenSpeed = other.naturalRegenSpeed;
+    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+        super.writeSyncPacket(buf, recipient);
+        buf.writeDouble(this.maxAethum);
+        buf.writeDouble(this.naturalRegenSpeed);
+    }
+
+    @Override
+    public void applySyncPacket(PacketByteBuf buf) {
+        super.applySyncPacket(buf);
+        this.maxAethum = buf.readDouble();
+        this.naturalRegenSpeed = buf.readDouble();
     }
 }

@@ -34,7 +34,7 @@ public class PlayerAethumHud {
                 if (player == null) return;
 
                 var component = AffinityComponents.PLAYER_AETHUM.get(player);
-                double aethumProgress = component.getAethum() / component.getMaxAethum();
+                double aethumProgress = component.getAethum() / component.maxAethum();
 
                 this.displayAethum += Delta.compute(this.displayAethum, aethumProgress, delta);
                 this.slowDisplayAethum += Delta.compute(this.slowDisplayAethum, aethumProgress, delta * .1f);

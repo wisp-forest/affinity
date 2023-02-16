@@ -196,6 +196,8 @@
   "message.affinity.linking.too_many_links": "This node cannot carry any more links",
   "message.affinity.linking.failed": "Could not link to %s",
 
+  "attribute.name.player.affinity.max_aethum": "Maximum Aethum",
+  "attribute.name.player.affinity.natural_aethum_regen_speed": "Aethum Regeneration",
   "death.attack.aethum_drain": [
     {
       "index": 0,

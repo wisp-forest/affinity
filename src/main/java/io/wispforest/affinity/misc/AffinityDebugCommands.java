@@ -37,6 +37,7 @@ public class AffinityDebugCommands {
     public static final int AFFINITY_COLOR = 0x94B3FD;
     public static final int VALUE_COLOR = 0x2FDD92;
 
+    // TODO clean up player aethum nodes
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> {
             dispatcher.register(literal("aethum")
@@ -57,13 +58,13 @@ public class AffinityDebugCommands {
                     .then(literal("player")
                             .then(argument("player", EntityArgumentType.player())
                                     .then(literal("get")
-                                            .then(getPlayerAethumNode(PlayerAethumType.VALUE))
-                                            .then(getPlayerAethumNode(PlayerAethumType.MAX))
-                                            .then(getPlayerAethumNode(PlayerAethumType.REGEN)))
+//                                            .then(getPlayerAethumNode(PlayerAethumType.VALUE))
+//                                            .then(getPlayerAethumNode(PlayerAethumType.MAX))
+                                            .then(getPlayerAethumNode(PlayerAethumType.VALUE)))
                                     .then(literal("set")
-                                            .then(setPlayerAethumNode(PlayerAethumType.VALUE))
-                                            .then(setPlayerAethumNode(PlayerAethumType.MAX))
-                                            .then(setPlayerAethumNode(PlayerAethumType.REGEN))))));
+//                                            .then(setPlayerAethumNode(PlayerAethumType.VALUE))
+//                                            .then(setPlayerAethumNode(PlayerAethumType.MAX))
+                                            .then(setPlayerAethumNode(PlayerAethumType.VALUE))))));
 
             dispatcher.register(literal("aethumflux")
                     .then(argument("position", BlockPosArgumentType.blockPos())
@@ -218,9 +219,9 @@ public class AffinityDebugCommands {
     }
 
     private enum PlayerAethumType {
-        VALUE("aethum", PlayerAethumComponent::getAethum, AethumComponent::setAethum),
-        MAX("max aethum", PlayerAethumComponent::getMaxAethum, PlayerAethumComponent::setMaxAethum),
-        REGEN("aethum regen speed", PlayerAethumComponent::getNaturalRegenSpeed, PlayerAethumComponent::setNaturalRegenSpeed);
+        VALUE("aethum", PlayerAethumComponent::getAethum, AethumComponent::setAethum);
+//        MAX("max aethum", PlayerAethumComponent::getMaxAethum, PlayerAethumComponent::setMaxAethum),
+//        REGEN("aethum regen speed", PlayerAethumComponent::getNaturalRegenSpeed, PlayerAethumComponent::setNaturalRegenSpeed);
 
         public final String displayName;
         public final Function<PlayerAethumComponent, Double> getter;
