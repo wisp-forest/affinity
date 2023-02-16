@@ -22,11 +22,15 @@ public class PlayerAethumHud {
     static void initialize() {
         Hud.add(COMPONENT_ID, () -> new BaseComponent() {
 
-            private double displayAethum = 1f;
-            private double slowDisplayAethum = 1f;
+            private double displayAethum = 0f;
+            private double slowDisplayAethum = 0f;
 
-            private float alpha = 0;
-            private float warningColorWeight = 0;
+            private double lastMaxAethum = 0f;
+            private double maxAethumChange = 0f;
+            private double maxAethumChangeAge = 1f;
+
+            private float alpha = 0f;
+            private float warningColorWeight = 0f;
 
             @Override
             public void draw(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta) {
@@ -34,12 +38,25 @@ public class PlayerAethumHud {
                 if (player == null) return;
 
                 var component = AffinityComponents.PLAYER_AETHUM.get(player);
-                double aethumProgress = component.getAethum() / component.maxAethum();
+                var maxAethum = component.maxAethum();
 
-                this.displayAethum += Delta.compute(this.displayAethum, aethumProgress, delta);
-                this.slowDisplayAethum += Delta.compute(this.slowDisplayAethum, aethumProgress, delta * .1f);
+                if (this.lastMaxAethum != maxAethum) {
+                    this.maxAethumChange = Math.max(0, maxAethum - this.lastMaxAethum);
+                    this.lastMaxAethum = maxAethum;
+                    this.maxAethumChangeAge = 0f;
+                }
 
-                this.alpha += Delta.compute(this.alpha, aethumProgress == 1 ? 0 : 10, delta * .25f);
+                if (this.displayAethum > maxAethum) {
+                    this.displayAethum = maxAethum;
+                    this.slowDisplayAethum = maxAethum;
+                }
+
+                this.maxAethumChangeAge += Delta.compute(this.maxAethumChangeAge, 1f, delta * 0.05f);
+
+                this.displayAethum += Delta.compute(this.displayAethum, component.getAethum(), delta);
+                this.slowDisplayAethum += Delta.compute(this.slowDisplayAethum, component.getAethum(), delta * .1f);
+
+                this.alpha += Delta.compute(this.alpha, component.getAethum() >= maxAethum ? 0 : 10, delta * .25f);
                 this.warningColorWeight += Delta.compute(this.warningColorWeight, component.getAethum() < 3 ? 1 : 0, delta * .25f);
 
                 RenderSystem.setShaderColor(1, 1, 1, Math.min(this.alpha, 1));
@@ -52,11 +69,21 @@ public class PlayerAethumHud {
                         Color.ofArgb(0x7f000000), Color.ofArgb(0x7f000000)
                 );
 
+                int maxAethumChangeColor = (int) ((0x7f) * (1 - this.maxAethumChangeAge)) << 24 | 0x03C988;
+                Drawer.drawRing(
+                        matrices,
+                        this.x + this.width / 2,
+                        this.y + this.height / 2,
+                        90, 360 * (this.maxAethumChange / maxAethum) + 91,
+                        50, 3, 8,
+                        Color.ofArgb(maxAethumChangeColor), Color.ofArgb(maxAethumChangeColor)
+                );
+
                 if (this.slowDisplayAethum > this.displayAethum) {
-                    this.drawAethumRing(matrices, this.slowDisplayAethum, Color.ofArgb(0x7f03C988));
+                    this.drawAethumRing(matrices, this.slowDisplayAethum / maxAethum, Color.ofRgb(0xAD7BE9));
                 }
 
-                this.drawAethumRing(matrices, this.displayAethum, Affinity.AETHUM_FLUX_COLOR.interpolate(Color.ofRgb(0xce2424), this.warningColorWeight));
+                this.drawAethumRing(matrices, this.displayAethum / maxAethum, Affinity.AETHUM_FLUX_COLOR.interpolate(Color.ofRgb(0xce2424), this.warningColorWeight));
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }
