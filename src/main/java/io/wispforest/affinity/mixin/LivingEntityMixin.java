@@ -5,6 +5,7 @@ import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.enchantment.impl.BastionEnchantment;
 import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
+import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEnchantments;
@@ -62,9 +63,17 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "applyDamage", at = @At("TAIL"))
     private void applyLifeLeech(DamageSource source, float amount, CallbackInfo ci) {
         if (!(source.getAttacker() instanceof PlayerEntity player)) return;
-        if (!player.hasStatusEffect(AffinityStatusEffects.LIFE_LEECH)) return;
 
-        player.heal(amount * 0.1f * (player.getStatusEffect(AffinityStatusEffects.LIFE_LEECH).getAmplifier() + 1));
+        if (player.hasStatusEffect(AffinityStatusEffects.LIFE_LEECH)) {
+            player.heal(amount * 0.1f * (player.getStatusEffect(AffinityStatusEffects.LIFE_LEECH).getAmplifier() + 1));
+        }
+
+        if (!AffinityEntityAddon.getData(player, ArtifactBladeItem.DID_CRIT)) return;
+
+        var weapon = player.getMainHandStack();
+        if (weapon.getItem() instanceof ArtifactBladeItem blade && ArtifactBladeItem.getAbilityTicks(player.world, weapon) >= 0 && blade.tier.ordinal() >= 2) {
+            player.heal(amount * .1f);
+        }
     }
 
     @Inject(method = "canFreeze", at = @At("HEAD"), cancellable = true)

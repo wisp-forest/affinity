@@ -2,10 +2,15 @@ package io.wispforest.affinity.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -21,36 +26,83 @@ import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Language;
-import net.minecraft.util.Rarity;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ArtifactBladeItem extends SwordItem {
 
-    private final Tier tier;
+    public static final AffinityEntityAddon.DataKey<Boolean> DID_CRIT = AffinityEntityAddon.DataKey.withDefaultConstant(false);
+
+    private static final NbtKey<Long> ABILITY_START_TIME = new NbtKey<>("AbilityStartTime", NbtKey.Type.LONG);
+    private static final EntityAttributeModifier DAMAGE_MODIFIER = new EntityAttributeModifier(UUID.fromString("3fb1b365-3b7b-421e-9237-6d5c92d97625"), "Aethum Ability Damage Boost", 2, EntityAttributeModifier.Operation.ADDITION);
+
+    public final Tier tier;
     private final Multimap<EntityAttribute, EntityAttributeModifier> modifiers;
+    private final Multimap<EntityAttribute, EntityAttributeModifier> modifiersWithDamage;
 
     public ArtifactBladeItem(Tier tier) {
-        super(tier, 0, tier.attackSpeed, AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1).rarity(tier.rarity));
+        super(tier, 0, tier.data.attackSpeed, AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1).rarity(tier.data.rarity));
         this.tier = tier;
 
-        var modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                .putAll(super.getAttributeModifiers(EquipmentSlot.MAINHAND));
+        var modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder().putAll(super.getAttributeModifiers(EquipmentSlot.MAINHAND));
 
         if (this.tier == Tier.ASTRAL) {
             modifiers.put(AffinityEntityAttributes.MAX_AETHUM, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes", 1, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
-                    .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes episode 2", 1, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
+                    .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes episode 2", 3, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
         }
 
         this.modifiers = modifiers.build();
+
+        modifiers.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, DAMAGE_MODIFIER);
+        this.modifiersWithDamage = modifiers.build();
     }
 
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND ? this.modifiers : super.getAttributeModifiers(slot);
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
+        return slot == EquipmentSlot.MAINHAND
+                ? stack.has(ABILITY_START_TIME) ? this.modifiersWithDamage : this.modifiers
+                : super.getAttributeModifiers(slot);
+    }
+
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        var playerStack = user.getStackInHand(hand);
+        if (playerStack.has(ABILITY_START_TIME)) return TypedActionResult.pass(playerStack);
+
+        var aethum = AffinityComponents.PLAYER_AETHUM.get(user);
+        if (!(aethum.tryConsumeAethum(aethum.maxAethum() * this.tier.data.abilityAethumCost))) return TypedActionResult.pass(playerStack);
+
+        playerStack.put(ABILITY_START_TIME, world.getTime());
+        return TypedActionResult.success(playerStack);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        if (getAbilityTicks(world, stack) > this.tier.data.abilityDuration) {
+            stack.delete(ABILITY_START_TIME);
+
+            if (!(entity instanceof PlayerEntity player)) return;
+            player.getItemCooldownManager().set(this, this.tier.data.abilityCooldown);
+        }
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        tooltip.add(Text.translatable("item.affinity.staff.tooltip.consumption_per_use", Text.literal((int) (this.tier.data.abilityAethumCost * 100) + "%")));
+    }
+
+    public int abilityDuration() {
+        return this.tier.data.abilityDuration;
+    }
+
+    public static int getAbilityTicks(World world, ItemStack stack) {
+        if (!stack.has(ABILITY_START_TIME)) return -1;
+        return (int) (world.getTime() - stack.get(ABILITY_START_TIME));
     }
 
     @Override
@@ -104,58 +156,49 @@ public class ArtifactBladeItem extends SwordItem {
     }
 
     public enum Tier implements ToolMaterial {
-        FORGOTTEN(500, 2, 20, 7, 7f, -2.4f, Rarity.UNCOMMON),
-        STABILIZED(1000, 3, 25, 8, 10f, -2.4f, Rarity.UNCOMMON),
-        STRENGTHENED(1500, 4, 35, 12, 12f, -2f, Rarity.RARE),
-        SUPERIOR(3000, 5, 40, 15, 15f, -1.8f, Rarity.EPIC),
-        ASTRAL(69000, 6, 100, 6969, 75f, 21f, Rarity.EPIC);
+        FORGOTTEN(new TierData(500, 2, 20, 7, 7f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f)),
+        STABILIZED(new TierData(1000, 3, 25, 8, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .6f)),
+        STRENGTHENED(new TierData(1500, 4, 35, 12, 12f, -2f, Rarity.RARE, 160, 400, .6f)),
+        SUPERIOR(new TierData(3000, 5, 40, 15, 15f, -1.8f, Rarity.EPIC, 200, 800, .8f)),
+        ASTRAL(new TierData(69000, 6, 100, 6969, 75f, 21f, Rarity.EPIC, 200, 800, 1f));
 
-        private final int durability;
-        private final int miningLevel;
-        private final int enchantability;
-        private final float attackDamage;
-        private final float miningSpeedMultiplier;
-        private final float attackSpeed;
-        private final Rarity rarity;
+        private final TierData data;
 
-        Tier(int durability, int miningLevel, int enchantability, float attackDamage, float miningSpeedMultiplier, float attackSpeed, Rarity rarity) {
-            this.durability = durability;
-            this.miningLevel = miningLevel;
-            this.enchantability = enchantability;
-            this.attackDamage = attackDamage;
-            this.miningSpeedMultiplier = miningSpeedMultiplier;
-            this.attackSpeed = attackSpeed;
-            this.rarity = rarity;
+        Tier(TierData data) {
+            this.data = data;
         }
 
         @Override
         public int getDurability() {
-            return this.durability;
+            return this.data.durability;
         }
 
         @Override
         public float getMiningSpeedMultiplier() {
-            return this.miningSpeedMultiplier;
+            return this.data.miningSpeedMultiplier;
         }
 
         @Override
         public float getAttackDamage() {
-            return this.attackDamage;
+            return this.data.attackDamage;
         }
 
         @Override
         public int getMiningLevel() {
-            return this.miningLevel;
+            return this.data.miningLevel;
         }
 
         @Override
         public int getEnchantability() {
-            return this.enchantability;
+            return this.data.enchantability;
         }
 
         @Override
         public Ingredient getRepairIngredient() {
             return Ingredient.EMPTY;
         }
+
+        private record TierData(int durability, int miningLevel, int enchantability, float attackDamage, float miningSpeedMultiplier, float attackSpeed,
+                                Rarity rarity, int abilityDuration, int abilityCooldown, float abilityAethumCost) {}
     }
 }

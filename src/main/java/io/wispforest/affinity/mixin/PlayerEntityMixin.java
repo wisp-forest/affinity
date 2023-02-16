@@ -1,6 +1,7 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
+import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEnchantments;
@@ -23,8 +24,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
@@ -79,5 +83,22 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         if (woundingLevel < 1) return damage;
 
         return damage * ((1.5f + .1f * woundingLevel) / 1.5f);
+    }
+
+    @SuppressWarnings("InvalidInjectorMethodSignature")
+    @Inject(method = "attack",
+            at = @At(value = "CONSTANT", args = "floatValue=1.5", shift = At.Shift.BY, by = 4), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void storeCritState(Entity target, CallbackInfo ci, float f, float g, boolean bl, boolean bl2, int i, boolean bl3) {
+        AffinityEntityAddon.setData(this, ArtifactBladeItem.DID_CRIT, bl3);
+    }
+
+    @ModifyArg(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
+    private DamageSource convertArtifactBladeDamage(DamageSource incoming) {
+        var weapon = this.getMainHandStack();
+        if (!(weapon.getItem() instanceof ArtifactBladeItem blade) || ArtifactBladeItem.getAbilityTicks(this.world, weapon) < 0 || blade.tier.ordinal() < 1) {
+            return incoming;
+        }
+
+        return incoming.setBypassesArmor().setUsesMagic();
     }
 }

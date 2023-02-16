@@ -39,6 +39,13 @@ public abstract class AethumComponent<H> implements Component, AutoSyncedCompone
         return this.aethum;
     }
 
+    public boolean tryConsumeAethum(double amount) {
+        if (this.aethum < amount) return false;
+
+        this.addAethum(-amount);
+        return true;
+    }
+
     public double getAethum() {
         return this.aethum;
     }
