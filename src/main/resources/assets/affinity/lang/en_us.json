@@ -80,6 +80,13 @@
   "item.affinity.azalea_flowers": "Azalea Flowers",
   "item.affinity.soup_of_bee": "Soup of Bee",
 
+  "text.affinity.infinite_attack_damage": "Infinite",
+  "item.affinity.forgotten_artifact_blade": "Forgotten Artifact Blade",
+  "item.affinity.stabilized_artifact_blade": "Stabilized Artifact Blade",
+  "item.affinity.strengthened_artifact_blade": "Strengthened Artifact Blade",
+  "item.affinity.superior_artifact_blade": "Superior Artifact Blade",
+  "item.affinity.astral_artifact_blade": "Astral Artifact Blade",
+
   "item.affinity.emerald_wand_of_iridescence": "Emerald Wand of Iridescence",
   "item.affinity.sapphire_wand_of_iridescence": "Sapphire Wand of Iridescence",
   "item.affinity.wand_of_iridescence.mode_suffix": [

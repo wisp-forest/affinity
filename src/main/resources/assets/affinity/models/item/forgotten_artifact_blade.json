@@ -1,0 +1,39 @@
+{
+	"parent": "item/handheld",
+	"textures": {
+		"layer0": "affinity:item/forgotten_artifact_blade"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [-9, -90, 61],
+			"translation": [0, 2.75, -0.75],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [-9, 90, -61],
+			"translation": [0, 2.75, -0.75],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -90, 25],
+			"translation": [0.5, 2.5, 1.5],
+			"scale": [0.65, 0.65, 0.65]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 90, -25],
+			"translation": [0.5, 2.25, 1.5],
+			"scale": [0.65, 0.65, 0.65]
+		},
+		"ground": {
+			"rotation": [0, 0, -135],
+			"translation": [0, 4, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"translation": [-0.25, 0, 0]
+		},
+		"fixed": {
+			"rotation": [0, 0, 90]
+		}
+	}
+}

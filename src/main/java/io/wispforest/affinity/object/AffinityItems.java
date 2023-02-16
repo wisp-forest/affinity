@@ -55,6 +55,12 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item AFFINITEA = new AffiniteaItem();
     public static final Item DRAGON_DROP = new Item(settings(AffinityItemGroup.MAIN));
 
+    public static final Item FORGOTTEN_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.FORGOTTEN);
+    public static final Item STABILIZED_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.STABILIZED);
+    public static final Item STRENGTHENED_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.STRENGTHENED);
+    public static final Item SUPERIOR_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.SUPERIOR);
+    public static final Item ASTRAL_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.ASTRAL);
+
     public static OwoItemSettings settings(int tab) {
         return new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP);
     }
