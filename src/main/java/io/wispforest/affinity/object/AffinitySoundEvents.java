@@ -18,6 +18,9 @@ public class AffinitySoundEvents implements AutoRegistryContainer<SoundEvent> {
     @AssignedName("block.aberrant_calling_core.ritual_success")
     public static final SoundEvent BLOCK_ABERRANT_CALLING_CORE_RITUAL_SUCCESS = SoundEvent.of(Affinity.id("block.aberrant_calling_core.ritual_success"));
 
+    @AssignedName("item.artifact_blade.jump_hit")
+    public static final SoundEvent ITEM_ARTIFACT_BLADE_JUMP_HIT = SoundEvent.of(Affinity.id("item.artifact_blade.jump_hit"));
+
     @Override
     public Registry<SoundEvent> getRegistry() {
         return Registries.SOUND_EVENT;

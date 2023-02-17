@@ -1,13 +1,16 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.misc.EntityReference;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,5 +55,17 @@ public class EntityMixin implements AffinityEntityAddon {
     private Map<DataKey<?>, Object> affinity$getStorage() {
         if (this.affinity$dataStorage == null) this.affinity$dataStorage = new HashMap<>();
         return this.affinity$dataStorage;
+    }
+
+    @Inject(method = "getJumpVelocityMultiplier", at = @At("TAIL"), cancellable = true)
+    protected void lessJumping(CallbackInfoReturnable<Float> cir) {
+        if (!((Object) this instanceof PlayerEntity player)) return;
+
+        var weapon = player.getMainHandStack();
+        if (!(weapon.getItem() instanceof ArtifactBladeItem blade) || ArtifactBladeItem.getAbilityTicks(player.world, weapon) < 0 || blade.tier.ordinal() < 2) {
+            return;
+        }
+
+        cir.setReturnValue(cir.getReturnValueF() * 2.5f);
     }
 }

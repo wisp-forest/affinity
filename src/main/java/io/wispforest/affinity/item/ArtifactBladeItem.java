@@ -100,6 +100,11 @@ public class ArtifactBladeItem extends SwordItem {
         return this.tier.data.abilityDuration;
     }
 
+    public static boolean isBladeWithActiveAbility(World world, ItemStack stack, int minTier) {
+        if (!(stack.getItem() instanceof ArtifactBladeItem blade)) return false;
+        return getAbilityTicks(world, stack) >= 0 && blade.tier.ordinal() >= minTier;
+    }
+
     public static int getAbilityTicks(World world, ItemStack stack) {
         if (!stack.has(ABILITY_START_TIME)) return -1;
         return (int) (world.getTime() - stack.get(ABILITY_START_TIME));

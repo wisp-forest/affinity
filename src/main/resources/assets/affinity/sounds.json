@@ -7,6 +7,11 @@
       "affinity:block/peculiar_clump_resonance_4"
     ]
   },
+  "item.artifact_blade.jump_hit": {
+    "sounds": [
+      "affinity:item/artifact_blade_jump_hit"
+    ]
+  },
   "block.ritual_socle.activate": {
     "sounds": [
       "affinity:block/ritual_socle_activate"
