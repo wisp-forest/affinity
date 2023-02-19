@@ -1,6 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "redstone",
+  "type": "affinity:assembly_shaped",
   "key": {
     "a": {
       "item": "affinity:anthracite_powder"
