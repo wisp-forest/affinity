@@ -76,7 +76,8 @@
     "client.MinecraftClientMixin",
     "client.MouseMixin",
     "client.RenderLayerMixin",
-    "client.StyleMixin"
+    "client.StyleMixin",
+    "client.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

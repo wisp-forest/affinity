@@ -121,6 +121,21 @@ public class KinesisStaffItem extends StaffItem {
         return TypedActionResult.success(stack);
     }
 
+    public void performThrow(PlayerEntity player, ItemStack stack) {
+        var targetEntity = player.world.getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
+        if (targetEntity == null) return;
+
+        stack.delete(ACTIVE_TARGET_ENTITY);
+        player.stopUsingItem();
+        player.getItemCooldownManager().set(AffinityItems.KINESIS_STAFF, 10);
+
+        targetEntity.addVelocity(player.getRotationVec(0).multiply(2.5f));
+    }
+
+    public boolean canThrow(ItemStack stack, PlayerEntity player) {
+        return stack.has(ACTIVE_TARGET_ENTITY);
+    }
+
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
@@ -141,16 +156,9 @@ public class KinesisStaffItem extends StaffItem {
         AffinityNetwork.CHANNEL.registerServerbound(YeetPacket.class, (message, access) -> {
             var player = access.player();
             var activeStack = player.getActiveItem();
-            if (!activeStack.isOf(AffinityItems.KINESIS_STAFF)) return;
+            if (!(activeStack.getItem() instanceof KinesisStaffItem staff)) return;
 
-            var targetEntity = player.world.getEntityById(activeStack.get(ACTIVE_TARGET_ENTITY));
-            if (targetEntity == null) return;
-
-            activeStack.delete(ACTIVE_TARGET_ENTITY);
-            player.stopUsingItem();
-            player.getItemCooldownManager().set(AffinityItems.KINESIS_STAFF, 10);
-
-            targetEntity.addVelocity(player.getRotationVec(0).multiply(2.5f));
+            staff.performThrow(player, activeStack);
         });
 
         LivingEntityTickEvent.EVENT.register(entity -> {
