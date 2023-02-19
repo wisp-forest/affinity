@@ -36,6 +36,7 @@
     "PotionEntityMixin",
     "PotionItemMixin",
     "PotionUtilMixin",
+    "ProjectileEntityMixin",
     "ProjectileUtilMixin",
     "ServerWorldMixin",
     "StatusEffectMixin",

@@ -56,6 +56,8 @@ public class Affinity implements ModInitializer {
         FieldRegistrationHandler.register(AffinityRecipeTypes.Serializers.class, MOD_ID, false);
         FieldRegistrationHandler.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
 
+        FieldRegistrationHandler.processSimple(AffinityCriteria.class, false);
+
         AffinityStatusEffects.register();
         AffinityNetwork.initialize();
         AffinityParticleSystems.initialize();

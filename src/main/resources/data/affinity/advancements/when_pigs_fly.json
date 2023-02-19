@@ -1,0 +1,48 @@
+{
+  "parent": "affinity:root",
+  "display": {
+    "icon": {
+      "item": "affinity:kinesis_staff"
+    },
+    "title": {
+      "translate": "advancement.affinity.when_pigs_fly.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.when_pigs_fly.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ride_pig": {
+      "trigger": "affinity:kinesis",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:pig",
+              "passenger": {
+                "type": "minecraft:player",
+                "distance": {
+                  "absolute": {
+                    "min": 0,
+                    "max": 0.5
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "ride_pig"
+    ]
+  ]
+}

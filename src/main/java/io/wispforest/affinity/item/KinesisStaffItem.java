@@ -7,6 +7,7 @@ import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.network.AffinityNetwork;
+import io.wispforest.affinity.object.AffinityCriteria;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.entity.Entity;
@@ -15,10 +16,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -34,6 +37,8 @@ public class KinesisStaffItem extends StaffItem {
 
     private static final EntityAttributeModifier MODIFIER = new EntityAttributeModifier(UUID.fromString("bc21b17e-2832-4762-acef-361df22a96f1"), "", -0.65, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
     private static final AffinityEntityAddon.DataKey<Long> MODIFIER_APPLIED_TICK = AffinityEntityAddon.DataKey.withNullDefault();
+
+    public static final AffinityEntityAddon.DataKey<UUID> PROJECTILE_THROWER = AffinityEntityAddon.DataKey.withNullDefault();
 
     public KinesisStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
@@ -105,7 +110,10 @@ public class KinesisStaffItem extends StaffItem {
             if (entityTarget == null) return TypedActionResult.pass(stack);
             entity = entityTarget.getEntity();
 
-            if (!world.isClient) stack.put(ACTIVE_TARGET_ENTITY, entity.getId());
+            if (!world.isClient) {
+                stack.put(ACTIVE_TARGET_ENTITY, entity.getId());
+                AffinityCriteria.KINESIS.trigger((ServerPlayerEntity) player, entity);
+            }
         }
 
         if (entity == null) {
@@ -127,9 +135,10 @@ public class KinesisStaffItem extends StaffItem {
 
         stack.delete(ACTIVE_TARGET_ENTITY);
         player.stopUsingItem();
-        player.getItemCooldownManager().set(AffinityItems.KINESIS_STAFF, 10);
+        player.getItemCooldownManager().set(stack.getItem(), 10);
 
         targetEntity.addVelocity(player.getRotationVec(0).multiply(2.5f));
+        if (targetEntity instanceof ProjectileEntity) AffinityEntityAddon.setData(targetEntity, PROJECTILE_THROWER, player.getUuid());
     }
 
     public boolean canThrow(ItemStack stack, PlayerEntity player) {

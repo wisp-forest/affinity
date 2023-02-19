@@ -1,0 +1,39 @@
+{
+  "parent": "affinity:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:potion",
+      "nbt": "{Potion: \"affinity:long_flight\"}"
+    },
+    "title": {
+      "translate": "advancement.affinity.how_many_hours_do_we_fly.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.how_many_hours_do_we_fly.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "flight_potion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "affinity:long_flight"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "flight_potion"
+    ]
+  ]
+}

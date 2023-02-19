@@ -1,0 +1,34 @@
+{
+  "parent": "affinity:root",
+  "display": {
+    "icon": {
+      "item": "affinity:strengthened_artifact_blade"
+    },
+    "title": {
+      "translate": "advancement.affinity.nice_try.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.nice_try.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "smash": {
+      "trigger": "affinity:artifact_blade_smash",
+      "conditions": {
+        "fall_distance": {
+          "min": 100,
+          "max": 10000
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "smash"
+    ]
+  ]
+}

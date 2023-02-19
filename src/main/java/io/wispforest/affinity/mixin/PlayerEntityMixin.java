@@ -14,6 +14,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -44,6 +45,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Shadow
     public abstract void playSound(SoundEvent sound, float volume, float pitch);
+
+    @Shadow public abstract SoundCategory getSoundCategory();
 
     @Unique
     private float affinity$lastJumpAttackDamage = 0f;
@@ -126,7 +129,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private void artifactBladeAreaDamage(Entity target, CallbackInfo ci) {
         if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 2)) return;
 
-        this.playSound(AffinitySoundEvents.ITEM_ARTIFACT_BLADE_JUMP_HIT, .7f, .6f + this.world.random.nextFloat() * .4f);
         var entityPositions = new ArrayList<Vec3d>();
 
         var area = new Box(target.getBlockPos()).expand(5, 3, 5);
@@ -140,6 +142,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         }
 
         if (!world.isClient) {
+            AffinityCriteria.ARTIFACT_BLADE_SMASH.trigger((ServerPlayerEntity) (Object) this);
+            // TODO fix :(
+            WorldOps.playSound(this.world, this.getPos(), AffinitySoundEvents.ITEM_ARTIFACT_BLADE_JUMP_HIT, this.getSoundCategory());
+
+            // TODO rename to smash
             AffinityParticleSystems.ARTIFACT_BLADE_AREA_ATTACK.spawn(
                     this.world,
                     target.getPos(),

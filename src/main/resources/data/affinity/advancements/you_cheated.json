@@ -1,0 +1,35 @@
+{
+  "parent": "affinity:root",
+  "display": {
+    "icon": {
+      "item": "affinity:creative_aethum_flux_cache"
+    },
+    "title": {
+      "translate": "advancement.affinity.you_cheated.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.you_cheated.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "creative_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "affinity:creative_items"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "creative_item"
+    ]
+  ]
+}

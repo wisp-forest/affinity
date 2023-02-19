@@ -221,13 +221,6 @@
   "text.affinity.tooltip.creative_flux_cache_flux_level": "All of it, really",
 
   "gui.affinity.augmented_crafting_table.title": "Augmented Crafting Table",
-  "gui.affinity.augmented_crafting_table.treetap_count": [
-    {"text": "Treetaps: ", "color": "dark_gray"},
-    {"index": 0},
-    {"text": " (", "color": "gray"},
-    {"index": 1, "color": "gray"},
-    {"text": ")", "color": "gray"}
-  ],
 
   "gui.affinity.flux_network_visualizer.network_statistics": "Network statistics",
   "gui.affinity.flux_network_visualizer.member_count": ["Member count: ", {"index": 0, "color": "blue"}],
@@ -237,6 +230,27 @@
   "gui.affinity.flux_network_visualizer.move_hint": ["Mouse 2 to ", {"text": "move", "color": "yellow"}],
   "gui.affinity.flux_network_visualizer.reset_hint": ["Double-click to ", {"text": "reset", "color": "yellow"}],
   "gui.affinity.flux_network_visualizer.hover_hint": ["Hover to ", {"text": "view information", "color": "yellow"}],
+
+  "advancement.affinity.so_tell_me_whats_your_intention.title": "So Tell Me, What's Your Intention?",
+  "advancement.affinity.so_tell_me_whats_your_intention.description": "Equip an item enchanted with Curse of Illiteracy",
+  "advancement.affinity.drag_and_drop.title": "Drag'n'Drop",
+  "advancement.affinity.drag_and_drop.description": "Obtain the Dragon Drop",
+  "advancement.affinity.you_cheated.title": "You Cheated",
+  "advancement.affinity.you_cheated.description": "Obtain a creative-only item",
+  "advancement.affinity.a_severe_and_continuous_lapse_in_your_judgement.title": "A Severe and Continuous Lapse in your Judgement",
+  "advancement.affinity.a_severe_and_continuous_lapse_in_your_judgement.description": "Put on a helmet enchanted with both Curse of Illiteracy and Curse of Binding",
+  "advancement.affinity.living_is_wise_if_you_never_ever_think_twice.title": "Living Is Wise, If You Never Ever Think Twice",
+  "advancement.affinity.living_is_wise_if_you_never_ever_think_twice.description": "Find an Item enchanted with Curse of Health",
+  "advancement.affinity.how_many_hours_do_we_fly.title": "How Many Hours Do We Fly?",
+  "advancement.affinity.how_many_hours_do_we_fly.description": "Brew up an extended Potion of Flight",
+  "advancement.affinity.nice_try.title": "Nice Try",
+  "advancement.affinity.nice_try.description": "Perform an Artifact Blade Smash after falling more than 100 blocks",
+  "advancement.affinity.return_to_sender_2.title": "Return to Sender 2",
+  "advancement.affinity.return_to_sender_2.description": "Hit a Shulker with its own Bullet",
+  "advancement.affinity.cache_invalidation.title": "Cache Invalidation",
+  "advancement.affinity.cache_invalidation.description": "Break an Aethum Flux Cache that's filled at least 50%",
+  "advancement.affinity.when_pigs_fly.title": "When Pigs Fly",
+  "advancement.affinity.when_pigs_fly.description": "Fly on a Pig",
 
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.bastion_regeneration": "Bastion",
