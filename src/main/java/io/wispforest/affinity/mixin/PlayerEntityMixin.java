@@ -6,7 +6,6 @@ import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.*;
 import io.wispforest.owo.ops.WorldOps;
-import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -15,11 +14,11 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,6 +30,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import java.util.ArrayList;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
@@ -96,8 +97,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(method = "attack",
             at = @At(value = "CONSTANT", args = "floatValue=1.5", shift = At.Shift.BY, by = 4), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void storeCritState(Entity target, CallbackInfo ci, float f, float g, boolean bl, boolean bl2, int i, boolean bl3) {
-        AffinityEntityAddon.setData(this, ArtifactBladeItem.DID_CRIT, bl3);
+    private void storeCritState(Entity target, CallbackInfo ci, float f, float g, boolean bl, boolean bl2, int i, boolean crit) {
+        AffinityEntityAddon.setData(this, ArtifactBladeItem.DID_CRIT, crit);
     }
 
     @ModifyArg(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
@@ -126,11 +127,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 2)) return;
 
         this.playSound(AffinitySoundEvents.ITEM_ARTIFACT_BLADE_JUMP_HIT, .7f, .6f + this.world.random.nextFloat() * .4f);
-
-        if (world.isClient) {
-            ClientParticles.setParticleCount(35);
-            ClientParticles.spawnPrecise(ParticleTypes.CRIT, this.world, target.getPos().add(0, target.getHeight() / 2, 0), 5, 1, 5);
-        }
+        var entityPositions = new ArrayList<Vec3d>();
 
         var area = new Box(target.getBlockPos()).expand(5, 3, 5);
         for (var entity : this.world.getNonSpectatingEntities(LivingEntity.class, area)) {
@@ -139,19 +136,15 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             entity.damage(DamageSource.player((PlayerEntity) (Object) this), this.affinity$lastJumpAttackDamage * .25f);
             entity.takeKnockback(.5, target.getX() - entity.getX(), target.getZ() - entity.getZ());
 
-            if (world.isClient) {
-                ClientParticles.setParticleCount(15);
-                ClientParticles.spawnLine(
-                        ParticleTypes.FIREWORK,
-                        this.world,
-                        target.getPos().add(0, .15f, 0),
-                        entity.getPos().add(0, .15f, 0),
-                        .05f
-                );
+            entityPositions.add(entity.getPos());
+        }
 
-                ClientParticles.setParticleCount(3);
-                ClientParticles.spawn(ParticleTypes.EXPLOSION, this.world, entity.getPos().add(0, entity.getHeight() / 2, 0), 2.5);
-            }
+        if (!world.isClient) {
+            AffinityParticleSystems.ARTIFACT_BLADE_AREA_ATTACK.spawn(
+                    this.world,
+                    target.getPos(),
+                    new AffinityParticleSystems.ArtifactBladeAreaAttackData(target.getPos(), entityPositions)
+            );
         }
     }
 }

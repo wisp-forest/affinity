@@ -8,7 +8,10 @@ import io.wispforest.affinity.object.AffinityEntityAttributes;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -137,7 +140,8 @@ public class ArtifactBladeItem extends SwordItem {
         return outText.append(Text.literal(" "));
     }
 
-    static {
+    @Environment(EnvType.CLIENT)
+    private static void registerTooltipAddition() {
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
             if (!(stack.getItem() instanceof ArtifactBladeItem blade) || blade.tier != Tier.ASTRAL) return;
 
@@ -158,6 +162,12 @@ public class ArtifactBladeItem extends SwordItem {
                 return;
             }
         });
+    }
+
+    static {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            registerTooltipAddition();
+        }
     }
 
     public enum Tier implements ToolMaterial {

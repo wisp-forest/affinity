@@ -124,11 +124,32 @@ public class AffinityParticleSystems {
         ClientParticles.spawnCenteredOnBlock(ParticleTypes.SMOKE, world, new BlockPos(pos), 1.25);
     });
 
+    public static final ParticleSystem<ArtifactBladeAreaAttackData> ARTIFACT_BLADE_AREA_ATTACK = CONTROLLER.register(ArtifactBladeAreaAttackData.class, (world, pos, data) -> {
+        ClientParticles.setParticleCount(35);
+        ClientParticles.spawnPrecise(ParticleTypes.CRIT, world, data.targetPos.add(0, 1, 0), 5, 1, 5);
+
+        for (var entityPos : data.entityPositions) {
+            ClientParticles.setParticleCount(15);
+            ClientParticles.spawnLine(
+                    ParticleTypes.FIREWORK,
+                    world,
+                    data.targetPos.add(0, .15f, 0),
+                    entityPos.add(0, .15f, 0),
+                    .05f
+            );
+
+            ClientParticles.setParticleCount(3);
+            ClientParticles.spawn(ParticleTypes.EXPLOSION, world, entityPos.add(0, 1, 0), 2.5);
+        }
+    });
+
     public record DissolveData(ItemStack suckWhat, Vec3d suckWhere, int duration, int particleMaxAge) {}
 
     public record LineData(Vec3d target, int color) {}
 
     public record CandleData(List<Vec3d> candles) {}
+
+    public record ArtifactBladeAreaAttackData(Vec3d targetPos, List<Vec3d> entityPositions) {}
 
     public static void initialize() {}
 }
