@@ -46,7 +46,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow
     public abstract void playSound(SoundEvent sound, float volume, float pitch);
 
-    @Shadow public abstract SoundCategory getSoundCategory();
+    @Shadow
+    public abstract SoundCategory getSoundCategory();
 
     @Unique
     private float affinity$lastJumpAttackDamage = 0f;
@@ -143,11 +144,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
         if (!world.isClient) {
             AffinityCriteria.ARTIFACT_BLADE_SMASH.trigger((ServerPlayerEntity) (Object) this);
-            // TODO fix :(
-            WorldOps.playSound(this.world, this.getPos(), AffinitySoundEvents.ITEM_ARTIFACT_BLADE_JUMP_HIT, this.getSoundCategory());
+            WorldOps.playSound(
+                    this.world, this.getPos(),
+                    AffinitySoundEvents.ITEM_ARTIFACT_BLADE_SMASH,
+                    this.getSoundCategory(),
+                    1, .6f + this.world.random.nextFloat() * .4f
+            );
 
-            // TODO rename to smash
-            AffinityParticleSystems.ARTIFACT_BLADE_AREA_ATTACK.spawn(
+            AffinityParticleSystems.ARTIFACT_BLADE_SMASH.spawn(
                     this.world,
                     target.getPos(),
                     new AffinityParticleSystems.ArtifactBladeAreaAttackData(target.getPos(), entityPositions)

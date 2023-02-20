@@ -124,7 +124,7 @@ public class AffinityParticleSystems {
         ClientParticles.spawnCenteredOnBlock(ParticleTypes.SMOKE, world, new BlockPos(pos), 1.25);
     });
 
-    public static final ParticleSystem<ArtifactBladeAreaAttackData> ARTIFACT_BLADE_AREA_ATTACK = CONTROLLER.register(ArtifactBladeAreaAttackData.class, (world, pos, data) -> {
+    public static final ParticleSystem<ArtifactBladeAreaAttackData> ARTIFACT_BLADE_SMASH = CONTROLLER.register(ArtifactBladeAreaAttackData.class, (world, pos, data) -> {
         ClientParticles.setParticleCount(35);
         ClientParticles.spawnPrecise(ParticleTypes.CRIT, world, data.targetPos.add(0, 1, 0), 5, 1, 5);
 
