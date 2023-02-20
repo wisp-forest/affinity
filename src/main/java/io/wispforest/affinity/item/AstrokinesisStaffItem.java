@@ -1,17 +1,25 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.nbt.NbtKey;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+@SuppressWarnings("UnstableApiUsage")
 public class AstrokinesisStaffItem extends KinesisStaffItem {
 
     public static final NbtKey<Boolean> PERFORMING_ASTROKINESIS = new NbtKey<>("PerformingAstrokinesis", NbtKey.Type.BOOLEAN);
@@ -27,6 +35,35 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
         stack.put(PERFORMING_ASTROKINESIS, true);
         return TypedActionResult.success(stack);
     }
+
+    @Override
+    public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        if (pedestal.flux() < pedestal.fluxCapacity()) return;
+
+        var storageBelow = ItemStorage.SIDED.find(world, pos.down(), Direction.UP);
+        if (storageBelow == null) return;
+
+        BlockPos targetPos = null;
+        for (var view : storageBelow) {
+            if (!view.getResource().isOf(Items.ECHO_SHARD)) continue;
+            if (!view.getResource().hasNbt()) continue;
+
+            var nbt = view.getResource().getNbt();
+            if (!nbt.has(EchoShardExtension.BOUND)) continue;
+            if (!nbt.get(EchoShardExtension.WORLD).equals(world.getRegistryKey().getValue())) continue;
+
+            targetPos = nbt.get(EchoShardExtension.POS);
+            break;
+        }
+
+        if (targetPos == null) return;
+
+        pedestal.consumeFlux(pedestal.fluxCapacity());
+        world.createExplosion(null, null, null, Vec3d.ofCenter(targetPos), 10, true, World.ExplosionSourceType.TNT);
+    }
+
+    @Override
+    public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
 
     @Override
     protected float getAethumConsumption(ItemStack stack) {
@@ -47,6 +84,9 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
             var target = player.raycast(50, 0, false);
             if (!(target instanceof BlockHitResult blockHit)) return;
 
+            var aethum = AffinityComponents.PLAYER_AETHUM.get(player);
+            if (!aethum.tryConsumeAethum(10)) return;
+
             player.world.createExplosion(player, DamageSource.player(player), null, Vec3d.ofCenter(blockHit.getBlockPos()), 5, true, World.ExplosionSourceType.TNT);
             player.stopUsingItem();
             player.getItemCooldownManager().set(AffinityItems.ASTROKINESIS_STAFF, 100);
@@ -58,7 +98,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
     @Override
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
         return stack.has(PERFORMING_ASTROKINESIS)
-                ? AffinityEntityAddon.hasData(player, CAN_THROW_ASTEROID)
+                ? AffinityEntityAddon.hasData(player, CAN_THROW_ASTEROID) && AffinityComponents.PLAYER_AETHUM.get(player).getAethum() >= 10
                 : super.canThrow(stack, player);
     }
 }
