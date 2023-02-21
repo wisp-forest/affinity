@@ -289,6 +289,8 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
                     ItemOps.decrementPlayerHandItem(player, hand);
 
                     updatePropertyCache();
+                    this.markDirty(false);
+
                     return ActionResult.SUCCESS;
                 } else if (this.isUpgradeable && this.outerShardCount < this.outerShards.size()) {
                     ListUtil.addItem(this.outerShards, ItemOps.singleCopy(playerStack));
@@ -296,6 +298,8 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
                     ItemOps.decrementPlayerHandItem(player, hand);
 
                     updatePropertyCache();
+                    this.markDirty(false);
+
                     return ActionResult.SUCCESS;
                 }
             } else if (this.isUpgradeable() && this.shard.isEmpty() && playerStack.getItem() instanceof AttunedShardItem shardItem) {
@@ -305,24 +309,11 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
                 ItemOps.decrementPlayerHandItem(player, hand);
 
                 updatePropertyCache();
+                this.markDirty(false);
+
                 return ActionResult.SUCCESS;
             }
 
-        } else if (player.isSneaking()) {
-            if (!world.isClient) return ActionResult.PASS;
-
-            final var network = visitNetwork();
-            player.sendMessage(Text.of("Network size: " + network.size()), true);
-
-            ClientParticles.persist();
-            ClientParticles.setParticleCount(20);
-
-            for (var nodePos : network) {
-                ClientParticles.spawnLine(ParticleTypes.GLOW, world, Vec3d.ofCenter(nodePos), Vec3d.ofCenter(nodePos.add(0, 2, 0)), 0);
-            }
-
-            ClientParticles.reset();
-            return ActionResult.SUCCESS;
         }
 
         return ActionResult.PASS;
