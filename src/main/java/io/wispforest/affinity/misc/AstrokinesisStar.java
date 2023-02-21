@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class AstrokinesisStar {
 
-    private final float polar, azimuthal;
+    private final float polar, azimuthal, size;
     private float displayPolar, displayAzimuthal;
 
     private float alpha = 1f;
@@ -19,6 +19,7 @@ public class AstrokinesisStar {
     public AstrokinesisStar() {
         this.polar = ThreadLocalRandom.current().nextFloat() * 90;
         this.azimuthal = ThreadLocalRandom.current().nextFloat() * 360;
+        this.size = ThreadLocalRandom.current().nextFloat(.25f, .6f);
     }
 
     public void update(@Nullable Vector2f target, float delta) {
@@ -88,5 +89,9 @@ public class AstrokinesisStar {
 
     public float azimuthal() {
         return this.displayAzimuthal;
+    }
+
+    public float size() {
+        return size;
     }
 }

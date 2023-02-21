@@ -1,5 +1,6 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
@@ -15,6 +16,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
@@ -24,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -33,6 +37,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
 
     private static final int ASTEROID_THROW_COST = 10;
 
+    public static final TagKey<DimensionType> WHITELISTED_DIMENSIONS = TagKey.of(RegistryKeys.DIMENSION_TYPE, Affinity.id("astrokinesis_staff_whitelist"));
     public static final NbtKey<Boolean> PERFORMING_ASTROKINESIS = new NbtKey<>("PerformingAstrokinesis", NbtKey.Type.BOOLEAN);
     public static final AffinityEntityAddon.DataKey<Float> ASTEROID_ORIGIN = AffinityEntityAddon.DataKey.withNullDefault();
 
@@ -42,6 +47,8 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
 
         var superResult = super.executeSpell(world, player, stack, remainingTicks);
         if (superResult.getResult().isAccepted()) return superResult;
+
+        if (player.getPitch() > 10 || !world.getDimensionEntry().isIn(WHITELISTED_DIMENSIONS)) return TypedActionResult.pass(stack);
 
         var raycast = player.raycast(512d, 0f, true);
         if (raycast.getType() != HitResult.Type.MISS && !world.getBlockState(((BlockHitResult) raycast).getBlockPos()).isOf(AffinityBlocks.THE_SKY)) {

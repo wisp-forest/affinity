@@ -58,6 +58,8 @@ public abstract class WorldRendererMixin {
 
     @Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Ljava/lang/Runnable;run()V", ordinal = 1))
     private void renderStuffInTheSky(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci) {
+        if (!this.world.getDimensionEntry().isIn(AstrokinesisStaffItem.WHITELISTED_DIMENSIONS)) return;
+
         var player = this.client.player;
         var delta = this.client.getLastFrameDuration() * .05f;
         this.affinity$random.setSeed(6969);
@@ -119,8 +121,8 @@ public abstract class WorldRendererMixin {
             var point = new Vector3f(x, y, z).normalize().mul(100);
             var other = new Vector3f(point).add(this.affinity$random.nextInt(100), this.affinity$random.nextInt(100), this.affinity$random.nextInt(100));
 
-            var upOffset = new Vector3f(point).cross(other).normalize().mul(.5f);
-            var rightOffset = new Vector3f(upOffset).rotateAxis((float) (Math.PI / 2), x, y, z).normalize().mul(.5f);
+            var upOffset = new Vector3f(point).cross(other).normalize().mul(star.size());
+            var rightOffset = new Vector3f(upOffset).rotateAxis((float) (Math.PI / 2), x, y, z).normalize().mul(star.size());
 
             float alpha = baseAlpha + (1 - baseAlpha) * star.alpha();
 
