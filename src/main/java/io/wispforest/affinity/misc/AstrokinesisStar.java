@@ -1,5 +1,6 @@
 package io.wispforest.affinity.misc;
 
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.owo.ui.util.Delta;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
@@ -36,7 +37,7 @@ public class AstrokinesisStar {
                 this.displayPolar += polarDifference * delta * .5f;
                 this.displayAzimuthal += azimuthalDifference * delta * .5f;
 
-                this.alpha = this.smoothstep(.8f, 2, 5 / Math.min(absPolarDifference, absAzimuthalDifference));
+                this.alpha = MathUtil.smoothstep(.8f, 2, 5 / Math.min(absPolarDifference, absAzimuthalDifference));
 
                 this.canBeFrozen = absPolarDifference <= 2 && absAzimuthalDifference <= 2;
                 return;
@@ -47,14 +48,6 @@ public class AstrokinesisStar {
         this.displayAzimuthal += this.computeDelta(this.displayAzimuthal, this.azimuthal, delta);
         this.alpha += Delta.compute(this.alpha, 0, delta);
         this.canBeFrozen = false;
-    }
-
-    private float smoothstep(float edge0, float edge1, float x) {
-        if (x < edge0) return 0;
-        if (x >= edge1) return 1;
-
-        x = (x - edge0) / (edge1 - edge0);
-        return x * x * (3 - 2 * x);
     }
 
     private float computeDelta(float current, float target, float delta) {

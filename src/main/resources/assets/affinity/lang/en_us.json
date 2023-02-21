@@ -146,6 +146,7 @@
   "item.affinity.staff.tooltip.consumption_per_second": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per second", "color": "gray"}],
   "item.affinity.staff.tooltip.cycle_mode_hint": [{"text": "⇄", "color": "#4D4C7D"}, {"text": " Sneak-Click to cycle modes", "color": "gray"}],
 
+  "item.affinity.kinesis_staff.tooltip.consumption_per_throw": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per throw", "color": "gray"}],
   "item.affinity.astrokinesis_staff.tooltip.consumption_per_throw": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum to throw an asteroid", "color": "gray"}],
 
   "text.affinity.attuned_shard_range": "Range: ",

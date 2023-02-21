@@ -3,6 +3,7 @@ package io.wispforest.affinity.item;
 import com.google.common.collect.ImmutableMultimap;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
@@ -10,6 +11,7 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityCriteria;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.nbt.NbtKey;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -24,14 +26,19 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.UUID;
 
 public class KinesisStaffItem extends StaffItem {
+
+    private static final float ENTITY_THROW_COST = 2.5f;
 
     private static final NbtKey<Integer> ACTIVE_TARGET_ENTITY = new NbtKey<>("TargetEntity", NbtKey.Type.INT);
     private static final TagKey<EntityType<?>> IMMUNE_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE, Affinity.id("kinesis_staff_immune"));
@@ -130,9 +137,21 @@ public class KinesisStaffItem extends StaffItem {
         return TypedActionResult.success(stack);
     }
 
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        tooltip.add(Text.translatable(
+                "item.affinity.kinesis_staff.tooltip.consumption_per_throw",
+                ENTITY_THROW_COST
+        ));
+    }
+
     public void performThrow(PlayerEntity player, ItemStack stack, PacketByteBuf extraData) {
         var targetEntity = player.world.getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
         if (targetEntity == null) return;
+
+        var aethum = AffinityComponents.PLAYER_AETHUM.get(player);
+        if (!aethum.tryConsumeAethum(ENTITY_THROW_COST)) return;
 
         stack.delete(ACTIVE_TARGET_ENTITY);
         player.stopUsingItem();
@@ -143,7 +162,7 @@ public class KinesisStaffItem extends StaffItem {
     }
 
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
-        return stack.has(ACTIVE_TARGET_ENTITY);
+        return stack.has(ACTIVE_TARGET_ENTITY) && AffinityComponents.PLAYER_AETHUM.get(player).getAethum() >= ENTITY_THROW_COST;
     }
 
     public void writeExtraThrowData(ItemStack stack, PlayerEntity player, PacketByteBuf buffer) {}
