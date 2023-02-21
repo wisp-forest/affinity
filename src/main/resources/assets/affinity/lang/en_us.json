@@ -6,6 +6,7 @@
   "itemGroup.affinity.affinity.tab.enchantments": "Enchantments",
 
   "entity.affinity.wisp": "Wisp",
+  "entity.affinity.asteroid": "Asteroid",
   "item.affinity.wisp_matter": "Wisp Matter",
   "wispType.affinity.inert": "Inert",
   "wispType.affinity.wise": "Wise",
@@ -144,6 +145,8 @@
   "item.affinity.staff.tooltip.consumption_per_second": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per second", "color": "gray"}],
   "item.affinity.staff.tooltip.cycle_mode_hint": [{"text": "⇄", "color": "#4D4C7D"}, {"text": " Sneak-Click to cycle modes", "color": "gray"}],
 
+  "item.affinity.astrokinesis_staff.tooltip.consumption_per_throw": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum to throw an asteroid", "color": "gray"}],
+
   "text.affinity.attuned_shard_range": "Range: ",
   "text.affinity.attuned_shard_range.value": "%d blocks",
   "text.affinity.attuned_shard_max_transfer": "Rate: ",
@@ -219,6 +222,9 @@
 
   "text.affinity.tooltip.aethum_storage": "Flux: %d/%d",
   "text.affinity.tooltip.creative_flux_cache_flux_level": "All of it, really",
+
+  "death.attack.asteroid": "%s was expunged by an Asteroid",
+  "death.attack.asteroid.player": "%s was expunged by %s's Asteroid",
 
   "gui.affinity.augmented_crafting_table.title": "Augmented Crafting Table",
 

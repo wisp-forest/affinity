@@ -61,9 +61,13 @@ public class WorldRendererMixin {
         boolean canFreezeStars = potentiallyFrozenStars.size() >= 10;
         if (canFreezeStars) {
             potentiallyFrozenStars.forEach(star -> star.frozen = true);
-            AffinityEntityAddon.setData(player, AstrokinesisStaffItem.CAN_THROW_ASTEROID, null);
+
+            if (!AffinityEntityAddon.hasData(player, AstrokinesisStaffItem.ASTEROID_ORIGIN)) {
+                AffinityEntityAddon.setData(player, AstrokinesisStaffItem.ASTEROID_ORIGIN, player.prevYaw);
+            }
+
         } else {
-            AffinityEntityAddon.removeData(player, AstrokinesisStaffItem.CAN_THROW_ASTEROID);
+            AffinityEntityAddon.removeData(player, AstrokinesisStaffItem.ASTEROID_ORIGIN);
         }
 
         boolean performingAstrokinesis = player.getActiveItem().has(AstrokinesisStaffItem.PERFORMING_ASTROKINESIS);
@@ -81,7 +85,7 @@ public class WorldRendererMixin {
             }
         }
 
-        boolean holdingAstrokinesisStaff = player.getMainHandStack().isOf(AffinityItems.ASTROKINESIS_STAFF)
+        boolean holdingAstrokinesisStaff = player.isHolding(AffinityItems.ASTROKINESIS_STAFF)
                 && player.getItemCooldownManager().getCooldownProgress(AffinityItems.ASTROKINESIS_STAFF, 0) == 0f;
 
         this.affinity$starAlpha += Delta.compute(this.affinity$starAlpha, holdingAstrokinesisStaff ? 1 : 0, delta * 10);

@@ -3,6 +3,7 @@ package io.wispforest.affinity.mixin.client;
 import io.wispforest.affinity.item.KinesisStaffItem;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.network.AffinityNetwork;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -37,7 +38,10 @@ public class MinecraftClientMixin {
             var activeStack = this.player.getActiveItem();
             if (!(activeStack.getItem() instanceof KinesisStaffItem staff) || !staff.canThrow(activeStack, this.player)) return;
 
-            AffinityNetwork.CHANNEL.clientHandle().send(new KinesisStaffItem.YeetPacket());
+            var dataBuffer = PacketByteBufs.create();
+            staff.writeExtraThrowData(activeStack, this.player, dataBuffer);
+
+            AffinityNetwork.CHANNEL.clientHandle().send(new KinesisStaffItem.YeetPacket(dataBuffer));
             this.player.swingHand(this.player.getActiveHand());
         }
     }

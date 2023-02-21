@@ -19,6 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -129,7 +130,7 @@ public class KinesisStaffItem extends StaffItem {
         return TypedActionResult.success(stack);
     }
 
-    public void performThrow(PlayerEntity player, ItemStack stack) {
+    public void performThrow(PlayerEntity player, ItemStack stack, PacketByteBuf extraData) {
         var targetEntity = player.world.getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
         if (targetEntity == null) return;
 
@@ -144,6 +145,8 @@ public class KinesisStaffItem extends StaffItem {
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
         return stack.has(ACTIVE_TARGET_ENTITY);
     }
+
+    public void writeExtraThrowData(ItemStack stack, PlayerEntity player, PacketByteBuf buffer) {}
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
@@ -167,7 +170,7 @@ public class KinesisStaffItem extends StaffItem {
             var activeStack = player.getActiveItem();
             if (!(activeStack.getItem() instanceof KinesisStaffItem staff)) return;
 
-            staff.performThrow(player, activeStack);
+            staff.performThrow(player, activeStack, message.extraData);
         });
 
         LivingEntityTickEvent.EVENT.register(entity -> {
@@ -180,5 +183,5 @@ public class KinesisStaffItem extends StaffItem {
         });
     }
 
-    public record YeetPacket() {}
+    public record YeetPacket(PacketByteBuf extraData) {}
 }

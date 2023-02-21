@@ -6,6 +6,8 @@ import io.wispforest.affinity.block.impl.RitualSocleBlock;
 import io.wispforest.affinity.client.particle.*;
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
 import io.wispforest.affinity.client.render.blockentity.*;
+import io.wispforest.affinity.client.render.entity.AsteroidEntityModel;
+import io.wispforest.affinity.client.render.entity.AsteroidEntityRenderer;
 import io.wispforest.affinity.client.render.entity.WispEntityModel;
 import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
 import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
@@ -48,6 +50,7 @@ public class AffinityClient implements ClientModInitializer {
         AffinityModelPredicateProviders.applyDefaults();
 
         EntityModelLayerRegistry.registerModelLayer(WispEntityModel.LAYER, WispEntityModel::createModelData);
+        EntityModelLayerRegistry.registerModelLayer(AsteroidEntityModel.LAYER, AsteroidEntityModel::createModelData);
 
         HandledScreens.register(AffinityScreenHandlerTypes.RITUAL_SOCLE_COMPOSER, RitualSocleComposerScreen::new);
         HandledScreens.register(AffinityScreenHandlerTypes.ASSEMBLY_AUGMENT, AssemblyAugmentScreen::new);
@@ -63,6 +66,7 @@ public class AffinityClient implements ClientModInitializer {
         EntityRendererRegistry.register(AffinityEntities.INERT_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.WISE_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.VICIOUS_WISP, WispEntityRenderer::new);
+        EntityRendererRegistry.register(AffinityEntities.ASTEROID, AsteroidEntityRenderer::new);
 
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
             final var tier = AttunedShardTiers.forItem(stack.getItem());
