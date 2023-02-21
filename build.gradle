@@ -27,7 +27,7 @@ loom {
 sourceSets {
     main {
         resources {
-            srcDirs += [ "src/generated" ]
+            srcDirs += ["src/generated"]
         }
     }
 }
@@ -93,13 +93,17 @@ dependencies {
     modImplementation "io.wispforest:owo-lib:${project.owo_version}"
     include "io.wispforest:owo-sentinel:${project.owo_version}"
 
-    modImplementation ("io.wispforest:owo-whats-this:${project.owo_whats_this_version}") {
+    modImplementation("io.wispforest:owo-whats-this:${project.owo_whats_this_version}") {
         exclude group: "maven.modrinth"
     }
 
     modImplementation "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"
 
     modImplementation "io.wispforest:worldmesher:${project.worldmesher_version}"
+
+    // sky block compatibility
+    modCompileOnly "maven.modrinth:sodium:${project.sodium_version}"
+    modCompileOnly "maven.modrinth:iris:${project.iris_version}"
 
     // dev utils
 

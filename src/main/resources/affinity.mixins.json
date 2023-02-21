@@ -70,15 +70,20 @@
     "client.CrackParticleMixin",
     "client.DimensionTypeMixin",
     "client.EntityMixin",
+    "client.FramebufferMixin",
     "client.HeldItemRendererMixin",
     "client.InGameHudMixin",
     "client.ItemFrameEntityRendererMixin",
     "client.ItemRendererMixin",
     "client.MinecraftClientMixin",
     "client.MouseMixin",
+    "client.RenderLayerAccessor",
     "client.RenderLayerMixin",
     "client.StyleMixin",
-    "client.WorldRendererMixin"
+    "client.WorldRendererMixin",
+    "client.iris.WorldRenderingPhaseMixin",
+    "client.sodium.BlockRenderPassManagerMixin",
+    "client.sodium.BlockRenderPassMixin"
   ],
   "injectors": {
     "defaultRequire": 1

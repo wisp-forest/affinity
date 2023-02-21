@@ -5,6 +5,8 @@ import io.wispforest.affinity.block.impl.RanthraciteWireBlock;
 import io.wispforest.affinity.block.impl.RitualSocleBlock;
 import io.wispforest.affinity.client.particle.*;
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
+import io.wispforest.affinity.client.render.SkyBlitProgram;
+import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.AsteroidEntityModel;
 import io.wispforest.affinity.client.render.entity.AsteroidEntityRenderer;
@@ -34,6 +36,8 @@ import net.minecraft.util.Formatting;
 
 @Environment(EnvType.CLIENT)
 public class AffinityClient implements ClientModInitializer {
+
+    public static final SkyBlitProgram SKY_BLIT_PROGRAM = new SkyBlitProgram();
 
     @Override
     public void onInitializeClient() {
@@ -130,5 +134,6 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.RANTHRACITE_WIRE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.MANGROVE_BASKET, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.THE_SKY, SkyCaptureBuffer.SKY_STENCIL_LAYER);
     }
 }

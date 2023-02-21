@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
 
@@ -34,10 +35,10 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
                 });
     }
 
-    public static void assignBuffers(Object2ObjectLinkedOpenHashMap<RenderLayer, BufferBuilder> builderStorage) {
+    public static void assignBuffers(Consumer<RenderLayer> bufferMaker) {
         LAYERS.forEach((absoluteEnchantment, renderLayers) -> {
             for (var layer : renderLayers) {
-                builderStorage.put(layer, new BufferBuilder(layer.getExpectedBufferSize()));
+                bufferMaker.accept(layer);
             }
         });
     }

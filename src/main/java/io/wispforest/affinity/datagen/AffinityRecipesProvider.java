@@ -37,15 +37,6 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ANTHRACITE_POWDER), conditionsFromItem(ANTHRACITE_POWDER))
                 .offerTo(exporter, craftingRecipe(AETHUM_MAP_PROTOTYPE));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, AffinityBlocks.RANTHRACITE_WIRE, 9)
-                .pattern("rrr")
-                .pattern("rar")
-                .pattern("rrr")
-                .input('a', ANTHRACITE_POWDER)
-                .input('r', Items.REDSTONE)
-                .criterion(hasItem(ANTHRACITE_POWDER), conditionsFromItem(ANTHRACITE_POWDER))
-                .offerTo(exporter, craftingRecipe(AffinityBlocks.RANTHRACITE_WIRE));
-
         ShapelessRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, Blocks.FLOWERING_AZALEA)
                 .input(AZALEA_FLOWERS)
                 .input(Blocks.AZALEA)

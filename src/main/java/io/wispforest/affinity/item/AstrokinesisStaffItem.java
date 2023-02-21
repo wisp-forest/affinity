@@ -3,6 +3,7 @@ package io.wispforest.affinity.item;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
+import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEntities;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
@@ -42,7 +43,10 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
         var superResult = super.executeSpell(world, player, stack, remainingTicks);
         if (superResult.getResult().isAccepted()) return superResult;
 
-        if (player.raycast(512d, 0f, true).getType() != HitResult.Type.MISS) return superResult;
+        var raycast = player.raycast(512d, 0f, true);
+        if (raycast.getType() != HitResult.Type.MISS && !world.getBlockState(((BlockHitResult) raycast).getBlockPos()).isOf(AffinityBlocks.THE_SKY)) {
+            return TypedActionResult.pass(stack);
+        }
 
         stack.put(PERFORMING_ASTROKINESIS, true);
         return TypedActionResult.success(stack);
