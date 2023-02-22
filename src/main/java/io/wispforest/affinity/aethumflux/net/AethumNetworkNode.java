@@ -1,6 +1,7 @@
 package io.wispforest.affinity.aethumflux.net;
 
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -34,8 +35,10 @@ public interface AethumNetworkNode extends AethumNetworkMember {
      * does not notify it
      *
      * @param pos The position of the link target
+     * @return {@link AethumLink.Result#LINK_CREATED} if the link was established,
+     * a {@link AethumLink.Result} describing the problem otherwise
      */
-    void addNodeLink(BlockPos pos);
+    AethumLink.Result addNodeLink(BlockPos pos);
 
     /**
      * Removes a link to another node - this specifically

@@ -32,6 +32,6 @@ public class CopperPlatedAethumFluxNodeBlock extends AbstractAethumFluxNodeBlock
 
     @Override
     public float shardHeight() {
-        return .8f;
+        return .675f;
     }
 }

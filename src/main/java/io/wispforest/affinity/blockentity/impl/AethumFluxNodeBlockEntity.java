@@ -14,7 +14,6 @@ import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.owo.ops.ItemOps;
-import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -24,7 +23,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -32,14 +30,16 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings("UnstableApiUsage")
 public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity, InteractableBlockEntity {
 
-    @Environment(EnvType.CLIENT) public float renderShardCount = 1;
+    @Environment(EnvType.CLIENT) public float renderShardCount = 1f;
+    @Environment(EnvType.CLIENT) public float shardActivity = 1f;
+    @Environment(EnvType.CLIENT) public double time = ThreadLocalRandom.current().nextLong(0, 2000);
 
     private long lastTick = 0;
     private Collection<AethumNetworkMember> cachedMembers = null;
@@ -184,7 +184,9 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
         if (member instanceof AethumNetworkNode node) {
             if (node.isLinked(this.pos)) return AethumLink.Result.ALREADY_LINKED;
-            node.addNodeLink(this.pos);
+
+            var result = node.addNodeLink(this.pos);
+            if (result != AethumLink.Result.LINK_CREATED) return result;
         } else {
             if (!member.acceptsLinks()) return AethumLink.Result.NO_TARGET;
             if (!member.addLinkParent(this.pos, type)) return AethumLink.Result.ALREADY_LINKED;
@@ -220,9 +222,13 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     }
 
     @Override
-    public void addNodeLink(BlockPos pos) {
+    public AethumLink.Result addNodeLink(BlockPos pos) {
+        if (!this.pos.isWithinDistance(pos, this.tier.maxDistance())) return AethumLink.Result.OUT_OF_RANGE;
+
         this.links.put(pos.toImmutable(), AethumLink.Type.NORMAL);
         this.markDirty(true);
+
+        return AethumLink.Result.LINK_CREATED;
     }
 
     @Override

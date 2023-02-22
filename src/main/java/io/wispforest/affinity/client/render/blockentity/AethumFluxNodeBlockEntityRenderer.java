@@ -3,6 +3,8 @@ package io.wispforest.affinity.client.render.blockentity;
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
+import io.wispforest.owo.ui.util.Delta;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
@@ -21,7 +23,6 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
     public static boolean enableLinkRendering = true;
 
     public static final ModelPart FLOATING_SHARD;
-    private static final Random RANDOM = new Random();
 
     static {
         ModelData floatingShardData = new ModelData();
@@ -35,6 +36,7 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
 
     @Override
     public void render(AethumFluxNodeBlockEntity node, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        node.shardActivity += Delta.compute(node.shardActivity, node.validForTransfer() ? 1 : 0.15, MinecraftClient.getInstance().getLastFrameDuration() * .1);
 
         // --------------
         // Link rendering
@@ -68,9 +70,7 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
                 node.getWorld().getLightLevel(LightType.BLOCK, node.getPos()) - 2,
                 node.getWorld().getLightLevel(LightType.SKY, node.getPos()));
 
-        RANDOM.setSeed(node.getPos().asLong());
-        long time = System.currentTimeMillis() + RANDOM.nextLong(5000);
-
+        double time = node.time += MinecraftClient.getInstance().getLastFrameDuration() * 50 * node.shardActivity;
         float angle = (float) ((time / -2000d) % (2 * Math.PI));
 
         // -------------
