@@ -1,0 +1,21 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:flight",
+  "effect_inputs": [
+    "minecraft:levitation"
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "affinity:azalea_flowers"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ]
+}

@@ -50,6 +50,7 @@ public class AffinityStatusEffects {
         registerPotions(StatusEffects.GLOWING, "glowing", 9600, true, false, GlowingPotion::new);
         registerPotions(StatusEffects.WITHER, "wither", 400, true, true);
         registerPotions(StatusEffects.HUNGER, "hunger", 1200, true, true);
+        registerPotions(StatusEffects.LEVITATION, "levitation", 600, true, true);
 
         Registry.register(Registries.STATUS_EFFECT, Affinity.id("dripping"), DRIPPING);
         Registry.register(Registries.STATUS_EFFECT, Affinity.id("bastion_regeneration"), BASTION_REGENERATION);

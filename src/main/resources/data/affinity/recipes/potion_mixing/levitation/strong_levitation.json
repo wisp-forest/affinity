@@ -1,0 +1,21 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:strong_levitation",
+  "effect_inputs": [
+    "minecraft:slow_falling"
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    }
+  ]
+}

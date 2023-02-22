@@ -72,7 +72,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     @Override
     public void tickServer() {
         if (!this.validForTransfer()) return;
-        if (lastTick == world.getTime()) return;
+        if (this.lastTick == world.getTime()) return;
         this.lastTick = world.getTime();
 
         final var network = this.visitNetwork();
@@ -98,8 +98,8 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         if (networkFlux < 0) networkFlux = 0;
         if (networkFlux > networkCapacity) networkFlux = networkCapacity;
 
-        networkFlux = transfer(members, networkFlux, networkCapacity, TransferFunction.EXTRACT_FROM_MEMBER);
-        networkFlux = transfer(members, networkFlux, networkCapacity, TransferFunction.INSERT_INTO_MEMBER);
+        networkFlux = this.transfer(members, networkFlux, networkCapacity, TransferFunction.EXTRACT_FROM_MEMBER);
+        networkFlux = this.transfer(members, networkFlux, networkCapacity, TransferFunction.INSERT_INTO_MEMBER);
 
         var fluxPerNode = (long) Math.ceil(networkFlux / (double) nodes.size());
 
@@ -127,7 +127,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     }
 
     private Collection<BlockPos> visitNetwork() {
-        if (!validForTransfer()) return Collections.emptyList();
+        if (!this.validForTransfer()) return Collections.emptyList();
 
         var visitedNodes = new ArrayList<BlockPos>();
         visitedNodes.add(this.pos);
