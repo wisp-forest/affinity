@@ -7,6 +7,8 @@ import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.misc.MixinHooks;
+import io.wispforest.affinity.mixin.client.CameraInvoker;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
@@ -43,6 +45,8 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL30C;
 
 import java.util.ArrayList;
@@ -151,7 +155,10 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             modelViewStack.push();
             modelViewStack.loadIdentity();
 
-            float scale = this.scale.get() / 10f;
+            float ageScalar = Math.min(1, this.age / 20f);
+            float visualizerScale = .75f + Easing.EXPO.apply(ageScalar) * .25f;
+
+            float scale = (this.scale.get() / 10f) * visualizerScale;
             modelViewStack.scale(scale, scale, scale);
 
             modelViewStack.translate(this.xOffset.get() / 2600d, this.yOffset.get() / -2600d, 0);
@@ -166,11 +173,35 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             matrices.loadIdentity();
             matrices.translate(-this.xSize / 2f, -this.ySize / 2f, -this.zSize / 2f);
 
+            var viewMatrix = new Matrix4f(modelViewStack.peek().getPositionMatrix()).mul(matrices.peek().getPositionMatrix());
+
+            var invProj = new Matrix4f(RenderSystem.getProjectionMatrix()).invert();
+            var invView = new Matrix4f(viewMatrix).invert();
+
+            var near = new Vector4f(0, 0, -1, 1).mul(invProj).mul(invView);
+            ((CameraInvoker) MinecraftClient.getInstance().gameRenderer.getCamera()).affinity$etPos(new Vec3d(near.x, near.y, near.z));
+
             //noinspection deprecation
             RenderSystem.runAsFancy(() -> {
                 int prevFramebuffer = GlStateManager.getBoundFramebuffer();
                 visualizerFramebuffer().clear(MinecraftClient.IS_SYSTEM_MAC);
+
+                GlStateManager._glBindFramebuffer(GL30C.GL_READ_FRAMEBUFFER, prevFramebuffer);
+                GlStateManager._glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, visualizerFramebuffer.fbo);
+                GL30.glBlitFramebuffer(
+                        0, 0,
+                        visualizerFramebuffer.textureWidth, visualizerFramebuffer.textureHeight,
+                        0, 0,
+                        visualizerFramebuffer.textureWidth, visualizerFramebuffer.textureHeight,
+                        GL30.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST
+                );
                 visualizerFramebuffer.beginWrite(false);
+
+                modelViewStack.translate(-this.xSize / 2f, -this.ySize / 2f, -this.zSize / 2f);
+                this.mesh.render(modelViewStack);
+                modelViewStack.translate(this.xSize / 2f, this.ySize / 2f, this.zSize / 2f);
+
+                MixinHooks.FORCE_BLOCK_ENTITY_RENDERING = true;
 
                 this.mesh.renderInfo().blockEntities().forEach((blockPos, entity) -> {
                     matrices.push();
@@ -179,11 +210,9 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                     matrices.pop();
                 });
 
-                this.client.getBufferBuilders().getEntityVertexConsumers().draw();
+                MixinHooks.FORCE_BLOCK_ENTITY_RENDERING = false;
 
-                modelViewStack.translate(-this.xSize / 2f, -this.ySize / 2f, -this.zSize / 2f);
-                this.mesh.render(modelViewStack);
-                modelViewStack.translate(this.xSize / 2f, this.ySize / 2f, this.zSize / 2f);
+                this.client.getBufferBuilders().getEntityVertexConsumers().draw();
 
                 GlStateManager._glBindFramebuffer(GL30C.GL_FRAMEBUFFER, prevFramebuffer);
             });
@@ -205,31 +234,15 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             // End model view / projection crimes
 
-            float ageScalar = Math.min(1, this.age / 20f);
-            float visualizerScale = .75f + Easing.EXPO.apply(ageScalar) * .25f;
-
-            matrices.push();
-            RenderSystem.setShaderColor(1, 1, 1, Easing.SINE.apply(ageScalar));
-
-            matrices.translate(this.width / 2d, this.height / 2d, 0);
-            matrices.scale(visualizerScale, visualizerScale, visualizerScale);
-            matrices.translate(this.width / -2d, this.height / -2d, 0);
-
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
+            RenderSystem.setShaderColor(1, 1, 1, Easing.SINE.apply(ageScalar));
 
-            RenderSystem.setShaderTexture(0, visualizerFramebuffer.getColorAttachment());
-            Drawer.drawTexture(
-                    matrices,
-                    0, 0,
-                    this.width, this.height,
-                    0, visualizerFramebuffer.textureHeight,
-                    visualizerFramebuffer.textureWidth, -visualizerFramebuffer.textureHeight,
-                    visualizerFramebuffer.textureWidth, visualizerFramebuffer.textureHeight
-            );
+            RenderSystem.backupProjectionMatrix();
+            visualizerFramebuffer.draw(visualizerFramebuffer.textureWidth, visualizerFramebuffer.textureHeight, false);
+            RenderSystem.restoreProjectionMatrix();
 
             RenderSystem.setShaderColor(1, 1, 1, 1);
-            matrices.pop();
 
             if (raycastResult instanceof BlockHitResult blockHit && blockHit.getType() != HitResult.Type.MISS) {
                 var blockEntity = this.world.getBlockEntity(blockHit.getBlockPos());

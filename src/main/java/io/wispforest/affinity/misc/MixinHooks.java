@@ -28,6 +28,7 @@ public class MixinHooks {
     public static boolean TEXT_OBFUSCATION = false;
     public static boolean INJECT_ASSEMBLY_AUGMENT_SCREEN = false;
     public static boolean INCREASED_TARGETING_MARGIN = false;
+    public static boolean FORCE_BLOCK_ENTITY_RENDERING = false;
     public static final DamageSource THREW_DOOM_POTION_SOURCE = new ImpendingDoomStatusEffect.DoomDamageSource("threw_doom_potion");
 
     public static final ThreadLocal<ItemStack> POTION_UTIL_STACK = new ThreadLocal<>();

@@ -10,10 +10,12 @@ import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemb
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.item.AttunedShardItem;
 import io.wispforest.affinity.misc.util.ListUtil;
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.owo.ops.ItemOps;
+import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -23,6 +25,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -30,6 +33,7 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -49,6 +53,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     private boolean allLinksValid = false;
 
     private final float shardHeight;
+    private final Vec3d linkAttachmentPoint;
     private final boolean isUpgradeable;
 
     public AethumFluxNodeBlockEntity(BlockPos pos, BlockState state) {
@@ -57,9 +62,11 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         if (state.getBlock() instanceof AbstractAethumFluxNodeBlock nodeBlock) {
             this.shardHeight = nodeBlock.shardHeight();
             this.isUpgradeable = nodeBlock.isUpgradeable();
+            this.linkAttachmentPoint = nodeBlock.linkAttachmentPoint();
         } else {
             this.shardHeight = .5f;
             this.isUpgradeable = false;
+            this.linkAttachmentPoint = Vec3d.ZERO;
         }
 
         this.fluxStorage.setFluxCapacity(32000);
@@ -68,6 +75,26 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     // ------------------
     // Ticking / Transfer
     // ------------------
+
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void tickClient() {
+        if (this.links.isEmpty() || !this.validForTransfer()) return;
+        if (this.world.random.nextFloat() >= .5f) return;
+
+        var linkIter = this.links.keySet().iterator();
+        int linkIndex = this.world.random.nextInt(this.links.size());
+
+        for (int i = 0; i < linkIndex; i++) linkIter.next();
+
+        var offset = Vec3d.of(linkIter.next().subtract(this.pos)).multiply(this.world.random.nextFloat());
+        var startPos = Vec3d.ofCenter(this.pos).add(offset);
+        var endPos = Vec3d.ofCenter(this.pos).add(offset.normalize().multiply(.25f + this.world.random.nextInt() * .5f));
+
+        ClientParticles.setParticleCount(1 + this.world.random.nextInt(5));
+        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb()), .5f), this.world, startPos, endPos, .15f);
+    }
 
     @Override
     public void tickServer() {
@@ -381,6 +408,11 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
     public float shardHeight() {
         return this.shardHeight;
+    }
+
+    @Override
+    public Vec3d linkAttachmentPointOffset() {
+        return this.linkAttachmentPoint;
     }
 
     // ------------------------

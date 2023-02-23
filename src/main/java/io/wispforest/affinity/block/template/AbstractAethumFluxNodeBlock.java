@@ -16,6 +16,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -60,4 +61,8 @@ public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlo
     public abstract boolean isUpgradeable();
 
     public abstract float shardHeight();
+
+    public Vec3d linkAttachmentPoint() {
+        return Vec3d.ZERO;
+    }
 }

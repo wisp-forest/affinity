@@ -1,6 +1,7 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.AbstractAethumFluxNodeBlock;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -42,5 +43,10 @@ public class StoneBandedAethumFluxNodeBlock extends AbstractAethumFluxNodeBlock 
     @Override
     public float shardHeight() {
         return .3f;
+    }
+
+    @Override
+    public Vec3d linkAttachmentPoint() {
+        return new Vec3d(0, -.35, 0);
     }
 }

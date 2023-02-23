@@ -63,7 +63,9 @@
   "client": [
     "access.ParticleManagerInvoker",
     "client.ArmorFeatureRendererMixin",
+    "client.BlockEntityRenderDispatcherMixin",
     "client.BufferBuilderStorageMixin",
+    "client.CameraInvoker",
     "client.ClientPlayerEntityMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.ClientWorldMixin",

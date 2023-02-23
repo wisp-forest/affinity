@@ -3,6 +3,7 @@ package io.wispforest.affinity.aethumflux.net;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxContainer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayDeque;
@@ -50,6 +51,13 @@ public interface AethumNetworkMember extends AethumFluxContainer {
      */
     AethumLink.Type specialLinkType();
 
+    /**
+     * @return An offset from the center of this block
+     * at which aethum links should attach
+     */
+    default Vec3d linkAttachmentPointOffset() {
+        return Vec3d.ZERO;
+    }
 
     static Set<BlockPos> traverseNetwork(World world, BlockPos initialMember) {
         return traverseNetwork(world, initialMember, (aethumNetworkMember, aBoolean) -> {});
