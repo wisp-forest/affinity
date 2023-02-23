@@ -7,6 +7,7 @@ import io.wispforest.affinity.aethumflux.net.AethumLink.Type;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
 import net.minecraft.block.BlockState;
@@ -128,6 +129,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
         stack.delete(LINK_DATA);
 
+        context.getPlayer().playSound(AffinitySoundEvents.ITEM_IRIDESCENCE_WAND_BIND, 1, .75f + world.random.nextFloat() * .5f);
         return ActionResult.SUCCESS;
     }
 

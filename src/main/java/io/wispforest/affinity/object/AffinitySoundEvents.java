@@ -21,6 +21,9 @@ public class AffinitySoundEvents implements AutoRegistryContainer<SoundEvent> {
     @AssignedName("item.artifact_blade.smash")
     public static final SoundEvent ITEM_ARTIFACT_BLADE_SMASH = SoundEvent.of(Affinity.id("item.artifact_blade.smash"));
 
+    @AssignedName("item.iridescence_wand.bind")
+    public static final SoundEvent ITEM_IRIDESCENCE_WAND_BIND = SoundEvent.of(Affinity.id("item.iridescence_wand.bind"));
+
     @Override
     public Registry<SoundEvent> getRegistry() {
         return Registries.SOUND_EVENT;
