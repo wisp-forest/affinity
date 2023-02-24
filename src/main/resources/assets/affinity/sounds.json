@@ -17,6 +17,11 @@
       "affinity:item/iridescence_wand_bind"
     ]
   },
+  "item.satiating_potion.start_drinking": {
+    "sounds": [
+      "affinity:item/satiating_potion_start_drinking"
+    ]
+  },
   "block.ritual_socle.activate": {
     "sounds": [
       "affinity:block/ritual_socle_activate"

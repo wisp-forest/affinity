@@ -8,10 +8,7 @@ import io.wispforest.affinity.object.wisps.AffinityWispTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.BoatItem;
-import net.minecraft.item.FoodComponent;
-import net.minecraft.item.Item;
-import net.minecraft.item.SignItem;
+import net.minecraft.item.*;
 
 @SuppressWarnings("unused")
 public class AffinityItems implements ItemRegistryContainer {
@@ -54,6 +51,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item AZALEA_CHEST_BOAT = new BoatItem(true, AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
 
     public static final Item AFFINITEA = new AffiniteaItem();
+    public static final Item SATIATING_POTION = new SatiationPotionItem();
     public static final Item DRAGON_DROP = new Item(settings(AffinityItemGroup.MAIN));
 
     public static final Item FORGOTTEN_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.FORGOTTEN);

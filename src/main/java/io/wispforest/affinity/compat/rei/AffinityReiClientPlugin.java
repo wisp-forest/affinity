@@ -25,7 +25,6 @@ import net.minecraft.registry.Registries;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AffinityReiClientPlugin implements REIClientPlugin {
 
@@ -52,7 +51,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         registry.registerFiller(ShapedAssemblyRecipe.class, ShapedAssemblyDisplay::new);
         registry.registerFiller(ShapelessAssemblyRecipe.class, ShapelessAssemblyDisplay::new);
 
-        Map<StatusEffect, List<Potion>> effectToPotion = new HashMap<>();
+        var effectToPotion = new HashMap<StatusEffect, List<Potion>>();
 
         for (Potion potion : Registries.POTION) {
             for (StatusEffectInstance effectInst : potion.getEffects()) {

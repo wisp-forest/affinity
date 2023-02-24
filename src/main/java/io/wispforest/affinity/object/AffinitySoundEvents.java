@@ -24,6 +24,9 @@ public class AffinitySoundEvents implements AutoRegistryContainer<SoundEvent> {
     @AssignedName("item.iridescence_wand.bind")
     public static final SoundEvent ITEM_IRIDESCENCE_WAND_BIND = SoundEvent.of(Affinity.id("item.iridescence_wand.bind"));
 
+    @AssignedName("item.satiating_potion.start_drinking")
+    public static final SoundEvent ITEM_SATIATING_POTION_START_DRINKING = SoundEvent.of(Affinity.id("item.satiating_potion.start_drinking"));
+
     @Override
     public Registry<SoundEvent> getRegistry() {
         return Registries.SOUND_EVENT;
