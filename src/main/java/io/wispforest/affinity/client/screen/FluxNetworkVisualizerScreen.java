@@ -236,13 +236,11 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            RenderSystem.setShaderColor(1, 1, 1, Easing.SINE.apply(ageScalar));
+            MinecraftClient.getInstance().gameRenderer.blitScreenProgram.colorModulator.set(new float[]{1, 1, 1, Easing.SINE.apply(ageScalar)});
 
             RenderSystem.backupProjectionMatrix();
             visualizerFramebuffer.draw(visualizerFramebuffer.textureWidth, visualizerFramebuffer.textureHeight, false);
             RenderSystem.restoreProjectionMatrix();
-
-            RenderSystem.setShaderColor(1, 1, 1, 1);
 
             if (raycastResult instanceof BlockHitResult blockHit && blockHit.getType() != HitResult.Type.MISS) {
                 var blockEntity = this.world.getBlockEntity(blockHit.getBlockPos());
