@@ -60,6 +60,7 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
 
             for (var linkedMember : node.linkedMembers()) {
                 var member = Affinity.AETHUM_MEMBER.find(node.getWorld(), linkedMember, null);
+                if (member == null) continue;
 
                 matrices.push();
                 matrices.multiplyPositionMatrix(BILLBOARD_MATRIX.billboardCylindrical(
