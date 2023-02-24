@@ -14,8 +14,13 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -72,6 +77,29 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     protected void writeNbt(NbtCompound nbt) {
         NbtUtil.writeLinks(nbt, "LinkedMembers", links);
         this.fluxStorage.writeNbt(nbt);
+    }
+
+    @Override
+    public void setStackNbt(ItemStack stack) {
+        var nbt = this.createNbt();
+        nbt.remove("LinkedMembers");
+
+        BlockItem.setBlockEntityNbt(stack, this.getType(), nbt);
+
+        // did I really just over-engineer the tooltip
+        // when I was actually trying to remove the links when
+        // pick-stacking aethum BEs? yes, yes I did
+        //
+        // glisco, 25.02.2023
+        var loreList = new NbtList();
+        loreList.add(NbtString.of(Text.Serializer.toJson(
+                Text.empty().styled(style -> style.withItalic(false)).formatted(Formatting.DARK_GRAY)
+                        .append(Text.literal("["))
+                        .append(Text.literal("+").formatted(Formatting.GRAY))
+                        .append(Text.literal("]"))
+                        .append(Text.literal(" NBT").formatted(Formatting.GOLD))
+        )));
+        stack.getOrCreateSubNbt("display").put("Lore", loreList);
     }
 
     protected void sendFluxUpdate() {
