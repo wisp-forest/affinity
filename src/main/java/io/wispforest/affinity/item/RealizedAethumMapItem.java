@@ -3,17 +3,30 @@ package io.wispforest.affinity.item;
 import io.wispforest.affinity.misc.AethumAcquisitionCache;
 import io.wispforest.affinity.mixin.access.MapStateAccessor;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
+import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.block.MapColor;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.FilledMapItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.map.MapState;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ClickType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class RealizedAethumMapItem extends FilledMapItem {
+
+    private static final NbtKey<Boolean> LOCKED = new NbtKey<>("Locked", NbtKey.Type.BOOLEAN);
 
     private static final byte[] COLORS = {
             MapColor.BLACK.getRenderColorByte(MapColor.Brightness.LOWEST),
@@ -35,7 +48,13 @@ public class RealizedAethumMapItem extends FilledMapItem {
     };
 
     public RealizedAethumMapItem() {
-        super(new OwoItemSettings());
+        super(new OwoItemSettings().maxCount(1));
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        if (stack.get(LOCKED)) return;
+        super.inventoryTick(stack, world, entity, slot, selected);
     }
 
     @Override
@@ -70,6 +89,22 @@ public class RealizedAethumMapItem extends FilledMapItem {
                 }
             }
         }
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        if (stack.get(LOCKED)) {
+            tooltip.add(Text.translatable(this.getTranslationKey() + ".tooltip.locked"));
+        } else {
+            tooltip.add(Text.translatable(this.getTranslationKey() + ".tooltip.unlocked"));
+        }
+    }
+
+    @Override
+    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+        stack.mutate(LOCKED, locked -> !locked);
+        return true;
     }
 
     public static void realign(MapState state, int x, int z) {

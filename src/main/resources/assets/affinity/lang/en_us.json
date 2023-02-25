@@ -162,6 +162,8 @@
   "item.affinity.anthracite_powder": "Anthracite Powder",
   "item.affinity.aethum_map_prototype": "Aethum Map Prototype",
   "item.affinity.realized_aethum_map": "Realized Aethum Map",
+  "item.affinity.realized_aethum_map.tooltip.locked": { "text": "Locked", "color": "gray" },
+  "item.affinity.realized_aethum_map.tooltip.unlocked": { "text": "Unlocked", "color": "gray" },
 
   "enchantment.affinity.curse_of_illiteracy": "Curse of Illiteracy",
   "enchantment.affinity.curse_of_illiteracy.desc": [
