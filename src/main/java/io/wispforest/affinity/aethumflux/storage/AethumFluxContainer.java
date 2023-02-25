@@ -57,7 +57,7 @@ public interface AethumFluxContainer {
     long extract(long max, TransactionContext transaction);
 
     /**
-     * @return {@code true} if this container supports energy extraction
+     * @return {@code true} if this container supports flux extraction
      */
     boolean canExtract();
 

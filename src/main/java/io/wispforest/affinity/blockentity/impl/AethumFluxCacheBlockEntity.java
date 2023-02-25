@@ -184,7 +184,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
             try (var transaction = Transaction.openOuter()) {
                 for (var pushTarget : pushTargets) {
                     var targetNode = Affinity.AETHUM_NODE.find(world, pushTarget, null);
-                    if (targetNode == null) return;
+                    if (targetNode == null) continue;
 
                     totalFlux -= targetNode.insert(Math.min(totalFlux, maxTransferPerNode), transaction);
                 }

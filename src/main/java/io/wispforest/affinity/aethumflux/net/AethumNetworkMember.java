@@ -30,7 +30,7 @@ public interface AethumNetworkMember extends AethumFluxContainer {
 
     /**
      * Adds a link parent to this member, so that it can notify
-     * all it's parents when it is removed
+     * all its parents when it is removed
      *
      * @param pos  The parent position
      * @param type The type of link that was established
@@ -46,8 +46,8 @@ public interface AethumNetworkMember extends AethumFluxContainer {
     void onLinkTargetRemoved(BlockPos pos);
 
     /**
-     * @return The type of link to establish if the player is pressing
-     * {@code SHIFT} while beginning the linking process
+     * @return The type of link to establish if the player is
+     * sneaking while beginning the linking process
      */
     AethumLink.Type specialLinkType();
 

@@ -250,7 +250,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
     @Override
     public AethumLink.Result addNodeLink(BlockPos pos) {
-        if (!this.pos.isWithinDistance(pos, this.tier.maxDistance())) return AethumLink.Result.OUT_OF_RANGE;
+        if (!this.pos.isWithinDistance(pos, this.tier.maxDistance() + 1)) return AethumLink.Result.OUT_OF_RANGE;
 
         this.links.put(pos.toImmutable(), AethumLink.Type.NORMAL);
         this.markDirty(true);
@@ -380,11 +380,10 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         this.outerShardCount = ListUtil.nonEmptyStacks(this.outerShards);
         this.updateTransferRateForTier();
 
-        boolean validityAccumulator = true;
+        this.allLinksValid = true;
         for (var link : this.links.keySet()) {
-            validityAccumulator &= this.pos.isWithinDistance(link, this.tier.maxDistance() + 1);
+            this.allLinksValid &= this.pos.isWithinDistance(link, this.tier.maxDistance() + 1);
         }
-        this.allLinksValid = validityAccumulator;
     }
 
     // -------

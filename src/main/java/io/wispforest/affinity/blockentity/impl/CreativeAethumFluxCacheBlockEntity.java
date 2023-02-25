@@ -28,7 +28,7 @@ public class CreativeAethumFluxCacheBlockEntity extends AethumNetworkMemberBlock
             try (var transaction = Transaction.openOuter()) {
                 for (var pushTarget : pushTargets) {
                     var targetNode = Affinity.AETHUM_NODE.find(world, pushTarget, null);
-                    if (targetNode == null) return;
+                    if (targetNode == null) continue;
 
                     targetNode.insert(Long.MAX_VALUE, transaction);
                 }
