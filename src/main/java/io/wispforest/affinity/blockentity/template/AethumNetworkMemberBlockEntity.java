@@ -37,6 +37,10 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     }
 
     public void onBroken() {
+        this.clearLinks();
+    }
+
+    protected void clearLinks() {
         for (var memberPos : this.links.keySet()) {
             var member = Affinity.AETHUM_MEMBER.find(world, memberPos, null);
             if (member == null) continue;
@@ -49,7 +53,7 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
 
     @Override
     public boolean preMangroveBasket(World world, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        this.onBroken();
+        this.clearLinks();
         return true;
     }
 
