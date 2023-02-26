@@ -5,6 +5,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AethumComponent<H> implements Component, AutoSyncedComponent {
@@ -22,7 +23,9 @@ public abstract class AethumComponent<H> implements Component, AutoSyncedCompone
         this.aethum = this.initialValue();
     }
 
-    abstract double initialValue();
+    protected abstract double initialValue();
+
+    protected abstract double maxAethum();
 
     @Override
     public void readFromNbt(@NotNull NbtCompound tag) {
@@ -51,7 +54,7 @@ public abstract class AethumComponent<H> implements Component, AutoSyncedCompone
     }
 
     public void setAethum(double aethum) {
-        this.aethum = aethum;
+        this.aethum = MathHelper.clamp(aethum, 0, this.maxAethum());
         this.key.sync(this.holder);
     }
 

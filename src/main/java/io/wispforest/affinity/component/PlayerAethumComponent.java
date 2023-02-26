@@ -39,6 +39,7 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
         this.aethum = Math.min(this.aethum + this.naturalRegenSpeed, this.maxAethum);
     }
 
+    @Override
     public double maxAethum() {
         return this.holder.world.isClient
                 ? this.maxAethum
@@ -52,7 +53,7 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
     }
 
     @Override
-    double initialValue() {
+    protected double initialValue() {
         return 10;
     }
 

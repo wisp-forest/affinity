@@ -185,13 +185,17 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     }
 
     public void regenerate() {
-        ThreadLocalRandom.current().nextDouble(50, 75);
-        this.holder.setNeedsSaving(true);
+        this.setAethum(this.initialValue());
     }
 
     @Override
-    double initialValue() {
+    protected double initialValue() {
         return ThreadLocalRandom.current().nextDouble(60, 85);
+    }
+
+    @Override
+    protected double maxAethum() {
+        return 100;
     }
 
     @Override
