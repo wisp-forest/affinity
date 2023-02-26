@@ -103,6 +103,8 @@ public class RealizedAethumMapItem extends FilledMapItem {
 
     @Override
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+        if (clickType != ClickType.RIGHT) return false;
+
         stack.mutate(LOCKED, locked -> !locked);
         return true;
     }

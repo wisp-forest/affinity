@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "affinity:assembly_shaped",
   "category": "misc",
   "key": {
     "a": {

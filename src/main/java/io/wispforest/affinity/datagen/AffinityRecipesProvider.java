@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
@@ -28,15 +27,6 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(Consumer<RecipeJsonProvider> exporter) {
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, AETHUM_MAP_PROTOTYPE)
-                .pattern(" a ")
-                .pattern("ama")
-                .pattern(" a ")
-                .input('a', ANTHRACITE_POWDER)
-                .input('m', Items.MAP)
-                .criterion(hasItem(ANTHRACITE_POWDER), conditionsFromItem(ANTHRACITE_POWDER))
-                .offerTo(exporter, craftingRecipe(AETHUM_MAP_PROTOTYPE));
-
         ShapelessRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, Blocks.FLOWERING_AZALEA)
                 .input(AZALEA_FLOWERS)
                 .input(Blocks.AZALEA)
