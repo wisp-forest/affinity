@@ -26,6 +26,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
 
     public static final LatchingAethumEffect INFERTILITY = new LatchingAethumEffect(40, 60);
     public static final LatchingAethumEffect NO_NATURAL_REGEN = new LatchingAethumEffect(30, 45);
+    public static final LatchingAethumEffect INCREASED_NATURAL_SPAWNING = new LatchingAethumEffect(90, 85);
 
     private static final NbtKey<NbtList> ACTIVE_EFFECTS_KEY = new NbtKey.ListKey<>("ActiveEffects", NbtKey.Type.STRING);
     private static final BiMap<Identifier, LatchingAethumEffect> EFFECT_REGISTRY = HashBiMap.create();
@@ -74,9 +75,9 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
 
         for (var effect : EFFECT_REGISTRY.values()) {
             if (this.activeEffects.contains(effect)) {
-                if (this.aethum >= effect.releaseThreshold) this.activeEffects.remove(effect);
+                if (effect.testRelease(this.aethum)) this.activeEffects.remove(effect);
             } else {
-                if (this.aethum <= effect.triggerThreshold) this.activeEffects.add(effect);
+                if (effect.testTrigger(this.aethum)) this.activeEffects.add(effect);
             }
         }
 
@@ -91,7 +92,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
             var diff = this.aethum - neighbor.getAethum();
             if (diff < 15) continue;
 
-            diff *= .1;
+            diff = Math.min(diff * .1, 2.5);
             neighbor.addAethum(diff);
             this.aethum -= diff;
         }
@@ -220,10 +221,23 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         EFFECT_REGISTRY.put(id, effect);
     }
 
-    public record LatchingAethumEffect(double triggerThreshold, double releaseThreshold) {}
+    public record LatchingAethumEffect(double triggerThreshold, double releaseThreshold) {
+        public boolean testTrigger(double aethum) {
+            return this.releaseThreshold > this.triggerThreshold
+                    ? aethum <= this.triggerThreshold
+                    : aethum >= this.triggerThreshold;
+        }
+
+        public boolean testRelease(double aethum) {
+            return this.releaseThreshold > this.triggerThreshold
+                    ? aethum >= this.releaseThreshold
+                    : aethum <= this.releaseThreshold;
+        }
+    }
 
     static {
         registerAethumEffect(Affinity.id("infertility"), INFERTILITY);
         registerAethumEffect(Affinity.id("no_natural_regen"), NO_NATURAL_REGEN);
+        registerAethumEffect(Affinity.id("increased_natural_spawning"), INCREASED_NATURAL_SPAWNING);
     }
 }

@@ -38,6 +38,7 @@
     "PotionUtilMixin",
     "ProjectileEntityMixin",
     "ProjectileUtilMixin",
+    "ServerChunkManagerMixin",
     "ServerWorldMixin",
     "StatusEffectMixin",
     "StatusEffectUtilMixin",
