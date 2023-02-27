@@ -46,6 +46,7 @@
   "block.affinity.staff_pedestal": "Staff Pedestal",
   "block.affinity.ouija_board": "Ouija Board",
   "block.affinity.the_sky": "The Sky",
+  "block.affinity.arcane_fade": "Arcane Fade",
 
   "block.affinity.aberrant_calling_core": "Aberrant Calling Core",
   "block.affinity.aberrant_calling_core.tooltip.complete": "Complete",
@@ -137,6 +138,7 @@
   "item.affinity.affinitea": "Affinitea",
   "item.affinity.satiating_potion": "Satiating Potion",
   "item.affinity.dragon_drop": "Dragon Drop",
+  "item.affinity.arcane_fade_bucket": "Bucket of Arcane Fade",
 
   "item.affinity.staff.mode_template": [
     {"text": " [", "color": "dark_gray"},

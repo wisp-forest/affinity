@@ -5,6 +5,7 @@ import io.wispforest.affinity.block.impl.*;
 import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.*;
 import io.wispforest.affinity.item.AffinityItemGroup;
+import io.wispforest.affinity.misc.ArcaneFadeFluid;
 import io.wispforest.affinity.mixin.access.SignTypeInvoker;
 import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
@@ -17,6 +18,8 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.vehicle.BoatEntity;
+import net.minecraft.fluid.FlowableFluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -78,6 +81,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AZALEA_TRAPDOOR = new TrapdoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR), SoundEvents.BLOCK_WOODEN_DOOR_CLOSE, SoundEvents.BLOCK_WOODEN_DOOR_OPEN);
     public static final Block AZALEA_FENCE_GATE = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), SoundEvents.BLOCK_FENCE_GATE_CLOSE, SoundEvents.BLOCK_FENCE_GATE_OPEN);
     public static final Block THE_SKY = new Block(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    @NoBlockItem public static final FluidBlock ARCANE_FADE = new FluidBlock(Fluids.ARCANE_FADE, FabricBlockSettings.copyOf(Blocks.WATER));
 
     public static final SignType AZALEA_SIGN_TYPE = SignTypeInvoker.affinity$invokeNew("azalea");
     @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_SIGN_TYPE);
@@ -184,6 +189,22 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         private static <T extends BlockEntity> BlockEntityType<T> make(FabricBlockEntityTypeBuilder.Factory<T> factory, Block... blocks) {
             return FabricBlockEntityTypeBuilder.create(factory, blocks).build();
+        }
+    }
+
+    public static class Fluids implements AutoRegistryContainer<Fluid> {
+
+        public static final FlowableFluid ARCANE_FADE = new ArcaneFadeFluid.Still();
+        public static final FlowableFluid ARCANE_FADE_FLOWING = new ArcaneFadeFluid.Flowing();
+
+        @Override
+        public Registry<Fluid> getRegistry() {
+            return Registries.FLUID;
+        }
+
+        @Override
+        public Class<Fluid> getTargetFieldType() {
+            return Fluid.class;
         }
     }
 

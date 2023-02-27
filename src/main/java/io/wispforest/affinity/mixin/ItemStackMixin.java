@@ -3,6 +3,7 @@ package io.wispforest.affinity.mixin;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.ChunkAethumComponent;
+import io.wispforest.affinity.misc.ArcaneFadeFluid;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.owo.ui.core.Color;
@@ -42,6 +43,12 @@ public abstract class ItemStackMixin {
         if (!component.hasEffectActive(ChunkAethumComponent.INFERTILITY)) return;
 
         cir.setReturnValue(ActionResult.PASS);
+    }
+
+    @Inject(method = "hasGlint", at = @At("HEAD"), cancellable = true)
+    private void removeGlint(CallbackInfoReturnable<Boolean> cir) {
+        if (!((ItemStack) (Object) this).get(ArcaneFadeFluid.REMOVE_ENCHANTMENT_GLINT_KEY)) return;
+        cir.setReturnValue(false);
     }
 
 }

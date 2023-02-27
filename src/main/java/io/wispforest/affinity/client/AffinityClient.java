@@ -28,6 +28,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
@@ -71,6 +73,10 @@ public class AffinityClient implements ClientModInitializer {
         EntityRendererRegistry.register(AffinityEntities.WISE_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.VICIOUS_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.ASTEROID, AsteroidEntityRenderer::new);
+
+        BlockRenderLayerMap.INSTANCE.putFluid(AffinityBlocks.Fluids.ARCANE_FADE, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putFluid(AffinityBlocks.Fluids.ARCANE_FADE_FLOWING, RenderLayer.getTranslucent());
+        FluidRenderHandlerRegistry.INSTANCE.register(AffinityBlocks.Fluids.ARCANE_FADE, AffinityBlocks.Fluids.ARCANE_FADE_FLOWING, SimpleFluidRenderHandler.coloredWater(0xA86464));
 
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
             final var tier = AttunedShardTiers.forItem(stack.getItem());

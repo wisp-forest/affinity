@@ -54,6 +54,8 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item SATIATING_POTION = new SatiationPotionItem();
     public static final Item DRAGON_DROP = new Item(settings(AffinityItemGroup.MAIN));
 
+    public static final Item ARCANE_FADE_BUCKET = new BucketItem(AffinityBlocks.Fluids.ARCANE_FADE, settings(AffinityItemGroup.MAIN).maxCount(1).recipeRemainder(Items.BUCKET));
+
     public static final Item FORGOTTEN_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.FORGOTTEN);
     public static final Item STABILIZED_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.STABILIZED);
     public static final Item STRENGTHENED_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.STRENGTHENED);

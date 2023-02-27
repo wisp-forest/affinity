@@ -40,20 +40,14 @@ public class Affinity implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        FieldRegistrationHandler.register(AffinityBlocks.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityBlocks.Entities.class, MOD_ID, false);
-
+        FieldRegistrationHandler.register(AffinityBlocks.class, MOD_ID, true);
         FieldRegistrationHandler.register(AffinityItems.class, MOD_ID, false);
         FieldRegistrationHandler.register(AffinityEnchantments.class, MOD_ID, false);
-
         FieldRegistrationHandler.register(AffinityEntities.class, MOD_ID, false);
         FieldRegistrationHandler.register(AffinityEntityAttributes.class, MOD_ID, false);
-
         FieldRegistrationHandler.register(AffinityParticleTypes.class, MOD_ID, false);
         FieldRegistrationHandler.register(AffinitySoundEvents.class, MOD_ID, false);
-
-        FieldRegistrationHandler.register(AffinityRecipeTypes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityRecipeTypes.Serializers.class, MOD_ID, false);
+        FieldRegistrationHandler.register(AffinityRecipeTypes.class, MOD_ID, true);
         FieldRegistrationHandler.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
 
         FieldRegistrationHandler.processSimple(AffinityCriteria.class, false);
