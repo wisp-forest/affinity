@@ -88,9 +88,15 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
         for (int i = 0; i < linkIndex; i++) linkIter.next();
 
-        var offset = Vec3d.of(linkIter.next().subtract(this.pos)).multiply(this.world.random.nextFloat());
-        var startPos = Vec3d.ofCenter(this.pos).add(offset);
-        var endPos = Vec3d.ofCenter(this.pos).add(offset.normalize().multiply(.25f + this.world.random.nextInt() * .5f));
+        var otherPos = linkIter.next();
+        var otherMember = Affinity.AETHUM_MEMBER.find(this.world, otherPos, null);
+
+        var thisPoint = Vec3d.ofCenter(this.pos).add(this.linkAttachmentPoint);
+        var otherPoint = Vec3d.ofCenter(otherPos).add(otherMember.linkAttachmentPointOffset());
+
+        var offset = otherPoint.subtract(thisPoint).multiply(this.world.random.nextFloat());
+        var startPos = thisPoint.add(offset);
+        var endPos = thisPoint.add(offset.normalize().multiply(.25f + this.world.random.nextInt() * .5f));
 
         ClientParticles.setParticleCount(1 + this.world.random.nextInt(5));
         ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb()), .5f), this.world, startPos, endPos, .15f);

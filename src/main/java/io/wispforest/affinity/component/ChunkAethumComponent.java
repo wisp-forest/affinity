@@ -67,7 +67,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
                 if (neighborChunk == null) continue;
                 final var neighborComponent = AffinityComponents.CHUNK_AETHUM.get(neighborChunk);
 
-                neighbors[dir.getHorizontal()] = neighborComponent;
+                this.neighbors[dir.getHorizontal()] = neighborComponent;
                 neighborComponent.neighbors[dir.getOpposite().getHorizontal()] = this;
             }
             this.neighborsCached = true;
@@ -86,7 +86,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         final double previousAethum = this.aethum;
 
         for (var dir : HORIZONTAL_DIRECTIONS) {
-            final var neighbor = neighbors[dir.getHorizontal()];
+            final var neighbor = this.neighbors[dir.getHorizontal()];
             if (neighbor == null) continue;
 
             var diff = this.aethum - neighbor.getAethum();
