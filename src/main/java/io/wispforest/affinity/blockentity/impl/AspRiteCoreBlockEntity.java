@@ -1,7 +1,7 @@
 package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
-import io.wispforest.affinity.misc.recipe.AspenInfusionRecipe;
+import io.wispforest.affinity.recipe.AspenInfusionRecipe;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityRecipeTypes;

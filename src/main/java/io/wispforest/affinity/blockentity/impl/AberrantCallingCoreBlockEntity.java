@@ -4,7 +4,7 @@ import io.wispforest.affinity.block.impl.AberrantCallingCoreBlock;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.misc.EntityReference;
 import io.wispforest.affinity.misc.ServerTasks;
-import io.wispforest.affinity.misc.recipe.AberrantCallingRecipe;
+import io.wispforest.affinity.recipe.AberrantCallingRecipe;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;

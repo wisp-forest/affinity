@@ -3,7 +3,7 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.potion.PotionMixture;
-import io.wispforest.affinity.misc.recipe.GlowingPotionDyeRecipe;
+import io.wispforest.affinity.recipe.GlowingPotionDyeRecipe;
 import io.wispforest.affinity.statuseffects.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;

@@ -86,16 +86,6 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
         });
     }
 
-    private static void bleachSheep(Entity entity) {
-        if (!(entity instanceof SheepEntity sheep) || sheep.getColor() == DyeColor.WHITE) return;
-
-        sheep.setColor(DyeColor.WHITE);
-        sheep.playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 1f, 1f);
-
-        ClientParticles.setParticleCount(15);
-        ClientParticles.spawn(ParticleTypes.WITCH, sheep.world, sheep.getEyePos(), 1f);
-    }
-
     private static boolean tryCraft(List<ItemEntity> items, Predicate<ItemEntity> inputPredicate, Predicate<ItemEntity> catalystPredicate, BiConsumer<ItemEntity, ItemEntity> craftFunction) {
         ItemEntity input = null;
         for (var item : items) {
@@ -119,6 +109,17 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
 
         craftFunction.accept(input, catalyst);
         return true;
+    }
+
+    // TODO improve these effects and move them to the client
+    private static void bleachSheep(Entity entity) {
+        if (!(entity instanceof SheepEntity sheep) || sheep.getColor() == DyeColor.WHITE) return;
+
+        sheep.setColor(DyeColor.WHITE);
+        sheep.playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 1f, 1f);
+
+        ClientParticles.setParticleCount(15);
+        ClientParticles.spawn(ParticleTypes.WITCH, sheep.world, sheep.getEyePos(), 1f);
     }
 
     @Override

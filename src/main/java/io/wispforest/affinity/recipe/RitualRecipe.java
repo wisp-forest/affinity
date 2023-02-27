@@ -1,4 +1,4 @@
-package io.wispforest.affinity.misc.recipe;
+package io.wispforest.affinity.recipe;
 
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import net.minecraft.inventory.Inventory;

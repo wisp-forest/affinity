@@ -1,4 +1,4 @@
-package io.wispforest.affinity.misc.recipe;
+package io.wispforest.affinity.recipe;
 
 import io.wispforest.affinity.misc.Ingrediente;
 import io.wispforest.affinity.misc.potion.PotionMixture;

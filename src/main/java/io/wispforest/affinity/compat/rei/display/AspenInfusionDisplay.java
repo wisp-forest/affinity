@@ -1,7 +1,7 @@
 package io.wispforest.affinity.compat.rei.display;
 
 import io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin;
-import io.wispforest.affinity.misc.recipe.AspenInfusionRecipe;
+import io.wispforest.affinity.recipe.AspenInfusionRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;

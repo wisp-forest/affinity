@@ -1,4 +1,4 @@
-package io.wispforest.affinity.misc.recipe;
+package io.wispforest.affinity.recipe;
 
 import com.google.gson.JsonObject;
 import io.wispforest.affinity.blockentity.impl.AberrantCallingCoreBlockEntity;

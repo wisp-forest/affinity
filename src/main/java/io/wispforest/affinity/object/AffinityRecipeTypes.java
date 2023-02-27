@@ -1,6 +1,6 @@
 package io.wispforest.affinity.object;
 
-import io.wispforest.affinity.misc.recipe.*;
+import io.wispforest.affinity.recipe.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.Registries;

@@ -3,7 +3,7 @@ package io.wispforest.affinity.blockentity.impl;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.misc.potion.PotionMixture;
-import io.wispforest.affinity.misc.recipe.PotionMixingRecipe;
+import io.wispforest.affinity.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.misc.util.ListUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -35,7 +35,6 @@ import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
