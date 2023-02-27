@@ -32,6 +32,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
 
     @Inject(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;set(Ljava/util/Map;Lnet/minecraft/item/ItemStack;)V"))
     private void setResplendentGemCost(CallbackInfo ci) {
+        if (!this.input.getStack(1).isOf(AffinityItems.RESPLENDENT_GEM)) return;
         this.levelCost.set(30);
     }
 
