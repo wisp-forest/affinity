@@ -22,7 +22,7 @@ public class StatProviderRenderer {
     private static float targetViewTime = -1;
 
     static void initialize() {
-        WorldRenderEvents.LAST.register(context -> {
+        WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
             var client = MinecraftClient.getInstance();
 
             if (client.crosshairTarget instanceof BlockHitResult blockHit && blockHit.getType() != HitResult.Type.MISS) {
@@ -44,6 +44,7 @@ public class StatProviderRenderer {
 
                 var modelViewStack = RenderSystem.getModelViewStack();
                 modelViewStack.push();
+                modelViewStack.multiplyPositionMatrix(context.matrixStack().peek().getPositionMatrix());
 
                 var pos = Vec3d.ofCenter(target).subtract(context.camera().getPos());
                 modelViewStack.translate(pos.x, pos.y + .5f, pos.z);
