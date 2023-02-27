@@ -140,7 +140,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         this.neighborPositions = null;
 
         WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_ABERRANT_CALLING_CORE_RITUAL_SUCCESS, SoundCategory.BLOCKS);
-        AffinityParticleSystems.ABERRANT_CALLING_SUCCESS.spawn(world, pos.add(0, 2, 0));
+        AffinityParticleSystems.LAVA_ERUPTION.spawn(world, pos.add(0, 2, 0));
 
         return true;
     }

@@ -84,7 +84,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
         pedestal.consumeFlux(pedestal.fluxCapacity());
         this.spawnAsteroid(world, targetPos, 10f, null, null);
 
-        AffinityParticleSystems.ABERRANT_CALLING_SUCCESS.spawn(world, Vec3d.ofCenter(pos, .95f));
+        AffinityParticleSystems.LAVA_ERUPTION.spawn(world, Vec3d.ofCenter(pos, .95f));
     }
 
     @Override

@@ -35,7 +35,7 @@ public class WispMatterItem extends Item {
         final var world = context.getWorld();
 
         if (this == AffinityItems.INERT_WISP_MATTER) {
-            AffinityParticleSystems.ABERRANT_CALLING_SUCCESS.spawn(world, Vec3d.ofCenter(context.getBlockPos().up()));
+            AffinityParticleSystems.LAVA_ERUPTION.spawn(world, Vec3d.ofCenter(context.getBlockPos().up()));
             return ActionResult.SUCCESS;
         }
 

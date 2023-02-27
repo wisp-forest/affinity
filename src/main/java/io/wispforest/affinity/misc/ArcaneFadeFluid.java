@@ -2,9 +2,9 @@ package io.wispforest.affinity.misc;
 
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.ItemOps;
-import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.block.Block;
@@ -22,7 +22,6 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.sound.SoundEvents;
@@ -60,13 +59,17 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
         ENTITY_TICK_IN_FADE_EVENT.register(ArcaneFadeFluid::bleachSheep);
 
         ENTITY_TOUCH_EVENT.register(entity -> {
-            if (!(entity instanceof ItemEntity item)) return;
+            if (!(entity instanceof ItemEntity item) || item.world.isClient) return;
 
             var items = item.world.getEntitiesByClass(ItemEntity.class, item.getBoundingBox().expand(.75), ItemEntity::isAlive);
 
             if (tryCraft(items, input -> input.getStack().hasGlint(), catalyst -> catalyst.getStack().isOf(AffinityItems.DRAGON_DROP), (input, catalyst) -> {
                 if (!ItemOps.emptyAwareDecrement(catalyst.getStack())) catalyst.discard();
-                input.getStack().put(REMOVE_ENCHANTMENT_GLINT_KEY, true);
+
+                var output = input.getStack().copy();
+                output.put(REMOVE_ENCHANTMENT_GLINT_KEY, true);
+
+                input.setStack(output);
             })) return;
 
             if (tryCraft(items, input -> input.getStack().getRepairCost() != 0, catalyst -> catalyst.getStack().isOf(Items.POTION) && PotionUtil.getPotion(catalyst.getStack()) == Potions.HEALING, (input, catalyst) -> {
@@ -108,18 +111,20 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
         if (catalyst == null) return false;
 
         craftFunction.accept(input, catalyst);
+
+        input.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 1f, input.world.random.nextFloat() * 2f);
+        AffinityParticleSystems.ARCANE_FADE_CRAFT.spawn(input.world, input.getPos().add(0, .5f, 0));
+
         return true;
     }
 
-    // TODO improve these effects and move them to the client
     private static void bleachSheep(Entity entity) {
         if (!(entity instanceof SheepEntity sheep) || sheep.getColor() == DyeColor.WHITE) return;
 
         sheep.setColor(DyeColor.WHITE);
         sheep.playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 1f, 1f);
 
-        ClientParticles.setParticleCount(15);
-        ClientParticles.spawn(ParticleTypes.WITCH, sheep.world, sheep.getEyePos(), 1f);
+        AffinityParticleSystems.ARCANE_FADE_BLEACH_SHEEP.spawn(sheep.world, sheep.getPos().add(sheep.getWidth() / 2, sheep.getHeight() / 2, sheep.getWidth() / 2));
     }
 
     @Override

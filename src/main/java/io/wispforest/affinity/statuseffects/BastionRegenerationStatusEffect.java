@@ -3,9 +3,9 @@ package io.wispforest.affinity.statuseffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectCategory;
 
-public class BastionRegeneration extends AffinityStatusEffect {
+public class BastionRegenerationStatusEffect extends AffinityStatusEffect {
 
-    public BastionRegeneration(StatusEffectCategory type, int color) {
+    public BastionRegenerationStatusEffect(StatusEffectCategory type, int color) {
         super(type, color);
     }
 

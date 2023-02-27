@@ -100,7 +100,7 @@ public class AffinityParticleSystems {
         ClientParticles.reset();
     });
 
-    public static final ParticleSystem<Void> ABERRANT_CALLING_SUCCESS = CONTROLLER.register(Void.class, (world, pos, data) -> {
+    public static final ParticleSystem<Void> LAVA_ERUPTION = CONTROLLER.register(Void.class, (world, pos, data) -> {
         ClientParticles.spawn(new GenericEmitterParticleEffect(
                 ParticleTypes.LARGE_SMOKE, new Vec3d(0, .25, 0), 1, .5f, false, 8
         ), world, pos, 0d);
@@ -141,6 +141,23 @@ public class AffinityParticleSystems {
             ClientParticles.setParticleCount(3);
             ClientParticles.spawn(ParticleTypes.EXPLOSION, world, entityPos.add(0, 1, 0), 2.5);
         }
+    });
+
+    public static final ParticleSystem<Void> ARCANE_FADE_BLEACH_SHEEP = CONTROLLER.register(Void.class, (world, pos, data) -> {
+        ClientParticles.setParticleCount(25);
+        ClientParticles.spawn(ParticleTypes.WITCH, world, pos, 1f);
+
+        ClientParticles.setParticleCount(5);
+        ClientParticles.spawn(ParticleTypes.POOF, world, pos, 1f);
+    });
+
+    public static final ParticleSystem<Void> ARCANE_FADE_CRAFT = CONTROLLER.register(Void.class, (world, pos, data) -> {
+        ClientParticles.setParticleCount(5);
+        ClientParticles.spawn(ParticleTypes.CLOUD, world, pos, .25f);
+
+        ClientParticles.randomizeVelocity(.15f);
+        ClientParticles.setParticleCount(15);
+        ClientParticles.spawn(ParticleTypes.FIREWORK, world, pos, .25f);
     });
 
     public record DissolveData(ItemStack suckWhat, Vec3d suckWhere, int duration, int particleMaxAge) {}
