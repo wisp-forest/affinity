@@ -1,0 +1,25 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:long_blindness",
+  "effect_inputs": [
+    "minecraft:night_vision",
+    "minecraft:weakness"
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    {
+      "item": "minecraft:spider_eye"
+    },
+    {
+      "item": "minecraft:ink_sac"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ]
+}

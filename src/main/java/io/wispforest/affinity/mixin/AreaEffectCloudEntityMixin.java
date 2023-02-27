@@ -8,6 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.Potion;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,7 +25,8 @@ public class AreaEffectCloudEntityMixin implements ExtendedAreaEffectCloudEntity
     private List<StatusEffectInstance> effects;
 
     @Shadow private Potion potion;
-    private NbtCompound affinity$extraPotionNbt;
+
+    private @Nullable NbtCompound affinity$extraPotionNbt;
 
     public void affinity$setExtraPotionNbt(NbtCompound tag) {
         affinity$extraPotionNbt = tag;

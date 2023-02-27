@@ -338,6 +338,11 @@
   "item.minecraft.lingering_potion.effect.glowing": "Lingering Potion of Incandescence",
   "item.minecraft.tipped_arrow.effect.glowing": "Arrow of Incandescence",
 
+  "item.minecraft.potion.effect.blindness": "Potion of Sightlessness",
+  "item.minecraft.splash_potion.effect.blindness": "Splash Potion of Sightlessness",
+  "item.minecraft.lingering_potion.effect.blindness": "Lingering Potion of Sightlessness",
+  "item.minecraft.tipped_arrow.effect.blindness": "Arrow of Sightlessness",
+
   "item.minecraft.potion.effect.wither": "Potion of Decay",
   "item.minecraft.splash_potion.effect.wither": "Splash Potion of Decay",
   "item.minecraft.lingering_potion.effect.wither": "Lingering Potion of Decay",

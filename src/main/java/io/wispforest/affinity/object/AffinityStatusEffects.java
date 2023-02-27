@@ -34,7 +34,8 @@ public class AffinityStatusEffects {
                     EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,
                     "ea838142-499a-4460-b92c-a12d1e329b77",
                     1,
-                    EntityAttributeModifier.Operation.ADDITION);
+                    EntityAttributeModifier.Operation.ADDITION
+            );
 
     public static void register() {
         registerEffectAndPotions(LIFE_LEECH, "life_leech", 2400, true, true);
@@ -51,6 +52,7 @@ public class AffinityStatusEffects {
         registerPotions(StatusEffects.WITHER, "wither", 400, true, true);
         registerPotions(StatusEffects.HUNGER, "hunger", 1200, true, true);
         registerPotions(StatusEffects.LEVITATION, "levitation", 600, true, true);
+        registerPotions(StatusEffects.BLINDNESS, "blindness", 300, true, false);
 
         Registry.register(Registries.STATUS_EFFECT, Affinity.id("dripping"), DRIPPING);
         Registry.register(Registries.STATUS_EFFECT, Affinity.id("bastion_regeneration"), BASTION_REGENERATION);
