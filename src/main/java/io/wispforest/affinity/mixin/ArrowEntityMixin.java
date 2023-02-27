@@ -7,6 +7,7 @@ import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.Potion;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +20,7 @@ public class ArrowEntityMixin {
 
     @Shadow private Potion potion;
 
-    private NbtCompound affinity$extraPotionNbt;
+    private @Nullable NbtCompound affinity$extraPotionNbt;
 
     @Inject(method = "initFromStack", at = @At("RETURN"))
     private void addExtraData(ItemStack stack, CallbackInfo ci) {
@@ -33,8 +34,9 @@ public class ArrowEntityMixin {
 
     @ModifyArg(method = "onHit", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(II)I"), index = 0)
     private int addDuration(int duration) {
-        duration *= this.affinity$extraPotionNbt.getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
+        if (this.affinity$extraPotionNbt == null) return duration;
 
+        duration *= this.affinity$extraPotionNbt.getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
         return duration;
     }
 
