@@ -51,7 +51,7 @@ public class CollectionStaffItem extends StaffItem {
     @Override
     @SuppressWarnings("UnstableApiUsage")
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        if (pedestal.tickCounter() % 20 != 0) return;
+        if (pedestal.time() % 20 != 0) return;
 
         var storage = ItemStorage.SIDED.find(world, pos.down(), Direction.UP);
         if (storage == null) return;

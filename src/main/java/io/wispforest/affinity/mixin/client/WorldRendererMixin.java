@@ -108,6 +108,7 @@ public abstract class WorldRendererMixin {
         var buffer = Tessellator.getInstance().getBuffer();
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
+        // TODO: this must respect the celestial zoomer
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(this.world.getSkyAngle(tickDelta) * -360f));
         for (var star : affinity$stars) {

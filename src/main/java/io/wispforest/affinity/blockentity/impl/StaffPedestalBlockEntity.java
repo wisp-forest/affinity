@@ -33,7 +33,7 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
     private static final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
-    private int tickCounter = 0;
+    private int time = 0;
 
     private final SingleElementDefaultedList<ItemStack> inventoryProvider = new SingleElementDefaultedList<>(
             ItemStack.EMPTY, () -> this.item, stack -> this.item = stack
@@ -59,7 +59,7 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
 
     @Override
     public void tickServer() {
-        this.tickCounter++;
+        this.time++;
 
         if (this.item.isEmpty() || !(this.item.getItem() instanceof StaffItem staff)) return;
         staff.pedestalTickServer((ServerWorld) this.world, this.pos, this);
@@ -67,7 +67,7 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
 
     @Override
     public void tickClient() {
-        this.tickCounter++;
+        this.time++;
 
         if (this.item.isEmpty() || !(this.item.getItem() instanceof StaffItem staff)) return;
         staff.pedestalTickClient(this.world, this.pos, this);
@@ -77,8 +77,8 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
         return this.item;
     }
 
-    public int tickCounter() {
-        return this.tickCounter;
+    public int time() {
+        return this.time;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

@@ -114,6 +114,7 @@
   },
 
   "item.affinity.time_staff": "Time Staff",
+  "item.affinity.time_staff": "Time Staff",
   "item.affinity.time_staff.mode.normal": "Normal (x%s)",
   "item.affinity.time_staff.mode.fast": "Fast (x%s)",
   "item.affinity.time_staff.mode.ludicrous": "Ludicrous (x%s)",
@@ -127,6 +128,8 @@
   "item.affinity.collection_staff": "Collection Staff",
   "item.affinity.kinesis_staff": "Kinesis Staff",
   "item.affinity.astrokinesis_staff": "Astrokinesis Staff",
+  "item.affinity.cultivation_staff": "Cultivation Staff",
+  "item.affinity.cultivation_staff.super_foraging_mode": "Super Foraging Mode™",
   "item.affinity.nimble_staff": "Nimble Staff",
   "item.affinity.nimble_staff.direction.north": "North",
   "item.affinity.nimble_staff.direction.south": "South",
