@@ -20,6 +20,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -105,7 +106,7 @@ public class NimbleStaffItem extends StaffItem {
     }
 
     @Override
-    protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks) {
+    protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {
         var target = player.raycast(50, 0, false);
         if (!(target instanceof BlockHitResult blockHit)) return TypedActionResult.fail(stack);
         if (world.isAir(blockHit.getBlockPos())) return TypedActionResult.fail(stack);

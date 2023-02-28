@@ -91,7 +91,7 @@ public class KinesisStaffItem extends StaffItem {
     }
 
     @Override
-    protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks) {
+    protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {
         var playerFacing = player.getRotationVec(0);
         Entity entity;
 

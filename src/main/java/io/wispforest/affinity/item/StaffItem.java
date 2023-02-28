@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -31,7 +32,7 @@ public abstract class StaffItem extends Item {
     // In Hand
     // -------
 
-    protected abstract TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks);
+    protected abstract TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock);
 
     protected abstract float getAethumConsumption(ItemStack stack);
 
@@ -52,6 +53,7 @@ public abstract class StaffItem extends Item {
     }
 
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
+
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
 
     public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {}
@@ -66,6 +68,15 @@ public abstract class StaffItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        return this.handleItemUse(world, user, hand, null);
+    }
+
+    @Override
+    public ActionResult useOnBlock(ItemUsageContext context) {
+        return this.handleItemUse(context.getWorld(), context.getPlayer(), context.getHand(), context.getBlockPos()).getResult();
+    }
+
+    private TypedActionResult<ItemStack> handleItemUse(World world, PlayerEntity user, Hand hand, @Nullable BlockPos clickedBlock) {
         final var stack = user.getStackInHand(hand);
 
         final var aethum = AffinityComponents.PLAYER_AETHUM.get(user);
@@ -74,7 +85,7 @@ public abstract class StaffItem extends Item {
         if (this.isContinuous(stack)) {
             if (aethum.getAethum() < consumption * 20) return TypedActionResult.pass(stack);
 
-            if (this.executeSpell(world, user, stack, this.getMaxUseTime(stack)).getResult().isAccepted()) {
+            if (this.executeSpell(world, user, stack, this.getMaxUseTime(stack), clickedBlock).getResult().isAccepted()) {
                 user.setCurrentHand(hand);
                 return TypedActionResult.consume(stack);
             } else {
@@ -83,8 +94,10 @@ public abstract class StaffItem extends Item {
         } else {
             if (aethum.getAethum() < consumption) return TypedActionResult.pass(stack);
 
-            aethum.addAethum(-consumption);
-            return this.executeSpell(world, user, stack, -1);
+            var result = this.executeSpell(world, user, stack, -1, clickedBlock);
+            if (result.getResult().isAccepted()) aethum.addAethum(-consumption);
+
+            return result;
         }
     }
 
@@ -100,7 +113,7 @@ public abstract class StaffItem extends Item {
         }
 
         aethum.addAethum(-consumption);
-        if (!this.executeSpell(world, player, stack, remainingUseTicks).getResult().isAccepted()) {
+        if (!this.executeSpell(world, player, stack, remainingUseTicks, null).getResult().isAccepted()) {
             user.stopUsingItem();
         }
     }

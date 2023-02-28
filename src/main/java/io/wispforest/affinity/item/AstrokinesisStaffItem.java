@@ -42,10 +42,10 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
     public static final AffinityEntityAddon.DataKey<Float> ASTEROID_ORIGIN = AffinityEntityAddon.DataKey.withNullDefault();
 
     @Override
-    protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks) {
+    protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {
         if (stack.has(PERFORMING_ASTROKINESIS)) return TypedActionResult.success(stack);
 
-        var superResult = super.executeSpell(world, player, stack, remainingTicks);
+        var superResult = super.executeSpell(world, player, stack, remainingTicks, clickedBlock);
         if (superResult.getResult().isAccepted()) return superResult;
 
         if (player.getPitch() > 10 || !world.getDimensionEntry().isIn(WHITELISTED_DIMENSIONS)) return TypedActionResult.pass(stack);

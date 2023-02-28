@@ -3,6 +3,7 @@ package io.wispforest.affinity.worldgen;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.mixin.access.OverworldBiomeCreatorInvoker;
 import io.wispforest.affinity.object.AffinityEntities;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registerable;
@@ -10,8 +11,10 @@ import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BiomeMoodSound;
+import net.minecraft.util.collection.DataPool;
 import net.minecraft.util.math.intprovider.ClampedIntProvider;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.GenerationSettings;
@@ -23,6 +26,8 @@ import net.minecraft.world.gen.placementmodifier.BiomePlacementModifier;
 import net.minecraft.world.gen.placementmodifier.CountPlacementModifier;
 import net.minecraft.world.gen.placementmodifier.RarityFilterPlacementModifier;
 import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
+import net.minecraft.world.gen.stateprovider.NoiseBlockStateProvider;
+import net.minecraft.world.gen.stateprovider.WeightedBlockStateProvider;
 import terrablender.api.Regions;
 import terrablender.api.TerraBlenderApi;
 
@@ -41,6 +46,11 @@ public class AffinityWorldgen {
     public static final RegistryKey<PlacedFeature> WISP_FOREST_FLOWERS = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Affinity.id("wisp_forest_flowers"));
     public static final RegistryKey<PlacedFeature> FLOWER_WISP_FOREST = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Affinity.id("flower_wisp_forest"));
 
+    public static final RegistryKey<ConfiguredFeature<?, ?>> CONFIGURED_CULTIVATION_STAFF_FLOWER_PATCH = RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, Affinity.id("cultivation_staff_flower_patch"));
+    public static final RegistryKey<ConfiguredFeature<?, ?>> CONFIGURED_CULTIVATION_STAFF_GRASS_PATCH = RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, Affinity.id("cultivation_staff_grass_patch"));
+    public static final RegistryKey<PlacedFeature> CULTIVATION_STAFF_FLOWER_PATCH = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Affinity.id("cultivation_staff_flower_patch"));
+    public static final RegistryKey<PlacedFeature> CULTIVATION_STAFF_GRASS_PATCH = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Affinity.id("cultivation_staff_grass_patch"));
+
     public static void bootstrapAzaleaTree(Registerable<PlacedFeature> featureRegisterable) {
         var featureLookup = featureRegisterable.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE);
         PlacedFeatures.register(featureRegisterable, AZALEA_TREE, featureLookup.getOrThrow(TreeConfiguredFeatures.AZALEA_TREE), PlacedFeatures.wouldSurvive(Blocks.AZALEA));
@@ -55,6 +65,46 @@ public class AffinityWorldgen {
                 new RandomFeatureConfig(
                         List.of(new RandomFeatureEntry(featureLookup.getOrThrow(AZALEA_TREE), 0.15F)),
                         featureLookup.getOrThrow(TreePlacedFeatures.OAK_BEES_0002)
+                )
+        );
+
+        ConfiguredFeatures.register(
+                featureRegisterable,
+                CONFIGURED_CULTIVATION_STAFF_GRASS_PATCH,
+                Feature.RANDOM_PATCH,
+                new RandomPatchFeatureConfig(
+                        100, 7, 3,
+                        PlacedFeatures.createEntry(
+                                Feature.SIMPLE_BLOCK,
+                                new SimpleBlockFeatureConfig(new WeightedBlockStateProvider(DataPool.<BlockState>builder()
+                                        .add(Blocks.GRASS.getDefaultState(), 4)
+                                        .add(Blocks.TALL_GRASS.getDefaultState(), 1)
+                                        .add(Blocks.FERN.getDefaultState(), 2)
+                                ))
+                        )
+                )
+        );
+
+        ConfiguredFeatures.register(
+                featureRegisterable,
+                CONFIGURED_CULTIVATION_STAFF_FLOWER_PATCH,
+                Feature.FLOWER,
+                new RandomPatchFeatureConfig(
+                        80, 6, 2,
+                        PlacedFeatures.createEntry(
+                                Feature.SIMPLE_BLOCK,
+                                new SimpleBlockFeatureConfig(new NoiseBlockStateProvider(
+                                        2056, new DoublePerlinNoiseSampler.NoiseParameters(0, 1.0), 5f,
+                                        List.of(
+                                                Blocks.DANDELION.getDefaultState(), Blocks.POPPY.getDefaultState(),
+                                                Blocks.ALLIUM.getDefaultState(), Blocks.AZURE_BLUET.getDefaultState(),
+                                                Blocks.RED_TULIP.getDefaultState(), Blocks.ORANGE_TULIP.getDefaultState(),
+                                                Blocks.WHITE_TULIP.getDefaultState(), Blocks.PINK_TULIP.getDefaultState(),
+                                                Blocks.OXEYE_DAISY.getDefaultState(), Blocks.CORNFLOWER.getDefaultState(),
+                                                Blocks.LILY_OF_THE_VALLEY.getDefaultState(), Blocks.FERN.getDefaultState()
+                                        )
+                                ))
+                        )
                 )
         );
     }
@@ -95,6 +145,18 @@ public class AffinityWorldgen {
                 PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 CountPlacementModifier.of(ClampedIntProvider.create(UniformIntProvider.create(-1, 3), 0, 3)),
                 BiomePlacementModifier.of()
+        );
+
+        PlacedFeatures.register(
+                featureRegisterable,
+                CULTIVATION_STAFF_FLOWER_PATCH,
+                featureLookup.getOrThrow(CONFIGURED_CULTIVATION_STAFF_FLOWER_PATCH)
+        );
+
+        PlacedFeatures.register(
+                featureRegisterable,
+                CULTIVATION_STAFF_GRASS_PATCH,
+                featureLookup.getOrThrow(CONFIGURED_CULTIVATION_STAFF_GRASS_PATCH)
         );
     }
 
