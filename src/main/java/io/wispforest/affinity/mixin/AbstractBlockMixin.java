@@ -29,7 +29,8 @@ public class AbstractBlockMixin {
 
         if (!world.isClient) {
             world.setBlockState(pos, AffinityBlocks.BUDDING_AZALEA_LEAVES.getDefaultState()
-                    .with(LeavesBlock.PERSISTENT, state.get(LeavesBlock.PERSISTENT)));
+                    .with(LeavesBlock.PERSISTENT, state.get(LeavesBlock.PERSISTENT))
+                    .with(LeavesBlock.DISTANCE, state.get(LeavesBlock.DISTANCE)));
             ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(AffinityItems.AZALEA_FLOWERS));
         }
 

@@ -41,7 +41,8 @@ public class BuddingAzaleaLeavesBlock extends LeavesBlock {
 
             if (age == MAX_AGE) {
                 world.setBlockState(pos, Blocks.FLOWERING_AZALEA_LEAVES.getDefaultState()
-                        .with(LeavesBlock.PERSISTENT, state.get(LeavesBlock.PERSISTENT)));
+                        .with(LeavesBlock.PERSISTENT, state.get(LeavesBlock.PERSISTENT))
+                        .with(LeavesBlock.DISTANCE, state.get(LeavesBlock.DISTANCE)));
                 return;
             }
         }
