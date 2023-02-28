@@ -20,7 +20,8 @@
                             <positioning type="absolute">157,27</positioning>
                         </affinity.alpha-wrapper>
 
-                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="30" region-height="30" u="176" id="crafting-overlay">
+                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="30" region-height="30" u="176"
+                                 id="crafting-overlay">
                             <positioning type="absolute">117,28</positioning>
                             <blend>true</blend>
                             <visible-area>
