@@ -88,7 +88,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                         ),
                         this.treetapCache.stream().filter(blockPos -> BLOCKED_TREETAPS.get(blockPos) == this.pos).map(pos -> {
                             var direction = this.world.getBlockState(pos).get(ArcaneTreetapBlock.FACING);
-                            return new Vec3d(pos.getX() + direction.getOffsetX() * .85, pos.getY() + .5, pos.getZ() + direction.getOffsetZ() * .85);
+                            return new Vec3d(pos.getX() + .5 + direction.getOffsetX() * .4, pos.getY() + .5, pos.getZ() + .5 + direction.getOffsetZ() * .4);
                         }).toList(), 1, 30, true
                 ));
             }
