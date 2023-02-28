@@ -10,10 +10,7 @@ import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particle.DustColorTransitionParticleEffect;
-import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.particle.ItemStackParticleEffect;
-import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
@@ -36,10 +33,10 @@ public class AffinityParticleSystems {
     });
 
     public static final ParticleSystem<LineData> WISP_ATTACK = CONTROLLER.register(LineData.class, (world, pos, data) -> {
-        var length = data.target().subtract(pos).length();
+        var length = data.target.subtract(pos).length();
 
         ClientParticles.setParticleCount((int) Math.round(length * 5));
-        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVec3f(data.color()), 1), world, pos, data.target(), .15f);
+        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVec3f(data.color), 1), world, pos, data.target, .15f);
     });
 
     public static final ParticleSystem<BlockPos> TIME_STAFF_ACCELERATE = CONTROLLER.register(BlockPos.class, (world, pos, data) -> {
@@ -65,12 +62,12 @@ public class AffinityParticleSystems {
     });
 
     public static final ParticleSystem<DissolveData> DISSOLVE_ITEM = CONTROLLER.register(DissolveData.class, (world, pos, data) -> {
-        world.addParticle(BezierPathEmitterParticleEffect.item(data.suckWhat(), data.suckWhere(), data.particleMaxAge(), data.duration()),
+        world.addParticle(BezierPathEmitterParticleEffect.item(data.suckWhat, data.suckWhere, data.particleMaxAge, data.duration, false),
                 pos.x, pos.y, pos.z, 0, 0, 0);
 
         world.addParticle(new GenericEmitterParticleEffect(
-                new ItemStackParticleEffect(ParticleTypes.ITEM, data.suckWhat()),
-                new Vec3d(.05f, 0.2f, .05f), 1, .15f, true, data.duration()
+                new ItemStackParticleEffect(ParticleTypes.ITEM, data.suckWhat),
+                new Vec3d(.05f, 0.2f, .05f), 1, .15f, true, data.duration
         ), pos.x, pos.y, pos.z, 0, 0, 0);
     });
 
@@ -110,9 +107,9 @@ public class AffinityParticleSystems {
     });
 
 
-    public static final ParticleSystem<CandleData> AFFINE_CANDLE_BREWING = CONTROLLER.register(CandleData.class, (world, pos, data) -> {
-        for (var candle : data.candles()) {
-            ClientParticles.spawn(new BezierPathEmitterParticleEffect(ParticleTypes.REVERSE_PORTAL, pos, 30, 20), world, candle, .15f);
+    public static final ParticleSystem<BezierVortexData> BEZIER_VORTEX = CONTROLLER.register(BezierVortexData.class, (world, pos, data) -> {
+        for (var candle : data.originPositions) {
+            ClientParticles.spawn(new BezierPathEmitterParticleEffect(data.particle, pos, data.travelDuration, data.emitDuration, data.randomPath), world, candle, .15f);
         }
     });
 
@@ -160,13 +157,17 @@ public class AffinityParticleSystems {
         ClientParticles.spawn(ParticleTypes.FIREWORK, world, pos, .25f);
     });
 
+    // Context data types
+
     public record DissolveData(ItemStack suckWhat, Vec3d suckWhere, int duration, int particleMaxAge) {}
 
     public record LineData(Vec3d target, int color) {}
 
-    public record CandleData(List<Vec3d> candles) {}
+    public record BezierVortexData(ParticleEffect particle, List<Vec3d> originPositions, int emitDuration, int travelDuration, boolean randomPath) {}
 
     public record ArtifactBladeAreaAttackData(Vec3d targetPos, List<Vec3d> entityPositions) {}
+
+    // ------------------
 
     public static void initialize() {}
 }

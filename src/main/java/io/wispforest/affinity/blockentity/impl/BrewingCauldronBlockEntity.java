@@ -3,12 +3,12 @@ package io.wispforest.affinity.blockentity.impl;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.misc.potion.PotionMixture;
-import io.wispforest.affinity.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.misc.util.ListUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
+import io.wispforest.affinity.recipe.PotionMixingRecipe;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
@@ -204,10 +204,10 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
                         ))
                 ).toList();
 
-        AffinityParticleSystems.AFFINE_CANDLE_BREWING.spawn(
+        AffinityParticleSystems.BEZIER_VORTEX.spawn(
                 this.world,
                 Vec3d.ofCenter(this.pos),
-                new AffinityParticleSystems.CandleData(particleOrigins)
+                new AffinityParticleSystems.BezierVortexData(ParticleTypes.REVERSE_PORTAL, particleOrigins, 20, 30, false)
         );
     }
 

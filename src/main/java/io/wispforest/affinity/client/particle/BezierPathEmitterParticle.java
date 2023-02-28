@@ -22,8 +22,9 @@ public class BezierPathEmitterParticle extends NoRenderParticle {
     private final ParticleEffect subject;
     private final Vec3d endpoint;
     private final int travelDuration;
+    private final boolean randomPath;
 
-    protected BezierPathEmitterParticle(ClientWorld world, double x, double y, double z, ParticleEffect subject, Vec3d endpoint, int emitterDuration, int travelDuration) {
+    protected BezierPathEmitterParticle(ClientWorld world, double x, double y, double z, ParticleEffect subject, Vec3d endpoint, int emitterDuration, int travelDuration, boolean randomPath) {
         super(world, x, y, z);
         this.endpoint = endpoint;
 
@@ -32,6 +33,7 @@ public class BezierPathEmitterParticle extends NoRenderParticle {
         this.gravityStrength = 0;
         this.subject = subject;
         this.travelDuration = travelDuration;
+        this.randomPath = randomPath;
 
         ACTIVE_PARTICLES.put(this.position, this);
     }
@@ -40,7 +42,7 @@ public class BezierPathEmitterParticle extends NoRenderParticle {
     public void tick() {
         var offset = VectorRandomUtils.getRandomOffset(this.world, Vec3d.ZERO, .25);
 
-        this.world.addParticle(new BezierPathParticleEffect(subject, this.endpoint, this.travelDuration),
+        this.world.addParticle(new BezierPathParticleEffect(subject, this.endpoint, this.travelDuration, this.randomPath),
                 this.x + offset.x, this.y + offset.y, this.z + offset.z, 0, 0, 0);
 
         super.tick();
@@ -63,7 +65,7 @@ public class BezierPathEmitterParticle extends NoRenderParticle {
         @Nullable
         @Override
         public Particle createParticle(BezierPathEmitterParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new BezierPathEmitterParticle(world, x, y, z, parameters.effect(), parameters.splineEndpoint(), parameters.emitterDuration(), parameters.travelDuration());
+            return new BezierPathEmitterParticle(world, x, y, z, parameters.effect(), parameters.splineEndpoint(), parameters.emitterDuration(), parameters.travelDuration(), parameters.randomPath());
         }
     }
 }

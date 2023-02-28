@@ -18,14 +18,14 @@ public class BezierPathParticle extends Particle {
     private final BezierSpline spline;
     private final Particle subject;
 
-    public BezierPathParticle(ClientWorld world, double x, double y, double z, Particle subject, Vec3d endpoint, int travelDuration) {
+    public BezierPathParticle(ClientWorld world, double x, double y, double z, Particle subject, Vec3d endpoint, int travelDuration, boolean randomPath) {
         super(world, x, y, z);
 
         this.maxAge = travelDuration;
         this.gravityStrength = 0;
         this.subject = subject;
 
-        this.spline = makePath(new Vec3d(x, y, z), endpoint, this.maxAge);
+        this.spline = makePath(new Vec3d(x, y, z), endpoint, this.maxAge, randomPath);
     }
 
     @Override
@@ -49,10 +49,19 @@ public class BezierPathParticle extends Particle {
         return this.subject.getType();
     }
 
-    public static BezierSpline makePath(Vec3d from, Vec3d to, int resolution) {
+    protected BezierSpline makePath(Vec3d from, Vec3d to, int resolution, boolean randomize) {
         final var diff = to.subtract(from);
-        final var c1 = from.add(diff.add(0, 3, 0).rotateY((float) Math.toRadians(-45)).multiply(.5));
-        final var c2 = from.add(diff.add(0, 2, 0).rotateY((float) Math.toRadians(45)).multiply(.5));
+
+        final Vec3d c1;
+        final Vec3d c2;
+
+        if (randomize) {
+            c1 = from.add(diff.add(0, -2 + this.random.nextFloat() * 4, 0).rotateY((float) Math.toRadians(-45 + this.random.nextFloat() * 90)).multiply(.5));
+            c2 = from.add(diff.add(0, -2 + this.random.nextFloat() * 4, 0).rotateY((float) Math.toRadians(-45 + this.random.nextFloat() * 90)).multiply(.5));
+        } else {
+            c1 = from.add(diff.add(0, 3, 0).rotateY((float) Math.toRadians(-45)).multiply(.5));
+            c2 = from.add(diff.add(0, 2, 0).rotateY((float) Math.toRadians(45)).multiply(.5));
+        }
 
         return BezierSpline.compute(from, c1, c2, to, resolution);
     }
@@ -63,9 +72,9 @@ public class BezierPathParticle extends Particle {
         public Particle createParticle(BezierPathParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             final var particle = ((ParticleManagerInvoker) MinecraftClient.getInstance().particleManager)
                     .affinity$createParticle(parameters.effect(), x, y, z, velocityX, velocityY, velocityZ);
-            particle.setMaxAge(parameters.travelDuration());
+            particle.setMaxAge(parameters.travelDuration() + 1);
 
-            return new BezierPathParticle(world, x, y, z, particle, parameters.splineEndpoint(), parameters.travelDuration());
+            return new BezierPathParticle(world, x, y, z, particle, parameters.splineEndpoint(), parameters.travelDuration(), parameters.randomPath());
         }
     }
 }

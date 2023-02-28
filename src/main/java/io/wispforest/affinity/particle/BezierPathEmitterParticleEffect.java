@@ -12,12 +12,13 @@ import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 
-public record BezierPathEmitterParticleEffect(ParticleEffect effect, Vec3d splineEndpoint, int travelDuration, int emitterDuration) implements ParticleEffect {
+public record BezierPathEmitterParticleEffect(ParticleEffect effect, Vec3d splineEndpoint, int travelDuration, int emitterDuration,
+                                              boolean randomPath) implements ParticleEffect {
 
     private static final RecordSerializer<BezierPathEmitterParticleEffect> SERIALIZER = RecordSerializer.create(BezierPathEmitterParticleEffect.class);
 
-    public static BezierPathEmitterParticleEffect item(ItemStack stack, Vec3d splineEndpoint, int travelDuration, int emitterDuration) {
-        return new BezierPathEmitterParticleEffect(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), splineEndpoint, travelDuration, emitterDuration);
+    public static BezierPathEmitterParticleEffect item(ItemStack stack, Vec3d splineEndpoint, int travelDuration, int emitterDuration, boolean randomPath) {
+        return new BezierPathEmitterParticleEffect(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), splineEndpoint, travelDuration, emitterDuration, randomPath);
     }
 
     @Override
@@ -53,7 +54,10 @@ public record BezierPathEmitterParticleEffect(ParticleEffect effect, Vec3d splin
             reader.expect(' ');
             var travelDuration = reader.readInt();
 
-            return new BezierPathEmitterParticleEffect(ParticleTypes.WHITE_ASH, new Vec3d(x, y, z), emitterDuration, travelDuration);
+            reader.expect(' ');
+            var randomPath = reader.readBoolean();
+
+            return new BezierPathEmitterParticleEffect(ParticleTypes.WHITE_ASH, new Vec3d(x, y, z), emitterDuration, travelDuration, randomPath);
         }
 
         @Override

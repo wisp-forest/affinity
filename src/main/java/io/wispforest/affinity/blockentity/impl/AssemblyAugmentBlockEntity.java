@@ -2,11 +2,13 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.block.impl.ArcaneTreetapBlock;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.mixin.access.CraftingInventoryAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
+import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.util.ImplementedInventory;
@@ -21,6 +23,7 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -77,9 +80,17 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
 
         if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipe.get().getOutput())) {
             if (this.craftingTick % 20 == 0) {
-                AffinityParticleSystems.AFFINE_CANDLE_BREWING.spawn(this.world, Vec3d.ofCenter(this.pos),
-                        new AffinityParticleSystems.CandleData(this.treetapCache.stream().filter(blockPos -> BLOCKED_TREETAPS.get(blockPos) == this.pos).map(Vec3d::ofCenter).toList())
-                );
+                AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, 0f), new AffinityParticleSystems.BezierVortexData(
+                        new GenericEmitterParticleEffect(
+                                new DustColorTransitionParticleEffect(MathUtil.splitRGBToVec3f(0x865DFF), MathUtil.splitRGBToVec3f(0xFFA3FD), 1f),
+                                new Vec3d(.05, .05, .05),
+                                1, .05f, true, 1
+                        ),
+                        this.treetapCache.stream().filter(blockPos -> BLOCKED_TREETAPS.get(blockPos) == this.pos).map(pos -> {
+                            var direction = this.world.getBlockState(pos).get(ArcaneTreetapBlock.FACING);
+                            return new Vec3d(pos.getX() + direction.getOffsetX() * .85, pos.getY() + .5, pos.getZ() + direction.getOffsetZ() * .85);
+                        }).toList(), 1, 30, true
+                ));
             }
 
             if (this.craftingTick++ > this.craftingDuration()) {
@@ -185,7 +196,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
     }
 
     public int craftingDuration() {
-        return 100 - this.activeTreetaps * 20;
+        return 105 - this.activeTreetaps * 20;
     }
 
     public SimpleInventory outputInventory() {

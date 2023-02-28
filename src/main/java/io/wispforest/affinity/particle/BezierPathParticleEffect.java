@@ -11,7 +11,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.Vec3d;
 
-public record BezierPathParticleEffect(ParticleEffect effect, Vec3d splineEndpoint, int travelDuration) implements ParticleEffect {
+public record BezierPathParticleEffect(ParticleEffect effect, Vec3d splineEndpoint, int travelDuration, boolean randomPath) implements ParticleEffect {
 
     private static final RecordSerializer<BezierPathParticleEffect> SERIALIZER = RecordSerializer.create(BezierPathParticleEffect.class);
 
@@ -45,7 +45,10 @@ public record BezierPathParticleEffect(ParticleEffect effect, Vec3d splineEndpoi
             reader.expect(' ');
             var travelDuration = reader.readInt();
 
-            return new BezierPathParticleEffect(ParticleTypes.WHITE_ASH, new Vec3d(x, y, z), travelDuration);
+            reader.expect(' ');
+            var randomPath = reader.readBoolean();
+
+            return new BezierPathParticleEffect(ParticleTypes.WHITE_ASH, new Vec3d(x, y, z), travelDuration, randomPath);
         }
 
         @Override
