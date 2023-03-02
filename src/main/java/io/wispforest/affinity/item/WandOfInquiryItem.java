@@ -138,43 +138,57 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
 
         var thickness = new MutableFloat(0f);
         var lastOutlineBlock = new MutableObject<>(BlockPos.ORIGIN);
+
+        var colorProgress = new MutableFloat(0f);
         var outlineColor = Color.ofRgb(0x191825);
+        var activeOutlineColor = Color.ofRgb(0x301E67);
 
         WorldRenderEvents.BLOCK_OUTLINE.register((worldContext, outlineContext) -> {
             var client = worldContext.gameRenderer().getClient();
-            if (!outlineContext.blockPos().equals(lastOutlineBlock.getValue())) {
+            var pos = outlineContext.blockPos();
+            var delta = client.getLastFrameDuration() * .25f;
+
+            if (!pos.equals(lastOutlineBlock.getValue())) {
                 thickness.setValue(0f);
-                lastOutlineBlock.setValue(outlineContext.blockPos());
+                lastOutlineBlock.setValue(pos);
+                colorProgress.setValue(targetColor(pos));
             }
 
-            if (!client.player.isHolding(AffinityItems.WAND_OF_INQUIRY) || !(worldContext.world().getBlockEntity(outlineContext.blockPos()) instanceof InquirableOutlineProvider)) {
+            if (!client.player.isHolding(AffinityItems.WAND_OF_INQUIRY) || !(worldContext.world().getBlockEntity(pos) instanceof InquirableOutlineProvider)) {
 
                 if (thickness.floatValue() >= .15f) {
-                    thickness.add(Delta.compute(thickness.floatValue(), 0f, client.getLastFrameDuration() * .25f));
+                    thickness.add(Delta.compute(thickness.floatValue(), 0f, delta));
                 } else {
                     return true;
                 }
             } else {
-                thickness.add(Delta.compute(thickness.floatValue(), 1f, client.getLastFrameDuration() * .25f));
+                thickness.add(Delta.compute(thickness.floatValue(), 1f, delta));
             }
+
+            var color = outlineColor.interpolate(activeOutlineColor, colorProgress.floatValue());
+            colorProgress.add(Delta.compute(colorProgress.floatValue(), targetColor(pos), delta));
 
             var buffer = worldContext.consumers().getBuffer(CuboidRenderer.OUTLINE_LAYER);
             var matrices = worldContext.matrixStack();
 
-            var pos = outlineContext.blockPos();
             var shape = outlineContext.blockState().getOutlineShape(worldContext.world(), pos, ShapeContext.of(outlineContext.entity()));
 
             matrices.push();
             matrices.translate(pos.getX() - outlineContext.cameraX(), pos.getY() - outlineContext.cameraY(), pos.getZ() - outlineContext.cameraZ());
 
             shape.forEachEdge((minX, minY, minZ, maxX, maxY, maxZ) -> {
-                CuboidRenderer.line(matrices, buffer, (float) minX, (float) minY, (float) minZ, (float) maxX, (float) maxY, (float) maxZ, outlineColor, .01f * thickness.floatValue());
+                CuboidRenderer.line(matrices, buffer, (float) minX, (float) minY, (float) minZ, (float) maxX, (float) maxY, (float) maxZ, color, .01f * thickness.floatValue());
             });
 
             matrices.pop();
 
             return false;
         });
+    }
+
+    @Environment(EnvType.CLIENT)
+    private static float targetColor(BlockPos pos) {
+        return ACTIVE_OUTLINE_PROVIDERS.contains(pos) ? 1f : 0f;
     }
 
     @Environment(EnvType.CLIENT)
