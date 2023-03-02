@@ -54,14 +54,15 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
                 world, pos, player, hand,
                 stack -> stack.getItem() instanceof StaffItem staff && staff.canBePlacedOnPedestal(),
                 InteractionUtil.InvalidBehaviour.DROP,
-                () -> this.item,
-                stack -> this.item = stack,
+                this.inventoryProvider.getter,
+                this.inventoryProvider.setter,
                 this::markDirty
         );
     }
 
     @Override
     public void tickServer() {
+        if (this.shouldNotTick()) return;
         this.time++;
 
         if (this.item.isEmpty() || !(this.item.getItem() instanceof StaffItem staff)) return;
@@ -70,10 +71,15 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
 
     @Override
     public void tickClient() {
+        if (this.shouldNotTick()) return;
         this.time++;
 
         if (this.item.isEmpty() || !(this.item.getItem() instanceof StaffItem staff)) return;
         staff.pedestalTickClient(this.world, this.pos, this);
+    }
+
+    protected boolean shouldNotTick() {
+        return this.world.getReceivedRedstonePower(this.pos) > 0;
     }
 
     @Override

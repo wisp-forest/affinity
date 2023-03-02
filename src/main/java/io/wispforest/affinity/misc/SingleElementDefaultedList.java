@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 
 public class SingleElementDefaultedList<E> extends DefaultedList<E> {
 
-    private final Supplier<@NotNull E> getter;
-    private final Consumer<@NotNull E> setter;
+    public final Supplier<@NotNull E> getter;
+    public final Consumer<@NotNull E> setter;
     private final @NotNull E initial;
 
     public SingleElementDefaultedList(@NotNull E initial, Supplier<@NotNull E> getter, Consumer<@NotNull E> setter) {
