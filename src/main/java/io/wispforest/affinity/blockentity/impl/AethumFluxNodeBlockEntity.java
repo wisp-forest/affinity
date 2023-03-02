@@ -92,6 +92,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
         var otherPos = linkIter.next();
         var otherMember = Affinity.AETHUM_MEMBER.find(this.world, otherPos, null);
+        if (otherMember == null) return;
 
         var thisPoint = Vec3d.ofCenter(this.pos).add(this.linkAttachmentPoint);
         var otherPoint = Vec3d.ofCenter(otherPos).add(otherMember.linkAttachmentPointOffset());
