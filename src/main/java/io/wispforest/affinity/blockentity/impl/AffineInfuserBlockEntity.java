@@ -1,7 +1,9 @@
 package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityStatusEffects;
@@ -16,8 +18,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import org.apache.commons.lang3.mutable.MutableInt;
+import org.jetbrains.annotations.Nullable;
 
-public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity {
+public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InquirableOutlineProvider {
 
     private static final int REPAIR_COST_PER_ITEM = 100;
 
@@ -55,6 +58,11 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
         }
 
         this.updateFlux(this.flux() - currentRepairCost.getValue());
+    }
+
+    @Override
+    public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
+        return CuboidRenderer.Cuboid.symmetrical(32, 32, 32);
     }
 
     private static void repairIfEnchanted(ItemStack stack) {

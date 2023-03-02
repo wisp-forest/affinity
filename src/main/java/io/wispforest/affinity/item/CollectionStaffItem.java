@@ -1,6 +1,7 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.misc.EntityReference;
 import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -33,6 +34,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class CollectionStaffItem extends StaffItem {
+
+    private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(5, 2, 5);
 
     public CollectionStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
@@ -95,6 +98,11 @@ public class CollectionStaffItem extends StaffItem {
         for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos).expand(5, 2, 5), Entity::isAlive)) {
             ClientParticles.spawn(ParticleTypes.WITCH, world, item.getPos().add(0, .125, 0), .25);
         }
+    }
+
+    @Override
+    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
+        return AOE;
     }
 
     @Override

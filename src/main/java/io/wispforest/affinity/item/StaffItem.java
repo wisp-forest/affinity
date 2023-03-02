@@ -1,6 +1,7 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
@@ -60,6 +61,10 @@ public abstract class StaffItem extends Item {
 
     public ActionResult onPedestalScrolled(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, boolean direction) {
         return ActionResult.PASS;
+    }
+
+    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
+        return null;
     }
 
     // --------------

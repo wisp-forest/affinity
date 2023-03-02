@@ -3,7 +3,9 @@ package io.wispforest.affinity.item;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
+import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.client.screen.FluxNetworkVisualizerScreen;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -12,10 +14,17 @@ import io.wispforest.affinity.object.rituals.RitualSocleType;
 import io.wispforest.owo.network.ClientAccess;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.ui.core.Color;
+import io.wispforest.owo.ui.util.Delta;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.DustParticleEffect;
@@ -24,10 +33,16 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.mutable.MutableFloat;
+import org.apache.commons.lang3.mutable.MutableObject;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class WandOfInquiryItem extends Item implements DirectInteractionHandler {
+
+    private static final Set<BlockPos> ACTIVE_OUTLINE_PROVIDERS = new HashSet<>();
 
     public WandOfInquiryItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
@@ -40,7 +55,7 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
         final var pos = context.getBlockPos();
 
         final var blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof RitualCoreBlockEntity core) {
+        if (blockEntity instanceof RitualCoreBlockEntity core && !player.isSneaking()) {
             player.getItemCooldownManager().set(this, 30);
 
             if (!world.isClient()) {
@@ -79,12 +94,87 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
 
     @Override
     public boolean shouldHandleInteraction(World world, BlockPos pos, BlockState state) {
-        return world.getBlockEntity(pos) instanceof RitualCoreBlockEntity || Affinity.AETHUM_MEMBER.find(world, pos, null) != null;
+        return Affinity.AETHUM_MEMBER.find(world, pos, null) != null;
+    }
+
+    @Override
+    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        if (world.getBlockEntity(pos) instanceof InquirableOutlineProvider provider) {
+            if (world.isClient) {
+                if (!ACTIVE_OUTLINE_PROVIDERS.contains(pos) && provider.getActiveOutline() != null) {
+                    ACTIVE_OUTLINE_PROVIDERS.add(pos);
+                } else {
+                    ACTIVE_OUTLINE_PROVIDERS.remove(pos);
+                }
+            }
+
+            return false;
+        } else {
+            return true;
+        }
     }
 
     static {
         //noinspection Convert2MethodRef
         AffinityNetwork.CHANNEL.registerClientbound(SocleParticlesPacket.class, (message, access) -> handleParticlePacket(message, access));
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) setupOutlineHandler();
+    }
+
+    @Environment(EnvType.CLIENT)
+    private static void setupOutlineHandler() {
+        ClientTickEvents.END_WORLD_TICK.register(world -> {
+            if (!MinecraftClient.getInstance().player.isHolding(AffinityItems.WAND_OF_INQUIRY)) return;
+
+            ACTIVE_OUTLINE_PROVIDERS.removeIf(providerPos -> {
+                if (!(world.getBlockEntity(providerPos) instanceof InquirableOutlineProvider provider)) return true;
+
+                var outline = provider.getActiveOutline();
+                if (outline == null) return true;
+
+                CuboidRenderer.add(providerPos, outline);
+                return false;
+            });
+        });
+
+        var thickness = new MutableFloat(0f);
+        var lastOutlineBlock = new MutableObject<>(BlockPos.ORIGIN);
+        var outlineColor = Color.ofRgb(0x191825);
+
+        WorldRenderEvents.BLOCK_OUTLINE.register((worldContext, outlineContext) -> {
+            var client = worldContext.gameRenderer().getClient();
+            if (!outlineContext.blockPos().equals(lastOutlineBlock.getValue())) {
+                thickness.setValue(0f);
+                lastOutlineBlock.setValue(outlineContext.blockPos());
+            }
+
+            if (!client.player.isHolding(AffinityItems.WAND_OF_INQUIRY) || !(worldContext.world().getBlockEntity(outlineContext.blockPos()) instanceof InquirableOutlineProvider)) {
+
+                if (thickness.floatValue() >= .15f) {
+                    thickness.add(Delta.compute(thickness.floatValue(), 0f, client.getLastFrameDuration() * .25f));
+                } else {
+                    return true;
+                }
+            } else {
+                thickness.add(Delta.compute(thickness.floatValue(), 1f, client.getLastFrameDuration() * .25f));
+            }
+
+            var buffer = worldContext.consumers().getBuffer(CuboidRenderer.OUTLINE_LAYER);
+            var matrices = worldContext.matrixStack();
+
+            var pos = outlineContext.blockPos();
+            var shape = outlineContext.blockState().getOutlineShape(worldContext.world(), pos, ShapeContext.of(outlineContext.entity()));
+
+            matrices.push();
+            matrices.translate(pos.getX() - outlineContext.cameraX(), pos.getY() - outlineContext.cameraY(), pos.getZ() - outlineContext.cameraZ());
+
+            shape.forEachEdge((minX, minY, minZ, maxX, maxY, maxZ) -> {
+                CuboidRenderer.line(matrices, buffer, (float) minX, (float) minY, (float) minZ, (float) maxX, (float) maxY, (float) maxZ, outlineColor, .01f * thickness.floatValue());
+            });
+
+            matrices.pop();
+
+            return false;
+        });
     }
 
     @Environment(EnvType.CLIENT)

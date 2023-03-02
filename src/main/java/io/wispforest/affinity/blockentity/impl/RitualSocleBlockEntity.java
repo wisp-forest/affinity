@@ -4,6 +4,7 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
@@ -13,7 +14,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -21,7 +21,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.poi.PointOfInterest;
-import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -90,9 +89,9 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
 
     @SuppressWarnings("SameParameterValue")
     private PointOfInterest closestCore(int radius) {
-        return ((ServerWorld) this.world).getPointOfInterestStorage()
-                .getInCircle(type -> type.value() == AffinityPoiTypes.RITUAL_CORE, this.pos, radius, PointOfInterestStorage.OccupationStatus.ANY)
-                .min(Comparator.comparingDouble(value -> this.pos.getSquaredDistance(value.getPos()))).orElse(null);
+        return BlockFinder.findPoi(this.world, AffinityPoiTypes.RITUAL_CORE, this.pos, radius)
+                .min(Comparator.comparingDouble(value -> this.pos.getSquaredDistance(value.getPos())))
+                .orElse(null);
     }
 
     @Override

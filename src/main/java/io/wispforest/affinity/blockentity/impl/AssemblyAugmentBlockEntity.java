@@ -1,7 +1,10 @@
 package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.block.impl.ArcaneTreetapBlock;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.client.render.CuboidRenderer;
+import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.mixin.access.CraftingInventoryAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -24,13 +27,11 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.poi.PointOfInterest;
-import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -39,7 +40,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
-public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlockEntity, ImplementedInventory, SidedInventory {
+public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlockEntity, ImplementedInventory, SidedInventory, InquirableOutlineProvider {
 
     private static final int[] DOWN_SLOTS = new int[]{0};
     private static final int[] NO_SLOTS = new int[0];
@@ -106,7 +107,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                     outputStack.increment(currentRecipe.get().getOutput().getCount());
                 }
 
-                this.craftingTick = 1;
+                this.craftingTick = 0;
             }
         } else {
             if (this.craftingTick != 0) {
@@ -125,8 +126,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
         this.treetapCache.clear();
         var occupiedLogs = new HashSet<BlockPos>();
 
-        ((ServerWorld) this.world).getPointOfInterestStorage()
-                .getInCircle(type -> type.value() == AffinityPoiTypes.ARCANE_TREETAP, this.pos, 10, PointOfInterestStorage.OccupationStatus.ANY)
+        BlockFinder.findPoi(this.world, AffinityPoiTypes.ARCANE_TREETAP, this.pos, 10)
                 .map(PointOfInterest::getPos)
                 .filter(poi -> {
                     if (!ArcaneTreetapBlock.isProperlyAttached(this.world, poi)) return false;
@@ -135,6 +135,13 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                     return tree.stream().allMatch(occupiedLogs::add);
                 })
                 .forEach(this.treetapCache::add);
+    }
+
+    @Override
+    public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
+        return CuboidRenderer.Cuboid.of(
+                new BlockPos(-10, -10, -10), new BlockPos(11, 11, 11)
+        );
     }
 
     @Override

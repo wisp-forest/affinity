@@ -2,6 +2,7 @@ package io.wispforest.affinity.item;
 
 import com.google.common.collect.ImmutableMap;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
@@ -29,6 +30,7 @@ public class NimbleStaffItem extends StaffItem {
 
     public static final NbtKey<Direction> DIRECTION = new NbtKey<>("Direction", NbtKey.Type.STRING.then(Direction::byName, Direction::asString));
 
+    private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 2, 4);
     private static final Map<Direction, Text> ARROW_BY_DIRECTION = new ImmutableMap.Builder<Direction, Text>()
             .put(Direction.NORTH, TextOps.withColor("↑", 0xFEF5AC))
             .put(Direction.SOUTH, TextOps.withColor("↓", 0xFEF5AC))
@@ -90,6 +92,11 @@ public class NimbleStaffItem extends StaffItem {
         }
 
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
+        return AOE;
     }
 
     @Override

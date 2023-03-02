@@ -2,7 +2,9 @@ package io.wispforest.affinity.blockentity.template;
 
 import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
 import io.wispforest.affinity.client.particle.BezierPathEmitterParticle;
+import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.misc.ReadOnlyInventory;
+import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityPoiTypes;
@@ -19,7 +21,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
+public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, InquirableOutlineProvider {
 
     @Nullable protected RitualSetup cachedSetup = null;
 
@@ -172,14 +173,19 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         return this.pos;
     }
 
+    @Override
+    public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
+        return CuboidRenderer.Cuboid.symmetrical(10, 0, 10);
+    }
+
     public static RitualSetup examineSetup(RitualCoreBlockEntity core, boolean includeEmptySocles) {
         return examineSetup((ServerWorld) core.world, core.ritualCenterPos(), includeEmptySocles);
     }
 
     @SuppressWarnings("ConstantConditions")
     public static RitualSetup examineSetup(ServerWorld world, BlockPos pos, boolean includeEmptySocles) {
-        var soclePOIs = world.getPointOfInterestStorage().getInCircle(type -> type.value() == AffinityPoiTypes.RITUAL_SOCLE,
-                pos, 10, PointOfInterestStorage.OccupationStatus.ANY).filter(poi -> poi.getPos().getY() == pos.getY()).toList();
+        var soclePOIs = BlockFinder.findPoi(world, AffinityPoiTypes.RITUAL_SOCLE, pos, 10)
+                .filter(poi -> poi.getPos().getY() == pos.getY()).toList();
 
         double stability = 75;
 

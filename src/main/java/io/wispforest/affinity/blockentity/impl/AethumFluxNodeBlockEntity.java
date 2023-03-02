@@ -5,9 +5,11 @@ import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.block.template.AbstractAethumFluxNodeBlock;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.item.AttunedShardItem;
 import io.wispforest.affinity.misc.util.ListUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
@@ -34,12 +36,13 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings("UnstableApiUsage")
-public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity, InteractableBlockEntity {
+public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity, InteractableBlockEntity, InquirableOutlineProvider {
 
     @Environment(EnvType.CLIENT) public float renderShardCount = 1f;
     @Environment(EnvType.CLIENT) public float shardActivity = 1f;
@@ -75,7 +78,6 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     // ------------------
     // Ticking / Transfer
     // ------------------
-
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -188,6 +190,12 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     // Linking
     // -------
 
+    @Override
+    public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
+        int distance = this.tier.maxDistance();
+        return CuboidRenderer.Cuboid.symmetrical(distance, distance, distance);
+    }
+
     public Collection<AethumNetworkMember> membersWithNormalLink() {
         if (this.cachedMembers != null) return this.cachedMembers;
 
@@ -213,7 +221,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         if (member == null) return AethumLink.Result.NO_TARGET;
 
         if (this.links.size() >= this.maxConnections()) return AethumLink.Result.TOO_MANY_LINKS;
-        if (!this.pos.isWithinDistance(pos, this.tier.maxDistance() + 1)) return AethumLink.Result.OUT_OF_RANGE;
+        if (!this.isInRange(pos)) return AethumLink.Result.OUT_OF_RANGE;
 
         if (member instanceof AethumNetworkNode node) {
             if (node.isLinked(this.pos)) return AethumLink.Result.ALREADY_LINKED;
@@ -256,12 +264,18 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
     @Override
     public AethumLink.Result addNodeLink(BlockPos pos) {
-        if (!this.pos.isWithinDistance(pos, this.tier.maxDistance() + 1)) return AethumLink.Result.OUT_OF_RANGE;
+        if (!this.isInRange(pos)) return AethumLink.Result.OUT_OF_RANGE;
 
         this.links.put(pos.toImmutable(), AethumLink.Type.NORMAL);
         this.markDirty(true);
 
         return AethumLink.Result.LINK_CREATED;
+    }
+
+    protected boolean isInRange(BlockPos pos) {
+        return Math.abs(this.pos.getX() - pos.getX()) <= this.tier.maxDistance()
+                && Math.abs(this.pos.getY() - pos.getY()) <= this.tier.maxDistance()
+                && Math.abs(this.pos.getZ() - pos.getZ()) <= this.tier.maxDistance();
     }
 
     @Override
@@ -388,7 +402,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
         this.allLinksValid = true;
         for (var link : this.links.keySet()) {
-            this.allLinksValid &= this.pos.isWithinDistance(link, this.tier.maxDistance() + 1);
+            this.allLinksValid &= this.isInRange(link);
         }
     }
 

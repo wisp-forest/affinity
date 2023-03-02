@@ -1,8 +1,10 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.block.impl.AffineCandleBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.misc.potion.PotionMixture;
+import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.ListUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -22,16 +24,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.poi.PointOfInterestStorage;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
@@ -212,10 +211,9 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     }
 
     private Stream<Candle> getCandles() {
-        return ((ServerWorld) this.world).getPointOfInterestStorage()
-                .getInCircle(type -> type.value() == AffinityPoiTypes.AFFINE_CANDLE, this.pos, 5, PointOfInterestStorage.OccupationStatus.ANY)
-                .map(poi -> new Candle(poi.getPos(), world.getBlockState(poi.getPos())))
-                .filter(candle -> candle.state.get(Properties.LIT));
+        return BlockFinder.findPoi(this.world, AffinityPoiTypes.AFFINE_CANDLE, this.pos, 5)
+                .map(poi -> new Candle(poi.getPos(), this.world.getBlockState(poi.getPos())))
+                .filter(candle -> candle.state.get(AffineCandleBlock.LIT));
     }
 
     public ItemStack extractOneBottle() {

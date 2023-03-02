@@ -1,13 +1,16 @@
 package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.misc.SingleElementDefaultedList;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.util.ImplementedInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, ImplementedInventory, SidedInventory {
+public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, ImplementedInventory, SidedInventory, InquirableOutlineProvider {
 
     private static final int[] AVAILABLE_SLOTS = new int[]{0};
     private static final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
@@ -71,6 +74,20 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
 
         if (this.item.isEmpty() || !(this.item.getItem() instanceof StaffItem staff)) return;
         staff.pedestalTickClient(this.world, this.pos, this);
+    }
+
+    @Override
+    public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
+        if (!(this.item.getItem() instanceof StaffItem staff)) return null;
+
+        var aoe = staff.getAreaOfEffect();
+        if (aoe == null) return null;
+
+        return CuboidRenderer.Cuboid.of(
+                new BlockPos(aoe.minX(), aoe.minY(), aoe.minZ()),
+                new BlockPos(aoe.maxX(), aoe.maxY(), aoe.maxZ()),
+                Color.ofRgb(0x3E54AC), Color.ofRgb(0x3E54AC)
+        );
     }
 
     public @NotNull ItemStack getItem() {

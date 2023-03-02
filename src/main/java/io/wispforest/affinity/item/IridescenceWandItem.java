@@ -203,7 +203,10 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         }
 
         public Mode next() {
-            return Mode.values()[(this.ordinal() + 1) % Mode.values().length];
+            return switch (this) {
+                case RELEASE -> BIND;
+                case BIND -> RELEASE;
+            };
         }
 
         public static Mode byId(String id) {

@@ -3,6 +3,7 @@ package io.wispforest.affinity.item;
 import com.google.common.collect.ImmutableMultimap;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.misc.MixinHooks;
@@ -38,6 +39,7 @@ import java.util.UUID;
 
 public class KinesisStaffItem extends StaffItem {
 
+    private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 4, 4);
     private static final float ENTITY_THROW_COST = 2.5f;
 
     private static final NbtKey<Integer> ACTIVE_TARGET_ENTITY = new NbtKey<>("TargetEntity", NbtKey.Type.INT);
@@ -88,6 +90,11 @@ public class KinesisStaffItem extends StaffItem {
             entity.setVelocity(entity.getVelocity().subtract(drag));
             entity.fallDistance = 0;
         }
+    }
+
+    @Override
+    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
+        return AOE;
     }
 
     @Override

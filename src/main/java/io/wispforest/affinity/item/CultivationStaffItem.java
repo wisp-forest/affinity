@@ -1,6 +1,7 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
@@ -39,6 +40,8 @@ import java.util.List;
 public class CultivationStaffItem extends StaffItem {
 
     public static final NbtKey<Boolean> SUPER_FORAGING_MODE_KEY = new NbtKey<>("SuperForagingMode", NbtKey.Type.BOOLEAN);
+
+    private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 0, 4);
 
     public CultivationStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN));
@@ -108,8 +111,13 @@ public class CultivationStaffItem extends StaffItem {
 
     @Override
     public ActionResult onPedestalScrolled(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, boolean direction) {
-        pedestal.getItem().mutate(SUPER_FORAGING_MODE_KEY, enabled -> !enabled);
+        pedestal.getItem().mutate(SUPER_FORAGING_MODE_KEY, enabled -> direction);
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
+        return AOE;
     }
 
     @Override

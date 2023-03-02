@@ -2,6 +2,7 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
@@ -29,6 +30,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class TimeStaffItem extends StaffItem implements DirectInteractionHandler {
+
+    private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(2, 1, 2);
 
     public static final NbtKey<Mode> MODE = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
 
@@ -84,6 +87,11 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
                 pedestal.consumeFlux(costPerBlock);
             }
         }
+    }
+
+    @Override
+    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
+        return AOE;
     }
 
     @Override

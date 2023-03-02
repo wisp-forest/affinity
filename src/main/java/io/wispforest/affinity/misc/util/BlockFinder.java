@@ -2,8 +2,12 @@ package io.wispforest.affinity.misc.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.poi.PointOfInterest;
+import net.minecraft.world.poi.PointOfInterestStorage;
+import net.minecraft.world.poi.PointOfInterestType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayDeque;
@@ -11,6 +15,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class BlockFinder {
 
@@ -50,6 +56,11 @@ public class BlockFinder {
         }
 
         return new Result(foundBlocks);
+    }
+
+    public static Stream<PointOfInterest> findPoi(World world, PointOfInterestType type, BlockPos center, int maxDistance) {
+        if (!(world instanceof ServerWorld serverWorld)) throw new UnsupportedOperationException("Attempted POI lookup on the client");
+        return serverWorld.getPointOfInterestStorage().getInSquare(poiEntry -> poiEntry.value() == type, center, maxDistance, PointOfInterestStorage.OccupationStatus.ANY);
     }
 
     public record Result(Map<BlockPos, BlockState> results) implements Iterable<BlockPos> {

@@ -1,13 +1,16 @@
 package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.object.AffinityBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
-public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity {
+public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InquirableOutlineProvider {
 
     public CropReaperBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.CROP_REAPER, pos, state);
@@ -40,5 +43,10 @@ public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implem
         if (addedAethum > 0) {
             this.updateFlux(Math.min(this.fluxStorage.flux() + addedAethum, this.fluxStorage.fluxCapacity()));
         }
+    }
+
+    @Override
+    public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
+        return CuboidRenderer.Cuboid.symmetrical(8, 4, 8);
     }
 }
