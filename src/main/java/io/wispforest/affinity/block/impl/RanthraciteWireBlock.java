@@ -197,12 +197,6 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
     protected void update(World world, BlockPos pos, BlockState state) {
         final int previousPower = state.get(POWER);
 
-        this.wiresGivePower = false;
-//        if (previousPower == world.getReceivedRedstonePower(pos)) {
-//            this.wiresGivePower = true;
-//            return;
-//        }
-
         final var foundNodes = new ArrayList<BlockPos>();
         final var searchQueue = new ArrayDeque<BlockPos>();
 
@@ -232,12 +226,16 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
 
         }
 
-        int networkPower = 0;
+        ((RedstoneWireBlock) Blocks.REDSTONE_WIRE).wiresGivePower = false;
+        this.wiresGivePower = false;
 
+        int networkPower = 0;
         for (var node : foundNodes) {
             networkPower = Math.max(networkPower, world.getReceivedRedstonePower(node));
         }
+
         this.wiresGivePower = true;
+        ((RedstoneWireBlock) Blocks.REDSTONE_WIRE).wiresGivePower = true;
 
         if (networkPower != previousPower) {
             this.respondToBlockUpdates = false;
@@ -305,12 +303,11 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
     @Override
     public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
         if (this.wiresGivePower && direction != Direction.UP) {
-            int i = state.get(POWER);
-            if (i == 0) {
+            int power = state.get(POWER);
+            if (power == 0) {
                 return 0;
             } else {
-                return direction != Direction.DOWN
-                        && !this.getPlacementState(world, state, pos).get(getConnectionProp(direction.getOpposite())).isConnected() ? 0 : i;
+                return direction != Direction.DOWN && !this.getPlacementState(world, state, pos).get(getConnectionProp(direction.getOpposite())).isConnected() ? 0 : power;
             }
         } else {
             return 0;
