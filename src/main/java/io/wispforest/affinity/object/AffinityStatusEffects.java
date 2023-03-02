@@ -28,6 +28,7 @@ public class AffinityStatusEffects {
     public static final StatusEffect BANISHED = new BanishedStatusEffect(StatusEffectCategory.BENEFICIAL, 0xc9b6b3);
     public static final StatusEffect AFFINE = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x0000ff);
     public static final StatusEffect UNHOLY = new AffinityStatusEffect(StatusEffectCategory.HARMFUL, 0x000000);
+    public static final StatusEffect RESONANT = new ResonantStatusEffect(StatusEffectCategory.HARMFUL, 0xffec4f);
 
     public static final StatusEffect STEADFAST = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x222222)
             .addAttributeModifier(
@@ -57,6 +58,7 @@ public class AffinityStatusEffects {
         Registry.register(Registries.STATUS_EFFECT, Affinity.id("dripping"), DRIPPING);
         Registry.register(Registries.STATUS_EFFECT, Affinity.id("bastion_regeneration"), BASTION_REGENERATION);
         Registry.register(Registries.STATUS_EFFECT, Affinity.id("affine"), AFFINE);
+        Registry.register(Registries.STATUS_EFFECT, Affinity.id("resonant"), RESONANT);
 
         Registry.register(Registries.POTION, Affinity.id("dubious"), PotionMixture.DUBIOUS_POTION);
         Registry.register(Registries.RECIPE_SERIALIZER, Affinity.id("crafting_special_potiondye"), GlowingPotionDyeRecipe.SERIALIZER);

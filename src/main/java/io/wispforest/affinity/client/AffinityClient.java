@@ -33,7 +33,10 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
 
 @Environment(EnvType.CLIENT)
@@ -88,6 +91,27 @@ public class AffinityClient implements ClientModInitializer {
             lines.add(Text.translatable("text.affinity.attuned_shard_range").formatted(Formatting.GRAY)
                     .append(Text.translatable("text.affinity.attuned_shard_range.value", tier.maxDistance())
                             .styled(style -> style.withColor(0x4D4C7D))));
+        });
+
+        ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
+            for (int i = 0; i < lines.size(); i++) {
+                var line = lines.get(i);
+                if (!(line.getContent() instanceof LiteralTextContent) || line.getSiblings().isEmpty()) continue;
+
+                var sibling = line.getSiblings().get(0);
+                if (!(sibling.getContent() instanceof TranslatableTextContent modifierTranslatable)) continue;
+                if (modifierTranslatable.getArgs().length < 2) continue;
+
+                if (!(modifierTranslatable.getArgs()[1] instanceof Text text) || !(text.getContent() instanceof TranslatableTextContent translatable) || !translatable.getKey().startsWith("attribute.name.generic.attack_damage")) {
+                    continue;
+                }
+
+                var replacement = ReplaceAttackDamageTextCallback.EVENT.invoker().replaceDamageText(stack);
+                if (replacement == null) return;
+
+                lines.set(i, replacement.append(Text.translatable(EntityAttributes.GENERIC_ATTACK_DAMAGE.getTranslationKey()).formatted(Formatting.DARK_GREEN)));
+                return;
+            }
         });
 
         AbsoluteEnchantmentGlintHandler.createLayers();

@@ -2,6 +2,7 @@ package io.wispforest.affinity.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import io.wispforest.affinity.client.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
@@ -10,7 +11,6 @@ import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -25,11 +25,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
-import net.minecraft.util.*;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Language;
+import net.minecraft.util.Rarity;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -142,24 +143,11 @@ public class ArtifactBladeItem extends SwordItem {
 
     @Environment(EnvType.CLIENT)
     private static void registerTooltipAddition() {
-        ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-            if (!(stack.getItem() instanceof ArtifactBladeItem blade) || blade.tier != Tier.ASTRAL) return;
-
-            for (int i = 0; i < lines.size(); i++) {
-                var line = lines.get(i);
-                if (!(line.getContent() instanceof LiteralTextContent) || line.getSiblings().isEmpty()) continue;
-
-
-                var sibling = line.getSiblings().get(0);
-                if (!(sibling.getContent() instanceof TranslatableTextContent modifierTranslatable)) continue;
-                if (modifierTranslatable.getArgs().length < 2) continue;
-
-                if (!(modifierTranslatable.getArgs()[1] instanceof Text text) || !(text.getContent() instanceof TranslatableTextContent translatable) || !translatable.getKey().startsWith("attribute.name.generic.attack_damage")) {
-                    continue;
-                }
-
-                lines.set(i, makeInfiniteText().append(Text.translatable(EntityAttributes.GENERIC_ATTACK_DAMAGE.getTranslationKey()).formatted(Formatting.DARK_GREEN)));
-                return;
+        ReplaceAttackDamageTextCallback.EVENT.register(stack -> {
+            if (stack.getItem() instanceof ArtifactBladeItem blade && blade.tier == Tier.ASTRAL) {
+                return makeInfiniteText();
+            } else {
+                return null;
             }
         });
     }

@@ -143,6 +143,10 @@
   "item.affinity.dragon_drop": "Dragon Drop",
   "item.affinity.arcane_fade_bucket": "Bucket of Arcane Fade",
 
+  "item.affinity.resounding_chime": "Resounding Chime",
+  "death.attack.resonating": "%s was late to class",
+  "death.attack.resonating.player": "%s was late to class because they were chatting with %s",
+
   "item.affinity.staff.mode_template": [
     {"text": " [", "color": "dark_gray"},
     {"index": 0, "color": "gray"},
@@ -274,6 +278,8 @@
   "effect.affinity.bastion_regeneration.desc": "Extremely fast regeneration when low on health",
   "effect.affinity.affine": "Affine",
   "effect.affinity.affine.desc": "Heals the affected when in range of an active Affine Infuser",
+  "effect.affinity.resonant": "Resonant",
+  "effect.affinity.resonant.desc": "dingggggggggg",
 
   "effect.affinity.life_leech": "Life Leech",
   "effect.affinity.life_leech.desc": "Heals the affected when attacking",

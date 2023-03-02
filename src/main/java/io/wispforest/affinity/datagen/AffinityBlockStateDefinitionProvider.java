@@ -60,7 +60,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
         );
 
         handheld(generator, COLLECTION_STAFF, NIMBLE_STAFF, TIME_STAFF, KINESIS_STAFF,
-                ASTROKINESIS_STAFF, CULTIVATION_STAFF, WAND_OF_INQUIRY);
+                ASTROKINESIS_STAFF, CULTIVATION_STAFF, WAND_OF_INQUIRY, RESOUNDING_CHIME);
 
         generatedWithTexture(generator, Affinity.id("item/ranthracite_dust"), RANTHRACITE_WIRE.asItem());
 
