@@ -140,12 +140,12 @@ public class AffinityParticleSystems {
         }
     });
 
-    public static final ParticleSystem<Void> ARCANE_FADE_BLEACH_SHEEP = CONTROLLER.register(Void.class, (world, pos, data) -> {
-        ClientParticles.setParticleCount(25);
-        ClientParticles.spawn(ParticleTypes.WITCH, world, pos, 1f);
+    public static final ParticleSystem<Float> ARCANE_FADE_BLEACH_SHEEP = CONTROLLER.register(Float.class, (world, pos, scale) -> {
+        ClientParticles.setParticleCount((int) (25 * scale));
+        ClientParticles.spawn(ParticleTypes.WITCH, world, pos, scale);
 
         ClientParticles.setParticleCount(5);
-        ClientParticles.spawn(ParticleTypes.POOF, world, pos, 1f);
+        ClientParticles.spawn(scale > .5f ? ParticleTypes.POOF : new DustParticleEffect(new Vector3f(1), 1), world, pos, scale);
     });
 
     public static final ParticleSystem<Void> ARCANE_FADE_CRAFT = CONTROLLER.register(Void.class, (world, pos, data) -> {

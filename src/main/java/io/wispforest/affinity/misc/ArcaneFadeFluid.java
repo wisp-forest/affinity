@@ -124,7 +124,7 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
         sheep.setColor(DyeColor.WHITE);
         sheep.playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 1f, 1f);
 
-        AffinityParticleSystems.ARCANE_FADE_BLEACH_SHEEP.spawn(sheep.world, sheep.getPos().add(sheep.getWidth() / 2, sheep.getHeight() / 2, sheep.getWidth() / 2));
+        AffinityParticleSystems.ARCANE_FADE_BLEACH_SHEEP.spawn(sheep.world, sheep.getPos().add(sheep.getWidth() / 2, sheep.getHeight() / 2, sheep.getWidth() / 2), 1f);
     }
 
     @Override

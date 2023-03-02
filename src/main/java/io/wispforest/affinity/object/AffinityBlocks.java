@@ -82,7 +82,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AZALEA_FENCE_GATE = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), SoundEvents.BLOCK_FENCE_GATE_CLOSE, SoundEvents.BLOCK_FENCE_GATE_OPEN);
     public static final Block THE_SKY = new Block(FabricBlockSettings.copyOf(Blocks.STONE));
 
-    @NoBlockItem public static final FluidBlock ARCANE_FADE = new FluidBlock(Fluids.ARCANE_FADE, FabricBlockSettings.copyOf(Blocks.WATER));
+    @NoBlockItem public static final FluidBlock ARCANE_FADE = new ArcaneFadeBlock();
 
     public static final SignType AZALEA_SIGN_TYPE = SignTypeInvoker.affinity$invokeNew("azalea");
     @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_SIGN_TYPE);
