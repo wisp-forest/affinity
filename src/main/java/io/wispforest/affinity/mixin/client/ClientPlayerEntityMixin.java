@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin.client;
 
+import io.wispforest.affinity.item.KinesisStaffItem;
 import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -24,7 +25,7 @@ public abstract class ClientPlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "tickMovement", at = @At(value = "FIELD", target = "Lnet/minecraft/client/network/ClientPlayerEntity;noClip:Z", opcode = Opcodes.GETFIELD))
     private void swiftKinesisMoment(CallbackInfo ci) {
-        if (!this.activeItemStack.isOf(AffinityItems.KINESIS_STAFF)) return;
+        if (!(this.activeItemStack.getItem() instanceof KinesisStaffItem)) return;
 
         this.input.movementSideways *= 5;
         this.input.movementForward *= 5;

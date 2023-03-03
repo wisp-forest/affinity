@@ -37,6 +37,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.entity.EmptyEntityRenderer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
@@ -80,6 +81,7 @@ public class AffinityClient implements ClientModInitializer {
         EntityRendererRegistry.register(AffinityEntities.WISE_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.VICIOUS_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.ASTEROID, AsteroidEntityRenderer::new);
+        EntityRendererRegistry.register(AffinityEntities.AETHUM_MISSILE, EmptyEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putFluid(AffinityBlocks.Fluids.ARCANE_FADE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putFluid(AffinityBlocks.Fluids.ARCANE_FADE_FLOWING, RenderLayer.getTranslucent());

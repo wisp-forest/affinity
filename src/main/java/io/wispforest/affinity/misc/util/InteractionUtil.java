@@ -1,11 +1,15 @@
 package io.wispforest.affinity.misc.util;
 
+import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.owo.ops.ItemOps;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -14,6 +18,26 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class InteractionUtil {
+
+    public static EntityHitResult raycastEntities(Entity entity, double reach, double margin, Predicate<Entity> predicate) {
+        var maxReach = entity.getRotationVec(0).multiply(reach);
+
+        MixinHooks.EXTRA_TARGETING_MARGIN = margin;
+        var entityTarget = ProjectileUtil.raycast(
+                entity,
+                entity.getEyePos(),
+                entity.getEyePos().add(maxReach),
+                entity.getBoundingBox().stretch(maxReach),
+                candidate -> {
+                    if (candidate.isSpectator()) return false;
+                    return predicate.test(candidate);
+                },
+                reach * reach
+        );
+        MixinHooks.EXTRA_TARGETING_MARGIN = 0;
+
+        return entityTarget;
+    }
 
     public static ActionResult handleSingleItemContainer(
             World world,

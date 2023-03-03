@@ -131,6 +131,7 @@
   "item.affinity.astrokinesis_staff": "Astrokinesis Staff",
   "item.affinity.cultivation_staff": "Cultivation Staff",
   "item.affinity.cultivation_staff.super_foraging_mode": "Super Foraging Mode™",
+  "item.affinity.salvo_staff": "Salvo Staff",
   "item.affinity.nimble_staff": "Nimble Staff",
   "item.affinity.nimble_staff.direction.north": "North",
   "item.affinity.nimble_staff.direction.south": "South",
@@ -158,7 +159,11 @@
   "item.affinity.staff.tooltip.cycle_mode_hint": [{"text": "⇄", "color": "#4D4C7D"}, {"text": " Sneak-Click to cycle modes", "color": "gray"}],
 
   "item.affinity.kinesis_staff.tooltip.consumption_per_throw": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per throw", "color": "gray"}],
-  "item.affinity.astrokinesis_staff.tooltip.consumption_per_throw": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum to throw an asteroid", "color": "gray"}],
+  "item.affinity.astrokinesis_staff.tooltip.consumption_per_throw": [
+    {"index": 0, "color": "#4D4C7D"},
+    {"text": " aethum to throw an asteroid", "color": "gray"}
+  ],
+  "item.affinity.salvo_staff.tooltip.consumption_per_missile": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per missile", "color": "gray"}],
 
   "text.affinity.attuned_shard_range": "Range: ",
   "text.affinity.attuned_shard_range.value": "%d blocks",
@@ -172,8 +177,8 @@
   "item.affinity.anthracite_powder": "Anthracite Powder",
   "item.affinity.aethum_map_prototype": "Aethum Map Prototype",
   "item.affinity.realized_aethum_map": "Realized Aethum Map",
-  "item.affinity.realized_aethum_map.tooltip.locked": { "text": "Locked", "color": "gray" },
-  "item.affinity.realized_aethum_map.tooltip.unlocked": { "text": "Unlocked", "color": "gray" },
+  "item.affinity.realized_aethum_map.tooltip.locked": {"text": "Locked", "color": "gray"},
+  "item.affinity.realized_aethum_map.tooltip.unlocked": {"text": "Unlocked", "color": "gray"},
 
   "enchantment.affinity.curse_of_illiteracy": "Curse of Illiteracy",
   "enchantment.affinity.curse_of_illiteracy.desc": [

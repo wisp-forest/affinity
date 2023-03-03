@@ -22,6 +22,11 @@ public class AffinityEntities implements AutoRegistryContainer<EntityType<?>> {
             .dimensions(EntityDimensions.fixed(.5f, .5f))
             .build();
 
+    public static final EntityType<AethumMissileEntity> AETHUM_MISSILE = FabricEntityTypeBuilder.create()
+            .entityFactory(AethumMissileEntity::new)
+            .dimensions(EntityDimensions.fixed(.15f, .15f))
+            .build();
+
     private static <W extends WispEntity> EntityType<W> createWispType(EntityType.EntityFactory<W> factory) {
         return FabricEntityTypeBuilder.<WispEntity>createMob()
                 .spawnGroup(SpawnGroup.MONSTER)

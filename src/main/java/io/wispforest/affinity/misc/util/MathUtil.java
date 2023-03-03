@@ -3,6 +3,7 @@ package io.wispforest.affinity.misc.util;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
@@ -61,6 +62,10 @@ public class MathUtil {
         final double y = bezier_3(t, from.y, c1.y, c2.y, to.y);
         final double z = bezier_3(t, from.z, c1.z, c2.z, to.z);
         return new Vec3d(x, y, z);
+    }
+
+    public static Vec3d entityCenterPos(Entity entity) {
+        return new Vec3d(entity.getX(), entity.getY() + entity.getHeight() / 2, entity.getZ());
     }
 
     public static double distance(BlockPos pos, BlockPos other) {

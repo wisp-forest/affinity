@@ -11,8 +11,7 @@ public class ProjectileUtilMixin {
 
     @ModifyArg(method = "raycast", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Box;expand(D)Lnet/minecraft/util/math/Box;"))
     private static double increaseMargin(double value) {
-        if (!MixinHooks.INCREASED_TARGETING_MARGIN) return value;
-        return value + 1.5f;
+        return value + MixinHooks.EXTRA_TARGETING_MARGIN;
     }
 
 }

@@ -6,8 +6,8 @@ import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
-import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
+import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityCriteria;
 import io.wispforest.affinity.object.AffinityItems;
@@ -20,7 +20,6 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKeys;
@@ -105,22 +104,7 @@ public class KinesisStaffItem extends StaffItem {
         if (stack.has(ACTIVE_TARGET_ENTITY)) {
             entity = world.getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
         } else {
-            final double reach = 25;
-            var maxReach = playerFacing.multiply(reach);
-
-            MixinHooks.INCREASED_TARGETING_MARGIN = true;
-            var entityTarget = ProjectileUtil.raycast(
-                    player,
-                    player.getEyePos(),
-                    player.getEyePos().add(maxReach),
-                    player.getBoundingBox().stretch(maxReach),
-                    candidate -> {
-                        if (candidate.isSpectator()) return false;
-                        return !candidate.getType().isIn(IMMUNE_ENTITIES);
-                    },
-                    reach * reach
-            );
-            MixinHooks.INCREASED_TARGETING_MARGIN = false;
+            var entityTarget = InteractionUtil.raycastEntities(player, 25, 1.5, candidate -> !candidate.getType().isIn(IMMUNE_ENTITIES));
 
             if (entityTarget == null) return TypedActionResult.pass(stack);
             entity = entityTarget.getEntity();
@@ -140,6 +124,7 @@ public class KinesisStaffItem extends StaffItem {
         var targetVelocity = targetPos.subtract(entity.getPos()).multiply(.25f);
         entity.setVelocity(targetVelocity);
         entity.fallDistance = 0;
+        entity.velocityDirty = true;
 
         return TypedActionResult.success(stack);
     }
@@ -148,7 +133,7 @@ public class KinesisStaffItem extends StaffItem {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
         tooltip.add(Text.translatable(
-                "item.affinity.kinesis_staff.tooltip.consumption_per_throw",
+                this.getTranslationKey() + ".tooltip.consumption_per_throw",
                 ENTITY_THROW_COST
         ));
     }
