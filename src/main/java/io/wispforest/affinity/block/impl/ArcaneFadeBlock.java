@@ -13,6 +13,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.tag.TagKey;
@@ -23,8 +24,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class ArcaneFadeBlock extends FluidBlock {
 
@@ -51,6 +55,27 @@ public class ArcaneFadeBlock extends FluidBlock {
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         this.bleachNeighbor(world, neighborState, neighborPos);
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    public static void forEachGroup(BiConsumer<ItemConvertible, List<ItemConvertible>> action) {
+        ITEM_GROUPS.forEach((item, tag) -> {
+            var entries = new ArrayList<ItemConvertible>();
+            for (var mappedItem : Registries.ITEM.iterateEntries(tag)) {
+                entries.add(mappedItem.value());
+            }
+
+            action.accept(item, entries);
+        });
+
+        BLOCK_GROUPS.forEach((block, tag) -> {
+            var entries = new ArrayList<ItemConvertible>();
+            for (var mappedItem : Registries.BLOCK.iterateEntries(tag)) {
+                entries.add(mappedItem.value());
+            }
+
+            action.accept(block, entries);
+        });
+
     }
 
     private void bleachNeighbor(WorldAccess world, BlockState neighborState, BlockPos neighborPos) {

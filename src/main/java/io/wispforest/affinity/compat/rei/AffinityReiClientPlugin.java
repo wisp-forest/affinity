@@ -1,15 +1,13 @@
 package io.wispforest.affinity.compat.rei;
 
-import io.wispforest.affinity.compat.rei.category.AspenInfusionCategory;
-import io.wispforest.affinity.compat.rei.category.AssemblyCategory;
-import io.wispforest.affinity.compat.rei.category.ContainingPotionsCategory;
-import io.wispforest.affinity.compat.rei.category.PotionMixingCategory;
+import io.wispforest.affinity.block.impl.ArcaneFadeBlock;
+import io.wispforest.affinity.compat.rei.category.*;
 import io.wispforest.affinity.compat.rei.display.*;
+import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.recipe.AspenInfusionRecipe;
 import io.wispforest.affinity.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.recipe.ShapedAssemblyRecipe;
 import io.wispforest.affinity.recipe.ShapelessAssemblyRecipe;
-import io.wispforest.affinity.object.AffinityBlocks;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
@@ -34,6 +32,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         registry.add(new AssemblyCategory());
         registry.add(new ContainingPotionsCategory());
         registry.add(new AspenInfusionCategory());
+        registry.add(new ArcaneFadingCategory());
 
         registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(Blocks.SPORE_BLOSSOM));
         registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(AffinityBlocks.BREWING_CAULDRON));
@@ -50,6 +49,10 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
 
         registry.registerFiller(ShapedAssemblyRecipe.class, ShapedAssemblyDisplay::new);
         registry.registerFiller(ShapelessAssemblyRecipe.class, ShapelessAssemblyDisplay::new);
+
+        ArcaneFadeBlock.forEachGroup((item, items) -> {
+            registry.add(new ArcaneFadingDisplay(items, item));
+        });
 
         var effectToPotion = new HashMap<StatusEffect, List<Potion>>();
 
