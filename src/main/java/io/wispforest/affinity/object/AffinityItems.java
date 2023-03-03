@@ -8,7 +8,13 @@ import io.wispforest.affinity.object.wisps.AffinityWispTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
+import net.minecraft.text.Text;
+
+import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public class AffinityItems implements ItemRegistryContainer {
@@ -67,5 +73,14 @@ public class AffinityItems implements ItemRegistryContainer {
 
     public static OwoItemSettings settings(int tab) {
         return new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP);
+    }
+
+    public static ItemStack makePotionOfInfiniteProwess() {
+        var potion = new ItemStack(Items.POTION);
+        PotionUtil.setPotion(potion, Potions.LONG_STRENGTH);
+        PotionUtil.setCustomPotionEffects(potion, Stream.generate(() -> new StatusEffectInstance(StatusEffects.STRENGTH, 9600)).limit(24).toList());
+
+        potion.setCustomName(Text.translatable("item.affinity.potion_of_infinite_prowess"));
+        return potion;
     }
 }
