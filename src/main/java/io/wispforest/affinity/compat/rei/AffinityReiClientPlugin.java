@@ -4,6 +4,7 @@ import io.wispforest.affinity.block.impl.ArcaneFadeBlock;
 import io.wispforest.affinity.compat.rei.category.*;
 import io.wispforest.affinity.compat.rei.display.*;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.recipe.AspenInfusionRecipe;
 import io.wispforest.affinity.recipe.PotionMixingRecipe;
 import io.wispforest.affinity.recipe.ShapedAssemblyRecipe;
@@ -34,12 +35,13 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         registry.add(new AspenInfusionCategory());
         registry.add(new ArcaneFadingCategory());
 
-        registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(Blocks.SPORE_BLOSSOM));
-        registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(AffinityBlocks.BREWING_CAULDRON));
+        registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(Blocks.SPORE_BLOSSOM), EntryStacks.of(AffinityBlocks.BREWING_CAULDRON));
 
         registry.addWorkstations(AffinityReiCommonPlugin.ASPEN_INFUSION, EntryStacks.of(AffinityBlocks.ASP_RITE_CORE));
 
         registry.addWorkstations(AffinityReiCommonPlugin.ASSEMBLY, EntryStacks.of(AffinityBlocks.ASSEMBLY_AUGMENT), EntryStacks.of(Blocks.CRAFTING_TABLE));
+
+        registry.addWorkstations(AffinityReiCommonPlugin.ARCANE_FADING, EntryStacks.of(AffinityItems.ARCANE_FADE_BUCKET));
     }
 
     @Override
