@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 
+import java.util.Comparator;
 import java.util.concurrent.CompletableFuture;
 
 import static io.wispforest.affinity.object.AffinityBlocks.*;
@@ -23,6 +24,6 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
 
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
                 .add(STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ACCUMULATION_APPARATUS)
-                .add(AffinityBlockFamilies.AZALEA.getVariants().values().toArray(new Block[0]));
+                .add(AffinityBlockFamilies.AZALEA.getVariants().values().stream().sorted(Comparator.comparing(block -> block.getRegistryEntry().registryKey().getValue())).toArray(Block[]::new));
     }
 }
