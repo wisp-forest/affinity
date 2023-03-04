@@ -40,11 +40,13 @@
       "item": "minecraft:white_wool"
     }
   ],
+  "output": {
+    "item": "affinity:aethum_overcharger"
+  },
   "entity": {
     "id": "minecraft:sheep",
     "data": {
-      "CustomName": "{\"text\": \"Dönerbone\"}",
-      "Age": -2147483647
+      "CustomName": "{\"text\":\"Dönerbone\"}"
     }
   }
 }

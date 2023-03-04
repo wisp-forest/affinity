@@ -7,6 +7,7 @@ import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
@@ -25,26 +26,31 @@ import java.util.Optional;
 public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlockEntity.AberrantCallingInventory> {
 
     private final List<Ingredient> coreInputs;
-
     private final EntityType<?> entityType;
     @Nullable private final NbtCompound entityNbt;
+
+    private final ItemStack output;
 
     protected AberrantCallingRecipe(Identifier id,
                                     List<Ingredient> coreInputs,
                                     List<Ingredient> inputs,
                                     EntityType<?> entityType,
                                     @Nullable NbtCompound entityNbt,
-                                    int duration) {
+                                    int duration,
+                                    ItemStack output) {
         super(id, inputs, duration);
         this.coreInputs = coreInputs;
         this.entityType = entityType;
         this.entityNbt = entityNbt;
+        this.output = output;
     }
 
     @Override
     public boolean matches(AberrantCallingCoreBlockEntity.AberrantCallingInventory inventory, World world) {
         return this.runRecipeMatcher(this.coreInputs, Arrays.asList(inventory.coreInputs()))
-                && this.soclesMatchInputs(inventory);
+                && this.soclesMatchInputs(inventory)
+                && this.entityType == inventory.sacrifice().getType()
+                && (this.entityNbt == null || NbtHelper.matches(this.entityNbt, inventory.sacrifice().writeNbt(new NbtCompound()), true));
     }
 
     @Override
@@ -54,7 +60,7 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
 
     @Override
     public ItemStack getOutput() {
-        return ItemStack.EMPTY;
+        return this.output.copy();
     }
 
     @Override
@@ -65,14 +71,6 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
     @Override
     public RecipeType<?> getType() {
         return AffinityRecipeTypes.ABERRANT_CALLING;
-    }
-
-    public EntityType<?> getEntityType() {
-        return entityType;
-    }
-
-    public @Nullable NbtCompound getEntityNbt() {
-        return entityNbt;
     }
 
     public static final class Serializer implements RecipeSerializer<AberrantCallingRecipe> {
@@ -92,7 +90,9 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
             final var entityType = JsonUtil.readFromRegistry(entityObject, "id", Registries.ENTITY_TYPE);
             final var entityNbt = entityObject.has("data") ? JsonUtil.readNbt(entityObject, "data") : null;
 
-            return new AberrantCallingRecipe(id, coreInputs, socleInputs, entityType, entityNbt, duration);
+            final var output = JsonUtil.readChadStack(json, "output");
+
+            return new AberrantCallingRecipe(id, coreInputs, socleInputs, entityType, entityNbt, duration, output);
         }
 
         @Override
@@ -104,7 +104,9 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
             final var entityType = Registries.ENTITY_TYPE.get(buf.readVarInt());
             final var entityNbt = buf.readOptional(PacketByteBuf::readNbt).orElse(null);
 
-            return new AberrantCallingRecipe(id, coreInputs, socleInputs, entityType, entityNbt, duration);
+            final var output = buf.readItemStack();
+
+            return new AberrantCallingRecipe(id, coreInputs, socleInputs, entityType, entityNbt, duration, output);
         }
 
         @Override
@@ -115,6 +117,8 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
 
             buf.writeVarInt(Registries.ENTITY_TYPE.getRawId(recipe.entityType));
             buf.writeOptional(Optional.ofNullable(recipe.entityNbt), PacketByteBuf::writeNbt);
+
+            buf.writeItemStack(recipe.output);
         }
     }
 }

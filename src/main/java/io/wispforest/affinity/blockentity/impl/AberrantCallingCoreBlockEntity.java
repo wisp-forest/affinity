@@ -2,30 +2,36 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.block.impl.AberrantCallingCoreBlock;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
-import io.wispforest.affinity.misc.EntityReference;
-import io.wispforest.affinity.misc.ServerTasks;
-import io.wispforest.affinity.recipe.AberrantCallingRecipe;
+import io.wispforest.affinity.client.render.CuboidRenderer;
+import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.misc.util.InteractionUtil;
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.object.AffinitySoundEvents;
+import io.wispforest.affinity.recipe.AberrantCallingRecipe;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,6 +75,9 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         this.neighborPositions = AberrantCallingCoreBlock.findValidCoreSet(this.world, this.pos);
         if (this.neighborPositions == null) return false;
 
+        final var sacrifices = this.world.getNonSpectatingEntities(LivingEntity.class, new Box(this.ritualCenterPos().up()).expand(1));
+        if (sacrifices.isEmpty()) return false;
+
         final var coreItems = new ItemStack[4];
         coreItems[0] = this.item.copy();
 
@@ -77,9 +86,8 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
             coreItems[i + 1] = this.cachedNeighbors[i].item.copy();
         }
 
-        final var inventory = new AberrantCallingInventory(setup.resolveSocles(this.world), coreItems);
-        final var recipeOptional = this.world.getRecipeManager()
-                .getFirstMatch(AffinityRecipeTypes.ABERRANT_CALLING, inventory, this.world);
+        final var inventory = new AberrantCallingInventory(setup.resolveSocles(this.world), coreItems, sacrifices.get(0));
+        final var recipeOptional = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ABERRANT_CALLING, inventory, this.world);
 
         if (recipeOptional.isEmpty()) return false;
         this.cachedRecipe = recipeOptional.get();
@@ -92,6 +100,12 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
             neighbor.ritualLock.acquire(this);
             this.createDissolveParticle(neighbor.item, neighbor.pos, setup.duration());
         }
+
+        AffinityParticleSystems.LAVA_ERUPTION.spawn(world, MathUtil.entityCenterPos(sacrifices.get(0)));
+        WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_ABERRANT_CALLING_CORE_RITUAL_SUCCESS, SoundCategory.BLOCKS);
+
+        AffinityComponents.ENTITY_FLAGS.get(sacrifices.get(0)).setFlag(EntityFlagComponent.NO_DROPS);
+        sacrifices.get(0).kill();
 
         return true;
     }
@@ -117,30 +131,24 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected boolean onRitualCompleted() {
-        final var pos = Vec3d.ofCenter(this.ritualCenterPos());
+        final var pos = Vec3d.ofCenter(this.ritualCenterPos(), 2.5);
 
-        final var entity = this.cachedRecipe.getEntityType().create(world);
-        if (this.cachedRecipe.getEntityNbt() != null) entity.readNbt(this.cachedRecipe.getEntityNbt());
-
-        entity.setPos(pos.x, pos.y + 1.5, pos.z);
-        entity.addVelocity(0, 1, 0);
-
-        final var ref = EntityReference.of(entity);
-        entity.setInvulnerable(true);
-        ServerTasks.doDelayed((ServerWorld) this.world, 30, () -> {
-            ref.consume(e -> e.setInvulnerable(false));
-        });
-
-        this.world.spawnEntity(entity);
-        if (entity instanceof MobEntity mob) mob.playSpawnEffects();
+        var item = new ItemEntity(this.world, pos.x, pos.y - .25, pos.z, this.cachedRecipe.getOutput());
+        item.setVelocity(
+                this.world.random.nextTriangular(0.0, 0.115),
+                this.world.random.nextTriangular(0.2, 0.115),
+                this.world.random.nextTriangular(0.0, 0.115)
+        );
+        this.world.spawnEntity(item);
+        AffinityParticleSystems.ARCANE_FADE_CRAFT.spawn(this.world, pos);
 
         this.ritualLock.release();
 
+        this.cachedRecipe = null;
         this.cachedNeighbors = null;
         this.neighborPositions = null;
 
-        WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_ABERRANT_CALLING_CORE_RITUAL_SUCCESS, SoundCategory.BLOCKS);
-        AffinityParticleSystems.LAVA_ERUPTION.spawn(world, pos.add(0, 2, 0));
+        WorldOps.playSound(world, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS);
 
         return true;
     }
@@ -201,6 +209,12 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         return set != null ? set.center() : this.pos;
     }
 
+    // TODO: this needs to be centered at ritualCenterPos()
+    @Override
+    public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
+        return super.getActiveOutline();
+    }
+
     @Override
     public void appendTooltipEntries(List<Entry> entries) {
         super.appendTooltipEntries(entries);
@@ -257,18 +271,25 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     public static class AberrantCallingInventory extends SocleInventory {
 
         private final ItemStack[] coreInputs;
+        private final Entity sacrifice;
 
-        public AberrantCallingInventory(List<RitualSocleBlockEntity> socles, ItemStack[] coreInputs) {
+        public AberrantCallingInventory(List<RitualSocleBlockEntity> socles, ItemStack[] coreInputs, Entity sacrifice) {
             super(socles);
 
             this.coreInputs = new ItemStack[4];
             for (int i = 0; i < coreInputs.length; i++) {
                 this.coreInputs[i] = coreInputs[i].copy();
             }
+
+            this.sacrifice = sacrifice;
         }
 
         public ItemStack[] coreInputs() {
             return coreInputs;
+        }
+
+        public Entity sacrifice() {
+            return this.sacrifice;
         }
     }
 }
