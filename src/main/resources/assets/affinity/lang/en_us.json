@@ -144,6 +144,7 @@
   "item.affinity.satiating_potion": "Satiating Potion",
   "item.affinity.dragon_drop": "Dragon Drop",
   "item.affinity.arcane_fade_bucket": "Bucket of Arcane Fade",
+  "item.affinity.aethum_overcharger": "Aethum Overcharger",
   "item.affinity.potion_of_infinite_prowess": {
     "text": "Potion of Infinite Prowess",
     "italic": false,
@@ -282,6 +283,8 @@
   "advancement.affinity.cache_invalidation.description": "Break an Aethum Flux Cache that's filled at least 50%",
   "advancement.affinity.when_pigs_fly.title": "When Pigs Fly",
   "advancement.affinity.when_pigs_fly.description": "Fly on a Pig",
+  "advancement.affinity.you_re_doomed.title": "You're Doomed",
+  "advancement.affinity.you_re_doomed.description": "Use an Aethum Overcharger to cheat death and turn divine - temporarily",
 
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.dripping.desc": "Got that drip",

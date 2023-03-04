@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.text.Text;
 
 public class ImpendingDoomStatusEffect extends AffinityStatusEffect {
 
@@ -25,6 +26,11 @@ public class ImpendingDoomStatusEffect extends AffinityStatusEffect {
             this.setOutOfWorld();
             this.setUsesMagic();
             this.setUnblockable();
+        }
+
+        @Override
+        public Text getDeathMessage(LivingEntity entity) {
+            return Text.translatable("death.attack." + this.name, entity.getDisplayName());
         }
     }
 }

@@ -9,8 +9,11 @@ import io.wispforest.affinity.particle.OrbitingEmitterParticleEffect;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.*;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
@@ -155,6 +158,27 @@ public class AffinityParticleSystems {
         ClientParticles.randomizeVelocity(.15f);
         ClientParticles.setParticleCount(15);
         ClientParticles.spawn(ParticleTypes.FIREWORK, world, pos, .25f);
+    });
+
+    public static final ParticleSystem<Integer> AETHUM_OVERCHARGE = CONTROLLER.register(Integer.class, (world, pos, entityId) -> {
+        var entity = world.getEntityById(entityId);
+        var client = MinecraftClient.getInstance();
+
+        client.particleManager.addEmitter(entity, ParticleTypes.TOTEM_OF_UNDYING, 30);
+        world.playSound(entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_TOTEM_USE, entity.getSoundCategory(), 1.0F, 1.0F, false);
+
+        if (entity == client.player) {
+            ItemStack overcharger = null;
+            for (var hand : Hand.values()) {
+                if (!client.player.getStackInHand(hand).isOf(AffinityItems.AETHUM_OVERCHARGER)) continue;
+
+                overcharger = client.player.getStackInHand(hand);
+                break;
+            }
+
+            if (overcharger == null) return;
+            client.gameRenderer.showFloatingItem(overcharger);
+        }
     });
 
     // Context data types

@@ -8,8 +8,7 @@ import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.misc.LivingEntityTickEvent;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
-import io.wispforest.affinity.object.AffinityEnchantments;
-import io.wispforest.affinity.object.AffinityStatusEffects;
+import io.wispforest.affinity.object.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -17,8 +16,13 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.stat.Stats;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -54,6 +58,18 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow
     public abstract float getMaxHealth();
+
+    @Shadow
+    public abstract ItemStack getStackInHand(Hand hand);
+
+    @Shadow
+    public abstract void setHealth(float health);
+
+    @Shadow
+    public abstract boolean clearStatusEffects();
+
+    @Shadow
+    public abstract boolean addStatusEffect(StatusEffectInstance effect);
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTickEnd(CallbackInfo ci) {
@@ -148,6 +164,38 @@ public abstract class LivingEntityMixin extends Entity {
         if (AffinityComponents.ENTITY_FLAGS.get(this).hasFlag(EntityFlagComponent.NO_DROPS)) {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "tryUseTotem", at = @At("TAIL"), cancellable = true)
+    private void tryUseOvercharger(DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValueZ()) return;
+
+        ItemStack overcharger = null;
+
+        for (var hand : Hand.values()) {
+            var stack = this.getStackInHand(hand);
+            if (!stack.isOf(AffinityItems.AETHUM_OVERCHARGER)) continue;
+
+            overcharger = stack;
+            break;
+        }
+
+        if (overcharger == null) return;
+        overcharger.decrement(1);
+
+        this.setHealth(1f);
+        this.clearStatusEffects();
+        this.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 300, 4));
+        this.addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.IMPENDING_DOOM, 300));
+
+        AffinityParticleSystems.AETHUM_OVERCHARGE.spawn(this.world, this.getPos(), this.getId());
+
+        if ((Object) this instanceof ServerPlayerEntity serverPlayer) {
+            serverPlayer.incrementStat(Stats.USED.getOrCreateStat(AffinityItems.AETHUM_OVERCHARGER));
+            AffinityCriteria.USED_OVERCHARGER.trigger(serverPlayer);
+        }
+
+        cir.setReturnValue(true);
     }
 
     @Unique

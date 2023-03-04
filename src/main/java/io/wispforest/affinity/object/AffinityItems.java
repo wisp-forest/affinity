@@ -13,6 +13,7 @@ import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.text.Text;
+import net.minecraft.util.Rarity;
 
 import java.util.stream.Stream;
 
@@ -60,7 +61,8 @@ public class AffinityItems implements ItemRegistryContainer {
 
     public static final Item AFFINITEA = new AffiniteaItem();
     public static final Item SATIATING_POTION = new SatiationPotionItem();
-    public static final Item DRAGON_DROP = new Item(settings(AffinityItemGroup.MAIN));
+    public static final Item DRAGON_DROP = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
+    public static final Item AETHUM_OVERCHARGER = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.RARE).maxCount(1));
 
     public static final Item ARCANE_FADE_BUCKET = new BucketItem(AffinityBlocks.Fluids.ARCANE_FADE, settings(AffinityItemGroup.MAIN).maxCount(1).recipeRemainder(Items.BUCKET));
 
@@ -82,5 +84,17 @@ public class AffinityItems implements ItemRegistryContainer {
 
         potion.setCustomName(Text.translatable("item.affinity.potion_of_infinite_prowess"));
         return potion;
+    }
+
+    private static class GlintItem extends Item {
+
+        public GlintItem(Settings settings) {
+            super(settings);
+        }
+
+        @Override
+        public boolean hasGlint(ItemStack stack) {
+            return true;
+        }
     }
 }

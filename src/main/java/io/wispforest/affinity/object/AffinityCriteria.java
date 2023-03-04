@@ -1,9 +1,6 @@
 package io.wispforest.affinity.object;
 
-import io.wispforest.affinity.criteria.ArtifactBladeSmashCriterion;
-import io.wispforest.affinity.criteria.BreakAethumFluxCacheCriterion;
-import io.wispforest.affinity.criteria.KinesisProjectileHitCriterion;
-import io.wispforest.affinity.criteria.KinesisCriterion;
+import io.wispforest.affinity.criteria.*;
 import io.wispforest.owo.registration.reflect.SimpleFieldProcessingSubject;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.advancement.criterion.Criterion;
@@ -16,6 +13,7 @@ public class AffinityCriteria implements SimpleFieldProcessingSubject<Criterion<
     public static final KinesisProjectileHitCriterion KINESIS_PROJECTILE_HIT = new KinesisProjectileHitCriterion();
     public static final BreakAethumFluxCacheCriterion BREAK_AETHUM_FLUX_CACHE = new BreakAethumFluxCacheCriterion();
     public static final KinesisCriterion KINESIS = new KinesisCriterion();
+    public static final UsedOverchargerCriterion USED_OVERCHARGER = new UsedOverchargerCriterion();
 
     @Override
     public void processField(Criterion<?> value, String identifier, Field field) {
