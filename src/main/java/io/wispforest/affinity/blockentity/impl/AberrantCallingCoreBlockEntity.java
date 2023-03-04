@@ -28,7 +28,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -209,10 +208,10 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         return set != null ? set.center() : this.pos;
     }
 
-    // TODO: this needs to be centered at ritualCenterPos()
     @Override
     public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
-        return super.getActiveOutline();
+        var offset = this.ritualCenterPos().subtract(this.pos);
+        return CuboidRenderer.Cuboid.of(new BlockPos(-10, 0, -10).add(offset), new BlockPos(11, 1, 11).add(offset));
     }
 
     @Override
