@@ -14,6 +14,7 @@ public class AffinityCriteria implements SimpleFieldProcessingSubject<Criterion<
     public static final BreakAethumFluxCacheCriterion BREAK_AETHUM_FLUX_CACHE = new BreakAethumFluxCacheCriterion();
     public static final KinesisCriterion KINESIS = new KinesisCriterion();
     public static final UsedOverchargerCriterion USED_OVERCHARGER = new UsedOverchargerCriterion();
+    public static final SacrificedToRitualCriterion SACRIFICED_TO_RITUAL = new SacrificedToRitualCriterion();
 
     @Override
     public void processField(Criterion<?> value, String identifier, Field field) {

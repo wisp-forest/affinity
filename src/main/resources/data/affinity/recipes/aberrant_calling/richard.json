@@ -35,9 +35,7 @@
     "item": "minecraft:barrier"
   },
   "entity": {
-    "id": "minecraft:pig",
-    "data": {
-      "CustomName": "{\"text\": \"Richard\"}"
-    }
+    "id": "minecraft:player",
+    "data": "{UUID:[I; -636583758, -554811017, -1686711687, 1005251556]}"
   }
 }

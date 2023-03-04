@@ -285,6 +285,8 @@
   "advancement.affinity.when_pigs_fly.description": "Fly on a Pig",
   "advancement.affinity.you_re_doomed.title": "You're Doomed",
   "advancement.affinity.you_re_doomed.description": "Use an Aethum Overcharger to cheat death and turn divine - temporarily",
+  "advancement.affinity.when_the_world_is_calling_you.title": "When the World is Calling You",
+  "advancement.affinity.when_the_world_is_calling_you.description": "Sacrifice yourself to a ritual",
 
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.dripping.desc": "Got that drip",

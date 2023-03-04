@@ -55,7 +55,7 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
         final var pos = context.getBlockPos();
 
         final var blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof RitualCoreBlockEntity core && !player.isSneaking()) {
+        if (blockEntity instanceof RitualCoreBlockEntity core) {
             player.getItemCooldownManager().set(this, 30);
 
             if (!world.isClient()) {

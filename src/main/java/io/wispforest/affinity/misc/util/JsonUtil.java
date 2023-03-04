@@ -3,7 +3,6 @@ package io.wispforest.affinity.misc.util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -47,13 +46,17 @@ public class JsonUtil {
     }
 
     public static NbtCompound readNbt(JsonObject json, String key) {
-        final var nbtString = JsonHelper.getObject(json, key).toString();
-        final var reader = new StringNbtReader(new StringReader(nbtString));
+        final var nbt = json.get(key);
+        if (nbt == null) throw new JsonSyntaxException("Expected '" + key + "' to be NBT data, yet key was missing");
 
         try {
-            return reader.parseCompound();
+            if (nbt.isJsonObject()) {
+                return StringNbtReader.parse(nbt.toString());
+            } else {
+                return StringNbtReader.parse(JsonHelper.asString(nbt, key));
+            }
         } catch (CommandSyntaxException e) {
-            throw new JsonParseException("Invalid NBT data found: '" + nbtString + "'", e);
+            throw new JsonParseException("Invalid NBT data found: '" + nbt + "'", e);
         }
     }
 

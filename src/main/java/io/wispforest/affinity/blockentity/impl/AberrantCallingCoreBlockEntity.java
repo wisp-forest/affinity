@@ -8,10 +8,7 @@ import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
-import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.affinity.object.AffinityRecipeTypes;
-import io.wispforest.affinity.object.AffinitySoundEvents;
+import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.recipe.AberrantCallingRecipe;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
@@ -23,6 +20,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -85,7 +83,8 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
             coreItems[i + 1] = this.cachedNeighbors[i].item.copy();
         }
 
-        final var inventory = new AberrantCallingInventory(setup.resolveSocles(this.world), coreItems, sacrifices.get(0));
+        final var sacrifice = sacrifices.get(0);
+        final var inventory = new AberrantCallingInventory(setup.resolveSocles(this.world), coreItems, sacrifice);
         final var recipeOptional = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ABERRANT_CALLING, inventory, this.world);
 
         if (recipeOptional.isEmpty()) return false;
@@ -100,11 +99,15 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
             this.createDissolveParticle(neighbor.item, neighbor.pos, setup.duration());
         }
 
-        AffinityParticleSystems.LAVA_ERUPTION.spawn(world, MathUtil.entityCenterPos(sacrifices.get(0)));
+        AffinityParticleSystems.LAVA_ERUPTION.spawn(world, MathUtil.entityCenterPos(sacrifice));
         WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_ABERRANT_CALLING_CORE_RITUAL_SUCCESS, SoundCategory.BLOCKS);
 
-        AffinityComponents.ENTITY_FLAGS.get(sacrifices.get(0)).setFlag(EntityFlagComponent.NO_DROPS);
-        sacrifices.get(0).kill();
+        if (sacrifice instanceof ServerPlayerEntity serverPlayer) {
+            AffinityCriteria.SACRIFICED_TO_RITUAL.trigger(serverPlayer);
+        }
+
+        AffinityComponents.ENTITY_FLAGS.get(sacrifice).setFlag(EntityFlagComponent.NO_DROPS);
+        sacrifice.kill();
 
         return true;
     }

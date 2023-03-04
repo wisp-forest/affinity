@@ -1,0 +1,27 @@
+{
+  "parent": "affinity:root",
+  "display": {
+    "icon": {
+      "item": "affinity:aberrant_calling_core"
+    },
+    "title": {
+      "translate": "advancement.affinity.when_the_world_is_calling_you.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.when_the_world_is_calling_you.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "sacrifice": {
+      "trigger": "affinity:sacrificed_to_ritual"
+    }
+  },
+  "requirements": [
+    [
+      "sacrifice"
+    ]
+  ]
+}
