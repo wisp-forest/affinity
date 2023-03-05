@@ -4,9 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.RanthraciteWireBlock;
 import io.wispforest.affinity.block.impl.RitualSocleBlock;
 import io.wispforest.affinity.client.particle.*;
-import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
-import io.wispforest.affinity.client.render.SkyBlitProgram;
-import io.wispforest.affinity.client.render.SkyCaptureBuffer;
+import io.wispforest.affinity.client.render.*;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.AsteroidEntityModel;
 import io.wispforest.affinity.client.render.entity.AsteroidEntityRenderer;
@@ -56,6 +54,7 @@ public class AffinityClient implements ClientModInitializer {
         this.registerColorProviders();
 
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.MANGROVE_BASKET, new MangroveBasketItemRenderer());
+        PostItemRenderCallback.EVENT.register(DragonDropItemRenderer::render);
 
         AethumNetworkLinkingHud.initialize();
         PlayerAethumHud.initialize();

@@ -3,6 +3,7 @@ package io.wispforest.affinity.mixin.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
+import io.wispforest.affinity.client.render.PostItemRenderCallback;
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -33,6 +34,18 @@ public abstract class ItemRendererMixin {
             at = @At("HEAD"))
     private void captureGlintColor(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
         AbsoluteEnchantmentGlintHandler.prepareGlintColor(stack);
+    }
+
+    @Inject(
+            method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/item/ItemRenderer;renderBakedItemModel(Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;)V",
+                    shift = At.Shift.AFTER
+            )
+    )
+    private void callPostRenderEvent(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
+        PostItemRenderCallback.EVENT.invoker().postRender(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model);
     }
 
     @Inject(method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At("HEAD"))
