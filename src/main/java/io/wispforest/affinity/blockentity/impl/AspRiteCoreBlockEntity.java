@@ -1,29 +1,17 @@
 package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
-import io.wispforest.affinity.recipe.AspenInfusionRecipe;
-import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.affinity.recipe.AspenInfusionRecipe;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
-
-    private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
-    @NotNull private ItemStack item = ItemStack.EMPTY;
 
     @Nullable private AspenInfusionRecipe cachedRecipe = null;
 
@@ -32,17 +20,7 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     }
 
     @Override
-    protected ActionResult handleNormalUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (this.world.isClient()) return ActionResult.SUCCESS;
-
-        return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
-                () -> this.item, stack -> this.item = stack, this::markDirty);
-    }
-
-    @Override
     protected boolean onRitualStart(RitualSetup setup) {
-        if (this.item.isEmpty()) return false;
-
         final var inventory = new AspenInfusionInventory(setup.resolveSocles(this.world), this.item);
         final var recipeOptional = this.world.getRecipeManager()
                 .getFirstMatch(AffinityRecipeTypes.ASPEN_INFUSION, inventory, this.world);
@@ -64,28 +42,6 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     @Override
     protected boolean onRitualInterrupted() {
         return false;
-    }
-
-    @Override
-    public void onBroken() {
-        super.onBroken();
-        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.getItem());
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.item = nbt.get(ITEM_KEY);
-    }
-
-    @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.put(ITEM_KEY, this.item);
-    }
-
-    public @NotNull ItemStack getItem() {
-        return item;
     }
 
     @Override

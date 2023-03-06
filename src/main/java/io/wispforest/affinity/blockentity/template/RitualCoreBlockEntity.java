@@ -4,21 +4,29 @@ import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
 import io.wispforest.affinity.client.particle.BezierPathEmitterParticle;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.misc.ReadOnlyInventory;
+import io.wispforest.affinity.misc.SingleElementDefaultedList;
 import io.wispforest.affinity.misc.util.BlockFinder;
+import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
+import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.util.ImplementedInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -31,9 +39,18 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, InquirableOutlineProvider {
+public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, InquirableOutlineProvider, ImplementedInventory, SidedInventory {
+
+    protected static final int[] AVAILABLE_SLOTS = new int[]{0};
+    protected static final int[] NO_AVAILABLE_SLOTS = new int[0];
+    protected static final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
 
     @Nullable protected RitualSetup cachedSetup = null;
+
+    @NotNull protected ItemStack item = ItemStack.EMPTY;
+    protected final SingleElementDefaultedList<ItemStack> inventoryProvider = new SingleElementDefaultedList<>(
+            ItemStack.EMPTY, () -> this.item, stack -> this.item = stack
+    );
 
     protected int ritualTick = -1;
     protected int ritualFailureTick = -1;
@@ -78,7 +95,11 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         if (player.isSneaking()) {
             return this.tryStartRitual();
         } else {
-            return this.handleNormalUse(player, hand, hit);
+            if (this.world.isClient()) return ActionResult.SUCCESS;
+            if (this.ritualTick >= 0) return ActionResult.PASS;
+
+            return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
+                    () -> this.item, stack -> this.item = stack, this::markDirty);
         }
     }
 
@@ -86,10 +107,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     public void onBroken() {
         super.onBroken();
         this.finishRitual(this::onRitualInterrupted, false);
-    }
-
-    protected ActionResult handleNormalUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        return ActionResult.PASS;
+        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.getItem());
     }
 
     protected void activateSocle(@NotNull RitualSocleBlockEntity socle) {
@@ -98,6 +116,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
     public ActionResult tryStartRitual() {
         if (this.world.isClient()) return ActionResult.SUCCESS;
+        if (this.item.isEmpty()) return ActionResult.PASS;
 
         var setup = examineSetup(this, false);
         if (setup.isEmpty()) return ActionResult.PASS;
@@ -167,6 +186,44 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         if (handlerImpl.get()) {
             this.markDirty();
         }
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.item = nbt.get(ITEM_KEY);
+    }
+
+    @Override
+    protected void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        nbt.put(ITEM_KEY, this.item);
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return this.inventoryProvider;
+    }
+
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        return this.ritualTick < 0
+                ? AVAILABLE_SLOTS
+                : NO_AVAILABLE_SLOTS;
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        return this.item.isEmpty() && this.ritualTick < 0;
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return this.ritualTick < 0;
+    }
+
+    public @NotNull ItemStack getItem() {
+        return item;
     }
 
     public BlockPos ritualCenterPos() {

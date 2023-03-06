@@ -5,12 +5,10 @@ import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
-import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.recipe.AberrantCallingRecipe;
-import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.block.BlockState;
@@ -19,7 +17,6 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -29,6 +26,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,10 +38,7 @@ import java.util.function.Supplier;
 
 public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
 
-    public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, 0.85, .5);
-
-    private static final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
-    private @NotNull ItemStack item = ItemStack.EMPTY;
+    public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, .85, .5);
 
     @Nullable private AberrantCallingRecipe cachedRecipe = null;
     @Nullable private AberrantCallingCoreBlock.CoreSet neighborPositions = null;
@@ -56,18 +51,14 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     }
 
     @Override
-    protected ActionResult handleNormalUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (this.world.isClient()) return ActionResult.SUCCESS;
+    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (this.ritualLock.isActive()) return ActionResult.PASS;
-
-        return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
-                () -> this.item, stack -> this.item = stack, this::markDirty);
+        return super.onUse(player, hand, hit);
     }
 
     @Override
     protected boolean onRitualStart(RitualSetup setup) {
         if (this.ritualLock.isActive()) return false;
-        if (this.item.isEmpty()) return false;
 
         this.neighborPositions = AberrantCallingCoreBlock.findValidCoreSet(this.world, this.pos);
         if (this.neighborPositions == null) return false;
@@ -214,6 +205,23 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     }
 
     @Override
+    public int[] getAvailableSlots(Direction side) {
+        return this.ritualLock.isActive()
+                ? NO_AVAILABLE_SLOTS
+                : super.getAvailableSlots(side);
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        return !this.ritualLock.isActive() && super.canInsert(slot, stack, dir);
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return !this.ritualLock.isActive() && super.canExtract(slot, stack, dir);
+    }
+
+    @Override
     public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
         var offset = this.ritualCenterPos().subtract(this.pos);
         return CuboidRenderer.Cuboid.of(new BlockPos(-10, 0, -10).add(offset), new BlockPos(11, 1, 11).add(offset));
@@ -251,25 +259,9 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         }
     }
 
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.item = nbt.get(ITEM_KEY);
-    }
-
-    @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.put(ITEM_KEY, this.item);
-    }
-
     private void createDissolveParticle(ItemStack item, BlockPos from, int duration) {
         AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, Vec3d.of(from).add(PARTICLE_OFFSET),
                 new AffinityParticleSystems.DissolveData(item, Vec3d.ofCenter(this.ritualCenterPos().up(2)), duration - 10, 16));
-    }
-
-    public @NotNull ItemStack getItem() {
-        return item;
     }
 
     public static class AberrantCallingInventory extends SocleInventory {

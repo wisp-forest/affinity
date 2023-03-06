@@ -4,35 +4,45 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.misc.SingleElementDefaultedList;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.util.ImplementedInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.poi.PointOfInterest;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 
 @SuppressWarnings("UnusedReturnValue")
-public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
+public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity, ImplementedInventory, SidedInventory {
+
+    private static final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
+    private static final int[] AVAILABLE_SLOTS = new int[]{0};
 
     public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, 1, .5);
 
-    private final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
-
     @NotNull private ItemStack item = ItemStack.EMPTY;
+    private final SingleElementDefaultedList<ItemStack> inventoryProvider = new SingleElementDefaultedList<>(
+            ItemStack.EMPTY, () -> this.item, stack -> this.item = stack
+    );
 
     private int extractionTicks = 0;
     private int extractionDuration = -1;
@@ -53,6 +63,9 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
 
             return ActionResult.SUCCESS;
         } else {
+            if (this.world.isClient) return ActionResult.SUCCESS;
+            if (this.ritualLock.isActive()) return ActionResult.PASS;
+
             return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
                     () -> this.item, stack -> this.item = stack, this::markDirty);
         }
@@ -126,5 +139,25 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
 
     public @NotNull ItemStack getItem() {
         return item;
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return this.inventoryProvider;
+    }
+
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        return AVAILABLE_SLOTS;
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        return this.item.isEmpty();
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return !this.ritualLock.isActive();
     }
 }

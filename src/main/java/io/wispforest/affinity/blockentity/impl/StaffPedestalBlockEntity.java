@@ -36,11 +36,11 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
     private static final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
-    private int time = 0;
-
     private final SingleElementDefaultedList<ItemStack> inventoryProvider = new SingleElementDefaultedList<>(
             ItemStack.EMPTY, () -> this.item, stack -> this.item = stack
     );
+
+    private int time = 0;
 
     public StaffPedestalBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.STAFF_PEDESTAL, pos, state);
