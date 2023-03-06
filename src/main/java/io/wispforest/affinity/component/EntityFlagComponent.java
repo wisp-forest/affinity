@@ -1,11 +1,13 @@
 package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.nbt.NbtCompound;
 
-public class EntityFlagComponent implements Component {
+public class EntityFlagComponent implements Component, AutoSyncedComponent {
 
     public static final int NO_DROPS = 0x1;
+    public static final int ITEM_GLOW = 0x2;
 
     private int flags = 0;
 

@@ -1,13 +1,15 @@
 package io.wispforest.affinity.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
 import io.wispforest.affinity.client.render.PostItemRenderCallback;
 import io.wispforest.affinity.item.ArtifactBladeItem;
+import io.wispforest.affinity.misc.MixinHooks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -45,7 +47,13 @@ public abstract class ItemRendererMixin {
             )
     )
     private void callPostRenderEvent(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
-        PostItemRenderCallback.EVENT.invoker().postRender(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model);
+        var item = MixinHooks.RENDER_ITEM != null && MixinHooks.RENDER_ITEM.present()
+                ? MixinHooks.RENDER_ITEM.get()
+                : null;
+
+        PostItemRenderCallback.EVENT.invoker().postRender(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model, item);
+
+        MixinHooks.RENDER_ITEM = null;
     }
 
     @Inject(method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At("HEAD"))

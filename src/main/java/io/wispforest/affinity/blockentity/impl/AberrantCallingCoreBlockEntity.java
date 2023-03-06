@@ -141,6 +141,8 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
                 this.world.random.nextTriangular(0.2, 0.115),
                 this.world.random.nextTriangular(0.0, 0.115)
         );
+        AffinityComponents.ENTITY_FLAGS.get(item).setFlag(EntityFlagComponent.ITEM_GLOW);
+        AffinityComponents.ENTITY_FLAGS.sync(item);
         this.world.spawnEntity(item);
         AffinityParticleSystems.ARCANE_FADE_CRAFT.spawn(this.world, pos);
 

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public abstract class EntityReference<E> {
 
-    private static final Map<Entity, List<Releasable<?>>> ENTITY_TO_REFERENCE = new WeakHashMap<>();
+    private static final ThreadLocal<Map<Entity, List<Releasable<?>>>> ENTITY_TO_REFERENCE = ThreadLocal.withInitial(WeakHashMap::new);
 
     // ---------
 
@@ -35,7 +35,7 @@ public abstract class EntityReference<E> {
         var ref = new EntityGroupReference<>(new ArrayList<>(entities));
 
         for (var entity : entities) {
-            CollectionUtil.getOrAddList(ENTITY_TO_REFERENCE, entity).add(ref);
+            CollectionUtil.getOrAddList(ENTITY_TO_REFERENCE.get(), entity).add(ref);
         }
 
         return ref;
@@ -43,16 +43,16 @@ public abstract class EntityReference<E> {
 
     public static <E extends Entity> EntityReference<E> of(E entity) {
         var ref = new SingleEntityReference<>(entity);
-        CollectionUtil.getOrAddList(ENTITY_TO_REFERENCE, entity).add(ref);
+        CollectionUtil.getOrAddList(ENTITY_TO_REFERENCE.get(), entity).add(ref);
         return ref;
     }
 
     @SuppressWarnings("unchecked")
     public static <E extends Entity> void dropAll(E entity) {
-        final var refs = (List<Releasable<E>>) (Object) ENTITY_TO_REFERENCE.get(entity);
+        final var refs = (List<Releasable<E>>) (Object) ENTITY_TO_REFERENCE.get().get(entity);
         if (refs != null) {
             refs.forEach(releasable -> releasable.release(entity));
-            if (refs.isEmpty()) ENTITY_TO_REFERENCE.remove(entity);
+            if (refs.isEmpty()) ENTITY_TO_REFERENCE.get().remove(entity);
         }
     }
 

@@ -14,12 +14,12 @@ import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
 import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
 import io.wispforest.affinity.client.screen.OuijaBoardScreen;
 import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
-import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.affinity.object.AffinityEntities;
-import io.wispforest.affinity.object.AffinityParticleTypes;
-import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
+import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.component.EntityFlagComponent;
+import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
+import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,8 +34,10 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
+import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
@@ -54,7 +56,26 @@ public class AffinityClient implements ClientModInitializer {
         this.registerColorProviders();
 
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.MANGROVE_BASKET, new MangroveBasketItemRenderer());
-        PostItemRenderCallback.EVENT.register(DragonDropItemRenderer::render);
+        PostItemRenderCallback.EVENT.register((stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
+            boolean hasItemGlow = item != null && AffinityComponents.ENTITY_FLAGS.get(item).hasFlag(EntityFlagComponent.ITEM_GLOW);
+            if (mode != ModelTransformation.Mode.GROUND || (!stack.isOf(AffinityItems.DRAGON_DROP) && !hasItemGlow)) return;
+
+            ((VertexConsumerProvider.Immediate) vertexConsumers).draw();
+
+            matrices.push();
+            matrices.translate(.5f, .5f, .5f);
+            matrices.scale(.01f, .01f, .01f);
+
+            LightLeakRenderer.render(
+                    matrices,
+                    vertexConsumers,
+                    hasItemGlow
+                            ? Color.WHITE
+                            : new Color(.5f, 0f, 1f, 1f)
+            );
+
+            matrices.pop();
+        });
 
         AethumNetworkLinkingHud.initialize();
         PlayerAethumHud.initialize();
