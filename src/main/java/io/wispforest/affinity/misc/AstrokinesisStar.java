@@ -39,7 +39,7 @@ public class AstrokinesisStar {
 
                 this.alpha = MathUtil.smoothstep(.8f, 2, 5 / Math.min(absPolarDifference, absAzimuthalDifference));
 
-                this.canBeFrozen = absPolarDifference <= 2 && absAzimuthalDifference <= 2;
+                this.canBeFrozen = absPolarDifference <= 5 && absAzimuthalDifference <= 5;
                 return;
             }
         }

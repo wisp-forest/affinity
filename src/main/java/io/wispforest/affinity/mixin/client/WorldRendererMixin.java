@@ -1,11 +1,14 @@
 package io.wispforest.affinity.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.wispforest.affinity.client.render.LightLeakRenderer;
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.item.AstrokinesisStaffItem;
 import io.wispforest.affinity.misc.AstrokinesisStar;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.util.Delta;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
@@ -56,6 +59,9 @@ public abstract class WorldRendererMixin {
     @Unique
     private float affinity$starAlpha = 0f;
 
+    @Unique
+    private float affinity$asteroidOriginYaw = 0f, affinity$asteroidOriginPitch = 0f, affinity$asteroidOriginAge = 0f;
+
     @Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Ljava/lang/Runnable;run()V", ordinal = 1))
     private void renderStuffInTheSky(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci) {
         if (!this.world.getDimensionEntry().isIn(AstrokinesisStaffItem.WHITELISTED_DIMENSIONS)) return;
@@ -75,11 +81,15 @@ public abstract class WorldRendererMixin {
 
             if (!AffinityEntityAddon.hasData(player, AstrokinesisStaffItem.ASTEROID_ORIGIN)) {
                 AffinityEntityAddon.setData(player, AstrokinesisStaffItem.ASTEROID_ORIGIN, player.prevYaw);
-            }
 
+                this.affinity$asteroidOriginYaw = (float) Math.toRadians(player.prevYaw % 360f);
+                this.affinity$asteroidOriginPitch = (float) Math.toRadians(Math.abs((90 + player.prevPitch) % 180));
+            }
         } else {
             AffinityEntityAddon.removeData(player, AstrokinesisStaffItem.ASTEROID_ORIGIN);
         }
+
+        this.affinity$asteroidOriginAge += Delta.compute(this.affinity$asteroidOriginAge, canFreezeStars ? 1f : 0f, delta);
 
         boolean performingAstrokinesis = player.getActiveItem().has(AstrokinesisStaffItem.PERFORMING_ASTROKINESIS);
         if (!canFreezeStars || !performingAstrokinesis) {
@@ -108,24 +118,22 @@ public abstract class WorldRendererMixin {
         var buffer = Tessellator.getInstance().getBuffer();
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
-        // TODO: this must respect the celestial zoomer
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(this.world.getSkyAngle(tickDelta) * -360f));
         for (var star : affinity$stars) {
             float polar = (float) Math.toRadians(star.polar());
             float azimuthal = (float) Math.toRadians(star.azimuthal());
 
-            float x = (float) (Math.sin(polar) * Math.cos(azimuthal));
-            float y = (float) Math.cos(polar);
-            float z = (float) (Math.sin(polar) * Math.sin(azimuthal));
+            var axis = MathUtil.sphericalPolarToEuclidean(polar, azimuthal, 1);
+            var point = new Vector3f(axis).mul(100);
 
-            var point = new Vector3f(x, y, z).normalize().mul(100);
             var other = new Vector3f(point).add(this.affinity$random.nextInt(100), this.affinity$random.nextInt(100), this.affinity$random.nextInt(100));
 
             var upOffset = new Vector3f(point).cross(other).normalize().mul(star.size());
-            var rightOffset = new Vector3f(upOffset).rotateAxis((float) (Math.PI / 2), x, y, z).normalize().mul(star.size());
+            var rightOffset = new Vector3f(upOffset).rotateAxis((float) (Math.PI / 2), axis.x, axis.y, axis.z).normalize().mul(star.size());
 
             float alpha = baseAlpha + (1 - baseAlpha) * star.alpha();
+            if (star.frozen) alpha *= Math.pow(1f - this.affinity$asteroidOriginAge, 3);
 
             buffer.vertex(matrices.peek().getPositionMatrix(), point.x + rightOffset.x, point.y + rightOffset.y, point.z + rightOffset.z)
                     .color(1, 1, 1, alpha)
@@ -141,11 +149,23 @@ public abstract class WorldRendererMixin {
                     .next();
         }
 
-        matrices.pop();
 
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         BufferRenderer.drawWithGlobalProgram(buffer.end());
         VertexBuffer.unbind();
+
+        var asteroidOrigin = MathUtil.sphericalPolarToEuclidean(this.affinity$asteroidOriginPitch, this.affinity$asteroidOriginYaw, 100);
+        var immediate = this.client.getBufferBuilders().getEntityVertexConsumers();
+
+        matrices.translate(asteroidOrigin.x, asteroidOrigin.y, asteroidOrigin.z);
+
+        float scale = .1f * this.affinity$asteroidOriginAge;
+        matrices.scale(scale, scale, scale);
+
+        LightLeakRenderer.render(matrices, immediate, new Color(1f, .65f, 0f, this.affinity$asteroidOriginAge));
+        immediate.draw();
+
+        matrices.pop();
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))

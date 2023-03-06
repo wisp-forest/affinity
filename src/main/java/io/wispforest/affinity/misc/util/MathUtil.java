@@ -100,6 +100,14 @@ public class MathUtil {
         return x * x * (3 - 2 * x);
     }
 
+    public static Vector3f sphericalPolarToEuclidean(float polar, float azimuthal, float radius) {
+        float x = (float) (Math.sin(polar) * Math.cos(azimuthal));
+        float y = (float) Math.cos(polar);
+        float z = (float) (Math.sin(polar) * Math.sin(azimuthal));
+
+        return new Vector3f(x, y, z).normalize().mul(radius);
+    }
+
     @Environment(EnvType.CLIENT)
     public static float proportionalApproach(float value, float targetValue, float minChange, float coefficient) {
         float diff = value - targetValue;
