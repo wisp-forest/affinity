@@ -47,7 +47,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "hasGlint", at = @At("HEAD"), cancellable = true)
     private void removeGlint(CallbackInfoReturnable<Boolean> cir) {
-        if (!((ItemStack) (Object) this).get(ArcaneFadeFluid.REMOVE_ENCHANTMENT_GLINT_KEY)) return;
+        if (!((ItemStack) (Object) this).getOr(ArcaneFadeFluid.REMOVE_ENCHANTMENT_GLINT_KEY, false)) return;
         cir.setReturnValue(false);
     }
 
