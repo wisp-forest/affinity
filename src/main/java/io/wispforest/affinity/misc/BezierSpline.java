@@ -26,7 +26,7 @@ public class BezierSpline {
     }
 
     private void compute(int resolution) {
-        final double step = 1d / resolution;
+        final double step = 1d / (resolution - 1);
         this.values = new Vec3d[resolution];
 
         for (int i = 0; i < resolution; i++) {

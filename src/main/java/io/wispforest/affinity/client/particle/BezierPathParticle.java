@@ -72,7 +72,7 @@ public class BezierPathParticle extends Particle {
         public Particle createParticle(BezierPathParticleEffect parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             final var particle = ((ParticleManagerInvoker) MinecraftClient.getInstance().particleManager)
                     .affinity$createParticle(parameters.effect(), x, y, z, velocityX, velocityY, velocityZ);
-            particle.setMaxAge(parameters.travelDuration() + 1);
+            particle.setMaxAge(parameters.travelDuration());
 
             return new BezierPathParticle(world, x, y, z, particle, parameters.splineEndpoint(), parameters.travelDuration(), parameters.randomPath());
         }
