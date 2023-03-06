@@ -55,7 +55,7 @@ public abstract class ShardBearingAethumNetworkMemberBlockEntity extends AethumN
         super.readNbt(nbt);
 
         this.shard = ItemStack.fromNbt(nbt.getCompound("Shard"));
-        this.setTierFromNbt(AttunedShardTiers.forItem(this.shard.getItem()));
+        this.setTierFromNbt(AttunedShardTier.forItem(this.shard.getItem()));
         this.updateTransferRateForTier();
     }
 

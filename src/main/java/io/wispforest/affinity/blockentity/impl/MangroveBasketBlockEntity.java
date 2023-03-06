@@ -2,6 +2,7 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.ChestType;
@@ -16,6 +17,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 public class MangroveBasketBlockEntity extends SyncedBlockEntity {
+
+    public static final NbtKey<BlockState> CONTAINED_STATE_KEY = new NbtKey<>("ContainedState", NbtKey.Type.COMPOUND.then(
+            nbt -> NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), nbt),
+            NbtHelper::fromBlockState
+    ));
+
+    public static final NbtKey<NbtCompound> CONTAINED_BLOCK_ENTITY_KEY = new NbtKey<>("ContainedBlockEntity", NbtKey.Type.COMPOUND);
+
     private BlockState containedState = null;
     private BlockEntity containedBlockEntity = null;
 
@@ -24,42 +33,45 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
     }
 
     public void init(BlockState state, BlockEntity blockEntity) {
-        containedState = state;
-        containedBlockEntity = blockEntity;
+        this.containedState = state;
+        this.containedBlockEntity = blockEntity;
 
-        if (containedState.contains(Properties.CHEST_TYPE))
-            containedState = containedState.with(Properties.CHEST_TYPE, ChestType.SINGLE);
+        if (this.containedState.contains(Properties.CHEST_TYPE)) {
+            this.containedState = this.containedState.with(Properties.CHEST_TYPE, ChestType.SINGLE);
+        }
 
-        containedBlockEntity.setWorld(world);
+        this.containedBlockEntity.setWorld(world);
     }
 
-    public BlockState getContainedState() {
-        return containedState;
+    public BlockState containedState() {
+        return this.containedState;
     }
 
-    public BlockEntity getContainedBlockEntity() {
-        return containedBlockEntity;
+    public BlockEntity containedBlockEntity() {
+        return this.containedBlockEntity;
     }
 
     public ItemStack toItem() {
-        ItemStack stack = new ItemStack(AffinityBlocks.MANGROVE_BASKET);
+        var stack = new ItemStack(AffinityBlocks.MANGROVE_BASKET);
+        var nbt = new NbtCompound();
 
-        NbtCompound nbt = new NbtCompound();
+        if (this.containedState != null) {
+            var newState = this.containedState;
 
-        if (containedState != null) {
-            var newState = containedState;
-
-            if (newState.contains(Properties.HORIZONTAL_FACING))
+            if (newState.contains(Properties.HORIZONTAL_FACING)) {
                 newState = newState.with(Properties.HORIZONTAL_FACING, Direction.NORTH);
+            }
 
-            if (newState.contains(Properties.FACING))
+            if (newState.contains(Properties.FACING)) {
                 newState = newState.with(Properties.FACING, Direction.NORTH);
+            }
 
-            nbt.put("ContainedState", NbtHelper.fromBlockState(newState));
+            nbt.put(CONTAINED_STATE_KEY, newState);
         }
 
-        if (containedBlockEntity != null)
-            nbt.put("ContainedBlockEntity", containedBlockEntity.createNbtWithId());
+        if (this.containedBlockEntity != null) {
+            nbt.put(CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId());
+        }
 
         BlockItem.setBlockEntityNbt(stack, this.getType(), nbt);
 
@@ -68,37 +80,36 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        containedState = NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), nbt.getCompound("ContainedState"));
-        containedBlockEntity = BlockEntity.createFromNbt(pos, containedState, nbt.getCompound("ContainedBlockEntity"));
+        this.containedState = nbt.get(CONTAINED_STATE_KEY);
 
-        containedBlockEntity.setWorld(world);
+        this.containedBlockEntity = BlockEntity.createFromNbt(this.pos, this.containedState, nbt.get(CONTAINED_BLOCK_ENTITY_KEY));
+        this.containedBlockEntity.setWorld(world);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        if (containedState != null)
-            nbt.put("ContainedState", NbtHelper.fromBlockState(containedState));
+        nbt.putIfNotNull(CONTAINED_STATE_KEY, this.containedState);
 
-        if (containedBlockEntity != null)
-            nbt.put("ContainedBlockEntity", containedBlockEntity.createNbtWithId());
+        if (this.containedBlockEntity != null) {
+            nbt.put(CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId());
+        }
     }
 
     public void onPlaced(LivingEntity placer) {
-        if (containedState == null)
-            return;
+        if (this.containedState == null) return;
+        var newState = this.containedState;
 
-        var newState = containedState;
-
-        if (newState.contains(Properties.HORIZONTAL_FACING))
+        if (newState.contains(Properties.HORIZONTAL_FACING)) {
             newState = newState.with(Properties.HORIZONTAL_FACING, placer.getHorizontalFacing().getOpposite());
+        }
 
-        if (newState.contains(Properties.FACING))
-            newState =
-                    newState.with(Properties.FACING, Direction.getEntityFacingOrder(placer)[0].getOpposite().getOpposite());
+        if (newState.contains(Properties.FACING)) {
+            newState = newState.with(Properties.FACING, Direction.getEntityFacingOrder(placer)[0].getOpposite().getOpposite());
+        }
 
-        if (!containedState.equals(newState)) {
-            containedState = newState;
-            markDirty();
+        if (!this.containedState.equals(newState)) {
+            this.containedState = newState;
+            this.markDirty();
         }
     }
 }

@@ -2,24 +2,22 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.MangroveBasketBlockEntity;
-import io.wispforest.affinity.misc.PreMangroveBasketCallback;
+import io.wispforest.affinity.misc.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -46,11 +44,8 @@ public class MangroveBasketItem extends BlockItem {
         if (BlockItem.getBlockEntityNbt(context.getStack()) == null) {
             var currentState = context.getWorld().getBlockState(context.getBlockPos());
 
-            if (currentState.isIn(MANGROVE_BASKET_BLACKLIST))
-                return null;
-
-            if (context.getWorld().getBlockEntity(context.getBlockPos()) == null)
-                return null;
+            if (currentState.isIn(MANGROVE_BASKET_BLACKLIST)) return null;
+            if (context.getWorld().getBlockEntity(context.getBlockPos()) == null) return null;
         }
 
         return super.getPlacementState(context);
@@ -59,14 +54,9 @@ public class MangroveBasketItem extends BlockItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         var nbt = BlockItem.getBlockEntityNbt(stack);
+        if (nbt == null) return;
 
-        if (nbt != null) {
-            var state = NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), nbt.getCompound("ContainedState"));
-
-            tooltip.add(Text.literal("• ")
-                    .formatted(Formatting.DARK_GRAY)
-                    .append(state.getBlock().getName()));
-        }
+        tooltip.add(nbt.get(MangroveBasketBlockEntity.CONTAINED_STATE_KEY).getBlock().getName().formatted(Formatting.GRAY));
     }
 
     @Override
@@ -77,20 +67,26 @@ public class MangroveBasketItem extends BlockItem {
             return super.place(context, state);
         }
 
-        BlockState old = context.getWorld().getBlockState(context.getBlockPos());
-        BlockEntity oldBlockEntity = context.getWorld().getBlockEntity(context.getBlockPos());
+        var world = context.getWorld();
+        var pos = context.getBlockPos();
 
-        if (!PreMangroveBasketCallback.EVENT.invoker().preMangroveBasket(context.getWorld(), context.getBlockPos(), old, oldBlockEntity)) {
+        var oldState = world.getBlockState(pos);
+        var oldBlockEntity = world.getBlockEntity(pos);
+
+        var stateRef = new MutableObject<>(oldState);
+        if (!BeforeMangroveBasketCaptureCallback.EVENT.invoker().beforeMangroveBasketCapture(world, pos, stateRef, oldBlockEntity)) {
             return false;
         }
 
-        context.getWorld().removeBlockEntity(context.getBlockPos());
+        oldState = stateRef.getValue();
+        world.removeBlockEntity(pos);
 
-        if (!context.getWorld().setBlockState(context.getBlockPos(), state, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD))
+        if (!world.setBlockState(pos, state, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD)) {
             return false;
+        }
 
-        if (context.getWorld().getBlockEntity(context.getBlockPos()) instanceof MangroveBasketBlockEntity newBlockEntity) {
-            newBlockEntity.init(old, oldBlockEntity);
+        if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity newBlockEntity) {
+            newBlockEntity.init(oldState, oldBlockEntity);
             return true;
         } else {
             return false;
@@ -100,7 +96,6 @@ public class MangroveBasketItem extends BlockItem {
     private static class BasketPlacementContext extends ItemPlacementContext {
         public BasketPlacementContext(ItemUsageContext context) {
             super(context);
-
             this.canReplaceExisting = true;
         }
     }

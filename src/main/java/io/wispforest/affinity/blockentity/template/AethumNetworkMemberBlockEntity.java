@@ -5,7 +5,7 @@ import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxStorage;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
-import io.wispforest.affinity.misc.PreMangroveBasketCallback;
+import io.wispforest.affinity.misc.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.network.FluxSyncHandler;
 import net.fabricmc.api.EnvType;
@@ -23,11 +23,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback, CrosshairStatProvider, PreMangroveBasketCallback {
+public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback, CrosshairStatProvider, BeforeMangroveBasketCaptureCallback {
 
     protected final Map<BlockPos, AethumLink.Type> links = new HashMap<>();
     protected final AethumFluxStorage fluxStorage = new AethumFluxStorage(this);
@@ -52,7 +53,7 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     }
 
     @Override
-    public boolean preMangroveBasket(World world, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+    public boolean beforeMangroveBasketCapture(World world, BlockPos pos, MutableObject<BlockState> state, BlockEntity blockEntity) {
         this.clearLinks();
         return true;
     }

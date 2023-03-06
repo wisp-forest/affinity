@@ -8,6 +8,7 @@ import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
 import io.wispforest.affinity.statuseffects.ImpendingDoomStatusEffect;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -30,7 +31,9 @@ public class MixinHooks {
     public static boolean INJECT_ASSEMBLY_AUGMENT_SCREEN = false;
     public static boolean FORCE_BLOCK_ENTITY_RENDERING = false;
     public static double EXTRA_TARGETING_MARGIN = 0;
+    public static @Nullable BlockEntity QUEUED_BLOCKENTITY = null;
     public static @Nullable EntityReference<ItemEntity> RENDER_ITEM = null;
+
     public static final DamageSource THREW_DOOM_POTION_SOURCE = new ImpendingDoomStatusEffect.DoomDamageSource("threw_doom_potion");
 
     public static final ThreadLocal<ItemStack> POTION_UTIL_STACK = new ThreadLocal<>();

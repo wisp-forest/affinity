@@ -17,7 +17,7 @@ import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.object.*;
-import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.ClientModInitializer;
@@ -108,7 +108,7 @@ public class AffinityClient implements ClientModInitializer {
         FluidRenderHandlerRegistry.INSTANCE.register(AffinityBlocks.Fluids.ARCANE_FADE, AffinityBlocks.Fluids.ARCANE_FADE_FLOWING, SimpleFluidRenderHandler.coloredWater(0xA86464));
 
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-            final var tier = AttunedShardTiers.forItem(stack.getItem());
+            final var tier = AttunedShardTier.forItem(stack.getItem());
             if (tier.isNone()) return;
 
             lines.add(Text.translatable("text.affinity.attuned_shard_max_transfer").formatted(Formatting.GRAY)

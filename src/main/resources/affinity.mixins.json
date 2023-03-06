@@ -46,6 +46,7 @@
     "ThrowablePotionItemMixin",
     "TippedArrowRecipeMixin",
     "TrackTargetGoalMixin",
+    "WorldChunkMixin",
     "WorldMixin",
     "WorldViewMixin",
     "access.BlockEntityTypeAccessor",

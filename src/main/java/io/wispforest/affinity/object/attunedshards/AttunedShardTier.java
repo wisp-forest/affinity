@@ -1,8 +1,12 @@
 package io.wispforest.affinity.object.attunedshards;
 
+import io.wispforest.affinity.item.AttunedShardItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The tier of a shard that can be used inside the
@@ -41,6 +45,13 @@ public interface AttunedShardTier {
      */
     default boolean isNone() {
         return this == AttunedShardTiers.NONE;
+    }
+
+    @NotNull
+    static AttunedShardTier forItem(Item item) {
+        if (item instanceof AttunedShardItem shardItem) return shardItem.tier();
+        if (item == Items.AMETHYST_SHARD) return AttunedShardTiers.CRUDE;
+        return AttunedShardTiers.NONE;
     }
 
 }

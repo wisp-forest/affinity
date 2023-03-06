@@ -6,7 +6,7 @@ import io.wispforest.affinity.enchantment.impl.BastionEnchantment;
 import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
 import io.wispforest.affinity.item.ArtifactBladeItem;
-import io.wispforest.affinity.misc.LivingEntityTickEvent;
+import io.wispforest.affinity.misc.LivingEntityTickCallback;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.*;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -73,7 +73,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTickEnd(CallbackInfo ci) {
-        LivingEntityTickEvent.EVENT.invoker().onTick((LivingEntity) (Object) this);
+        LivingEntityTickCallback.EVENT.invoker().onTick((LivingEntity) (Object) this);
     }
 
     @Inject(method = "applyDamage", at = @At("TAIL"))

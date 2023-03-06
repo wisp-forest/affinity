@@ -12,7 +12,6 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
-import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,6 +28,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -51,7 +51,6 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         super(AffinityBlocks.Entities.AETHUM_FLUX_CACHE, pos, state);
 
         this.fluxStorage.setFluxCapacity(128000);
-
         this.isPrimaryStorage = state.get(AethumFluxCacheBlock.PART).isBase;
     }
 
@@ -75,8 +74,9 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         }
 
         this.isPrimaryStorage = part.isBase;
+        this.tier = AttunedShardTier.forItem(this.shard.getItem());
 
-        if (this.isPrimaryStorage) updateChildCache();
+        if (this.isPrimaryStorage) this.updateChildCache();
         if (this.parentRef != null && parentRef.entity != this) parentRef.entity.updateChildCache();
     }
 
@@ -95,12 +95,12 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
             cacheEntity.tier = this.tier;
             cacheEntity.updateTransferRateForTier();
 
-            moveChildLinksOntoSelf(cacheEntity);
+            this.moveChildLinksOntoSelf(cacheEntity);
 
             this.childCache.add(cacheEntity);
         }
 
-        AffinityNetwork.CHANNEL.serverHandle(PlayerLookup.tracking(this)).send(new CacheChildrenUpdatePacket(this));
+        AffinityNetwork.CHANNEL.serverHandle(PlayerLookup.tracking(this)).send(new CacheDataUpdatePacket(this));
     }
 
     private void moveChildLinksOntoSelf(AethumFluxCacheBlockEntity child) {
@@ -118,35 +118,36 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         }
     }
 
-    private void moveSelfLinksOntoChild(AethumFluxCacheBlockEntity child) {
+    private void tryMoveSelfLinksOntoChild() {
+        if (!(this.world.getBlockEntity(this.pos.up()) instanceof AethumFluxCacheBlockEntity child)) return;
         child.isPrimaryStorage = true;
 
-        if (!links.isEmpty()) {
-            for (var link : linkedMembers()) {
+        if (!this.links.isEmpty()) {
+            for (var link : this.linkedMembers()) {
                 final var targetNode = Affinity.AETHUM_NODE.find(this.world, link, null);
                 if (targetNode == null) continue;
 
-                targetNode.onLinkTargetRemoved(link);
-                targetNode.createGenericLink(child.pos, links.get(link));
+                targetNode.onLinkTargetRemoved(this.pos);
+                targetNode.createGenericLink(child.pos, this.links.get(link));
             }
         }
 
         child.isPrimaryStorage = false;
+        this.links.clear();
     }
 
     @Override
     public void onBroken() {
+        this.tryMoveSelfLinksOntoChild();
         super.onBroken();
-        if (!(this.world.getBlockEntity(this.pos.up()) instanceof AethumFluxCacheBlockEntity child)) return;
-        moveSelfLinksOntoChild(child);
     }
 
     @Override
-    public boolean preMangroveBasket(World world, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        super.onBroken();
+    public boolean beforeMangroveBasketCapture(World world, BlockPos pos, MutableObject<BlockState> state, BlockEntity blockEntity) {
+        this.tryMoveSelfLinksOntoChild();
 
-        if (this.world.getBlockEntity(this.pos.up()) instanceof AethumFluxCacheBlockEntity child) {
-            moveSelfLinksOntoChild(child);
+        if (state.getValue().get(AethumFluxCacheBlock.PART) != AethumFluxCacheBlock.Part.STANDALONE) {
+            state.setValue(state.getValue().with(AethumFluxCacheBlock.PART, AethumFluxCacheBlock.Part.STANDALONE));
         }
 
         return true;
@@ -162,7 +163,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         if (this.tickedOnce) return;
 
         if (this.isPrimaryStorage) {
-            AffinityNetwork.CHANNEL.clientHandle().send(new RequestCacheChildrenPacket(this.pos));
+            AffinityNetwork.CHANNEL.clientHandle().send(new RequestCacheDataPacket(this.pos));
         }
 
         this.tickedOnce = true;
@@ -264,11 +265,12 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     }
 
     @Environment(EnvType.CLIENT)
-    public void readChildren(List<BlockPos> children) {
+    public void updateForStateChangeClient(List<BlockPos> children, AttunedShardTier tier) {
         if (this.childCache == null) this.childCache = new ArrayList<>();
         this.childCache.clear();
         this.parentRef = new ParentStorageReference(this, -1);
         this.isPrimaryStorage = true;
+        this.tier = tier;
 
         for (var childPos : children) {
             if (!(world.getBlockEntity(childPos) instanceof AethumFluxCacheBlockEntity child)) return;
@@ -314,7 +316,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
             this.shard = ItemStack.EMPTY;
             this.markDirty();
         } else {
-            if (this.shard.isEmpty() && !AttunedShardTiers.forItem(playerStack.getItem()).isNone()) {
+            if (this.shard.isEmpty() && !AttunedShardTier.forItem(playerStack.getItem()).isNone()) {
                 this.shard = ItemOps.singleCopy(playerStack);
                 ItemOps.decrementPlayerHandItem(player, hand);
 
@@ -331,7 +333,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
             }
         }
 
-        this.tier = AttunedShardTiers.forItem(this.shard.getItem());
+        this.tier = AttunedShardTier.forItem(this.shard.getItem());
         this.updateTransferRateForTier();
         if (!world.isClient) this.updateChildCache();
 
@@ -348,22 +350,22 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     }
 
     static {
-        AffinityNetwork.CHANNEL.registerServerbound(RequestCacheChildrenPacket.class, (message, access) -> {
+        AffinityNetwork.CHANNEL.registerServerbound(RequestCacheDataPacket.class, (message, access) -> {
             if (!(access.player().world.getBlockEntity(message.pos()) instanceof AethumFluxCacheBlockEntity cache)) return;
-            AffinityNetwork.CHANNEL.serverHandle(access.player()).send(new CacheChildrenUpdatePacket(cache));
+            AffinityNetwork.CHANNEL.serverHandle(access.player()).send(new CacheDataUpdatePacket(cache));
         });
 
-        AffinityNetwork.CHANNEL.registerClientbound(CacheChildrenUpdatePacket.class, (message, access) -> {
+        AffinityNetwork.CHANNEL.registerClientbound(CacheDataUpdatePacket.class, (message, access) -> {
             if (!(access.runtime().world.getBlockEntity(message.cachePos()) instanceof AethumFluxCacheBlockEntity cache)) return;
-            cache.readChildren(message.children());
+            cache.updateForStateChangeClient(message.children(), AttunedShardTier.forItem(message.shard.getItem()));
         });
     }
 
-    public record RequestCacheChildrenPacket(BlockPos pos) {}
+    public record RequestCacheDataPacket(BlockPos pos) {}
 
-    public record CacheChildrenUpdatePacket(BlockPos cachePos, List<BlockPos> children) {
-        public CacheChildrenUpdatePacket(AethumFluxCacheBlockEntity cache) {
-            this(cache.pos, cache.childCache == null ? Collections.emptyList() : cache.childCache.stream().map(BlockEntity::getPos).toList());
+    public record CacheDataUpdatePacket(BlockPos cachePos, List<BlockPos> children, ItemStack shard) {
+        public CacheDataUpdatePacket(AethumFluxCacheBlockEntity cache) {
+            this(cache.pos, cache.childCache == null ? Collections.emptyList() : cache.childCache.stream().map(BlockEntity::getPos).toList(), cache.shard);
         }
     }
 

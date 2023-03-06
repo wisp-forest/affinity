@@ -5,7 +5,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.component.AffinityComponents;
-import io.wispforest.affinity.misc.LivingEntityTickEvent;
+import io.wispforest.affinity.misc.LivingEntityTickCallback;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -184,7 +184,7 @@ public class KinesisStaffItem extends StaffItem {
             staff.performThrow(player, activeStack, message.extraData);
         });
 
-        LivingEntityTickEvent.EVENT.register(entity -> {
+        LivingEntityTickCallback.EVENT.register(entity -> {
             if (!AffinityEntityAddon.hasData(entity, MODIFIER_APPLIED_TICK)) return;
 
             if (entity.world.getTime() - AffinityEntityAddon.getData(entity, MODIFIER_APPLIED_TICK) > 2) {

@@ -2,7 +2,7 @@ package io.wispforest.affinity.enchantment.impl;
 
 import io.wispforest.affinity.enchantment.template.AbsoluteEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
-import io.wispforest.affinity.misc.LivingEntityTickEvent;
+import io.wispforest.affinity.misc.LivingEntityTickCallback;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.enchantment.EnchantmentTarget;
@@ -32,7 +32,7 @@ public class BastionEnchantment extends AbsoluteEnchantment implements Enchantme
     }
 
     static {
-        LivingEntityTickEvent.EVENT.register(entity -> {
+        LivingEntityTickCallback.EVENT.register(entity -> {
             if (!AffinityEntityAddon.hasData(entity, BASTION)) return;
 
             if (entity.world.getTime() % 10 == 0) {

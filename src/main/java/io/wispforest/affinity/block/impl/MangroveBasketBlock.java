@@ -3,6 +3,7 @@ package io.wispforest.affinity.block.impl;
 import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.MangroveBasketBlockEntity;
 import io.wispforest.affinity.item.MangroveBasketItem;
+import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -54,15 +55,13 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
         var stack = player.getStackInHand(hand);
 
         if (!stack.isOf(Items.FLINT_AND_STEEL)) return ActionResult.PASS;
+        if (!(world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity basket)) return ActionResult.PASS;
 
-        if (!(world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity blockEntity)) return ActionResult.PASS;
-
-        var newState = blockEntity.getContainedState();
-
+        var newState = basket.containedState();
         if (newState == null) return ActionResult.FAIL;
 
+        MixinHooks.QUEUED_BLOCKENTITY = basket.containedBlockEntity();
         world.setBlockState(pos, newState, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-        world.addBlockEntity(blockEntity.getContainedBlockEntity());
 
         world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.4F + 0.8F);
         AffinityParticleSystems.LIGHT_BLOCK.spawn(world, Vec3d.ofCenter(pos));
@@ -76,8 +75,8 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
         if (world.isClient) return;
         if (BlockItem.getBlockEntityNbt(itemStack) == null) return;
 
-        if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity blockEntity) {
-            blockEntity.onPlaced(placer);
+        if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity basket) {
+            basket.onPlaced(placer);
         }
     }
 
@@ -104,10 +103,9 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
 
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity blockEntity)
-            return blockEntity.toItem();
-
-        return super.getPickStack(world, pos, state);
+        return world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity basket
+                ? basket.toItem()
+                : super.getPickStack(world, pos, state);
     }
 
     @Nullable

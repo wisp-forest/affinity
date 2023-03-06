@@ -4,9 +4,9 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.LivingEntity;
 
-public interface LivingEntityTickEvent {
+public interface LivingEntityTickCallback {
 
-    Event<LivingEntityTickEvent> EVENT = EventFactory.createArrayBacked(LivingEntityTickEvent.class, callbacks -> entity -> {
+    Event<LivingEntityTickCallback> EVENT = EventFactory.createArrayBacked(LivingEntityTickCallback.class, callbacks -> entity -> {
         for (var callback : callbacks) {
             callback.onTick(entity);
         }

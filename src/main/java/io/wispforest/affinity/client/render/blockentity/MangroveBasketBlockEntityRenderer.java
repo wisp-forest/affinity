@@ -15,9 +15,9 @@ public class MangroveBasketBlockEntityRenderer implements BlockEntityRenderer<Ma
 
     @Override
     public void render(MangroveBasketBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getContainedState() == null) return;
+        if (entity.containedState() == null) return;
 
-        renderContents(entity.getContainedState(), entity.getContainedBlockEntity(), tickDelta, matrices, vertexConsumers, light, overlay);
+        renderContents(entity.containedState(), entity.containedBlockEntity(), tickDelta, matrices, vertexConsumers, light, overlay);
     }
 
     public static void renderContents(BlockState containedState, BlockEntity containedBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
