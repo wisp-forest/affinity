@@ -31,5 +31,10 @@
     "sounds": [
       "affinity:block/aberrant_calling_success"
     ]
+  },
+  "block.aberrant_calling_core.ritual_start": {
+    "sounds": [
+      "affinity:block/aberrant_calling_start"
+    ]
   }
 }

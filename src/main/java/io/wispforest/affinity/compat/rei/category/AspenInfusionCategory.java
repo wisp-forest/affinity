@@ -59,7 +59,7 @@ public class AspenInfusionCategory implements DisplayCategory<AspenInfusionDispl
         }
 
         inputContainer.child(adapter.wrap(Widgets::createSlot, slot -> {
-            slot.entries(display.getInputEntries().get(0)).disableBackground();
+            slot.entries(display.getInputEntries().get(0));
         }));
 
         // Arrow

@@ -100,7 +100,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         }
 
         AffinityParticleSystems.LAVA_ERUPTION.spawn(world, MathUtil.entityCenterPos(sacrifice));
-        WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_ABERRANT_CALLING_CORE_RITUAL_SUCCESS, SoundCategory.BLOCKS);
+        WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_ABERRANT_CALLING_CORE_RITUAL_START, SoundCategory.BLOCKS);
 
         if (sacrifice instanceof ServerPlayerEntity serverPlayer) {
             AffinityCriteria.SACRIFICED_TO_RITUAL.trigger(serverPlayer);

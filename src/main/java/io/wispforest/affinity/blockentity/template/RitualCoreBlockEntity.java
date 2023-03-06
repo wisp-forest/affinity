@@ -99,7 +99,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     public ActionResult tryStartRitual() {
         if (this.world.isClient()) return ActionResult.SUCCESS;
 
-        var setup = examineSetup((ServerWorld) this.world, this.pos, false);
+        var setup = examineSetup(this, false);
         if (setup.isEmpty()) return ActionResult.PASS;
 
         if (!this.onRitualStart(setup)) return ActionResult.PASS;
