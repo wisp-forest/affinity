@@ -5,15 +5,13 @@ import io.wispforest.affinity.compat.rei.category.*;
 import io.wispforest.affinity.compat.rei.display.*;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
-import io.wispforest.affinity.recipe.AspenInfusionRecipe;
-import io.wispforest.affinity.recipe.PotionMixingRecipe;
-import io.wispforest.affinity.recipe.ShapedAssemblyRecipe;
-import io.wispforest.affinity.recipe.ShapelessAssemblyRecipe;
+import io.wispforest.affinity.recipe.*;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.common.entry.EntryStack;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffect;
@@ -33,11 +31,17 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         registry.add(new AssemblyCategory());
         registry.add(new ContainingPotionsCategory());
         registry.add(new AspenInfusionCategory());
+        registry.add(new AberrantCallingCategory());
         registry.add(new ArcaneFadingCategory());
 
         registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(Blocks.SPORE_BLOSSOM), EntryStacks.of(AffinityBlocks.BREWING_CAULDRON));
 
         registry.addWorkstations(AffinityReiCommonPlugin.ASPEN_INFUSION, EntryStacks.of(AffinityBlocks.ASP_RITE_CORE));
+        registry.addWorkstations(AffinityReiCommonPlugin.ABERRANT_CALLING, EntryStacks.of(AffinityBlocks.ABERRANT_CALLING_CORE));
+        for (var item : Registries.ITEM.iterateEntries(AberrantCallingCategory.RECIPE_RITUAL_SOCLE_PREVIEW)) {
+            registry.addWorkstations(AffinityReiCommonPlugin.ASPEN_INFUSION, EntryIngredients.of(item.value()));
+            registry.addWorkstations(AffinityReiCommonPlugin.ABERRANT_CALLING, EntryIngredients.of(item.value()));
+        }
 
         registry.addWorkstations(AffinityReiCommonPlugin.ASSEMBLY, EntryStacks.of(AffinityBlocks.ASSEMBLY_AUGMENT), EntryStacks.of(Blocks.CRAFTING_TABLE));
 
@@ -48,6 +52,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
     public void registerDisplays(DisplayRegistry registry) {
         registry.registerFiller(PotionMixingRecipe.class, PotionMixingDisplay::new);
         registry.registerFiller(AspenInfusionRecipe.class, AspenInfusionDisplay::new);
+        registry.registerFiller(AberrantCallingRecipe.class, AberrantCallingDisplay::new);
 
         registry.registerFiller(ShapedAssemblyRecipe.class, ShapedAssemblyDisplay::new);
         registry.registerFiller(ShapelessAssemblyRecipe.class, ShapelessAssemblyDisplay::new);

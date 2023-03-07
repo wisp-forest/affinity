@@ -23,10 +23,6 @@
     "item": "minecraft:barrier"
   },
   "entity": {
-    "id": "minecraft:bee",
-    "data": {
-      "CustomName": "{\"text\": \"Yeet\"}",
-      "Health": 0
-    }
+    "id": "minecraft:bee"
   }
 }

@@ -1,5 +1,6 @@
 package io.wispforest.affinity.recipe;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 import io.wispforest.affinity.blockentity.impl.AberrantCallingCoreBlockEntity;
 import io.wispforest.affinity.misc.util.JsonUtil;
@@ -25,8 +26,8 @@ import java.util.Optional;
 
 public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlockEntity.AberrantCallingInventory> {
 
-    private final List<Ingredient> coreInputs;
-    private final EntityType<?> entityType;
+    public final List<Ingredient> coreInputs;
+    public final EntityType<?> entityType;
     @Nullable private final NbtCompound entityNbt;
 
     private final ItemStack output;
@@ -39,7 +40,7 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
                                     int duration,
                                     ItemStack output) {
         super(id, inputs, duration);
-        this.coreInputs = coreInputs;
+        this.coreInputs = ImmutableList.copyOf(coreInputs);
         this.entityType = entityType;
         this.entityNbt = entityNbt;
         this.output = output;
@@ -61,6 +62,12 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
     @Override
     public ItemStack getOutput() {
         return this.output.copy();
+    }
+
+    public @Nullable NbtCompound entityNbt() {
+        return this.entityNbt != null
+                ? this.entityNbt.copy()
+                : null;
     }
 
     @Override
