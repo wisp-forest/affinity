@@ -64,7 +64,12 @@ public class AffinityClient implements ClientModInitializer {
 
             matrices.push();
             matrices.translate(.5f, .5f, .5f);
-            matrices.scale(.01f, .01f, .01f);
+
+            if (model.hasDepth()) {
+                matrices.scale(.03f, .03f, .03f);
+            } else {
+                matrices.scale(.01f, .01f, .01f);
+            }
 
             LightLeakRenderer.render(
                     matrices,
