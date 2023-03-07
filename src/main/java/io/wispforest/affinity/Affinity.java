@@ -46,10 +46,10 @@ public class Affinity implements ModInitializer {
         FieldRegistrationHandler.register(AffinityEntities.class, MOD_ID, false);
         FieldRegistrationHandler.register(AffinityEntityAttributes.class, MOD_ID, false);
         FieldRegistrationHandler.register(AffinityParticleTypes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinitySoundEvents.class, MOD_ID, false);
         FieldRegistrationHandler.register(AffinityRecipeTypes.class, MOD_ID, true);
         FieldRegistrationHandler.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
 
+        FieldRegistrationHandler.processSimple(AffinitySoundEvents.class, false);
         FieldRegistrationHandler.processSimple(AffinityCriteria.class, false);
 
         AffinityStatusEffects.register();

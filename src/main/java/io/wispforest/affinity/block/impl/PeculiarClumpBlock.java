@@ -21,7 +21,6 @@ public class PeculiarClumpBlock extends Block {
 
     public PeculiarClumpBlock() {
         super(FabricBlockSettings.copyOf(Blocks.STONE));
-        WAS_MINED_CORRECTLY.defaultReturnValue(false);
     }
 
     @Override

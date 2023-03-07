@@ -1,12 +1,4 @@
 {
-  "block.peculiar_clump.resonance": {
-    "sounds": [
-      "affinity:block/peculiar_clump_resonance_1",
-      "affinity:block/peculiar_clump_resonance_2",
-      "affinity:block/peculiar_clump_resonance_3",
-      "affinity:block/peculiar_clump_resonance_4"
-    ]
-  },
   "item.artifact_blade.smash": {
     "sounds": [
       "affinity:item/artifact_blade_smash"
@@ -22,11 +14,6 @@
       "affinity:item/satiating_potion_start_drinking"
     ]
   },
-  "block.ritual_socle.activate": {
-    "sounds": [
-      "affinity:block/ritual_socle_activate"
-    ]
-  },
   "block.aberrant_calling_core.ritual_success": {
     "sounds": [
       "affinity:block/aberrant_calling_success"
@@ -35,6 +22,16 @@
   "block.aberrant_calling_core.ritual_start": {
     "sounds": [
       "affinity:block/aberrant_calling_start"
+    ]
+  },
+  "block.asp_rite_core.craft": {
+    "sounds": [
+      "affinity:block/aspen_infusion_craft"
+    ]
+  },
+  "block.asp_rite_core.active": {
+    "sounds": [
+      "affinity:block/aspen_infusion_active"
     ]
   }
 }

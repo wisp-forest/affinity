@@ -4,9 +4,12 @@ import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.affinity.recipe.AspenInfusionRecipe;
+import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
@@ -36,14 +39,21 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected void doRitualTick() {
-        if (this.ritualTick % 10 != 0) return;
-        AffinityParticleSystems.ASPEN_INFUSION_ACTIVE.spawn(this.world, Vec3d.ofCenter(this.pos, .85f));
+        if (this.ritualTick % 10 == 0) {
+            AffinityParticleSystems.ASPEN_INFUSION_ACTIVE.spawn(this.world, Vec3d.ofCenter(this.pos, .85f));
+        }
+
+        if (this.ritualTick % 80 == 0) {
+            WorldOps.playSound(this.world, this.pos, AffinitySoundEvents.BLOCK_ASP_RITE_CORE_ACTIVE, SoundCategory.BLOCKS);
+        }
     }
 
     @Override
     protected boolean onRitualCompleted() {
         this.item = this.cachedRecipe.getOutput();
+
         AffinityParticleSystems.ASPEN_INFUSION_CRAFT.spawn(this.world, Vec3d.ofCenter(this.pos, 1f));
+        WorldOps.playSound(this.world, this.pos, AffinitySoundEvents.BLOCK_ASP_RITE_CORE_CRAFT, SoundCategory.BLOCKS);
 
         return true;
     }
