@@ -1,6 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
-import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
+import io.wispforest.affinity.block.template.RitualCoreBlock;
 import io.wispforest.affinity.blockentity.impl.AspRiteCoreBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class AspRiteCoreBlock extends AethumNetworkMemberBlock {
+public class AspRiteCoreBlock extends RitualCoreBlock {
 
     private static final VoxelShape SHAPE = Stream.of(
             Block.createCuboidShape(5, 9, 11, 11, 13, 14),

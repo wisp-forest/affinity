@@ -1,6 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
-import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
+import io.wispforest.affinity.block.template.RitualCoreBlock;
 import io.wispforest.affinity.blockentity.impl.AberrantCallingCoreBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
@@ -35,7 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class AberrantCallingCoreBlock extends AethumNetworkMemberBlock {
+public class AberrantCallingCoreBlock extends RitualCoreBlock {
 
     private static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
 
