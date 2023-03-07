@@ -103,7 +103,7 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
 
         ItemEntity catalyst = null;
         for (var item : items) {
-            if (!catalystPredicate.test(item)) continue;
+            if (input == item || !catalystPredicate.test(item)) continue;
 
             catalyst = item;
             break;
