@@ -2,11 +2,13 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.recipe.AspenInfusionRecipe;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -22,8 +24,7 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     @Override
     protected boolean onRitualStart(RitualSetup setup) {
         final var inventory = new AspenInfusionInventory(setup.resolveSocles(this.world), this.item);
-        final var recipeOptional = this.world.getRecipeManager()
-                .getFirstMatch(AffinityRecipeTypes.ASPEN_INFUSION, inventory, this.world);
+        final var recipeOptional = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASPEN_INFUSION, inventory, this.world);
 
         if (recipeOptional.isEmpty()) return false;
         this.cachedRecipe = recipeOptional.get();
@@ -34,8 +35,16 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     }
 
     @Override
+    protected void doRitualTick() {
+        if (this.ritualTick % 10 != 0) return;
+        AffinityParticleSystems.ASPEN_INFUSION_ACTIVE.spawn(this.world, Vec3d.ofCenter(this.pos, .85f));
+    }
+
+    @Override
     protected boolean onRitualCompleted() {
         this.item = this.cachedRecipe.getOutput();
+        AffinityParticleSystems.ASPEN_INFUSION_CRAFT.spawn(this.world, Vec3d.ofCenter(this.pos, 1f));
+
         return true;
     }
 
@@ -43,9 +52,6 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     protected boolean onRitualInterrupted() {
         return false;
     }
-
-    @Override
-    protected void doRitualTick() {}
 
     public static class AspenInfusionInventory extends SocleInventory {
 

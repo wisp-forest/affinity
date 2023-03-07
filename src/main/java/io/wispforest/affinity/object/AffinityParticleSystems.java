@@ -70,7 +70,7 @@ public class AffinityParticleSystems {
 
         world.addParticle(new GenericEmitterParticleEffect(
                 new ItemStackParticleEffect(ParticleTypes.ITEM, data.suckWhat),
-                new Vec3d(.05f, 0.2f, .05f), 1, .15f, true, data.duration
+                new Vec3d(.05, 0.2, .05), 1, .15f, true, data.duration
         ), pos.x, pos.y, pos.z, 0, 0, 0);
     });
 
@@ -158,6 +158,23 @@ public class AffinityParticleSystems {
         ClientParticles.randomizeVelocity(.15f);
         ClientParticles.setParticleCount(15);
         ClientParticles.spawn(ParticleTypes.FIREWORK, world, pos, .25f);
+    });
+
+    public static final ParticleSystem<Void> ASPEN_INFUSION_ACTIVE = CONTROLLER.register(Void.class, (world, pos, data) -> {
+        ClientParticles.spawn(
+                new GenericEmitterParticleEffect(ParticleTypes.ENCHANT, new Vec3d(.2, .2, .2), 1, .25f, true, 10),
+                world, pos, 0
+        );
+    });
+
+    public static final ParticleSystem<Void> ASPEN_INFUSION_CRAFT = CONTROLLER.register(Void.class, (world, pos, data) -> {
+        ClientParticles.randomizeVelocity(.15f);
+        ClientParticles.setParticleCount(10);
+        ClientParticles.spawn(ParticleTypes.FIREWORK, world, pos, .25f);
+
+        ClientParticles.randomizeVelocity(.15f);
+        ClientParticles.setParticleCount(15);
+        ClientParticles.spawn(new DustColorTransitionParticleEffect(new Vector3f(.25f, .25f, 1f), new Vector3f(1f, .5f, .25f), 1f), world, pos.subtract(0, .1, 0), .35f);
     });
 
     public static final ParticleSystem<Integer> AETHUM_OVERCHARGE = CONTROLLER.register(Integer.class, (world, pos, entityId) -> {

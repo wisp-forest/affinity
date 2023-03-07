@@ -26,9 +26,9 @@ public class GenericEmitterParticle extends NoRenderParticle {
             final var velocityParam = this.parameters.emitVelocity();
             final var velocity = this.parameters.randomizeVelocity()
                     ? new Vec3d(
-                    this.random.nextFloat() * velocityParam.x,
-                    this.random.nextFloat() * velocityParam.y,
-                    this.random.nextFloat() * velocityParam.z)
+                    this.random.nextFloat() * velocityParam.x * 2 - velocityParam.z,
+                    this.random.nextFloat() * velocityParam.y * 2 - velocityParam.y,
+                    this.random.nextFloat() * velocityParam.z * 2 - velocityParam.z)
                     : velocityParam;
 
             this.world.addParticle(

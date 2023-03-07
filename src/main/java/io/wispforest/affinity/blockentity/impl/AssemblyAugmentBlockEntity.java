@@ -81,7 +81,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
 
         if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipe.get().getOutput())) {
             if (this.craftingTick % 20 == 0) {
-                AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, 0f), new AffinityParticleSystems.BezierVortexData(
+                AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, -.2f), new AffinityParticleSystems.BezierVortexData(
                         new GenericEmitterParticleEffect(
                                 new DustColorTransitionParticleEffect(MathUtil.splitRGBToVec3f(0x865DFF), MathUtil.splitRGBToVec3f(0xFFA3FD), 1f),
                                 new Vec3d(.05, .05, .05),
