@@ -3,12 +3,14 @@ package io.wispforest.affinity.blockentity.template;
 import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
 import io.wispforest.affinity.client.particle.BezierPathEmitterParticle;
 import io.wispforest.affinity.client.render.CuboidRenderer;
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.ReadOnlyInventory;
 import io.wispforest.affinity.misc.SingleElementDefaultedList;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
+import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import io.wispforest.owo.nbt.NbtKey;
@@ -27,6 +29,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -232,7 +235,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
     @Override
     public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
-        return CuboidRenderer.Cuboid.symmetrical(10, 0, 10);
+        return CuboidRenderer.Cuboid.symmetrical(8, 0, 8);
     }
 
     public static RitualSetup examineSetup(RitualCoreBlockEntity core, boolean includeEmptySocles) {
@@ -241,10 +244,10 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
     @SuppressWarnings("ConstantConditions")
     public static RitualSetup examineSetup(ServerWorld world, BlockPos pos, boolean includeEmptySocles) {
-        var soclePOIs = BlockFinder.findPoi(world, AffinityPoiTypes.RITUAL_SOCLE, pos, 10)
+        var soclePOIs = BlockFinder.findPoi(world, AffinityPoiTypes.RITUAL_SOCLE, pos, 8)
                 .filter(poi -> poi.getPos().getY() == pos.getY()).toList();
 
-        double stability = 75;
+        double stability = AffinityComponents.CHUNK_AETHUM.get(world.getChunk(pos)).aethumAt(pos.getX(), pos.getZ());
 
         List<Double> allDistances = new ArrayList<>((soclePOIs.size() - 1) * soclePOIs.size());
 
@@ -296,7 +299,11 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
             }
         }
 
-        return new RitualSetup(stability, socles);
+        if (world.getBlockState(pos.down()).isOf(AffinityBlocks.INVERSION_STONE)) {
+            stability = 100 - stability;
+        }
+
+        return new RitualSetup(MathHelper.clamp(stability, 0, 100), socles);
     }
 
     public static final class RitualSetup {

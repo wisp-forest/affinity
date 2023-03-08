@@ -81,6 +81,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AZALEA_TRAPDOOR = new TrapdoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR), SoundEvents.BLOCK_WOODEN_DOOR_CLOSE, SoundEvents.BLOCK_WOODEN_DOOR_OPEN);
     public static final Block AZALEA_FENCE_GATE = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), SoundEvents.BLOCK_FENCE_GATE_CLOSE, SoundEvents.BLOCK_FENCE_GATE_OPEN);
     public static final Block THE_SKY = new Block(FabricBlockSettings.copyOf(Blocks.STONE));
+    public static final Block INVERSION_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE));
 
     @NoBlockItem public static final FluidBlock ARCANE_FADE = new ArcaneFadeBlock();
 

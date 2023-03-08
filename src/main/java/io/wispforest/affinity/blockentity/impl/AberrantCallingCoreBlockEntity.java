@@ -224,7 +224,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     @Override
     public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
         var offset = this.ritualCenterPos().subtract(this.pos);
-        return CuboidRenderer.Cuboid.of(new BlockPos(-10, 0, -10).add(offset), new BlockPos(11, 1, 11).add(offset));
+        return CuboidRenderer.Cuboid.of(new BlockPos(-8, 0, -8).add(offset), new BlockPos(9, 1, 9).add(offset));
     }
 
     @Override

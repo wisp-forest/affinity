@@ -65,7 +65,7 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
                 int stability20 = (int) Math.round(stability * 20);
                 String stabilityBar = "|".repeat(stability20) + "§" + "|".repeat(20 - stability20);
 
-                var text = TextOps.withColor("# §" + setup.socles.size() + " | §🛡 " + stabilityBar + "",
+                var text = TextOps.withColor("# §" + setup.socles.size() + " | §🛡 " + stabilityBar + " ",
                         0xD885A3, TextOps.color(Formatting.GRAY), 0x1572A1, TextOps.color(Formatting.GRAY));
                 player.sendMessage(text, true);
 
