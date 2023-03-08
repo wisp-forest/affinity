@@ -138,7 +138,7 @@ public class CollectionStaffItem extends StaffItem {
     }
 
     private static Collection<ItemEntity> getItems(LivingEntity entity) {
-        var box = new Box(entity.getBlockPos()).expand(5, 3, 5);
+        var box = new Box(entity.getBlockPos()).expand(9, 3, 9);
         return entity.world.getEntitiesByClass(ItemEntity.class, box, itemEntity -> !itemEntity.cannotPickup());
     }
 
