@@ -3,6 +3,7 @@ package io.wispforest.affinity.statuseffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.registry.tag.BlockTags;
 
 public class ResonantStatusEffect extends AffinityStatusEffect {
 
@@ -19,6 +20,7 @@ public class ResonantStatusEffect extends AffinityStatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+        if (entity.world.getBlockState(entity.getBlockPos().down()).isIn(BlockTags.DAMPENS_VIBRATIONS)) return;
         entity.damage(RESONATING, amplifier + 1);
     }
 }
