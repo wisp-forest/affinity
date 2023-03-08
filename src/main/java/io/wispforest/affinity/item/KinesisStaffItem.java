@@ -133,7 +133,7 @@ public class KinesisStaffItem extends StaffItem {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
         tooltip.add(Text.translatable(
-                this.getTranslationKey() + ".tooltip.consumption_per_throw",
+                AffinityItems.KINESIS_STAFF.getTranslationKey() + ".tooltip.consumption_per_throw",
                 ENTITY_THROW_COST
         ));
     }
