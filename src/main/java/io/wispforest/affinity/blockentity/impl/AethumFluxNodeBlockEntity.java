@@ -215,40 +215,40 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     }
 
     @Override
-    public AethumLink.Result createGenericLink(BlockPos pos, AethumLink.Type type) {
-        if (isLinked(pos)) return AethumLink.Result.ALREADY_LINKED;
+    public LinkResult createGenericLink(BlockPos pos, AethumLink.Type type) {
+        if (isLinked(pos)) return LinkResult.ALREADY_LINKED;
 
         var member = Affinity.AETHUM_MEMBER.find(world, pos, null);
-        if (member == null) return AethumLink.Result.NO_TARGET;
+        if (member == null) return LinkResult.NO_TARGET;
 
-        if (this.links.size() >= this.maxConnections()) return AethumLink.Result.TOO_MANY_LINKS;
-        if (!this.isInRange(pos)) return AethumLink.Result.OUT_OF_RANGE;
+        if (this.links.size() >= this.maxConnections()) return LinkResult.TOO_MANY_LINKS;
+        if (!this.isInRange(pos)) return LinkResult.OUT_OF_RANGE;
 
         if (member instanceof AethumNetworkNode node) {
-            if (node.isLinked(this.pos)) return AethumLink.Result.ALREADY_LINKED;
+            if (node.isLinked(this.pos)) return LinkResult.ALREADY_LINKED;
 
             var result = node.addNodeLink(this.pos);
-            if (result != AethumLink.Result.LINK_CREATED) return result;
+            if (result != LinkResult.LINK_CREATED) return result;
         } else {
-            if (!member.acceptsLinks()) return AethumLink.Result.NO_TARGET;
-            if (!member.addLinkParent(this.pos, type)) return AethumLink.Result.ALREADY_LINKED;
+            if (!member.acceptsLinks()) return LinkResult.NO_TARGET;
+            if (!member.addLinkParent(this.pos, type)) return LinkResult.ALREADY_LINKED;
         }
 
         this.links.put(pos.toImmutable(), type);
         this.cachedMembers = null;
         this.markDirty(true);
 
-        return AethumLink.Result.LINK_CREATED;
+        return LinkResult.LINK_CREATED;
     }
 
     @Override
-    public AethumLink.Result destroyLink(BlockPos pos) {
-        if (!isLinked(pos)) return AethumLink.Result.NOT_LINKED;
+    public LinkResult destroyLink(BlockPos pos) {
+        if (!isLinked(pos)) return LinkResult.NOT_LINKED;
 
         var member = Affinity.AETHUM_MEMBER.find(world, pos, null);
-        if (member == null) return AethumLink.Result.NO_TARGET;
+        if (member == null) return LinkResult.NO_TARGET;
 
-        if (!member.isLinked(this.pos)) return AethumLink.Result.NOT_LINKED;
+        if (!member.isLinked(this.pos)) return LinkResult.NOT_LINKED;
 
         if (member instanceof AethumNetworkNode node) {
             node.removeNodeLink(this.pos);
@@ -260,17 +260,17 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         this.cachedMembers = null;
         this.markDirty(true);
 
-        return AethumLink.Result.LINK_DESTROYED;
+        return LinkResult.LINK_DESTROYED;
     }
 
     @Override
-    public AethumLink.Result addNodeLink(BlockPos pos) {
-        if (!this.isInRange(pos)) return AethumLink.Result.OUT_OF_RANGE;
+    public LinkResult addNodeLink(BlockPos pos) {
+        if (!this.isInRange(pos)) return LinkResult.OUT_OF_RANGE;
 
         this.links.put(pos.toImmutable(), AethumLink.Type.NORMAL);
         this.markDirty(true);
 
-        return AethumLink.Result.LINK_CREATED;
+        return LinkResult.LINK_CREATED;
     }
 
     protected boolean isInRange(BlockPos pos) {

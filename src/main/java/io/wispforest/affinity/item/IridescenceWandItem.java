@@ -1,11 +1,6 @@
 package io.wispforest.affinity.item;
 
-import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.aethumflux.net.AethumLink;
-import io.wispforest.affinity.aethumflux.net.AethumLink.Element;
-import io.wispforest.affinity.aethumflux.net.AethumLink.Type;
-import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
-import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
+import io.wispforest.affinity.blockentity.template.LinkableBlockEntity;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.nbt.NbtKey;
@@ -25,7 +20,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -60,7 +54,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public boolean shouldHandleInteraction(World world, BlockPos pos, BlockState state) {
-        return Affinity.AETHUM_MEMBER.find(world, pos, null) != null;
+        return world.getBlockEntity(pos) instanceof LinkableBlockEntity;
     }
 
     @Override
@@ -92,45 +86,44 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         final var stack = context.getStack();
         final var world = context.getWorld();
         final var pos = context.getBlockPos();
-
         final var mode = stack.get(MODE);
 
-        var nextMember = Affinity.AETHUM_MEMBER.find(world, pos, null);
-        if (nextMember == null) return ActionResult.PASS;
-        if (!nextMember.acceptsLinks()) {
-            final var isNode = nextMember instanceof AethumNetworkNode;
-            if (mode == Mode.BIND && isNode) {
-                context.getPlayer().sendMessage(Text.translatable(AethumLink.Result.TOO_MANY_LINKS.translationKey), true);
-                stack.delete(LINK_DATA);
+        if (!(world.getBlockEntity(pos) instanceof LinkableBlockEntity linkable)) return ActionResult.PASS;
+        var blockName = world.getBlockState(pos).getBlock().getName();
+
+        var storedPos = this.getStoredPos(stack);
+        if (Objects.equals(storedPos, context.getBlockPos())) return ActionResult.PASS;
+
+        if (storedPos == null) {
+            var data = new NbtCompound();
+            var result = linkable.beginLink(context.getPlayer(), data);
+            if (result.isPresent()) {
+                context.getPlayer().sendMessage(Text.translatable(result.get(), blockName), true);
                 return ActionResult.SUCCESS;
-            } else if (!isNode) {
+            }
+
+            data.putLong("Position", pos.asLong());
+            stack.put(LINK_DATA, data);
+
+            return ActionResult.SUCCESS;
+        } else {
+            var result = mode == Mode.BIND
+                    ? linkable.finishLink(context.getPlayer(), storedPos, stack.get(LINK_DATA))
+                    : linkable.destroyLink(context.getPlayer(), storedPos, stack.get(LINK_DATA));
+
+            stack.delete(LINK_DATA);
+            if (result.isPresent()) {
+                result.map(LinkableBlockEntity.LinkResult::messageTranslationKey).ifPresentOrElse(translationKey -> {
+                    context.getPlayer().sendMessage(Text.translatable(translationKey, blockName), true);
+                }, () -> {
+                    context.getPlayer().playSound(AffinitySoundEvents.ITEM_IRIDESCENCE_WAND_BIND, 1, .75f + world.random.nextFloat() * .5f);
+                });
+
+                return ActionResult.SUCCESS;
+            } else {
                 return ActionResult.PASS;
             }
         }
-
-        if (Objects.equals(getStoredPos(stack), context.getBlockPos())) return ActionResult.PASS;
-        var existingElement = getLink(stack);
-
-        if (existingElement == null) {
-            var linkType = context.getPlayer().isSneaking() ? nextMember.specialLinkType() : Type.NORMAL;
-
-            beginLink(stack, pos, Element.of(nextMember), linkType);
-            return ActionResult.SUCCESS;
-        }
-
-        if (existingElement == Element.MEMBER && Element.of(nextMember) == Element.MEMBER) {
-            return ActionResult.PASS;
-        }
-
-        var result = mode.processor.run(stack, world, existingElement, pos, nextMember);
-        if (result.translationKey != null) {
-            context.getPlayer().sendMessage(Text.translatable(result.translationKey, world.getBlockState(pos).getBlock().getName()), true);
-        }
-
-        stack.delete(LINK_DATA);
-
-        context.getPlayer().playSound(AffinitySoundEvents.ITEM_IRIDESCENCE_WAND_BIND, 1, .75f + world.random.nextFloat() * .5f);
-        return ActionResult.SUCCESS;
     }
 
     public BlockPos getStoredPos(ItemStack stack) {
@@ -139,67 +132,21 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
                 : null;
     }
 
-    public Element getLink(ItemStack stack) {
-        if (!stack.has(LINK_DATA)) return null;
-        return Element.values()[stack.get(LINK_DATA).getInt("Element")];
-    }
-
-    public Type getType(ItemStack stack) {
-        if (!stack.has(LINK_DATA)) return null;
-        return Type.values()[stack.get(LINK_DATA).getInt("Type")];
-    }
-
-    private void beginLink(ItemStack stack, BlockPos pos, Element element, Type type) {
-        var nbt = new NbtCompound();
-        nbt.putLong("Position", pos.asLong());
-        nbt.putInt("Element", element.ordinal());
-        nbt.putInt("Type", type.ordinal());
-
-        stack.put(LINK_DATA, nbt);
-    }
-
-    private static AethumLink.Result executeBind(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
-        var linkNbt = stack.get(LINK_DATA);
-        var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
-        var linkType = Type.values()[linkNbt.getInt("Type")];
-
-        if (existingElement == Element.NODE) {
-            var node = Affinity.AETHUM_NODE.find(world, existingPos, null);
-            return node == null ? AethumLink.Result.NO_TARGET : node.createGenericLink(nextPos, linkType);
-        } else {
-            return ((AethumNetworkNode) nextMember).createGenericLink(existingPos, linkType);
-        }
-    }
-
-    private static AethumLink.Result executeRelease(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember) {
-        var linkNbt = stack.get(LINK_DATA);
-        var existingPos = BlockPos.fromLong(linkNbt.getLong("Position"));
-
-        if (existingElement == Element.NODE) {
-            var node = Affinity.AETHUM_NODE.find(world, existingPos, null);
-            return node == null ? AethumLink.Result.NO_TARGET : node.destroyLink(nextPos);
-        } else {
-            return ((AethumNetworkNode) nextMember).destroyLink(existingPos);
-        }
-    }
-
     @Override
     public boolean hasGlint(ItemStack stack) {
         return stack.has(LINK_DATA);
     }
 
     public enum Mode {
-        BIND(0x721B26, IridescenceWandItem::executeBind),
-        RELEASE(0x11667C, IridescenceWandItem::executeRelease);
+        BIND(0x721B26),
+        RELEASE(0x11667C);
 
         public final String id;
         public final int color;
-        public final MemberProcessor processor;
 
-        Mode(int color, MemberProcessor processor) {
+        Mode(int color) {
             this.id = this.name().toLowerCase(Locale.ROOT);
             this.color = color;
-            this.processor = processor;
         }
 
         public Mode next() {
@@ -212,10 +159,5 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         public static Mode byId(String id) {
             return "release".equals(id) ? RELEASE : BIND;
         }
-    }
-
-    @FunctionalInterface
-    private interface MemberProcessor {
-        AethumLink.Result run(ItemStack stack, World world, @NotNull Element existingElement, BlockPos nextPos, AethumNetworkMember nextMember);
     }
 }

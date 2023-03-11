@@ -2,6 +2,8 @@ package io.wispforest.affinity.client;
 
 import com.google.common.base.Suppliers;
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.aethumflux.net.AethumLink;
+import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.item.IridescenceWandItem;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.Containers;
@@ -49,13 +51,19 @@ public class AethumNetworkLinkingHud {
                         layout.child(Components.block(blockEntity.getCachedState().getBlock().getDefaultState(), blockEntity)
                                 .sizing(Sizing.fixed(16)));
 
-                        var linkActionLabel = switch (stack.get(IridescenceWandItem.MODE)) {
-                            case BIND -> switch (wand.getType(stack)) {
-                                case PUSH -> Text.literal("→").styled(style -> style.withColor(0x3955E5));
-                                case NORMAL -> Text.literal("+").styled(style -> style.withColor(0x28FFBF));
-                            };
-                            case RELEASE -> Text.literal("-").styled(style -> style.withColor(0xEB1D36));
-                        };
+                        var linkActionLabel = Text.empty();
+                        switch (stack.get(IridescenceWandItem.MODE)) {
+                            case BIND -> {
+                                linkActionLabel = Text.literal("+").styled(style -> style.withColor(0x28FFBF));
+
+                                var linkData = stack.get(IridescenceWandItem.LINK_DATA);
+                                if (!linkData.has(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY)) break;
+                                if (linkData.get(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY) != AethumLink.Type.PUSH) break;
+
+                                linkActionLabel = Text.literal("→").styled(style -> style.withColor(0x3955E5));
+                            }
+                            case RELEASE -> linkActionLabel = Text.literal("-").styled(style -> style.withColor(0xEB1D36));
+                        }
 
                         layout.child(Components.label(linkActionLabel)
                                 .shadow(true)

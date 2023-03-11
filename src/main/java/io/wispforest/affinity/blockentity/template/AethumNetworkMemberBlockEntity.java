@@ -3,17 +3,20 @@ package io.wispforest.affinity.blockentity.template;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
+import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxStorage;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.misc.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.network.FluxSyncHandler;
+import io.wispforest.owo.nbt.NbtKey;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -28,7 +31,10 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback, CrosshairStatProvider, BeforeMangroveBasketCaptureCallback {
+public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback, CrosshairStatProvider, BeforeMangroveBasketCaptureCallback, LinkableBlockEntity {
+
+    public static final NbtKey<AethumLink.Element> LINK_ELEMENT_KEY = new NbtKey<>("Element", NbtKey.Type.INT.then(ordinal -> AethumLink.Element.values()[ordinal], Enum::ordinal));
+    public static final NbtKey<AethumLink.Type> LINK_TYPE_KEY = new NbtKey<>("Type", NbtKey.Type.INT.then(ordinal -> AethumLink.Type.values()[ordinal], Enum::ordinal));
 
     protected final Map<BlockPos, AethumLink.Type> links = new HashMap<>();
     protected final AethumFluxStorage fluxStorage = new AethumFluxStorage(this);
@@ -56,6 +62,50 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     public boolean beforeMangroveBasketCapture(World world, BlockPos pos, MutableObject<BlockState> state, BlockEntity blockEntity) {
         this.clearLinks();
         return true;
+    }
+
+    @Override
+    public Optional<String> beginLink(PlayerEntity player, NbtCompound linkData) {
+        if (!this.acceptsLinks()) {
+            return Optional.ofNullable(this instanceof AethumNetworkNode
+                    ? LinkResult.TOO_MANY_LINKS.messageTranslationKey()
+                    : "message.affinity.linking.cannot_be_linked");
+        }
+
+        linkData.put(LINK_ELEMENT_KEY, AethumLink.Element.of(this));
+        linkData.put(LINK_TYPE_KEY, player.isSneaking() ? this.specialLinkType() : AethumLink.Type.NORMAL);
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<LinkResult> finishLink(PlayerEntity player, BlockPos linkTo, NbtCompound linkData) {
+        if (!this.acceptsLinks()) return Optional.of(LinkResult.TOO_MANY_LINKS);
+
+        var existingElement = linkData.get(LINK_ELEMENT_KEY);
+        var linkType = linkData.get(LINK_TYPE_KEY);
+
+        if (existingElement == AethumLink.Element.NODE) {
+            var node = Affinity.AETHUM_NODE.find(this.world, linkTo, null);
+            return Optional.of(node == null ? LinkResult.NO_TARGET : node.createGenericLink(this.pos, linkType));
+        } else {
+            return this instanceof AethumNetworkNode node
+                    ? Optional.of(node.createGenericLink(linkTo, linkType))
+                    : Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<LinkResult> destroyLink(PlayerEntity player, BlockPos destroyFrom, NbtCompound linkData) {
+        var existingElement = linkData.get(LINK_ELEMENT_KEY);
+
+        if (existingElement == AethumLink.Element.NODE) {
+            var node = Affinity.AETHUM_NODE.find(world, destroyFrom, null);
+            return Optional.of(node == null ? LinkResult.NO_TARGET : node.destroyLink(this.pos));
+        } else {
+            return this instanceof AethumNetworkNode node
+                    ? Optional.of(node.destroyLink(destroyFrom))
+                    : Optional.empty();
+        }
     }
 
     @Override
