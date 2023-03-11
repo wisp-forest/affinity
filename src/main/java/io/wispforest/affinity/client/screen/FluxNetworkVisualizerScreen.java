@@ -7,6 +7,7 @@ import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.client.render.blockentity.LinkRenderer;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.mixin.client.CameraInvoker;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
@@ -25,10 +26,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.FluidState;
@@ -201,16 +199,21 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                 this.mesh.render(modelViewStack);
                 modelViewStack.translate(this.xSize / 2f, this.ySize / 2f, this.zSize / 2f);
 
-                MixinHooks.FORCE_BLOCK_ENTITY_RENDERING = true;
+                LinkRenderer.reset();
 
+                MixinHooks.FORCE_BLOCK_ENTITY_RENDERING = true;
                 this.mesh.renderInfo().blockEntities().forEach((blockPos, entity) -> {
                     matrices.push();
                     matrices.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                     this.client.getBlockEntityRenderDispatcher().render(entity, 0, matrices, this.client.getBufferBuilders().getEntityVertexConsumers());
                     matrices.pop();
                 });
-
                 MixinHooks.FORCE_BLOCK_ENTITY_RENDERING = false;
+
+                matrices.push();
+                matrices.translate(-mesh.startPos().getX(), -mesh.startPos().getY(),  -mesh.startPos().getZ());
+                LinkRenderer.draw(matrices, this.client.getBufferBuilders().getEntityVertexConsumers(), LightmapTextureManager.MAX_LIGHT_COORDINATE);
+                matrices.pop();
 
                 this.client.getBufferBuilders().getEntityVertexConsumers().draw();
 

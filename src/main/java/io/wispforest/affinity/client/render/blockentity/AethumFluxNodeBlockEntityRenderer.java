@@ -14,19 +14,13 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<AethumFluxNodeBlockEntity> {
 
-    private static final Matrix4f BILLBOARD_MATRIX = new Matrix4f();
-    private static final Identifier LINK_TEXTURE_ID = Affinity.id("textures/aethum_link.png");
-
     public static boolean enableLinkRendering = true;
-
     public static final ModelPart FLOATING_SHARD;
 
     static {
@@ -47,56 +41,15 @@ public class AethumFluxNodeBlockEntityRenderer implements BlockEntityRenderer<Ae
         // Link rendering
         // --------------
 
-        if (enableLinkRendering) {
-            var badColor = Color.ofRgb(0xE90064);
-            int color = badColor.interpolate(Affinity.AETHUM_FLUX_COLOR, node.shardActivity).argb();
+        var badColor = Color.ofRgb(0xE90064);
+        int color = badColor.interpolate(Affinity.AETHUM_FLUX_COLOR, node.shardActivity).argb();
 
-            var cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos().toVector3f();
-            var linkBuffer = vertexConsumers.getBuffer(RenderLayer.getBeaconBeam(LINK_TEXTURE_ID, true));
+        var nodeLinkPos = Vec3d.ofCenter(node.getPos()).add(node.linkAttachmentPointOffset());
+        for (var link : node.linkedMembers()) {
+            var member = Affinity.AETHUM_MEMBER.find(node.getWorld(), link, null);
+            if (member == null) continue;
 
-            float nodeX = node.getPos().getX() + (float) node.linkAttachmentPointOffset().x;
-            float nodeY = node.getPos().getY() + (float) node.linkAttachmentPointOffset().y;
-            float nodeZ = node.getPos().getZ() + (float) node.linkAttachmentPointOffset().z;
-
-            for (var linkedMember : node.linkedMembers()) {
-                var member = Affinity.AETHUM_MEMBER.find(node.getWorld(), linkedMember, null);
-                if (member == null) continue;
-
-                matrices.push();
-                matrices.multiplyPositionMatrix(BILLBOARD_MATRIX.billboardCylindrical(
-                        new Vector3f(
-                                .5f + (float) node.linkAttachmentPointOffset().x,
-                                .5f + (float) node.linkAttachmentPointOffset().y,
-                                .5f + (float) node.linkAttachmentPointOffset().z),
-                        new Vector3f(nodeX + .5f - cameraPos.x, nodeY + .5f - cameraPos.y, nodeZ + .5f - cameraPos.z),
-                        new Vector3f(
-                                linkedMember.getX() + (float) member.linkAttachmentPointOffset().x - nodeX,
-                                linkedMember.getY() + (float) member.linkAttachmentPointOffset().y - nodeY,
-                                linkedMember.getZ() + (float) member.linkAttachmentPointOffset().z - nodeZ)
-                ));
-
-                linkBuffer.vertex(matrices.peek().getPositionMatrix(), -.035f, 0, 0)
-                        .color(color).texture(0, 0).light(light)
-                        .normal(matrices.peek().getNormalMatrix(), 0, 1, 0)
-                        .next();
-
-                linkBuffer.vertex(matrices.peek().getPositionMatrix(), -.035f, 1, 0)
-                        .color(color).texture(1, 0).light(light)
-                        .normal(matrices.peek().getNormalMatrix(), 0, 1, 0)
-                        .next();
-
-                linkBuffer.vertex(matrices.peek().getPositionMatrix(), .035f, 1, 0)
-                        .color(color).texture(1, 1).light(light)
-                        .normal(matrices.peek().getNormalMatrix(), 0, 1, 0)
-                        .next();
-
-                linkBuffer.vertex(matrices.peek().getPositionMatrix(), .035f, 0, 0)
-                        .color(color).texture(0, 1).light(light)
-                        .normal(matrices.peek().getNormalMatrix(), 0, 1, 0)
-                        .next();
-
-                matrices.pop();
-            }
+            LinkRenderer.addLink(nodeLinkPos, Vec3d.ofCenter(link).add(member.linkAttachmentPointOffset()), color);
         }
 
         // -------------------------
