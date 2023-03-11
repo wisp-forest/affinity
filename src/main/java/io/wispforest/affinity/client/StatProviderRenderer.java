@@ -46,8 +46,12 @@ public class StatProviderRenderer {
                 modelViewStack.push();
                 modelViewStack.multiplyPositionMatrix(context.matrixStack().peek().getPositionMatrix());
 
-                var pos = Vec3d.ofCenter(target).subtract(context.camera().getPos());
-                modelViewStack.translate(pos.x, pos.y + .5f, pos.z);
+                var targetShape = blockEntity.getCachedState().getOutlineShape(client.world, target).getBoundingBox();
+                var pos = Vec3d.of(target)
+                        .subtract(context.camera().getPos())
+                        .add(targetShape.minX + (targetShape.maxX - targetShape.minX) / 2, targetShape.maxY + .15, targetShape.minZ + (targetShape.maxZ - targetShape.minZ) / 2);
+
+                modelViewStack.translate(pos.x, pos.y, pos.z);
                 modelViewStack.scale(.01f, -.01f, .01f);
 
                 var offset = pos.multiply(-1);
