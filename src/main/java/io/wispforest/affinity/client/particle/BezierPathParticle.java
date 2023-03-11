@@ -37,6 +37,7 @@ public class BezierPathParticle extends Particle {
 
         final var pos = this.spline.get(Math.min(this.age, this.spline.resolution() - 1));
         this.subject.setPos(pos.x, pos.y, pos.z);
+        this.setPos(pos.x, pos.y, pos.z);
     }
 
     @Override
