@@ -8,17 +8,17 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NbtUtil {
 
-    public static void writeBlockPosList(NbtCompound nbt, String key, List<BlockPos> list) {
-        var posArray = new long[list.size()];
+    public static void writeBlockPosCollection(NbtCompound nbt, String key, Collection<BlockPos> positions) {
+        var posArray = new long[positions.size()];
 
         int idx = 0;
-        for (var pos : list) {
+        for (var pos : positions) {
             posArray[idx] = pos.asLong();
             idx++;
         }
@@ -26,20 +26,12 @@ public class NbtUtil {
         nbt.putLongArray(key, posArray);
     }
 
-    public static void readBlockPosList(NbtCompound nbt, String key, List<BlockPos> list) {
-        list.clear();
+    public static void readBlockPosCollection(NbtCompound nbt, String key, Collection<BlockPos> positions) {
+        positions.clear();
 
         for (var pos : nbt.getLongArray(key)) {
-            list.add(BlockPos.fromLong(pos));
+            positions.add(BlockPos.fromLong(pos));
         }
-    }
-
-    public static void writeItemStack(NbtCompound nbt, String key, ItemStack stack) {
-        nbt.put(key, stack.writeNbt(new NbtCompound()));
-    }
-
-    public static ItemStack readItemStack(NbtCompound nbt, String key) {
-        return nbt.contains(key, NbtElement.COMPOUND_TYPE) ? ItemStack.fromNbt(nbt.getCompound(key)) : ItemStack.EMPTY;
     }
 
     public static void writeItemStackList(NbtCompound nbt, String key, DefaultedList<ItemStack> items) {

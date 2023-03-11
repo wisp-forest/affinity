@@ -1,0 +1,29 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "affinity:block/item_transfer_node"
+    },
+    "facing=up": {
+      "model": "affinity:block/item_transfer_node",
+      "x": 180
+    },
+    "facing=north": {
+      "model": "affinity:block/item_transfer_node",
+      "x": -90
+    },
+    "facing=south": {
+      "model": "affinity:block/item_transfer_node",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "affinity:block/item_transfer_node",
+      "x": -90,
+      "y": 90
+    },
+    "facing=west": {
+      "model": "affinity:block/item_transfer_node",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

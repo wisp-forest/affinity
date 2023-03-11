@@ -27,7 +27,7 @@ public class AffinityBlockStateDefinitionProvider extends FabricModelProvider {
         parentedItem(generator, AZALEA_LOG, AZALEA_WOOD, STRIPPED_AZALEA_LOG, STRIPPED_AZALEA_WOOD);
         parentedItem(generator, AZALEA_PLANKS, AZALEA_FENCE_GATE, AZALEA_PRESSURE_PLATE);
 
-        parentedItem(generator, ARCANE_TREETAP);
+        parentedItem(generator, ARCANE_TREETAP, ITEM_TRANSFER_NODE);
 
         generator.registerParented(Blocks.ENCHANTING_TABLE, OUIJA_BOARD);
 
