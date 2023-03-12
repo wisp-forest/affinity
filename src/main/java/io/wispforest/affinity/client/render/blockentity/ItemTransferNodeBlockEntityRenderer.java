@@ -37,7 +37,7 @@ public class ItemTransferNodeBlockEntityRenderer implements BlockEntityRenderer<
         matrices.multiply(entity.getCachedState().get(ItemTransferNodeBlock.FACING).getOpposite().getRotationQuaternion());
         matrices.translate(-.5, -.5, -.5);
 
-        final var stack = entity.getItem();
+        final var stack = entity.previewItem();
         if (!stack.isEmpty()) {
             this.renderItem(
                     entity, matrices, vertexConsumers, stack,
@@ -49,22 +49,25 @@ public class ItemTransferNodeBlockEntityRenderer implements BlockEntityRenderer<
             );
         }
 
-        final var filterStack = entity.getFilterItem();
+        final var filterStack = entity.filterStack();
         if (!filterStack.isEmpty()) {
             final var client = MinecraftClient.getInstance();
             final var depthModel = client.getItemRenderer().getModel(filterStack, client.world, null, 0).hasDepth();
 
-            matrices.translate(.5, .255, .5325);
+            matrices.translate(.5, 0, .5);
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+            matrices.translate(-.5, 0, -.5);
+
+            matrices.translate(.5, .255, .5);
 
             if (depthModel) {
-                matrices.scale(1.2f, 1.2f, 1.2f);
-                matrices.translate(0, -.01, .02);
+                matrices.translate(0, -.01, 0);
             }
 
-            matrices.scale(.25f, .25f, .25f);
+            matrices.scale(.15f, .15f, .15f);
             matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90));
 
-            MinecraftClient.getInstance().getItemRenderer().renderItem(filterStack, ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, 0);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(filterStack, ModelTransformation.Mode.FIXED, light, overlay, matrices, vertexConsumers, 0);
         }
 
         matrices.pop();

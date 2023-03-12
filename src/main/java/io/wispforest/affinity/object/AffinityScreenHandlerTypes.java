@@ -1,6 +1,7 @@
 package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.misc.screenhandler.AssemblyAugmentScreenHandler;
+import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
 import io.wispforest.affinity.misc.screenhandler.OuijaBoardScreenHandler;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
@@ -13,6 +14,7 @@ public class AffinityScreenHandlerTypes implements AutoRegistryContainer<ScreenH
     public static final ScreenHandlerType<RitualSocleComposerScreenHandler> RITUAL_SOCLE_COMPOSER = new ScreenHandlerType<>(RitualSocleComposerScreenHandler::client);
     public static final ScreenHandlerType<AssemblyAugmentScreenHandler> ASSEMBLY_AUGMENT = new ScreenHandlerType<>(AssemblyAugmentScreenHandler::client);
     public static final ScreenHandlerType<OuijaBoardScreenHandler> OUIJA_BOARD = new ScreenHandlerType<>(OuijaBoardScreenHandler::client);
+    public static final ScreenHandlerType<ItemTransferNodeScreenHandler> ITEM_TRANSFER_NODE = new ScreenHandlerType<>(ItemTransferNodeScreenHandler::client);
 
     @Override
     public Registry<ScreenHandlerType<?>> getRegistry() {

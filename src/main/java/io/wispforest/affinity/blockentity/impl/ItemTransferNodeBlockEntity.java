@@ -7,6 +7,7 @@ import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.CrosshairStatProvider;
 import io.wispforest.affinity.misc.BeforeMangroveBasketCaptureCallback;
+import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
@@ -21,11 +22,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -49,17 +54,25 @@ import java.util.function.Predicate;
 @SuppressWarnings("UnstableApiUsage")
 public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, CrosshairStatProvider, LinkableBlockEntity, InteractableBlockEntity, BeforeMangroveBasketCaptureCallback {
 
-    private static final NbtKey<Mode> MODE_KEY = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
-    private static final NbtKey<Integer> STACK_SIZE_KEY = new NbtKey<>("StackSize", NbtKey.Type.INT);
-    private static final NbtKey<ItemStack> FILTER_STACK_KEY = new NbtKey<>("FilterStack", NbtKey.Type.ITEM_STACK);
+    public static final NbtKey<Mode> MODE_KEY = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
+    public static final NbtKey<Integer> STACK_SIZE_KEY = new NbtKey<>("StackSize", NbtKey.Type.INT);
+    public static final NbtKey<ItemStack> FILTER_STACK_KEY = new NbtKey<>("FilterStack", NbtKey.Type.ITEM_STACK);
+
+    public static final NbtKey<Boolean> IGNORE_DAMAGE_KEY = new NbtKey<>("IgnoreDamage", NbtKey.Type.BOOLEAN);
+    public static final NbtKey<Boolean> IGNORE_DATA_KEY = new NbtKey<>("IgnoreData", NbtKey.Type.BOOLEAN);
+    public static final NbtKey<Boolean> INVERT_FILTER_KEY = new NbtKey<>("InvertFilter", NbtKey.Type.BOOLEAN);
 
     private final Set<BlockPos> links = new HashSet<>();
     private final List<ItemEntry> entries = new ArrayList<>();
     private BlockApiCache<Storage<ItemVariant>, Direction> storageCache;
 
     @NotNull private Mode mode = Mode.IDLE;
-    @NotNull private ItemStack filterStack = ItemStack.EMPTY;
     private int stackSize = 8;
+
+    public boolean ignoreDamage = true;
+    public boolean ignoreData = true;
+    public boolean invertFilter = false;
+    @NotNull private ItemStack filterStack = ItemStack.EMPTY;
 
     private long time = ThreadLocalRandom.current().nextLong(0, 10);
     private int startIndex = 0;
@@ -76,6 +89,9 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     @Override
     public Optional<LinkResult> finishLink(PlayerEntity player, BlockPos linkTo, NbtCompound linkData) {
         if (!(this.world.getBlockEntity(linkTo) instanceof ItemTransferNodeBlockEntity other)) return Optional.of(LinkResult.NO_TARGET);
+        if (Math.abs(linkTo.getX() - this.pos.getX()) > 15 || Math.abs(linkTo.getY() - this.pos.getY()) > 15 || Math.abs(linkTo.getZ() - this.pos.getZ()) > 15) {
+            return Optional.of(LinkResult.OUT_OF_RANGE);
+        }
 
         if (!this.addLink(linkTo)) return Optional.of(LinkResult.ALREADY_LINKED);
         other.addLink(this.pos);
@@ -253,16 +269,22 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     private boolean acceptsItem(ItemStack stack) {
         if (this.filterStack.isEmpty()) return true;
-
-        if (!this.filterStack.isItemEqual(stack)) return false;
-        return !this.filterStack.hasNbt() || NbtHelper.matches(this.filterStack.getNbt(), stack.getNbt(), true);
+        return this.invertFilter != this.testFilter(stack.getItem(), stack.getNbt());
     }
 
     private boolean acceptsItem(ItemVariant variant) {
         if (this.filterStack.isEmpty()) return true;
+        return this.invertFilter != this.testFilter(variant.getItem(), variant.getNbt());
+    }
 
-        if (this.filterStack.getItem() != variant.getItem()) return false;
-        return !this.filterStack.hasNbt() || NbtHelper.matches(this.filterStack.getNbt(), variant.getNbt(), true);
+    private boolean testFilter(Item item, @Nullable NbtCompound nbt) {
+        if (this.filterStack.getItem() != item) return false;
+        if (this.ignoreData || !this.filterStack.hasNbt()) return true;
+
+        var standard = this.filterStack.getNbt();
+        if (this.ignoreDamage) standard.remove("Damage");
+
+        return NbtHelper.matches(standard, nbt, true);
     }
 
     private boolean addLink(BlockPos pos) {
@@ -315,6 +337,23 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!player.isSneaking()) {
+            if (world.isClient) return ActionResult.SUCCESS;
+            player.openHandledScreen(new NamedScreenHandlerFactory() {
+                @Override
+                public Text getDisplayName() {
+                    return ItemTransferNodeBlockEntity.this.getCachedState().getBlock().getName();
+                }
+
+                @Override
+                public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                    return new ItemTransferNodeScreenHandler(syncId, inv, ItemTransferNodeBlockEntity.this);
+                }
+            });
+
+            return ActionResult.SUCCESS;
+        }
+
         var playerStack = player.getStackInHand(hand);
         if (playerStack.isEmpty()) {
             if (player.isSneaking()) {
@@ -341,6 +380,10 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         nbt.put(MODE_KEY, this.mode);
         nbt.put(STACK_SIZE_KEY, this.stackSize);
         nbt.put(FILTER_STACK_KEY, this.filterStack);
+
+        nbt.put(IGNORE_DAMAGE_KEY, this.ignoreDamage);
+        nbt.put(IGNORE_DATA_KEY, this.ignoreData);
+        nbt.put(INVERT_FILTER_KEY, this.invertFilter);
     }
 
     @Override
@@ -351,9 +394,13 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         this.mode = nbt.get(MODE_KEY);
         this.stackSize = nbt.get(STACK_SIZE_KEY);
         this.filterStack = nbt.get(FILTER_STACK_KEY);
+
+        this.ignoreDamage = nbt.get(IGNORE_DAMAGE_KEY);
+        this.ignoreData = nbt.get(IGNORE_DATA_KEY);
+        this.invertFilter = nbt.get(INVERT_FILTER_KEY);
     }
 
-    public ItemStack getItem() {
+    public ItemStack previewItem() {
         return this.entries.isEmpty() || this.entries.get(0).age < 0
                 ? ItemStack.EMPTY
                 : this.entries.get(0).item;
@@ -369,8 +416,13 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         return list;
     }
 
-    public ItemStack getFilterItem() {
+    public @NotNull ItemStack filterStack() {
         return this.filterStack;
+    }
+
+    public void setFilterStack(ItemStack filterStack) {
+        this.filterStack = filterStack.copyWithCount(1);
+        this.markDirty();
     }
 
     public static Vec3d particleOrigin(ItemTransferNodeBlockEntity node) {

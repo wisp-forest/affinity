@@ -1,0 +1,66 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.19.3/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <flow-layout direction="vertical">
+                    <children>
+                        <texture texture="affinity:textures/gui/item_transfer_node.png" region-width="176" region-height="192"/>
+
+                        <flow-layout direction="horizontal" id="content-container">
+                            <children>
+                                <flow-layout direction="horizontal" id="node-preview-anchor">
+                                    <children/>
+
+                                    <padding>
+                                        <bottom>50</bottom>
+                                        <horizontal>-25</horizontal>
+                                    </padding>
+                                </flow-layout>
+
+                                <flow-layout direction="vertical">
+                                    <children>
+                                        <checkbox id="ignore-damage-toggle">
+                                            <text>Ignore damage</text>
+                                        </checkbox>
+
+                                        <checkbox id="ignore-data-toggle">
+                                            <text>Ignore data</text>
+                                        </checkbox>
+
+                                        <checkbox id="invert-filter-toggle">
+                                            <text>Invert filter</text>
+                                        </checkbox>
+                                    </children>
+
+                                    <gap>5</gap>
+                                </flow-layout>
+                            </children>
+
+                            <positioning type="absolute">0,0</positioning>
+
+                            <horizontal-alignment>center</horizontal-alignment>
+                            <vertical-alignment>center</vertical-alignment>
+
+                            <sizing>
+                                <horizontal method="fixed">176</horizontal>
+                                <vertical method="fixed">102</vertical>
+                            </sizing>
+
+                            <allow-overflow>true</allow-overflow>
+                        </flow-layout>
+                    </children>
+
+                    <allow-overflow>true</allow-overflow>
+                </flow-layout>
+            </children>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+</owo-ui>
