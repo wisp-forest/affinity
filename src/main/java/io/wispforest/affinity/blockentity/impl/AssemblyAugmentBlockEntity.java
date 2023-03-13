@@ -31,13 +31,11 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraft.world.poi.PointOfInterest;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
 public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlockEntity, ImplementedInventory, SidedInventory, InquirableOutlineProvider {
@@ -45,9 +43,10 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
     private static final int[] DOWN_SLOTS = new int[]{0};
     private static final int[] NO_SLOTS = new int[0];
 
-    private static final Map<BlockPos, BlockPos> BLOCKED_TREETAPS = new HashMap<>();
-
     private static final NbtKey<ItemStack> OUTPUT_KEY = new NbtKey<>("Output", NbtKey.Type.ITEM_STACK);
+
+    private static final Map<World, Map<BlockPos, BlockPos>> BLOCKED_TREETAPS_PER_WORLD = new WeakHashMap<>();
+    private Map<BlockPos, BlockPos> blockedTreetaps;
 
     private final Set<BlockPos> treetapCache = new HashSet<>();
     private int activeTreetaps = 0;
@@ -64,6 +63,12 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
     }
 
     @Override
+    public void setWorld(World world) {
+        super.setWorld(world);
+        this.blockedTreetaps = BLOCKED_TREETAPS_PER_WORLD.computeIfAbsent(this.world, $ -> new HashMap<>());
+    }
+
+    @Override
     public void tickServer() {
         var currentRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world);
         var outputStack = this.outputInventory.getStack(0);
@@ -71,10 +76,10 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
         this.activeTreetaps = 0;
         if (currentRecipe.isPresent()) {
             for (var treetap : this.treetapCache) {
-                if (BLOCKED_TREETAPS.containsKey(treetap) && BLOCKED_TREETAPS.get(treetap) != this.pos) {
+                if (this.blockedTreetaps.containsKey(treetap) && this.blockedTreetaps.get(treetap) != this.pos) {
                     continue;
                 }
-                BLOCKED_TREETAPS.put(treetap, this.pos);
+                this.blockedTreetaps.put(treetap, this.pos);
                 if (++this.activeTreetaps >= 5) break;
             }
         }
@@ -87,7 +92,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                                 new Vec3d(.05, .05, .05),
                                 1, .05f, true, 1
                         ),
-                        this.treetapCache.stream().filter(blockPos -> BLOCKED_TREETAPS.get(blockPos) == this.pos).map(pos -> {
+                        this.treetapCache.stream().filter(blockPos -> BLOCKED_TREETAPS_PER_WORLD.get(blockPos) == this.pos).map(pos -> {
                             var direction = this.world.getBlockState(pos).get(ArcaneTreetapBlock.FACING);
                             return new Vec3d(pos.getX() + .5 + direction.getOffsetX() * .4, pos.getY() + .5, pos.getZ() + .5 + direction.getOffsetZ() * .4);
                         }).toList(), 1, 30, true
@@ -113,8 +118,8 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
             if (this.craftingTick != 0) {
                 this.activeTreetaps = 0;
                 for (var treetap : this.treetapCache) {
-                    if (!this.getPos().equals(BLOCKED_TREETAPS.get(treetap))) continue;
-                    BLOCKED_TREETAPS.remove(treetap);
+                    if (!this.getPos().equals(this.blockedTreetaps.get(treetap))) continue;
+                    this.blockedTreetaps.remove(treetap);
                 }
             }
 
@@ -190,7 +195,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
 
     public int displayTreetaps() {
         return (int) this.treetapCache.stream()
-                .filter(blockPos -> !BLOCKED_TREETAPS.containsKey(blockPos) || BLOCKED_TREETAPS.get(blockPos) == this.pos)
+                .filter(blockPos -> !this.blockedTreetaps.containsKey(blockPos) || this.blockedTreetaps.get(blockPos) == this.pos)
                 .count();
     }
 
