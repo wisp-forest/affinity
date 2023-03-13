@@ -14,6 +14,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -70,6 +72,12 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow
     public abstract boolean addStatusEffect(StatusEffectInstance effect);
+
+    @Shadow
+    public abstract Iterable<ItemStack> getArmorItems();
+
+    @Shadow
+    public abstract double getAttributeValue(EntityAttribute attribute);
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTickEnd(CallbackInfo ci) {
@@ -196,6 +204,21 @@ public abstract class LivingEntityMixin extends Entity {
         }
 
         cir.setReturnValue(true);
+    }
+
+    @Inject(method = "createLivingAttributes", at = @At("RETURN"))
+    private static void injectAethumAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
+        cir.getReturnValue().add(AffinityEntityAttributes.DAMAGE_TAKEN, 0).add(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY, 0);
+    }
+
+    @ModifyVariable(method = "applyArmorToDamage", at = @At(value = "LOAD", ordinal = 1), argsOnly = true)
+    private float applyEmeraldArmorToDamage(float amount) {
+        return amount + (float) this.getAttributeValue(AffinityEntityAttributes.DAMAGE_TAKEN);
+    }
+
+    @ModifyVariable(method = "takeKnockback", at = @At(value = "STORE", ordinal = 0), ordinal = 0, argsOnly = true)
+    private double applyEmeraldArmorToKnockback(double strength) {
+        return strength + this.getAttributeValue(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY);
     }
 
     @Unique

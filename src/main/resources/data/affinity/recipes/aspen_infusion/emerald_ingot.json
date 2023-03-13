@@ -1,0 +1,37 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 150,
+  "output": {
+    "item": "affinity:emerald_ingot",
+    "count": 8
+  },
+  "primary_input": {
+    "item": "minecraft:iron_ingot"
+  },
+  "inputs": [
+    {
+      "item": "minecraft:emerald"
+    },
+    {
+      "item": "minecraft:emerald"
+    },
+    {
+      "item": "minecraft:emerald"
+    },
+    {
+      "item": "minecraft:emerald"
+    },
+    {
+      "item": "minecraft:emerald"
+    },
+    {
+      "item": "minecraft:emerald"
+    },
+    {
+      "item": "minecraft:emerald"
+    },
+    {
+      "item": "minecraft:emerald"
+    }
+  ]
+}

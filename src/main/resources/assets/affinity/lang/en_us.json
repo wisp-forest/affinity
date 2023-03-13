@@ -94,6 +94,15 @@
   "item.affinity.superior_artifact_blade": "Superior Artifact Blade",
   "item.affinity.astral_artifact_blade": "Astral Artifact Blade",
 
+  "item.affinity.emerald_helmet": "Emerald Helmet",
+  "item.affinity.emerald_chestplate": "Emerald Chestplate",
+  "item.affinity.emerald_leggings": "Emerald Leggings",
+  "item.affinity.emerald_boots": "Emerald Boots",
+  "item.affinity.emerald_ingot": "Emerald Ingot",
+  "item.affinity.emerald_nugget": "Emerald Nugget",
+  "attribute.name.generic.affinity.damage_taken": "Damage Taken",
+  "attribute.name.generic.affinity.knockback_susceptibility": "Knockback Susceptibility",
+
   "item.affinity.emerald_wand_of_iridescence": "Emerald Wand of Iridescence",
   "item.affinity.sapphire_wand_of_iridescence": "Sapphire Wand of Iridescence",
   "item.affinity.wand_of_iridescence.mode_suffix": [

@@ -1,0 +1,73 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_emerald_boots": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "affinity:emerald_boots"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_emerald_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "affinity:emerald_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_emerald_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "affinity:emerald_helmet"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_emerald_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "affinity:emerald_leggings"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "affinity:smelting/emerald_nugget"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_emerald_helmet",
+      "has_emerald_chestplate",
+      "has_emerald_leggings",
+      "has_emerald_boots",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "affinity:smelting/emerald_nugget"
+    ]
+  }
+}
