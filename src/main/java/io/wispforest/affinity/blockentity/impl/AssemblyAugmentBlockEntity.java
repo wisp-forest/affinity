@@ -76,9 +76,8 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
         this.activeTreetaps = 0;
         if (currentRecipe.isPresent()) {
             for (var treetap : this.treetapCache) {
-                if (this.blockedTreetaps.containsKey(treetap) && this.blockedTreetaps.get(treetap) != this.pos) {
-                    continue;
-                }
+                if (this.blockedTreetaps.containsKey(treetap) && !this.pos.equals(this.blockedTreetaps.get(treetap))) continue;
+
                 this.blockedTreetaps.put(treetap, this.pos);
                 if (++this.activeTreetaps >= 5) break;
             }
@@ -92,7 +91,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                                 new Vec3d(.05, .05, .05),
                                 1, .05f, true, 1
                         ),
-                        this.treetapCache.stream().filter(blockPos -> BLOCKED_TREETAPS_PER_WORLD.get(blockPos) == this.pos).map(pos -> {
+                        this.treetapCache.stream().filter(blockPos -> this.pos.equals(this.blockedTreetaps.get(blockPos))).map(pos -> {
                             var direction = this.world.getBlockState(pos).get(ArcaneTreetapBlock.FACING);
                             return new Vec3d(pos.getX() + .5 + direction.getOffsetX() * .4, pos.getY() + .5, pos.getZ() + .5 + direction.getOffsetZ() * .4);
                         }).toList(), 1, 30, true
@@ -115,12 +114,10 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                 this.craftingTick = 0;
             }
         } else {
-            if (this.craftingTick != 0) {
-                this.activeTreetaps = 0;
-                for (var treetap : this.treetapCache) {
-                    if (!this.getPos().equals(this.blockedTreetaps.get(treetap))) continue;
-                    this.blockedTreetaps.remove(treetap);
-                }
+            this.activeTreetaps = 0;
+            for (var treetap : this.treetapCache) {
+                if (!this.getPos().equals(this.blockedTreetaps.get(treetap))) continue;
+                this.blockedTreetaps.remove(treetap);
             }
 
             this.craftingTick = 0;
