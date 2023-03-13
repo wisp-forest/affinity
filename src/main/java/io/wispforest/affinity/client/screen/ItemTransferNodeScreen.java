@@ -5,7 +5,6 @@ import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
-import io.wispforest.owo.ui.component.BlockComponent;
 import io.wispforest.owo.ui.component.CheckboxComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.ItemComponent;
@@ -23,6 +22,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout, ItemTransferNodeScreenHandler> {
@@ -44,17 +44,30 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
     protected void build(FlowLayout rootComponent) {
         this.bind(this.handler.filterStack, this::updateNodePreview);
 
-        this.ignoreDamageToggle = rootComponent.childById(CheckboxComponent.class, "ignore-damage-toggle");
-        this.ignoreDamageToggle.onChanged(checked -> this.sendFilterState());
-        this.bind(this.handler.ignoreDamage, checked -> this.ignoreDamageToggle.checked(checked));
+        this.ignoreDamageToggle = this.bindToggle("ignore-damage-toggle", this.handler.ignoreDamage);
+        this.ignoreDataToggle = this.bindToggle("ignore-data-toggle", this.handler.ignoreData);
+        this.invertFilterToggle = this.bindToggle("invert-filter-toggle", this.handler.invertFilter);
 
-        this.ignoreDataToggle = rootComponent.childById(CheckboxComponent.class, "ignore-data-toggle");
-        this.ignoreDataToggle.onChanged(checked -> this.sendFilterState());
-        this.bind(this.handler.ignoreData, checked -> this.ignoreDataToggle.checked(checked));
+        rootComponent.childById(FlowLayout.class, "node-click-area").<FlowLayout>configure(clickArea -> {
+            clickArea.cursorStyle(CursorStyle.HAND);
+            clickArea.mouseDown().subscribe((mouseX, mouseY, button) -> {
+                if (button != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
-        this.invertFilterToggle = rootComponent.childById(CheckboxComponent.class, "invert-filter-toggle");
-        this.invertFilterToggle.onChanged(checked -> this.sendFilterState());
-        this.bind(this.handler.invertFilter, checked -> this.invertFilterToggle.checked(checked));
+                this.handler.updateFilterStack();
+                UISounds.playInteractionSound();
+
+                return true;
+            });
+        });
+    }
+
+    private CheckboxComponent bindToggle(String id, Observable<Boolean> target) {
+        var toggle = this.uiAdapter.rootComponent.childById(CheckboxComponent.class, id);
+        toggle.onChanged(checked -> this.sendFilterState());
+
+        this.bind(target, toggle::checked);
+
+        return toggle;
     }
 
     private void sendFilterState() {
@@ -71,29 +84,18 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
 
         this.uiAdapter.rootComponent.childById(FlowLayout.class, "node-preview-anchor").<FlowLayout>configure(anchor -> {
             anchor.clearChildren();
-            anchor.child(
-                    Components.block(AffinityBlocks.ITEM_TRANSFER_NODE.getDefaultState(), nodeNbt).<BlockComponent>configure(block -> {
-                        block.sizing(Sizing.fixed(150));
-                        block.cursorStyle(CursorStyle.HAND);
-                        block.mouseDown().subscribe((mouseX, mouseY, button) -> {
-                            if (button != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
-
-                            this.handler.updateFilterStack();
-                            UISounds.playInteractionSound();
-
-                            return true;
-                        });
-
-                        if (!stack.isEmpty()) {
-                            var tooltip = ItemComponent.tooltipFromItem(stack, this.client.player, null);
-                            tooltip.add(TooltipComponent.of(OrderedText.empty()));
-                            tooltip.add(TooltipComponent.of(Text.literal("Click to clear filter").formatted(Formatting.GRAY).asOrderedText()));
-
-                            block.tooltip(tooltip);
-                        }
-                    })
-            );
+            anchor.child(Components.block(AffinityBlocks.ITEM_TRANSFER_NODE.getDefaultState(), nodeNbt).sizing(Sizing.fixed(150)));
         });
+
+        if (!stack.isEmpty()) {
+            var tooltip = ItemComponent.tooltipFromItem(stack, this.client.player, null);
+            tooltip.add(TooltipComponent.of(OrderedText.empty()));
+            tooltip.add(TooltipComponent.of(Text.literal("Click to clear filter").formatted(Formatting.GRAY).asOrderedText()));
+
+            this.uiAdapter.rootComponent.childById(FlowLayout.class, "node-click-area").tooltip(tooltip);
+        } else {
+            this.uiAdapter.rootComponent.childById(FlowLayout.class, "node-click-area").tooltip((List<TooltipComponent>) null);
+        }
     }
 
     private <T> void bind(Observable<T> observable, Consumer<T> function) {

@@ -18,6 +18,17 @@
                                     </padding>
                                 </flow-layout>
 
+                                <flow-layout direction="vertical" id="node-click-area">
+                                    <children/>
+
+                                    <positioning type="absolute">2,14</positioning>
+
+                                    <sizing>
+                                        <horizontal method="fixed">75</horizontal>
+                                        <vertical method="fixed">75</vertical>
+                                    </sizing>
+                                </flow-layout>
+
                                 <flow-layout direction="vertical">
                                     <children>
                                         <checkbox id="ignore-damage-toggle">

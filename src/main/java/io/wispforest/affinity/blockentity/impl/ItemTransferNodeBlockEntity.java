@@ -64,7 +64,9 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     private final Set<BlockPos> links = new HashSet<>();
     private final List<ItemEntry> entries = new ArrayList<>();
+
     private BlockApiCache<Storage<ItemVariant>, Direction> storageCache;
+    private Direction facing;
 
     @NotNull private Mode mode = Mode.IDLE;
     private int stackSize = 8;
@@ -79,6 +81,13 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     public ItemTransferNodeBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ITEM_TRANSFER_NODE, pos, state);
+        this.facing = state.get(ItemTransferNodeBlock.FACING);
+    }
+
+    @Override
+    public void setCachedState(BlockState state) {
+        super.setCachedState(state);
+        this.facing = state.get(ItemTransferNodeBlock.FACING);
     }
 
     @Override
@@ -123,6 +132,24 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
             if (!entry.insert) continue;
             this.dropItem(entry.item);
         }
+    }
+
+    private boolean addLink(BlockPos pos) {
+        if (!this.links.add(pos)) return false;
+
+        this.startIndex = 0;
+        this.markDirty();
+
+        return true;
+    }
+
+    private boolean removeLink(BlockPos pos) {
+        if (!this.links.remove(pos)) return false;
+
+        this.startIndex = 0;
+        this.markDirty();
+
+        return true;
     }
 
     @Override
@@ -241,19 +268,16 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     }
 
     private @Nullable Storage<ItemVariant> attachedStorage() {
-        var facing = this.getCachedState().get(ItemTransferNodeBlock.FACING);
-        if (this.storageCache == null) this.storageCache = BlockApiCache.create(ItemStorage.SIDED, (ServerWorld) this.world, this.pos.offset(facing));
-
-        return this.storageCache.find(facing.getOpposite());
+        if (this.storageCache == null) this.storageCache = BlockApiCache.create(ItemStorage.SIDED, (ServerWorld) this.world, this.pos.offset(this.facing));
+        return this.storageCache.find(this.facing.getOpposite());
     }
 
     private void dropItem(ItemStack stack) {
-        var facing = this.getCachedState().get(ItemTransferNodeBlock.FACING);
         this.world.spawnEntity(new ItemEntity(
                 this.world,
-                this.pos.getX() + .5 - facing.getOffsetX() * .15,
-                this.pos.getY() + .5 - facing.getOffsetY() * .15,
-                this.pos.getZ() + .5 - facing.getOffsetZ() * .15,
+                this.pos.getX() + .5 - this.facing.getOffsetX() * .15,
+                this.pos.getY() + .5 - this.facing.getOffsetY() * .15,
+                this.pos.getZ() + .5 - this.facing.getOffsetZ() * .15,
                 stack
         ));
     }
@@ -285,24 +309,6 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         if (this.ignoreDamage) standard.remove("Damage");
 
         return NbtHelper.matches(standard, nbt, true);
-    }
-
-    private boolean addLink(BlockPos pos) {
-        if (!this.links.add(pos)) return false;
-
-        this.startIndex = 0;
-        this.markDirty();
-
-        return true;
-    }
-
-    private boolean removeLink(BlockPos pos) {
-        if (!this.links.remove(pos)) return false;
-
-        this.startIndex = 0;
-        this.markDirty();
-
-        return true;
     }
 
     private List<ItemTransferNodeBlockEntity> linkedNodes(Predicate<Mode> modePredicate) {
@@ -350,25 +356,11 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
                     return new ItemTransferNodeScreenHandler(syncId, inv, ItemTransferNodeBlockEntity.this);
                 }
             });
-
-            return ActionResult.SUCCESS;
-        }
-
-        var playerStack = player.getStackInHand(hand);
-        if (playerStack.isEmpty()) {
-            if (player.isSneaking()) {
-                this.mode = this.mode.next();
-                return ActionResult.SUCCESS;
-            } else if (this.filterStack.isEmpty()) {
-                return ActionResult.PASS;
-            }
-
-            this.filterStack = ItemStack.EMPTY;
         } else {
-            this.filterStack = playerStack.copyWithCount(1);
+            this.mode = this.mode.next();
+            this.markDirty();
         }
 
-        this.markDirty();
         return ActionResult.SUCCESS;
     }
 
@@ -425,9 +417,12 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         this.markDirty();
     }
 
-    public static Vec3d particleOrigin(ItemTransferNodeBlockEntity node) {
-        var facing = node.getCachedState().get(ItemTransferNodeBlock.FACING);
-        return Vec3d.ofCenter(node.pos).add(facing.getOffsetX() * .1, facing.getOffsetY() * .1, facing.getOffsetZ() * .1);
+    public Direction facing() {
+        return this.facing;
+    }
+
+    private static Vec3d particleOrigin(ItemTransferNodeBlockEntity node) {
+        return Vec3d.ofCenter(node.pos).add(node.facing.getOffsetX() * .1, node.facing.getOffsetY() * .1, node.facing.getOffsetZ() * .1);
     }
 
     public static final class ItemEntry {

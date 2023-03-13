@@ -1,6 +1,5 @@
 package io.wispforest.affinity.client.render.blockentity;
 
-import io.wispforest.affinity.block.impl.ItemTransferNodeBlock;
 import io.wispforest.affinity.blockentity.impl.ItemTransferNodeBlockEntity;
 import io.wispforest.affinity.item.IridescenceWandItem;
 import io.wispforest.owo.ui.util.Delta;
@@ -34,7 +33,7 @@ public class ItemTransferNodeBlockEntityRenderer implements BlockEntityRenderer<
         matrices.push();
 
         matrices.translate(.5, .5, .5);
-        matrices.multiply(entity.getCachedState().get(ItemTransferNodeBlock.FACING).getOpposite().getRotationQuaternion());
+        matrices.multiply(entity.facing().getOpposite().getRotationQuaternion());
         matrices.translate(-.5, -.5, -.5);
 
         final var stack = entity.previewItem();
@@ -74,11 +73,10 @@ public class ItemTransferNodeBlockEntityRenderer implements BlockEntityRenderer<
     }
 
     private static Vec3d nodeLinkPos(ItemTransferNodeBlockEntity node) {
-        var facing = node.getCachedState().get(ItemTransferNodeBlock.FACING);
         return new Vec3d(
-                node.getPos().getX() + .5 + facing.getOffsetX() * .3,
-                node.getPos().getY() + .5 + facing.getOffsetY() * .3,
-                node.getPos().getZ() + .5 + facing.getOffsetZ() * .3
+                node.getPos().getX() + .5 + node.facing().getOffsetX() * .3,
+                node.getPos().getY() + .5 + node.facing().getOffsetY() * .3,
+                node.getPos().getZ() + .5 + node.facing().getOffsetZ() * .3
         );
     }
 
