@@ -133,7 +133,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         this.cachedSetup.forEachSocle(world, socle -> socle.ritualLock.acquire(this));
 
         if (this.cachedSetup.stability / 100d < this.world.random.nextDouble()) {
-            this.ritualFailureTick = this.world.random.nextInt(this.cachedSetup.duration());
+            this.ritualFailureTick = 20 + this.world.random.nextInt(this.cachedSetup.duration() - 20);
         }
 
         this.ritualTick = 0;
