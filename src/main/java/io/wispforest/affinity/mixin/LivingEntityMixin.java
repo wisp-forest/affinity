@@ -207,8 +207,11 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Inject(method = "createLivingAttributes", at = @At("RETURN"))
-    private static void injectAethumAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
-        cir.getReturnValue().add(AffinityEntityAttributes.DAMAGE_TAKEN, 0).add(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY, 0);
+    private static void injectAffinityAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
+        cir.getReturnValue()
+                .add(AffinityEntityAttributes.DAMAGE_TAKEN, 0)
+                .add(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY, 0)
+                .add(AffinityEntityAttributes.FALL_RESISTANCE, 0);
     }
 
     @ModifyVariable(method = "applyArmorToDamage", at = @At(value = "LOAD", ordinal = 1), argsOnly = true)
@@ -219,6 +222,11 @@ public abstract class LivingEntityMixin extends Entity {
     @ModifyVariable(method = "takeKnockback", at = @At(value = "STORE", ordinal = 0), ordinal = 0, argsOnly = true)
     private double applyEmeraldArmorToKnockback(double strength) {
         return strength + this.getAttributeValue(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY);
+    }
+
+    @ModifyVariable(method = "handleFallDamage", at = @At("HEAD"), ordinal = 0, argsOnly = true)
+    private float applyFallResistance(float fallDistance) {
+        return fallDistance - (float) this.getAttributeValue(AffinityEntityAttributes.FALL_RESISTANCE);
     }
 
     @Unique

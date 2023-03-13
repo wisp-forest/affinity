@@ -64,6 +64,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item SATIATING_POTION = new SatiationPotionItem();
     public static final Item DRAGON_DROP = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
     public static final Item AETHUM_OVERCHARGER = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.RARE).maxCount(1));
+    public static final Item FEATHERWEIGHT_RING = new FeatherweightRingItem();
 
     public static final Item ARCANE_FADE_BUCKET = new BucketItem(AffinityBlocks.Fluids.ARCANE_FADE, settings(AffinityItemGroup.MAIN).maxCount(1).recipeRemainder(Items.BUCKET));
 

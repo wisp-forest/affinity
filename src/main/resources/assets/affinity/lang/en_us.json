@@ -102,6 +102,7 @@
   "item.affinity.emerald_nugget": "Emerald Nugget",
   "attribute.name.generic.affinity.damage_taken": "Damage Taken",
   "attribute.name.generic.affinity.knockback_susceptibility": "Knockback Susceptibility",
+  "attribute.name.generic.affinity.fall_resistance": "Fall Resistance",
 
   "item.affinity.emerald_wand_of_iridescence": "Emerald Wand of Iridescence",
   "item.affinity.sapphire_wand_of_iridescence": "Sapphire Wand of Iridescence",
@@ -157,6 +158,7 @@
   "item.affinity.dragon_drop": "Dragon Drop",
   "item.affinity.arcane_fade_bucket": "Bucket of Arcane Fade",
   "item.affinity.aethum_overcharger": "Aethum Overcharger",
+  "item.affinity.featherweight_ring": "Featherweight Ring",
   "item.affinity.potion_of_infinite_prowess": {
     "text": "Potion of Infinite Prowess",
     "italic": false,

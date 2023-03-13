@@ -22,6 +22,9 @@ public class AffinityEntityAttributes implements AutoRegistryContainer<EntityAtt
     @AssignedName("generic.knockback_susceptibility")
     public static final EntityAttribute KNOCKBACK_SUSCEPTIBILITY = new ClampedEntityAttribute("attribute.name.generic." + Affinity.MOD_ID + ".knockback_susceptibility", 0, 0, 1000);
 
+    @AssignedName("generic.fall_resistance")
+    public static final EntityAttribute FALL_RESISTANCE = new ClampedEntityAttribute("attribute.name.generic." + Affinity.MOD_ID + ".fall_resistance", 0, 0, 1000);
+
     @Override
     public Registry<EntityAttribute> getRegistry() {
         return Registries.ATTRIBUTE;
