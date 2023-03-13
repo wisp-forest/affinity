@@ -193,8 +193,9 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
             if (!this.entries.isEmpty()) return;
 
             var targets = this.linkedNodes(mode -> mode != Mode.SENDING);
-            var firstTarget = targets.isEmpty() ? null : targets.get(this.startIndex);
+
             if (!targets.isEmpty()) this.startIndex = (this.startIndex + 1) % targets.size();
+            var firstTarget = targets.isEmpty() ? null : targets.get(this.startIndex);
 
             Predicate<ItemVariant> predicate = firstTarget == null
                     ? this::acceptsItem
@@ -216,19 +217,20 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
             this.markDirty();
 
             if (!targets.isEmpty()) {
+                var insertVariant = ItemVariant.of(stack);
+
                 int validTargets = 0;
                 for (var node : targets) {
-                    if (node.acceptsItem(stack)) validTargets++;
+                    if (node.acceptsItem(insertVariant)) validTargets++;
                 }
 
                 int countPerTarget = (int) Math.ceil(stack.getCount() / (double) validTargets);
-                var insertVariant = ItemVariant.of(stack);
 
                 for (int i = this.startIndex; i < targets.size() + startIndex; i++) {
                     if (stack.isEmpty()) break;
 
                     var node = targets.get(i % targets.size());
-                    if (!node.acceptsItem(stack)) continue;
+                    if (!node.acceptsItem(insertVariant)) continue;
 
                     int insertCount = Math.min(node.maxInsertCount(insertVariant), Math.min(countPerTarget, stack.getCount()));
                     if (insertCount == 0) continue;
@@ -287,13 +289,13 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         if (storage == null) return Integer.MAX_VALUE;
 
         try (var transaction = Transaction.openOuter()) {
+            for (var entry : this.entries) {
+                if (!entry.insert) continue;
+                storage.insert(entry.variant(), entry.item.getCount(), transaction);
+            }
+
             return (int) storage.insert(variant, Long.MAX_VALUE, transaction);
         }
-    }
-
-    private boolean acceptsItem(ItemStack stack) {
-        if (this.filterStack.isEmpty()) return true;
-        return this.invertFilter != this.testFilter(stack.getItem(), stack.getNbt());
     }
 
     private boolean acceptsItem(ItemVariant variant) {
@@ -428,12 +430,19 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     public static final class ItemEntry {
         private final ItemStack item;
         private final boolean insert;
+
         private int age;
+        private @Nullable ItemVariant variant = null;
 
         public ItemEntry(ItemStack item, int age, boolean insert) {
             this.item = item;
             this.age = age;
             this.insert = insert;
+        }
+
+        public ItemVariant variant() {
+            if (this.variant == null) this.variant = ItemVariant.of(this.item);
+            return this.variant;
         }
 
         public static void writeEntries(NbtCompound nbt, String key, List<ItemEntry> entries) {
