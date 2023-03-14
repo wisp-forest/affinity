@@ -50,7 +50,7 @@ public class ArtifactBladeItem extends SwordItem {
     private final Multimap<EntityAttribute, EntityAttributeModifier> modifiersWithDamage;
 
     public ArtifactBladeItem(Tier tier) {
-        super(tier, 0, tier.data.attackSpeed, AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1).rarity(tier.data.rarity));
+        super(tier, 0, tier.data.attackSpeed, AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1).rarity(tier.data.rarity));
         this.tier = tier;
 
         var modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder().putAll(super.getAttributeModifiers(EquipmentSlot.MAINHAND));

@@ -39,7 +39,7 @@ public class NimbleStaffItem extends StaffItem {
             .build();
 
     public NimbleStaffItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
     }
 
     @Override

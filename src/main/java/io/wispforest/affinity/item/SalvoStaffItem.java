@@ -22,7 +22,7 @@ public class SalvoStaffItem extends StaffItem {
     private static final int MISSILE_COST = 1;
 
     public SalvoStaffItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
     }
 
     @Override

@@ -23,7 +23,7 @@ public class EmeraldArmorItem extends ArmorItem {
     private final Multimap<EntityAttribute, EntityAttributeModifier> modifiers;
 
     public EmeraldArmorItem(EquipmentSlot slot) {
-        super(Material.INSTANCE, slot, AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1).rarity(Rarity.UNCOMMON));
+        super(Material.INSTANCE, slot, AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1).rarity(Rarity.UNCOMMON));
 
         this.modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder().putAll(super.getAttributeModifiers(slot))
                 .put(AffinityEntityAttributes.DAMAGE_TAKEN, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes, season 2", 1, EntityAttributeModifier.Operation.ADDITION))

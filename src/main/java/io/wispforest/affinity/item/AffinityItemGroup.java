@@ -17,11 +17,13 @@ public class AffinityItemGroup {
 
     public static final int MAIN = 0;
     public static final int NATURE = 1;
-    public static final int ENCHANTMENTS = 2;
+    public static final int EQUIPMENT = 2;
+    public static final int ENCHANTMENTS = 3;
 
     public static final OwoItemGroup GROUP = OwoItemGroup.builder(Affinity.id("affinity"), () -> Icon.of(AffinityItems.INERT_WISP_MATTER)).initializer(group -> {
         group.addTab(Icon.of(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE), "main", null, true);
         group.addTab(Icon.of(AffinityBlocks.AZALEA_LOG), "nature", null, false);
+        group.addTab(Icon.of(AffinityItems.RESOUNDING_CHIME), "equipment", null, false);
         group.addCustomTab(Icon.of(AffinityItems.RESPLENDENT_GEM), "enchantments", (enabledFeatures, entries, hasPermissions) -> {
             Registries.ENCHANTMENT.getIds().stream()
                     .filter(id -> id.getNamespace().equals(Affinity.MOD_ID))

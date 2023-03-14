@@ -38,7 +38,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     public static final TagKey<Block> IMMUNE_BLOCKS = TagKey.of(RegistryKeys.BLOCK, Affinity.id("time_staff_immune"));
 
     public TimeStaffItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
     }
 
     @Override

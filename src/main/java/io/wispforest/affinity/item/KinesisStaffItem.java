@@ -50,7 +50,7 @@ public class KinesisStaffItem extends StaffItem {
     public static final AffinityEntityAddon.DataKey<UUID> PROJECTILE_THROWER = AffinityEntityAddon.DataKey.withNullDefault();
 
     public KinesisStaffItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
     }
 
     @Override

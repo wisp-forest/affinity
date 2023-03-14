@@ -79,6 +79,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item EMERALD_CHESTPLATE = new EmeraldArmorItem(EquipmentSlot.CHEST);
     public static final Item EMERALD_LEGGINGS = new EmeraldArmorItem(EquipmentSlot.LEGS);
     public static final Item EMERALD_BOOTS = new EmeraldArmorItem(EquipmentSlot.FEET);
+
     public static final Item EMERALD_INGOT = new Item(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
     public static final Item EMERALD_NUGGET = new Item(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
 
