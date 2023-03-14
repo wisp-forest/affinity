@@ -9,7 +9,7 @@ import net.minecraft.client.item.ModelPredicateProviderRegistry;
 public class AffinityModelPredicateProviders {
 
     public static final ClampedModelPredicateProvider IRIDESCENCE_WAND_MODE =
-            (stack, world, entity, seed) -> stack.get(IridescenceWandItem.MODE).ordinal() / (float) IridescenceWandItem.Mode.values().length;
+            (stack, world, entity, seed) -> stack.get(IridescenceWandItem.MODE_KEY).ordinal() / (float) IridescenceWandItem.Mode.values().length;
 
     public static void applyDefaults() {
         ModelPredicateProviderRegistry.register(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE, Affinity.id("mode"), IRIDESCENCE_WAND_MODE);

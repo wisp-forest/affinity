@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "affinity:emerald_block"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "item": "affinity:emerald_ingot"
+  }
+}
