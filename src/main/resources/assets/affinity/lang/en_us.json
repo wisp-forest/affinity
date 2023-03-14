@@ -3,6 +3,7 @@
   "itemGroup.affinity.affinity.button.github": "GitHub",
   "itemGroup.affinity.affinity.tab.main": "Affinity",
   "itemGroup.affinity.affinity.tab.nature": "Nature",
+  "itemGroup.affinity.affinity.tab.equipment": "Equipment",
   "itemGroup.affinity.affinity.tab.enchantments": "Enchantments",
 
   "entity.affinity.wisp": "Wisp",
@@ -113,10 +114,29 @@
     "]"
   ],
   "item.affinity.wand_of_iridescence.help": {
-    "text": "Sneak-Click to cycle modes",
+    "text": "Sneak-use to cycle modes",
     "color": "gray"
   },
   "item.affinity.wand_of_iridescence.help.template": "⇄ %s",
+  "item.affinity.wand_of_iridescence.retain_mode.enabled": [
+    {
+      "text": "Not Retaining: ",
+      "color": "dark_gray"
+    },
+    {
+      "text": "Right-click to toggle",
+      "color": "gray"
+    }
+  ],
+  "item.affinity.wand_of_iridescence.retain_mode.disabled": [
+    {
+      "text": "Retaining: "
+    },
+    {
+      "text": "Sneak-use to clear",
+      "color": "gray"
+    }
+  ],
   "item.affinity.wand_of_iridescence.mode.bind": "Bind",
   "item.affinity.wand_of_iridescence.mode.bind.description": {
     "text": "Link machines together",
@@ -302,6 +322,8 @@
   "advancement.affinity.you_re_doomed.description": "Use an Aethum Overcharger to cheat death and turn divine - temporarily",
   "advancement.affinity.when_the_world_is_calling_you.title": "When the World is Calling You",
   "advancement.affinity.when_the_world_is_calling_you.description": "Sacrifice yourself to a ritual",
+  "advancement.affinity.gamedesign.title": "Gamedesign!",
+  "advancement.affinity.gamedesign.description": "64 nuggets in a block",
 
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.dripping.desc": "Got that drip",

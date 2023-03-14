@@ -52,11 +52,11 @@ public class AethumNetworkLinkingHud {
                                 .sizing(Sizing.fixed(16)));
 
                         var linkActionLabel = Text.empty();
-                        switch (stack.get(IridescenceWandItem.MODE)) {
+                        switch (stack.get(IridescenceWandItem.MODE_KEY)) {
                             case BIND -> {
                                 linkActionLabel = Text.literal("+").styled(style -> style.withColor(0x28FFBF));
 
-                                var linkData = stack.get(IridescenceWandItem.LINK_DATA);
+                                var linkData = stack.get(IridescenceWandItem.LINK_DATA_KEY);
                                 if (!linkData.has(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY)) break;
                                 if (linkData.get(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY) != AethumLink.Type.PUSH) break;
 
