@@ -12,6 +12,7 @@ import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -29,6 +30,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
@@ -188,6 +190,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         })) this.markDirty();
 
         if (this.time++ % 10 != 0) return;
+        if (this.world.getReceivedRedstonePower(this.pos) > 0) return;
 
         if (this.mode == Mode.SENDING) {
             if (!this.entries.isEmpty()) return;
@@ -253,6 +256,18 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     @Override
     public void tickClient() {
         this.entries.forEach(entry -> entry.age++);
+
+        if (this.world.getReceivedRedstonePower(this.pos) > 0 && this.world.random.nextFloat() < .075f) {
+            var pos = Vec3d.ofCenter(this.pos).add(
+                    this.facing.getOffsetX() * .3,
+                    this.facing.getOffsetY() * .3,
+                    this.facing.getOffsetZ() * .3
+
+            );
+
+            ClientParticles.setParticleCount(5);
+            ClientParticles.spawn(new DustParticleEffect(DustParticleEffect.RED, .5f), this.world, pos, .25f);
+        }
     }
 
     private void insertItem(ItemStack item, int delay) {
