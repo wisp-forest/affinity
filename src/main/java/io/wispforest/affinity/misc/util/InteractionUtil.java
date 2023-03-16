@@ -73,7 +73,7 @@ public class InteractionUtil {
             Runnable changeHandler
     ) {
         var playerStack = player.getStackInHand(hand);
-        var item = itemProvider.get();
+        var item = itemProvider.get().copy();
 
         if (playerStack.isEmpty()) {
             if (item.isEmpty()) return ActionResult.PASS;
@@ -94,18 +94,28 @@ public class InteractionUtil {
 
                 changeHandler.run();
             } else {
-                if (ItemOps.canStack(playerStack, item)) {
-                    playerStack.increment(1);
+                if (ItemStack.canCombine(playerStack, item)) {
+                    int incrementCount = Math.min(playerStack.getMaxCount() - playerStack.getCount(), item.getCount());
+
+                    playerStack.increment(incrementCount);
+                    item.decrement(incrementCount);
+                }
+
+                if (item.isEmpty()) {
+                    item = ItemStack.EMPTY;
                 } else {
                     switch (invalidBehaviour) {
-                        case DROP -> ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item);
+                        case DROP -> {
+                            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), item);
+                            item = ItemStack.EMPTY;
+                        }
                         case DO_NOTHING -> {
                             return ActionResult.PASS;
                         }
                     }
                 }
 
-                itemManipulator.accept(ItemStack.EMPTY);
+                itemManipulator.accept(item);
                 changeHandler.run();
             }
         }
