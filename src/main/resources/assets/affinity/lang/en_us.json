@@ -118,7 +118,7 @@
     "color": "gray"
   },
   "item.affinity.wand_of_iridescence.help.template": "⇄ %s",
-  "item.affinity.wand_of_iridescence.retain_mode.enabled": [
+  "item.affinity.wand_of_iridescence.retain_mode.disabled": [
     {
       "text": "Not Retaining: ",
       "color": "dark_gray"
@@ -128,7 +128,7 @@
       "color": "gray"
     }
   ],
-  "item.affinity.wand_of_iridescence.retain_mode.disabled": [
+  "item.affinity.wand_of_iridescence.retain_mode.enabled": [
     {
       "text": "Retaining: "
     },
