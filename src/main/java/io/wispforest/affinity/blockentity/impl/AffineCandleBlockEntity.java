@@ -20,7 +20,7 @@ public class AffineCandleBlockEntity extends AethumNetworkMemberBlockEntity impl
     public AffineCandleBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.AFFINE_CANDLE, pos, state);
 
-        this.fluxStorage.setFluxCapacity(8000);
+        this.fluxStorage.setFluxCapacity(2000);
         this.fluxStorage.setMaxInsert(256);
     }
 

@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "crystals=0,powered=false": {
+      "model": "affinity:block/aethum_probe_0_crystals_off"
+    },
+    "crystals=0,powered=true": {
+      "model": "affinity:block/aethum_probe_0_crystals_on"
+    },
+    "crystals=1,powered=false": {
+      "model": "affinity:block/aethum_probe_1_crystals_off"
+    },
+    "crystals=1,powered=true": {
+      "model": "affinity:block/aethum_probe_1_crystals_on"
+    },
+    "crystals=2,powered=false": {
+      "model": "affinity:block/aethum_probe_2_crystals_off"
+    },
+    "crystals=2,powered=true": {
+      "model": "affinity:block/aethum_probe_2_crystals_on"
+    },
+    "crystals=3,powered=false": {
+      "model": "affinity:block/aethum_probe_3_crystals_off"
+    },
+    "crystals=3,powered=true": {
+      "model": "affinity:block/aethum_probe_3_crystals_on"
+    },
+    "crystals=4,powered=false": {
+      "model": "affinity:block/aethum_probe_4_crystals_off"
+    },
+    "crystals=4,powered=true": {
+      "model": "affinity:block/aethum_probe_4_crystals_on"
+    }
+  }
+}

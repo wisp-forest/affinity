@@ -53,6 +53,7 @@
   "block.affinity.arcane_fade": "Arcane Fade",
   "block.affinity.inversion_stone": "Inversion Stone",
   "block.affinity.item_transfer_node": "Item Transfer Node",
+  "block.affinity.aethum_probe": "Aethum Probe",
 
   "block.affinity.aberrant_calling_core": "Aberrant Calling Core",
   "block.affinity.aberrant_calling_core.tooltip.complete": "Complete",
