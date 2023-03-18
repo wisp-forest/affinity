@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "l": {
+      "item": "affinity:azalea_log"
+    },
+    "a": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "pattern": [
+    "lal",
+    "a a",
+    "lal"
+  ],
+  "result": {
+    "item": "affinity:assembly_augment"
+  }
+}

@@ -3,9 +3,9 @@
 	"parent": "block/block",
 	"textures": {
 		"0": "block/stone_bricks",
-		"11": "block/oak_log",
-		"12": "block/oak_planks",
-		"particle": "block/oak_log"
+		"11": "affinity:block/azalea_log",
+		"12": "affinity:block/azalea_planks",
+		"particle": "affinity:block/azalea_log"
 	},
 	"elements": [
 		{
@@ -223,6 +223,7 @@
 		{
 			"name": "VoxelShapes",
 			"origin": [0, 0, 0],
+			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
 		}
 	]
