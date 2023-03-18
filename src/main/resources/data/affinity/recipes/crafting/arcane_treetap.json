@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:large_amethyst_bud"
+    },
+    "s": {
+      "item": "minecraft:stone_brick_slab"
+    }
+  },
+  "pattern": [
+    "a",
+    "s"
+  ],
+  "result": {
+    "item": "affinity:arcane_treetap"
+  }
+}

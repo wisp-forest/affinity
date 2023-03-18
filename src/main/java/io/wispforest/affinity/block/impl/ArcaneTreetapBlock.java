@@ -1,10 +1,15 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.misc.util.BlockFinder;
+import io.wispforest.affinity.misc.util.MathUtil;
+import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.DustColorTransitionParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
@@ -14,6 +19,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -23,37 +30,30 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class ArcaneTreetapBlock extends HorizontalFacingBlock {
 
-    private static final VoxelShape NORTH_SHAPE = Stream.of(
-            Block.createCuboidShape(1, 6, 0, 15, 10, 1),
-            Block.createCuboidShape(12, 7, 1, 14, 9, 2),
-            Block.createCuboidShape(2, 7, 1, 4, 9, 2),
-            Block.createCuboidShape(5, 7, 1, 11, 9, 2)
-    ).reduce(VoxelShapes::union).get();
+    public static final DustColorTransitionParticleEffect PARTICLE = new DustColorTransitionParticleEffect(MathUtil.splitRGBToVec3f(0x865DFF), MathUtil.splitRGBToVec3f(0xFFA3FD), 1f);
 
-    private static final VoxelShape SOUTH_SHAPE = Stream.of(
-            Block.createCuboidShape(1, 6, 15, 15, 10, 16),
-            Block.createCuboidShape(2, 7, 14, 4, 9, 15),
-            Block.createCuboidShape(12, 7, 14, 14, 9, 15),
-            Block.createCuboidShape(5, 7, 14, 11, 9, 15)
-    ).reduce(VoxelShapes::union).get();
+    private static final VoxelShape NORTH_SHAPE = VoxelShapes.union(
+            Block.createCuboidShape(6, 6, 2, 10, 10, 5),
+            Block.createCuboidShape(5, 5, 0, 11, 11, 2)
+    );
 
-    public static final VoxelShape WEST_SHAPE = Stream.of(
-            Block.createCuboidShape(0, 6, 1, 1, 10, 15),
-            Block.createCuboidShape(1, 7, 2, 2, 9, 4),
-            Block.createCuboidShape(1, 7, 12, 2, 9, 14),
-            Block.createCuboidShape(1, 7, 5, 2, 9, 11)
-    ).reduce(VoxelShapes::union).get();
+    private static final VoxelShape SOUTH_SHAPE = VoxelShapes.union(
+            Block.createCuboidShape(6, 6, 11, 10, 10, 14),
+            Block.createCuboidShape(5, 5, 14, 11, 11, 16)
+    );
 
-    public static final VoxelShape EAST_SHAPE = Stream.of(
-            Block.createCuboidShape(15, 6, 1, 16, 10, 15),
-            Block.createCuboidShape(14, 7, 12, 15, 9, 14),
-            Block.createCuboidShape(14, 7, 2, 15, 9, 4),
-            Block.createCuboidShape(14, 7, 5, 15, 9, 11)
-    ).reduce(VoxelShapes::union).get();
+    public static final VoxelShape WEST_SHAPE = VoxelShapes.union(
+            Block.createCuboidShape(2, 6, 6, 5, 10, 10),
+            Block.createCuboidShape(0, 5, 5, 2, 11, 11)
+    );
+
+    public static final VoxelShape EAST_SHAPE = VoxelShapes.union(
+            Block.createCuboidShape(11, 6, 6, 14, 10, 10),
+            Block.createCuboidShape(14, 5, 5, 16, 11, 11)
+    );
 
     public ArcaneTreetapBlock() {
         super(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR));
@@ -108,6 +108,19 @@ public class ArcaneTreetapBlock extends HorizontalFacingBlock {
         }
 
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        boolean attached = isProperlyAttached(world, pos);
+        var facing = state.get(FACING);
+
+        if (attached) {
+            ClientParticles.spawn(PARTICLE, world, Vec3d.ofCenter(pos).add(facing.getOffsetX() * .25, 0, facing.getOffsetZ() * .25), .15f);
+            ClientParticles.spawn(new BlockStateParticleEffect(ParticleTypes.FALLING_DUST, Blocks.AMETHYST_BLOCK.getDefaultState()), world, Vec3d.ofCenter(pos).add(facing.getOffsetX() * .25, 0, facing.getOffsetZ() * .25), .15f);
+        } else {
+            ClientParticles.spawn(ParticleTypes.SMOKE, world, Vec3d.ofCenter(pos).add(facing.getOffsetX() * .25, 0, facing.getOffsetZ() * .25), .15f);
+        }
     }
 
     public static Set<BlockPos> walkConnectedTree(World world, BlockPos pos) {

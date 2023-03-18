@@ -5,7 +5,6 @@ import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.misc.util.BlockFinder;
-import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.mixin.access.CraftingInventoryAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
@@ -26,7 +25,6 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -87,8 +85,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
             if (this.craftingTick % 20 == 0) {
                 AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, -.2f), new AffinityParticleSystems.BezierVortexData(
                         new GenericEmitterParticleEffect(
-                                new DustColorTransitionParticleEffect(MathUtil.splitRGBToVec3f(0x865DFF), MathUtil.splitRGBToVec3f(0xFFA3FD), 1f),
-                                new Vec3d(.05, .05, .05),
+                                ArcaneTreetapBlock.PARTICLE, new Vec3d(.05, .05, .05),
                                 1, .05f, true, 1
                         ),
                         this.treetapCache.stream().filter(blockPos -> this.pos.equals(this.blockedTreetaps.get(blockPos))).map(pos -> {
