@@ -1,0 +1,26 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "s": {
+      "item": "minecraft:smooth_stone_slab"
+    },
+    "a": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "q": {
+      "item": "minecraft:quartz"
+    },
+    "r": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "pattern": [
+    " r ",
+    "qaq",
+    "sss"
+  ],
+  "result": {
+    "item": "affinity:aethum_probe"
+  }
+}
