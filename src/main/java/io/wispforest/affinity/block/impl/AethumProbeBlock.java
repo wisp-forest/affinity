@@ -95,6 +95,8 @@ public class AethumProbeBlock extends BlockWithEntity {
                 updateNeighbors(world, pos);
             }
         }
+
+        super.onStateReplaced(state, world, pos, newState, moved);
     }
 
     public static void updateNeighbors(World world, BlockPos pos) {
