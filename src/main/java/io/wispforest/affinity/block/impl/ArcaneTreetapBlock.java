@@ -56,15 +56,12 @@ public class ArcaneTreetapBlock extends HorizontalFacingBlock {
     );
 
     public ArcaneTreetapBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR));
+        super(FabricBlockSettings.copyOf(Blocks.AMETHYST_BLOCK).luminance(state -> 5));
     }
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return world.getBlockState(pos.north()).isIn(BlockTags.LOGS)
-                || world.getBlockState(pos.south()).isIn(BlockTags.LOGS)
-                || world.getBlockState(pos.east()).isIn(BlockTags.LOGS)
-                || world.getBlockState(pos.west()).isIn(BlockTags.LOGS);
+        return world.getBlockState(pos.offset(state.get(FACING))).isIn(BlockTags.LOGS);
     }
 
     @Override
