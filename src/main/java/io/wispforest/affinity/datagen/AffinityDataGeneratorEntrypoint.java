@@ -10,11 +10,15 @@ public class AffinityDataGeneratorEntrypoint implements DataGeneratorEntrypoint 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         var pack = fabricDataGenerator.createPack();
-        pack.addProvider(AffinityBlockStateDefinitionProvider::new);
-        pack.addProvider(AffinityBlockTagProvider::new);
+        pack.addProvider(AffinityBlockStateModelProvider::new);
+        pack.addProvider(AffinityItemModelProvider::new);
         pack.addProvider(AffinityEntityLootTableProvider::new);
+        pack.addProvider(AffinityBlockLootTableProvider::new);
         pack.addProvider(AffinityRecipesProvider::new);
         pack.addProvider(AffinityDynamicRegistryProvider::new);
+
+        var blockTagProvider = pack.addProvider(AffinityBlockTagProvider::new);
+        pack.addProvider((output, registries) -> new AffinityItemTagProvider(output, registries, blockTagProvider));
     }
 
     @Override

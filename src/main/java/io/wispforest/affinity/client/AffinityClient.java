@@ -76,7 +76,7 @@ public class AffinityClient implements ClientModInitializer {
                     matrices,
                     vertexConsumers,
                     hasItemGlow
-                            ? Color.RED
+                            ? Color.WHITE
                             : new Color(.5f, 0f, 1f, 1f)
             );
 

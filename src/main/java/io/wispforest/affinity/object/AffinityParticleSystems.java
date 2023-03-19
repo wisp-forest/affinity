@@ -2,6 +2,7 @@ package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.AberrantCallingCoreBlock;
+import io.wispforest.affinity.block.impl.ArcaneTreetapBlock;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
 import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
@@ -174,7 +175,7 @@ public class AffinityParticleSystems {
 
         ClientParticles.randomizeVelocity(.15f);
         ClientParticles.setParticleCount(15);
-        ClientParticles.spawn(new DustColorTransitionParticleEffect(new Vector3f(.25f, .25f, 1f), new Vector3f(1f, .5f, .25f), 1f), world, pos.subtract(0, .1, 0), .35f);
+        ClientParticles.spawn(ArcaneTreetapBlock.PARTICLE, world, pos.subtract(0, .1, 0), .35f);
     });
 
     public static final ParticleSystem<Integer> AETHUM_OVERCHARGE = CONTROLLER.register(Integer.class, (world, pos, entityId) -> {

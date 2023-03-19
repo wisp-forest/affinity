@@ -1,0 +1,74 @@
+package io.wispforest.affinity.datagen;
+
+import io.wispforest.affinity.object.AffinityItems;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.block.Block;
+import net.minecraft.data.client.*;
+import net.minecraft.item.ItemConvertible;
+
+import static io.wispforest.affinity.object.AffinityBlocks.*;
+
+public class AffinityBlockStateModelProvider extends FabricModelProvider {
+
+    public AffinityBlockStateModelProvider(FabricDataOutput dataOutput) {
+        super(dataOutput);
+    }
+
+    @Override
+    public void generateBlockStateModels(BlockStateModelGenerator generator) {
+
+        // Azalea wood set
+
+        generator.registerCubeAllModelTexturePool(AZALEA_PLANKS).family(AffinityBlockFamilies.AZALEA);
+        generator.registerLog(AZALEA_LOG).log(AZALEA_LOG).wood(AZALEA_WOOD);
+        generator.registerLog(STRIPPED_AZALEA_LOG).log(STRIPPED_AZALEA_LOG).wood(STRIPPED_AZALEA_WOOD);
+
+        // Everything else
+
+        this.primitiveCubeAllState(generator,
+                PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, THE_SKY, INVERSION_STONE
+        );
+
+        this.primitiveState(generator,
+                COPPER_PLATED_AETHUM_FLUX_NODE, STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ACCUMULATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE,
+                REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, RITUAL_SOCLE_COMPOSER, ABERRANT_CALLING_CORE, ASP_RITE_CORE, ASSEMBLY_AUGMENT, STAFF_PEDESTAL,
+                CREATIVE_AETHUM_FLUX_CACHE, EMERALD_BLOCK, SUNDIAL, BREWING_CAULDRON
+        );
+    }
+
+    @Override
+    public void generateItemModels(ItemModelGenerator generator) {
+        this.parentedItem(generator,
+                ITEM_TRANSFER_NODE, PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, THE_SKY, INVERSION_STONE, COPPER_PLATED_AETHUM_FLUX_NODE,
+                STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ACCUMULATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE, REFINED_RITUAL_SOCLE,
+                SOPHISTICATED_RITUAL_SOCLE, RITUAL_SOCLE_COMPOSER, ABERRANT_CALLING_CORE, ASP_RITE_CORE, ASSEMBLY_AUGMENT, STAFF_PEDESTAL,
+                CREATIVE_AETHUM_FLUX_CACHE, EMERALD_BLOCK
+        );
+
+        this.generatedItem(generator,
+                SUNDIAL, BREWING_CAULDRON, AffinityItems.RANTHRACITE_DUST
+        );
+    }
+
+    private void parentedItem(ItemModelGenerator generator, Block... blocks) {
+        for (var block : blocks) generator.writer.accept(ModelIds.getItemModelId(block.asItem()), new SimpleModelSupplier(ModelIds.getBlockModelId(block)));
+    }
+
+    private void generatedItem(ItemModelGenerator generator, ItemConvertible... items) {
+        for (var itemConvertible : items) generator.register(itemConvertible.asItem(), Models.GENERATED);
+    }
+
+    private void primitiveState(BlockStateModelGenerator generator, Block... blocks) {
+        for (var block : blocks) generator.registerSimpleState(block);
+    }
+
+    private void primitiveCubeAllState(BlockStateModelGenerator generator, Block... blocks) {
+        for (var block : blocks) generator.registerSimpleCubeAll(block);
+    }
+
+    @Override
+    public String getName() {
+        return "Block States / Models";
+    }
+}

@@ -39,6 +39,7 @@
   "block.affinity.ritual_socle_composer": "Ritual Socle Composer",
   "block.affinity.affine_infuser": "Affine Infuser",
   "block.affinity.ranthracite_wire": "Ranthracite Dust",
+  "item.affinity.ranthracite_dust": { "translate": "block.affinity.ranthracite_wire" },
   "block.affinity.crop_reaper": "Crop Reaper",
   "block.affinity.affine_candle": "Affine Candle",
   "block.affinity.world_pin": "World Pin",

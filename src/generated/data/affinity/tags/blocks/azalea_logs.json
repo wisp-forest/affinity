@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "affinity:azalea_log",
+    "affinity:azalea_wood",
+    "affinity:stripped_azalea_log",
+    "affinity:stripped_azalea_wood"
+  ]
+}

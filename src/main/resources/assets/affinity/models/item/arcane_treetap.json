@@ -1,6 +1,11 @@
 {
-  "parent": "affinity:block/aethum_probe_0_crystals_off",
+  "parent": "affinity:block/arcane_treetap",
   "display": {
+    "gui": {
+      "rotation": [30, -75, 0],
+      "translation": [0, 4, 0],
+      "scale": [1, 1, 1]
+    },
     "thirdperson_righthand": {
       "rotation": [ 75, 45, 0 ],
       "translation": [ 0, 1.5, 2.25],
