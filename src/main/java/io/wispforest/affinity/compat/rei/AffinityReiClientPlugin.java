@@ -1,15 +1,18 @@
 package io.wispforest.affinity.compat.rei;
 
 import io.wispforest.affinity.block.impl.ArcaneFadeBlock;
+import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
 import io.wispforest.affinity.compat.rei.category.*;
 import io.wispforest.affinity.compat.rei.display.*;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.recipe.*;
+import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
+import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
@@ -57,8 +60,8 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         registry.registerFiller(ShapedAssemblyRecipe.class, ShapedAssemblyDisplay::new);
         registry.registerFiller(ShapelessAssemblyRecipe.class, ShapelessAssemblyDisplay::new);
 
-        ArcaneFadeBlock.forEachGroup((item, items) -> {
-            registry.add(new ArcaneFadingDisplay(items, item));
+        ArcaneFadeBlock.forEachGroup((id, item, items) -> {
+            registry.add(new ArcaneFadingDisplay(items, item, id));
         });
 
         var effectToPotion = new HashMap<StatusEffect, List<Potion>>();
@@ -79,4 +82,10 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         }
     }
 
+    @Override
+    public void registerScreens(ScreenRegistry registry) {
+        registry.registerClickArea(screen -> {
+            return new Rectangle(screen.rootX() + 90, screen.rootY() + 35, 22, 15);
+        }, AssemblyAugmentScreen.class, AffinityReiCommonPlugin.ASSEMBLY);
+    }
 }

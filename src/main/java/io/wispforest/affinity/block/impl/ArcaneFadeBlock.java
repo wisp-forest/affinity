@@ -57,14 +57,14 @@ public class ArcaneFadeBlock extends FluidBlock {
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    public static void forEachGroup(BiConsumer<ItemConvertible, List<ItemConvertible>> action) {
+    public static void forEachGroup(GroupConsumer consumer) {
         ITEM_GROUPS.forEach((item, tag) -> {
             var entries = new ArrayList<ItemConvertible>();
             for (var mappedItem : Registries.ITEM.iterateEntries(tag)) {
                 entries.add(mappedItem.value());
             }
 
-            action.accept(item, entries);
+            consumer.accept(tag.id(), item, entries);
         });
 
         BLOCK_GROUPS.forEach((block, tag) -> {
@@ -73,7 +73,7 @@ public class ArcaneFadeBlock extends FluidBlock {
                 entries.add(mappedItem.value());
             }
 
-            action.accept(block, entries);
+            consumer.accept(tag.id(), block, entries);
         });
 
     }
@@ -113,6 +113,10 @@ public class ArcaneFadeBlock extends FluidBlock {
             registry.getOrEmpty(new Identifier(tag.id().getNamespace(), tag.id().getPath().replaceFirst("arcane_fade_groups/", "")))
                     .ifPresent(block -> storage.put(block, tag));
         });
+    }
+
+    public interface GroupConsumer {
+        void accept(Identifier id, ItemConvertible fadedVariant, List<ItemConvertible> inputVariants);
     }
 
     static {

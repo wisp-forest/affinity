@@ -44,7 +44,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
         var effectContainer = Containers.horizontalFlow(Sizing.content(), Sizing.content());
         inputContainer.child(effectContainer);
 
-        for (var effect : display.getEffects()) {
+        for (var effect : display.recipe.getEffectInputs()) {
             var ingredient = EntryIngredients.of(AffinityReiCommonPlugin.EFFECT_ENTRY_TYPE, List.of(effect));
 
             effectContainer.child(adapter.wrap(
@@ -53,7 +53,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
             ).margins(Insets.of(1)));
         }
 
-        if (!(display.getEffects().isEmpty() || display.getRecipe().getItemInputs().isEmpty())) {
+        if (!(display.recipe.getEffectInputs().isEmpty() || display.recipe.getItemInputs().isEmpty())) {
             inputContainer.child(
                     Components.box(Sizing.fixed(70), Sizing.fixed(1))
                             .color(Color.ofFormatting(Formatting.GRAY))
@@ -61,7 +61,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
             );
         }
 
-        var inputs = display.getRecipe().getItemInputs();
+        var inputs = display.recipe.getItemInputs();
         inputs:
         for (int row = 0; row < MathHelper.ceilDiv(inputs.size(), 3); row++) {
             var rowContainer = Containers.horizontalFlow(Sizing.content(), Sizing.content());
@@ -92,7 +92,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
         potionNbt.put(BrewingCauldronBlockEntity.FILL_LEVEL_KEY, 3);
         potionNbt.put(
                 BrewingCauldronBlockEntity.STORED_POTION_KEY,
-                new PotionMixture(display.getPotionOutput(), null)
+                new PotionMixture(display.recipe.potionOutput(), null)
         );
 
         root.child(

@@ -48,8 +48,8 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
 
     @Override
     public boolean matches(AberrantCallingCoreBlockEntity.AberrantCallingInventory inventory, World world) {
-        return this.runRecipeMatcher(this.coreInputs, Arrays.asList(inventory.coreInputs()))
-                && this.soclesMatchInputs(inventory)
+        return this.doShapelessMatch(this.coreInputs, Arrays.asList(inventory.coreInputs()))
+                && this.doShapelessMatch(this.socleInputs, inventory.delegate())
                 && this.entityType == inventory.sacrifice().getType()
                 && (this.entityNbt == null || NbtHelper.matches(this.entityNbt, inventory.sacrifice().writeNbt(new NbtCompound()), true));
     }
@@ -119,7 +119,7 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
         @Override
         public void write(PacketByteBuf buf, AberrantCallingRecipe recipe) {
             buf.writeCollection(recipe.coreInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
-            buf.writeCollection(recipe.inputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
+            buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeVarInt(recipe.duration);
 
             buf.writeVarInt(Registries.ENTITY_TYPE.getRawId(recipe.entityType));

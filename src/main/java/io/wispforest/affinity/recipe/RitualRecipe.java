@@ -8,49 +8,40 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventory> implements Recipe<I> {
 
     protected final Identifier id;
-    protected final List<Ingredient> inputs;
+    protected final List<Ingredient> socleInputs;
     protected final int duration;
 
-    protected RitualRecipe(Identifier id, List<Ingredient> inputs, int duration) {
+    protected RitualRecipe(Identifier id, List<Ingredient> socleInputs, int duration) {
         this.id = id;
-        this.inputs = inputs;
+        this.socleInputs = socleInputs;
         this.duration = duration;
     }
 
-    protected boolean soclesMatchInputs(I inventory) {
-        final var matcher = new RecipeMatcher();
-        int nonEmptyStacks = 0;
-
-        for (int j = 0; j < inventory.size(); ++j) {
-            ItemStack itemStack = inventory.getStack(j);
-            if (!itemStack.isEmpty()) {
-                ++nonEmptyStacks;
-                matcher.addInput(itemStack, 1);
-            }
-        }
-
-        return nonEmptyStacks == this.inputs.size() && matcher.match(this, null);
-    }
-
-    protected boolean runRecipeMatcher(List<Ingredient> expected, Collection<ItemStack> stacks) {
-        final var matcher = new RecipeMatcher();
-        int nonEmptyStacks = 0;
+    protected boolean doShapelessMatch(List<Ingredient> expected, Collection<ItemStack> stacks) {
+        var ingredientStacks = new ArrayList<ItemStack>();
 
         for (var stack : stacks) {
-            if (!stack.isEmpty()) {
-                ++nonEmptyStacks;
-                matcher.addInput(stack, 1);
-            }
+            if (stack.isEmpty()) continue;
+            ingredientStacks.add(stack);
         }
 
-        return nonEmptyStacks == expected.size() &&
-                matcher.match(new MatchingRecipe(DefaultedList.copyOf(Ingredient.EMPTY, expected.toArray(Ingredient[]::new))), null);
+        if (ingredientStacks.size() != expected.size()) return false;
+
+        for (var ingredient : expected) {
+            if (!ingredient.requiresTesting()) continue;
+            return ShapelessMatch.isMatch(ingredientStacks, expected);
+        }
+
+        var matcher = new RecipeMatcher();
+        for (var input : ingredientStacks) matcher.addInput(input, 1);
+        return matcher.match(new MatchingRecipe(DefaultedList.copyOf(Ingredient.EMPTY, expected.toArray(Ingredient[]::new))), null);
     }
 
     public int getDuration() {
@@ -59,7 +50,7 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventor
 
     @Override
     public DefaultedList<Ingredient> getIngredients() {
-        return DefaultedList.copyOf(Ingredient.EMPTY, this.inputs.toArray(Ingredient[]::new));
+        return DefaultedList.copyOf(Ingredient.EMPTY, this.socleInputs.toArray(Ingredient[]::new));
     }
 
     @Override

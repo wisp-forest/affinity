@@ -29,7 +29,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
     @Override
     public boolean matches(AspRiteCoreBlockEntity.AspenInfusionInventory inventory, World world) {
-        return this.primaryInput.test(inventory.primaryInput()) && this.soclesMatchInputs(inventory);
+        return this.primaryInput.test(inventory.primaryInput()) && this.doShapelessMatch(this.socleInputs, inventory.delegate());
     }
 
     @Override
@@ -81,7 +81,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
         @Override
         public void write(PacketByteBuf buf, AspenInfusionRecipe recipe) {
             recipe.primaryInput.write(buf);
-            buf.writeCollection(recipe.inputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
+            buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeItemStack(recipe.output);
             buf.writeVarInt(recipe.duration);
         }

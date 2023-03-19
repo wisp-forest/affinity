@@ -74,6 +74,14 @@ public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, 
         }
     }
 
+    public int rootX() {
+        return this.x;
+    }
+
+    public int rootY() {
+        return this.y;
+    }
+
     static {
         UIParsing.registerFactory("affinity.alpha-wrapper", element -> new AlphaWrapper<>(null));
     }
