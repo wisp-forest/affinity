@@ -116,7 +116,7 @@ public class ArcaneTreetapBlock extends HorizontalFacingBlock {
             ClientParticles.spawn(PARTICLE, world, Vec3d.ofCenter(pos).add(facing.getOffsetX() * .25, 0, facing.getOffsetZ() * .25), .15f);
             ClientParticles.spawn(new BlockStateParticleEffect(ParticleTypes.FALLING_DUST, Blocks.AMETHYST_BLOCK.getDefaultState()), world, Vec3d.ofCenter(pos).add(facing.getOffsetX() * .25, 0, facing.getOffsetZ() * .25), .15f);
         } else {
-            ClientParticles.spawn(ParticleTypes.SMOKE, world, Vec3d.ofCenter(pos).add(facing.getOffsetX() * .25, 0, facing.getOffsetZ() * .25), .15f);
+            ClientParticles.spawn(ParticleTypes.ASH, world, Vec3d.ofCenter(pos).add(facing.getOffsetX() * .25, 0, facing.getOffsetZ() * .25), .15f);
         }
     }
 

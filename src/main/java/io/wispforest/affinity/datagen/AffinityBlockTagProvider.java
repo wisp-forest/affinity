@@ -45,9 +45,8 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
         );
 
         this.getOrCreateTagBuilder(AZALEA_LOGS).add(AZALEA_LOG, AZALEA_WOOD, STRIPPED_AZALEA_LOG, STRIPPED_AZALEA_WOOD);
-        this.getOrCreateTagBuilder(BlockTags.LOGS).addTag(AZALEA_LOGS);
         this.getOrCreateTagBuilder(BlockTags.LOGS_THAT_BURN).addTag(AZALEA_LOGS);
-        this.getOrCreateTagBuilder(BlockTags.OVERWORLD_NATURAL_LOGS).addTag(AZALEA_LOGS);
+        this.getOrCreateTagBuilder(BlockTags.OVERWORLD_NATURAL_LOGS).add(AZALEA_LOG);
         this.getOrCreateTagBuilder(BlockTags.LEAVES).add(BUDDING_AZALEA_LEAVES, UNFLOWERING_AZALEA_LEAVES);
 
         this.getOrCreateTagBuilder(BlockTags.PLANKS).add(AZALEA_PLANKS);
