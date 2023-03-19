@@ -16,12 +16,15 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventor
 
     protected final Identifier id;
     protected final List<Ingredient> socleInputs;
-    protected final int duration;
 
-    protected RitualRecipe(Identifier id, List<Ingredient> socleInputs, int duration) {
+    public final int duration;
+    public final int fluxCostPerTick;
+
+    protected RitualRecipe(Identifier id, List<Ingredient> socleInputs, int duration, int fluxCostPerTick) {
         this.id = id;
         this.socleInputs = socleInputs;
         this.duration = duration;
+        this.fluxCostPerTick = fluxCostPerTick;
     }
 
     protected boolean doShapelessMatch(List<Ingredient> expected, Collection<ItemStack> stacks) {
@@ -42,10 +45,6 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventor
         var matcher = new RecipeMatcher();
         for (var input : ingredientStacks) matcher.addInput(input, 1);
         return matcher.match(new MatchingRecipe(DefaultedList.copyOf(Ingredient.EMPTY, expected.toArray(Ingredient[]::new))), null);
-    }
-
-    public int getDuration() {
-        return duration;
     }
 
     @Override

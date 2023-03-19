@@ -109,7 +109,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     @Override
     public void onBroken() {
         super.onBroken();
-        this.finishRitual(this::onRitualInterrupted, false);
+        this.endRitual(this::onRitualInterrupted, false);
         ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.getItem());
     }
 
@@ -150,11 +150,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         }
 
         this.doRitualTick();
+        if (this.ritualTick < 0) return;
 
-        if (this.ritualTick++ >= this.cachedSetup.duration()) {
-            this.finishRitual(this::onRitualCompleted, true);
+        if (++this.ritualTick >= this.cachedSetup.duration()) {
+            this.endRitual(this::onRitualCompleted, true);
         } else if (this.ritualTick == this.ritualFailureTick) {
-            this.finishRitual(this::onRitualInterrupted, false);
+            this.endRitual(this::onRitualInterrupted, false);
         }
     }
 
@@ -164,10 +165,10 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         this.onRitualInterrupted();
 
-        this.finishRitual(this::onRitualInterrupted, false);
+        this.endRitual(this::onRitualInterrupted, false);
     }
 
-    protected void finishRitual(Supplier<Boolean> handlerImpl, boolean clearItems) {
+    protected void endRitual(Supplier<Boolean> handlerImpl, boolean clearItems) {
         if (this.ritualTick < 0) return;
 
         this.ritualTick = -1;

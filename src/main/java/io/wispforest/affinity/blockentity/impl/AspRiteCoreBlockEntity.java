@@ -22,6 +22,9 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     public AspRiteCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ASP_RITE_CORE, pos, state);
+
+        this.fluxStorage.setFluxCapacity(8000);
+        this.fluxStorage.setMaxInsert(200);
     }
 
     @Override
@@ -32,13 +35,22 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
         if (recipeOptional.isEmpty()) return false;
         this.cachedRecipe = recipeOptional.get();
 
-        setup.configureLength(this.cachedRecipe.getDuration());
+        setup.configureLength(this.cachedRecipe.duration);
 
         return true;
     }
 
     @Override
     protected void doRitualTick() {
+        if (this.cachedRecipe.fluxCostPerTick > 0) {
+            if (this.flux() < this.cachedRecipe.fluxCostPerTick) {
+                this.endRitual(this::onRitualInterrupted, false);
+                return;
+            } else {
+                this.updateFlux(this.flux() - this.cachedRecipe.fluxCostPerTick);
+            }
+        }
+
         if (this.ritualTick % 10 == 0) {
             AffinityParticleSystems.ASPEN_INFUSION_ACTIVE.spawn(this.world, Vec3d.ofCenter(this.pos, .85f));
         }

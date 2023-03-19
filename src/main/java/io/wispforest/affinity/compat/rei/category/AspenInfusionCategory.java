@@ -6,7 +6,9 @@ import io.wispforest.affinity.compat.rei.display.AspenInfusionDisplay;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.compat.rei.ReiUIAdapter;
+import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.Containers;
+import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -64,9 +66,19 @@ public class AspenInfusionCategory implements DisplayCategory<AspenInfusionDispl
 
         // Arrow
 
-        root.child(adapter.wrap(Widgets::createArrow, arrow -> {
-            arrow.animationDurationTicks(display.recipe.getDuration());
-        }).tooltip(Text.of(MathUtil.rounded(display.recipe.getDuration() / 20d, 1) + "s")));
+        root.child(Containers.verticalFlow(Sizing.content(), Sizing.content()).<FlowLayout>configure(container -> {
+            container.gap(5).horizontalAlignment(HorizontalAlignment.CENTER);
+
+            container.child(adapter.wrap(Widgets::createArrow, arrow -> arrow.animationDurationTicks(display.recipe.duration))
+                    .tooltip(Text.of(MathUtil.rounded(display.recipe.duration / 20d, 1) + "s")));
+
+            if (display.recipe.fluxCostPerTick != 0) {
+                container.child(Components.label(Text.of(display.recipe.fluxCostPerTick * display.recipe.duration + "\n" + "flux"))
+                        .horizontalTextAlignment(HorizontalAlignment.CENTER)
+                        .color(Color.ofRgb(0x3f3f3f))
+                ).padding(Insets.top(25));
+            }
+        }));
 
         // Output and socle requirements
 

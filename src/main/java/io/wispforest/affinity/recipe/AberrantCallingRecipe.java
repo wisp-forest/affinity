@@ -2,6 +2,7 @@ package io.wispforest.affinity.recipe;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import io.wispforest.affinity.blockentity.impl.AberrantCallingCoreBlockEntity;
 import io.wispforest.affinity.misc.util.JsonUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
@@ -38,8 +39,9 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
                                     EntityType<?> entityType,
                                     @Nullable NbtCompound entityNbt,
                                     int duration,
+                                    int fluxCostPerTick,
                                     ItemStack output) {
-        super(id, inputs, duration);
+        super(id, inputs, duration, fluxCostPerTick);
         this.coreInputs = ImmutableList.copyOf(coreInputs);
         this.entityType = entityType;
         this.entityNbt = entityNbt;
@@ -88,42 +90,48 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
 
         @Override
         public AberrantCallingRecipe read(Identifier id, JsonObject json) {
-            final var coreInputs = JsonUtil.readIngredientList(json, "core_inputs");
-            final var socleInputs = JsonUtil.readIngredientList(json, "socle_inputs");
-
-            final int duration = JsonHelper.getInt(json, "duration", 100);
-
             final var entityObject = JsonHelper.getObject(json, "entity");
-            final var entityType = JsonUtil.readFromRegistry(entityObject, "id", Registries.ENTITY_TYPE);
-            final var entityNbt = entityObject.has("data") ? JsonUtil.readNbt(entityObject, "data") : null;
 
-            final var output = JsonUtil.readChadStack(json, "output");
+            int fluxCostPerTick = JsonHelper.getInt(json, "flux_cost_per_tick", 0);
+            if (fluxCostPerTick % 4 != 0) {
+                throw new JsonParseException("Aberrant calling flux cost must be divisible by 4");
+            }
 
-            return new AberrantCallingRecipe(id, coreInputs, socleInputs, entityType, entityNbt, duration, output);
+            return new AberrantCallingRecipe(id,
+                    JsonUtil.readIngredientList(json, "core_inputs"),
+                    JsonUtil.readIngredientList(json, "socle_inputs"),
+                    JsonUtil.readFromRegistry(entityObject, "id", Registries.ENTITY_TYPE),
+                    entityObject.has("data") ? JsonUtil.readNbt(entityObject, "data") : null,
+                    JsonHelper.getInt(json, "duration", 100),
+                    fluxCostPerTick,
+                    JsonUtil.readChadStack(json, "output")
+            );
         }
 
         @Override
         public AberrantCallingRecipe read(Identifier id, PacketByteBuf buf) {
-            final var coreInputs = buf.readCollection(ArrayList::new, Ingredient::fromPacket);
-            final var socleInputs = buf.readCollection(ArrayList::new, Ingredient::fromPacket);
-            final int duration = buf.readVarInt();
-
-            final var entityType = Registries.ENTITY_TYPE.get(buf.readVarInt());
-            final var entityNbt = buf.readOptional(PacketByteBuf::readNbt).orElse(null);
-
-            final var output = buf.readItemStack();
-
-            return new AberrantCallingRecipe(id, coreInputs, socleInputs, entityType, entityNbt, duration, output);
+            return new AberrantCallingRecipe(
+                    id,
+                    buf.readCollection(ArrayList::new, Ingredient::fromPacket),
+                    buf.readCollection(ArrayList::new, Ingredient::fromPacket),
+                    Registries.ENTITY_TYPE.get(buf.readVarInt()),
+                    buf.readOptional(PacketByteBuf::readNbt).orElse(null),
+                    buf.readVarInt(),
+                    buf.readVarInt(),
+                    buf.readItemStack()
+            );
         }
 
         @Override
         public void write(PacketByteBuf buf, AberrantCallingRecipe recipe) {
             buf.writeCollection(recipe.coreInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
-            buf.writeVarInt(recipe.duration);
 
             buf.writeVarInt(Registries.ENTITY_TYPE.getRawId(recipe.entityType));
             buf.writeOptional(Optional.ofNullable(recipe.entityNbt), PacketByteBuf::writeNbt);
+
+            buf.writeVarInt(recipe.duration);
+            buf.writeVarInt(recipe.fluxCostPerTick);
 
             buf.writeItemStack(recipe.output);
         }

@@ -48,6 +48,9 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
 
     public AberrantCallingCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ABERRANT_CALLING_CORE, pos, state);
+
+        this.fluxStorage.setFluxCapacity(16000);
+        this.fluxStorage.setMaxInsert(500);
     }
 
     @Override
@@ -81,7 +84,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         if (recipeOptional.isEmpty()) return false;
         this.cachedRecipe = recipeOptional.get();
 
-        setup.configureLength(this.cachedRecipe.getDuration());
+        setup.configureLength(this.cachedRecipe.duration);
         this.ritualLock.acquire(this);
         this.createDissolveParticle(this.item, this.pos, setup.duration());
 
@@ -105,6 +108,21 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected void doRitualTick() {
+        if (this.cachedRecipe.fluxCostPerTick > 0) {
+            int fluxCostPerCore = this.cachedRecipe.fluxCostPerTick / 4;
+
+            if (this.testFluxSupply(fluxCostPerCore)) {
+                this.updateFlux(this.flux() - fluxCostPerCore);
+
+                for (var neighbor : this.cachedNeighbors) {
+                    neighbor.updateFlux(neighbor.flux() - fluxCostPerCore);
+                }
+            } else {
+                this.endRitual(this::onRitualInterrupted, false);
+                return;
+            }
+        }
+
         if (this.ritualTick % 3 == 0) {
             AffinityParticleSystems.ABERRANT_CALLING_ACTIVE.spawn(this.world, Vec3d.ofCenter(this.pos), this.neighborPositions);
         }
@@ -120,6 +138,16 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
                 neighbor.markDirty();
             }
         }
+    }
+
+    private boolean testFluxSupply(int requiredFlux) {
+        if (this.flux() < requiredFlux) return false;
+
+        for (var neighbor : this.cachedNeighbors) {
+            if (neighbor.flux() < requiredFlux) return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -162,14 +190,14 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     }
 
     @Override
-    protected void finishRitual(Supplier<Boolean> handlerImpl, boolean clearItems) {
+    protected void endRitual(Supplier<Boolean> handlerImpl, boolean clearItems) {
         if (this.ritualTick > 0) {
             final var positions = new ArrayList<>(Arrays.asList(this.neighborPositions.cores()));
             positions.add(this.pos);
             AffinityNetwork.server(this).send(new RemoveBezierEmitterParticlesPacket(positions, PARTICLE_OFFSET));
         }
 
-        super.finishRitual(handlerImpl, clearItems);
+        super.endRitual(handlerImpl, clearItems);
     }
 
     @Override
@@ -195,7 +223,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         super.onBroken();
 
         if (!this.ritualLock.isActive()) return;
-        this.ritualLock.holder().finishRitual(this.ritualLock.holder()::onRitualInterrupted, false);
+        this.ritualLock.holder().endRitual(this.ritualLock.holder()::onRitualInterrupted, false);
     }
 
     @Override

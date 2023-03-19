@@ -1,10 +1,8 @@
 {
   "type": "affinity:aspen_infusion",
-  "output": {
-    "item": "minecraft:diamond"
-  },
+  "flux_cost_per_tick": 5,
   "primary_input": {
-    "item": "affinity:azalea_flowers"
+    "item": "minecraft:redstone"
   },
   "inputs": [
     {
@@ -30,12 +28,10 @@
     },
     {
       "item": "affinity:anthracite_powder"
-    },
-    {
-      "item": "affinity:anthracite_powder"
-    },
-    {
-      "item": "affinity:anthracite_powder"
     }
-  ]
+  ],
+  "output": {
+    "item": "affinity:ranthracite_dust",
+    "count": 9
+  }
 }

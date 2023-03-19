@@ -9,6 +9,7 @@ import io.wispforest.owo.compat.rei.ReiUIAdapter;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.EntityComponent;
 import io.wispforest.owo.ui.container.Containers;
+import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -73,16 +74,25 @@ public class AberrantCallingCategory implements DisplayCategory<AberrantCallingD
 
         // Arrow and sacrifice
 
-        root.child(Containers.verticalFlow(Sizing.content(), Sizing.content())
-                .child((display.recipe.entityType == EntityType.PLAYER
-                        ? Components.entity(Sizing.fixed(30), EntityComponent.createRenderablePlayer(MinecraftClient.getInstance().player.getGameProfile()))
-                        : Components.entity(Sizing.fixed(30), display.recipe.entityType, display.recipe.entityNbt()))
-                        .scaleToFit(true).margins(Insets.bottom(5)).tooltip(display.recipe.entityType.getName()))
-                .child(adapter.wrap(Widgets::createArrow, arrow -> {
-                    arrow.animationDurationTicks(display.recipe.getDuration());
-                }).tooltip(Text.of(MathUtil.rounded(display.recipe.getDuration() / 20d, 1) + "s")))
-                .horizontalAlignment(HorizontalAlignment.CENTER)
-                .padding(Insets.bottom(35)));
+        root.child(Containers.verticalFlow(Sizing.content(), Sizing.content()).<FlowLayout>configure(container -> {
+            container.gap(5).horizontalAlignment(HorizontalAlignment.CENTER);
+
+            container.child((display.recipe.entityType == EntityType.PLAYER
+                            ? Components.entity(Sizing.fixed(30), EntityComponent.createRenderablePlayer(MinecraftClient.getInstance().player.getGameProfile()))
+                            : Components.entity(Sizing.fixed(30), display.recipe.entityType, display.recipe.entityNbt()))
+                            .scaleToFit(true).tooltip(display.recipe.entityType.getName()))
+                    .child(adapter.wrap(Widgets::createArrow, arrow -> arrow.animationDurationTicks(display.recipe.duration))
+                            .tooltip(Text.of(MathUtil.rounded(display.recipe.duration / 20d, 1) + "s")));
+
+            if (display.recipe.fluxCostPerTick != 0) {
+                container.child(Components.label(Text.of(display.recipe.fluxCostPerTick * display.recipe.duration + "\n" + "flux"))
+                        .horizontalTextAlignment(HorizontalAlignment.CENTER)
+                        .color(Color.ofRgb(0x3f3f3f))
+                        .margins(Insets.top(10)));
+            } else {
+                container.padding(Insets.bottom(35));
+            }
+        }));
 
         // Output and socle requirements
 

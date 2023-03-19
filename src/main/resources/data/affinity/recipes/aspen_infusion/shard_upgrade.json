@@ -23,5 +23,6 @@
       "tag": "minecraft:candles"
     }
   ],
-  "duration": 200
+  "duration": 200,
+  "flux_cost_per_tick": 10
 }

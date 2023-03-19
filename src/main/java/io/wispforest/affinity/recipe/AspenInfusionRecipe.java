@@ -21,8 +21,8 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
     public final Ingredient primaryInput;
     private final ItemStack output;
 
-    public AspenInfusionRecipe(Identifier id, Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, int duration) {
-        super(id, inputs, duration);
+    public AspenInfusionRecipe(Identifier id, Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, int duration, int fluxCostPerTick) {
+        super(id, inputs, duration, fluxCostPerTick);
         this.primaryInput = primaryInput;
         this.output = output;
     }
@@ -60,22 +60,25 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
         @Override
         public AspenInfusionRecipe read(Identifier id, JsonObject json) {
-            final var output = JsonUtil.readChadStack(json, "output");
-            final var baseInput = Ingredient.fromJson(JsonHelper.getObject(json, "primary_input"));
-            final var inputs = JsonUtil.readIngredientList(json, "inputs");
-
-            final int duration = JsonHelper.getInt(json, "duration", 100);
-
-            return new AspenInfusionRecipe(id, baseInput, inputs, output, duration);
+            return new AspenInfusionRecipe(id,
+                    Ingredient.fromJson(JsonHelper.getObject(json, "primary_input")),
+                    JsonUtil.readIngredientList(json, "inputs"),
+                    JsonUtil.readChadStack(json, "output"),
+                    JsonHelper.getInt(json, "duration", 100),
+                    JsonHelper.getInt(json, "flux_cost_per_tick", 0)
+            );
         }
 
         @Override
         public AspenInfusionRecipe read(Identifier id, PacketByteBuf buf) {
-            final var baseInput = Ingredient.fromPacket(buf);
-            final var inputs = buf.readCollection(ArrayList::new, Ingredient::fromPacket);
-            final var output = buf.readItemStack();
-            final int duration = buf.readVarInt();
-            return new AspenInfusionRecipe(id, baseInput, inputs, output, duration);
+            return new AspenInfusionRecipe(
+                    id,
+                    Ingredient.fromPacket(buf),
+                    buf.readCollection(ArrayList::new, Ingredient::fromPacket),
+                    buf.readItemStack(),
+                    buf.readVarInt(),
+                    buf.readVarInt()
+            );
         }
 
         @Override
@@ -84,6 +87,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
             buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeItemStack(recipe.output);
             buf.writeVarInt(recipe.duration);
+            buf.writeVarInt(recipe.fluxCostPerTick);
         }
     }
 }
