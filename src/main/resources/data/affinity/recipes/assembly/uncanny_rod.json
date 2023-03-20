@@ -1,0 +1,20 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "s": {
+      "item": "minecraft:stick"
+    },
+    "w": {
+      "item": "affinity:inert_wisp_matter"
+    }
+  },
+  "pattern": [
+    "w",
+    "s",
+    "w"
+  ],
+  "result": {
+    "item": "affinity:uncanny_rod"
+  }
+}
