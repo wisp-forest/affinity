@@ -1,6 +1,7 @@
 {
   "type": "affinity:aberrant_calling",
   "duration": 400,
+  "flux_cost_per_tick": 40,
   "core_inputs": [
     {
       "item": "affinity:vicious_wisp_matter"
@@ -26,12 +27,6 @@
       "item": "minecraft:nether_wart"
     },
     {
-      "item": "affinity:azalea_flowers"
-    },
-    {
-      "item": "minecraft:nether_wart"
-    },
-    {
       "fabric:type": "fabric:nbt",
       "base": {
         "item": "minecraft:potion"
@@ -39,7 +34,14 @@
       "nbt": {
         "Potion": "affinity:strong_wither"
       }
+    },
+    {
+      "item": "minecraft:nether_wart"
+    },
+    {
+      "item": "affinity:azalea_flowers"
     }
+
   ],
   "output": {
     "item": "affinity:arcane_fade_bucket"

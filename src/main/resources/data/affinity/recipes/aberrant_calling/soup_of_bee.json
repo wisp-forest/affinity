@@ -1,7 +1,6 @@
 {
   "type": "affinity:aberrant_calling",
   "duration": 50,
-  "flux_cost_per_tick": 20,
   "core_inputs": [
     {
       "item": "minecraft:sugar"

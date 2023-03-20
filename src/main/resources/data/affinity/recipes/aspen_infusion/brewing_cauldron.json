@@ -1,0 +1,34 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 500,
+  "flux_cost_per_tick": 10,
+  "primary_input": {
+    "item": "minecraft:cauldron"
+  },
+  "inputs": [
+    {
+      "item": "minecraft:ghast_tear"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    }
+  ],
+  "output": {
+    "item": "affinity:brewing_cauldron"
+  }
+}
