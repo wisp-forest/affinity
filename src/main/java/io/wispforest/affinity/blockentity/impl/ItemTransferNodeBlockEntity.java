@@ -5,7 +5,7 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.LinkableBlockEntity;
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
-import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.misc.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
 import io.wispforest.affinity.misc.util.NbtUtil;
@@ -54,7 +54,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 @SuppressWarnings("UnstableApiUsage")
-public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, CrosshairStatProvider, LinkableBlockEntity, InteractableBlockEntity, BeforeMangroveBasketCaptureCallback {
+public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, InWorldTooltipProvider, LinkableBlockEntity, InteractableBlockEntity, BeforeMangroveBasketCaptureCallback {
 
     public static final NbtKey<Mode> MODE_KEY = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
     public static final NbtKey<Integer> STACK_SIZE_KEY = new NbtKey<>("StackSize", NbtKey.Type.INT);

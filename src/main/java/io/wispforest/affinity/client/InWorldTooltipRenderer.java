@@ -1,7 +1,7 @@
 package io.wispforest.affinity.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.owo.ui.core.Easing;
 import io.wispforest.owo.ui.util.Drawer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -16,7 +16,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 
-public class StatProviderRenderer {
+public class InWorldTooltipRenderer {
 
     private static BlockPos lastTargetPos = null;
     private static float targetViewTime = -1;
@@ -37,9 +37,11 @@ public class StatProviderRenderer {
                 if (targetViewTime < 5) return;
 
                 final var blockEntity = client.world.getBlockEntity(target);
-                if (!(blockEntity instanceof CrosshairStatProvider provider)) return;
+                if (!(blockEntity instanceof InWorldTooltipProvider provider)) return;
 
-                var entries = new ArrayList<CrosshairStatProvider.Entry>();
+                provider.updateTooltipEntries(Math.floor(targetViewTime) == 5f, client.getLastFrameDuration());
+
+                var entries = new ArrayList<InWorldTooltipProvider.Entry>();
                 provider.appendTooltipEntries(entries);
 
                 var modelViewStack = RenderSystem.getModelViewStack();
@@ -72,9 +74,9 @@ public class StatProviderRenderer {
                     matrices.push();
                     matrices.translate(0, 0, Easing.CUBIC.apply(1 - progress) * -25);
 
-                    if (entry instanceof CrosshairStatProvider.TextEntry textEntry) {
+                    if (entry instanceof InWorldTooltipProvider.TextEntry textEntry) {
                         client.textRenderer.draw(matrices, textEntry.icon(), 1, i * 10, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
-                    } else if (entry instanceof CrosshairStatProvider.TextAndIconEntry iconEntry) {
+                    } else if (entry instanceof InWorldTooltipProvider.TextAndIconEntry iconEntry) {
                         RenderSystem.enableBlend();
                         RenderSystem.setShaderColor(1, 1, 1, progress);
                         RenderSystem.setShaderTexture(0, iconEntry.texture());

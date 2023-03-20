@@ -6,7 +6,7 @@ import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
-import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.client.render.blockentity.LinkRenderer;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.mixin.client.CameraInvoker;
@@ -256,11 +256,11 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                     }
                 }
 
-                if (blockEntity instanceof CrosshairStatProvider statProvider) {
-                    var entries = new ArrayList<CrosshairStatProvider.Entry>();
+                if (blockEntity instanceof InWorldTooltipProvider statProvider) {
+                    var entries = new ArrayList<InWorldTooltipProvider.Entry>();
                     statProvider.appendTooltipEntries(entries);
 
-                    entries.add(0, CrosshairStatProvider.Entry.text(Text.empty(), blockEntity.getCachedState().getBlock().getName()));
+                    entries.add(0, InWorldTooltipProvider.Entry.text(Text.empty(), blockEntity.getCachedState().getBlock().getName()));
 
                     for (int i = 0; i < entries.size(); i++) {
                         var entry = entries.get(i);
@@ -269,9 +269,9 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                         int yOffset = i * 10;
                         if (i > 0) yOffset += 3;
 
-                        if (entry instanceof CrosshairStatProvider.TextEntry textEntry) {
+                        if (entry instanceof InWorldTooltipProvider.TextEntry textEntry) {
                             client.textRenderer.draw(matrices, textEntry.icon(), mouseX + 10 + 1, mouseY + yOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
-                        } else if (entry instanceof CrosshairStatProvider.TextAndIconEntry iconEntry) {
+                        } else if (entry instanceof InWorldTooltipProvider.TextAndIconEntry iconEntry) {
                             RenderSystem.enableBlend();
                             RenderSystem.setShaderColor(1, 1, 1, progress);
                             RenderSystem.setShaderTexture(0, iconEntry.texture());

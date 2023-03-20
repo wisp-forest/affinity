@@ -2,7 +2,7 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
-import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import net.minecraft.client.item.TooltipContext;
@@ -57,7 +57,7 @@ public abstract class StaffItem extends Item {
 
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {}
 
-    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {}
+    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<InWorldTooltipProvider.Entry> entries) {}
 
     public ActionResult onPedestalScrolled(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, boolean direction) {
         return ActionResult.PASS;

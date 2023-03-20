@@ -5,11 +5,12 @@ import io.wispforest.affinity.aethumflux.net.AethumLink;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxStorage;
-import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.misc.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.network.FluxSyncHandler;
 import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.ui.util.Delta;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -31,10 +32,12 @@ import org.apache.commons.lang3.mutable.MutableObject;
 import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
-public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback, CrosshairStatProvider, BeforeMangroveBasketCaptureCallback, LinkableBlockEntity {
+public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback, InWorldTooltipProvider, BeforeMangroveBasketCaptureCallback, LinkableBlockEntity {
 
     public static final NbtKey<AethumLink.Element> LINK_ELEMENT_KEY = new NbtKey<>("Element", NbtKey.Type.INT.then(ordinal -> AethumLink.Element.values()[ordinal], Enum::ordinal));
     public static final NbtKey<AethumLink.Type> LINK_TYPE_KEY = new NbtKey<>("Type", NbtKey.Type.INT.then(ordinal -> AethumLink.Type.values()[ordinal], Enum::ordinal));
+
+    @Environment(EnvType.CLIENT) private long tooltipFlux = 0;
 
     protected final Map<BlockPos, AethumLink.Type> links = new HashMap<>();
     protected final AethumFluxStorage fluxStorage = new AethumFluxStorage(this);
@@ -212,8 +215,21 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     // ------------
 
     @Override
+    public void updateTooltipEntries(boolean force, float delta) {
+        if (force) {
+            this.tooltipFlux = this.displayFlux();
+            return;
+        }
+
+        if (this.displayFlux() != this.tooltipFlux) {
+            float diff = Delta.compute(this.tooltipFlux, this.displayFlux(), delta * .5f);
+            this.tooltipFlux += Math.signum(diff) * Math.max(1, Math.abs(diff));
+        }
+    }
+
+    @Override
     public void appendTooltipEntries(List<Entry> entries) {
-        entries.add(Entry.icon(Text.of(String.valueOf(this.displayFlux())), 0, 0));
+        entries.add(Entry.icon(Text.of(String.valueOf(this.tooltipFlux)), 0, 0));
     }
 
     public void updateFlux(long flux) {

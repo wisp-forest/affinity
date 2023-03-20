@@ -3,7 +3,7 @@ package io.wispforest.affinity.item;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
-import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
@@ -57,8 +57,8 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     }
 
     @Override
-    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {
-        entries.add(CrosshairStatProvider.Entry.icon(this.getModeName(pedestal.getItem()), 8, 0));
+    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<InWorldTooltipProvider.Entry> entries) {
+        entries.add(InWorldTooltipProvider.Entry.icon(this.getModeName(pedestal.getItem()), 8, 0));
     }
 
     @Override

@@ -8,17 +8,20 @@ import java.util.List;
 
 /**
  * An interface to be implemented on {@link net.minecraft.block.entity.BlockEntity} types that
- * should display some stats under the crosshair when looked at
+ * should display some stats in the world when targeted by the player
  */
-public interface CrosshairStatProvider {
+public interface InWorldTooltipProvider {
 
     /**
-     * @return {@code true} if this provider is currently
-     * providing meaningful stats to display
+     * Update the tooltip entries display by this provider,
+     * usually used for visually interpolated values
+     *
+     * @param force Whether all interpolated values should instantaneously
+     *              be updated to their real current value, usually because the
+     *              player's targeted block has changed
+     * @param delta The duration of the last frame, in partial ticks
      */
-    default boolean shouldDisplay() {
-        return true;
-    }
+    default void updateTooltipEntries(boolean force, float delta) {}
 
     /**
      * The statistics this provider should currently

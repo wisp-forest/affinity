@@ -3,7 +3,7 @@ package io.wispforest.affinity.item;
 import com.google.common.collect.ImmutableMap;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
-import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.nbt.NbtKey;
@@ -100,9 +100,9 @@ public class NimbleStaffItem extends StaffItem {
     }
 
     @Override
-    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {
+    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<InWorldTooltipProvider.Entry> entries) {
         var direction = getDirection(pedestal.getItem());
-        entries.add(CrosshairStatProvider.Entry.text(
+        entries.add(InWorldTooltipProvider.Entry.text(
                 ARROW_BY_DIRECTION.get(direction),
                 Text.translatable(this.getTranslationKey() + ".direction." + direction.asString())
         ));

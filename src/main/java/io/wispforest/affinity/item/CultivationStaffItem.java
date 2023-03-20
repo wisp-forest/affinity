@@ -2,7 +2,7 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
-import io.wispforest.affinity.client.render.CrosshairStatProvider;
+import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.nbt.NbtKey;
@@ -102,8 +102,8 @@ public class CultivationStaffItem extends StaffItem {
     }
 
     @Override
-    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<CrosshairStatProvider.Entry> entries) {
-        entries.add(CrosshairStatProvider.Entry.text(
+    public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<InWorldTooltipProvider.Entry> entries) {
+        entries.add(InWorldTooltipProvider.Entry.text(
                 pedestal.getItem().get(SUPER_FORAGING_MODE_KEY) ? TextOps.withColor("✔", 0x28FFBF) : TextOps.withColor("❌ ", 0xEB1D36),
                 Text.literal("Super Foraging Mode™")
         ));
