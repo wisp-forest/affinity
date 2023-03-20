@@ -56,7 +56,7 @@ public class AberrantCallingCategory implements DisplayCategory<AberrantCallingD
 
         for (int i = 4; i < display.getInputEntries().size(); i++) {
             int index = i;
-            double angle = angleStep * index - Math.PI / 2;
+            double angle = angleStep * (index - 4) - Math.PI / 2;
 
             inputContainer.child(adapter.wrap(Widgets::createSlot, slot -> {
                 slot.markInput().entries(display.getInputEntries().get(index)).disableBackground();
