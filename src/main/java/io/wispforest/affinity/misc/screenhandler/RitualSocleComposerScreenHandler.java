@@ -79,7 +79,7 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
             if (world.isClient()) return;
 
             var recipe = world.getRecipeManager()
-                    .getFirstMatch(AffinityRecipeTypes.RITUAL_SOCLE_COMPOSER_CONVERSION, inventory, world);
+                    .getFirstMatch(AffinityRecipeTypes.ORNAMENT_CARVING, inventory, world);
 
             final var resultStack = recipe.isEmpty() ? ItemStack.EMPTY : recipe.get().getOutput();
             this.resultInventory.setStack(0, resultStack);
@@ -209,7 +209,7 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
 
         @Override
         public void onTakeItem(PlayerEntity player, ItemStack stack) {
-            DefaultedList<ItemStack> defaultedList = player.world.getRecipeManager().getRemainingStacks(AffinityRecipeTypes.RITUAL_SOCLE_COMPOSER_CONVERSION,
+            DefaultedList<ItemStack> defaultedList = player.world.getRecipeManager().getRemainingStacks(AffinityRecipeTypes.ORNAMENT_CARVING,
                     this.input, player.world);
 
             for (int i = 0; i < defaultedList.size(); ++i) {

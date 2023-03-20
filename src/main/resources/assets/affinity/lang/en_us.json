@@ -19,6 +19,8 @@
   "category.affinity.potion_mixing": "Potion Mixing",
   "category.affinity.containing_potions": "Containing Potions",
   "category.affinity.arcane_fading": "Arcane Fading",
+  "category.affinity.ornament_carving": "Ornament Carving",
+  "category.affinity.socle_composing": "Socle Composing",
 
   "block.affinity.brewing_cauldron": "Brewing Cauldron",
   "block.affinity.sundial": "Sundial",

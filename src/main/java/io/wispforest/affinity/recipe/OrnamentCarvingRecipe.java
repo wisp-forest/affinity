@@ -14,13 +14,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 
-public class RitualSocleComposerConversionRecipe implements Recipe<Inventory> {
+public class OrnamentCarvingRecipe implements Recipe<Inventory> {
+
+    public final Ingredient input;
 
     private final Identifier id;
-    private final Ingredient input;
     private final ItemStack output;
 
-    public RitualSocleComposerConversionRecipe(Identifier id, Ingredient input, ItemStack output) {
+    public OrnamentCarvingRecipe(Identifier id, Ingredient input, ItemStack output) {
         this.id = id;
         this.input = input;
         this.output = output;
@@ -58,7 +59,7 @@ public class RitualSocleComposerConversionRecipe implements Recipe<Inventory> {
 
     @Override
     public RecipeType<?> getType() {
-        return AffinityRecipeTypes.RITUAL_SOCLE_COMPOSER_CONVERSION;
+        return AffinityRecipeTypes.ORNAMENT_CARVING;
     }
 
     @Override
@@ -66,26 +67,26 @@ public class RitualSocleComposerConversionRecipe implements Recipe<Inventory> {
         return true;
     }
 
-    public static final class Serializer implements RecipeSerializer<RitualSocleComposerConversionRecipe> {
+    public static final class Serializer implements RecipeSerializer<OrnamentCarvingRecipe> {
 
         public static final Serializer INSTANCE = new Serializer();
 
         private Serializer() {}
 
         @Override
-        public RitualSocleComposerConversionRecipe read(Identifier id, JsonObject json) {
+        public OrnamentCarvingRecipe read(Identifier id, JsonObject json) {
             var input = Ingredient.fromJson(JsonHelper.getObject(json, "input"));
             var output = JsonHelper.getItem(json, "output").getDefaultStack();
-            return new RitualSocleComposerConversionRecipe(id, input, output);
+            return new OrnamentCarvingRecipe(id, input, output);
         }
 
         @Override
-        public RitualSocleComposerConversionRecipe read(Identifier id, PacketByteBuf buf) {
-            return new RitualSocleComposerConversionRecipe(id, Ingredient.fromPacket(buf), buf.readItemStack());
+        public OrnamentCarvingRecipe read(Identifier id, PacketByteBuf buf) {
+            return new OrnamentCarvingRecipe(id, Ingredient.fromPacket(buf), buf.readItemStack());
         }
 
         @Override
-        public void write(PacketByteBuf buf, RitualSocleComposerConversionRecipe recipe) {
+        public void write(PacketByteBuf buf, OrnamentCarvingRecipe recipe) {
             recipe.input.write(buf);
             buf.writeItemStack(recipe.output);
         }

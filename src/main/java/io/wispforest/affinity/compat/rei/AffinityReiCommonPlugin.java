@@ -22,6 +22,8 @@ public class AffinityReiCommonPlugin implements REIServerPlugin {
     public static final CategoryIdentifier<AberrantCallingDisplay> ABERRANT_CALLING = CategoryIdentifier.of(Affinity.id("aberrant_calling"));
     public static final CategoryIdentifier<DefaultCraftingDisplay<?>> ASSEMBLY = CategoryIdentifier.of(Affinity.id("assembly"));
     public static final CategoryIdentifier<ArcaneFadingDisplay> ARCANE_FADING = CategoryIdentifier.of(Affinity.id("arcane_fading"));
+    public static final CategoryIdentifier<OrnamentCarvingDisplay> ORNAMENT_CARVING = CategoryIdentifier.of(Affinity.id("ornament_carving"));
+    public static final CategoryIdentifier<SocleComposingDisplay> SOCLE_COMPOSING = CategoryIdentifier.of(Affinity.id("socle_composing"));
 
     public static final EntryType<StatusEffect> EFFECT_ENTRY_TYPE = EntryType.deferred(Affinity.id("status_effect"));
 
