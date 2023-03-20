@@ -1,5 +1,9 @@
 package io.wispforest.affinity.object.wisps;
 
+import io.wispforest.owo.ops.TextOps;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+
 /**
  * The type of a Wisp entity. Used to determine the
  * translation key as well as the color of the particles
@@ -30,4 +34,7 @@ public interface WispType {
      */
     String icon();
 
+    default Text createTooltip() {
+        return TextOps.withColor(this.icon(), this.color()).append(" ").append(Text.translatable(this.translationKey()).formatted(Formatting.GRAY));
+    }
 }

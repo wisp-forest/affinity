@@ -40,13 +40,13 @@ public class AffinityParticleSystems {
         var length = data.target.subtract(pos).length();
 
         ClientParticles.setParticleCount((int) Math.round(length * 5));
-        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVec3f(data.color), 1), world, pos, data.target, .15f);
+        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.rgbToVec3f(data.color), 1), world, pos, data.target, .15f);
     });
 
     public static final ParticleSystem<BlockPos> TIME_STAFF_ACCELERATE = CONTROLLER.register(BlockPos.class, (world, pos, data) -> {
         ClientParticles.spawn(
                 new OrbitingEmitterParticleEffect(
-                        new DustParticleEffect(MathUtil.splitRGBToVec3f(0x3955E5), .75f),
+                        new DustParticleEffect(MathUtil.rgbToVec3f(0x3955E5), .75f),
                         ParticleTypes.ASH,
                         Vec3d.ofCenter(data).subtract(pos).multiply(1f / 20f).toVector3f(),
                         .1f, 1, 45, 20
@@ -55,7 +55,7 @@ public class AffinityParticleSystems {
         );
 
         ClientParticles.setParticleCount(5);
-        ClientParticles.spawnCubeOutline(new DustParticleEffect(MathUtil.splitRGBToVec3f(0x7743DB), .6f), world, Vec3d.of(data), 1, .05f);
+        ClientParticles.spawnCubeOutline(new DustParticleEffect(MathUtil.rgbToVec3f(0x7743DB), .6f), world, Vec3d.of(data), 1, .05f);
     });
 
     public static final ParticleSystem<Vec3d> ABERRANT_CORE_HINT = CONTROLLER.register(Vec3d.class, (world, pos, data) -> {

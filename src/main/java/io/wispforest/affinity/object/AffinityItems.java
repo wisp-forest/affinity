@@ -84,6 +84,10 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item EMERALD_INGOT = new Item(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
     public static final Item EMERALD_NUGGET = new Item(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
 
+    public static final Item INERT_WISP_SPAWN_EGG = new WispSpawnEggItem(AffinityEntities.INERT_WISP, AffinityWispTypes.INERT);
+    public static final Item WISE_WISP_SPAWN_EGG = new WispSpawnEggItem(AffinityEntities.WISE_WISP, AffinityWispTypes.WISE);
+    public static final Item VICIOUS_WISP_SPAWN_EGG = new WispSpawnEggItem(AffinityEntities.VICIOUS_WISP, AffinityWispTypes.VICIOUS);
+
     public static OwoItemSettings settings(int tab) {
         return new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP);
     }

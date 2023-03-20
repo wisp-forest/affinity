@@ -202,7 +202,7 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
             final var type = RitualSocleType.forBlockState(world.getBlockState(soclePos));
             final int color = type == null ? 0 : type.glowColor();
 
-            ClientParticles.spawnPrecise(new DustParticleEffect(MathUtil.splitRGBToVec3f(color), 2), world,
+            ClientParticles.spawnPrecise(new DustParticleEffect(MathUtil.rgbToVec3f(color), 2), world,
                     Vec3d.ofCenter(soclePos).add(0, .34, 0), .15, .15, .15);
         }
 

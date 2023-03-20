@@ -12,7 +12,7 @@ public class AbsoluteEnchantmentGlintTexture extends RenderPhase.Texture {
 
     public AbsoluteEnchantmentGlintTexture(int hue) {
         super(Affinity.id("textures/glint.png"), true, false);
-        this.colors = MathUtil.splitRGBToFloats(MathHelper.hsvToRgb(hue / 360f, .5f, .2f));
+        this.colors = MathUtil.rgbToFloats(MathHelper.hsvToRgb(hue / 360f, .5f, .2f));
     }
 
     @Override

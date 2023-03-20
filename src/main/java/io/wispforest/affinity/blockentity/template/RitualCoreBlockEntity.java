@@ -4,6 +4,7 @@ import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
 import io.wispforest.affinity.client.particle.BezierPathEmitterParticle;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.entity.WiseWispEntity;
 import io.wispforest.affinity.misc.ReadOnlyInventory;
 import io.wispforest.affinity.misc.SingleElementDefaultedList;
 import io.wispforest.affinity.misc.util.BlockFinder;
@@ -17,6 +18,7 @@ import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.util.ImplementedInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
@@ -27,10 +29,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -299,6 +298,8 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
                 stability += (100 - stability) * (socleType == null ? 0 : socleType.stabilityModifier());
             }
         }
+
+        stability += (100 - stability) * 0.1 * world.getEntitiesByClass(WiseWispEntity.class, new Box(pos).expand(5, 3, 5), Entity::isAlive).size();
 
         if (world.getBlockState(pos.down()).isOf(AffinityBlocks.INVERSION_STONE)) {
             stability = 100 - stability;

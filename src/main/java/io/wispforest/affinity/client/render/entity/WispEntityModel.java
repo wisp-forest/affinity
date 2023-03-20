@@ -32,7 +32,7 @@ public class WispEntityModel extends EntityModel<WispEntity> {
 
     @Override
     public void setAngles(WispEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        var colors = MathUtil.splitRGBToFloats(entity.type().color());
+        var colors = MathUtil.rgbToFloats(entity.type().color());
         this.r = colors[0];
         this.g = colors[1];
         this.b = colors[2];

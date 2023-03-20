@@ -1,5 +1,6 @@
 package io.wispforest.affinity.entity;
 
+import io.wispforest.affinity.entity.goal.WispMoveTowardsRitualCoreGoal;
 import io.wispforest.affinity.entity.goal.WispTemptGoal;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.wisps.AffinityWispTypes;
@@ -19,6 +20,7 @@ public class WiseWispEntity extends WispEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(0, new WispTemptGoal(this, .6f, Ingredient.ofItems(AffinityItems.AZALEA_FLOWERS), false));
+        this.goalSelector.add(5, new WispMoveTowardsRitualCoreGoal(this));
     }
 
     @Override

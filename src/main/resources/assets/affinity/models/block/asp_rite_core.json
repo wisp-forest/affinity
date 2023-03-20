@@ -6,6 +6,7 @@
 		"2": "affinity:block/azalea_log_top",
 		"3": "affinity:block/asp_rite_core_top",
 		"4": "affinity:block/asp_rite_core_bottom",
+		"5": "affinity:block/azalea_log",
 		"particle": "affinity:block/asp_rite_core_side"
 	},
 	"elements": [
@@ -26,7 +27,7 @@
 			"to": [5, 13, 14],
 			"faces": {
 				"north": {"uv": [11, 3, 14, 7], "texture": "#0"},
-				"east": {"uv": [2, 3, 14, 7], "texture": "#0"},
+				"east": {"uv": [2, 3, 14, 7], "texture": "#5"},
 				"south": {"uv": [2, 3, 5, 7], "texture": "#0"},
 				"west": {"uv": [2, 3, 14, 7], "texture": "#0"},
 				"up": {"uv": [2, 2, 5, 14], "texture": "#3"}
@@ -46,7 +47,7 @@
 				"north": {"uv": [2, 3, 5, 7], "texture": "#0"},
 				"east": {"uv": [2, 3, 14, 7], "texture": "#0"},
 				"south": {"uv": [11, 3, 14, 7], "texture": "#0"},
-				"west": {"uv": [2, 3, 14, 7], "texture": "#0"},
+				"west": {"uv": [2, 3, 14, 7], "texture": "#4"},
 				"up": {"uv": [11, 2, 14, 14], "texture": "#3"}
 			}
 		},
@@ -56,7 +57,7 @@
 			"faces": {
 				"north": {"uv": [5, 3, 11, 7], "texture": "#0"},
 				"east": {"uv": [11, 3, 14, 7], "texture": "#0"},
-				"south": {"uv": [5, 3, 11, 7], "texture": "#0"},
+				"south": {"uv": [5, 3, 11, 7], "texture": "#5"},
 				"west": {"uv": [2, 3, 5, 7], "texture": "#0"},
 				"up": {"uv": [5, 2, 11, 5], "texture": "#3"}
 			}
@@ -65,7 +66,7 @@
 			"from": [5, 9, 11],
 			"to": [11, 13, 14],
 			"faces": {
-				"north": {"uv": [5, 3, 11, 7], "texture": "#0"},
+				"north": {"uv": [5, 3, 11, 7], "texture": "#5"},
 				"east": {"uv": [2, 3, 5, 7], "texture": "#0"},
 				"south": {"uv": [5, 3, 11, 7], "texture": "#0"},
 				"west": {"uv": [11, 3, 14, 7], "texture": "#0"},

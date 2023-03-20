@@ -19,7 +19,7 @@ public record OrbitingEmitterParticleEffect(ParticleEffect outerEffect, Particle
         @Override
         public OrbitingEmitterParticleEffect read(ParticleType<OrbitingEmitterParticleEffect> type, StringReader reader) {
             return new OrbitingEmitterParticleEffect(
-                    new DustParticleEffect(MathUtil.splitRGBToVec3f(0x4C0033), .65f), new DustParticleEffect(MathUtil.splitRGBToVec3f(0xFEF5AC), .65f),
+                    new DustParticleEffect(MathUtil.rgbToVec3f(0x4C0033), .65f), new DustParticleEffect(MathUtil.rgbToVec3f(0xFEF5AC), .65f),
                     new Vector3f(.2f, 0, 0), .1f, 1, 25, 100
             );
         }

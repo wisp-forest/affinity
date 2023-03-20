@@ -20,7 +20,7 @@ public class FlyRandomlyGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        var pos = getTarget();
+        var pos = this.getTarget();
         if (pos == null) return false;
 
         this.target = pos;

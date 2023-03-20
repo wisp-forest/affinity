@@ -2,11 +2,10 @@ package io.wispforest.affinity.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.Model;
-import net.minecraft.data.client.Models;
+import net.minecraft.data.client.*;
 import net.minecraft.item.Item;
+
+import java.util.Optional;
 
 import static io.wispforest.affinity.object.AffinityItems.*;
 
@@ -29,6 +28,10 @@ public class AffinityItemModelProvider extends FabricModelProvider {
         forAll(generator, Models.HANDHELD,
                 COLLECTION_STAFF, NIMBLE_STAFF, TIME_STAFF, KINESIS_STAFF, ASTROKINESIS_STAFF, CULTIVATION_STAFF, WAND_OF_INQUIRY, RESOUNDING_CHIME,
                 SALVO_STAFF, GEOLOGICAL_RESONATOR
+        );
+
+        forAll(generator, new Model(Optional.of(ModelIds.getMinecraftNamespacedItem("template_spawn_egg")), Optional.empty()),
+                INERT_WISP_SPAWN_EGG, WISE_WISP_SPAWN_EGG, VICIOUS_WISP_SPAWN_EGG
         );
     }
 

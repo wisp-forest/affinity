@@ -94,7 +94,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         if (this.processTick < 1) return;
 
         if (this.processTick < 100) {
-            ClientParticles.setVelocity(MathUtil.splitRGBToVec3d(storedPotion.color()));
+            ClientParticles.setVelocity(MathUtil.rgbToVec3d(storedPotion.color()));
             ClientParticles.setParticleCount(2);
             ClientParticles.spawnPrecise(ParticleTypes.ENTITY_EFFECT, world, Vec3d.of(pos).add(0.5, 0.8, 0.5), 0.6, 0.2, 0.6);
 

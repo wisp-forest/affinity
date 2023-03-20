@@ -102,7 +102,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         var endPos = thisPoint.add(offset.normalize().multiply(.25f + this.world.random.nextInt() * .5f));
 
         ClientParticles.setParticleCount(1 + this.world.random.nextInt(5));
-        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.splitRGBToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb()), .5f), this.world, startPos, endPos, .15f);
+        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.rgbToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb()), .5f), this.world, startPos, endPos, .15f);
     }
 
     @Override

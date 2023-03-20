@@ -33,7 +33,7 @@ import java.util.Set;
 
 public class ArcaneTreetapBlock extends HorizontalFacingBlock {
 
-    public static final DustColorTransitionParticleEffect PARTICLE = new DustColorTransitionParticleEffect(MathUtil.splitRGBToVec3f(0x865DFF), MathUtil.splitRGBToVec3f(0xFFA3FD), 1f);
+    public static final DustColorTransitionParticleEffect PARTICLE = new DustColorTransitionParticleEffect(MathUtil.rgbToVec3f(0x865DFF), MathUtil.rgbToVec3f(0xFFA3FD), 1f);
 
     private static final VoxelShape NORTH_SHAPE = VoxelShapes.union(
             Block.createCuboidShape(6, 6, 2, 10, 10, 5),

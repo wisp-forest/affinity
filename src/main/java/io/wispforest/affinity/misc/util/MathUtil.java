@@ -76,19 +76,19 @@ public class MathUtil {
         return new BigDecimal(value).setScale(places, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
     }
 
-    public static Vector3f splitRGBToVec3f(int rgb) {
+    public static Vector3f rgbToVec3f(int rgb) {
         return new Vector3f((rgb >> 16) / 255f, ((rgb >> 8) & 0xFF) / 255f, (rgb & 0xFF) / 255f);
     }
 
-    public static Vec3d splitRGBToVec3d(int rgb) {
+    public static Vec3d rgbToVec3d(int rgb) {
         return new Vec3d((rgb >> 16) / 255d, ((rgb >> 8) & 0xFF) / 255d, (rgb & 0xFF) / 255d);
     }
 
-    public static float[] splitRGBToFloats(int rgb) {
+    public static float[] rgbToFloats(int rgb) {
         return new float[]{(rgb >> 16) / 255f, ((rgb >> 8) & 0xFF) / 255f, (rgb & 0xFF) / 255f};
     }
 
-    public static int[] splitRGBToInts(int rgb) {
+    public static int[] rgbToInts(int rgb) {
         return new int[]{rgb >> 16, (rgb >> 8) & 0xFF, rgb & 0xFF};
     }
 
