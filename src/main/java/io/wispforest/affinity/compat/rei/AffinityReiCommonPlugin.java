@@ -19,7 +19,7 @@ public class AffinityReiCommonPlugin implements REIServerPlugin {
     public static final CategoryIdentifier<PotionMixingDisplay> POTION_MIXING = CategoryIdentifier.of(Affinity.id("potion_mixing"));
     public static final CategoryIdentifier<ContainingPotionsDisplay> CONTAINING_POTIONS = CategoryIdentifier.of(Affinity.id("containing_potions"));
     public static final CategoryIdentifier<AspenInfusionDisplay> ASPEN_INFUSION = CategoryIdentifier.of(Affinity.id("aspen_infusion"));
-    public static final CategoryIdentifier<AberrantCallingDisplay> ABERRANT_CALLING = CategoryIdentifier.of(Affinity.id("aberrant_calling"));
+    public static final CategoryIdentifier<SpiritAssimilationDisplay> SPIRIT_ASSIMILATION = CategoryIdentifier.of(Affinity.id("spirit_assimilation"));
     public static final CategoryIdentifier<DefaultCraftingDisplay<?>> ASSEMBLY = CategoryIdentifier.of(Affinity.id("assembly"));
     public static final CategoryIdentifier<ArcaneFadingDisplay> ARCANE_FADING = CategoryIdentifier.of(Affinity.id("arcane_fading"));
     public static final CategoryIdentifier<OrnamentCarvingDisplay> ORNAMENT_CARVING = CategoryIdentifier.of(Affinity.id("ornament_carving"));

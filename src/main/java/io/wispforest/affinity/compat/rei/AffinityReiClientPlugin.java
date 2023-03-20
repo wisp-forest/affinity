@@ -38,12 +38,12 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         registry.addWorkstations(AffinityReiCommonPlugin.ASSEMBLY, EntryStacks.of(AffinityBlocks.ASSEMBLY_AUGMENT), EntryStacks.of(Blocks.CRAFTING_TABLE));
 
         registry.add(new AspenInfusionCategory());
-        registry.add(new AberrantCallingCategory());
+        registry.add(new SpiritAssimilationCategory());
         registry.addWorkstations(AffinityReiCommonPlugin.ASPEN_INFUSION, EntryStacks.of(AffinityBlocks.ASP_RITE_CORE));
-        registry.addWorkstations(AffinityReiCommonPlugin.ABERRANT_CALLING, EntryStacks.of(AffinityBlocks.ABERRANT_CALLING_CORE));
-        for (var item : Registries.ITEM.iterateEntries(AberrantCallingCategory.RECIPE_RITUAL_SOCLE_PREVIEW)) {
+        registry.addWorkstations(AffinityReiCommonPlugin.SPIRIT_ASSIMILATION, EntryStacks.of(AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS));
+        for (var item : Registries.ITEM.iterateEntries(SpiritAssimilationCategory.RECIPE_RITUAL_SOCLE_PREVIEW)) {
             registry.addWorkstations(AffinityReiCommonPlugin.ASPEN_INFUSION, EntryIngredients.of(item.value()));
-            registry.addWorkstations(AffinityReiCommonPlugin.ABERRANT_CALLING, EntryIngredients.of(item.value()));
+            registry.addWorkstations(AffinityReiCommonPlugin.SPIRIT_ASSIMILATION, EntryIngredients.of(item.value()));
         }
 
         registry.add(new ArcaneFadingCategory());
@@ -61,7 +61,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
     public void registerDisplays(DisplayRegistry registry) {
         registry.registerFiller(PotionMixingRecipe.class, PotionMixingDisplay::new);
         registry.registerFiller(AspenInfusionRecipe.class, AspenInfusionDisplay::new);
-        registry.registerFiller(AberrantCallingRecipe.class, AberrantCallingDisplay::new);
+        registry.registerFiller(SpiritAssimilationRecipe.class, SpiritAssimilationDisplay::new);
         registry.registerFiller(OrnamentCarvingRecipe.class, OrnamentCarvingDisplay::new);
 
         registry.registerFiller(ShapedAssemblyRecipe.class, ShapedAssemblyDisplay::new);

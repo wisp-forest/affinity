@@ -1,7 +1,7 @@
 package io.wispforest.affinity.compat.rei.display;
 
 import io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin;
-import io.wispforest.affinity.recipe.AberrantCallingRecipe;
+import io.wispforest.affinity.recipe.SpiritAssimilationRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AberrantCallingDisplay extends BasicDisplay {
+public class SpiritAssimilationDisplay extends BasicDisplay {
 
-    public final AberrantCallingRecipe recipe;
+    public final SpiritAssimilationRecipe recipe;
 
-    public AberrantCallingDisplay(AberrantCallingRecipe recipe) {
+    public SpiritAssimilationDisplay(SpiritAssimilationRecipe recipe) {
         super(Util.make(() -> {
             var inputs = new ArrayList<>(recipe.coreInputs.stream().map(EntryIngredients::ofIngredient).toList());
             inputs.addAll(recipe.getIngredients().stream().map(EntryIngredients::ofIngredient).toList());
@@ -27,6 +27,6 @@ public class AberrantCallingDisplay extends BasicDisplay {
 
     @Override
     public CategoryIdentifier<?> getCategoryIdentifier() {
-        return AffinityReiCommonPlugin.ABERRANT_CALLING;
+        return AffinityReiCommonPlugin.SPIRIT_ASSIMILATION;
     }
 }

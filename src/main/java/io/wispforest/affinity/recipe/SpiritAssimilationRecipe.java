@@ -3,7 +3,7 @@ package io.wispforest.affinity.recipe;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import io.wispforest.affinity.blockentity.impl.AberrantCallingCoreBlockEntity;
+import io.wispforest.affinity.blockentity.impl.SpiritIntegrationApparatusBlockEntity;
 import io.wispforest.affinity.misc.util.JsonUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.entity.EntityType;
@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlockEntity.AberrantCallingInventory> {
+public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory> {
 
     public final List<Ingredient> coreInputs;
     public final EntityType<?> entityType;
@@ -33,14 +33,14 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
 
     private final ItemStack output;
 
-    protected AberrantCallingRecipe(Identifier id,
-                                    List<Ingredient> coreInputs,
-                                    List<Ingredient> inputs,
-                                    EntityType<?> entityType,
-                                    @Nullable NbtCompound entityNbt,
-                                    int duration,
-                                    int fluxCostPerTick,
-                                    ItemStack output) {
+    protected SpiritAssimilationRecipe(Identifier id,
+                                       List<Ingredient> coreInputs,
+                                       List<Ingredient> inputs,
+                                       EntityType<?> entityType,
+                                       @Nullable NbtCompound entityNbt,
+                                       int duration,
+                                       int fluxCostPerTick,
+                                       ItemStack output) {
         super(id, inputs, duration, fluxCostPerTick);
         this.coreInputs = ImmutableList.copyOf(coreInputs);
         this.entityType = entityType;
@@ -49,7 +49,7 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
     }
 
     @Override
-    public boolean matches(AberrantCallingCoreBlockEntity.AberrantCallingInventory inventory, World world) {
+    public boolean matches(SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory inventory, World world) {
         return this.doShapelessMatch(this.coreInputs, Arrays.asList(inventory.coreInputs()))
                 && this.doShapelessMatch(this.socleInputs, inventory.delegate())
                 && this.entityType == inventory.sacrifice().getType()
@@ -57,7 +57,7 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
     }
 
     @Override
-    public ItemStack craft(AberrantCallingCoreBlockEntity.AberrantCallingInventory inventory) {
+    public ItemStack craft(SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory inventory) {
         return ItemStack.EMPTY;
     }
 
@@ -79,25 +79,25 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
 
     @Override
     public RecipeType<?> getType() {
-        return AffinityRecipeTypes.ABERRANT_CALLING;
+        return AffinityRecipeTypes.SPIRIT_ASSIMILATION;
     }
 
-    public static final class Serializer implements RecipeSerializer<AberrantCallingRecipe> {
+    public static final class Serializer implements RecipeSerializer<SpiritAssimilationRecipe> {
 
         public static final Serializer INSTANCE = new Serializer();
 
         private Serializer() {}
 
         @Override
-        public AberrantCallingRecipe read(Identifier id, JsonObject json) {
+        public SpiritAssimilationRecipe read(Identifier id, JsonObject json) {
             final var entityObject = JsonHelper.getObject(json, "entity");
 
             int fluxCostPerTick = JsonHelper.getInt(json, "flux_cost_per_tick", 0);
             if (fluxCostPerTick % 4 != 0) {
-                throw new JsonParseException("Aberrant calling flux cost must be divisible by 4");
+                throw new JsonParseException("Spirit assimilation flux cost must be divisible by 4");
             }
 
-            return new AberrantCallingRecipe(id,
+            return new SpiritAssimilationRecipe(id,
                     JsonUtil.readIngredientList(json, "core_inputs"),
                     JsonUtil.readIngredientList(json, "socle_inputs"),
                     JsonUtil.readFromRegistry(entityObject, "id", Registries.ENTITY_TYPE),
@@ -109,8 +109,8 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
         }
 
         @Override
-        public AberrantCallingRecipe read(Identifier id, PacketByteBuf buf) {
-            return new AberrantCallingRecipe(
+        public SpiritAssimilationRecipe read(Identifier id, PacketByteBuf buf) {
+            return new SpiritAssimilationRecipe(
                     id,
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
@@ -123,7 +123,7 @@ public class AberrantCallingRecipe extends RitualRecipe<AberrantCallingCoreBlock
         }
 
         @Override
-        public void write(PacketByteBuf buf, AberrantCallingRecipe recipe) {
+        public void write(PacketByteBuf buf, SpiritAssimilationRecipe recipe) {
             buf.writeCollection(recipe.coreInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
 

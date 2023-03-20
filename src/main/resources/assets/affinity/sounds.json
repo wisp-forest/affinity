@@ -14,14 +14,14 @@
       "affinity:item/satiating_potion_start_drinking"
     ]
   },
-  "block.aberrant_calling_core.ritual_success": {
+  "block.spirit_integration_apparatus.ritual_success": {
     "sounds": [
-      "affinity:block/aberrant_calling_success"
+      "affinity:block/spirit_assimilation_success"
     ]
   },
-  "block.aberrant_calling_core.ritual_start": {
+  "block.spirit_integration_apparatus.ritual_start": {
     "sounds": [
-      "affinity:block/aberrant_calling_start"
+      "affinity:block/spirit_assimilation_start"
     ]
   },
   "block.asp_rite_core.craft": {

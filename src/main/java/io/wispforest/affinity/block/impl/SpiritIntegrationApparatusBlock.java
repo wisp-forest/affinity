@@ -1,7 +1,7 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.RitualCoreBlock;
-import io.wispforest.affinity.blockentity.impl.AberrantCallingCoreBlockEntity;
+import io.wispforest.affinity.blockentity.impl.SpiritIntegrationApparatusBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -35,7 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class AberrantCallingCoreBlock extends RitualCoreBlock {
+public class SpiritIntegrationApparatusBlock extends RitualCoreBlock {
 
     private static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
 
@@ -49,7 +49,7 @@ public class AberrantCallingCoreBlock extends RitualCoreBlock {
             Block.createCuboidShape(6, 2, 12, 10, 6, 14)
     ).reduce(VoxelShapes::union).get();
 
-    public AberrantCallingCoreBlock() {
+    public SpiritIntegrationApparatusBlock() {
         super(FabricBlockSettings.copyOf(Blocks.RED_NETHER_BRICKS));
     }
 
@@ -78,11 +78,11 @@ public class AberrantCallingCoreBlock extends RitualCoreBlock {
     }
 
     private static void makeLine(World world, BlockPos origin, BlockPos target) {
-        AffinityParticleSystems.ABERRANT_CORE_HINT.spawn(world, Vec3d.ofCenter(origin), Vec3d.ofCenter(target));
+        AffinityParticleSystems.SPIRIT_INTEGRATION_APPARATUS_HINT.spawn(world, Vec3d.ofCenter(origin), Vec3d.ofCenter(target));
     }
 
     private static boolean noCoreAt(World world, BlockPos pos) {
-        return !world.getBlockState(pos).isOf(AffinityBlocks.ABERRANT_CALLING_CORE);
+        return !world.getBlockState(pos).isOf(AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS);
     }
 
     private static BlockPos[] possibleDiagonals(BlockPos center) {
@@ -134,7 +134,7 @@ public class AberrantCallingCoreBlock extends RitualCoreBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.ABERRANT_CALLING_CORE, TickedBlockEntity.ticker());
+        return checkType(type, AffinityBlocks.Entities.SPIRIT_INTEGRATION_APPARATUS, TickedBlockEntity.ticker());
     }
 
     @Override
@@ -150,7 +150,7 @@ public class AberrantCallingCoreBlock extends RitualCoreBlock {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new AberrantCallingCoreBlockEntity(pos, state);
+        return new SpiritIntegrationApparatusBlockEntity(pos, state);
     }
 
     public record CoreSet(BlockPos[] cores, BlockPos center) implements Iterable<BlockPos> {
@@ -163,17 +163,17 @@ public class AberrantCallingCoreBlock extends RitualCoreBlock {
             int validCores = 0;
 
             for (var pos : this.cores) {
-                if (AberrantCallingCoreBlock.noCoreAt(world, pos)) continue;
+                if (SpiritIntegrationApparatusBlock.noCoreAt(world, pos)) continue;
                 validCores++;
             }
 
             return validCores;
         }
 
-        public AberrantCallingCoreBlockEntity[] resolve(World world) {
-            final var resolved = new AberrantCallingCoreBlockEntity[3];
+        public SpiritIntegrationApparatusBlockEntity[] resolve(World world) {
+            final var resolved = new SpiritIntegrationApparatusBlockEntity[3];
             for (int i = 0; i < cores.length; i++) {
-                resolved[i] = (AberrantCallingCoreBlockEntity) world.getBlockEntity(cores[i]);
+                resolved[i] = (SpiritIntegrationApparatusBlockEntity) world.getBlockEntity(cores[i]);
             }
             return resolved;
         }

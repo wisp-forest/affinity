@@ -2,7 +2,7 @@
   "parent": "affinity:root",
   "display": {
     "icon": {
-      "item": "affinity:aberrant_calling_core"
+      "item": "affinity:spirit_integration_apparatus"
     },
     "title": {
       "translate": "advancement.affinity.when_the_world_is_calling_you.title"

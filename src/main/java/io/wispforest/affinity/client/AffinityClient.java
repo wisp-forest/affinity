@@ -179,7 +179,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.AETHUM_FLUX_CACHE, AethumFluxCacheBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.RITUAL_SOCLE, RitualSocleBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ASP_RITE_CORE, AspRiteCoreBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(AffinityBlocks.Entities.ABERRANT_CALLING_CORE, AberrantCallingCoreBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.SPIRIT_INTEGRATION_APPARATUS, SpiritIntegrationApparatusBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.MANGROVE_BASKET, MangroveBasketBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.STAFF_PEDESTAL, StaffPedestalBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ITEM_TRANSFER_NODE, ItemTransferNodeBlockEntityRenderer::new);

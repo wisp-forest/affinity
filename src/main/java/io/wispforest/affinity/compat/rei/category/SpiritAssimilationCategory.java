@@ -2,7 +2,7 @@ package io.wispforest.affinity.compat.rei.category;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin;
-import io.wispforest.affinity.compat.rei.display.AberrantCallingDisplay;
+import io.wispforest.affinity.compat.rei.display.SpiritAssimilationDisplay;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.compat.rei.ReiUIAdapter;
@@ -33,12 +33,12 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
-public class AberrantCallingCategory implements DisplayCategory<AberrantCallingDisplay> {
+public class SpiritAssimilationCategory implements DisplayCategory<SpiritAssimilationDisplay> {
 
     public static final TagKey<Item> RECIPE_RITUAL_SOCLE_PREVIEW = TagKey.of(RegistryKeys.ITEM, Affinity.id("recipe_ritual_socle_preview"));
 
     @Override
-    public List<Widget> setupDisplay(AberrantCallingDisplay display, Rectangle bounds) {
+    public List<Widget> setupDisplay(SpiritAssimilationDisplay display, Rectangle bounds) {
         var adapter = new ReiUIAdapter<>(bounds, Containers::horizontalFlow);
         var root = adapter.rootComponent();
         root.verticalAlignment(VerticalAlignment.CENTER).horizontalAlignment(HorizontalAlignment.CENTER);
@@ -131,22 +131,22 @@ public class AberrantCallingCategory implements DisplayCategory<AberrantCallingD
     }
 
     @Override
-    public int getDisplayWidth(AberrantCallingDisplay display) {
+    public int getDisplayWidth(SpiritAssimilationDisplay display) {
         return DisplayCategory.super.getDisplayWidth(display) + 30;
     }
 
     @Override
-    public CategoryIdentifier<? extends AberrantCallingDisplay> getCategoryIdentifier() {
-        return AffinityReiCommonPlugin.ABERRANT_CALLING;
+    public CategoryIdentifier<? extends SpiritAssimilationDisplay> getCategoryIdentifier() {
+        return AffinityReiCommonPlugin.SPIRIT_ASSIMILATION;
     }
 
     @Override
     public Text getTitle() {
-        return Text.translatable("category.affinity.aberrant_calling");
+        return Text.translatable("category.affinity.spirit_assimilation");
     }
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(AffinityBlocks.ABERRANT_CALLING_CORE);
+        return EntryStacks.of(AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS);
     }
 }

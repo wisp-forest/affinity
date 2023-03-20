@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 
 public class AffinitySoundEvents implements SimpleFieldProcessingSubject<SoundEvent> {
 
-    public static final SoundEvent BLOCK_ABERRANT_CALLING_CORE_RITUAL_START = SoundEvent.of(Affinity.id("block.aberrant_calling_core.ritual_start"));
+    public static final SoundEvent BLOCK_SPIRIT_INTEGRATION_APPARATUS_RITUAL_START = SoundEvent.of(Affinity.id("block.spirit_integration_apparatus.ritual_start"));
     public static final SoundEvent BLOCK_ASP_RITE_CORE_CRAFT = SoundEvent.of(Affinity.id("block.asp_rite_core.craft"));
     public static final SoundEvent BLOCK_ASP_RITE_CORE_ACTIVE = SoundEvent.of(Affinity.id("block.asp_rite_core.active"));
     public static final SoundEvent ITEM_ARTIFACT_BLADE_SMASH = SoundEvent.of(Affinity.id("item.artifact_blade.smash"));

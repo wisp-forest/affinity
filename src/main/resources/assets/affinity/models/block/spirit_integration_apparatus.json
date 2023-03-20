@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "affinity:block/aberrant_calling_core_ring",
-		"2": "affinity:block/aberrant_calling_core",
-		"particle": "affinity:block/aberrant_calling_core"
+		"0": "affinity:block/spirit_integration_apparatus_ring",
+		"2": "affinity:block/spirit_integration_apparatus",
+		"particle": "affinity:block/spirit_integration_apparatus"
 	},
 	"elements": [
 		{

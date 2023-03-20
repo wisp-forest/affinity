@@ -50,7 +50,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block REFINED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.REFINED);
     @Tab(AffinityItemGroup.MAIN) public static final Block SOPHISTICATED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.SOPHISTICATED);
     @Tab(AffinityItemGroup.MAIN) public static final Block ASP_RITE_CORE = new AspRiteCoreBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block ABERRANT_CALLING_CORE = new AberrantCallingCoreBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block SPIRIT_INTEGRATION_APPARATUS = new SpiritIntegrationApparatusBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block RITUAL_SOCLE_COMPOSER = new RitualSocleComposerBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block AFFINE_INFUSER = new AffineInfuserBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block CROP_REAPER = new CropReaperBlock();
@@ -130,8 +130,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<AspRiteCoreBlockEntity> ASP_RITE_CORE =
                 make(AspRiteCoreBlockEntity::new, AffinityBlocks.ASP_RITE_CORE);
-        public static final BlockEntityType<AberrantCallingCoreBlockEntity> ABERRANT_CALLING_CORE =
-                make(AberrantCallingCoreBlockEntity::new, AffinityBlocks.ABERRANT_CALLING_CORE);
+        public static final BlockEntityType<SpiritIntegrationApparatusBlockEntity> SPIRIT_INTEGRATION_APPARATUS =
+                make(SpiritIntegrationApparatusBlockEntity::new, AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS);
 
         public static final BlockEntityType<AffineInfuserBlockEntity> AFFINE_INFUSER =
                 make(AffineInfuserBlockEntity::new, AffinityBlocks.AFFINE_INFUSER);
@@ -180,7 +180,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(SUNDIAL);
             Affinity.AETHUM_MEMBER.registerSelf(ARBOREAL_ACCUMULATION_APPARATUS);
             Affinity.AETHUM_MEMBER.registerSelf(ASP_RITE_CORE);
-            Affinity.AETHUM_MEMBER.registerSelf(ABERRANT_CALLING_CORE);
+            Affinity.AETHUM_MEMBER.registerSelf(SPIRIT_INTEGRATION_APPARATUS);
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_INFUSER);
             Affinity.AETHUM_MEMBER.registerSelf(CROP_REAPER);
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_CANDLE);

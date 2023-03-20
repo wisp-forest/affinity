@@ -1,7 +1,7 @@
 package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.block.impl.AberrantCallingCoreBlock;
+import io.wispforest.affinity.block.impl.SpiritIntegrationApparatusBlock;
 import io.wispforest.affinity.block.impl.ArcaneTreetapBlock;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
@@ -58,7 +58,7 @@ public class AffinityParticleSystems {
         ClientParticles.spawnCubeOutline(new DustParticleEffect(MathUtil.rgbToVec3f(0x7743DB), .6f), world, Vec3d.of(data), 1, .05f);
     });
 
-    public static final ParticleSystem<Vec3d> ABERRANT_CORE_HINT = CONTROLLER.register(Vec3d.class, (world, pos, data) -> {
+    public static final ParticleSystem<Vec3d> SPIRIT_INTEGRATION_APPARATUS_HINT = CONTROLLER.register(Vec3d.class, (world, pos, data) -> {
         var length = data.subtract(pos).length();
 
         ClientParticles.setParticleCount((int) Math.round(length * 5));
@@ -87,7 +87,7 @@ public class AffinityParticleSystems {
         ClientParticles.spawn(ParticleTypes.EFFECT, world, pos, 0.5);
     });
 
-    public static final ParticleSystem<AberrantCallingCoreBlock.CoreSet> ABERRANT_CALLING_ACTIVE = CONTROLLER.register(AberrantCallingCoreBlock.CoreSet.class, (world, pos, data) -> {
+    public static final ParticleSystem<SpiritIntegrationApparatusBlock.CoreSet> SPIRIT_ASSIMILATION_ACTIVE = CONTROLLER.register(SpiritIntegrationApparatusBlock.CoreSet.class, (world, pos, data) -> {
         var effect = new DustColorTransitionParticleEffect(new Vector3f(1, 0, 0), new Vector3f(1, .25f, .75f), 1);
 
         ClientParticles.persist();

@@ -1,6 +1,6 @@
 package io.wispforest.affinity.blockentity.impl;
 
-import io.wispforest.affinity.block.impl.AberrantCallingCoreBlock;
+import io.wispforest.affinity.block.impl.SpiritIntegrationApparatusBlock;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.component.AffinityComponents;
@@ -8,7 +8,7 @@ import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
-import io.wispforest.affinity.recipe.AberrantCallingRecipe;
+import io.wispforest.affinity.recipe.SpiritAssimilationRecipe;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.block.BlockState;
@@ -36,18 +36,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
+public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity {
 
     public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, .85, .5);
 
-    @Nullable private AberrantCallingRecipe cachedRecipe = null;
-    @Nullable private AberrantCallingCoreBlock.CoreSet neighborPositions = null;
-    @Nullable private AberrantCallingCoreBlockEntity[] cachedNeighbors = null;
+    @Nullable private SpiritAssimilationRecipe cachedRecipe = null;
+    @Nullable private SpiritIntegrationApparatusBlock.CoreSet neighborPositions = null;
+    @Nullable private SpiritIntegrationApparatusBlockEntity[] cachedNeighbors = null;
 
-    public final RitualLock<AberrantCallingCoreBlockEntity> ritualLock = new RitualLock<>();
+    public final RitualLock<SpiritIntegrationApparatusBlockEntity> ritualLock = new RitualLock<>();
 
-    public AberrantCallingCoreBlockEntity(BlockPos pos, BlockState state) {
-        super(AffinityBlocks.Entities.ABERRANT_CALLING_CORE, pos, state);
+    public SpiritIntegrationApparatusBlockEntity(BlockPos pos, BlockState state) {
+        super(AffinityBlocks.Entities.SPIRIT_INTEGRATION_APPARATUS, pos, state);
 
         this.fluxStorage.setFluxCapacity(16000);
         this.fluxStorage.setMaxInsert(500);
@@ -63,7 +63,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     protected boolean onRitualStart(RitualSetup setup) {
         if (this.ritualLock.isActive()) return false;
 
-        this.neighborPositions = AberrantCallingCoreBlock.findValidCoreSet(this.world, this.pos);
+        this.neighborPositions = SpiritIntegrationApparatusBlock.findValidCoreSet(this.world, this.pos);
         if (this.neighborPositions == null) return false;
 
         final var sacrifices = this.world.getNonSpectatingEntities(LivingEntity.class, new Box(this.ritualCenterPos().up()).expand(1));
@@ -78,8 +78,8 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         }
 
         final var sacrifice = sacrifices.get(0);
-        final var inventory = new AberrantCallingInventory(setup.resolveSocles(this.world), coreItems, sacrifice);
-        final var recipeOptional = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ABERRANT_CALLING, inventory, this.world);
+        final var inventory = new SpiritAssimilationInventory(setup.resolveSocles(this.world), coreItems, sacrifice);
+        final var recipeOptional = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.SPIRIT_ASSIMILATION, inventory, this.world);
 
         if (recipeOptional.isEmpty()) return false;
         this.cachedRecipe = recipeOptional.get();
@@ -94,7 +94,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         }
 
         AffinityParticleSystems.LAVA_ERUPTION.spawn(world, MathUtil.entityCenterPos(sacrifice));
-        WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_ABERRANT_CALLING_CORE_RITUAL_START, SoundCategory.BLOCKS);
+        WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_SPIRIT_INTEGRATION_APPARATUS_RITUAL_START, SoundCategory.BLOCKS);
 
         if (sacrifice instanceof ServerPlayerEntity serverPlayer) {
             AffinityCriteria.SACRIFICED_TO_RITUAL.trigger(serverPlayer);
@@ -124,7 +124,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
         }
 
         if (this.ritualTick % 3 == 0) {
-            AffinityParticleSystems.ABERRANT_CALLING_ACTIVE.spawn(this.world, Vec3d.ofCenter(this.pos), this.neighborPositions);
+            AffinityParticleSystems.SPIRIT_ASSIMILATION_ACTIVE.spawn(this.world, Vec3d.ofCenter(this.pos), this.neighborPositions);
         }
 
         if (this.ritualTick == this.cachedSetup.duration() - 10) {
@@ -228,7 +228,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     public BlockPos ritualCenterPos() {
-        final var set = neighborPositions != null ? neighborPositions : AberrantCallingCoreBlock.findValidCoreSet(this.world, this.pos);
+        final var set = neighborPositions != null ? neighborPositions : SpiritIntegrationApparatusBlock.findValidCoreSet(this.world, this.pos);
         return set != null ? set.center() : this.pos;
     }
 
@@ -259,7 +259,7 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
     public void appendTooltipEntries(List<Entry> entries) {
         super.appendTooltipEntries(entries);
 
-        var possibleCoreSets = AberrantCallingCoreBlock.possibleValidCoreSets(this.pos);
+        var possibleCoreSets = SpiritIntegrationApparatusBlock.possibleValidCoreSets(this.pos);
 
         var mostCompleteSet = possibleCoreSets.get(0);
         for (var set : possibleCoreSets) {
@@ -274,15 +274,15 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
                     TextOps.withColor("❌ ", 0xEB1D36),
                     Text.translatable(
                             missingCoreCount == 1
-                                    ? "block.affinity.aberrant_calling_core.tooltip.incomplete.singular"
-                                    : "block.affinity.aberrant_calling_core.tooltip.incomplete.plural",
+                                    ? "block.affinity.spirit_integration_apparatus.tooltip.incomplete.singular"
+                                    : "block.affinity.spirit_integration_apparatus.tooltip.incomplete.plural",
                             missingCoreCount
                     )
             ));
         } else {
             entries.add(Entry.text(
                     TextOps.withColor("✔", 0x28FFBF),
-                    Text.translatable("block.affinity.aberrant_calling_core.tooltip.complete")
+                    Text.translatable("block.affinity.spirit_integration_apparatus.tooltip.complete")
             ));
         }
     }
@@ -292,12 +292,12 @@ public class AberrantCallingCoreBlockEntity extends RitualCoreBlockEntity {
                 new AffinityParticleSystems.DissolveData(item, Vec3d.ofCenter(this.ritualCenterPos().up(2)), duration - 10, 16));
     }
 
-    public static class AberrantCallingInventory extends SocleInventory {
+    public static class SpiritAssimilationInventory extends SocleInventory {
 
         private final ItemStack[] coreInputs;
         private final Entity sacrifice;
 
-        public AberrantCallingInventory(List<RitualSocleBlockEntity> socles, ItemStack[] coreInputs, Entity sacrifice) {
+        public SpiritAssimilationInventory(List<RitualSocleBlockEntity> socles, ItemStack[] coreInputs, Entity sacrifice) {
             super(socles);
 
             this.coreInputs = new ItemStack[4];

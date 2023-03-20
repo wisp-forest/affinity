@@ -1,17 +1,17 @@
 package io.wispforest.affinity.client.render.blockentity;
 
-import io.wispforest.affinity.blockentity.impl.AberrantCallingCoreBlockEntity;
+import io.wispforest.affinity.blockentity.impl.SpiritIntegrationApparatusBlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class AberrantCallingCoreBlockEntityRenderer implements BlockEntityRenderer<AberrantCallingCoreBlockEntity>, RotatingItemRenderer {
+public class SpiritIntegrationApparatusBlockEntityRenderer implements BlockEntityRenderer<SpiritIntegrationApparatusBlockEntity>, RotatingItemRenderer {
 
-    public AberrantCallingCoreBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
+    public SpiritIntegrationApparatusBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
 
     @Override
-    public void render(AberrantCallingCoreBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(SpiritIntegrationApparatusBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         final var stack = entity.getItem();
         if (stack.isEmpty()) return;
 

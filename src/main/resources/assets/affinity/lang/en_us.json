@@ -16,7 +16,7 @@
 
   "category.affinity.assembly": "Assembly",
   "category.affinity.aspen_infusion": "Aspen Infusion",
-  "category.affinity.aberrant_calling": "Aberrant Calling",
+  "category.affinity.spirit_assimilation": "Spirit Assimilation",
   "category.affinity.potion_mixing": "Potion Mixing",
   "category.affinity.containing_potions": "Containing Potions",
   "category.affinity.arcane_fading": "Arcane Fading",
@@ -59,14 +59,14 @@
   "block.affinity.item_transfer_node": "Item Transfer Node",
   "block.affinity.aethum_probe": "Aethum Probe",
 
-  "block.affinity.aberrant_calling_core": "Aberrant Calling Core",
-  "block.affinity.aberrant_calling_core.tooltip.complete": "Complete",
-  "block.affinity.aberrant_calling_core.tooltip.incomplete.singular": [
+  "block.affinity.spirit_integration_apparatus": "Spirit Integration Apparatus",
+  "block.affinity.spirit_integration_apparatus.tooltip.complete": "Complete",
+  "block.affinity.spirit_integration_apparatus.tooltip.incomplete.singular": [
     "Missing ",
     {"index": 0, "color": "blue"},
     " core"
   ],
-  "block.affinity.aberrant_calling_core.tooltip.incomplete.plural": [
+  "block.affinity.spirit_integration_apparatus.tooltip.incomplete.plural": [
     "Missing ",
     {"index": 0, "color": "blue"},
     " cores"
