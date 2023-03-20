@@ -1,0 +1,1 @@
+playsound minecraft:block.bell.use player @s

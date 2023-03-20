@@ -1,0 +1,31 @@
+{
+  "parent": "affinity:root",
+  "display": {
+    "icon": {
+      "item": "affinity:assembly_augment"
+    },
+    "title": {
+      "translate": "advancement.affinity.some_assembly_required.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.some_assembly_required.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "assembly_augment": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "affinity:assembly_augment"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "assembly_augment"
+    ]
+  ]
+}
