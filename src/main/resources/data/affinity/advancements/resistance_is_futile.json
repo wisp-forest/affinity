@@ -1,0 +1,31 @@
+{
+  "parent": "affinity:some_assembly_required",
+  "display": {
+    "icon": {
+      "item": "affinity:spirit_integration_apparatus"
+    },
+    "title": {
+      "translate": "advancement.affinity.resistance_is_futile.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.resistance_is_futile.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "full_apparatus": {
+      "trigger": "affinity:construct_spirit_integration_apparatus",
+      "conditions": {
+        "completion": 4
+      }
+    }
+  },
+  "requirements": [
+    [
+      "full_apparatus"
+    ]
+  ]
+}

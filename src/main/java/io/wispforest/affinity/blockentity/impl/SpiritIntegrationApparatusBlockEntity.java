@@ -41,7 +41,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, .85, .5);
 
     @Nullable private SpiritAssimilationRecipe cachedRecipe = null;
-    @Nullable private SpiritIntegrationApparatusBlock.CoreSet neighborPositions = null;
+    @Nullable private SpiritIntegrationApparatusBlock.ApparatusSet neighborPositions = null;
     @Nullable private SpiritIntegrationApparatusBlockEntity[] cachedNeighbors = null;
 
     public final RitualLock<SpiritIntegrationApparatusBlockEntity> ritualLock = new RitualLock<>();
@@ -63,7 +63,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     protected boolean onRitualStart(RitualSetup setup) {
         if (this.ritualLock.isActive()) return false;
 
-        this.neighborPositions = SpiritIntegrationApparatusBlock.findValidCoreSet(this.world, this.pos);
+        this.neighborPositions = SpiritIntegrationApparatusBlock.findValidApparatusSet(this.world, this.pos);
         if (this.neighborPositions == null) return false;
 
         final var sacrifices = this.world.getNonSpectatingEntities(LivingEntity.class, new Box(this.ritualCenterPos().up()).expand(1));
@@ -192,7 +192,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     @Override
     protected void endRitual(Supplier<Boolean> handlerImpl, boolean clearItems) {
         if (this.ritualTick > 0) {
-            final var positions = new ArrayList<>(Arrays.asList(this.neighborPositions.cores()));
+            final var positions = new ArrayList<>(Arrays.asList(this.neighborPositions.apparatuses()));
             positions.add(this.pos);
             AffinityNetwork.server(this).send(new RemoveBezierEmitterParticlesPacket(positions, PARTICLE_OFFSET));
         }
@@ -228,7 +228,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
 
     @Override
     public BlockPos ritualCenterPos() {
-        final var set = neighborPositions != null ? neighborPositions : SpiritIntegrationApparatusBlock.findValidCoreSet(this.world, this.pos);
+        final var set = neighborPositions != null ? neighborPositions : SpiritIntegrationApparatusBlock.findValidApparatusSet(this.world, this.pos);
         return set != null ? set.center() : this.pos;
     }
 
@@ -259,16 +259,16 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     public void appendTooltipEntries(List<Entry> entries) {
         super.appendTooltipEntries(entries);
 
-        var possibleCoreSets = SpiritIntegrationApparatusBlock.possibleValidCoreSets(this.pos);
+        var possibleCoreSets = SpiritIntegrationApparatusBlock.possibleValidApparatusSets(this.pos);
 
         var mostCompleteSet = possibleCoreSets.get(0);
         for (var set : possibleCoreSets) {
-            if (set.validCoreCount(this.world) > mostCompleteSet.validCoreCount(this.world)) {
+            if (set.validApparatusCount(this.world) > mostCompleteSet.validApparatusCount(this.world)) {
                 mostCompleteSet = set;
             }
         }
 
-        int missingCoreCount = 3 - mostCompleteSet.validCoreCount(this.world);
+        int missingCoreCount = 3 - mostCompleteSet.validApparatusCount(this.world);
         if (missingCoreCount != 0) {
             entries.add(Entry.text(
                     TextOps.withColor("❌ ", 0xEB1D36),

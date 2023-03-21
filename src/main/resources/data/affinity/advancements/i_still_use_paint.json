@@ -2,13 +2,13 @@
   "parent": "affinity:some_assembly_required",
   "display": {
     "icon": {
-      "item": "minecraft:enchanted_book"
+      "item": "affinity:asp_rite_core"
     },
     "title": {
-      "translate": "advancement.affinity.living_is_wise_if_you_never_ever_think_twice.title"
+      "translate": "advancement.affinity.i_still_use_paint.title"
     },
     "description": {
-      "translate": "advancement.affinity.living_is_wise_if_you_never_ever_think_twice.description"
+      "translate": "advancement.affinity.i_still_use_paint.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,15 +16,13 @@
     "hidden": false
   },
   "criteria": {
-    "curse_of_health": {
+    "asp_rite_core": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "enchantments": [
-              {
-                "enchantment": "affinity:curse_of_health"
-              }
+            "items":[
+              "affinity:asp_rite_core"
             ]
           }
         ]
@@ -33,7 +31,7 @@
   },
   "requirements": [
     [
-      "curse_of_health"
+      "asp_rite_core"
     ]
   ]
 }

@@ -5,6 +5,7 @@ import io.wispforest.affinity.blockentity.impl.SpiritIntegrationApparatusBlockEn
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityCriteria;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -17,6 +18,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -58,12 +60,12 @@ public class SpiritIntegrationApparatusBlock extends RitualCoreBlock {
         if (world.isClient()) return;
 
         for (var neighborPos : possibleNeighbors(pos)) {
-            if (noCoreAt(world, neighborPos)) continue;
+            if (noApparatusAt(world, neighborPos)) continue;
             makeLine(world, pos, neighborPos);
         }
 
         for (var diagonal : possibleDiagonals(pos)) {
-            if (noCoreAt(world, diagonal)) continue;
+            if (noApparatusAt(world, diagonal)) continue;
             final var differenceVector = diagonal.subtract(pos);
 
             final var differenceAxes = new Direction[2];
@@ -71,9 +73,19 @@ public class SpiritIntegrationApparatusBlock extends RitualCoreBlock {
             differenceAxes[1] = differenceVector.getZ() > 0 ? Direction.SOUTH : Direction.NORTH;
 
             for (var possibleNeighbor : invertAndOffset(diagonal, differenceAxes)) {
-                if (noCoreAt(world, possibleNeighbor)) continue;
+                if (noApparatusAt(world, possibleNeighbor)) continue;
                 makeLine(world, diagonal, possibleNeighbor);
             }
+        }
+
+        if (placer instanceof ServerPlayerEntity player) {
+            int completion = 0;
+
+            for (var set : possibleValidApparatusSets(pos)) {
+                completion = Math.max(completion, set.validApparatusCount(world));
+            }
+
+            AffinityCriteria.CONSTRUCT_SPIRIT_INTEGRATION_APPARATUS.trigger(player, completion + 1);
         }
     }
 
@@ -81,7 +93,7 @@ public class SpiritIntegrationApparatusBlock extends RitualCoreBlock {
         AffinityParticleSystems.SPIRIT_INTEGRATION_APPARATUS_HINT.spawn(world, Vec3d.ofCenter(origin), Vec3d.ofCenter(target));
     }
 
-    private static boolean noCoreAt(World world, BlockPos pos) {
+    private static boolean noApparatusAt(World world, BlockPos pos) {
         return !world.getBlockState(pos).isOf(AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS);
     }
 
@@ -110,19 +122,19 @@ public class SpiritIntegrationApparatusBlock extends RitualCoreBlock {
         return positions;
     }
 
-    public static @Nullable CoreSet findValidCoreSet(World world, BlockPos corner) {
-        final var possibleSets = possibleValidCoreSets(corner);
+    public static @Nullable SpiritIntegrationApparatusBlock.ApparatusSet findValidApparatusSet(World world, BlockPos corner) {
+        final var possibleSets = possibleValidApparatusSets(corner);
         for (var set : possibleSets) {
-            if (set.hasMissingCores(world)) continue;
+            if (set.hasMissingApparatuses(world)) continue;
             return set;
         }
         return null;
     }
 
-    public static List<CoreSet> possibleValidCoreSets(BlockPos corner) {
-        final var list = new ArrayList<CoreSet>();
+    public static List<ApparatusSet> possibleValidApparatusSets(BlockPos corner) {
+        final var list = new ArrayList<ApparatusSet>();
         for (var direction : HORIZONTAL_DIRECTIONS) {
-            list.add(new CoreSet(new BlockPos[]{
+            list.add(new ApparatusSet(new BlockPos[]{
                     corner.offset(direction, 2),
                     corner.offset(direction, 2).offset(direction.rotateYClockwise(), 2),
                     corner.offset(direction.rotateYClockwise(), 2)
@@ -153,39 +165,39 @@ public class SpiritIntegrationApparatusBlock extends RitualCoreBlock {
         return new SpiritIntegrationApparatusBlockEntity(pos, state);
     }
 
-    public record CoreSet(BlockPos[] cores, BlockPos center) implements Iterable<BlockPos> {
+    public record ApparatusSet(BlockPos[] apparatuses, BlockPos center) implements Iterable<BlockPos> {
 
-        public boolean hasMissingCores(World world) {
-            return this.validCoreCount(world) != 3;
+        public boolean hasMissingApparatuses(World world) {
+            return this.validApparatusCount(world) != 3;
         }
 
-        public int validCoreCount(World world) {
-            int validCores = 0;
+        public int validApparatusCount(World world) {
+            int validApparatuses = 0;
 
-            for (var pos : this.cores) {
-                if (SpiritIntegrationApparatusBlock.noCoreAt(world, pos)) continue;
-                validCores++;
+            for (var pos : this.apparatuses) {
+                if (SpiritIntegrationApparatusBlock.noApparatusAt(world, pos)) continue;
+                validApparatuses++;
             }
 
-            return validCores;
+            return validApparatuses;
         }
 
         public SpiritIntegrationApparatusBlockEntity[] resolve(World world) {
             final var resolved = new SpiritIntegrationApparatusBlockEntity[3];
-            for (int i = 0; i < cores.length; i++) {
-                resolved[i] = (SpiritIntegrationApparatusBlockEntity) world.getBlockEntity(cores[i]);
+            for (int i = 0; i < apparatuses.length; i++) {
+                resolved[i] = (SpiritIntegrationApparatusBlockEntity) world.getBlockEntity(apparatuses[i]);
             }
             return resolved;
         }
 
         public BlockPos get(int idx) {
-            return this.cores[idx];
+            return this.apparatuses[idx];
         }
 
         @NotNull
         @Override
         public Iterator<BlockPos> iterator() {
-            return List.of(this.cores).iterator();
+            return List.of(this.apparatuses).iterator();
         }
     }
 }

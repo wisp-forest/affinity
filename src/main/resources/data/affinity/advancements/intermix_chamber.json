@@ -2,28 +2,27 @@
   "parent": "affinity:i_still_use_paint",
   "display": {
     "icon": {
-      "item": "affinity:emerald_ingot"
+      "item": "affinity:brewing_cauldron"
     },
     "title": {
-      "translate": "advancement.affinity.gamedesign.title"
+      "translate": "advancement.affinity.intermix_chamber.title"
     },
     "description": {
-      "translate": "advancement.affinity.gamedesign.description"
+      "translate": "advancement.affinity.intermix_chamber.description"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
-    "hidden": true
+    "hidden": false
   },
   "criteria": {
-    "emerald_item": {
+    "brewing_cauldron": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "affinity:emerald_ingot",
-              "affinity:emerald_nugget"
+              "affinity:brewing_cauldron"
             ]
           }
         ]
@@ -32,7 +31,7 @@
   },
   "requirements": [
     [
-      "emerald_item"
+      "brewing_cauldron"
     ]
   ]
 }

@@ -15,6 +15,7 @@ public class AffinityCriteria implements SimpleFieldProcessingSubject<Criterion<
     public static final KinesisCriterion KINESIS = new KinesisCriterion();
     public static final UsedOverchargerCriterion USED_OVERCHARGER = new UsedOverchargerCriterion();
     public static final SacrificedToRitualCriterion SACRIFICED_TO_RITUAL = new SacrificedToRitualCriterion();
+    public static final ConstructSpiritIntegrationApparatusCriterion CONSTRUCT_SPIRIT_INTEGRATION_APPARATUS = new ConstructSpiritIntegrationApparatusCriterion();
 
     @Override
     public void processField(Criterion<?> value, String identifier, Field field) {

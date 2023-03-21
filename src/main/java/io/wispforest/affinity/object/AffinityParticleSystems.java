@@ -87,7 +87,7 @@ public class AffinityParticleSystems {
         ClientParticles.spawn(ParticleTypes.EFFECT, world, pos, 0.5);
     });
 
-    public static final ParticleSystem<SpiritIntegrationApparatusBlock.CoreSet> SPIRIT_ASSIMILATION_ACTIVE = CONTROLLER.register(SpiritIntegrationApparatusBlock.CoreSet.class, (world, pos, data) -> {
+    public static final ParticleSystem<SpiritIntegrationApparatusBlock.ApparatusSet> SPIRIT_ASSIMILATION_ACTIVE = CONTROLLER.register(SpiritIntegrationApparatusBlock.ApparatusSet.class, (world, pos, data) -> {
         var effect = new DustColorTransitionParticleEffect(new Vector3f(1, 0, 0), new Vector3f(1, .25f, .75f), 1);
 
         ClientParticles.persist();
