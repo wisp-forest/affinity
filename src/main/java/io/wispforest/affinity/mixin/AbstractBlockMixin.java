@@ -1,6 +1,7 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.item.DirectInteractionHandler;
+import io.wispforest.affinity.item.WandOfInquiryItem;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.block.AbstractBlock;
@@ -18,6 +19,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractBlock.class)
@@ -47,6 +49,14 @@ public class AbstractBlockMixin {
 
             if (!handler.shouldHandleInteraction(world, hit.getBlockPos(), ((BlockState) (Object) this))) return;
             cir.setReturnValue(ActionResult.PASS);
+        }
+
+        @Inject(method = "onBlockBreakStart", at = @At("HEAD"))
+        private void notifyWandOfInquiry(World world, BlockPos pos, PlayerEntity player, CallbackInfo ci) {
+            final var playerStack = player.getMainHandStack();
+            if (playerStack.getItem() != AffinityItems.WAND_OF_INQUIRY) return;
+
+            WandOfInquiryItem.handleAttackBlock(world, pos);
         }
 
     }
