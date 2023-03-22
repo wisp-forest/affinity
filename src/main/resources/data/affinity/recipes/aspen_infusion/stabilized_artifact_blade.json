@@ -1,0 +1,43 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 800,
+  "flux_cost_per_tick": 10,
+  "primary_input": {
+    "item": "affinity:forgotten_artifact_blade"
+  },
+  "inputs": [
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "output": {
+    "item": "affinity:stabilized_artifact_blade"
+  }
+}

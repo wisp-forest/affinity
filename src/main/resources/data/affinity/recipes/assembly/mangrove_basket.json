@@ -1,0 +1,21 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    "r": {
+      "item": "minecraft:mangrove_roots"
+    }
+  },
+  "pattern": [
+    "rrr",
+    "rar",
+    "rrr"
+  ],
+  "result": {
+    "item": "affinity:mangrove_basket",
+    "count": 2
+  }
+}

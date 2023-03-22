@@ -30,6 +30,7 @@
   "block.affinity.creative_aethum_flux_cache": "Creative Aethum Flux Cache",
   "block.affinity.stone_banded_aethum_flux_node": "Stone Banded Aethum Flux Node",
   "block.affinity.arboreal_accumulation_apparatus": "Arboreal Accumulation Apparatus",
+  "block.affinity.arboreal_accumulation_apparatus.generation_rate_tooltip": "%s flux every %ds",
   "block.affinity.peculiar_clump": "Peculiar Clump",
   "block.affinity.blank_ritual_socle": "Blank Ritual Socle",
   "block.affinity.rudimentary_ritual_socle": "Rudimentary Ritual Socle",
@@ -222,6 +223,7 @@
   "item.affinity.greatly_attuned_amethyst_shard": "Greatly Attuned Amethyst Shard",
 
   "item.affinity.anthracite_powder": "Anthracite Powder",
+  "item.affinity.scintillant_anthracite_blend": "Scintillant Anthracite Blend",
   "item.affinity.aethum_map_prototype": "Aethum Map Prototype",
   "item.affinity.realized_aethum_map": "Realized Aethum Map",
   "item.affinity.realized_aethum_map.tooltip.locked": {"text": "Locked", "color": "gray"},
