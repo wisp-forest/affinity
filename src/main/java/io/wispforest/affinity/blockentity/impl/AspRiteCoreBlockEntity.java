@@ -23,7 +23,7 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
     public AspRiteCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ASP_RITE_CORE, pos, state);
 
-        this.fluxStorage.setFluxCapacity(8000);
+        this.fluxStorage.setFluxCapacity(16000);
         this.fluxStorage.setMaxInsert(200);
     }
 

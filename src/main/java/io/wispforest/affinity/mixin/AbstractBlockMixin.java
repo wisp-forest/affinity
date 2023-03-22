@@ -51,12 +51,13 @@ public class AbstractBlockMixin {
             cir.setReturnValue(ActionResult.PASS);
         }
 
-        @Inject(method = "onBlockBreakStart", at = @At("HEAD"))
+        @Inject(method = "onBlockBreakStart", at = @At("HEAD"), cancellable = true)
         private void notifyWandOfInquiry(World world, BlockPos pos, PlayerEntity player, CallbackInfo ci) {
             final var playerStack = player.getMainHandStack();
             if (playerStack.getItem() != AffinityItems.WAND_OF_INQUIRY) return;
 
-            WandOfInquiryItem.handleAttackBlock(world, pos);
+            if (!WandOfInquiryItem.handleAttackBlock(world, pos)) return;
+            ci.cancel();
         }
 
     }

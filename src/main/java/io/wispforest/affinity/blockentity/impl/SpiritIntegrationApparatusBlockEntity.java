@@ -49,7 +49,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     public SpiritIntegrationApparatusBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.SPIRIT_INTEGRATION_APPARATUS, pos, state);
 
-        this.fluxStorage.setFluxCapacity(16000);
+        this.fluxStorage.setFluxCapacity(24000);
         this.fluxStorage.setMaxInsert(500);
     }
 

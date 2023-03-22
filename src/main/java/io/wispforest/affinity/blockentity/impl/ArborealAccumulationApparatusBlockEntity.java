@@ -31,7 +31,7 @@ public class ArborealAccumulationApparatusBlockEntity extends AethumNetworkMembe
     @Override
     public void appendTooltipEntries(List<Entry> entries) {
         super.appendTooltipEntries(entries);
-        entries.add(Entry.icon(Text.translatable(this.getCachedState().getBlock().getTranslationKey() + ".generation_rate_tooltip", this.generationFactor, 5), 8, 0));
+        entries.add(Entry.icon(Text.translatable(this.getCachedState().getBlock().getTranslationKey() + ".generation_rate_tooltip", this.generationFactor, 10), 8, 0));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ArborealAccumulationApparatusBlockEntity extends AethumNetworkMembe
         if (this.generationFactor == -1 || this.world.getTime() % 200 == 0) this.updateGenerationFactor();
         this.time++;
 
-        if (this.time % 100 != 0) return;
+        if (this.time % 200 != 0) return;
 
         var flux = this.fluxStorage.flux();
         if (flux < this.fluxStorage.fluxCapacity()) {
@@ -49,14 +49,22 @@ public class ArborealAccumulationApparatusBlockEntity extends AethumNetworkMembe
 
     private void updateGenerationFactor() {
         this.generationFactor = 0;
-        for (BlockPos pos : BlockPos.iterate(this.getPos().add(-5, -5, -5), this.pos.add(5, 5, 5))) {
-            final var state = world.getBlockState(pos);
-            if (!state.isIn(BlockTags.FLOWERS) && !state.isIn(BlockTags.LEAVES)) continue;
-            if (state.getBlock() instanceof LeavesBlock && state.get(LeavesBlock.PERSISTENT)) continue;
 
-            this.generationFactor++;
+        for (var pos : BlockPos.iterate(this.getPos().add(-5, -5, -5), this.pos.add(5, 5, 5))) {
+            if (this.generationFactor >= 200) break;
+
+            final var state = world.getBlockState(pos);
+            if (state.isIn(BlockTags.FLOWERS)) {
+                this.generationFactor += 3;
+                continue;
+            }
+
+            if (state.isIn(BlockTags.LEAVES) && !(state.getBlock() instanceof LeavesBlock && state.get(LeavesBlock.PERSISTENT))) {
+                this.generationFactor++;
+            }
         }
 
+        this.generationFactor = Math.min(this.generationFactor, 200);
         AffinityNetwork.CHANNEL.serverHandle(PlayerLookup.tracking(this)).send(new GenerationFactorPacket(this.pos, this.generationFactor));
     }
 

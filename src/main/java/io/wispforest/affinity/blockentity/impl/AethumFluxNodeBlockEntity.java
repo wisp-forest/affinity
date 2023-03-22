@@ -374,7 +374,6 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     }
 
     public void onBreakStart(PlayerEntity player) {
-
         if ((player.isSneaking() || this.outerShardCount < 1) && !this.shard.isEmpty()) {
             ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.shard.copy());
 

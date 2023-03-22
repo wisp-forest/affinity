@@ -1,6 +1,5 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.block.template.AbstractAethumFluxNodeBlock;
 import io.wispforest.affinity.blockentity.impl.AethumFluxNodeBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,9 +16,7 @@ public class ItemMixin {
 
     @Inject(method = "canMine", at = @At("HEAD"), cancellable = true)
     private void doNotYeetNodes(BlockState state, World world, BlockPos pos, PlayerEntity miner, CallbackInfoReturnable<Boolean> cir) {
-        if (!(state.getBlock() instanceof AbstractAethumFluxNodeBlock)) return;
-        if (!(world.getBlockEntity(pos) instanceof AethumFluxNodeBlockEntity node)) return;
-        if (!node.hasShard()) return;
+        if (!(world.getBlockEntity(pos) instanceof AethumFluxNodeBlockEntity node) || !node.hasShard()) return;
 
         node.onBreakStart(miner);
         cir.setReturnValue(false);

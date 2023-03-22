@@ -202,7 +202,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
     }
 
     public int craftingDuration() {
-        return 105 - this.activeTreetaps * 20;
+        return 205 - this.activeTreetaps * 40;
     }
 
     public SimpleInventory outputInventory() {

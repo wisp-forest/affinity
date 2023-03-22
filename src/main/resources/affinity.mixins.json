@@ -63,6 +63,7 @@
     "access.WorldAccessor"
   ],
   "client": [
+    "RoughlyEnoughItemsCoreClientMixin",
     "access.ParticleManagerInvoker",
     "client.ArmorFeatureRendererMixin",
     "client.BlockEntityRenderDispatcherMixin",
