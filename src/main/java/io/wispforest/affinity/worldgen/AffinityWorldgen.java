@@ -2,7 +2,10 @@ package io.wispforest.affinity.worldgen;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.mixin.access.OverworldBiomeCreatorInvoker;
+import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEntities;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.SpawnGroup;
@@ -10,7 +13,9 @@ import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.BiomeMoodSound;
+import net.minecraft.structure.rule.TagMatchRuleTest;
 import net.minecraft.util.collection.DataPool;
 import net.minecraft.util.math.intprovider.ClampedIntProvider;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
@@ -20,12 +25,10 @@ import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.YOffset;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
 import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.placementmodifier.BiomePlacementModifier;
-import net.minecraft.world.gen.placementmodifier.CountPlacementModifier;
-import net.minecraft.world.gen.placementmodifier.RarityFilterPlacementModifier;
-import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
+import net.minecraft.world.gen.placementmodifier.*;
 import net.minecraft.world.gen.stateprovider.NoiseBlockStateProvider;
 import net.minecraft.world.gen.stateprovider.WeightedBlockStateProvider;
 import terrablender.api.Regions;
@@ -50,6 +53,13 @@ public class AffinityWorldgen {
     public static final RegistryKey<ConfiguredFeature<?, ?>> CONFIGURED_CULTIVATION_STAFF_GRASS_PATCH = RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, Affinity.id("cultivation_staff_grass_patch"));
     public static final RegistryKey<PlacedFeature> CULTIVATION_STAFF_FLOWER_PATCH = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Affinity.id("cultivation_staff_flower_patch"));
     public static final RegistryKey<PlacedFeature> CULTIVATION_STAFF_GRASS_PATCH = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Affinity.id("cultivation_staff_grass_patch"));
+
+    public static final RegistryKey<ConfiguredFeature<?, ?>> CONFIGURED_ORE_PECULIAR_CLUMP = RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, Affinity.id("ore_peculiar_clump"));
+    public static final RegistryKey<PlacedFeature> ORE_PECULIAR_CLUMP = RegistryKey.of(RegistryKeys.PLACED_FEATURE, Affinity.id("ore_peculiar_clump"));
+
+    public static void initialize() {
+        BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(), GenerationStep.Feature.UNDERGROUND_ORES, ORE_PECULIAR_CLUMP);
+    }
 
     public static void bootstrapAzaleaTree(Registerable<PlacedFeature> featureRegisterable) {
         var featureLookup = featureRegisterable.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE);
@@ -107,6 +117,16 @@ public class AffinityWorldgen {
                         )
                 )
         );
+
+        ConfiguredFeatures.register(
+                featureRegisterable,
+                CONFIGURED_ORE_PECULIAR_CLUMP,
+                Feature.ORE,
+                new OreFeatureConfig(
+                        List.of(OreFeatureConfig.createTarget(new TagMatchRuleTest(BlockTags.STONE_ORE_REPLACEABLES), AffinityBlocks.PECULIAR_CLUMP.getDefaultState())),
+                        10
+                )
+        );
     }
 
     public static void bootstrapPlacedFeatures(Registerable<PlacedFeature> featureRegisterable) {
@@ -157,6 +177,16 @@ public class AffinityWorldgen {
                 featureRegisterable,
                 CULTIVATION_STAFF_GRASS_PATCH,
                 featureLookup.getOrThrow(CONFIGURED_CULTIVATION_STAFF_GRASS_PATCH)
+        );
+
+        PlacedFeatures.register(
+                featureRegisterable,
+                ORE_PECULIAR_CLUMP,
+                featureLookup.getOrThrow(CONFIGURED_ORE_PECULIAR_CLUMP),
+                CountPlacementModifier.of(5),
+                SquarePlacementModifier.of(),
+                HeightRangePlacementModifier.uniform(YOffset.fixed(5), YOffset.fixed(100)),
+                BiomePlacementModifier.of()
         );
     }
 

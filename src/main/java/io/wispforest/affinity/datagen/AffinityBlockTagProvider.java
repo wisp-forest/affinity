@@ -3,6 +3,7 @@ package io.wispforest.affinity.datagen;
 import io.wispforest.affinity.Affinity;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
@@ -33,7 +34,7 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
                 OUIJA_BOARD, ITEM_TRANSFER_NODE, EMERALD_BLOCK, PECULIAR_CLUMP, THE_SKY, INVERSION_STONE
         );
 
-        this.getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(EMERALD_BLOCK);
+        this.getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(EMERALD_BLOCK, PECULIAR_CLUMP);
 
         this.getOrCreateTagBuilder(BlockTags.AXE_MINEABLE).add(STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ACCUMULATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT);
 
@@ -64,5 +65,7 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
 
         this.getOrCreateTagBuilder(BlockTags.CANDLES).add(AFFINE_CANDLE);
         this.getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS).add(EMERALD_BLOCK);
+
+        this.getOrCreateTagBuilder(ConventionalBlockTags.ORES).add(PECULIAR_CLUMP);
     }
 }

@@ -99,6 +99,10 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
 
     @Override
     public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+        return handleAttackBlock(world, pos);
+    }
+
+    public static boolean handleAttackBlock(World world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof InquirableOutlineProvider provider) {
             if (world.isClient) {
                 if (!ACTIVE_OUTLINE_PROVIDERS.contains(pos) && provider.getActiveOutline() != null) {

@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -36,8 +37,9 @@ public class PeculiarClumpBlock extends Block {
         WAS_MINED_CORRECTLY.put(pos, side == validDirection);
     }
 
-    public static boolean getAndClearMinedState(BlockPos pos) {
-        return WAS_MINED_CORRECTLY.removeBoolean(pos);
+    public static boolean getAndClearMinedState(MinecraftServer server, BlockPos pos) {
+        server.execute(() -> WAS_MINED_CORRECTLY.removeBoolean(pos));
+        return WAS_MINED_CORRECTLY.getBoolean(pos);
     }
 
     public static Direction getValidDirection(BlockPos pos) {

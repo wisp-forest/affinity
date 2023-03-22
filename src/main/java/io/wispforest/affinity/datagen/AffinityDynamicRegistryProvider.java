@@ -23,9 +23,11 @@ public class AffinityDynamicRegistryProvider extends FabricDynamicRegistryProvid
         entries.add(AffinityWorldgen.FLOWER_WISP_FOREST, registries.getWrapperOrThrow(RegistryKeys.PLACED_FEATURE).getOrThrow(AffinityWorldgen.FLOWER_WISP_FOREST).value());
         entries.add(AffinityWorldgen.CULTIVATION_STAFF_FLOWER_PATCH, registries.getWrapperOrThrow(RegistryKeys.PLACED_FEATURE).getOrThrow(AffinityWorldgen.CULTIVATION_STAFF_FLOWER_PATCH).value());
         entries.add(AffinityWorldgen.CULTIVATION_STAFF_GRASS_PATCH, registries.getWrapperOrThrow(RegistryKeys.PLACED_FEATURE).getOrThrow(AffinityWorldgen.CULTIVATION_STAFF_GRASS_PATCH).value());
+        entries.add(AffinityWorldgen.ORE_PECULIAR_CLUMP, registries.getWrapperOrThrow(RegistryKeys.PLACED_FEATURE).getOrThrow(AffinityWorldgen.ORE_PECULIAR_CLUMP).value());
         entries.add(AffinityWorldgen.CONFIGURED_CULTIVATION_STAFF_GRASS_PATCH, registries.getWrapperOrThrow(RegistryKeys.CONFIGURED_FEATURE).getOrThrow(AffinityWorldgen.CONFIGURED_CULTIVATION_STAFF_GRASS_PATCH).value());
         entries.add(AffinityWorldgen.CONFIGURED_CULTIVATION_STAFF_FLOWER_PATCH, registries.getWrapperOrThrow(RegistryKeys.CONFIGURED_FEATURE).getOrThrow(AffinityWorldgen.CONFIGURED_CULTIVATION_STAFF_FLOWER_PATCH).value());
         entries.add(AffinityWorldgen.CONFIGURED_OAK_AND_AZALEA_TREE, registries.getWrapperOrThrow(RegistryKeys.CONFIGURED_FEATURE).getOrThrow(AffinityWorldgen.CONFIGURED_OAK_AND_AZALEA_TREE).value());
+        entries.add(AffinityWorldgen.CONFIGURED_ORE_PECULIAR_CLUMP, registries.getWrapperOrThrow(RegistryKeys.CONFIGURED_FEATURE).getOrThrow(AffinityWorldgen.CONFIGURED_ORE_PECULIAR_CLUMP).value());
 
         entries.add(AffinityWorldgen.WISP_FOREST_KEY, registries.getWrapperOrThrow(RegistryKeys.BIOME).getOrThrow(AffinityWorldgen.WISP_FOREST_KEY).value());
     }
