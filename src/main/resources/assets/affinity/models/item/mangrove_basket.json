@@ -1,7 +1,7 @@
 {
   "parent": "builtin/entity",
   "textures": {
-    "particle": "block/mangrove_roots"
+    "particle": "minecraft:block/mangrove_roots_side"
   },
   "display": {
     "gui": {

@@ -1,6 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
+	"textures": {
+		"based": "minecraft:block/mangrove_roots_side",
+		"particle": "#based"
+	},
 	"elements": [
 		{
 			"name": "bottom",
@@ -86,9 +90,5 @@
 				"down": {"uv": [0, 0, 16, 16], "texture": "#based"}
 			}
 		}
-	],
-	"textures": {
-		"based": "minecraft:block/mangrove_roots_side",
-		"particle": "#based"
-	}
+	]
 }
