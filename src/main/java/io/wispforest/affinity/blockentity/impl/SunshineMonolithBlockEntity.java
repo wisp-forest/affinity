@@ -1,5 +1,6 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.block.impl.SunshineMonolithBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
@@ -21,8 +22,8 @@ public class SunshineMonolithBlockEntity extends AethumNetworkMemberBlockEntity 
         long flux = flux();
         boolean shouldBeEnabled = flux >= 1;
 
-        if (shouldBeEnabled != getCachedState().get(Properties.ENABLED)) {
-            world.setBlockState(pos, getCachedState().with(Properties.ENABLED, shouldBeEnabled));
+        if (shouldBeEnabled != getCachedState().get(SunshineMonolithBlock.ENABLED)) {
+            world.setBlockState(pos, getCachedState().with(SunshineMonolithBlock.ENABLED, shouldBeEnabled));
 
             if (shouldBeEnabled) {
                 addMonolithToChunks();

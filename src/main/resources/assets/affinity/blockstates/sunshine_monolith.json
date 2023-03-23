@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "enabled=false,half=lower": {
+      "model": "affinity:block/sunshine_monolith_off_bottom"
+    },
+    "enabled=true,half=lower": {
+      "model": "affinity:block/sunshine_monolith_on_bottom"
+    },
+    "enabled=false,half=upper": {
+      "model": "affinity:block/sunshine_monolith_off_top"
+    },
+    "enabled=true,half=upper": {
+      "model": "affinity:block/sunshine_monolith_on_top"
+    }
+  }
+}
