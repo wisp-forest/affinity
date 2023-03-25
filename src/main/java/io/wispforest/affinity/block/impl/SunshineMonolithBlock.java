@@ -50,7 +50,8 @@ public class SunshineMonolithBlock extends AethumNetworkMemberBlock {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (direction.getAxis() != Direction.Axis.Y) return state;
-        if (!neighborState.isOf(this) || neighborState.get(HALF) == state.get(HALF)) return Blocks.AIR.getDefaultState();
+        if (state.get(HALF) == DoubleBlockHalf.LOWER && direction == Direction.UP && !neighborState.isOf(this)) return Blocks.AIR.getDefaultState();
+        if (state.get(HALF) == DoubleBlockHalf.UPPER && direction == Direction.DOWN && !neighborState.isOf(this)) return Blocks.AIR.getDefaultState();
 
         var half = state.get(HALF);
         if (half != DoubleBlockHalf.UPPER) return state;

@@ -22,18 +22,18 @@ public class SunshineMonolithBlockEntity extends AethumNetworkMemberBlockEntity 
         long flux = flux();
         boolean shouldBeEnabled = flux >= 1;
 
-        if (shouldBeEnabled != getCachedState().get(SunshineMonolithBlock.ENABLED)) {
-            world.setBlockState(pos, getCachedState().with(SunshineMonolithBlock.ENABLED, shouldBeEnabled));
+        if (shouldBeEnabled != this.getCachedState().get(SunshineMonolithBlock.ENABLED)) {
+            this.world.setBlockState(this.pos, this.getCachedState().with(SunshineMonolithBlock.ENABLED, shouldBeEnabled));
 
             if (shouldBeEnabled) {
-                addMonolithToChunks();
+                this.addMonolithToChunks();
             } else {
-                removeMonolithFromChunks();
+                this.removeMonolithFromChunks();
             }
         }
 
-        if (shouldBeEnabled && world.isRaining()) {
-            updateFlux(flux - 1);
+        if (shouldBeEnabled && this.world.isRaining()) {
+            this.updateFlux(flux - 1);
         }
     }
 
@@ -41,30 +41,29 @@ public class SunshineMonolithBlockEntity extends AethumNetworkMemberBlockEntity 
     @Override
     public void onBroken() {
         super.onBroken();
-
-        removeMonolithFromChunks();
+        this.removeMonolithFromChunks();
     }
 
     private void addMonolithToChunks() {
-        int blockChunkX = pos.getX() >> 4;
-        int blockChunkZ = pos.getZ() >> 4;
+        int blockChunkX = this.pos.getX() >> 4;
+        int blockChunkZ = this.pos.getZ() >> 4;
         int radius = 3;
 
         for (int x = blockChunkX - radius; x <= blockChunkX + radius; x++) {
             for (int z = blockChunkZ - radius; z <= blockChunkZ + radius; z++) {
-                AffinityComponents.LOCAL_WEATHER.get(world.getChunk(x, z)).addMonolith(pos);
+                AffinityComponents.LOCAL_WEATHER.get(world.getChunk(x, z)).addMonolith(this.pos);
             }
         }
     }
 
     private void removeMonolithFromChunks() {
-        int blockChunkX = pos.getX() >> 4;
-        int blockChunkZ = pos.getZ() >> 4;
+        int blockChunkX = this.pos.getX() >> 4;
+        int blockChunkZ = this.pos.getZ() >> 4;
         int radius = 3;
 
         for (int x = blockChunkX - radius; x <= blockChunkX + radius; x++) {
             for (int z = blockChunkZ - radius; z <= blockChunkZ + radius; z++) {
-                AffinityComponents.LOCAL_WEATHER.get(world.getChunk(x, z)).removeMonolith(pos);
+                AffinityComponents.LOCAL_WEATHER.get(world.getChunk(x, z)).removeMonolith(this.pos);
             }
         }
     }
