@@ -19,10 +19,23 @@ import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.EntityType;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.condition.EntityPropertiesLootCondition;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.LootingEnchantLootFunction;
+import net.minecraft.loot.provider.number.UniformLootNumberProvider;
+import net.minecraft.predicate.entity.EntityEquipmentPredicate;
+import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -73,6 +86,20 @@ public class Affinity implements ModInitializer {
         SignTypeInvoker.affinity$invokeRegister(AffinityBlocks.AZALEA_SIGN_TYPE);
 
         AFFINITY_GROUP.initialize();
+
+        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, builder, source) -> {
+            if (!EntityType.WARDEN.getLootTableId().equals(id)) return;
+            builder.pool(LootPool.builder()
+                    .with(ItemEntry.builder(AffinityItems.RESONANCE_CRYSTAL).apply(LootingEnchantLootFunction.builder(UniformLootNumberProvider.create(0, .75f))))
+                    .conditionally(EntityPropertiesLootCondition.builder(
+                            LootContext.EntityTarget.KILLER_PLAYER, EntityPredicate.Builder.create()
+                                    .equipment(EntityEquipmentPredicate.Builder.create()
+                                            .mainhand(ItemPredicate.Builder.create()
+                                                    .tag(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades")))
+                                                    .build())
+                                            .build()))
+                    ));
+        });
 
         if (!Owo.DEBUG) return;
         AffinityDebugCommands.register();

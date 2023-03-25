@@ -69,6 +69,8 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item AFFINITEA = new AffiniteaItem();
     public static final Item SATIATING_POTION = new SatiationPotionItem();
     public static final Item DRAGON_DROP = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
+    public static final Item RESONANCE_CRYSTAL = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
+    public static final Item SYNTHETIC_DRAGON_HEART = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.RARE));
     public static final Item AETHUM_OVERCHARGER = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.RARE).maxCount(1));
     public static final Item FEATHERWEIGHT_RING = new FeatherweightRingItem();
 

@@ -55,5 +55,9 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.getOrCreateTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS).add(EMERALD_INGOT);
 
         this.copy(ConventionalBlockTags.ORES, ConventionalItemTags.ORES);
+
+        this.getOrCreateTagBuilder(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades"))).add(
+                FORGOTTEN_ARTIFACT_BLADE, STABILIZED_ARTIFACT_BLADE, STRENGTHENED_ARTIFACT_BLADE, SUPERIOR_ARTIFACT_BLADE, ASTRAL_ARTIFACT_BLADE
+        );
     }
 }

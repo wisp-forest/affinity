@@ -41,7 +41,7 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
                 .criterion(hasItem(Items.COOKED_BEEF), conditionsFromItem(Items.COOKED_BEEF))
                 .offerTo(exporter, craftingRecipe(SATIATING_POTION));
 
-        CookingRecipeJsonBuilder.createSmelting(Ingredient.ofItems(UNFIRED_CLAY_CUP), RecipeCategory.MISC, CLAY_CUP, .1f, 200)
+        CookingRecipeJsonBuilder.createBlasting(Ingredient.ofItems(UNFIRED_CLAY_CUP), RecipeCategory.MISC, CLAY_CUP, .1f, 200)
                 .criterion(hasItem(UNFIRED_CLAY_CUP), conditionsFromItem(UNFIRED_CLAY_CUP))
                 .offerTo(exporter);
 
