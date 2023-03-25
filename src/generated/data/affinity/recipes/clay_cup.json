@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "affinity:unfired_clay_cup"
+  },
+  "result": "affinity:clay_cup"
+}

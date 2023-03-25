@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "affinity:item/affinitea",
+    "layer1": "affinity:item/affinitea_overlay"
+  }
+}

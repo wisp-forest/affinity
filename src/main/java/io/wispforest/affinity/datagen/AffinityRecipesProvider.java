@@ -41,6 +41,10 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
                 .criterion(hasItem(Items.COOKED_BEEF), conditionsFromItem(Items.COOKED_BEEF))
                 .offerTo(exporter, craftingRecipe(SATIATING_POTION));
 
+        CookingRecipeJsonBuilder.createSmelting(Ingredient.ofItems(UNFIRED_CLAY_CUP), RecipeCategory.MISC, CLAY_CUP, .1f, 200)
+                .criterion(hasItem(UNFIRED_CLAY_CUP), conditionsFromItem(UNFIRED_CLAY_CUP))
+                .offerTo(exporter);
+
         offerBoatRecipe(exporter, AZALEA_BOAT, AffinityBlocks.AZALEA_PLANKS);
         offerChestBoatRecipe(exporter, AZALEA_CHEST_BOAT, AZALEA_BOAT);
         offerPlanksRecipe(exporter, AffinityBlocks.AZALEA_PLANKS, TagKey.of(RegistryKeys.ITEM, Affinity.id("azalea_logs")), 4);

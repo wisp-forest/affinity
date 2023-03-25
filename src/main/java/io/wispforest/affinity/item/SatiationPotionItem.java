@@ -31,7 +31,6 @@ import java.util.function.Supplier;
 public class SatiationPotionItem extends Item {
 
     private static final int MAX_USE_TIME = 32;
-
     private static final Supplier<StatusEffectInstance> EFFECT = () -> new StatusEffectInstance(StatusEffects.SATURATION, 5, 0);
 
     public SatiationPotionItem() {

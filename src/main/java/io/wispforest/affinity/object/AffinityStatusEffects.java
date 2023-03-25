@@ -26,7 +26,7 @@ public class AffinityStatusEffects {
     public static final StatusEffect IMPENDING_DOOM = new ImpendingDoomStatusEffect(StatusEffectCategory.HARMFUL, 0x000000);
     public static final StatusEffect BASTION_REGENERATION = new BastionRegenerationStatusEffect(StatusEffectCategory.BENEFICIAL, 0xfd5c5b);
     public static final StatusEffect BANISHED = new BanishedStatusEffect(StatusEffectCategory.BENEFICIAL, 0xc9b6b3);
-    public static final StatusEffect AFFINE = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x0000ff);
+    public static final StatusEffect AFFINE = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x6137d6);
     public static final StatusEffect UNHOLY = new AffinityStatusEffect(StatusEffectCategory.HARMFUL, 0x000000);
     public static final StatusEffect RESONANT = new ResonantStatusEffect(StatusEffectCategory.HARMFUL, 0xffec4f);
 

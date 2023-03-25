@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "affinity:clay_cup"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_unfired_clay_cup": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "affinity:unfired_clay_cup"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_unfired_clay_cup",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "affinity:clay_cup"
+    ]
+  }
+}
