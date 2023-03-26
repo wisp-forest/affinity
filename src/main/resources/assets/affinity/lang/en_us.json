@@ -328,6 +328,8 @@
   "advancement.affinity.resistance_is_futile.description": "Prepare a Spirit Assimilation ritual",
   "advancement.affinity.i_still_use_paint.title": "I Still use Paint",
   "advancement.affinity.i_still_use_paint.description": "Craft an Asp Rite Core",
+  "advancement.affinity.sup_b.title": "sup(B)",
+  "advancement.affinity.sup_b.description": "The supremum (abbreviated sup; plural suprema) of a subset S of a partially ordered set P is the least element in P that is greater than or equal to each element of S, if such an element exists",
   "advancement.affinity.intermix_chamber.title": "Intermix Chamber",
   "advancement.affinity.intermix_chamber.description": "Infuse a Brewing Cauldron",
   "advancement.affinity.you_cheated.title": "You Cheated",
