@@ -373,21 +373,29 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         return ActionResult.PASS;
     }
 
-    public void onBreakStart(PlayerEntity player) {
+    public ActionResult onAttack(PlayerEntity player) {
+        if (player.isSneaking() && this.shard.isEmpty()) return ActionResult.PASS;
+
         if ((player.isSneaking() || this.outerShardCount < 1) && !this.shard.isEmpty()) {
-            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.shard.copy());
+            ItemScatterer.spawn(this.world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.shard.copy());
 
             this.shard = ItemStack.EMPTY;
             this.tier = AttunedShardTiers.NONE;
 
             this.markDirty(false);
+            this.updatePropertyCache();
+
+            return ActionResult.SUCCESS;
         } else if (this.outerShardCount > 0) {
-            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), ListUtil.getAndRemoveLast(this.outerShards));
+            ItemScatterer.spawn(this.world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), ListUtil.getAndRemoveLast(this.outerShards));
 
             this.markDirty(false);
+            this.updatePropertyCache();
+
+            return ActionResult.SUCCESS;
         }
 
-        updatePropertyCache();
+        return ActionResult.PASS;
     }
 
     @Override

@@ -20,9 +20,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlock {
+public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlock implements AttackInteractionReceiver {
 
     protected AbstractAethumFluxNodeBlock() {
         super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10));
@@ -51,9 +52,9 @@ public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlo
     }
 
     @Override
-    public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
-        if (!(world.getBlockEntity(pos) instanceof AethumFluxNodeBlockEntity node)) return;
-        node.onBreakStart(player);
+    public @NotNull ActionResult onAttack(World world, BlockState state, BlockPos pos, PlayerEntity player) {
+        if (!(world.getBlockEntity(pos) instanceof AethumFluxNodeBlockEntity node)) return ActionResult.PASS;
+        return node.onAttack(player);
     }
 
     protected abstract VoxelShape getShape();

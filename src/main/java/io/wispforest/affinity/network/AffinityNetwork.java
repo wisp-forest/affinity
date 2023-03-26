@@ -1,6 +1,7 @@
 package io.wispforest.affinity.network;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.block.template.AttackInteractionReceiver;
 import io.wispforest.affinity.block.template.ScrollInteractionReceiver;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
@@ -58,6 +59,19 @@ public class AffinityNetwork {
             if (!(state.getBlock() instanceof ScrollInteractionReceiver receiver)) return;
 
             receiver.onScroll(world, state, message.pos(), player, message.direction());
+            player.swingHand(Hand.MAIN_HAND);
+        });
+
+        CHANNEL.registerServerbound(AttackInteractionReceiver.InteractionPacket.class, (message, access) -> {
+            var player = access.player();
+            var world = player.world;
+
+            if (!world.canPlayerModifyAt(player, message.pos())) return;
+
+            var state = world.getBlockState(message.pos());
+            if (!(state.getBlock() instanceof AttackInteractionReceiver receiver)) return;
+
+            receiver.onAttack(world, state, message.pos(), player);
             player.swingHand(Hand.MAIN_HAND);
         });
 
