@@ -26,7 +26,7 @@ public abstract class ShardBearingAethumNetworkMemberBlockEntity extends AethumN
     public abstract ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit);
 
     public boolean hasShard() {
-        return this.tier != AttunedShardTiers.NONE;
+        return !this.tier.isNone();
     }
 
     public AttunedShardTier tier() {

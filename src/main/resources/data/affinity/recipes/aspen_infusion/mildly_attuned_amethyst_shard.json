@@ -1,0 +1,27 @@
+{
+  "type": "affinity:aspen_infusion",
+  "flux_cost_per_tick": 10,
+  "primary_input": {
+    "item": "minecraft:amethyst_shard"
+  },
+  "inputs": [
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    }
+  ],
+  "output": {
+    "item": "affinity:mildly_attuned_amethyst_shard"
+  }
+}

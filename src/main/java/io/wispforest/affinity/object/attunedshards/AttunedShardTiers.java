@@ -10,10 +10,10 @@ import net.minecraft.screen.PlayerScreenHandler;
 public enum AttunedShardTiers implements AttunedShardTier {
 
     NONE(0, 5),
-    CRUDE(50, 5),
-    MILDLY_ATTUNED(100, 10),
-    FAIRLY_ATTUNED(500, 15),
-    GREATLY_ATTUNED(2000, 20);
+    CRUDE(5, 5),
+    MILDLY_ATTUNED(15, 10),
+    FAIRLY_ATTUNED(75, 15),
+    GREATLY_ATTUNED(300, 20);
 
     private final long maxTransfer;
     private final int maxDistance;

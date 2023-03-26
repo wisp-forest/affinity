@@ -1,7 +1,6 @@
 {
   "type": "affinity:aspen_infusion",
   "duration": 300,
-  "flux_cost_per_tick": 1,
   "output": {
     "item": "affinity:affinitea"
   },

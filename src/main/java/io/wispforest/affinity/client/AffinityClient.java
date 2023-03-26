@@ -118,12 +118,8 @@ public class AffinityClient implements ClientModInitializer {
             final var tier = AttunedShardTier.forItem(stack.getItem());
             if (tier.isNone()) return;
 
-            lines.add(Text.translatable("text.affinity.attuned_shard_max_transfer").formatted(Formatting.GRAY)
-                    .append(Text.translatable("text.affinity.attuned_shard_max_transfer.value", tier.maxTransfer())
-                            .styled(style -> style.withColor(0x4D4C7D))));
-            lines.add(Text.translatable("text.affinity.attuned_shard_range").formatted(Formatting.GRAY)
-                    .append(Text.translatable("text.affinity.attuned_shard_range.value", tier.maxDistance())
-                            .styled(style -> style.withColor(0x4D4C7D))));
+            lines.add(Text.translatable("text.affinity.attuned_shard_max_transfer", tier.maxTransfer() * 20));
+            lines.add(Text.translatable("text.affinity.attuned_shard_range", tier.maxDistance()));
         });
 
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
