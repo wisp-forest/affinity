@@ -1,5 +1,5 @@
 {
-  "parent": "affinity:root",
+  "parent": "affinity:resistance_is_futile",
   "display": {
     "icon": {
       "item": "affinity:strengthened_artifact_blade"

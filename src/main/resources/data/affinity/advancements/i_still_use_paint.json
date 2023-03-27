@@ -1,5 +1,5 @@
 {
-  "parent": "affinity:some_assembly_required",
+  "parent": "affinity:rock_and_stone",
   "display": {
     "icon": {
       "item": "affinity:asp_rite_core"

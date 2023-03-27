@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
+import io.wispforest.affinity.object.AffinityCriteria;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -8,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -35,6 +37,10 @@ public class PeculiarClumpBlock extends Block {
         final var side = blockResult.getSide();
         final var validDirection = getValidDirection(pos);
         WAS_MINED_CORRECTLY.put(pos, side == validDirection);
+
+        if (player instanceof ServerPlayerEntity serverPlayer) {
+            AffinityCriteria.MINED_PECULIAR_CLUMP.trigger(serverPlayer, side == validDirection);
+        }
     }
 
     public static boolean getAndClearMinedState(MinecraftServer server, BlockPos pos) {
