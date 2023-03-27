@@ -2,9 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "a": {
-      "item": "minecraft:large_amethyst_bud"
-    },
+    "a": [
+      {
+        "item": "minecraft:large_amethyst_bud"
+      },
+      {
+        "item": "minecraft:amethyst_cluster"
+      }
+    ],
     "s": {
       "item": "minecraft:stone_brick_slab"
     }

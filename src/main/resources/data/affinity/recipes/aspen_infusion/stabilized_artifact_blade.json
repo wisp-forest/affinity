@@ -1,7 +1,7 @@
 {
   "type": "affinity:aspen_infusion",
   "duration": 800,
-  "flux_cost_per_tick": 15,
+  "flux_cost_per_tick": 20,
   "primary_input": {
     "item": "affinity:forgotten_artifact_blade"
   },
