@@ -1,6 +1,7 @@
 package io.wispforest.affinity.misc.screenhandler;
 
 import io.wispforest.affinity.client.screen.OuijaBoardScreen;
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
 import io.wispforest.owo.client.screens.ScreenUtils;
@@ -63,6 +64,10 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
         if (this.context != ScreenHandlerContext.EMPTY) {
             this.inventory.getStack(0).addEnchantment(selectedCurse, 1);
             this.seed.set(this.player().getEnchantmentTableSeed());
+
+            this.context.run((world, blockPos) -> {
+                AffinityComponents.CHUNK_AETHUM.get(world.getChunk(blockPos)).tryConsumeAethum(5);
+            });
         } else {
             this.sendMessage(message);
         }

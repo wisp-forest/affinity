@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "minecraft:block/enchanting_table"
+      "model": "affinity:block/ouija_board"
     }
   }
 }

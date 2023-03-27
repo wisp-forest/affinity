@@ -169,6 +169,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<AethumProbeBlockEntity> AETHUM_PROBE =
                 make(AethumProbeBlockEntity::new, AffinityBlocks.AETHUM_PROBE);
 
+        public static final BlockEntityType<OuijaBoardBlockEntity> OUIJA_BOARD =
+                make(OuijaBoardBlockEntity::new, AffinityBlocks.OUIJA_BOARD);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
