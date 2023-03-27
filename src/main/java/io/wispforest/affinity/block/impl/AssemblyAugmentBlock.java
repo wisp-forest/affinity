@@ -7,16 +7,22 @@ import io.wispforest.affinity.item.DirectInteractionHandler;
 import io.wispforest.affinity.misc.screenhandler.AssemblyAugmentScreenHandler;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
+import io.wispforest.owo.particles.ClientParticles;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -26,6 +32,7 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -71,6 +78,25 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         return world.getBlockState(pos.down()).isOf(Blocks.CRAFTING_TABLE);
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        if (!world.isClient || !world.getBlockState(pos.down()).isOf(Blocks.CRAFTING_TABLE)) return;
+        this.displayPlaceParticles(world, pos);
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void displayPlaceParticles(World world, BlockPos pos) {
+        ClientParticles.setParticleCount(15);
+        ClientParticles.spawnCenteredOnBlock(ParticleTypes.END_ROD, world, pos.down(), 1.5);
+
+        ClientParticles.setParticleCount(15);
+        ClientParticles.spawn(ArcaneTreetapBlock.PARTICLE, world, Vec3d.ofCenter(pos.down(), 1.15), 1.25);
+
+        ClientParticles.setParticleCount(10);
+        ClientParticles.randomizeVelocity(.15);
+        ClientParticles.spawn(ParticleTypes.FIREWORK, world, Vec3d.ofCenter(pos.down(), 1.15), 1.25);
     }
 
     @Override
