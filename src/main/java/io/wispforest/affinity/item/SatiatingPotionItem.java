@@ -28,12 +28,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class SatiationPotionItem extends Item {
+public class SatiatingPotionItem extends Item {
 
     private static final int MAX_USE_TIME = 32;
     private static final Supplier<StatusEffectInstance> EFFECT = () -> new StatusEffectInstance(StatusEffects.SATURATION, 5, 0);
 
-    public SatiationPotionItem() {
+    public SatiatingPotionItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
     }
 
@@ -71,9 +71,7 @@ public class SatiationPotionItem extends Item {
             if (!player.isCreative()) stack.decrement(1);
         }
 
-        return stack.isEmpty()
-                ? ItemStack.EMPTY
-                : stack;
+        return stack;
     }
 
     @Override

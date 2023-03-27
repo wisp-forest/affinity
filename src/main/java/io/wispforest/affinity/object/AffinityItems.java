@@ -67,7 +67,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item UNFIRED_CLAY_CUP = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item CLAY_CUP = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item AFFINITEA = new AffiniteaItem();
-    public static final Item SATIATING_POTION = new SatiationPotionItem();
+    public static final Item SATIATING_POTION = new SatiatingPotionItem();
     public static final Item DRAGON_DROP = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
     public static final Item RESONANCE_CRYSTAL = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
     public static final Item SYNTHETIC_DRAGON_HEART = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.RARE));
