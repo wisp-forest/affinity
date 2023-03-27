@@ -35,7 +35,7 @@ public class JsonUtil {
         final var stack = new ItemStack(item, count);
 
         if (stackObject.has("data")) {
-            stack.setNbt(readNbt(json, "data"));
+            stack.setNbt(readNbt(stackObject, "data"));
         }
 
         return stack;

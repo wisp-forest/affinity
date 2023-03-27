@@ -1,5 +1,10 @@
 package io.wispforest.affinity.compat.rei;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import dev.architectury.event.EventResult;
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.ArcaneFadeBlock;
 import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
 import io.wispforest.affinity.compat.rei.category.*;
@@ -17,17 +22,28 @@ import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
+import net.minecraft.resource.SynchronousResourceReloader;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class AffinityReiClientPlugin implements REIClientPlugin {
+
+    private static final Set<Identifier> HIDDEN_RECIPES = new HashSet<>();
+
+    static {
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new IgnoredRecipesLoader());
+    }
 
     @Override
     public void registerCategories(CategoryRegistry registry) {
@@ -89,6 +105,14 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         }
 
         effectToPotion.forEach((key, value) -> registry.add(new ContainingPotionsDisplay(key, value)));
+
+        HIDDEN_RECIPES.forEach(identifier -> {
+            registry.registerVisibilityPredicate((category, display) -> {
+                return display.getDisplayLocation().map(HIDDEN_RECIPES::contains).orElse(false)
+                        ? EventResult.interruptFalse()
+                        : EventResult.pass();
+            });
+        });
     }
 
     @Override
@@ -103,5 +127,33 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
         registry.registerClickArea(screen -> {
             return new Rectangle(screen.rootX() + 90, screen.rootY() + 35, 22, 15);
         }, AssemblyAugmentScreen.class, AffinityReiCommonPlugin.ASSEMBLY);
+    }
+
+    private static class IgnoredRecipesLoader implements SynchronousResourceReloader, IdentifiableResourceReloadListener {
+
+        private static final Gson GSON = new GsonBuilder().create();
+
+        @Override
+        public Identifier getFabricId() {
+            return Affinity.id("rei_hidden_recipes");
+        }
+
+        @Override
+        public void reload(ResourceManager manager) {
+            HIDDEN_RECIPES.clear();
+
+            manager.findResources("rei_hidden_recipes", identifier -> identifier.getPath().endsWith(".json")).forEach((identifier, resource) -> {
+                try {
+                    var json = GSON.fromJson(resource.getReader(), JsonObject.class);
+
+                    var recipeArray = JsonHelper.getArray(json, "hidden_recipes");
+                    for (var element : recipeArray) {
+                        HIDDEN_RECIPES.add(new Identifier(element.getAsString()));
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException("Exception loading hidden REI recipes from " + identifier, e);
+                }
+            });
+        }
     }
 }
