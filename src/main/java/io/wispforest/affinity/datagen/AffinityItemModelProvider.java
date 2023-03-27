@@ -27,7 +27,7 @@ public class AffinityItemModelProvider extends FabricModelProvider {
 
         forAll(generator, Models.HANDHELD,
                 COLLECTION_STAFF, NIMBLE_STAFF, TIME_STAFF, KINESIS_STAFF, ASTROKINESIS_STAFF, CULTIVATION_STAFF, WAND_OF_INQUIRY, RESOUNDING_CHIME,
-                SALVO_STAFF, GEOLOGICAL_RESONATOR, UNCANNY_ROD
+                SALVO_STAFF, GEOLOGICAL_RESONATOR, UNCANNY_ROD, STAFF_PROTOTYPE
         );
 
         forAll(generator, new Model(Optional.of(ModelIds.getMinecraftNamespacedItem("template_spawn_egg")), Optional.empty()),

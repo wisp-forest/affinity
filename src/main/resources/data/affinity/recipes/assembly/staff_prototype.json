@@ -1,0 +1,18 @@
+{
+  "type": "affinity:assembly_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "affinity:uncanny_rod"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    }
+  ],
+  "result": {
+    "item": "affinity:staff_prototype"
+  }
+}
