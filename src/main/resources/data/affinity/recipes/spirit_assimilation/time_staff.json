@@ -1,0 +1,57 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 400,
+  "flux_cost_per_tick": 80,
+  "core_inputs": [
+    {
+      "item": "affinity:staff_prototype"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "affinity:synthetic_dragon_heart"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "fabric:type": "fabric:nbt",
+      "base": {
+        "item": "minecraft:potion"
+      },
+      "nbt": {
+        "Potion": "minecraft:strong_swiftness"
+      }
+    },
+    {
+      "item": "affinity:greatly_attuned_amethyst_shard"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "fabric:type": "fabric:nbt",
+      "base": {
+        "item": "minecraft:potion"
+      },
+      "nbt": {
+        "Potion": "minecraft:strong_slowness"
+      }
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "affinity:greatly_attuned_amethyst_shard"
+    }
+  ],
+  "output": {
+    "item": "affinity:time_staff"
+  },
+  "entity": {
+    "id": "minecraft:evoker"
+  }
+}
