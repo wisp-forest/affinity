@@ -3,29 +3,71 @@ package io.wispforest.affinity.block.impl;
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
 import io.wispforest.affinity.blockentity.impl.WorldPinBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
+import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.util.VectorRandomUtils;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.stream.Stream;
+
 public class WorldPinBlock extends AethumNetworkMemberBlock {
+
+    public static final BooleanProperty ENABLED = Properties.ENABLED;
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.createCuboidShape(11, 0, 7, 12, 5, 9),
+            Block.createCuboidShape(4, 5, 4, 12, 7, 12),
+            Block.createCuboidShape(7, 0, 11, 9, 5, 12),
+            Block.createCuboidShape(7, 0, 4, 9, 5, 5),
+            Block.createCuboidShape(4, 0, 7, 5, 5, 9),
+            Block.createCuboidShape(4, 0, 7, 5, 5, 9),
+            Block.createCuboidShape(5, 0, 5, 11, 8, 11)
+    ).reduce(VoxelShapes::union).get();
+
     public WorldPinBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.CHAIN).sounds(BlockSoundGroup.METAL));
+        super(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES).mapColor(MapColor.CYAN).sounds(BlockSoundGroup.METAL).luminance(10));
+        this.setDefaultState(this.getDefaultState().with(ENABLED, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.ENABLED);
+        builder.add(ENABLED);
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        if (!state.get(ENABLED)) return;
+
+        ClientParticles.spawn(
+                new BezierPathEmitterParticleEffect(
+                        new DustParticleEffect(MathUtil.rgbToVec3f(0x00aeb4), .5f),
+                        VectorRandomUtils.getRandomOffsetSpecific(world, Vec3d.ofCenter(pos, 5), 3, 1, 3),
+                        25, 10, true
+                ), world, Vec3d.ofCenter(pos, .85), .3
+        );
     }
 
     @Nullable
@@ -40,3 +82,4 @@ public class WorldPinBlock extends AethumNetworkMemberBlock {
         return new WorldPinBlockEntity(pos, state);
     }
 }
+
