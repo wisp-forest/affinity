@@ -41,7 +41,7 @@ public class OuijaBoardBlockEntityRenderer implements BlockEntityRenderer<OuijaB
         matrices.translate(.5, 0, .5);
 
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(2f * (float) (entity.time)));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(3.5f * entity.boardHeight));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(5f * entity.boardHeight));
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-3f * (float) entity.time));
 
         matrices.translate(-.5, 0, -.5);
