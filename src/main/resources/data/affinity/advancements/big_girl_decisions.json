@@ -1,0 +1,35 @@
+{
+  "parent": "affinity:some_assembly_required",
+  "display": {
+    "icon": {
+      "item": "affinity:staff_prototype"
+    },
+    "title": {
+      "translate": "advancement.affinity.big_girl_decisions.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.big_girl_decisions.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "staff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "affinity:staffs"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "staff"
+    ]
+  ]
+}

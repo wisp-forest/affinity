@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "affinity:collection_staff",
+    "affinity:nimble_staff",
+    "affinity:time_staff",
+    "affinity:kinesis_staff",
+    "affinity:astrokinesis_staff",
+    "affinity:cultivation_staff",
+    "affinity:salvo_staff"
+  ]
+}

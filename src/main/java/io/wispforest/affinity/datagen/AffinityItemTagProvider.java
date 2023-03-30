@@ -1,6 +1,9 @@
 package io.wispforest.affinity.datagen;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.item.StaffItem;
+import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
@@ -20,12 +23,14 @@ import static io.wispforest.affinity.object.AffinityItems.*;
 public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     public static final TagKey<Item> AZALEA_LOGS = TagKey.of(RegistryKeys.ITEM, Affinity.id("azalea_logs"));
+    public static final TagKey<Item> STAFFS = TagKey.of(RegistryKeys.ITEM, Affinity.id("staffs"));
 
     public AffinityItemTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture, @Nullable BlockTagProvider blockTagProvider) {
         super(output, completableFuture, blockTagProvider);
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     protected void configure(RegistryWrapper.WrapperLookup arg) {
 
         // Azalea wood set
@@ -59,5 +64,10 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.getOrCreateTagBuilder(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades"))).add(
                 FORGOTTEN_ARTIFACT_BLADE, STABILIZED_ARTIFACT_BLADE, STRENGTHENED_ARTIFACT_BLADE, SUPERIOR_ARTIFACT_BLADE, ASTRAL_ARTIFACT_BLADE
         );
+
+        FieldRegistrationHandler.process(AffinityItems.class, (value, name, field) -> {
+            if (!(value instanceof StaffItem)) return;
+            this.getOrCreateTagBuilder(STAFFS).add(value);
+        }, false);
     }
 }
