@@ -64,6 +64,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block ITEM_TRANSFER_NODE = new ItemTransferNodeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block AETHUM_PROBE = new AethumProbeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block EMERALD_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK));
+    @Tab(AffinityItemGroup.MAIN) public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
 
     @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 

@@ -59,6 +59,7 @@
   "block.affinity.inversion_stone": "Inversion Stone",
   "block.affinity.item_transfer_node": "Item Transfer Node",
   "block.affinity.aethum_probe": "Aethum Probe",
+  "block.affinity.infused_stone": "Infused Stone",
 
   "block.affinity.spirit_integration_apparatus": "Spirit Integration Apparatus",
   "block.affinity.spirit_integration_apparatus.tooltip.complete": "Complete",

@@ -27,7 +27,7 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
         // Everything else
 
         this.primitiveCubeAllState(generator,
-                PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, THE_SKY, INVERSION_STONE
+                PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, THE_SKY, INVERSION_STONE, INFUSED_STONE
         );
 
         this.primitiveState(generator,
@@ -43,7 +43,7 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
                 ITEM_TRANSFER_NODE, PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, THE_SKY, INVERSION_STONE, COPPER_PLATED_AETHUM_FLUX_NODE,
                 STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ACCUMULATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE, REFINED_RITUAL_SOCLE,
                 SOPHISTICATED_RITUAL_SOCLE, RITUAL_SOCLE_COMPOSER, SPIRIT_INTEGRATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT, STAFF_PEDESTAL,
-                CREATIVE_AETHUM_FLUX_CACHE, EMERALD_BLOCK
+                CREATIVE_AETHUM_FLUX_CACHE, EMERALD_BLOCK, INFUSED_STONE
         );
 
         this.generatedItem(generator,

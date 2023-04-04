@@ -45,6 +45,8 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
                 .criterion(hasItem(UNFIRED_CLAY_CUP), conditionsFromItem(UNFIRED_CLAY_CUP))
                 .offerTo(exporter);
 
+        offerStonecuttingRecipe(exporter, RecipeCategory.MISC, AffinityBlocks.BLANK_RITUAL_SOCLE, AffinityBlocks.INFUSED_STONE);
+
         offerBoatRecipe(exporter, AZALEA_BOAT, AffinityBlocks.AZALEA_PLANKS);
         offerChestBoatRecipe(exporter, AZALEA_CHEST_BOAT, AZALEA_BOAT);
         offerPlanksRecipe(exporter, AffinityBlocks.AZALEA_PLANKS, TagKey.of(RegistryKeys.ITEM, Affinity.id("azalea_logs")), 4);
