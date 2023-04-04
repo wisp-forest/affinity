@@ -66,33 +66,30 @@ public class AffineCandleBlock extends CandleBlock implements BlockEntityProvide
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (state.get(LIT)) {
-            this.getParticleOffsets(state)
-                    .forEach(offset -> {
-                        double x = offset.x + pos.getX();
-                        double y = offset.y + pos.getY();
-                        double z = offset.z + pos.getZ();
+        if (!state.get(LIT)) return;
 
-                        float f = random.nextFloat();
-                        if (f < 0.3F) {
-                            ClientParticles.randomizeVelocity(0.3);
-                            ClientParticles.spawn(ParticleTypes.REVERSE_PORTAL, world, new Vec3d(x, y, z), 0.2);
-                            if (f < 0.17F) {
-                                world.playSound(
-                                        x + 0.5, y + 0.5, z + 0.5,
-                                        SoundEvents.BLOCK_CANDLE_AMBIENT,
-                                        SoundCategory.BLOCKS,
-                                        1.0F + random.nextFloat(),
-                                        random.nextFloat() * 0.7F + 0.3F,
-                                        false
-                                );
-                            }
-                        }
+        this.getParticleOffsets(state).forEach(offset -> {
+            double x = pos.getX() + offset.x;
+            double y = pos.getY() + offset.y;
+            double z = pos.getZ() + offset.z;
 
-                        // TODO: make this better™
-                        world.addParticle(new SmallColoredFlameParticleEffect(DyeColor.PURPLE), x, y, z, 0.0, 0.0, 0.0);
-                    });
-        }
+            world.addParticle(new SmallColoredFlameParticleEffect(DyeColor.PURPLE), x, y, z, 0.0, 0.0, 0.0);
+
+            float chance = random.nextFloat();
+            if (chance < .3f && world.getBlockEntity(pos) instanceof AffineCandleBlockEntity candle && candle.flux() >= 100) {
+                ClientParticles.randomizeVelocity(0.3);
+                ClientParticles.spawn(ParticleTypes.REVERSE_PORTAL, world, new Vec3d(x, y, z), 0.2);
+
+                if (chance > .15f) return;
+                world.playSound(
+                        x + .5, y + .5, z + .5,
+                        SoundEvents.BLOCK_CANDLE_AMBIENT, SoundCategory.BLOCKS,
+                        1f + random.nextFloat(),
+                        random.nextFloat() * .7f + .3f,
+                        false
+                );
+            }
+        });
     }
 
     @Override
