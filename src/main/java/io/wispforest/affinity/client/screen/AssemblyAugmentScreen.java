@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client.screen;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.client.screen.component.AlphaWrapper;
 import io.wispforest.affinity.misc.screenhandler.AssemblyAugmentScreenHandler;
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
@@ -24,7 +25,8 @@ public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, 
     private final Slot augmentOutputSlot = this.handler.getSlot(this.handler.slots.size() - 1);
 
     public AssemblyAugmentScreen(AssemblyAugmentScreenHandler handler, PlayerInventory inventory, Text title) {
-        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.file("../src/main/resources/assets/affinity/owo_ui/assembly_augment.xml"));
+//        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.file("../src/main/resources/assets/affinity/owo_ui/assembly_augment.xml"));
+        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.asset(Affinity.id("assembly_augment")));
         this.titleY = 69420;
     }
 

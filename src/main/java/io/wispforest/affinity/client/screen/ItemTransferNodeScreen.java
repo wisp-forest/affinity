@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client.screen;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.ItemTransferNodeBlockEntity;
 import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -32,7 +33,8 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
     private CheckboxComponent invertFilterToggle;
 
     public ItemTransferNodeScreen(ItemTransferNodeScreenHandler handler, PlayerInventory inventory, Text title) {
-        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.file("../src/main/resources/assets/affinity/owo_ui/item_transfer_node.xml"));
+//        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.file("../src/main/resources/assets/affinity/owo_ui/item_transfer_node.xml"));
+        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.asset(Affinity.id("item_transfer_node")));
 
         this.backgroundHeight += 26;
 

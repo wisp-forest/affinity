@@ -2,6 +2,7 @@ package io.wispforest.affinity.client.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
@@ -89,7 +90,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
     private float focusViewTime = 0;
 
     public FluxNetworkVisualizerScreen(AethumNetworkMemberBlockEntity initialMember) {
-        super(FlowLayout.class, DataSource.file("../src/main/resources/assets/affinity/owo_ui/flux_network_visualizer.xml"));
+//        super(FlowLayout.class, DataSource.file("../src/main/resources/assets/affinity/owo_ui/flux_network_visualizer.xml"));
+        super(FlowLayout.class, DataSource.asset(Affinity.id("flux_network_visualizer")));
 
         var members = AethumNetworkMember.traverseNetwork(MinecraftClient.getInstance().world, initialMember.getPos(), (peer, isMultiblockChild) -> {
             if (!isMultiblockChild) {

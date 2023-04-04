@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client.screen;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.screenhandler.OuijaBoardScreenHandler;
 import io.wispforest.owo.ui.base.BaseComponent;
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
@@ -34,7 +35,8 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
     private final ButtonComponent[] curseButtons = new ButtonComponent[3];
 
     public OuijaBoardScreen(OuijaBoardScreenHandler handler, PlayerInventory inventory, Text title) {
-        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.file("../src/main/resources/assets/affinity/owo_ui/ouija_board.xml"));
+//        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.file("../src/main/resources/assets/affinity/owo_ui/ouija_board.xml"));
+        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.asset(Affinity.id("ouija_board")));
 
         this.backgroundHeight += 2;
         this.playerInventoryTitleY += 2;
