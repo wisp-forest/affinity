@@ -60,6 +60,7 @@
   "block.affinity.item_transfer_node": "Item Transfer Node",
   "block.affinity.aethum_probe": "Aethum Probe",
   "block.affinity.infused_stone": "Infused Stone",
+  "block.affinity.matter_harvesting_hearth": "Matter Harvesting Hearth",
 
   "block.affinity.spirit_integration_apparatus": "Spirit Integration Apparatus",
   "block.affinity.spirit_integration_apparatus.tooltip.complete": "Complete",

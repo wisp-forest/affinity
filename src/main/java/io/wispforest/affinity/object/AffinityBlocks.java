@@ -44,6 +44,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block SUNDIAL = new SundialBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block MATTER_HARVESTING_HEARTH = new MatterHarvestingHearthBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block BLANK_RITUAL_SOCLE = new BlankRitualSocleBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block RUDIMENTARY_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.RUDIMENTARY);
     @Tab(AffinityItemGroup.MAIN) public static final Block REFINED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.REFINED);
@@ -173,6 +174,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<OuijaBoardBlockEntity> OUIJA_BOARD =
                 make(OuijaBoardBlockEntity::new, AffinityBlocks.OUIJA_BOARD);
 
+        public static final BlockEntityType<MatterHarvestingHearthBlockEntity> MATTER_HARVESTING_HEARTH =
+                make(MatterHarvestingHearthBlockEntity::new, AffinityBlocks.MATTER_HARVESTING_HEARTH);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
@@ -191,6 +195,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(WORLD_PIN);
             Affinity.AETHUM_MEMBER.registerSelf(SUNSHINE_MONOLITH);
             Affinity.AETHUM_MEMBER.registerSelf(STAFF_PEDESTAL);
+            Affinity.AETHUM_MEMBER.registerSelf(MATTER_HARVESTING_HEARTH);
         }
 
         @Override

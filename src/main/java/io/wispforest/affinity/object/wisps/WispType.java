@@ -12,18 +12,10 @@ import net.minecraft.util.Formatting;
 public interface WispType {
 
     /**
-     * The color of the Wisp's particles
-     * as well as the matter it drops
-     *
-     * @return the color in RGB format
+     * @return The color of the Wisp's particles
      */
     int color();
 
-    /**
-     * The translation key of this type
-     *
-     * @return The namespaced translation key of this Wisp Type
-     */
     String translationKey();
 
     /**
@@ -33,6 +25,13 @@ public interface WispType {
      * @return A single unicode character/emoji
      */
     String icon();
+
+    /**
+     * @return How much flux Wisp Matter of
+     * this type should produce per second when being harvested
+     * in the Matter Harvesting Hearth
+     */
+    int aethumFluxPerSecond();
 
     default Text createTooltip() {
         return TextOps.withColor(this.icon(), this.color()).append(" ").append(Text.translatable(this.translationKey()).formatted(Formatting.GRAY));
