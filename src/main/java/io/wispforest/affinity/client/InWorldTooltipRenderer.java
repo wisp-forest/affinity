@@ -88,6 +88,8 @@ public class InWorldTooltipRenderer {
                     matrices.pop();
                 }
 
+                RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+
                 modelViewStack.pop();
                 RenderSystem.applyModelViewMatrix();
             } else {
