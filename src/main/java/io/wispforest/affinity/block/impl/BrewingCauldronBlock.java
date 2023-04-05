@@ -110,7 +110,7 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
             if (!world.isClient()) {
                 final var item = new ItemEntity(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5,
                         ListUtil.getAndRemoveLast(cauldron.getItems()));
-                item.addScoreboardTag(BrewingCauldronBlockEntity.NO_INSERT_MARKER);
+                item.addCommandTag(BrewingCauldronBlockEntity.NO_INSERT_MARKER);
 
                 world.spawnEntity(item);
                 cauldron.markDirty(false);

@@ -1,15 +1,16 @@
 package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
+import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class PlayerAethumComponent extends AethumComponent<PlayerEntity> implements CommonTickingComponent {
 
-    public static final DamageSource AETHUM_DRAIN_DAMAGE = new DamageSource("aethum_drain").setUsesMagic().setBypassesArmor();
+    public static final DamageTypeKey AETHUM_DRAIN_DAMAGE = new DamageTypeKey(Affinity.id("aethum_drain"), DamageTypeKey.Attribution.NEVER_ATTRIBUTE);
 
     private double maxAethum = 15;
     private double naturalRegenSpeed = 0.025;
@@ -21,7 +22,7 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
     @Override
     public void tick() {
         if (this.aethum < 3 && this.holder.world.getTime() % 20 == 0) {
-            this.holder.damage(AETHUM_DRAIN_DAMAGE, (float) (5d - this.aethum));
+            this.holder.damage(AETHUM_DRAIN_DAMAGE.source(this.holder.world), (float) (5d - this.aethum));
         }
 
         if (!this.holder.world.isClient && this.maxAethum != this.maxAethum() || this.naturalRegenSpeed != this.naturalRegenSpeed()) {

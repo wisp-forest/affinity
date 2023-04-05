@@ -135,7 +135,7 @@ public class AffinityWorldgen {
                 featureRegisterable,
                 OAK_AND_AZALEA_TREE,
                 featureLookup.getOrThrow(CONFIGURED_OAK_AND_AZALEA_TREE),
-                VegetationPlacedFeatures.modifiers(PlacedFeatures.createCountExtraModifier(10, 0.1F, 1))
+                VegetationPlacedFeatures.treeModifiers(PlacedFeatures.createCountExtraModifier(10, .1f, 1))
         );
 
         PlacedFeatures.register(
@@ -237,7 +237,7 @@ public class AffinityWorldgen {
         DefaultBiomeFeatures.addFarmAnimals(spawnSettings);
 
         return new Biome.Builder()
-                .precipitation(Biome.Precipitation.RAIN)
+                .precipitation(true)
                 .temperature(.7f)
                 .downfall(.4f)
                 .effects(effects)

@@ -15,7 +15,6 @@ import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Easing;
-import io.wispforest.owo.ui.core.Surface;
 import io.wispforest.owo.ui.event.WindowResizeCallback;
 import io.wispforest.owo.ui.util.Delta;
 import io.wispforest.owo.ui.util.Drawer;
@@ -26,8 +25,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
-import net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.FluidState;
@@ -54,19 +52,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
-
-    private static final Surface TOOLTIP_SURFACE = (matrices, component) -> {
-        var buffer = Tessellator.getInstance().getBuffer();
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-
-        TooltipBackgroundRenderer.render(Drawer::fillGradient, matrices.peek().getPositionMatrix(), buffer, component.x() + 4, component.y() + 4, component.width() - 8, component.height() - 8, 0);
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-
-        Tessellator.getInstance().draw();
-    };
 
     private static Framebuffer visualizerFramebuffer = null;
 
@@ -128,8 +113,6 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        rootComponent.childById(FlowLayout.class, "stats-tooltip").surface(TOOLTIP_SURFACE);
-
         rootComponent.childById(LabelComponent.class, "member-count-label").text(
                 Text.translatable("gui.affinity.flux_network_visualizer.member_count", this.networkMembers));
         rootComponent.childById(LabelComponent.class, "node-count-label").text(

@@ -10,6 +10,7 @@ import io.wispforest.affinity.mixin.access.ServerChunkManagerAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -43,8 +44,8 @@ public abstract class ServerWorldMixin extends World {
     private static final BlockState AFFINITY$MOCK_STATE = new BlockState(Blocks.AIR, ImmutableMap.of(), MapCodec.unit(null));
     private static final TagKey<Block> AFFINITY$NO_RANDOM_TICKS = TagKey.of(RegistryKeys.BLOCK, Affinity.id("no_random_ticks_in_dying_chunks"));
 
-    protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, RegistryEntry<DimensionType> dimension, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
-        super(properties, registryRef, dimension, profiler, isClient, debugWorld, seed, maxChainedNeighborUpdates);
+    protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
+        super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
     }
 
     @ModifyVariable(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;hasRandomTicks()Z", shift = At.Shift.BEFORE))
@@ -74,7 +75,7 @@ public abstract class ServerWorldMixin extends World {
         return thunderGradient;
     }
 
-    @ModifyVariable(method = "tickWeather", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToDimension(Lnet/minecraft/network/Packet;Lnet/minecraft/registry/RegistryKey;)V", ordinal = 1, shift = At.Shift.BY, by = 2))
+    @ModifyVariable(method = "tickWeather", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToDimension(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/registry/RegistryKey;)V", ordinal = 1, shift = At.Shift.BY, by = 2))
     private boolean disableRainingSending(boolean old) {
         return this.isRaining();
     }

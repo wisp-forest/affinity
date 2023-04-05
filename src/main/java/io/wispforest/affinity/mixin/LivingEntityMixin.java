@@ -232,9 +232,9 @@ public abstract class LivingEntityMixin extends Entity {
     @Unique
     private static void affinity$killWithAttacker(LivingEntity victim, LivingEntity attacker) {
         if (attacker instanceof PlayerEntity player) {
-            victim.damage(DamageSource.player(player), Float.MAX_VALUE);
+            victim.damage(player.world.getDamageSources().playerAttack(player), Float.MAX_VALUE);
         } else {
-            victim.damage(DamageSource.mob(attacker), Float.MAX_VALUE);
+            victim.damage(attacker.world.getDamageSources().mobAttack(attacker), Float.MAX_VALUE);
         }
     }
 }

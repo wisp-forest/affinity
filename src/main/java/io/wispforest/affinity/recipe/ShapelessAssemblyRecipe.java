@@ -1,6 +1,7 @@
 package io.wispforest.affinity.recipe;
 
 import com.google.gson.JsonObject;
+import io.wispforest.affinity.mixin.access.ShapelessRecipeAccessor;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -32,13 +33,13 @@ public class ShapelessAssemblyRecipe extends ShapelessRecipe {
         @Override
         public ShapelessRecipe read(Identifier identifier, JsonObject jsonObject) {
             final var recipe = super.read(identifier, jsonObject);
-            return new ShapelessAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), recipe.getOutput(), recipe.getIngredients());
+            return new ShapelessAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getOutput(), recipe.getIngredients());
         }
 
         @Override
         public ShapelessRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
             var recipe = super.read(identifier, packetByteBuf);
-            return new ShapelessAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), recipe.getOutput(), recipe.getIngredients());
+            return new ShapelessAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getOutput(), recipe.getIngredients());
         }
     }
 

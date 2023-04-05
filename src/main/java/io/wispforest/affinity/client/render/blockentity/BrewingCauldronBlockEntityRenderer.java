@@ -9,7 +9,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
@@ -28,11 +28,14 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
         POTION_MODEL = TexturedModelData.of(data, 16, 16).createModel();
     }
 
-    public BrewingCauldronBlockEntityRenderer(BlockEntityRendererFactory.Context context) {}
+    public BrewingCauldronBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
+    }
 
     @Override
     public void render(BrewingCauldronBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (entity.itemAvailable()) {
+            final var client = MinecraftClient.getInstance();
+
             matrices.push();
             matrices.translate(0.5, 0.6, 0.5);
 
@@ -50,12 +53,12 @@ public class BrewingCauldronBlockEntityRenderer implements BlockEntityRenderer<B
                 matrices.translate(0.5 * MathHelper.cos(itemAngle), MathHelper.sin(itemAngle + angle) * 0.2, 0.5 * MathHelper.sin(itemAngle));
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotation(itemAngle));
 
-                MinecraftClient.getInstance().getItemRenderer().renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, 0);
+                client.getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, client.world, 0);
 
                 matrices.pop();
             }
 
-            MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers().draw();
+            client.getBufferBuilders().getEntityVertexConsumers().draw();
 
             matrices.pop();
         }

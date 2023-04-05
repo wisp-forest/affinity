@@ -1,6 +1,7 @@
 package io.wispforest.affinity.recipe;
 
 import com.google.gson.JsonObject;
+import io.wispforest.affinity.mixin.access.ShapedRecipeAccessor;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -33,13 +34,13 @@ public class ShapedAssemblyRecipe extends ShapedRecipe {
         @Override
         public ShapedAssemblyRecipe read(Identifier identifier, JsonObject jsonObject) {
             final var recipe = super.read(identifier, jsonObject);
-            return new ShapedAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), recipe.getWidth(), recipe.getHeight(), recipe.getIngredients(), recipe.getOutput());
+            return new ShapedAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), recipe.getWidth(), recipe.getHeight(), recipe.getIngredients(), ((ShapedRecipeAccessor) recipe).affinity$getOutput());
         }
 
         @Override
         public ShapedAssemblyRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
             final var recipe = super.read(identifier, packetByteBuf);
-            return new ShapedAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), recipe.getWidth(), recipe.getHeight(), recipe.getIngredients(), recipe.getOutput());
+            return new ShapedAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), recipe.getWidth(), recipe.getHeight(), recipe.getIngredients(), ((ShapedRecipeAccessor) recipe).affinity$getOutput());
         }
     }
 

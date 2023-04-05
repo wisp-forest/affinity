@@ -8,7 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
@@ -66,7 +66,7 @@ public class ItemTransferNodeBlockEntityRenderer implements BlockEntityRenderer<
             matrices.scale(.15f, .15f, .15f);
             matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(90));
 
-            MinecraftClient.getInstance().getItemRenderer().renderItem(filterStack, ModelTransformation.Mode.FIXED, light, overlay, matrices, vertexConsumers, 0);
+            client.getItemRenderer().renderItem(filterStack, ModelTransformationMode.FIXED, light, overlay, matrices, vertexConsumers, client.world, 0);
         }
 
         matrices.pop();

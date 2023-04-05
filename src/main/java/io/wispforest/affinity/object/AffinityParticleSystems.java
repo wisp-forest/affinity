@@ -1,8 +1,8 @@
 package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.block.impl.SpiritIntegrationApparatusBlock;
 import io.wispforest.affinity.block.impl.ArcaneTreetapBlock;
+import io.wispforest.affinity.block.impl.SpiritIntegrationApparatusBlock;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
 import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
@@ -119,10 +119,10 @@ public class AffinityParticleSystems {
 
     public static final ParticleSystem<Void> LIGHT_BLOCK = CONTROLLER.register(Void.class, (world, pos, data) -> {
         ClientParticles.setParticleCount(6);
-        ClientParticles.spawnCenteredOnBlock(ParticleTypes.FLAME, world, new BlockPos(pos), 1.25);
+        ClientParticles.spawnCenteredOnBlock(ParticleTypes.FLAME, world, BlockPos.ofFloored(pos), 1.25);
 
         ClientParticles.setParticleCount(15);
-        ClientParticles.spawnCenteredOnBlock(ParticleTypes.SMOKE, world, new BlockPos(pos), 1.25);
+        ClientParticles.spawnCenteredOnBlock(ParticleTypes.SMOKE, world, BlockPos.ofFloored(pos), 1.25);
     });
 
     public static final ParticleSystem<ArtifactBladeAreaAttackData> ARTIFACT_BLADE_SMASH = CONTROLLER.register(ArtifactBladeAreaAttackData.class, (world, pos, data) -> {

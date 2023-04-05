@@ -24,7 +24,7 @@ public class AffinityItemGroup {
         group.addTab(Icon.of(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE), "main", null, true);
         group.addTab(Icon.of(AffinityBlocks.AZALEA_LOG), "nature", null, false);
         group.addTab(Icon.of(AffinityItems.RESOUNDING_CHIME), "equipment", null, false);
-        group.addCustomTab(Icon.of(AffinityItems.RESPLENDENT_GEM), "enchantments", (enabledFeatures, entries, hasPermissions) -> {
+        group.addCustomTab(Icon.of(AffinityItems.RESPLENDENT_GEM), "enchantments", (context, entries) -> {
             Registries.ENCHANTMENT.getIds().stream()
                     .filter(id -> id.getNamespace().equals(Affinity.MOD_ID))
                     .map(Registries.ENCHANTMENT::get)

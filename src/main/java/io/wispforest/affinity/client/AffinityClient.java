@@ -38,7 +38,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
@@ -59,7 +59,7 @@ public class AffinityClient implements ClientModInitializer {
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.MANGROVE_BASKET, new MangroveBasketItemRenderer());
         PostItemRenderCallback.EVENT.register((stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
             boolean hasItemGlow = item != null && AffinityComponents.ENTITY_FLAGS.get(item).hasFlag(EntityFlagComponent.ITEM_GLOW);
-            if (mode != ModelTransformation.Mode.GROUND || (!stack.isOf(AffinityItems.DRAGON_DROP) && !hasItemGlow)) return;
+            if (mode != ModelTransformationMode.GROUND || (!stack.isOf(AffinityItems.DRAGON_DROP) && !hasItemGlow)) return;
 
             ((VertexConsumerProvider.Immediate) vertexConsumers).draw();
 

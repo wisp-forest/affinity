@@ -62,7 +62,7 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected boolean onRitualCompleted() {
-        this.item = this.cachedRecipe.getOutput();
+        this.item = this.cachedRecipe.getOutput(null);
 
         AffinityParticleSystems.ASPEN_INFUSION_CRAFT.spawn(this.world, Vec3d.ofCenter(this.pos, 1f));
         WorldOps.playSound(this.world, this.pos, AffinitySoundEvents.BLOCK_ASP_RITE_CORE_CRAFT, SoundCategory.BLOCKS);

@@ -6,7 +6,6 @@ import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.object.AffinityBlocks;
 import net.minecraft.block.BlockState;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 
 public class SunshineMonolithBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity {

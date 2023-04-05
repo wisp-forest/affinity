@@ -1,13 +1,14 @@
 package io.wispforest.affinity.statuseffects;
 
+import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.misc.DamageTypeKey;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.registry.tag.BlockTags;
 
 public class ResonantStatusEffect extends AffinityStatusEffect {
 
-    public static final DamageSource RESONATING = new DamageSource("resonating").setBypassesArmor();
+    public static final DamageTypeKey DAMAGE_TYPE = new DamageTypeKey(Affinity.id("resonating"));
 
     public ResonantStatusEffect(StatusEffectCategory type, int color) {
         super(type, color);
@@ -21,6 +22,6 @@ public class ResonantStatusEffect extends AffinityStatusEffect {
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
         if (entity.world.getBlockState(entity.getBlockPos().down()).isIn(BlockTags.DAMPENS_VIBRATIONS)) return;
-        entity.damage(RESONATING, amplifier + 1);
+        entity.damage(DAMAGE_TYPE.source(entity.world), amplifier + 1);
     }
 }

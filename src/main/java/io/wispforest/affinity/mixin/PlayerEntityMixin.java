@@ -108,13 +108,13 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @ModifyArg(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private DamageSource convertArtifactBladeDamage(DamageSource incoming) {
         if (!ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 1)) return incoming;
-
-        return incoming.setBypassesArmor().setUsesMagic();
+        return ArtifactBladeItem.DAMAGE_TYPE.source(incoming.getSource(), incoming.getAttacker());
     }
 
     @ModifyVariable(method = "attack", at = @At(value = "STORE", ordinal = 3), ordinal = 0)
     private float applyArtifactBladeJumpDamage(float damage, Entity entity) {
-        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 2)) return damage;
+        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 2))
+            return damage;
 
         float multiplier = Math.min(this.fallDistance * .4f, 3f);
         return this.affinity$lastJumpAttackDamage = damage * multiplier;
@@ -128,7 +128,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private void artifactBladeAreaDamage(Entity target, CallbackInfo ci) {
-        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 2)) return;
+        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 2))
+            return;
 
         var entityPositions = new ArrayList<Vec3d>();
 
@@ -136,13 +137,13 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         for (var entity : this.world.getNonSpectatingEntities(LivingEntity.class, area)) {
             if (entity == this || entity == target) continue;
 
-            entity.damage(DamageSource.player((PlayerEntity) (Object) this), this.affinity$lastJumpAttackDamage * .25f);
+            entity.damage(this.getDamageSources().playerAttack((PlayerEntity) (Object) this), this.affinity$lastJumpAttackDamage * .25f);
             entity.takeKnockback(.5, target.getX() - entity.getX(), target.getZ() - entity.getZ());
 
             entityPositions.add(entity.getPos());
         }
 
-        if (!world.isClient) {
+        if (!this.world.isClient) {
             AffinityCriteria.ARTIFACT_BLADE_SMASH.trigger((ServerPlayerEntity) (Object) this);
             WorldOps.playSound(
                     this.world, this.getPos(),

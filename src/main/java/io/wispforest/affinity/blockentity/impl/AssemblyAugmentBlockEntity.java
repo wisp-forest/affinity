@@ -81,7 +81,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
             }
         }
 
-        if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipe.get().getOutput())) {
+        if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipe.get().getOutput(null))) {
             if (this.craftingTick % 20 == 0) {
                 AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, -.2f), new AffinityParticleSystems.BezierVortexData(
                         new GenericEmitterParticleEffect(
@@ -103,9 +103,9 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                 }
 
                 if (outputStack.isEmpty()) {
-                    this.outputInventory.setStack(0, currentRecipe.get().getOutput().copy());
+                    this.outputInventory.setStack(0, currentRecipe.get().getOutput(null).copy());
                 } else {
-                    outputStack.increment(currentRecipe.get().getOutput().getCount());
+                    outputStack.increment(currentRecipe.get().getOutput(null).getCount());
                 }
 
                 this.craftingTick = 0;

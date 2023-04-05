@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "affinity:artifact_blade",
+    "affinity:aethum_missile",
+    "affinity:aethum_drain",
+    "affinity:resonating",
+    "affinity:doom_potion",
+    "affinity:threw_doom_potion"
+  ]
+}

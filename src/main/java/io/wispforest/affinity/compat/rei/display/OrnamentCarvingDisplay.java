@@ -12,7 +12,7 @@ import java.util.Optional;
 public class OrnamentCarvingDisplay extends BasicDisplay {
 
     public OrnamentCarvingDisplay(OrnamentCarvingRecipe recipe) {
-        super(List.of(EntryIngredients.ofIngredient(recipe.input)), List.of(EntryIngredients.of(recipe.getOutput())), Optional.of(recipe.getId()));
+        super(List.of(EntryIngredients.ofIngredient(recipe.input)), List.of(EntryIngredients.of(recipe.getOutput(null))), Optional.of(recipe.getId()));
     }
 
     @Override

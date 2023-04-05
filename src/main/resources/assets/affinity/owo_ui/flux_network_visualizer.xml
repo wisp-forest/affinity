@@ -26,6 +26,9 @@
                     </children>
 
                     <gap>3</gap>
+                    <surface>
+                        <tooltip/>
+                    </surface>
 
                     <positioning type="relative">0,100</positioning>
 

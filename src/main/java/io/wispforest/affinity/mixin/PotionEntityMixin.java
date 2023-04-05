@@ -9,15 +9,25 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.projectile.thrown.PotionEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(PotionEntity.class)
 public abstract class PotionEntityMixin extends ThrownItemEntity {
+
+    @Unique
+    private static ItemStack affinity$stackContext = null;
 
     public PotionEntityMixin(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
@@ -34,15 +44,18 @@ public abstract class PotionEntityMixin extends ThrownItemEntity {
         return entity;
     }
 
-    @Redirect(method = "applySplashPotion", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/effect/StatusEffectInstance;getDuration()I"))
-    private int extendDuration(StatusEffectInstance instance) {
-        var stack = this.getStack();
-        int duration = instance.getDuration();
+    @Inject(method = "applySplashPotion", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/effect/StatusEffectInstance;mapDuration(Lit/unimi/dsi/fastutil/ints/Int2IntFunction;)I"))
+    private void captureStackContext(List<StatusEffectInstance> statusEffects, @Nullable Entity entity, CallbackInfo ci) {
+        affinity$stackContext = this.getStack();
+    }
 
-        if (stack.has(PotionMixture.EXTRA_DATA)) {
-            duration *= stack.get(PotionMixture.EXTRA_DATA).getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
+    @ModifyVariable(method = "method_48575", at = @At(value = "HEAD"), argsOnly = true)
+    private static double extendDuration(double duration) {
+        if (affinity$stackContext.has(PotionMixture.EXTRA_DATA)) {
+            duration *= affinity$stackContext.get(PotionMixture.EXTRA_DATA).getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
         }
 
+        affinity$stackContext = null;
         return duration;
     }
 

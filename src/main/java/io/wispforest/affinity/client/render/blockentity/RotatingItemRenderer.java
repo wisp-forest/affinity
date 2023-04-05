@@ -3,7 +3,7 @@ package io.wispforest.affinity.client.render.blockentity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
@@ -41,7 +41,7 @@ public interface RotatingItemRenderer {
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(zRotation));
         matrices.translate(0, -.125, 0);
 
-        client.getItemRenderer().renderItem(stack, ModelTransformation.Mode.GROUND, light, overlay, matrices, consumers, 0);
+        client.getItemRenderer().renderItem(stack, ModelTransformationMode.GROUND, light, overlay, matrices, consumers, client.world, 0);
 
         matrices.pop();
     }

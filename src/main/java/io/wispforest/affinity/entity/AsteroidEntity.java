@@ -1,23 +1,21 @@
 package io.wispforest.affinity.entity;
 
+import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.particles.ClientParticles;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.text.Text;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class AsteroidEntity extends ProjectileEntity {
 
+    public static final DamageTypeKey ASTEROID_DAMAGE = new DamageTypeKey(Affinity.id("asteroid"));
     protected static final NbtKey<Float> EXPLOSION_POWER = new NbtKey<>("ExplosionPower", NbtKey.Type.FLOAT);
 
     protected float explosionPower = 0f;
@@ -56,7 +54,7 @@ public class AsteroidEntity extends ProjectileEntity {
         super.onCollision(hitResult);
         if (hitResult.getType() == HitResult.Type.MISS) return;
 
-        this.world.createExplosion(this, new AsteroidDamageSource(this, this.getOwner()), null, hitResult.getPos(), this.explosionPower, true, World.ExplosionSourceType.TNT);
+        this.world.createExplosion(this, ASTEROID_DAMAGE.source(this, this.getOwner()), null, hitResult.getPos(), this.explosionPower, true, World.ExplosionSourceType.TNT);
         this.discard();
     }
 
@@ -77,22 +75,6 @@ public class AsteroidEntity extends ProjectileEntity {
     }
 
     @Override
-    protected void initDataTracker() {}
-
-    public static class AsteroidDamageSource extends EntityDamageSource {
-
-        private final @Nullable Entity owner;
-
-        public AsteroidDamageSource(Entity entity, @Nullable Entity owner) {
-            super("asteroid", entity);
-            this.owner = owner;
-        }
-
-        @Override
-        public Text getDeathMessage(LivingEntity entity) {
-            return this.owner == null
-                    ? Text.translatable("death.attack." + this.name, entity.getDisplayName())
-                    : Text.translatable("death.attack." + this.name + ".player", entity.getDisplayName(), this.owner.getDisplayName());
-        }
+    protected void initDataTracker() {
     }
 }

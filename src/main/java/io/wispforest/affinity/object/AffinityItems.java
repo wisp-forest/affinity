@@ -7,7 +7,6 @@ import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.affinity.object.wisps.AffinityWispTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
@@ -84,10 +83,10 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item ASTRAL_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.ASTRAL);
     public static final Item RESOUNDING_CHIME = new ResoundingChimeItem();
 
-    public static final Item EMERALD_HELMET = new EmeraldArmorItem(EquipmentSlot.HEAD);
-    public static final Item EMERALD_CHESTPLATE = new EmeraldArmorItem(EquipmentSlot.CHEST);
-    public static final Item EMERALD_LEGGINGS = new EmeraldArmorItem(EquipmentSlot.LEGS);
-    public static final Item EMERALD_BOOTS = new EmeraldArmorItem(EquipmentSlot.FEET);
+    public static final Item EMERALD_HELMET = new EmeraldArmorItem(ArmorItem.Type.HELMET);
+    public static final Item EMERALD_CHESTPLATE = new EmeraldArmorItem(ArmorItem.Type.CHESTPLATE);
+    public static final Item EMERALD_LEGGINGS = new EmeraldArmorItem(ArmorItem.Type.LEGGINGS);
+    public static final Item EMERALD_BOOTS = new EmeraldArmorItem(ArmorItem.Type.BOOTS);
 
     public static final Item EMERALD_INGOT = new Item(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
     public static final Item EMERALD_NUGGET = new Item(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));

@@ -9,7 +9,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
@@ -46,7 +45,7 @@ public class BerserkerEnchantment extends AbsoluteEnchantment implements Enchant
             AffinityEntityAddon.setData(entity, BERSERK_KEY, false);
 
             this.healthAttribute(entity).removeModifier(HEALTH_ADDITION);
-            entity.damage(DamageSource.OUT_OF_WORLD, Float.MIN_NORMAL);
+            entity.damage(entity.getDamageSources().outOfWorld(), Float.MIN_NORMAL);
         }
     }
 

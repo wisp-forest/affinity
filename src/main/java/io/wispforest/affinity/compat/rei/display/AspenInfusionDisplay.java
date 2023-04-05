@@ -20,7 +20,7 @@ public class AspenInfusionDisplay extends BasicDisplay {
             var inputs = new ArrayList<>(recipe.getIngredients().stream().map(EntryIngredients::ofIngredient).toList());
             inputs.add(0, EntryIngredients.ofIngredient(recipe.primaryInput));
             return inputs;
-        }), List.of(EntryIngredients.of(recipe.getOutput())), Optional.of(recipe.getId()));
+        }), List.of(EntryIngredients.of(recipe.getOutput(null))), Optional.of(recipe.getId()));
 
         this.recipe = recipe;
     }

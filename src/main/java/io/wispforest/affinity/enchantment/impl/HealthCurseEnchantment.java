@@ -7,7 +7,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
@@ -37,7 +36,7 @@ public class HealthCurseEnchantment extends CurseEnchantment implements Enchantm
 
         this.healthAttribute(entity).addPersistentModifier(new EntityAttributeModifier(UUID.randomUUID(),
                 "Curse of Health - Penalty", -10, EntityAttributeModifier.Operation.ADDITION));
-        entity.damage(DamageSource.OUT_OF_WORLD, Float.MIN_NORMAL);
+        entity.damage(entity.getDamageSources().outOfWorld(), Float.MIN_NORMAL);
     }
 
     private EntityAttributeInstance healthAttribute(LivingEntity entity) {

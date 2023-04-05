@@ -22,7 +22,7 @@ public class ClumpDirectionLootCondition implements LootCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
-        return PeculiarClumpBlock.getAndClearMinedState(lootContext.getWorld().getServer(), new BlockPos(lootContext.requireParameter(LootContextParameters.ORIGIN)));
+        return PeculiarClumpBlock.getAndClearMinedState(lootContext.getWorld().getServer(), BlockPos.ofFloored(lootContext.requireParameter(LootContextParameters.ORIGIN)));
     }
 
     private static class Serializer implements JsonSerializer<ClumpDirectionLootCondition> {

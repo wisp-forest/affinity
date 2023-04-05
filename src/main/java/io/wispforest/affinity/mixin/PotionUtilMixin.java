@@ -10,6 +10,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -44,7 +45,8 @@ public class PotionUtilMixin {
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyArg(method = "buildTooltip(Ljava/util/List;Ljava/util/List;F)V", at = @At(value = "INVOKE", target = "net/minecraft/text/Text.translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;", ordinal = 1), index = 1)
     private static Object[] addLengthMultiplier(Object[] args) {
-        String durationText = (String) args[1];
+        if (!(args[1] instanceof MutableText text && text.getContent() instanceof LiteralTextContent literal)) return args;
+        String durationText = literal.string();
 
         var data = MixinHooks.POTION_UTIL_DATA.get();
         var stack = MixinHooks.POTION_UTIL_STACK.get();

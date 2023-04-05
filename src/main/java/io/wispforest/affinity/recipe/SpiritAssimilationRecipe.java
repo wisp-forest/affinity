@@ -14,6 +14,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
@@ -57,12 +58,12 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
     }
 
     @Override
-    public ItemStack craft(SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory inventory) {
+    public ItemStack craft(SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory inventory, DynamicRegistryManager drm) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack getOutput() {
+    public ItemStack getOutput(DynamicRegistryManager drm) {
         return this.output.copy();
     }
 

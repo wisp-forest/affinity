@@ -17,11 +17,12 @@
 package io.wispforest.affinity.recipe;
 
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.Ingredient;
+
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
 
 // Fabric API's shapeless matcher class, extracted
 // because it's not public API

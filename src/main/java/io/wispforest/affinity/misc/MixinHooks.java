@@ -7,13 +7,11 @@ import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
-import io.wispforest.affinity.statuseffects.ImpendingDoomStatusEffect;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
@@ -34,7 +32,7 @@ public class MixinHooks {
     public static @Nullable BlockEntity QUEUED_BLOCKENTITY = null;
     public static @Nullable EntityReference<ItemEntity> RENDER_ITEM = null;
 
-    public static final DamageSource THREW_DOOM_POTION_SOURCE = new ImpendingDoomStatusEffect.DoomDamageSource("threw_doom_potion");
+    public static final DamageTypeKey THREW_DOOM_POTION_DAMAGE = new DamageTypeKey(Affinity.id("threw_doom_potion"), DamageTypeKey.Attribution.NEVER_ATTRIBUTE);
 
     public static final ThreadLocal<ItemStack> POTION_UTIL_STACK = new ThreadLocal<>();
     public static final ThreadLocal<PotionUtilData> POTION_UTIL_DATA = new ThreadLocal<>();

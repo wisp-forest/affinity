@@ -20,7 +20,7 @@ public class ThrowablePotionItemMixin {
     private void death(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir) {
         if (!MixinHooks.isDoomPotion(user.getStackInHand(hand))) return;
 
-        user.damage(MixinHooks.THREW_DOOM_POTION_SOURCE, Float.MAX_VALUE);
+        user.damage(MixinHooks.THREW_DOOM_POTION_DAMAGE.source(world), Float.MAX_VALUE);
         user.playSound(SoundEvents.ENTITY_SPLASH_POTION_BREAK, 1, 1);
 
         cir.setReturnValue(TypedActionResult.success(ItemStack.EMPTY));

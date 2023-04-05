@@ -20,7 +20,7 @@ public class SpiritAssimilationDisplay extends BasicDisplay {
             var inputs = new ArrayList<>(recipe.coreInputs.stream().map(EntryIngredients::ofIngredient).toList());
             inputs.addAll(recipe.getIngredients().stream().map(EntryIngredients::ofIngredient).toList());
             return inputs;
-        }), List.of(EntryIngredients.of(recipe.getOutput())), Optional.of(recipe.getId()));
+        }), List.of(EntryIngredients.of(recipe.getOutput(null))), Optional.of(recipe.getId()));
 
         this.recipe = recipe;
     }

@@ -16,5 +16,6 @@
   ],
   "result": {
     "item": "affinity:azalea_fence_gate"
-  }
+  },
+  "show_notification": true
 }

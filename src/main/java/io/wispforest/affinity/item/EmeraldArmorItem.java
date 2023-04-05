@@ -22,10 +22,10 @@ public class EmeraldArmorItem extends ArmorItem {
 
     private final Multimap<EntityAttribute, EntityAttributeModifier> modifiers;
 
-    public EmeraldArmorItem(EquipmentSlot slot) {
-        super(Material.INSTANCE, slot, AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1).rarity(Rarity.UNCOMMON));
+    public EmeraldArmorItem(Type type) {
+        super(Material.INSTANCE, type, AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1).rarity(Rarity.UNCOMMON));
 
-        this.modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder().putAll(super.getAttributeModifiers(slot))
+        this.modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder().putAll(super.getAttributeModifiers(this.getSlotType()))
                 .put(AffinityEntityAttributes.DAMAGE_TAKEN, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes, season 2", 1, EntityAttributeModifier.Operation.ADDITION))
                 .put(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes, season 2, part two", 1, EntityAttributeModifier.Operation.ADDITION))
                 .build();
@@ -33,19 +33,19 @@ public class EmeraldArmorItem extends ArmorItem {
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        return slot == this.slot ? this.modifiers : super.getAttributeModifiers(slot);
+        return slot == this.getSlotType() ? this.modifiers : super.getAttributeModifiers(slot);
     }
 
     public enum Material implements ArmorMaterial {
         INSTANCE;
 
         @Override
-        public int getDurability(EquipmentSlot slot) {
+        public int getDurability(Type slot) {
             return 69;
         }
 
         @Override
-        public int getProtectionAmount(EquipmentSlot slot) {
+        public int getProtection(Type slot) {
             return -5;
         }
 

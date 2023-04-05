@@ -2,8 +2,10 @@ package io.wispforest.affinity.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.client.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
 import io.wispforest.affinity.object.AffinityItems;
@@ -19,7 +21,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
@@ -40,6 +41,7 @@ import java.util.UUID;
 
 public class ArtifactBladeItem extends SwordItem {
 
+    public static final DamageTypeKey DAMAGE_TYPE = new DamageTypeKey(Affinity.id("artifact_blade"));
     public static final AffinityEntityAddon.DataKey<Boolean> DID_CRIT = AffinityEntityAddon.DataKey.withDefaultConstant(false);
 
     private static final NbtKey<Long> ABILITY_START_TIME = new NbtKey<>("AbilityStartTime", NbtKey.Type.LONG);
@@ -118,7 +120,7 @@ public class ArtifactBladeItem extends SwordItem {
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (stack.getItem() instanceof ArtifactBladeItem blade && blade.tier == Tier.ASTRAL && attacker instanceof PlayerEntity player) {
             target.setHealth(0);
-            target.onDeath(DamageSource.player(player));
+            target.onDeath(player.getDamageSources().playerAttack(player));
             return true;
         } else {
             return super.postHit(stack, target, attacker);

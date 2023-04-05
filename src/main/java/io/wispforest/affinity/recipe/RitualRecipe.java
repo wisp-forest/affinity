@@ -4,6 +4,7 @@ import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -80,7 +81,7 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventor
         }
 
         @Override
-        public ItemStack craft(Inventory inventory) {
+        public ItemStack craft(Inventory inventory, DynamicRegistryManager drm) {
             return null;
         }
 
@@ -90,7 +91,7 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventor
         }
 
         @Override
-        public ItemStack getOutput() {
+        public ItemStack getOutput(DynamicRegistryManager drm) {
             return null;
         }
 

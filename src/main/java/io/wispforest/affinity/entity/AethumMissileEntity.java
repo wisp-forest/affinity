@@ -1,12 +1,13 @@
 package io.wispforest.affinity.entity;
 
+import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 public class AethumMissileEntity extends ProjectileEntity {
 
+    private static final DamageTypeKey DAMAGE_TYPE = new DamageTypeKey(Affinity.id("aethum_missile"));
     private static final NbtKey<UUID> TARGET_KEY = new NbtKey<>("TargetEntity", NbtKey.Type.INT_ARRAY.then(Uuids::toUuid, Uuids::toIntArray));
 
     private UUID targetEntity = null;
@@ -76,7 +78,7 @@ public class AethumMissileEntity extends ProjectileEntity {
         if (hitResult instanceof EntityHitResult entityHit && entityHit.getEntity() instanceof LivingEntity living) {
             living.timeUntilRegen = 0;
             living.hurtTime = 0;
-            living.damage(DamageSource.magic(this, this.getOwner()).setBypassesArmor().setBypassesProtection(), 1f);
+            living.damage(DAMAGE_TYPE.source(this, this.getOwner()), 1f);
         }
 
         this.discard();

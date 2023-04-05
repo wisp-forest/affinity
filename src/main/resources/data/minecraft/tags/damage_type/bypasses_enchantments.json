@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "affinity:aethum_missile",
+    "affinity:doom_potion",
+    "affinity:threw_doom_potion",
+    "affinity:aethum_drain"
+  ]
+}

@@ -53,8 +53,8 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
     protected void dropInventory(PlayerEntity player, Inventory inventory) {}
 
     @Override
-    public void close(PlayerEntity player) {
-        super.close(player);
+    public void onClosed(PlayerEntity player) {
+        super.onClosed(player);
         if (this.augment != null) this.augment.markDirty();
     }
 

@@ -56,7 +56,8 @@
     "access.MapStateAccessor",
     "access.OverworldBiomeCreatorInvoker",
     "access.ServerChunkManagerAccessor",
-    "access.SignTypeInvoker",
+    "access.ShapedRecipeAccessor",
+    "access.ShapelessRecipeAccessor",
     "access.StatusEffectInstanceAccessor",
     "access.StructureFeatureAccessor",
     "access.WorldAccessor"

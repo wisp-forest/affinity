@@ -14,6 +14,7 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -84,7 +85,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
     @Override
     @Deprecated
-    public ItemStack craft(Inventory inventory) {
+    public ItemStack craft(Inventory inventory, DynamicRegistryManager drm) {
         return ItemStack.EMPTY;
     }
 
@@ -96,7 +97,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
     @Override
     @Deprecated
-    public ItemStack getOutput() {
+    public ItemStack getOutput(DynamicRegistryManager drm) {
         return ItemStack.EMPTY;
     }
 

@@ -1,7 +1,6 @@
 package io.wispforest.affinity.mixin.client;
 
 import io.wispforest.affinity.item.KinesisStaffItem;
-import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.EntityType;

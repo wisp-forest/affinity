@@ -13,5 +13,6 @@
   "result": {
     "count": 6,
     "item": "affinity:azalea_slab"
-  }
+  },
+  "show_notification": true
 }

@@ -4,7 +4,6 @@ import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.wisps.AffinityWispTypes;
 import io.wispforest.affinity.object.wisps.WispType;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.RaycastContext;
@@ -46,7 +45,7 @@ public class ViciousWispEntity extends WispEntity {
 
         if (hitResult.getType() != HitResult.Type.MISS) return;
 
-        closestPlayer.damage(DamageSource.magic(this, this), 2);
+        closestPlayer.damage(this.getDamageSources().indirectMagic(this, this), 2);
         AffinityParticleSystems.WISP_ATTACK.spawn(this.world, this.getPos(),
                 new AffinityParticleSystems.LineData(closestPlayer.getPos().add(0, 1, 0), this.type().color()));
         this.attackCooldown = 50;

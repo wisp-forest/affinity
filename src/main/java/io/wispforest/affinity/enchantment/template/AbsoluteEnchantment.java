@@ -72,11 +72,6 @@ public abstract class AbsoluteEnchantment extends AffinityEnchantment {
         return false;
     }
 
-    @Override
-    public boolean isAvailableForRandomSelection() {
-        return false;
-    }
-
     public enum Type {
         ITEM(EquipmentSlot.MAINHAND),
         ARMOR(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD);
@@ -91,7 +86,7 @@ public abstract class AbsoluteEnchantment extends AffinityEnchantment {
     private static class PhantomTranslatableText extends TranslatableTextContent {
 
         public PhantomTranslatableText(String key) {
-            super(key);
+            super(key, null, new Object[0]);
         }
 
         @Override
