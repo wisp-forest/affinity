@@ -10,10 +10,13 @@
     },
     "z": {
       "item": "affinity:azalea_log"
+    },
+    "s": {
+      "item": "minecraft:amethyst_shard"
     }
   },
   "pattern": [
-    " a ",
+    "sas",
     "ziz"
   ],
   "result": {

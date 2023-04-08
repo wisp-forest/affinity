@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
@@ -31,6 +32,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, ImplementedInventory, SidedInventory {
 
@@ -75,6 +78,14 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
             this.currentlyHarvesting = ItemStack.EMPTY;
             this.markDirty();
         }
+    }
+
+    @Override
+    public void appendTooltipEntries(List<Entry> entries) {
+        super.appendTooltipEntries(entries);
+
+        if (!(this.currentlyHarvesting.getItem() instanceof WispMatterItem matter)) return;
+        entries.add(Entry.icon(Text.of(matter.wispType().aethumFluxPerSecond() + "/s"), 8, 0));
     }
 
     private void enforceBlockState(boolean lit) {
