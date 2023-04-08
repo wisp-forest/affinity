@@ -1,0 +1,73 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 400,
+  "flux_cost_per_tick": 40,
+  "core_inputs": [
+    {
+      "item": "affinity:bare_resplendent_gem"
+    },
+    {
+      "item": "affinity:bare_resplendent_gem"
+    },
+    {
+      "item": "affinity:bare_resplendent_gem"
+    },
+    {
+      "item": "affinity:bare_resplendent_gem"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "item": "minecraft:enchanted_golden_apple"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "minecraft:glistering_melon_slice"
+    },
+    {
+      "fabric:type": "fabric:nbt",
+      "base": {
+        "item": "minecraft:potion"
+      },
+      "nbt": {
+        "Potion": "minecraft:strong_strength"
+      }
+    },
+    {
+      "fabric:type": "fabric:nbt",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "nbt": "{\"StoredEnchantments\":[{id: \"minecraft:sharpness\", lvl: 5s}]}"
+    },
+    {
+      "item": "minecraft:glistering_melon_slice"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    }
+  ],
+  "output": {
+    "item": "affinity:resplendent_gem",
+    "count": 4,
+    "data": {
+      "Enchantments": [
+        {
+          "id": "affinity:berserker",
+          "lvl": 1
+        }
+      ]
+    }
+  },
+  "entity": {
+    "id": "minecraft:piglin_brute"
+  }
+}

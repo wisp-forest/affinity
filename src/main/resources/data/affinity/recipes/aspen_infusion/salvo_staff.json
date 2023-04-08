@@ -1,0 +1,41 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 500,
+  "flux_cost_per_tick": 20,
+  "primary_input": {
+    "item": "affinity:staff_prototype"
+  },
+  "inputs": [
+    {
+      "item": "affinity:fairly_attuned_amethyst_shard"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "fabric:type": "fabric:nbt",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "nbt": "{\"StoredEnchantments\":[{id: \"minecraft:quick_charge\", lvl: 3s}]}"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "output": {
+    "item": "affinity:salvo_staff"
+  }
+}
