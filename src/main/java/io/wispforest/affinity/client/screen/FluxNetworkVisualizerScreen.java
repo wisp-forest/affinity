@@ -25,6 +25,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
@@ -162,7 +163,10 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             var invView = new Matrix4f(viewMatrix).invert();
 
             var near = new Vector4f(0, 0, -1, 1).mul(invProj).mul(invView);
-            ((CameraInvoker) MinecraftClient.getInstance().gameRenderer.getCamera()).affinity$etPos(new Vec3d(near.x, near.y, near.z));
+            var camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+            var prevCameraPos = camera.getPos();
+
+            ((CameraInvoker) camera).affinity$etPos(new Vec3d(near.x, near.y, near.z));
 
             //noinspection deprecation
             RenderSystem.runAsFancy(() -> {
@@ -220,6 +224,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             RenderSystem.restoreProjectionMatrix();
 
+            ((CameraInvoker) camera).affinity$etPos(prevCameraPos);
+
             // End model view / projection crimes
 
             RenderSystem.enableBlend();
@@ -266,6 +272,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
                         client.textRenderer.drawWithShadow(matrices, entry.label(), mouseX + 10 + 15, mouseY + yOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
                     }
+
+                    RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
                 }
 
                 this.focusViewTime += delta;
