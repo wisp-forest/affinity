@@ -72,7 +72,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
             this.linkAttachmentPoint = Vec3d.ZERO;
         }
 
-        this.fluxStorage.setFluxCapacity(32000);
+        this.fluxStorage.setFluxCapacity(16000);
     }
 
     // ------------------
@@ -421,8 +421,8 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     @Override
     public void appendTooltipEntries(List<Entry> entries) {
         super.appendTooltipEntries(entries);
-        entries.add(Entry.icon(Text.of(this.tier.maxTransfer() + "/t"), 8, 0));
-        entries.add(Entry.icon(Text.of("" + this.links.size()), 16, 0));
+        entries.add(Entry.icon(Text.of(this.tier.maxTransfer() * 20 + "/s"), 8, 0));
+        entries.add(Entry.icon(Text.of(String.valueOf(this.links.size())), 16, 0));
     }
 
     public int outerShardCount() {
