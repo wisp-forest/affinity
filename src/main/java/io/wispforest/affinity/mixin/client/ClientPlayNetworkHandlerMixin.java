@@ -30,7 +30,7 @@ public class ClientPlayNetworkHandlerMixin {
     private long itIsAlwaysNightyNight(long serverTimeOfDay) {
         CelestialZoomer.serverTimeOfDay = serverTimeOfDay;
 
-        if (isInWispForest()) {
+        if (affinity$isInWispForest()) {
             final var forestTime = (Math.abs(serverTimeOfDay) / 24000) * -24000 - 18000;
             if (!this.affinity$firstPacketReceived) world.setTimeOfDay(forestTime);
             CelestialZoomer.enableOffset(forestTime);
@@ -43,7 +43,7 @@ public class ClientPlayNetworkHandlerMixin {
     }
 
     @Unique
-    private boolean isInWispForest() {
+    private boolean affinity$isInWispForest() {
         return Objects.equals(world.getBiome(client.player.getBlockPos()).getKey().orElse(null), AffinityWorldgen.WISP_FOREST_KEY);
     }
 }
