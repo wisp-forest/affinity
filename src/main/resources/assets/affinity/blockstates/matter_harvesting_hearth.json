@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "affinity:block/matter_harvesting_hearth",
+      "y": 90
+    },
+    "axis=z": {
+      "model": "affinity:block/matter_harvesting_hearth"
+    }
+  }
+}
