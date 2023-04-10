@@ -28,7 +28,7 @@ public class ViciousWispEntity extends WispEntity {
     }
 
     @Override
-    protected void tickServer() {
+    protected void mobTick() {
         if (attackCooldown > 0) {
             attackCooldown--;
             return;
@@ -52,7 +52,8 @@ public class ViciousWispEntity extends WispEntity {
     }
 
     @Override
-    protected void tickClient() {
+    protected void tickServer() {}
 
-    }
+    @Override
+    protected void tickClient() {}
 }
