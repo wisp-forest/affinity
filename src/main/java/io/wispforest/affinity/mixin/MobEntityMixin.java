@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.enchantment.impl.GravecallerEnchantment;
 import io.wispforest.affinity.entity.goal.AttackWithMasterGoal;
 import io.wispforest.affinity.entity.goal.TrackMasterAttackerGoal;
@@ -12,6 +13,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.EmptyChunk;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +21,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MobEntity.class)
@@ -65,4 +68,19 @@ public abstract class MobEntityMixin extends LivingEntity {
         return MixinHooks.getExtraAttackDamage(this, entity, amount);
     }
 
+    @Redirect(method = "isAffectedByDaylight", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isDay()Z"))
+    private boolean iNeedMixinExtrasSoHardRn(World world) {
+        if (world.isClient || world.getDimension().hasFixedTime())
+            return world.isDay();
+
+        var chunk = world.getWorldChunk(getBlockPos());
+
+        if (chunk instanceof EmptyChunk) {
+            return world.isDay();
+        }
+
+        var component = AffinityComponents.LOCAL_WEATHER.get(chunk);
+
+        return component.getAmbientDarkness() < 4;
+    }
 }
