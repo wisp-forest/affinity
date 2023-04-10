@@ -36,10 +36,10 @@ public abstract class ClientWorldMixin extends World {
 
     @Inject(method = "tickTime", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/MutableWorldProperties;getGameRules()Lnet/minecraft/world/GameRules;"), cancellable = true)
     private void zooooom(CallbackInfo ci) {
-        CelestialZoomer.lastWorldTime = getTimeOfDay();
+        CelestialZoomer.lastWorldTime = this.getTimeOfDay();
         if (!CelestialZoomer.offsetEnabled()) return;
 
-        setTimeOfDay(CelestialZoomer.getZoomedTime(this));
+        this.setTimeOfDay(CelestialZoomer.getZoomedTime(this));
         ci.cancel();
     }
 
