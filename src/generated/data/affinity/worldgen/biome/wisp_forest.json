@@ -123,7 +123,7 @@
         "type": "affinity:inert_wisp",
         "maxCount": 5,
         "minCount": 2,
-        "weight": 10
+        "weight": 15
       },
       {
         "type": "affinity:wise_wisp",
