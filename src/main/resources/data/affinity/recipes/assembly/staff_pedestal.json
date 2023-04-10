@@ -1,0 +1,29 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "d": {
+      "item": "minecraft:deepslate_bricks"
+    },
+    "c": {
+      "item": "minecraft:copper_ingot"
+    },
+    "a": {
+      "item": "affinity:azalea_planks"
+    },
+    "s": {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    "f": {
+      "item": "affinity:fairly_attuned_amethyst_shard"
+    }
+  },
+  "pattern": [
+    "cfc",
+    "ada",
+    "sds"
+  ],
+  "result": {
+    "item": "affinity:staff_pedestal"
+  }
+}

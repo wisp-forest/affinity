@@ -74,8 +74,6 @@ public class AffinityNetwork {
             receiver.onAttack(world, state, message.pos(), player);
             player.swingHand(Hand.MAIN_HAND);
         });
-
-        RitualSocleComposerScreenHandler.initNetwork();
     }
 
 }
