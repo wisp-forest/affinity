@@ -26,7 +26,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,9 +39,12 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
 
     public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, .85, .5);
 
-    @Nullable private SpiritAssimilationRecipe cachedRecipe = null;
-    @Nullable private SpiritIntegrationApparatusBlock.ApparatusSet neighborPositions = null;
-    @Nullable private SpiritIntegrationApparatusBlockEntity[] cachedNeighbors = null;
+    @Nullable
+    private SpiritAssimilationRecipe cachedRecipe = null;
+    @Nullable
+    private SpiritIntegrationApparatusBlock.ApparatusSet neighborPositions = null;
+    @Nullable
+    private SpiritIntegrationApparatusBlockEntity[] cachedNeighbors = null;
 
     public final RitualLock<SpiritIntegrationApparatusBlockEntity> ritualLock = new RitualLock<>();
 
@@ -51,6 +53,8 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
 
         this.fluxStorage.setFluxCapacity(24000);
         this.fluxStorage.setMaxInsert(500);
+
+        this.storageProvider.active(() -> !this.ritualLock.isActive() && this.storageProvider.active().getAsBoolean());
     }
 
     @Override
@@ -230,23 +234,6 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     public BlockPos ritualCenterPos() {
         final var set = neighborPositions != null ? neighborPositions : SpiritIntegrationApparatusBlock.findValidApparatusSet(this.world, this.pos);
         return set != null ? set.center() : this.pos;
-    }
-
-    @Override
-    public int[] getAvailableSlots(Direction side) {
-        return this.ritualLock.isActive()
-                ? NO_AVAILABLE_SLOTS
-                : super.getAvailableSlots(side);
-    }
-
-    @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return !this.ritualLock.isActive() && super.canInsert(slot, stack, dir);
-    }
-
-    @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return !this.ritualLock.isActive() && super.canExtract(slot, stack, dir);
     }
 
     @Override

@@ -5,18 +5,17 @@ import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntit
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.item.WispMatterItem;
-import io.wispforest.affinity.misc.SingleElementDefaultedList;
+import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.util.ImplementedInventory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
@@ -24,29 +23,24 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, ImplementedInventory, SidedInventory {
+public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
     private static final Vec3d LINK_ATTACHMENT_POINT = new Vec3d(0, -.35f, 0);
 
-    private static final int[] AVAILABLE_SLOTS = new int[]{0};
     private static final NbtKey<ItemStack> CURRENTLY_HARVESTING_KEY = new NbtKey<>("CurrentlyHarvesting", NbtKey.Type.ITEM_STACK);
     private static final NbtKey<Integer> HARVEST_TICKS_KEY = new NbtKey<>("HarvestTicks", NbtKey.Type.INT);
 
-    @NotNull private ItemStack currentlyHarvesting = ItemStack.EMPTY;
-    private final SingleElementDefaultedList<ItemStack> inventoryProvider = new SingleElementDefaultedList<>(
-            ItemStack.EMPTY, () -> this.currentlyHarvesting, stack -> this.currentlyHarvesting = stack
-    );
+    @NotNull
+    private ItemStack currentlyHarvesting = ItemStack.EMPTY;
+    private final SingleStackStorageProvider storageProvider = new SingleStackStorageProvider(() -> this.currentlyHarvesting, stack -> this.currentlyHarvesting = stack, this::markDirty).capacity(1);
 
     private int time = 0;
     private int harvestTicks = 0;
@@ -141,23 +135,8 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
         return LINK_ATTACHMENT_POINT;
     }
 
-    @Override
-    public DefaultedList<ItemStack> getItems() {
-        return this.inventoryProvider;
-    }
-
-    @Override
-    public int[] getAvailableSlots(Direction side) {
-        return AVAILABLE_SLOTS;
-    }
-
-    @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return this.currentlyHarvesting.isEmpty();
-    }
-
-    @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return false;
+    static {
+        //noinspection UnstableApiUsage
+        ItemStorage.SIDED.registerForBlockEntity((hearth, direction) -> hearth.storageProvider, AffinityBlocks.Entities.MATTER_HARVESTING_HEARTH);
     }
 }
