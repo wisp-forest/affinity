@@ -10,6 +10,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
@@ -53,11 +54,11 @@ public class ItemTransferNodeBlockEntityRenderer implements BlockEntityRenderer<
             final var client = MinecraftClient.getInstance();
             final var depthModel = client.getItemRenderer().getModel(filterStack, client.world, null, 0).hasDepth();
 
-            matrices.translate(.5, 0, .5);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
-            matrices.translate(-.5, 0, -.5);
+            matrices.translate(1, .255, .5);
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+            matrices.translate(-.5, 0, 0);
 
-            matrices.translate(.5, .255, .5);
+            if (entity.facing().getAxis() != Direction.Axis.Y) matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
 
             if (depthModel) {
                 matrices.translate(0, -.01, 0);
