@@ -186,7 +186,7 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
         });
     }
 
-    static {
+    public static void initNetwork() {
         AffinityNetwork.CHANNEL.registerServerbound(ActionRequestPacket.class, (message, access) -> {
             if (!(access.player().currentScreenHandler instanceof RitualSocleComposerScreenHandler composerHandler)) return;
             switch (message.action()) {
