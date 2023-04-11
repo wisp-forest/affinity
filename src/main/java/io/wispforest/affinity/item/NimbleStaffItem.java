@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 public class NimbleStaffItem extends StaffItem {
 
@@ -49,15 +50,20 @@ public class NimbleStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        moveEntities(world, pos, pedestal);
+        moveEntities(world, pos, pedestal, () -> {
+            if (!pedestal.hasFlux(25)) return false;
+
+            pedestal.consumeFlux(25);
+            return true;
+        });
     }
 
     @Override
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        moveEntities(world, pos, pedestal);
+        moveEntities(world, pos, pedestal, () -> pedestal.hasFlux(25));
     }
 
-    protected static void moveEntities(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+    protected static void moveEntities(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, BooleanSupplier shouldContinue) {
         final var direction = getDirection(pedestal.getItem());
 
         var pushDelta = Vec3d.of(direction.getVector()).multiply(.2);
@@ -66,6 +72,7 @@ public class NimbleStaffItem extends StaffItem {
 
         for (var entity : world.getNonSpectatingEntities(Entity.class, new Box(pos).expand(4, 2, 4))) {
             if (entity.isSneaking()) continue;
+            if (!shouldContinue.getAsBoolean()) return;
 
             if (entity.getPos().isInRange(stuckPosition, 1.5)) {
                 entity.addVelocity(unstuckDelta);

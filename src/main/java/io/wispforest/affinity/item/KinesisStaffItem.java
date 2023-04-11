@@ -35,6 +35,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
 
 public class KinesisStaffItem extends StaffItem {
 
@@ -60,17 +62,23 @@ public class KinesisStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        slowDownEntities(world, pos);
+        slowDownEntities(world, pos, () -> {
+            if (!pedestal.hasFlux(15)) return false;
+
+            pedestal.consumeFlux(15);
+            return true;
+        });
     }
 
     @Override
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        slowDownEntities(world, pos);
+        slowDownEntities(world, pos, () -> pedestal.hasFlux(15));
     }
 
-    protected static void slowDownEntities(World world, BlockPos pos) {
+    protected static void slowDownEntities(World world, BlockPos pos, BooleanSupplier shouldContinue) {
         for (var entity : world.getNonSpectatingEntities(Entity.class, new Box(pos).expand(4, 4, 4))) {
             if (entity.isSneaking() || !(entity instanceof LivingEntity living)) continue;
+            if (!shouldContinue.getAsBoolean()) return;
 
             var attributes = living.getAttributes();
             if (!attributes.hasModifierForAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED, MODIFIER.getId())) {

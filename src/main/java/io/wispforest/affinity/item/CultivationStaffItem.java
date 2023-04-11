@@ -57,7 +57,9 @@ public class CultivationStaffItem extends StaffItem {
         var inventory = ItemStorage.SIDED.find(world, pos.down(), Direction.UP);
         if (inventory == null) return;
 
-        if (pedestal.getItem().get(SUPER_FORAGING_MODE_KEY)) {
+        if (pedestal.getItem().get(SUPER_FORAGING_MODE_KEY) && pedestal.hasFlux(150)) {
+            pedestal.consumeFlux(150);
+
             for (var cropPos : BlockPos.iterate(pos.add(-4, 0, -4), pos.add(4, 0, 4))) {
                 if (world.random.nextFloat() > .005f) continue;
 
@@ -75,6 +77,9 @@ public class CultivationStaffItem extends StaffItem {
         var state = world.getBlockState(cropPos);
 
         if (!(state.getBlock() instanceof CropBlock crop) || !crop.isMature(state)) return;
+
+        if (!pedestal.hasFlux(50)) return;
+        pedestal.consumeFlux(50);
 
         var drops = Block.getDroppedStacks(state, world, cropPos, world.getBlockEntity(cropPos));
         boolean foundSeeds = false;

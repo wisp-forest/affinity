@@ -161,7 +161,8 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     }
 
     protected void sendFluxUpdate() {
-        if (world.isClient) return;
+        if (this.world.isClient) return;
+
         FluxSyncHandler.queueUpdate(this);
         this.world.markDirty(this.pos);
     }
