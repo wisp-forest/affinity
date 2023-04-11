@@ -63,6 +63,8 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
         if (this.augment != null) {
             this.craftingProgress.set(this.augment.craftingTick() / (float) this.augment.craftingDuration());
             this.displayTreetaps.set(this.augment.displayTreetaps());
+
+            this.augment.markDirty();
         }
 
         super.sendContentUpdates();

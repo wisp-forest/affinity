@@ -2,6 +2,7 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.block.impl.ArcaneTreetapBlock;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
+import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.misc.util.BlockFinder;
@@ -14,11 +15,12 @@ import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.util.ImplementedInventory;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
@@ -36,7 +38,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
-public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlockEntity, ImplementedInventory, SidedInventory, InquirableOutlineProvider {
+public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, ImplementedInventory, SidedInventory, InquirableOutlineProvider {
+
+    @Environment(EnvType.CLIENT) public double previewAngle = 0d;
 
     private static final int[] DOWN_SLOTS = new int[]{0};
     private static final int[] NO_SLOTS = new int[0];
@@ -74,7 +78,8 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
         this.activeTreetaps = 0;
         if (currentRecipe.isPresent()) {
             for (var treetap : this.treetapCache) {
-                if (this.blockedTreetaps.containsKey(treetap) && !this.pos.equals(this.blockedTreetaps.get(treetap))) continue;
+                if (this.blockedTreetaps.containsKey(treetap) && !this.pos.equals(this.blockedTreetaps.get(treetap)))
+                    continue;
 
                 this.blockedTreetaps.put(treetap, this.pos);
                 if (++this.activeTreetaps >= 5) break;
@@ -83,7 +88,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
 
         if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipe.get().getOutput(null))) {
             if (this.craftingTick % 20 == 0) {
-                AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, -.2f), new AffinityParticleSystems.BezierVortexData(
+                AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, .2), new AffinityParticleSystems.BezierVortexData(
                         new GenericEmitterParticleEffect(
                                 ArcaneTreetapBlock.PARTICLE, new Vec3d(.05, .05, .05),
                                 1, .05f, true, 1
@@ -108,6 +113,7 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
                     outputStack.increment(currentRecipe.get().getOutput(null).getCount());
                 }
 
+                this.markDirty();
                 this.craftingTick = 0;
             }
         } else {
@@ -179,12 +185,6 @@ public class AssemblyAugmentBlockEntity extends BlockEntity implements TickedBlo
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         return true;
-    }
-
-    @Override
-    public void markDirty() {
-        if (this.world == null) return;
-        this.world.markDirty(this.pos);
     }
 
     public int displayTreetaps() {
