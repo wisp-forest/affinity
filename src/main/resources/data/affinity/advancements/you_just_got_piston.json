@@ -1,0 +1,37 @@
+{
+    "parent": "affinity:root",
+    "display": {
+        "icon": {
+            "item": "affinity:pocket_piston"
+        },
+        "title": {
+            "translate": "advancement.affinity.you_just_got_piston.title"
+        },
+        "description": {
+            "translate": "advancement.affinity.you_just_got_piston.description"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "pocket_piston": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items":[
+                            "affinity:pocket_piston"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "pocket_piston"
+        ]
+    ]
+}

@@ -373,6 +373,8 @@
   "advancement.affinity.when_the_world_is_calling_you.description": "Sacrifice yourself to a ritual",
   "advancement.affinity.gamedesign.title": "Gamedesign!",
   "advancement.affinity.gamedesign.description": "64 nuggets in a block",
+  "advancement.affinity.you_just_got_piston.title": "You Just Got Piston",
+  "advancement.affinity.you_just_got_piston.description": "Obtain a Pocket Piston",
 
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.dripping.desc": "Got that drip",

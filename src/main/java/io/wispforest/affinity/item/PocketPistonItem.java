@@ -9,6 +9,8 @@ import net.minecraft.block.piston.PistonHandler;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -29,11 +31,22 @@ public class PocketPistonItem extends Item {
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         boolean push = !context.getPlayer().isSneaking();
+
         if (move(
             context.getWorld(),
             context.getBlockPos().offset(context.getSide(), push ? 1 : 2),
             context.getSide().getOpposite(),
-            push)) {
+            push
+        )) {
+            context.getWorld().playSound(
+                context.getPlayer(),
+                context.getPlayer().getBlockPos(),
+                push ? SoundEvents.BLOCK_PISTON_EXTEND : SoundEvents.BLOCK_PISTON_CONTRACT,
+                SoundCategory.BLOCKS,
+                0.5F,
+                context.getWorld().random.nextFloat() * 0.25F + 0.6F
+            );
+
             return ActionResult.success(context.getWorld().isClient);
         } else {
             return ActionResult.PASS;
