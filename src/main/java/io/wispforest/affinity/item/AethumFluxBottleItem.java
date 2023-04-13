@@ -4,7 +4,6 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.ops.ItemOps;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
@@ -41,13 +40,10 @@ public class AethumFluxBottleItem extends Item implements DirectInteractionHandl
         if (member == null) return ActionResult.PASS;
         if (world.isClient) return ActionResult.SUCCESS;
 
-        try (var transaction = Transaction.openOuter()) {
-            if (member.insert(1000, transaction) != 1000) return ActionResult.PASS;
+        if (member.flux() + 1000 > member.fluxCapacity()) return ActionResult.PASS;
+        member.updateFlux(member.flux() + 1000);
 
-            this.useStack(context);
-            transaction.commit();
-        }
-
+        this.useStack(context);
         return ActionResult.SUCCESS;
     }
 
