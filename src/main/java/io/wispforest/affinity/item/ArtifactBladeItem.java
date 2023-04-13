@@ -161,9 +161,9 @@ public class ArtifactBladeItem extends SwordItem {
     }
 
     public enum Tier implements ToolMaterial {
-        FORGOTTEN(new TierData(500, 2, 20, 7, 7f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f)),
-        STABILIZED(new TierData(1000, 3, 25, 8, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .6f)),
-        STRENGTHENED(new TierData(1500, 4, 35, 12, 12f, -2f, Rarity.RARE, 160, 400, .6f)),
+        FORGOTTEN(new TierData(500, 2, 20, 6, 7f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f)),
+        STABILIZED(new TierData(1000, 3, 25, 6.5f, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .6f)),
+        STRENGTHENED(new TierData(1500, 4, 35, 11, 12f, -2f, Rarity.RARE, 160, 400, .6f)),
         SUPERIOR(new TierData(3000, 5, 40, 15, 15f, -1.8f, Rarity.EPIC, 200, 800, .8f)),
         ASTRAL(new TierData(69000, 6, 100, 6969, 75f, 21f, Rarity.EPIC, 200, 800, 1f));
 
