@@ -87,13 +87,13 @@ public class AethumMissileEntity extends ProjectileEntity {
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.put(TARGET_KEY, this.targetEntity);
+        nbt.putIfNotNull(TARGET_KEY, this.targetEntity);
     }
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.targetEntity = nbt.get(TARGET_KEY);
+        this.targetEntity = nbt.getOr(TARGET_KEY, null);
     }
 
     @Override

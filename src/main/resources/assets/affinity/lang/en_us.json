@@ -8,6 +8,7 @@
 
   "entity.affinity.wisp": "Wisp",
   "entity.affinity.asteroid": "Asteroid",
+  "entity.affinity.aethum_missile": "Aethum Missile",
   "item.affinity.wisp_matter": "Wisp Matter",
   "item.affinity.wisp_spawn_egg": "Wisp Spawn Egg",
   "wispType.affinity.inert": "Inert",
