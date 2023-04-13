@@ -183,7 +183,7 @@ public class AffinityWorldgen {
                 featureRegisterable,
                 ORE_PECULIAR_CLUMP,
                 featureLookup.getOrThrow(CONFIGURED_ORE_PECULIAR_CLUMP),
-                CountPlacementModifier.of(5),
+                CountPlacementModifier.of(3),
                 SquarePlacementModifier.of(),
                 HeightRangePlacementModifier.uniform(YOffset.fixed(5), YOffset.fixed(100)),
                 BiomePlacementModifier.of()
