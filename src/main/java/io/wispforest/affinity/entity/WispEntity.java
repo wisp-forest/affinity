@@ -66,9 +66,12 @@ public abstract class WispEntity extends PathAwareEntity {
         if (world.isClient) {
             ClientParticles.spawnPrecise(particles, world, this.getPos().add(0, .125, 0), .2, .2, .2);
             this.tickClient();
-        } else {
-            this.tickServer();
         }
+    }
+
+    @Override
+    protected void mobTick() {
+        this.tickServer();
     }
 
     @Override

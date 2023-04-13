@@ -280,7 +280,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
             }
         }
 
-        stability += (100 - stability) * 0.1 * world.getEntitiesByClass(WiseWispEntity.class, new Box(pos).expand(5, 3, 5), Entity::isAlive).size();
+        stability += (100 - stability) * 0.05 * world.getEntitiesByClass(WiseWispEntity.class, new Box(pos).expand(5, 3, 5), Entity::isAlive).size();
 
         if (world.getBlockState(pos.down()).isOf(AffinityBlocks.INVERSION_STONE)) {
             stability = 100 - stability;

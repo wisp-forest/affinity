@@ -6,6 +6,7 @@ import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.owo.util.VectorRandomUtils;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.poi.PointOfInterest;
 
@@ -15,7 +16,7 @@ import java.util.EnumSet;
 public class WispMoveTowardsRitualCoreGoal extends Goal {
 
     private final WispEntity wisp;
-    private BlockPos closestCore;
+    private BlockPos closestCore = null;
 
     public WispMoveTowardsRitualCoreGoal(WispEntity wisp) {
         this.wisp = wisp;
@@ -29,6 +30,14 @@ public class WispMoveTowardsRitualCoreGoal extends Goal {
                 .map(PointOfInterest::getPos)
                 .findFirst()
                 .orElse(null);
+
+        if (this.closestCore != null) {
+            var closeWisps = this.wisp.world.getEntitiesByClass(WispEntity.class, new Box(this.closestCore).expand(7), wispEntity -> wispEntity.type() == this.wisp.type());
+
+            if (closeWisps.size() > 4) {
+                return false;
+            }
+        }
 
         return this.closestCore != null && this.closestCore.getSquaredDistanceFromCenter(this.wisp.getX(), this.wisp.getY(), this.wisp.getZ()) >= (6 * 6);
     }
