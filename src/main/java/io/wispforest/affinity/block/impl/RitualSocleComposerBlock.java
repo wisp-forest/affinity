@@ -36,6 +36,7 @@ public class RitualSocleComposerBlock extends Block {
     public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
 
     private static final VoxelShape SHAPE = Block.createCuboidShape(0, 0, 0, 16, 10, 16);
+    private static final DamageTypeKey DAMAGE_TYPE = new DamageTypeKey(Affinity.id("sawblade"));
 
     public RitualSocleComposerBlock() {
         super(FabricBlockSettings.copyOf(Blocks.STONECUTTER));
@@ -57,6 +58,15 @@ public class RitualSocleComposerBlock extends Block {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         player.openHandledScreen(new ScreenHandlerFactory(world, pos));
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
+        if (!entity.bypassesSteppingEffects() && entity instanceof LivingEntity) {
+            entity.damage(DAMAGE_TYPE.source(world), 1f);
+        }
+
+        super.onSteppedOn(world, pos, state, entity);
     }
 
     @Override

@@ -310,6 +310,8 @@
   "death.attack.asteroid.player": "%s was expunged by %s's Asteroid",
   "death.attack.artifact_blade": "%s was slain by %s",
   "death.attack.artifact_blade.item": "%s was slain by %s using %s",
+  "death.attack.sawblade": "%s was slice'n'diced",
+  "death.attack.sawblade.player": "%s was slice'n'diced whilst trying to escape %s",
 
   "gui.affinity.augmented_crafting_table.title": "Augmented Crafting Table",
 
