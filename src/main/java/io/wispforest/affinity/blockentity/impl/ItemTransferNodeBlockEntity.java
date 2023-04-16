@@ -13,6 +13,7 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.util.VectorRandomUtils;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -99,7 +100,9 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     @Override
     public Optional<LinkResult> finishLink(PlayerEntity player, BlockPos linkTo, NbtCompound linkData) {
-        if (!(this.world.getBlockEntity(linkTo) instanceof ItemTransferNodeBlockEntity other)) return Optional.of(LinkResult.NO_TARGET);
+        if (!(this.world.getBlockEntity(linkTo) instanceof ItemTransferNodeBlockEntity other)) {
+            return Optional.of(LinkResult.NO_TARGET);
+        }
         if (Math.abs(linkTo.getX() - this.pos.getX()) > 15 || Math.abs(linkTo.getY() - this.pos.getY()) > 15 || Math.abs(linkTo.getZ() - this.pos.getZ()) > 15) {
             return Optional.of(LinkResult.OUT_OF_RANGE);
         }
@@ -187,7 +190,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
             } else {
                 return false;
             }
-        })) this.markDirty();
+        })) {this.markDirty();}
 
         if (this.time++ % 10 != 0) return;
         if (this.world.getReceivedRedstonePower(this.pos) > 0) return;
@@ -285,17 +288,20 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     }
 
     private @Nullable Storage<ItemVariant> attachedStorage() {
-        if (this.storageCache == null) this.storageCache = BlockApiCache.create(ItemStorage.SIDED, (ServerWorld) this.world, this.pos.offset(this.facing));
+        if (this.storageCache == null) {
+            this.storageCache = BlockApiCache.create(ItemStorage.SIDED, (ServerWorld) this.world, this.pos.offset(this.facing));
+        }
         return this.storageCache.find(this.facing.getOpposite());
     }
 
     private void dropItem(ItemStack stack) {
+        var velocity = VectorRandomUtils.getRandomOffset(this.world, Vec3d.ZERO, .05);
         this.world.spawnEntity(new ItemEntity(
                 this.world,
                 this.pos.getX() + .5 - this.facing.getOffsetX() * .15,
                 this.pos.getY() + .5 - this.facing.getOffsetY() * .15,
                 this.pos.getZ() + .5 - this.facing.getOffsetZ() * .15,
-                stack
+                stack, velocity.x, Math.abs(velocity.y) * 2, velocity.z
         ));
     }
 

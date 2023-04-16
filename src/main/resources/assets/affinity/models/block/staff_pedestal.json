@@ -5,7 +5,7 @@
 		"4": "affinity:block/staff_pedestal_accents",
 		"5": "affinity:block/staff_pedestal",
 		"6": "affinity:block/staff_pedestal_top",
-		"particle": "block/cut_copper"
+		"particle": "affinity:block/staff_pedestal"
 	},
 	"elements": [
 		{
