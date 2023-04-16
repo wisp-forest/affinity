@@ -1,12 +1,50 @@
 {
-  "parent": "minecraft:block/cube",
-  "textures": {
-    "particle": "minecraft:block/smithing_table_front",
-    "north": "minecraft:block/smithing_table_front",
-    "south": "minecraft:block/smithing_table_front",
-    "east": "minecraft:block/smithing_table_side",
-    "west": "minecraft:block/smithing_table_side",
-    "up": "minecraft:block/smithing_table_top",
-    "down": "minecraft:block/smithing_table_bottom"
-  }
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "affinity:block/ritual_socle_composer_saw",
+		"1": "affinity:block/ritual_socle_composer_side",
+		"2": "affinity:block/ritual_socle_composer_top",
+		"3": "affinity:block/ritual_socle_composer_side_alternate",
+		"5": "affinity:block/ritual_socle_composer_bottom",
+		"particle": "affinity:block/ritual_socle_composer_saw"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 10, 16],
+			"faces": {
+				"north": {"uv": [0, 6, 16, 16], "texture": "#3"},
+				"east": {"uv": [0, 6, 16, 16], "texture": "#1"},
+				"south": {"uv": [0, 6, 16, 16], "texture": "#3"},
+				"west": {"uv": [0, 6, 16, 16], "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#5"}
+			}
+		},
+		{
+			"from": [1, 10, 11],
+			"to": [15, 16, 11],
+			"faces": {
+				"north": {"uv": [1, 10, 15, 16], "texture": "#0", "tintindex": 0},
+				"east": {"uv": [0, 0, 0, 0], "texture": "#0"},
+				"south": {"uv": [15, 10, 1, 16], "texture": "#0", "tintindex": 0},
+				"west": {"uv": [0, 0, 0, 0], "texture": "#0"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#0"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#0"}
+			}
+		},
+		{
+			"from": [1, 10, 5],
+			"to": [15, 16, 5],
+			"faces": {
+				"north": {"uv": [1, 10, 15, 16], "texture": "#0", "tintindex": 0},
+				"east": {"uv": [0, 0, 0, 0], "texture": "#0"},
+				"south": {"uv": [15, 10, 1, 16], "texture": "#0", "tintindex": 0},
+				"west": {"uv": [0, 0, 0, 0], "texture": "#0"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#0"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#0"}
+			}
+		}
+	]
 }

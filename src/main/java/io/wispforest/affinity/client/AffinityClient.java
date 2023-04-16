@@ -204,5 +204,6 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.THE_SKY, SkyCaptureBuffer.SKY_STENCIL_LAYER);
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.AETHUM_PROBE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.ARCANE_TREETAP, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.RITUAL_SOCLE_COMPOSER, RenderLayer.getCutout());
     }
 }
