@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "affinity:block/ritual_socle_composer"
+    },
+    "axis=z": {
+      "model": "affinity:block/ritual_socle_composer",
+      "y": 90
+    }
+  }
+}
