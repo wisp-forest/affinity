@@ -42,7 +42,7 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
 
     @Override
     public void tickClient() {
-        if (this.flux() < REPAIR_COST_PER_ITEM || this.world.random.nextFloat() > .15f) return;
+        if (this.shouldBeDisabled() || this.flux() < REPAIR_COST_PER_ITEM || this.world.random.nextFloat() > .15f) return;
 
         ClientParticles.spawn(
                 new BezierPathEmitterParticleEffect(
@@ -55,7 +55,7 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
 
     @Override
     public void tickServer() {
-        if (this.world.getTime() % 10 != 0) return;
+        if (this.shouldBeDisabled() || this.world.getTime() % 10 != 0) return;
 
         final var searchArea = new Box(this.pos).expand(32);
         currentRepairCost.setValue(0);
@@ -78,6 +78,10 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
         }
 
         this.updateFlux(this.flux() - currentRepairCost.getValue());
+    }
+
+    private boolean shouldBeDisabled() {
+        return this.world.getReceivedRedstonePower(this.pos) > 0;
     }
 
     @Override
