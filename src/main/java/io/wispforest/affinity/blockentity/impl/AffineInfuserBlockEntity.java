@@ -1,12 +1,18 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityStatusEffects;
+import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
+import io.wispforest.affinity.particle.ColoredFallingDustParticleEffect;
+import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.util.VectorRandomUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -17,6 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +38,19 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
 
         this.fluxStorage.setFluxCapacity(64000);
         this.fluxStorage.setMaxInsert(256);
+    }
+
+    @Override
+    public void tickClient() {
+        if (this.flux() < REPAIR_COST_PER_ITEM || this.world.random.nextFloat() > .15f) return;
+
+        ClientParticles.spawn(
+                new BezierPathEmitterParticleEffect(
+                        new ColoredFallingDustParticleEffect(MathUtil.rgbToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb())),
+                        VectorRandomUtils.getRandomCenteredOnBlock(this.world, this.pos, 10),
+                        40, 5, true
+                ), this.world, Vec3d.ofCenter(pos), 0
+        );
     }
 
     @Override

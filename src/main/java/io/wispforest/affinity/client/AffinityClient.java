@@ -58,6 +58,7 @@ public class AffinityClient implements ClientModInitializer {
         this.registerColorProviders();
 
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.MANGROVE_BASKET, new MangroveBasketItemRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.AFFINE_INFUSER, new AffineInfuserBlockEntityRenderer(null));
         PostItemRenderCallback.EVENT.register((stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
             boolean hasItemGlow = item != null && AffinityComponents.ENTITY_FLAGS.get(item).hasFlag(EntityFlagComponent.ITEM_GLOW);
             if (mode != ModelTransformationMode.GROUND || (!stack.isOf(AffinityItems.DRAGON_DROP) && !hasItemGlow)) return;
@@ -183,6 +184,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ITEM_TRANSFER_NODE, ItemTransferNodeBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.OUIJA_BOARD, OuijaBoardBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ASSEMBLY_AUGMENT, AssemblyAugmentBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.AFFINE_INFUSER, AffineInfuserBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {
