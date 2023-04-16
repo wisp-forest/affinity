@@ -20,6 +20,7 @@ import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
+import io.wispforest.affinity.particle.ColoredFallingDustParticleEffect;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -103,6 +104,7 @@ public class AffinityClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.BEZIER_PATH_EMITTER, new BezierPathEmitterParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.GENERIC_EMITTER, new GenericEmitterParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.ORBITING_EMITTER, new OrbitingEmitterParticle.Factory());
+        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.COLORED_FALLING_DUST, ColoredFallingDustParticleEffect.ParticleFactory::new);
 
         EntityRendererRegistry.register(AffinityEntities.INERT_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.WISE_WISP, WispEntityRenderer::new);

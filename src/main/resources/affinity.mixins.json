@@ -11,6 +11,7 @@
     "AnvilScreenHandlerMixin",
     "AreaEffectCloudEntityMixin",
     "ArrowEntityMixin",
+    "BlockFallingDustParticleInvoker",
     "BoatEntityMixin",
     "BoatEntityTypeMixin",
     "BreedTaskMixin",
