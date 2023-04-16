@@ -59,7 +59,7 @@
     "item": "affinity:resplendent_gem",
     "count": 4,
     "data": {
-      "Enchantments": [
+      "StoredEnchantments": [
         {
           "id": "affinity:berserker",
           "lvl": 1
