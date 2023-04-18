@@ -1,0 +1,51 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 600,
+  "flux_cost_per_tick": 60,
+  "core_inputs": [
+    {
+      "item": "affinity:kinesis_staff"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "affinity:dragon_drop"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "item": "affinity:resonance_crystal"
+    },
+    {
+      "item": "minecraft:chorus_fruit"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "minecraft:nether_star"
+    },
+    {
+      "item": "minecraft:phantom_membrane"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    }
+  ],
+  "output": {
+    "item": "affinity:astrokinesis_staff"
+  },
+  "entity": {
+    "id": "minecraft:allay"
+  }
+}
