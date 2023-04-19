@@ -1,10 +1,12 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.SpiritIntegrationApparatusBlock;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
+import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
@@ -38,6 +40,7 @@ import java.util.function.Supplier;
 public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity {
 
     public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, .85, .5);
+    private static final DamageTypeKey DAMAGE_TYPE = new DamageTypeKey(Affinity.id("ritual_sacrifice"));
 
     @Nullable
     private SpiritAssimilationRecipe cachedRecipe = null;
@@ -105,7 +108,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
         }
 
         AffinityComponents.ENTITY_FLAGS.get(sacrifice).setFlag(EntityFlagComponent.NO_DROPS);
-        sacrifice.kill();
+        sacrifice.damage(DAMAGE_TYPE.source(this.world), Float.MAX_VALUE);
 
         return true;
     }
