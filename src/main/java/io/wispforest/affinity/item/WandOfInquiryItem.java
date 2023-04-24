@@ -7,6 +7,7 @@ import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.client.screen.FluxNetworkVisualizerScreen;
+import io.wispforest.affinity.misc.InquiryQuestions;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
@@ -24,12 +25,19 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.network.message.MessageType;
+import net.minecraft.network.message.SentMessage;
+import net.minecraft.network.message.SignedMessage;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -46,6 +54,20 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
 
     public WandOfInquiryItem() {
         super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+    }
+
+    @Override
+    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+        if (entity instanceof ServerPlayerEntity player) {
+            var params = MessageType.params(MessageType.MSG_COMMAND_INCOMING, player.world.getRegistryManager(), stack.getName());
+            var message = SentMessage.of(SignedMessage.ofUnsigned(InquiryQuestions.question()));
+
+            player.sendChatMessage(message, false, params);
+        }
+
+        return entity instanceof PlayerEntity
+                ? ActionResult.SUCCESS
+                : ActionResult.PASS;
     }
 
     @Override
@@ -75,7 +97,9 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
 
             return ActionResult.SUCCESS;
         } else if (blockEntity instanceof AethumNetworkMemberBlockEntity member) {
-            if (member instanceof MultiblockAethumNetworkMember multiblock && !multiblock.isParent()) return ActionResult.PASS;
+            if (member instanceof MultiblockAethumNetworkMember multiblock && !multiblock.isParent()) {
+                return ActionResult.PASS;
+            }
 
             if (world.isClient) {
                 this.openVisualizerScreen(member);

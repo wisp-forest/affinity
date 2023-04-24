@@ -7,6 +7,7 @@ import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.item.EchoShardExtension;
 import io.wispforest.affinity.misc.AffinityDebugCommands;
 import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
+import io.wispforest.affinity.misc.InquiryQuestions;
 import io.wispforest.affinity.mixin.access.BlockEntityTypeAccessor;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
@@ -69,6 +70,7 @@ public class Affinity implements ModInitializer {
         AffinityNetwork.initialize();
         AffinityParticleSystems.initialize();
         AffinityPoiTypes.initialize();
+        InquiryQuestions.initialize();
 
         EchoShardExtension.apply();
         AffinityWorldgen.initialize();
