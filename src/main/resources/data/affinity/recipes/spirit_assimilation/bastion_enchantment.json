@@ -18,13 +18,8 @@
   ],
   "socle_inputs": [
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:potion"
-      },
-      "nbt": {
-        "Potion": "minecraft:strong_regeneration"
-      }
+      "fabric:type": "affinity:potion",
+      "potion": "minecraft:strong_regeneration"
     },
     {
       "item": "affinity:scintillant_anthracite_blend"
@@ -36,18 +31,21 @@
       "item": "minecraft:ghast_tear"
     },
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:enchanted_book"
-      },
-      "nbt": "{\"StoredEnchantments\":[{id: \"minecraft:unbreaking\", lvl: 3s}]}"
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "minecraft:unbreaking",
+          "level": 3
+        }
+      ]
     },
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:enchanted_book"
-      },
-      "nbt": "{\"StoredEnchantments\":[{id: \"minecraft:mending\", lvl: 1s}]}"
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "minecraft:mending"
+        }
+      ]
     },
     {
       "item": "minecraft:ghast_tear"

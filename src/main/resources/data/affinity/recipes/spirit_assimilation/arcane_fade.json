@@ -27,13 +27,8 @@
       "item": "minecraft:nether_wart"
     },
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:potion"
-      },
-      "nbt": {
-        "Potion": "affinity:strong_wither"
-      }
+      "fabric:type": "affinity:potion",
+      "potion": "affinity:strong_wither"
     },
     {
       "item": "minecraft:nether_wart"

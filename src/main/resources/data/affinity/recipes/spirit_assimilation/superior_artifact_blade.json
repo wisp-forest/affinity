@@ -30,11 +30,13 @@
       "item": "minecraft:ender_pearl"
     },
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:enchanted_book"
-      },
-      "nbt": "{\"StoredEnchantments\":[{id: \"minecraft:knockback\", lvl: 2s}]}"
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "minecraft:knockback",
+          "level": 2
+        }
+      ]
     },
     {
       "item": "affinity:vicious_wisp_matter"
@@ -43,11 +45,13 @@
       "item": "minecraft:obsidian"
     },
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:enchanted_book"
-      },
-      "nbt": "{\"StoredEnchantments\":[{id: \"affinity:wounding\", lvl: 5s}]}"
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "affinity:wounding",
+          "level": 5
+        }
+      ]
     },
     {
       "item": "minecraft:obsidian"
@@ -56,11 +60,13 @@
       "item": "affinity:vicious_wisp_matter"
     },
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:enchanted_book"
-      },
-      "nbt": "{\"StoredEnchantments\":[{id: \"minecraft:sharpness\", lvl: 5s}]}"
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "minecraft:sharpness",
+          "level": 5
+        }
+      ]
     },
     {
       "item": "minecraft:ender_pearl"

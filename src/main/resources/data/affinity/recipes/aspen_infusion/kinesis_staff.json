@@ -19,11 +19,13 @@
       "item": "affinity:vicious_wisp_matter"
     },
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:enchanted_book"
-      },
-      "nbt": "{\"StoredEnchantments\":[{id: \"minecraft:punch\", lvl: 2s}]}"
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "minecraft:punch",
+          "level": 2
+        }
+      ]
     },
     {
       "item": "affinity:wise_wisp_matter"

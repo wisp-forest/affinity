@@ -7,11 +7,12 @@
   },
   "inputs": [
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:enchanted_book"
-      },
-      "nbt": "{\"StoredEnchantments\":[{id: \"affinity:affine\", lvl: 1s}]}"
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "affinity:affine"
+        }
+      ]
     },
     {
       "item": "affinity:scintillant_anthracite_blend"

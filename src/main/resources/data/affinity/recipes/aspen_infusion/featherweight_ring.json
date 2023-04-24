@@ -16,13 +16,8 @@
       "item": "affinity:inert_wisp_matter"
     },
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:potion"
-      },
-      "nbt": {
-        "Potion": "minecraft:slow_falling"
-      }
+      "fabric:type": "affinity:potion",
+      "potion": "minecraft:slow_falling"
     },
     {
       "item": "affinity:inert_wisp_matter"

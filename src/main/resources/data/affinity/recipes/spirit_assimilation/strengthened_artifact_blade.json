@@ -30,11 +30,13 @@
       "item": "minecraft:wither_skeleton_skull"
     },
     {
-      "fabric:type": "fabric:nbt",
-      "base": {
-        "item": "minecraft:enchanted_book"
-      },
-      "nbt": "{\"StoredEnchantments\":[{id: \"minecraft:sharpness\", lvl: 5s}]}"
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "minecraft:sharpness",
+          "level": 5
+        }
+      ]
     },
     {
       "item": "minecraft:wither_skeleton_skull"
