@@ -4,6 +4,7 @@ import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.misc.EntityReference;
 import io.wispforest.affinity.misc.ServerTasks;
+import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.ops.WorldOps;
@@ -138,7 +139,7 @@ public class CollectionStaffItem extends StaffItem {
     }
 
     private static Collection<ItemEntity> getItems(LivingEntity entity) {
-        var box = new Box(entity.getBlockPos()).expand(9, 3, 9);
+        var box = new Box(BlockPos.ofFloored(MathUtil.entityCenterPos(entity))).expand(9, 4, 9);
         return entity.world.getEntitiesByClass(ItemEntity.class, box, itemEntity -> !itemEntity.cannotPickup());
     }
 
