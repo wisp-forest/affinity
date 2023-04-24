@@ -12,6 +12,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InquirableOutlineProvider {
 
+    private int time = 0;
+
     public CropReaperBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.CROP_REAPER, pos, state);
 
@@ -21,32 +23,26 @@ public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implem
 
     @Override
     public void tickServer() {
-        if (this.world.getTime() % 20 != 0) return;
-
-        if (this.fluxStorage.flux() >= this.fluxStorage.fluxCapacity()) return;
+        this.time++;
+        if (this.time % 600 != 0 || this.flux() >= this.fluxCapacity()) return;
 
         int addedAethum = 0;
 
-        for (BlockPos pos : BlockPos.iterate(this.getPos().add(-8, -4, -8), this.pos.add(8, 4, 8))) {
-            final var state = world.getBlockState(pos);
+        for (var pos : BlockPos.iterate(this.pos.add(-8, -1, -8), this.pos.add(8, 1, 8))) {
+            var state = this.world.getBlockState(pos);
+            if (!(state.getBlock() instanceof CropBlock crop) || !crop.isMature(state)) continue;
 
-            if (!(state.getBlock() instanceof CropBlock crop)) continue;
-
-            if (crop.isMature(state)) {
-                world.breakBlock(pos, false);
-                world.setBlockState(pos, crop.withAge(0));
-
-                addedAethum += 200;
-            }
+            this.world.setBlockState(pos, crop.withAge(0));
+            addedAethum += 50;
         }
 
         if (addedAethum > 0) {
-            this.updateFlux(Math.min(this.fluxStorage.flux() + addedAethum, this.fluxStorage.fluxCapacity()));
+            this.updateFlux(Math.min(this.flux() + addedAethum, this.fluxCapacity()));
         }
     }
 
     @Override
     public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
-        return CuboidRenderer.Cuboid.symmetrical(8, 4, 8);
+        return CuboidRenderer.Cuboid.symmetrical(8, 1, 8);
     }
 }
