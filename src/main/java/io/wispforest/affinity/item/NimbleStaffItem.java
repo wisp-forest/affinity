@@ -144,6 +144,6 @@ public class NimbleStaffItem extends StaffItem {
 
     @Override
     protected float getAethumConsumption(ItemStack stack) {
-        return .5f;
+        return 1.5f;
     }
 }
