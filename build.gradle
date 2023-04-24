@@ -99,7 +99,7 @@ dependencies {
 
     modImplementation "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"
 
-    modImplementation "io.wispforest:worldmesher:${project.worldmesher_version}"
+    modImplementation include("io.wispforest:worldmesher:${project.worldmesher_version}")
 
     // sky block compatibility
     modCompileOnly "maven.modrinth:sodium:${project.sodium_version}"
