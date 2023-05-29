@@ -61,8 +61,6 @@ repositories {
 
     // gadget
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-
-    mavenLocal()
 }
 
 dependencies {

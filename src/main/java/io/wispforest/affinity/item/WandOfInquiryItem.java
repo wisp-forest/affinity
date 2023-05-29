@@ -59,7 +59,7 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         if (entity instanceof ServerPlayerEntity player) {
-            var params = MessageType.params(MessageType.MSG_COMMAND_INCOMING, player.world.getRegistryManager(), stack.getName());
+            var params = MessageType.params(MessageType.MSG_COMMAND_INCOMING, player.world.getRegistryManager(), stack.toHoverableText());
             var message = SentMessage.of(SignedMessage.ofUnsigned(InquiryQuestions.question()));
 
             player.sendChatMessage(message, false, params);
