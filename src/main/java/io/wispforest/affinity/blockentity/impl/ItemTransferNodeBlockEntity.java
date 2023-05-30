@@ -190,7 +190,9 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
             } else {
                 return false;
             }
-        })) {this.markDirty();}
+        })) {
+            this.markDirty();
+        }
 
         if (this.time++ % 10 != 0) return;
         if (this.world.getReceivedRedstonePower(this.pos) > 0) return;
@@ -295,14 +297,21 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     }
 
     private void dropItem(ItemStack stack) {
-        var velocity = VectorRandomUtils.getRandomOffset(this.world, Vec3d.ZERO, .05);
-        this.world.spawnEntity(new ItemEntity(
-                this.world,
-                this.pos.getX() + .5 - this.facing.getOffsetX() * .15,
-                this.pos.getY() + .5 - this.facing.getOffsetY() * .15,
-                this.pos.getZ() + .5 - this.facing.getOffsetZ() * .15,
-                stack, velocity.x, Math.abs(velocity.y) * 2, velocity.z
-        ));
+        while (!stack.isEmpty()) {
+            int dropCount = Math.min(stack.getCount(), stack.getMaxCount());
+            var dropStack = stack.copyWithCount(dropCount);
+
+            var velocity = VectorRandomUtils.getRandomOffset(this.world, Vec3d.ZERO, .05);
+            this.world.spawnEntity(new ItemEntity(
+                    this.world,
+                    this.pos.getX() + .5 - this.facing.getOffsetX() * .15,
+                    this.pos.getY() + .5 - this.facing.getOffsetY() * .15,
+                    this.pos.getZ() + .5 - this.facing.getOffsetZ() * .15,
+                    dropStack, velocity.x, Math.abs(velocity.y) * 2, velocity.z
+            ));
+
+            stack.decrement(dropCount);
+        }
     }
 
     private int maxInsertCount(ItemVariant variant) {
@@ -413,6 +422,11 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         this.ignoreDamage = nbt.get(IGNORE_DAMAGE_KEY);
         this.ignoreData = nbt.get(IGNORE_DATA_KEY);
         this.invertFilter = nbt.get(INVERT_FILTER_KEY);
+    }
+
+    @Override
+    public void setStackNbt(ItemStack stack) {
+        NbtUtil.processBlockEntityNbt(stack, this, nbt -> nbt.remove("Links"));
     }
 
     public ItemStack previewItem() {
