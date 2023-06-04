@@ -8,6 +8,9 @@
 
   "biome.affinity.wisp_forest": "Wisp Forest",
 
+  "item.affinity.wispen_testament": "The Wispen Testament",
+  "structure.affinity.augmented_crafting_table": "Augmented Crafting Table",
+
   "entity.affinity.wisp": "Wisp",
   "entity.affinity.asteroid": "Asteroid",
   "entity.affinity.aethum_missile": "Aethum Missile",
