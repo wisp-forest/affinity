@@ -27,6 +27,8 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -78,8 +80,9 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
         this.activeTreetaps = 0;
         if (currentRecipe.isPresent()) {
             for (var treetap : this.treetapCache) {
-                if (this.blockedTreetaps.containsKey(treetap) && !this.pos.equals(this.blockedTreetaps.get(treetap)))
+                if (this.blockedTreetaps.containsKey(treetap) && !this.pos.equals(this.blockedTreetaps.get(treetap))) {
                     continue;
+                }
 
                 this.blockedTreetaps.put(treetap, this.pos);
                 if (++this.activeTreetaps >= 5) break;
@@ -140,6 +143,10 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
                     return tree.stream().allMatch(occupiedLogs::add);
                 })
                 .forEach(this.treetapCache::add);
+    }
+
+    public Optional<CraftingRecipe> getCurrentCraftingRecipe() {
+        return this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingView, this.world);
     }
 
     @Override

@@ -2,6 +2,7 @@ package io.wispforest.affinity.recipe;
 
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.potion.PotionMixture;
+import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
@@ -10,7 +11,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
-import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
@@ -18,9 +18,7 @@ import net.minecraft.world.World;
 
 public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
 
-    public static final SpecialRecipeSerializer<GlowingPotionDyeRecipe> SERIALIZER = new SpecialRecipeSerializer<>(GlowingPotionDyeRecipe::new);
-
-    protected GlowingPotionDyeRecipe(Identifier id, CraftingRecipeCategory category) {
+    public GlowingPotionDyeRecipe(Identifier id, CraftingRecipeCategory category) {
         super(id, category);
     }
 
@@ -86,6 +84,6 @@ public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return SERIALIZER;
+        return AffinityRecipeTypes.Serializers.CRAFTING_SPECIAL_GLOWING_POTION_DYE;
     }
 }

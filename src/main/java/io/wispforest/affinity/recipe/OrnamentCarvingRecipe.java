@@ -55,7 +55,7 @@ public class OrnamentCarvingRecipe implements Recipe<Inventory> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return Serializer.INSTANCE;
+        return AffinityRecipeTypes.Serializers.ORNAMENT_CARVING;
     }
 
     @Override
@@ -70,9 +70,7 @@ public class OrnamentCarvingRecipe implements Recipe<Inventory> {
 
     public static final class Serializer implements RecipeSerializer<OrnamentCarvingRecipe> {
 
-        public static final Serializer INSTANCE = new Serializer();
-
-        private Serializer() {}
+        public Serializer() {}
 
         @Override
         public OrnamentCarvingRecipe read(Identifier id, JsonObject json) {

@@ -45,7 +45,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return Serializer.INSTANCE;
+        return AffinityRecipeTypes.Serializers.ASPEN_INFUSION;
     }
 
     @Override
@@ -55,9 +55,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
     public static final class Serializer implements RecipeSerializer<AspenInfusionRecipe> {
 
-        public static final Serializer INSTANCE = new Serializer();
-
-        private Serializer() {}
+        public Serializer() {}
 
         @Override
         public AspenInfusionRecipe read(Identifier id, JsonObject json) {

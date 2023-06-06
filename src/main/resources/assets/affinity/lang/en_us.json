@@ -243,6 +243,13 @@
   "item.affinity.greatly_attuned_amethyst_shard": "Greatly Attuned Amethyst Shard",
 
   "item.affinity.anthracite_powder": "Anthracite Powder",
+  "item.affinity.carbon_copy.empty": "Carbon Copy of ... Nothing?",
+  "item.affinity.carbon_copy": [
+    "Carbon Copy of ",
+    {"index": 0, "color": "gray"},
+    {"text": "x ", "color": "dark_gray"},
+    {"index": 1, "color": "gray"}
+  ],
   "item.affinity.scintillant_anthracite_blend": "Scintillant Anthracite Blend",
   "item.affinity.aethum_map_prototype": "Aethum Map Prototype",
   "item.affinity.realized_aethum_map": "Realized Aethum Map",

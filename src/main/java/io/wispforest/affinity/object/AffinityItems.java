@@ -57,7 +57,8 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item PRISMARINE_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.REFINED);
     public static final Item PURPUR_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.SOPHISTICATED);
 
-    public static final Item ANTHRACITE_POWDER = new Item(settings(AffinityItemGroup.MAIN));
+    public static final Item ANTHRACITE_POWDER = new AnthracitePowderItem();
+    public static final Item CARBON_COPY = new CarbonCopyItem();
     public static final Item SCINTILLANT_ANTHRACITE_BLEND = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item RANTHRACITE_DUST = new AliasedBlockItem(AffinityBlocks.RANTHRACITE_WIRE, settings(AffinityItemGroup.MAIN));
     public static final Item AETHUM_MAP_PROTOTYPE = new AethumMapPrototypeItem();
