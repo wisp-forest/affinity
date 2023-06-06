@@ -22,13 +22,22 @@ public class AnthracitePowderItem extends Item implements DirectInteractionHandl
         var blockEntity = context.getWorld().getBlockEntity(context.getBlockPos());
         if (!(blockEntity instanceof AssemblyAugmentBlockEntity augment)) return ActionResult.PASS;
 
-        var recipe = augment.getCurrentCraftingRecipe();
-        if (recipe.isEmpty()) return ActionResult.PASS;
+        var possibleRecipe = augment.getCurrentCraftingRecipe();
+        if (possibleRecipe.isEmpty()) return ActionResult.PASS;
 
         if (context.getWorld().isClient) return ActionResult.SUCCESS;
 
-        context.getPlayer().getInventory().offerOrDrop(CarbonCopyItem.create(recipe.get().getIngredients(), recipe.get().getOutput(context.getWorld().getRegistryManager())));
-        return ActionResult.SUCCESS;
+        var recipe = possibleRecipe.get();
+        for (int height = 1; height <= 3; height++) {
+            for (int width = 1; width <= 3; width++) {
+                if (!recipe.fits(width, height)) continue;
+
+                context.getPlayer().getInventory().offerOrDrop(CarbonCopyItem.create(recipe, recipe.getOutput(context.getWorld().getRegistryManager())));
+                return ActionResult.SUCCESS;
+            }
+        }
+
+        return ActionResult.PASS;
     }
 
     @Override

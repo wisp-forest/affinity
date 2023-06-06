@@ -21,10 +21,23 @@ public class CarbonCopyTooltipComponent implements TooltipComponent {
 
         this.root.child(Components.texture(Affinity.id("textures/gui/carbon_copy_tooltip.png"), 0, 0, 128, 64, 128, 64));
 
+        int height, width = 1;
+        outer:
+        for (height = 1; height <= 3; height++) {
+            for (width = 1; width <= 3; width++) {
+                if (!data.recipe().fits(width, height)) continue;
+                break outer;
+            }
+        }
+
         var grid = Containers.grid(Sizing.content(), Sizing.content(), 3, 3);
-        for (int i = 0; i < data.inputMatrix().size(); i++) {
-            var displayStacks = data.inputMatrix().get(i).getMatchingStacks();
-            grid.child(Components.item(displayStacks[(int) (System.currentTimeMillis() / 1000 % displayStacks.length)]).showOverlay(true).margins(Insets.of(1)), i / 3, i % 3);
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
+                if (x < width && y < height) {
+                    var displayStacks = data.recipe().getIngredients().get(y * width + x).getMatchingStacks();
+                    grid.child(Components.item(displayStacks[(int) (System.currentTimeMillis() / 1000 % displayStacks.length)]).showOverlay(true).margins(Insets.of(1)), y, x);
+                }
+            }
         }
 
         this.root.child(grid.margins(Insets.left(5)));
