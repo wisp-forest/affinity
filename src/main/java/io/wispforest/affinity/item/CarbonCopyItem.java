@@ -23,7 +23,6 @@ public class CarbonCopyItem extends Item {
         super(new OwoItemSettings().maxCount(1));
     }
 
-
     @Override
     @Environment(EnvType.CLIENT)
     public Optional<net.minecraft.client.item.TooltipData> getTooltipData(ItemStack stack) {

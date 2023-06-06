@@ -10,6 +10,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 
 public class CarbonCopyTooltipComponent implements TooltipComponent {
 
@@ -36,6 +37,8 @@ public class CarbonCopyTooltipComponent implements TooltipComponent {
                 if (x < width && y < height) {
                     var displayStacks = data.recipe().getIngredients().get(y * width + x).getMatchingStacks();
                     grid.child(Components.item(displayStacks[(int) (System.currentTimeMillis() / 1000 % displayStacks.length)]).showOverlay(true).margins(Insets.of(1)), y, x);
+                } else {
+                    grid.child(Components.item(ItemStack.EMPTY).margins(Insets.of(1)), y, x);
                 }
             }
         }
