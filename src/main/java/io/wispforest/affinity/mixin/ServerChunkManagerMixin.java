@@ -35,7 +35,7 @@ public class ServerChunkManagerMixin {
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SpawnHelper;spawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/SpawnHelper$Info;ZZZ)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
     private void theMobsDoInFactSeemToBeSpawningSomewhatSwiftlyToday(CallbackInfo ci, long l, long m, WorldProperties worldProperties, Profiler profiler, int i, boolean bl2, int j, SpawnHelper.Info info, List<?> list, boolean bl3, Iterator<?> var14, @Coerce Object bruh, WorldChunk worldChunk2, ChunkPos chunkPos) {
-        if (!AffinityComponents.CHUNK_AETHUM.get(worldChunk2).hasEffectActive(ChunkAethumComponent.INCREASED_NATURAL_SPAWNING)) return;
+        if (!AffinityComponents.CHUNK_AETHUM.get(worldChunk2).isEffectActive(ChunkAethumComponent.INCREASED_NATURAL_SPAWNING)) return;
         SpawnHelper.spawn(this.world, worldChunk2, info, this.spawnAnimals, this.spawnMonsters, bl2);
     }
 

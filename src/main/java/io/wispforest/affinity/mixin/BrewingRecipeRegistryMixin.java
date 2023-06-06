@@ -30,7 +30,7 @@ public class BrewingRecipeRegistryMixin {
 
     @Inject(method = "isValidIngredient", at = @At("HEAD"), cancellable = true)
     private static void injectProwessPotionIngredient(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (stack.isOf(Items.POTION) && PotionUtil.getPotion(stack) == Potions.LONG_STRENGTH) {
+        if (affinity$isStrengthPotion(stack)) {
             cir.setReturnValue(true);
         }
     }
