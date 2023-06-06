@@ -48,7 +48,7 @@ public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, 
             this.progressWrapper.alpha(1f);
         }
 
-        if (this.augmentOutputSlot.hasStack()) {
+        if (this.augmentOutputSlot.hasStack() || this.handler.matchesAutocraftingRecipe()) {
             this.disableSlot(this.craftingOutputSlot.id);
             this.enableSlot(this.augmentOutputSlot.id);
         } else {

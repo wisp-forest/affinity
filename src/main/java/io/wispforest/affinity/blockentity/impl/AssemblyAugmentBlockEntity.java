@@ -29,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -52,6 +53,8 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     private static final Map<World, Map<BlockPos, BlockPos>> BLOCKED_TREETAPS_PER_WORLD = new WeakHashMap<>();
     private Map<BlockPos, BlockPos> blockedTreetaps;
 
+    private CraftingRecipe autocraftingRecipe;
+
     private final Set<BlockPos> treetapCache = new HashSet<>();
     private int activeTreetaps = 0;
 
@@ -74,11 +77,17 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
 
     @Override
     public void tickServer() {
-        var currentRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world);
+        if (this.autocraftingRecipe == null) {
+            this.autocraftingRecipe = (CraftingRecipe) this.world.getRecipeManager().get(new Identifier("stick")).orElse(null);
+        }
+
+        var currentRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world).orElse(null);
+        if (currentRecipe == null && this.autocraftingRecipe.matches(this.craftingView, this.world)) currentRecipe = this.autocraftingRecipe;
+
         var outputStack = this.outputInventory.getStack(0);
 
         this.activeTreetaps = 0;
-        if (currentRecipe.isPresent()) {
+        if (currentRecipe != null) {
             for (var treetap : this.treetapCache) {
                 if (this.blockedTreetaps.containsKey(treetap) && !this.pos.equals(this.blockedTreetaps.get(treetap))) {
                     continue;
@@ -89,7 +98,8 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
             }
         }
 
-        if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipe.get().getOutput(null))) {
+        if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipe.getOutput(this.world.getRegistryManager()))) {
+            var currentRecipeOutput = currentRecipe.getOutput(this.world.getRegistryManager());
             if (this.craftingTick % 20 == 0) {
                 AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, .2), new AffinityParticleSystems.BezierVortexData(
                         new GenericEmitterParticleEffect(
@@ -111,9 +121,9 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
                 }
 
                 if (outputStack.isEmpty()) {
-                    this.outputInventory.setStack(0, currentRecipe.get().getOutput(null).copy());
+                    this.outputInventory.setStack(0, currentRecipeOutput.copy());
                 } else {
-                    outputStack.increment(currentRecipe.get().getOutput(null).getCount());
+                    outputStack.increment(currentRecipeOutput.getCount());
                 }
 
                 this.markDirty();
@@ -143,6 +153,10 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
                     return tree.stream().allMatch(occupiedLogs::add);
                 })
                 .forEach(this.treetapCache::add);
+    }
+
+    public @Nullable CraftingRecipe autocraftingRecipe() {
+        return this.autocraftingRecipe;
     }
 
     public Optional<CraftingRecipe> getCurrentCraftingRecipe() {
