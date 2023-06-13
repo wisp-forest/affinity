@@ -101,8 +101,8 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
             }
         }
 
-        if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipe.getOutput(this.world.getRegistryManager()))) {
-            var currentRecipeOutput = currentRecipe.getOutput(this.world.getRegistryManager());
+        var currentRecipeResult = this.activeTreetaps > 0 ? currentRecipe.craft(this.craftingView, this.world.getRegistryManager()) : null;
+        if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipeResult)) {
             if (this.craftingTick % 20 == 0) {
                 AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, .2), new AffinityParticleSystems.BezierVortexData(
                         new GenericEmitterParticleEffect(
@@ -124,9 +124,9 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
                 }
 
                 if (outputStack.isEmpty()) {
-                    this.inventory.setStack(OUTPUT_SLOT, currentRecipeOutput.copy());
+                    this.inventory.setStack(OUTPUT_SLOT, currentRecipeResult);
                 } else {
-                    outputStack.increment(currentRecipeOutput.getCount());
+                    outputStack.increment(currentRecipeResult.getCount());
                 }
 
                 this.markDirty();
@@ -214,7 +214,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
             }
         }
 
-        int x = slot % width, y = slot / width;
+        int x = slot % 3, y = slot / 3;
         if (x >= width || y >= height) return false;
 
         return this.inventory.getStack(slot).isEmpty() && this.autocraftingRecipe.getIngredients().get(y * width + x).test(stack);
