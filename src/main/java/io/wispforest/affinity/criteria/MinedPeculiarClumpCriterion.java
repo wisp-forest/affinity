@@ -5,7 +5,7 @@ import io.wispforest.affinity.Affinity;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
-import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
@@ -15,7 +15,7 @@ public class MinedPeculiarClumpCriterion extends AbstractCriterion<MinedPeculiar
     public static final Identifier ID = Affinity.id("mined_peculiar_clump");
 
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
         return new Conditions(playerPredicate, JsonHelper.getBoolean(obj, "expect_success", false));
     }
 
@@ -32,7 +32,7 @@ public class MinedPeculiarClumpCriterion extends AbstractCriterion<MinedPeculiar
 
         private final boolean expectSuccess;
 
-        public Conditions(EntityPredicate.Extended player, boolean expectSuccess) {
+        public Conditions(LootContextPredicate player, boolean expectSuccess) {
             super(ID, player);
             this.expectSuccess = expectSuccess;
         }

@@ -66,7 +66,7 @@ public class CultivationStaffItem extends StaffItem {
                 var state = world.getBlockState(cropPos);
                 if (!(state.getBlock() instanceof CropBlock crop)) continue;
 
-                world.setBlockState(cropPos, crop.withAge(Math.min(state.get(crop.getAgeProperty()) + 1, crop.getMaxAge())), Block.NOTIFY_LISTENERS);
+                world.setBlockState(cropPos, crop.withAge(Math.min(crop.getAge(state) + 1, crop.getMaxAge())), Block.NOTIFY_LISTENERS);
             }
         }
 

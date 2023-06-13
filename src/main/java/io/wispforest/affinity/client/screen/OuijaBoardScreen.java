@@ -9,6 +9,7 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.Size;
 import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.parsing.UIModel;
@@ -99,8 +100,8 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
         private OrderedText renderText = OrderedText.EMPTY;
 
         @Override
-        public void draw(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta) {
-            this.renderer.draw(matrices, this.renderText, this.x, this.y, this.textColor.argb());
+        public void draw(OwoUIDrawContext context, int mouseX, int mouseY, float partialTicks, float delta) {
+            context.drawText(this.renderer, this.renderText, this.x, this.y, this.textColor.argb(), false);
         }
 
         @Override

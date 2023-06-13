@@ -60,9 +60,9 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
         ENTITY_TICK_IN_FADE_EVENT.register(ArcaneFadeFluid::bleachSheep);
 
         ENTITY_TOUCH_EVENT.register(entity -> {
-            if (!(entity instanceof ItemEntity item) || item.world.isClient) return;
+            if (!(entity instanceof ItemEntity item) || item.getWorld().isClient) return;
 
-            var items = item.world.getEntitiesByClass(ItemEntity.class, item.getBoundingBox().expand(.75), ItemEntity::isAlive);
+            var items = item.getWorld().getEntitiesByClass(ItemEntity.class, item.getBoundingBox().expand(.75), ItemEntity::isAlive);
 
             if (tryCraft(items, input -> input.getStack().hasGlint(), catalyst -> catalyst.getStack().isOf(AffinityItems.DRAGON_DROP), (input, catalyst) -> {
                 if (!ItemOps.emptyAwareDecrement(catalyst.getStack())) catalyst.discard();
@@ -75,7 +75,7 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
 
             if (tryCraft(items, input -> input.getStack().getRepairCost() != 0, catalyst -> catalyst.getStack().isOf(Items.POTION) && PotionUtil.getPotion(catalyst.getStack()) == Potions.HEALING, (input, catalyst) -> {
                 if (ItemOps.emptyAwareDecrement(catalyst.getStack())) {
-                    catalyst.world.spawnEntity(new ItemEntity(catalyst.world, catalyst.getX(), catalyst.getY(), catalyst.getZ(), Items.GLASS_BOTTLE.getDefaultStack()));
+                    catalyst.getWorld().spawnEntity(new ItemEntity(catalyst.getWorld(), catalyst.getX(), catalyst.getY(), catalyst.getZ(), Items.GLASS_BOTTLE.getDefaultStack()));
                 } else {
                     catalyst.setStack(Items.GLASS_BOTTLE.getDefaultStack());
                 }
@@ -113,8 +113,8 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
 
         craftFunction.accept(input, catalyst);
 
-        input.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 1f, input.world.random.nextFloat() * 2f);
-        AffinityParticleSystems.ARCANE_FADE_CRAFT.spawn(input.world, input.getPos().add(0, .5f, 0));
+        input.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 1f, input.getWorld().random.nextFloat() * 2f);
+        AffinityParticleSystems.ARCANE_FADE_CRAFT.spawn(input.getWorld(), input.getPos().add(0, .5f, 0));
 
         return true;
     }
@@ -125,7 +125,7 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
         sheep.setColor(DyeColor.WHITE);
         sheep.playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 1f, 1f);
 
-        AffinityParticleSystems.ARCANE_FADE_BLEACH_SHEEP.spawn(sheep.world, MathUtil.entityCenterPos(sheep), 1f);
+        AffinityParticleSystems.ARCANE_FADE_BLEACH_SHEEP.spawn(sheep.getWorld(), MathUtil.entityCenterPos(sheep), 1f);
     }
 
     @Override

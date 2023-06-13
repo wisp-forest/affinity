@@ -34,19 +34,19 @@ public class ViciousWispEntity extends WispEntity {
             return;
         }
 
-        if (this.world.getTime() % 10 != 0) return;
+        if (this.getWorld().getTime() % 10 != 0) return;
 
-        var closestPlayer = this.world.getClosestPlayer(this, 10);
+        var closestPlayer = this.getWorld().getClosestPlayer(this, 10);
         if (closestPlayer == null) return;
         if (!closestPlayer.canTakeDamage()) return;
 
-        var hitResult = this.world.raycast(new RaycastContext(this.getPos(), closestPlayer.getEyePos(),
+        var hitResult = this.getWorld().raycast(new RaycastContext(this.getPos(), closestPlayer.getEyePos(),
                 RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
 
         if (hitResult.getType() != HitResult.Type.MISS) return;
 
         closestPlayer.damage(this.getDamageSources().indirectMagic(this, this), 2);
-        AffinityParticleSystems.WISP_ATTACK.spawn(this.world, this.getPos(),
+        AffinityParticleSystems.WISP_ATTACK.spawn(this.getWorld(), this.getPos(),
                 new AffinityParticleSystems.LineData(closestPlayer.getPos().add(0, 1, 0), this.type().color()));
         this.attackCooldown = 50;
     }

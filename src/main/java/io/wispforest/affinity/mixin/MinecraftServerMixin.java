@@ -17,7 +17,7 @@ import java.util.Iterator;
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin {
     @Inject(method = "prepareStartRegion", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getPersistentStateManager()Lnet/minecraft/world/PersistentStateManager;"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void loadPinChunks(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci, ServerWorld serverWorld, BlockPos blockPos, ServerChunkManager serverChunkManager, Iterator var5, ServerWorld serverWorld2) {
-        AffinityComponents.WORLD_PINS.get(serverWorld).addAllPins();
+    private void loadPinChunks(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci, Iterator var5, ServerWorld serverWorld2) {
+        AffinityComponents.WORLD_PINS.get(serverWorld2).addAllPins();
     }
 }

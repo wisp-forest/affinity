@@ -138,7 +138,7 @@ public class ArcaneFadeBlock extends FluidBlock {
                 return;
             }
 
-            AffinityParticleSystems.ARCANE_FADE_BLEACH_SHEEP.spawn(item.world, item.getPos().add(0, .5f, 0), .25f);
+            AffinityParticleSystems.ARCANE_FADE_BLEACH_SHEEP.spawn(item.getWorld(), item.getPos().add(0, .5f, 0), .25f);
 
         });
 

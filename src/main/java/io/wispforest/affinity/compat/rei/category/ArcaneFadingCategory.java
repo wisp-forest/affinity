@@ -63,7 +63,7 @@ public class ArcaneFadingCategory implements DisplayCategory<ArcaneFadingDisplay
             var lastUpdateTime = new MutableLong(0);
             var lastIndex = new MutableInt(-1);
 
-            updater = Widgets.createDrawableWidget((helper, matrices, mouseX, mouseY, delta) -> {
+            updater = Widgets.createDrawableWidget((context, mouseX, mouseY, delta) -> {
                 if (System.currentTimeMillis() - lastUpdateTime.longValue() <= 1000) return;
 
                 lastUpdateTime.setValue(System.currentTimeMillis());

@@ -63,13 +63,13 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "damage", at = @At("RETURN"))
     private void removeFlightWhenDamaged(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (world.isClient) return;
+        if (this.getWorld().isClient) return;
 
         if (!this.hasStatusEffect(AffinityStatusEffects.FLIGHT)) return;
         this.removeStatusEffect(AffinityStatusEffects.FLIGHT);
 
-        AffinityParticleSystems.FLIGHT_REMOVED.spawn(world, getPos());
-        WorldOps.playSound(world, getPos(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.PLAYERS, .5f, 0f);
+        AffinityParticleSystems.FLIGHT_REMOVED.spawn(this.getWorld(), getPos());
+        WorldOps.playSound(this.getWorld(), getPos(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.PLAYERS, .5f, 0f);
     }
 
     @ModifyVariable(method = "attack",
@@ -88,7 +88,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
         final int criticalGambleLevel = EnchantmentHelper.getLevel(AffinityEnchantments.CRITICAL_GAMBLE, weapon);
         if (criticalGambleLevel > 0 && this.random.nextFloat() < criticalGambleLevel * .01f) {
-            AffinityEntityAddon.setData(this, CriticalGambleEnchantment.ACTIVATED_AT, this.world.getTime());
+            AffinityEntityAddon.setData(this, CriticalGambleEnchantment.ACTIVATED_AT, this.getWorld().getTime());
             return (damage / 3) * 2;
         }
 
@@ -107,13 +107,13 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @ModifyArg(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private DamageSource convertArtifactBladeDamage(DamageSource incoming) {
-        if (!ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 1)) return incoming;
+        if (!ArtifactBladeItem.isBladeWithActiveAbility(this.getWorld(), this.getMainHandStack(), 1)) return incoming;
         return ArtifactBladeItem.DAMAGE_TYPE.source(incoming.getSource(), incoming.getAttacker());
     }
 
     @ModifyVariable(method = "attack", at = @At(value = "STORE", ordinal = 3), ordinal = 0)
     private float applyArtifactBladeJumpDamage(float damage, Entity entity) {
-        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 2))
+        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.getWorld(), this.getMainHandStack(), 2))
             return damage;
 
         float multiplier = Math.min(this.fallDistance * .4f, 3f);
@@ -122,19 +122,19 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @ModifyVariable(method = "attack", at = @At(value = "LOAD", ordinal = 0), ordinal = 2)
     private boolean disableCrit(boolean allowCrit) {
-        if (!ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 2)) return allowCrit;
+        if (!ArtifactBladeItem.isBladeWithActiveAbility(this.getWorld(), this.getMainHandStack(), 2)) return allowCrit;
         return allowCrit && this.fallDistance < 2;
     }
 
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private void artifactBladeAreaDamage(Entity target, CallbackInfo ci) {
-        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.world, this.getMainHandStack(), 2))
+        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.getWorld(), this.getMainHandStack(), 2))
             return;
 
         var entityPositions = new ArrayList<Vec3d>();
 
         var area = new Box(target.getBlockPos()).expand(5, 3, 5);
-        for (var entity : this.world.getNonSpectatingEntities(LivingEntity.class, area)) {
+        for (var entity : this.getWorld().getNonSpectatingEntities(LivingEntity.class, area)) {
             if (entity == this || entity == target) continue;
 
             entity.damage(this.getDamageSources().playerAttack((PlayerEntity) (Object) this), this.affinity$lastJumpAttackDamage * .25f);
@@ -143,17 +143,17 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             entityPositions.add(entity.getPos());
         }
 
-        if (!this.world.isClient) {
+        if (!this.getWorld().isClient) {
             AffinityCriteria.ARTIFACT_BLADE_SMASH.trigger((ServerPlayerEntity) (Object) this);
             WorldOps.playSound(
-                    this.world, this.getPos(),
+                    this.getWorld(), this.getPos(),
                     AffinitySoundEvents.ITEM_ARTIFACT_BLADE_SMASH,
                     this.getSoundCategory(),
-                    1, .6f + this.world.random.nextFloat() * .4f
+                    1, .6f + this.getWorld().random.nextFloat() * .4f
             );
 
             AffinityParticleSystems.ARTIFACT_BLADE_SMASH.spawn(
-                    this.world,
+                    this.getWorld(),
                     target.getPos(),
                     new AffinityParticleSystems.ArtifactBladeAreaAttackData(target.getPos(), entityPositions)
             );

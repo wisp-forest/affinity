@@ -13,7 +13,7 @@ public class HungerManagerMixin {
 
     @ModifyVariable(method = "update", at = @At(value = "LOAD", ordinal = 0))
     public boolean noHealingForYou(boolean canHeal, PlayerEntity player) {
-        var component = AffinityComponents.CHUNK_AETHUM.get(player.world.getChunk(player.getBlockPos()));
+        var component = AffinityComponents.CHUNK_AETHUM.get(player.getWorld().getChunk(player.getBlockPos()));
         if (!component.isEffectActive(ChunkAethumComponent.NO_NATURAL_REGEN)) return canHeal;
 
         return false;

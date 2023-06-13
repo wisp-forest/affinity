@@ -7,8 +7,10 @@ import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.TextureComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.PositionedRectangle;
 import io.wispforest.owo.ui.parsing.UIParsing;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.slot.Slot;
@@ -39,8 +41,8 @@ public class AssemblyAugmentScreen extends BaseUIModelHandledScreen<FlowLayout, 
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
 
         if (!(this.handler.craftingProgress() > 0)) {
             this.progressWrapper.alpha(((float) Math.sin(System.currentTimeMillis() / 500d) + 1f) / 2f);

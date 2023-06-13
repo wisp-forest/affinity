@@ -28,7 +28,7 @@ public abstract class ProjectileEntityMixin extends Entity {
         if (!AffinityEntityAddon.hasData(this, KinesisStaffItem.PROJECTILE_THROWER)) return;
 
         var throwerId = AffinityEntityAddon.getData(this, KinesisStaffItem.PROJECTILE_THROWER);
-        if (!(this.world instanceof ServerWorld serverWorld)) return;
+        if (!(this.getWorld() instanceof ServerWorld serverWorld)) return;
 
         var thrower = serverWorld.getEntity(throwerId);
         if (!(thrower instanceof ServerPlayerEntity player)) return;

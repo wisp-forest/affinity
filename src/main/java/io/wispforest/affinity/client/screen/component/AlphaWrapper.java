@@ -3,6 +3,7 @@ package io.wispforest.affinity.client.screen.component;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.owo.ui.container.WrappingParentComponent;
 import io.wispforest.owo.ui.core.Component;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.Sizing;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -15,8 +16,8 @@ public class AlphaWrapper<C extends Component> extends WrappingParentComponent<C
     }
 
     @Override
-    public void draw(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta) {
-        super.draw(matrices, mouseX, mouseY, partialTicks, delta);
+    public void draw(OwoUIDrawContext context, int mouseX, int mouseY, float partialTicks, float delta) {
+        super.draw(context, mouseX, mouseY, partialTicks, delta);
 
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -25,7 +26,7 @@ public class AlphaWrapper<C extends Component> extends WrappingParentComponent<C
         var previousAlpha = color[3];
 
         color[3] = alpha * color[3];
-        this.drawChildren(matrices, mouseX, mouseY, partialTicks, delta, this.childView);
+        this.drawChildren(context, mouseX, mouseY, partialTicks, delta, this.childView);
         color[3] = previousAlpha;
 
         RenderSystem.disableBlend();

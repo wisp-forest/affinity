@@ -1,7 +1,5 @@
 package io.wispforest.affinity.compat.rei;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import io.wispforest.owo.ui.util.Drawer;
 import io.wispforest.owo.util.RegistryAccess;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.entry.renderer.EntryRenderer;
@@ -15,7 +13,7 @@ import me.shedaniel.rei.api.common.entry.type.EntryType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
@@ -124,11 +122,9 @@ public class StatusEffectEntryDefinition implements EntryDefinition<StatusEffect
         private static final Renderer INSTANCE = new Renderer();
 
         @Override
-        public void render(EntryStack<StatusEffect> entry, MatrixStack matrices, Rectangle bounds, int mouseX, int mouseY, float delta) {
+        public void render(EntryStack<StatusEffect> entry, DrawContext context, Rectangle bounds, int mouseX, int mouseY, float delta) {
             var sprite = MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(entry.getValue());
-
-            RenderSystem.setShaderTexture(0, sprite.getAtlasId());
-            Drawer.drawSprite(matrices, bounds.x - 1, bounds.y - 1, 0, bounds.width + 2, bounds.height + 2, sprite);
+            context.drawSprite(bounds.x - 1, bounds.y - 1, 0, bounds.width + 2, bounds.height + 2, sprite);
         }
 
         @Override

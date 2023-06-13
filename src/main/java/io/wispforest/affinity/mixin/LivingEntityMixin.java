@@ -95,7 +95,7 @@ public abstract class LivingEntityMixin extends Entity {
         if (!AffinityEntityAddon.getData(player, ArtifactBladeItem.DID_CRIT)) return;
 
         var weapon = player.getMainHandStack();
-        if (weapon.getItem() instanceof ArtifactBladeItem blade && ArtifactBladeItem.getAbilityTicks(player.world, weapon) >= 0 && blade.tier.ordinal() >= 2) {
+        if (weapon.getItem() instanceof ArtifactBladeItem blade && ArtifactBladeItem.getAbilityTicks(player.getWorld(), weapon) >= 0 && blade.tier.ordinal() >= 2) {
             player.heal(amount * .1f);
         }
     }
@@ -143,7 +143,7 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (AffinityEntityAddon.hasData(attacker, CriticalGambleEnchantment.ACTIVATED_AT)) {
             long critTick = AffinityEntityAddon.removeData(attacker, CriticalGambleEnchantment.ACTIVATED_AT);
-            if (critTick != this.world.getTime() || this.getType().isIn(CriticalGambleEnchantment.BLACKLIST)) return;
+            if (critTick != this.getWorld().getTime() || this.getType().isIn(CriticalGambleEnchantment.BLACKLIST)) return;
 
             affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
         }
@@ -196,7 +196,7 @@ public abstract class LivingEntityMixin extends Entity {
         this.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 300, 4));
         this.addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.IMPENDING_DOOM, 300));
 
-        AffinityParticleSystems.AETHUM_OVERCHARGE.spawn(this.world, this.getPos(), this.getId());
+        AffinityParticleSystems.AETHUM_OVERCHARGE.spawn(this.getWorld(), this.getPos(), this.getId());
 
         if ((Object) this instanceof ServerPlayerEntity serverPlayer) {
             serverPlayer.incrementStat(Stats.USED.getOrCreateStat(AffinityItems.AETHUM_OVERCHARGER));
@@ -232,9 +232,9 @@ public abstract class LivingEntityMixin extends Entity {
     @Unique
     private static void affinity$killWithAttacker(LivingEntity victim, LivingEntity attacker) {
         if (attacker instanceof PlayerEntity player) {
-            victim.damage(player.world.getDamageSources().playerAttack(player), Float.MAX_VALUE);
+            victim.damage(player.getWorld().getDamageSources().playerAttack(player), Float.MAX_VALUE);
         } else {
-            victim.damage(attacker.world.getDamageSources().mobAttack(attacker), Float.MAX_VALUE);
+            victim.damage(attacker.getWorld().getDamageSources().mobAttack(attacker), Float.MAX_VALUE);
         }
     }
 }

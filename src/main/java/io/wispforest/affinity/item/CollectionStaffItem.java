@@ -111,7 +111,7 @@ public class CollectionStaffItem extends StaffItem {
         final var triggerPos = player.getBlockPos();
 
         player.getItemCooldownManager().set(stack.getItem(), 30);
-        if (!(player.world instanceof ServerWorld serverWorld)) return TypedActionResult.success(stack);
+        if (!(player.getWorld() instanceof ServerWorld serverWorld)) return TypedActionResult.success(stack);
 
         WorldOps.playSound(serverWorld, triggerPos, SoundEvents.ENTITY_ENDER_DRAGON_FLAP, SoundCategory.PLAYERS, 1, 0);
 
@@ -140,13 +140,13 @@ public class CollectionStaffItem extends StaffItem {
 
     private static Collection<ItemEntity> getItems(LivingEntity entity) {
         var box = new Box(BlockPos.ofFloored(MathUtil.entityCenterPos(entity))).expand(9, 4, 9);
-        return entity.world.getEntitiesByClass(ItemEntity.class, box, itemEntity -> !itemEntity.cannotPickup());
+        return entity.getWorld().getEntitiesByClass(ItemEntity.class, box, itemEntity -> !itemEntity.cannotPickup());
     }
 
     static {
         AffinityNetwork.CHANNEL.registerClientbound(BulkParticlesPacket.class, (message, access) -> {
             for (var pos : message.positions()) {
-                ClientParticles.spawn(message.particle(), access.player().world,
+                ClientParticles.spawn(message.particle(), access.player().getWorld(),
                         pos.add(0, .125, 0), message.deviation());
             }
         });

@@ -33,18 +33,18 @@ public class AsteroidEntity extends ProjectileEntity {
 
         this.updatePosition(this.getPos().x + this.getVelocity().x, this.getPos().y + this.getVelocity().y, this.getPos().z + this.getVelocity().z);
 
-        if (this.world.isClient && this.getVelocity().lengthSquared() > 0) {
+        if (this.getWorld().isClient && this.getVelocity().lengthSquared() > 0) {
             var lastPos = new Vec3d(this.lastRenderX, this.lastRenderY, this.lastRenderZ);
 
             if (this.getVelocity().lengthSquared() > .5) {
                 ClientParticles.setParticleCount(5);
-                ClientParticles.spawnLine(ParticleTypes.EXPLOSION, this.world, lastPos, this.getPos(), 1.5f);
+                ClientParticles.spawnLine(ParticleTypes.EXPLOSION, this.getWorld(), lastPos, this.getPos(), 1.5f);
 
                 ClientParticles.setParticleCount(5);
-                ClientParticles.spawnLine(ParticleTypes.POOF, this.world, lastPos, this.getPos(), 1f);
+                ClientParticles.spawnLine(ParticleTypes.POOF, this.getWorld(), lastPos, this.getPos(), 1f);
             } else {
                 ClientParticles.setParticleCount(2);
-                ClientParticles.spawnLine(ParticleTypes.SMOKE, this.world, lastPos, this.getPos(), .75f);
+                ClientParticles.spawnLine(ParticleTypes.SMOKE, this.getWorld(), lastPos, this.getPos(), .75f);
             }
         }
     }
@@ -54,7 +54,7 @@ public class AsteroidEntity extends ProjectileEntity {
         super.onCollision(hitResult);
         if (hitResult.getType() == HitResult.Type.MISS) return;
 
-        this.world.createExplosion(this, ASTEROID_DAMAGE.source(this, this.getOwner()), null, hitResult.getPos(), this.explosionPower, true, World.ExplosionSourceType.TNT);
+        this.getWorld().createExplosion(this, ASTEROID_DAMAGE.source(this, this.getOwner()), null, hitResult.getPos(), this.explosionPower, true, World.ExplosionSourceType.TNT);
         this.discard();
     }
 

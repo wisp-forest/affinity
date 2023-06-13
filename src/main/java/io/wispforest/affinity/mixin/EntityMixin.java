@@ -80,7 +80,7 @@ public abstract class EntityMixin implements AffinityEntityAddon {
         if (!((Object) this instanceof PlayerEntity player)) return;
 
         var weapon = player.getMainHandStack();
-        if (!(weapon.getItem() instanceof ArtifactBladeItem blade) || ArtifactBladeItem.getAbilityTicks(player.world, weapon) < 0 || blade.tier.ordinal() < 2) {
+        if (!(weapon.getItem() instanceof ArtifactBladeItem blade) || ArtifactBladeItem.getAbilityTicks(player.getWorld(), weapon) < 0 || blade.tier.ordinal() < 2) {
             return;
         }
 

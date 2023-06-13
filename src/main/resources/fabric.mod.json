@@ -59,7 +59,8 @@
     "terrablender": "*",
     "cardinal-components-entity": ">=5.1.0",
     "cardinal-components-chunk": ">=5.1.0",
-    "worldmesher": ">=0.3.0"
+    "worldmesher": ">=0.3.0",
+    "lavender": "*"
   },
   "custom": {
     "cardinal-components": [

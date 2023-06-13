@@ -5,8 +5,10 @@ import io.wispforest.affinity.Affinity;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.entity.Entity;
+import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -15,8 +17,8 @@ public class KinesisCriterion extends AbstractCriterion<KinesisCriterion.Conditi
     public static final Identifier ID = Affinity.id("kinesis");
 
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
-        return new Conditions(playerPredicate, EntityPredicate.Extended.getInJson(obj, "entity", predicateDeserializer));
+    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+        return new Conditions(playerPredicate, LootContextPredicate.fromJson("entity", predicateDeserializer, obj, LootContextTypes.ADVANCEMENT_ENTITY));
     }
 
     public void trigger(ServerPlayerEntity player, Entity entity) {
@@ -31,9 +33,9 @@ public class KinesisCriterion extends AbstractCriterion<KinesisCriterion.Conditi
 
     public static class Conditions extends AbstractCriterionConditions {
 
-        private final EntityPredicate.Extended entity;
+        private final LootContextPredicate entity;
 
-        public Conditions(EntityPredicate.Extended player, EntityPredicate.Extended entity) {
+        public Conditions(LootContextPredicate player, LootContextPredicate entity) {
             super(ID, player);
             this.entity = entity;
         }

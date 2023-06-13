@@ -40,7 +40,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
 
     @Override
     public void onRemoved(final LivingEntity outerEntity, AttributeContainer attributes, int amplifier) {
-        if (outerEntity.world.isClient) return;
+        if (outerEntity.getWorld().isClient) return;
 
         ServerTasks.doNext(server -> {
             var entity = outerEntity;
@@ -57,13 +57,13 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
     }
 
     private static void spawnCloud(LivingEntity entity) {
-        AffinityParticleSystems.BANISHMENT_CLOUD.spawn(entity.world, entity.getPos());
+        AffinityParticleSystems.BANISHMENT_CLOUD.spawn(entity.getWorld(), entity.getPos());
     }
 
     @Override
     public void onPotionApplied(LivingEntity target, @Nullable NbtCompound extraData) {
         if (extraData == null) return;
-        if (target.world.isClient) return;
+        if (target.getWorld().isClient) return;
 
         if (target.hasStatusEffect(AffinityStatusEffects.BANISHED))
             target.removeStatusEffectInternal(AffinityStatusEffects.BANISHED);

@@ -19,7 +19,12 @@
     "assembly_augment": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "affinity:assembly_augment"
+        "location": [
+          {
+            "block": "affinity:assembly_augment",
+            "condition": "minecraft:block_state_property"
+          }
+        ]
       }
     }
   },

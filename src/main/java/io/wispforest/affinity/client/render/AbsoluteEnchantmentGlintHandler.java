@@ -84,7 +84,7 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
                 .transparency(GLINT_TRANSPARENCY)
                 .texturing(texturing);
 
-        if (itemTarget) parameters.target(ITEM_TARGET);
+        if (itemTarget) parameters.target(ITEM_ENTITY_TARGET);
         if (layered) parameters.layering(VIEW_OFFSET_Z_LAYERING);
 
         return RenderLayer.of(

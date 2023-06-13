@@ -36,7 +36,7 @@ public class WiseWispEntity extends WispEntity {
         var damaged = super.damage(source, amount);
 
         if (damaged && source.getAttacker() instanceof PlayerEntity) {
-            for (var wisp : this.world.getEntitiesByClass(WispEntity.class, new Box(this.getBlockPos()).expand(8), wisp -> wisp instanceof WiseWispEntity)) {
+            for (var wisp : this.getWorld().getEntitiesByClass(WispEntity.class, new Box(this.getBlockPos()).expand(8), wisp -> wisp instanceof WiseWispEntity)) {
                 ((WiseWispEntity) wisp).scaredTicks = 600;
             }
         }

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(StatusEffectUtil.class)
 public class StatusEffectUtilMixin {
 
-    @Inject(method = "durationToString", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getDurationText", at = @At("HEAD"), cancellable = true)
     private static void injectBastionRegenerationName(StatusEffectInstance effect, float multiplier, CallbackInfoReturnable<Text> cir) {
         if (effect.getEffectType() != AffinityStatusEffects.BASTION_REGENERATION) return;
         cir.setReturnValue(StatusEffects.REGENERATION.getName().copy().formatted(Formatting.WHITE));

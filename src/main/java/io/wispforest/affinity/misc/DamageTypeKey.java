@@ -31,11 +31,11 @@ public class DamageTypeKey {
     }
 
     public DamageSource source(Entity source) {
-        return new Source(this.get(source.world), source, source);
+        return new Source(this.get(source.getWorld()), source, source);
     }
 
     public DamageSource source(Entity source, Entity attacker) {
-        return new Source(this.get(source.world), source, attacker);
+        return new Source(this.get(source.getWorld()), source, attacker);
     }
 
     public RegistryEntry<DamageType> get(World world) {

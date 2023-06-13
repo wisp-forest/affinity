@@ -7,6 +7,7 @@ import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -15,7 +16,7 @@ public class ArtifactBladeSmashCriterion extends AbstractCriterion<ArtifactBlade
     public static final Identifier ID = Affinity.id("artifact_blade_smash");
 
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
         return new Conditions(playerPredicate, NumberRange.IntRange.fromJson(obj.get("fall_distance")));
     }
 
@@ -31,7 +32,7 @@ public class ArtifactBladeSmashCriterion extends AbstractCriterion<ArtifactBlade
     public static class Conditions extends AbstractCriterionConditions {
         private final NumberRange.IntRange fallDistance;
 
-        public Conditions(EntityPredicate.Extended player, NumberRange.IntRange fallDistance) {
+        public Conditions(LootContextPredicate player, NumberRange.IntRange fallDistance) {
             super(ID, player);
             this.fallDistance = fallDistance;
         }

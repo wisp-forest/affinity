@@ -17,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -86,10 +87,10 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
     }
 
     @Override
-    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
         var list = super.getDroppedStacks(state, builder);
 
-        if (builder.getNullable(LootContextParameters.BLOCK_ENTITY) instanceof MangroveBasketBlockEntity blockEntity) {
+        if (builder.getOptional(LootContextParameters.BLOCK_ENTITY) instanceof MangroveBasketBlockEntity blockEntity) {
             list.add(blockEntity.toItem());
         }
 

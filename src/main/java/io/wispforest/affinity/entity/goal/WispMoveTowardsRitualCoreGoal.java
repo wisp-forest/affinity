@@ -25,14 +25,14 @@ public class WispMoveTowardsRitualCoreGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        this.closestCore = BlockFinder.findPoi(this.wisp.world, AffinityPoiTypes.RITUAL_CORE, this.wisp.getBlockPos(), 10)
+        this.closestCore = BlockFinder.findPoi(this.wisp.getWorld(), AffinityPoiTypes.RITUAL_CORE, this.wisp.getBlockPos(), 10)
                 .sorted(Comparator.comparing(poi -> poi.getPos().getSquaredDistanceFromCenter(this.wisp.getX(), this.wisp.getY(), this.wisp.getZ())))
                 .map(PointOfInterest::getPos)
                 .findFirst()
                 .orElse(null);
 
         if (this.closestCore != null) {
-            var closeWisps = this.wisp.world.getEntitiesByClass(WispEntity.class, new Box(this.closestCore).expand(7), wispEntity -> wispEntity.type() == this.wisp.type());
+            var closeWisps = this.wisp.getWorld().getEntitiesByClass(WispEntity.class, new Box(this.closestCore).expand(7), wispEntity -> wispEntity.type() == this.wisp.type());
 
             if (closeWisps.size() > 4) {
                 return false;
@@ -44,7 +44,7 @@ public class WispMoveTowardsRitualCoreGoal extends Goal {
 
     @Override
     public void start() {
-        var target = VectorRandomUtils.getRandomOffsetSpecific(this.wisp.world, Vec3d.ofCenter(this.closestCore.up(3)), 8, 5, 8);
+        var target = VectorRandomUtils.getRandomOffsetSpecific(this.wisp.getWorld(), Vec3d.ofCenter(this.closestCore.up(3)), 8, 5, 8);
         this.wisp.getNavigation().startMovingTo(target.x, target.y, target.z, .75);
     }
 

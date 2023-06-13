@@ -3,7 +3,7 @@ package io.wispforest.affinity.recipe;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
-import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PotionItem;
@@ -23,7 +23,7 @@ public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public boolean matches(CraftingInventory inventory, World world) {
+    public boolean matches(RecipeInputInventory inventory, World world) {
         ItemStack potion = ItemStack.EMPTY;
         ItemStack dye = ItemStack.EMPTY;
 
@@ -57,7 +57,7 @@ public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public ItemStack craft(CraftingInventory inventory, DynamicRegistryManager drm) {
+    public ItemStack craft(RecipeInputInventory inventory, DynamicRegistryManager drm) {
         var potion = ItemStack.EMPTY;
         var dye = ItemStack.EMPTY;
 

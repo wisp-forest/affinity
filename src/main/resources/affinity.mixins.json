@@ -74,6 +74,7 @@
     "client.ClientWorldMixin",
     "client.CrackParticleMixin",
     "client.DimensionTypeMixin",
+    "client.DrawContextMixin",
     "client.EntityMixin",
     "client.FramebufferMixin",
     "client.HeldItemRendererMixin",

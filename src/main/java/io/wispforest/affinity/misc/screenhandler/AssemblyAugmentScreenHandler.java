@@ -49,7 +49,7 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
 
         this.addClientboundMessage(SetAutocraftingRecipeMessage.class, message -> {
             if (message.recipeId.isPresent()) {
-                var recipe = this.player().world.getRecipeManager().get(message.recipeId.get()).orElse(null);
+                var recipe = this.player().getWorld().getRecipeManager().get(message.recipeId.get()).orElse(null);
                 this.autocraftingRecipe = recipe instanceof CraftingRecipe craftingRecipe ? craftingRecipe : null;
             } else {
                 this.autocraftingRecipe = null;
@@ -110,7 +110,7 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
     }
 
     public boolean matchesAutocraftingRecipe() {
-        return this.autocraftingRecipe != null && this.autocraftingRecipe.matches(((CraftingScreenHandlerAccessor) this).affinity$getInput(), this.player().world);
+        return this.autocraftingRecipe != null && this.autocraftingRecipe.matches(((CraftingScreenHandlerAccessor) this).affinity$getInput(), this.player().getWorld());
     }
 
     @Override
