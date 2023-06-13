@@ -28,14 +28,15 @@ public class AssemblyAugmentBlockEntityRenderer implements BlockEntityRenderer<A
 
         matrices.translate(.5, 0, .5);
 
-        if (!entity.craftingInput().isEmpty()) {
+        // TODO this needs to respect only the actual input slots
+        if (!entity.inventory().isEmpty()) {
             matrices.multiply(RotationAxis.NEGATIVE_Y.rotation((float) (entity.previewAngle + Math.PI / 2)));
 
             matrices.translate(0, .5, 0);
             matrices.scale(.125f, .125f, .125f);
             matrices.translate(1, -1, 0);
 
-            var stacks = entity.craftingInput().stacks;
+            var stacks = entity.inventory().stacks;
             for (int i = 0; i < stacks.size(); i++) {
                 matrices.push();
                 matrices.translate(-(i % 3), -(i / 3), 0);
@@ -43,7 +44,7 @@ public class AssemblyAugmentBlockEntityRenderer implements BlockEntityRenderer<A
                 matrices.pop();
             }
         } else {
-            this.renderItem(entity, matrices, vertexConsumers, entity.outputInventory().getStack(0), 5000, .5f, 0, .15f, 0, light, overlay);
+            this.renderItem(entity, matrices, vertexConsumers, entity.inventory().getStack(AssemblyAugmentBlockEntity.OUTPUT_SLOT), 5000, .5f, 0, .15f, 0, light, overlay);
         }
 
         matrices.pop();

@@ -5,6 +5,7 @@ import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
+import io.wispforest.affinity.item.CarbonCopyItem;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.mixin.access.CraftingInventoryAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -29,7 +30,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -43,12 +43,13 @@ import java.util.*;
 @SuppressWarnings("UnstableApiUsage")
 public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, ImplementedInventory, SidedInventory, InquirableOutlineProvider {
 
-    @Environment(EnvType.CLIENT) public double previewAngle = 0d;
+    @Environment(EnvType.CLIENT)
+    public double previewAngle = 0d;
 
-    private static final int[] DOWN_SLOTS = new int[]{0};
-    private static final int[] NO_SLOTS = new int[0];
+    public static final int OUTPUT_SLOT = 9;
+    private static final int[] ALL_SLOTS = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, OUTPUT_SLOT};
 
-    private static final NbtKey<ItemStack> OUTPUT_KEY = new NbtKey<>("Output", NbtKey.Type.ITEM_STACK);
+    private static final NbtKey<ItemStack> TEMPLATE_KEY = new NbtKey<>("Template", NbtKey.Type.ITEM_STACK);
 
     private static final Map<World, Map<BlockPos, BlockPos>> BLOCKED_TREETAPS_PER_WORLD = new WeakHashMap<>();
     private Map<BlockPos, BlockPos> blockedTreetaps;
@@ -58,15 +59,15 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     private final Set<BlockPos> treetapCache = new HashSet<>();
     private int activeTreetaps = 0;
 
-    private final SimpleInventory craftingInput = new SimpleInventory(9);
-    private final InputInventory craftingView = new InputInventory(this.craftingInput.stacks);
-    private final SimpleInventory outputInventory = new SimpleInventory(1);
+    private final SimpleInventory inventory = new SimpleInventory(10);
+    private final InputInventory craftingView = new InputInventory(this.inventory.stacks);
+    private final SimpleInventory templateInventory = new SimpleInventory(1);
 
     private int craftingTick = 0;
 
     public AssemblyAugmentBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ASSEMBLY_AUGMENT, pos, state);
-        this.craftingInput.addListener(sender -> this.markDirty());
+        this.inventory.addListener(sender -> this.markDirty());
     }
 
     @Override
@@ -77,14 +78,16 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
 
     @Override
     public void tickServer() {
+        this.autocraftingRecipe = CarbonCopyItem.getRecipe(this.templateInventory.getStack(0), this.world);
+
+        CraftingRecipe currentRecipe = null;
         if (this.autocraftingRecipe == null) {
-            this.autocraftingRecipe = (CraftingRecipe) this.world.getRecipeManager().get(new Identifier("stick")).orElse(null);
+            currentRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world).orElse(null);
+        } else if (this.autocraftingRecipe.matches(this.craftingView, this.world)) {
+            currentRecipe = this.autocraftingRecipe;
         }
 
-        var currentRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world).orElse(null);
-        if (currentRecipe == null && this.autocraftingRecipe.matches(this.craftingView, this.world)) currentRecipe = this.autocraftingRecipe;
-
-        var outputStack = this.outputInventory.getStack(0);
+        var outputStack = this.inventory.getStack(OUTPUT_SLOT);
 
         this.activeTreetaps = 0;
         if (currentRecipe != null) {
@@ -114,14 +117,14 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
             }
 
             if (this.craftingTick++ > this.craftingDuration()) {
-                for (int i = 0; i < this.craftingInput.stacks.size(); i++) {
-                    if (!ItemOps.emptyAwareDecrement(this.craftingInput.stacks.get(i))) {
-                        this.craftingInput.stacks.set(i, ItemStack.EMPTY);
+                for (int i = 0; i < 9; i++) {
+                    if (!ItemOps.emptyAwareDecrement(this.inventory.stacks.get(i))) {
+                        this.inventory.stacks.set(i, ItemStack.EMPTY);
                     }
                 }
 
                 if (outputStack.isEmpty()) {
-                    this.outputInventory.setStack(0, currentRecipeOutput.copy());
+                    this.inventory.setStack(OUTPUT_SLOT, currentRecipeOutput.copy());
                 } else {
                     outputStack.increment(currentRecipeOutput.getCount());
                 }
@@ -159,8 +162,8 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
         return this.autocraftingRecipe;
     }
 
-    public Optional<CraftingRecipe> getCurrentCraftingRecipe() {
-        return this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingView, this.world);
+    public Optional<CraftingRecipe> fetchActiveRecipe() {
+        return this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingView, this.world).or(() -> this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world));
     }
 
     @Override
@@ -174,38 +177,52 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
 
-        this.craftingInput.clear();
-        Inventories.readNbt(nbt, this.craftingInput.stacks);
+        this.inventory.clear();
+        Inventories.readNbt(nbt, this.inventory.stacks);
 
-        this.outputInventory.setStack(0, nbt.get(OUTPUT_KEY));
+        this.templateInventory.setStack(0, nbt.get(TEMPLATE_KEY));
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
-        Inventories.writeNbt(nbt, this.craftingInput.stacks);
-        nbt.put(OUTPUT_KEY, this.outputInventory.getStack(0));
+        Inventories.writeNbt(nbt, this.inventory.stacks);
+        nbt.put(TEMPLATE_KEY, this.templateInventory.getStack(0));
     }
 
     @Override
     public DefaultedList<ItemStack> getItems() {
-        return this.outputInventory.stacks;
+        return this.inventory.stacks;
     }
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        return side == Direction.DOWN ? DOWN_SLOTS : NO_SLOTS;
+        return ALL_SLOTS;
     }
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return false;
+        if (slot == OUTPUT_SLOT || this.autocraftingRecipe == null || dir == Direction.UP) return false;
+
+        int height, width = 1;
+        outer:
+        for (height = 1; height <= 3; height++) {
+            for (width = 1; width <= 3; width++) {
+                if (!this.autocraftingRecipe.fits(width, height)) continue;
+                break outer;
+            }
+        }
+
+        int x = slot % width, y = slot / width;
+        if (x >= width || y >= height) return false;
+
+        return this.inventory.getStack(slot).isEmpty() && this.autocraftingRecipe.getIngredients().get(y * width + x).test(stack);
     }
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return true;
+        return slot == OUTPUT_SLOT;
     }
 
     public int displayTreetaps() {
@@ -214,8 +231,12 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
                 .count();
     }
 
-    public SimpleInventory craftingInput() {
-        return this.craftingInput;
+    public SimpleInventory inventory() {
+        return this.inventory;
+    }
+
+    public SimpleInventory templateInventory() {
+        return this.templateInventory;
     }
 
     public int craftingTick() {
@@ -226,14 +247,10 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
         return 205 - this.activeTreetaps * 40;
     }
 
-    public SimpleInventory outputInventory() {
-        return this.outputInventory;
-    }
-
     static {
         ItemStorage.SIDED.registerFallback((tableWorld, tablePos, state, blockEntity, context) -> {
             if (state.isOf(Blocks.CRAFTING_TABLE) && tableWorld.getBlockEntity(tablePos.up()) instanceof AssemblyAugmentBlockEntity augment) {
-                return InventoryStorage.of(augment, Direction.DOWN);
+                return InventoryStorage.of(augment, context);
             } else {
                 return null;
             }
@@ -247,6 +264,5 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
             super(null, 3, 3);
             ((CraftingInventoryAccessor) (Object) this).affinity$setStacks(backingList);
         }
-
     }
 }

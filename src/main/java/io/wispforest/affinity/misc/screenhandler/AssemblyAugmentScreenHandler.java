@@ -5,6 +5,7 @@ import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.mixin.access.CraftingInventoryAccessor;
 import io.wispforest.affinity.mixin.access.CraftingScreenHandlerAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.client.screens.SyncedProperty;
 import io.wispforest.owo.client.screens.ValidatingSlot;
 import io.wispforest.owo.util.Observable;
@@ -55,11 +56,12 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
             }
         });
 
-        this.addSlot(new ValidatingSlot(this.augment != null ? this.augment.outputInventory() : new SimpleInventory(1), 0, this.getSlot(0).x, this.getSlot(0).y, stack -> false));
+        this.addSlot(new ValidatingSlot(this.augment != null ? this.augment.templateInventory() : new SimpleInventory(1), 0, 8, 35, stack -> stack.isOf(AffinityItems.CARBON_COPY)));
+        this.addSlot(new ValidatingSlot(this.augment != null ? this.augment.inventory() : new SimpleInventory(10), AssemblyAugmentBlockEntity.OUTPUT_SLOT, this.getSlot(0).x, this.getSlot(0).y, stack -> false));
 
         if (this.augment != null) {
             ((CraftingInventoryAccessor) ((CraftingScreenHandlerAccessor) this).affinity$getInput()).affinity$setStacks(
-                    this.augment.craftingInput().stacks
+                    this.augment.inventory().stacks
             );
 
             this.autocraftingRecipeId.observe(identifier -> {

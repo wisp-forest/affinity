@@ -34,12 +34,15 @@ public class CarbonCopyTooltipComponent implements TooltipComponent {
         var grid = Containers.grid(Sizing.content(), Sizing.content(), 3, 3);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
+                var displayStack = ItemStack.EMPTY;
                 if (x < width && y < height) {
                     var displayStacks = data.recipe().getIngredients().get(y * width + x).getMatchingStacks();
-                    grid.child(Components.item(displayStacks[(int) (System.currentTimeMillis() / 1000 % displayStacks.length)]).showOverlay(true).margins(Insets.of(1)), y, x);
-                } else {
-                    grid.child(Components.item(ItemStack.EMPTY).margins(Insets.of(1)), y, x);
+                    if (displayStacks.length > 0) {
+                        displayStack = displayStacks[(int) (System.currentTimeMillis() / 1000 % displayStacks.length)];
+                    }
                 }
+
+                grid.child(Components.item(displayStack).showOverlay(true).margins(Insets.of(1)), y, x);
             }
         }
 

@@ -11,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -58,6 +60,16 @@ public class CarbonCopyItem extends Item {
         return stack;
     }
 
-    public record TooltipData(CraftingRecipe recipe, ItemStack result) implements net.minecraft.client.item.TooltipData {}
+    public static @Nullable CraftingRecipe getRecipe(ItemStack stack, World world) {
+        if (!stack.has(RECIPE_KEY)) return null;
+        if (!(world.getRecipeManager().get(stack.get(RECIPE_KEY)).orElse(null) instanceof CraftingRecipe recipe))
+            return null;
+
+        return recipe;
+    }
+
+    public record TooltipData(CraftingRecipe recipe,
+                              ItemStack result) implements net.minecraft.client.item.TooltipData {
+    }
 
 }
