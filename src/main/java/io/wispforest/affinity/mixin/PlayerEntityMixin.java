@@ -1,9 +1,12 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
 import io.wispforest.affinity.item.ArtifactBladeItem;
+import io.wispforest.affinity.item.LavaliereOfSafeKeepingItem;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
+import io.wispforest.affinity.misc.util.ExperienceUtil;
 import io.wispforest.affinity.object.*;
 import io.wispforest.owo.ops.WorldOps;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -21,6 +24,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -48,6 +52,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Shadow
     public abstract SoundCategory getSoundCategory();
+
+    @Shadow
+    public float experienceProgress;
+    @Shadow
+    public int experienceLevel;
+
+    @Shadow
+    public abstract int getNextLevelExperience();
 
     @Unique
     private float affinity$lastJumpAttackDamage = 0f;
@@ -158,5 +170,18 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                     new AffinityParticleSystems.ArtifactBladeAreaAttackData(target.getPos(), entityPositions)
             );
         }
+    }
+
+    @Inject(method = "getXpToDrop", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/entity/player/PlayerEntity;experienceLevel:I"), cancellable = true)
+    public void preserveExperience(CallbackInfoReturnable<Integer> cir) {
+        if (!AffinityEntityAddon.getData(this, LavaliereOfSafeKeepingItem.IS_EQUIPPED)) return;
+
+        var aethum = AffinityComponents.PLAYER_AETHUM.get(this);
+        int limit = (int) (.12 * aethum.getAethum() * aethum.getAethum() * 100);
+
+        int levelExperience = ExperienceUtil.toPoints(this.experienceLevel);
+        int total = (int) (levelExperience + this.experienceProgress * this.getNextLevelExperience());
+
+        cir.setReturnValue(Math.min(total, limit));
     }
 }

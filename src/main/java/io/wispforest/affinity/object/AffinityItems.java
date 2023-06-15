@@ -80,6 +80,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item AETHUM_OVERCHARGER = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.RARE).maxCount(1));
     public static final Item ARCHETYPAL_IRON_RING = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item FEATHERWEIGHT_RING = new FeatherweightRingItem();
+    public static final Item LAVALIERE_OF_SAFE_KEEPING = new LavaliereOfSafeKeepingItem();
 
     public static final Item ARCANE_FADE_BUCKET = new BucketItem(AffinityBlocks.Fluids.ARCANE_FADE, settings(AffinityItemGroup.MAIN).maxCount(1).recipeRemainder(Items.BUCKET));
 
