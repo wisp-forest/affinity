@@ -6,6 +6,7 @@ import io.wispforest.owo.ops.ItemOps;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -18,15 +19,11 @@ public class CrystallizedExperienceItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (!world.isClient) {
-            int totalPoints = ExperienceUtil.toPoints(user.experienceLevel);
-            totalPoints += user.getNextLevelExperience() * user.experienceProgress;
-
-            totalPoints += ExperienceUtil.toPoints(30);
-
-            user.experienceLevel = ExperienceUtil.toLevels(totalPoints);
-            user.experienceProgress = (totalPoints - ExperienceUtil.toPoints(user.experienceLevel)) / (float) user.getNextLevelExperience();
-            user.addExperienceLevels(0);
+        if (user instanceof ServerPlayerEntity serverPlayer) {
+            ExperienceUtil.updateExperience(
+                    serverPlayer,
+                    ExperienceUtil.totalPoints(serverPlayer) + ExperienceUtil.POINTS_30_LEVELS
+            );
         }
 
         ItemOps.decrementPlayerHandItem(user, hand);

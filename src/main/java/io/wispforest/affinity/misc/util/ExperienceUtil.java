@@ -1,9 +1,25 @@
 package io.wispforest.affinity.misc.util;
 
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
+
 public class ExperienceUtil {
 
-    public static final int POINTS_16_LEVELS = toPoints(16);
-    public static final int POINTS_31_LEVELS = toPoints(31);
+    // generally useful constant
+    public static final int POINTS_30_LEVELS = toPoints(30);
+
+    // used in toLevels(...)
+    private static final int POINTS_16_LEVELS = toPoints(16);
+    private static final int POINTS_31_LEVELS = toPoints(31);
+
+    public static int totalPoints(PlayerEntity player) {
+        return toPoints(player.experienceLevel) + (int) (player.experienceProgress * player.getNextLevelExperience());
+    }
+
+    public static void updateExperience(ServerPlayerEntity player, int totalPoints) {
+        player.setExperienceLevel(toLevels(totalPoints));
+        player.setExperiencePoints(totalPoints - toPoints(player.experienceLevel));
+    }
 
     public static int toPoints(int levels) {
         if (levels <= 16) {
