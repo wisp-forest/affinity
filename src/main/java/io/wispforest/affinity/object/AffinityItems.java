@@ -81,7 +81,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item ARCHETYPAL_IRON_RING = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item FEATHERWEIGHT_RING = new FeatherweightRingItem();
     public static final Item LAVALIERE_OF_SAFE_KEEPING = new LavaliereOfSafeKeepingItem();
-    public static final Item EXPERIENCE_CRYSTAL_SEED = new ExperienceCrystalSeedItem();
+    public static final Item BUDDING_EXPERIENCE_CRYSTAL = new BuddingExperienceCrystalItem();
     public static final Item CRYSTALLIZED_EXPERIENCE = new CrystallizedExperienceItem();
 
     public static final Item ARCANE_FADE_BUCKET = new BucketItem(AffinityBlocks.Fluids.ARCANE_FADE, settings(AffinityItemGroup.MAIN).maxCount(1).recipeRemainder(Items.BUCKET));

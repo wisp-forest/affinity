@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "affinity:item/experience_crystal_seed"
+    "layer0": "affinity:item/budding_experience_crystal"
   }
 }
