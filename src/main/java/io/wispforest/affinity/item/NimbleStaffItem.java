@@ -139,6 +139,7 @@ public class NimbleStaffItem extends StaffItem {
                 targetCenter, 0xFEF5AC
         ));
 
+        player.getItemCooldownManager().set(this, 15);
         return TypedActionResult.success(stack);
     }
 

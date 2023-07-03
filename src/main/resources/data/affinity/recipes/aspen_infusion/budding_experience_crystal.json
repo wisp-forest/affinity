@@ -1,6 +1,7 @@
 {
   "type": "affinity:aspen_infusion",
-  "duration": 200,
+  "duration": 400,
+  "flux_cost_per_tick": 20,
   "output": {
     "item": "affinity:budding_experience_crystal"
   },

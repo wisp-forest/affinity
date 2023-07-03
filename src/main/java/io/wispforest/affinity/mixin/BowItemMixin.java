@@ -1,6 +1,7 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.item.AzaleaBowItem;
 import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.entity.LivingEntity;
@@ -54,6 +55,7 @@ public class BowItemMixin {
         if ((Object) this != AffinityItems.AZALEA_BOW) return arrow;
 
         arrow.setDamage(arrow.getDamage() / 1.5f);
+        AffinityComponents.ENTITY_FLAGS.get(arrow).setFlag(EntityFlagComponent.SHOT_BY_AZALEA_BOW);
         return arrow;
     }
 

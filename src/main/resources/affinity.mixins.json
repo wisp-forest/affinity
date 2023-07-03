@@ -32,6 +32,7 @@
     "MinecraftServerMixin",
     "MobEntityMixin",
     "MobSpawnerLogicMixin",
+    "PersistentProjectileEntityMixin",
     "PlayerEntityMixin",
     "PlayerManagerMixin",
     "PotionEntityMixin",
