@@ -12,7 +12,7 @@ public class LavaliereOfSafeKeepingItem extends TrinketItem {
     public static final AffinityEntityAddon.DataKey<Boolean> IS_EQUIPPED = AffinityEntityAddon.DataKey.withDefaultConstant(false);
 
     public LavaliereOfSafeKeepingItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN));
+        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT));
     }
 
     @Override

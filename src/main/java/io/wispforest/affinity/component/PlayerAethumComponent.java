@@ -54,6 +54,12 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
     }
 
     @Override
+    public boolean tryConsumeAethum(double amount) {
+        var result = super.tryConsumeAethum(amount);
+        return result || this.holder.isCreative();
+    }
+
+    @Override
     protected double initialValue() {
         return 10;
     }
