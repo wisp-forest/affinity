@@ -211,6 +211,8 @@
   },
 
   "item.affinity.resounding_chime": "Resounding Chime",
+  "item.affinity.azalea_bow": "Azalea Bow",
+  "item.affinity.azalea_bow.tooltip.consumption_per_shot": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per shot", "color": "gray"}],
   "death.attack.resonating": "%s was late to class",
   "death.attack.resonating.player": "%s was late to class because they were chatting with %s",
 

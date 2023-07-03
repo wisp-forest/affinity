@@ -92,6 +92,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item SUPERIOR_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.SUPERIOR);
     public static final Item ASTRAL_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.ASTRAL);
     public static final Item RESOUNDING_CHIME = new ResoundingChimeItem();
+    public static final Item AZALEA_BOW = new AzaleaBowItem();
 
     public static final Item EMERALD_HELMET = new EmeraldArmorItem(ArmorItem.Type.HELMET);
     public static final Item EMERALD_CHESTPLATE = new EmeraldArmorItem(ArmorItem.Type.CHESTPLATE);
