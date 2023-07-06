@@ -1,10 +1,10 @@
 package io.wispforest.affinity.mixin.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.ItemStack;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class DrawContextMixin {
 
     @Shadow
-    public abstract void fill(int x1, int y1, int x2, int y2, int color);
+    public abstract void fill(RenderLayer layer, int x1, int x2, int y1, int y2, int color);
 
     private boolean affinity$itemBarRendered = false;
 
@@ -36,12 +36,7 @@ public abstract class DrawContextMixin {
     @Inject(method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;player:Lnet/minecraft/client/network/ClientPlayerEntity;", opcode = Opcodes.GETFIELD))
     private void injectLateSecondaryItemBar(TextRenderer textRenderer, ItemStack stack, int x, int y, String countOverride, CallbackInfo ci) {
         if (this.affinity$itemBarRendered) return;
-
-        RenderSystem.disableDepthTest();
-        RenderSystem.disableBlend();
         this.affinity$renderSecondaryBar(x + 2, y + 13, stack);
-        RenderSystem.enableBlend();
-        RenderSystem.enableDepthTest();
     }
 
     @Unique
@@ -54,8 +49,8 @@ public abstract class DrawContextMixin {
         int progress = 13 - Math.round((abilityTicks / (float) blade.abilityDuration()) * 13);
         int color = 0xFF0096FF;
 
-        this.fill(x, y, x + 13, y + 2, 0xFF000000);
-        this.fill(x, y, x + progress, y + 1, color);
+        this.fill(RenderLayer.getGuiOverlay(), x, y, x + 13, y + 2, 0xFF000000);
+        this.fill(RenderLayer.getGuiOverlay(), x, y, x + progress, y + 1, color);
     }
 
 }
