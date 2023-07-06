@@ -4,15 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.owo.ui.base.BaseComponent;
-import io.wispforest.owo.ui.core.Color;
-import io.wispforest.owo.ui.core.Insets;
-import io.wispforest.owo.ui.core.Positioning;
-import io.wispforest.owo.ui.core.Sizing;
+import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.hud.Hud;
 import io.wispforest.owo.ui.util.Delta;
-import io.wispforest.owo.ui.util.Drawer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class PlayerAethumHud {
@@ -33,7 +28,7 @@ public class PlayerAethumHud {
             private float warningColorWeight = 0f;
 
             @Override
-            public void draw(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta) {
+            public void draw(OwoUIDrawContext context, int mouseX, int mouseY, float partialTicks, float delta) {
                 var player = MinecraftClient.getInstance().player;
                 if (player == null) return;
 
@@ -61,8 +56,7 @@ public class PlayerAethumHud {
 
                 RenderSystem.setShaderColor(1, 1, 1, Math.min(this.alpha, 1));
 
-                Drawer.drawRing(
-                        matrices,
+                context.drawRing(
                         this.x + this.width / 2,
                         this.y + this.height / 2,
                         50, 3, 8,
@@ -70,8 +64,7 @@ public class PlayerAethumHud {
                 );
 
                 int maxAethumChangeColor = (int) ((0x7f) * (1 - this.maxAethumChangeAge)) << 24 | 0x03C988;
-                Drawer.drawRing(
-                        matrices,
+                context.drawRing(
                         this.x + this.width / 2,
                         this.y + this.height / 2,
                         90, 360 * (this.maxAethumChange / maxAethum) + 91,
@@ -80,17 +73,16 @@ public class PlayerAethumHud {
                 );
 
                 if (this.slowDisplayAethum > this.displayAethum) {
-                    this.drawAethumRing(matrices, this.slowDisplayAethum / maxAethum, Color.ofRgb(0xAD7BE9));
+                    this.drawAethumRing(context, this.slowDisplayAethum / maxAethum, Color.ofRgb(0xAD7BE9));
                 }
 
-                this.drawAethumRing(matrices, this.displayAethum / maxAethum, Affinity.AETHUM_FLUX_COLOR.interpolate(Color.ofRgb(0xce2424), this.warningColorWeight));
+                this.drawAethumRing(context, this.displayAethum / maxAethum, Affinity.AETHUM_FLUX_COLOR.interpolate(Color.ofRgb(0xce2424), this.warningColorWeight));
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }
 
-            private void drawAethumRing(MatrixStack matrices, double progress, Color color) {
-                Drawer.drawRing(
-                        matrices,
+            private void drawAethumRing(OwoUIDrawContext context, double progress, Color color) {
+                context.drawRing(
                         this.x + this.width / 2,
                         this.y + this.height / 2,
                         360 - progress * 360 + 90, 360 + 90,

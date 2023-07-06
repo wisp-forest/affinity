@@ -75,7 +75,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return Serializer.INSTANCE;
+        return AffinityRecipeTypes.Serializers.SPIRIT_ASSIMILATION;
     }
 
     @Override
@@ -85,9 +85,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
 
     public static final class Serializer implements RecipeSerializer<SpiritAssimilationRecipe> {
 
-        public static final Serializer INSTANCE = new Serializer();
-
-        private Serializer() {}
+        public Serializer() {}
 
         @Override
         public SpiritAssimilationRecipe read(Identifier id, JsonObject json) {

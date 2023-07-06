@@ -28,7 +28,7 @@ public class WispFleeFromPlayerGoal extends Goal {
         var scared = this.isScared.getAsBoolean();
         if (!scared) return false;
 
-        PlayerEntity closestPlayer = this.wisp.world.getClosestPlayer(this.wisp, 20);
+        PlayerEntity closestPlayer = this.wisp.getWorld().getClosestPlayer(this.wisp, 20);
         if (closestPlayer == null) return false;
 
         var fleePos = NoPenaltyTargeting.findFrom(this.wisp, 10, 10, this.wisp.getPos().add(0, 5, 0));

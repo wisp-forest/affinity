@@ -16,13 +16,14 @@ public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>>
 
     public static class Serializers implements AutoRegistryContainer<RecipeSerializer<?>> {
 
-        public static final RecipeSerializer<PotionMixingRecipe> POTION_MIXING = PotionMixingRecipeSerializer.INSTANCE;
-        public static final RecipeSerializer<AspenInfusionRecipe> ASPEN_INFUSION = AspenInfusionRecipe.Serializer.INSTANCE;
-        public static final RecipeSerializer<SpiritAssimilationRecipe> SPIRIT_ASSIMILATION = SpiritAssimilationRecipe.Serializer.INSTANCE;
-        public static final RecipeSerializer<OrnamentCarvingRecipe> ORNAMENT_CARVING
-                = OrnamentCarvingRecipe.Serializer.INSTANCE;
+        public static final RecipeSerializer<PotionMixingRecipe> POTION_MIXING = new PotionMixingRecipeSerializer();
+        public static final RecipeSerializer<AspenInfusionRecipe> ASPEN_INFUSION = new AspenInfusionRecipe.Serializer();
+        public static final RecipeSerializer<SpiritAssimilationRecipe> SPIRIT_ASSIMILATION = new SpiritAssimilationRecipe.Serializer();
+        public static final RecipeSerializer<OrnamentCarvingRecipe> ORNAMENT_CARVING = new OrnamentCarvingRecipe.Serializer();
         public static final RecipeSerializer<ShapedRecipe> ASSEMBLY_SHAPED = new ShapedAssemblyRecipe.Serializer();
         public static final RecipeSerializer<ShapelessRecipe> ASSEMBLY_SHAPELESS = new ShapelessAssemblyRecipe.Serializer();
+
+        public static final RecipeSerializer<GlowingPotionDyeRecipe> CRAFTING_SPECIAL_GLOWING_POTION_DYE = new SpecialRecipeSerializer<>(GlowingPotionDyeRecipe::new);
 
         @Override
         public Registry<RecipeSerializer<?>> getRegistry() {

@@ -5,7 +5,9 @@ import io.wispforest.affinity.item.*;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.affinity.object.wisps.AffinityWispTypes;
+import io.wispforest.lavender.book.BookItem;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
+import io.wispforest.owo.registration.annotations.IterationIgnored;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -19,6 +21,9 @@ import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public class AffinityItems implements ItemRegistryContainer {
+
+    @IterationIgnored
+    public static final Item WISPEN_TESTAMENT = BookItem.registerForBook(Affinity.id("wispen_testament"), settings(AffinityItemGroup.MAIN).maxCount(1));
 
     public static final Item AETHUM_FLUX_BOTTLE = new AethumFluxBottleItem();
     public static final Item BARE_RESPLENDENT_GEM = new Item(settings(AffinityItemGroup.ENCHANTMENTS).maxCount(1));
@@ -52,7 +57,8 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item PRISMARINE_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.REFINED);
     public static final Item PURPUR_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.SOPHISTICATED);
 
-    public static final Item ANTHRACITE_POWDER = new Item(settings(AffinityItemGroup.MAIN));
+    public static final Item ANTHRACITE_POWDER = new AnthracitePowderItem();
+    public static final Item CARBON_COPY = new CarbonCopyItem();
     public static final Item SCINTILLANT_ANTHRACITE_BLEND = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item RANTHRACITE_DUST = new AliasedBlockItem(AffinityBlocks.RANTHRACITE_WIRE, settings(AffinityItemGroup.MAIN));
     public static final Item AETHUM_MAP_PROTOTYPE = new AethumMapPrototypeItem();
@@ -76,6 +82,9 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item FEATHERWEIGHT_RING = new FeatherweightRingItem();
     public static final Item BLACK_HEART_RING = new BlackHeartRing();
     public static final Item POCKET_PISTON = new PocketPistonItem();
+    public static final Item LAVALIERE_OF_SAFE_KEEPING = new LavaliereOfSafeKeepingItem();
+    public static final Item BUDDING_EXPERIENCE_CRYSTAL = new BuddingExperienceCrystalItem();
+    public static final Item CRYSTALLIZED_EXPERIENCE = new CrystallizedExperienceItem();
 
     public static final Item ARCANE_FADE_BUCKET = new BucketItem(AffinityBlocks.Fluids.ARCANE_FADE, settings(AffinityItemGroup.MAIN).maxCount(1).recipeRemainder(Items.BUCKET));
 
@@ -85,6 +94,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item SUPERIOR_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.SUPERIOR);
     public static final Item ASTRAL_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.ASTRAL);
     public static final Item RESOUNDING_CHIME = new ResoundingChimeItem();
+    public static final Item AZALEA_BOW = new AzaleaBowItem();
 
     public static final Item EMERALD_HELMET = new EmeraldArmorItem(ArmorItem.Type.HELMET);
     public static final Item EMERALD_CHESTPLATE = new EmeraldArmorItem(ArmorItem.Type.CHESTPLATE);

@@ -35,7 +35,7 @@ public class BastionEnchantment extends AbsoluteEnchantment implements Enchantme
         LivingEntityTickCallback.EVENT.register(entity -> {
             if (!AffinityEntityAddon.hasData(entity, BASTION)) return;
 
-            if (entity.world.getTime() % 10 == 0) {
+            if (entity.getWorld().getTime() % 10 == 0) {
                 entity.addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.BASTION_REGENERATION, 15, 0, true, false));
             }
         });

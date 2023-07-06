@@ -8,6 +8,9 @@
 
   "biome.affinity.wisp_forest": "Wisp Forest",
 
+  "item.affinity.wispen_testament": "The Wispen Testament",
+  "structure.affinity.augmented_crafting_table": "Augmented Crafting Table",
+
   "entity.affinity.wisp": "Wisp",
   "entity.affinity.asteroid": "Asteroid",
   "entity.affinity.aethum_missile": "Aethum Missile",
@@ -198,6 +201,9 @@
   "item.affinity.featherweight_ring": "Featherweight Ring",
   "item.affinity.black_heart_ring": "Black Heart Ring",
   "item.affinity.pocket_piston": "Pocket Piston",
+  "item.affinity.lavaliere_of_safe_keeping": "Lavaliere of Safe Keeping",
+  "item.affinity.budding_experience_crystal": "Budding Experience Crystal",
+  "item.affinity.crystallized_experience": "Crystallized Experience",
   "item.affinity.uncanny_rod": "Uncanny Rod",
   "item.affinity.staff_prototype": "Staff Prototype",
   "item.affinity.potion_of_infinite_prowess": {
@@ -207,6 +213,8 @@
   },
 
   "item.affinity.resounding_chime": "Resounding Chime",
+  "item.affinity.azalea_bow": "Azalea Bow",
+  "item.affinity.azalea_bow.tooltip.consumption_per_shot": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per shot", "color": "gray"}],
   "death.attack.resonating": "%s was late to class",
   "death.attack.resonating.player": "%s was late to class because they were chatting with %s",
 
@@ -242,6 +250,13 @@
   "item.affinity.greatly_attuned_amethyst_shard": "Greatly Attuned Amethyst Shard",
 
   "item.affinity.anthracite_powder": "Anthracite Powder",
+  "item.affinity.carbon_copy.empty": "Carbon Copy of ... Nothing?",
+  "item.affinity.carbon_copy": [
+    "Carbon Copy of ",
+    {"index": 0, "color": "gray"},
+    {"text": "x ", "color": "dark_gray"},
+    {"index": 1, "color": "gray"}
+  ],
   "item.affinity.scintillant_anthracite_blend": "Scintillant Anthracite Blend",
   "item.affinity.aethum_map_prototype": "Aethum Map Prototype",
   "item.affinity.realized_aethum_map": "Realized Aethum Map",

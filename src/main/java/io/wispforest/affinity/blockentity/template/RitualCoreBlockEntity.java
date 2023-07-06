@@ -361,10 +361,6 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         //noinspection UnstableApiUsage
         ItemStorage.SIDED.registerForBlockEntities((entity, direction) -> {
             var core = (RitualCoreBlockEntity) entity;
-
-            // TODO this should probably be enforced *during* transfer
-            if (core.ritualTick >= 0) return null;
-
             return core.storageProvider;
         }, AffinityBlocks.Entities.ASP_RITE_CORE, AffinityBlocks.Entities.SPIRIT_INTEGRATION_APPARATUS);
     }

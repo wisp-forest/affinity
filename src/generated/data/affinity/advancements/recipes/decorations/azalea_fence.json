@@ -30,5 +30,6 @@
     "recipes": [
       "affinity:azalea_fence"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

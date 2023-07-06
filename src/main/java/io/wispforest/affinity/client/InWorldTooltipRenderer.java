@@ -3,10 +3,9 @@ package io.wispforest.affinity.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.owo.ui.core.Easing;
-import io.wispforest.owo.ui.util.Drawer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -63,7 +62,8 @@ public class InWorldTooltipRenderer {
                 modelViewStack.multiply(RotationAxis.POSITIVE_Y.rotation((float) (-horizontalAngle + Math.PI / 2)));
                 RenderSystem.applyModelViewMatrix();
 
-                var matrices = new MatrixStack();
+                var drawContext = new DrawContext(MinecraftClient.getInstance(), MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers());
+                var matrices = drawContext.getMatrices();
                 matrices.translate(50, 0, 60);
                 matrices.multiply(RotationAxis.POSITIVE_X.rotation((float) (verticalAngle)));
 
@@ -75,16 +75,16 @@ public class InWorldTooltipRenderer {
                     matrices.translate(0, 0, Easing.CUBIC.apply(1 - progress) * -25);
 
                     if (entry instanceof InWorldTooltipProvider.TextEntry textEntry) {
-                        client.textRenderer.draw(matrices, textEntry.icon(), 1, i * 10, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
+                        drawContext.drawText(client.textRenderer, textEntry.icon(), 1, i * 10, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF, false);
                     } else if (entry instanceof InWorldTooltipProvider.TextAndIconEntry iconEntry) {
                         RenderSystem.enableBlend();
                         RenderSystem.setShaderColor(1, 1, 1, progress);
                         RenderSystem.setShaderTexture(0, iconEntry.texture());
                         RenderSystem.enableDepthTest();
-                        Drawer.drawTexture(matrices, 0, i * 10, iconEntry.u(), iconEntry.v(), 8, 8, 32, 32);
+                        drawContext.drawTexture(iconEntry.texture(), 0, i * 10, iconEntry.u(), iconEntry.v(), 8, 8, 32, 32);
                     }
 
-                    client.textRenderer.draw(matrices, entry.label(), 15, i * 10, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
+                    drawContext.drawText(client.textRenderer, entry.label(), 15, i * 10, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF, false);
                     matrices.pop();
                 }
 

@@ -51,7 +51,7 @@ public class AffinityNetwork {
 
         CHANNEL.registerServerbound(ScrollInteractionReceiver.InteractionPacket.class, (message, access) -> {
             var player = access.player();
-            var world = player.world;
+            var world = player.getWorld();
 
             if (!world.canPlayerModifyAt(player, message.pos())) return;
 
@@ -64,7 +64,7 @@ public class AffinityNetwork {
 
         CHANNEL.registerServerbound(AttackInteractionReceiver.InteractionPacket.class, (message, access) -> {
             var player = access.player();
-            var world = player.world;
+            var world = player.getWorld();
 
             if (!world.canPlayerModifyAt(player, message.pos())) return;
 

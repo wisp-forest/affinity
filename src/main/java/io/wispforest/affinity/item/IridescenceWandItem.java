@@ -67,7 +67,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public Text getName(ItemStack stack) {
-        final var mode = stack.get(MODE_KEY);
+        final var mode = stack.getOr(MODE_KEY, Mode.BIND);
 
         return Text.translatable(this.getTranslationKey()).append(Text.translatable(
                 WAND_OF_IRIDESCENCE_PREFIX + ".mode_suffix",
@@ -77,7 +77,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        final var mode = stack.get(MODE_KEY);
+        final var mode = stack.getOr(MODE_KEY, Mode.BIND);
 
         tooltip.add(Text.empty());
 
@@ -89,7 +89,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
                 Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".help")).setStyle(Style.EMPTY.withColor(mode.color)));
 
         tooltip.add(Text.empty());
-        tooltip.add(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".retain_mode." + (stack.get(RETAIN_MODE_KEY) ? "enabled" : "disabled")).styled(style -> style.withColor(mode.color)));
+        tooltip.add(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".retain_mode." + (stack.getOr(RETAIN_MODE_KEY, false) ? "enabled" : "disabled")).styled(style -> style.withColor(mode.color)));
     }
 
     @Override

@@ -45,7 +45,7 @@ public class AethumMissileEntity extends ProjectileEntity {
         var potentialHit = ProjectileUtil.getCollision(this, this::canHit);
         if (potentialHit.getType() != HitResult.Type.MISS) this.onCollision(potentialHit);
 
-        if (this.world instanceof ServerWorld serverWorld && this.targetEntity != null) {
+        if (this.getWorld() instanceof ServerWorld serverWorld && this.targetEntity != null) {
             var target = serverWorld.getEntity(this.targetEntity);
             if (target == null) {
                 this.discard();
@@ -58,12 +58,12 @@ public class AethumMissileEntity extends ProjectileEntity {
 
         this.updatePosition(this.getPos().x + this.getVelocity().x, this.getPos().y + this.getVelocity().y, this.getPos().z + this.getVelocity().z);
 
-        if (world.isClient) {
+        if (this.getWorld().isClient) {
             var lastPos = new Vec3d(this.lastRenderX, this.lastRenderY, this.lastRenderZ);
 
             ClientParticles.setParticleCount(2);
-            ClientParticles.spawnLine(ParticleTypes.WITCH, this.world, lastPos, this.getPos(), .1f);
-            ClientParticles.spawn(ParticleTypes.CRIT, this.world, this.getPos(), .1f);
+            ClientParticles.spawnLine(ParticleTypes.WITCH, this.getWorld(), lastPos, this.getPos(), .1f);
+            ClientParticles.spawn(ParticleTypes.CRIT, this.getWorld(), this.getPos(), .1f);
         }
     }
 

@@ -140,7 +140,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return PotionMixingRecipeSerializer.INSTANCE;
+        return AffinityRecipeTypes.Serializers.POTION_MIXING;
     }
 
     @Override

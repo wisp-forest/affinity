@@ -17,6 +17,7 @@ import io.wispforest.affinity.client.screen.OuijaBoardScreen;
 import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
+import io.wispforest.affinity.item.CarbonCopyItem;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
@@ -30,10 +31,8 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
-import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -83,6 +82,26 @@ public class AffinityClient implements ClientModInitializer {
             );
 
             matrices.pop();
+        });
+
+        PostItemRenderCallback.EVENT.register((stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
+            if (!stack.isOf(AffinityItems.CARBON_COPY) || renderMode != ModelTransformationMode.GUI) return;
+
+            var resultStack = stack.getOr(CarbonCopyItem.RESULT_KEY, null);
+            if (resultStack == null) return;
+
+            matrices.translate(.75, .25, 1);
+            matrices.scale(.5f, .5f, .5f);
+
+            MinecraftClient.getInstance().getItemRenderer().renderItem(
+                    resultStack, renderMode, light, overlay, matrices, vertexConsumers, null, 0
+            );
+        });
+
+        TooltipComponentCallback.EVENT.register(data -> {
+            return data instanceof CarbonCopyItem.TooltipData tooltipData
+                    ? new CarbonCopyTooltipComponent(tooltipData)
+                    : null;
         });
 
         AethumNetworkLinkingHud.initialize();

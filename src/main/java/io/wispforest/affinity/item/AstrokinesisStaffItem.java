@@ -121,7 +121,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
             var aethum = AffinityComponents.PLAYER_AETHUM.get(player);
             if (!aethum.tryConsumeAethum(ASTEROID_THROW_COST)) return;
 
-            this.spawnAsteroid(player.world, blockHit.getBlockPos(), 5f, player, extraData.readFloat());
+            this.spawnAsteroid(player.getWorld(), blockHit.getBlockPos(), 5f, player, extraData.readFloat());
 
             player.stopUsingItem();
             player.getItemCooldownManager().set(AffinityItems.ASTROKINESIS_STAFF, 100);

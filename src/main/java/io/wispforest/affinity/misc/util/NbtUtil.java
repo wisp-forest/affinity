@@ -1,16 +1,22 @@
 package io.wispforest.affinity.misc.util;
 
 import io.wispforest.affinity.aethumflux.net.AethumLink;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class NbtUtil {
 
@@ -84,5 +90,27 @@ public class NbtUtil {
         });
 
         nbt.put(key, members);
+    }
+
+    public static void processBlockEntityNbt(ItemStack stack, BlockEntity blockEntity, Consumer<NbtCompound> sanitizer) {
+        var nbt = blockEntity.createNbt();
+        sanitizer.accept(nbt);
+
+        BlockItem.setBlockEntityNbt(stack, blockEntity.getType(), nbt);
+
+        // did I really just over-engineer the tooltip
+        // when I was actually trying to remove the links when
+        // pick-stacking aethum BEs? yes, yes I did
+        //
+        // glisco, 25.02.2023
+        var loreList = new NbtList();
+        loreList.add(NbtString.of(Text.Serializer.toJson(
+                Text.empty().styled(style -> style.withItalic(false)).formatted(Formatting.DARK_GRAY)
+                        .append(Text.literal("["))
+                        .append(Text.literal("+").formatted(Formatting.GRAY))
+                        .append(Text.literal("]"))
+                        .append(Text.literal(" NBT").formatted(Formatting.GOLD))
+        )));
+        stack.getOrCreateSubNbt("display").put("Lore", loreList);
     }
 }

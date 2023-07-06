@@ -12,6 +12,8 @@ import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 
 public class AffinityItemGroup {
 
@@ -38,7 +40,7 @@ public class AffinityItemGroup {
     }).build();
 
     static {
-        ItemGroupEvents.modifyEntriesEvent(GROUP).register(entries -> {
+        ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, GROUP.id())).register(entries -> {
             if (GROUP.getSelectedTabIndex() != 0) return;
             entries.addBefore(AffinityItems.MILDLY_ATTUNED_AMETHYST_SHARD, Items.AMETHYST_SHARD);
         });

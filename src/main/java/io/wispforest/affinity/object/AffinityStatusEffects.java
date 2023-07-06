@@ -3,7 +3,6 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.potion.PotionMixture;
-import io.wispforest.affinity.recipe.GlowingPotionDyeRecipe;
 import io.wispforest.affinity.statuseffects.*;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -61,7 +60,6 @@ public class AffinityStatusEffects {
         Registry.register(Registries.STATUS_EFFECT, Affinity.id("resonant"), RESONANT);
 
         Registry.register(Registries.POTION, Affinity.id("dubious"), PotionMixture.DUBIOUS_POTION);
-        Registry.register(Registries.RECIPE_SERIALIZER, Affinity.id("crafting_special_potiondye"), GlowingPotionDyeRecipe.SERIALIZER);
     }
 
     private static void registerEffectAndPotions(StatusEffect effect, String baseName, int baseDuration, boolean registerLong, boolean registerStrong) {
@@ -81,10 +79,12 @@ public class AffinityStatusEffects {
     private static void registerPotions(StatusEffect effect, String baseName, int baseDuration, boolean registerLong, boolean registerStrong, BiFunction<String, StatusEffectInstance, Potion> potionFactory) {
         Registry.register(Registries.POTION, Affinity.id(baseName), potionFactory.apply(baseName, new StatusEffectInstance(effect, baseDuration)));
 
-        if (registerLong)
+        if (registerLong) {
             Registry.register(Registries.POTION, Affinity.id("long_" + baseName), potionFactory.apply(baseName, new StatusEffectInstance(effect, baseDuration * 2)));
-        if (registerStrong)
+        }
+        if (registerStrong) {
             Registry.register(Registries.POTION, Affinity.id("strong_" + baseName), potionFactory.apply(baseName, new StatusEffectInstance(effect, (int) (baseDuration * 0.5), 1)));
+        }
     }
 
 }

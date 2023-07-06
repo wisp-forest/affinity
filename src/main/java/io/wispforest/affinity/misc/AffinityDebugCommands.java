@@ -70,7 +70,7 @@ public class AffinityDebugCommands {
 
         if (be instanceof AethumFluxContainer container) {
             container.updateFlux(flux);
-            context.getSource().sendFeedback(simpleFeedback("block flux updated"), true);
+            context.getSource().sendFeedback(() -> simpleFeedback("block flux updated"), true);
         }
 
         return 0;
@@ -82,7 +82,7 @@ public class AffinityDebugCommands {
         BlockEntity be = context.getSource().getWorld().getBlockEntity(pos);
 
         if (be instanceof AethumFluxContainer container) {
-            context.getSource().sendFeedback(valueFeedback("block flux", container.flux()), true);
+            context.getSource().sendFeedback(() -> valueFeedback("block flux", container.flux()), true);
 
             return (int) container.flux();
         }
@@ -91,10 +91,10 @@ public class AffinityDebugCommands {
     }
 
     private static int regenerateChunkAethum(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        AffinityComponents.CHUNK_AETHUM.get(context.getSource().getPlayer().world
+        AffinityComponents.CHUNK_AETHUM.get(context.getSource().getPlayer().getWorld()
                 .getChunk(BlockPosArgumentType.getBlockPos(context, "chunk"))).regenerate();
 
-        context.getSource().sendFeedback(simpleFeedback("chunk aethum regenerated"), true);
+        context.getSource().sendFeedback(() -> simpleFeedback("chunk aethum regenerated"), true);
 
         return 0;
     }
@@ -104,8 +104,8 @@ public class AffinityDebugCommands {
         final var pos = BlockPosArgumentType.getBlockPos(context, "chunk");
         final var aethum = DoubleArgumentType.getDouble(context, "aethum");
 
-        AffinityComponents.CHUNK_AETHUM.get(player.world.getChunk(pos)).setAethum(aethum);
-        context.getSource().sendFeedback(simpleFeedback("chunk aethum updated"), true);
+        AffinityComponents.CHUNK_AETHUM.get(player.getWorld().getChunk(pos)).setAethum(aethum);
+        context.getSource().sendFeedback(() -> simpleFeedback("chunk aethum updated"), true);
 
         return (int) Math.round(aethum);
     }
@@ -114,8 +114,8 @@ public class AffinityDebugCommands {
         final var player = context.getSource().getPlayer();
         final var pos = BlockPosArgumentType.getBlockPos(context, "chunk");
 
-        final double chunkAethum = AffinityComponents.CHUNK_AETHUM.get(player.world.getChunk(pos)).getAethum();
-        context.getSource().sendFeedback(valueFeedback("chunk aethum", chunkAethum), true);
+        final double chunkAethum = AffinityComponents.CHUNK_AETHUM.get(player.getWorld().getChunk(pos)).getAethum();
+        context.getSource().sendFeedback(() -> valueFeedback("chunk aethum", chunkAethum), true);
 
         return (int) Math.round(chunkAethum);
     }
@@ -124,7 +124,7 @@ public class AffinityDebugCommands {
         final var pos = BlockPosArgumentType.getBlockPos(context, "position");
 
         final double worldAethum = AffinityComponents.CHUNK_AETHUM.get(context.getSource().getWorld().getChunk(pos)).aethumAt(pos.getX(), pos.getZ());
-        context.getSource().sendFeedback(valueFeedback("world aethum", worldAethum), true);
+        context.getSource().sendFeedback(() -> valueFeedback("world aethum", worldAethum), true);
 
         return (int) Math.round(worldAethum);
     }
@@ -174,7 +174,7 @@ public class AffinityDebugCommands {
 
     private static int getPlayerAethum(CommandContext<ServerCommandSource> context) {
         final double playerAethum = AffinityComponents.PLAYER_AETHUM.get(context.getSource().getPlayer()).getAethum();
-        context.getSource().sendFeedback(valueFeedback("player aethum", playerAethum), true);
+        context.getSource().sendFeedback(() -> valueFeedback("player aethum", playerAethum), true);
 
         return (int) Math.round(playerAethum);
     }
@@ -183,7 +183,7 @@ public class AffinityDebugCommands {
         final var aethum = DoubleArgumentType.getDouble(context, "aethum");
         AffinityComponents.PLAYER_AETHUM.get(EntityArgumentType.getPlayer(context, "player")).setAethum(aethum);
 
-        context.getSource().sendFeedback(simpleFeedback("player aethum updated"), true);
+        context.getSource().sendFeedback(() -> simpleFeedback("player aethum updated"), true);
 
         return (int) Math.round(aethum);
     }

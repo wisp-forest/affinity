@@ -21,11 +21,11 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
 
     @Override
     public void tick() {
-        if (this.aethum < 3 && this.holder.world.getTime() % 20 == 0) {
-            this.holder.damage(AETHUM_DRAIN_DAMAGE.source(this.holder.world), (float) (5d - this.aethum));
+        if (this.aethum < 3 && this.holder.getWorld().getTime() % 20 == 0) {
+            this.holder.damage(AETHUM_DRAIN_DAMAGE.source(this.holder.getWorld()), (float) (5d - this.aethum));
         }
 
-        if (!this.holder.world.isClient && this.maxAethum != this.maxAethum() || this.naturalRegenSpeed != this.naturalRegenSpeed()) {
+        if (!this.holder.getWorld().isClient && this.maxAethum != this.maxAethum() || this.naturalRegenSpeed != this.naturalRegenSpeed()) {
             this.maxAethum = this.maxAethum();
             this.naturalRegenSpeed = this.naturalRegenSpeed();
 
@@ -42,15 +42,21 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
 
     @Override
     public double maxAethum() {
-        return this.holder.world.isClient
+        return this.holder.getWorld().isClient
                 ? this.maxAethum
                 : this.holder.getAttributeValue(AffinityEntityAttributes.MAX_AETHUM);
     }
 
     public double naturalRegenSpeed() {
-        return this.holder.world.isClient
+        return this.holder.getWorld().isClient
                 ? this.naturalRegenSpeed
                 : this.holder.getAttributeValue(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED);
+    }
+
+    @Override
+    public boolean tryConsumeAethum(double amount) {
+        var result = super.tryConsumeAethum(amount);
+        return result || this.holder.isCreative();
     }
 
     @Override

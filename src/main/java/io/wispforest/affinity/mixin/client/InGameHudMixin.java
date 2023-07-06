@@ -3,6 +3,7 @@ package io.wispforest.affinity.mixin.client;
 import dev.emi.trinkets.api.TrinketsApi;
 import io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlockEntityRenderer;
 import io.wispforest.affinity.object.AffinityItems;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,12 +18,12 @@ public abstract class InGameHudMixin {
     @Shadow protected abstract PlayerEntity getCameraPlayer();
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void disableLinkRendering(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
+    private void disableLinkRendering(DrawContext context, float tickDelta, CallbackInfo ci) {
         AethumFluxNodeBlockEntityRenderer.enableLinkRendering = false;
     }
 
     @Inject(method = "render", at = @At("RETURN"))
-    private void enableLinkRendering(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
+    private void enableLinkRendering(DrawContext context, float tickDelta, CallbackInfo ci) {
         AethumFluxNodeBlockEntityRenderer.enableLinkRendering = true;
     }
 

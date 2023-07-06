@@ -2,6 +2,7 @@ package io.wispforest.affinity.client.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.systems.VertexSorter;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
@@ -17,7 +18,6 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Easing;
 import io.wispforest.owo.ui.event.WindowResizeCallback;
 import io.wispforest.owo.ui.util.Delta;
-import io.wispforest.owo.ui.util.Drawer;
 import io.wispforest.worldmesher.WorldMesh;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -25,9 +25,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
-import net.minecraft.client.render.Camera;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -123,8 +122,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        this.renderBackground(context);
 
         if (this.mesh.canRender()) {
 
@@ -133,7 +132,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             float aspectRatio = this.client.getWindow().getFramebufferWidth() / (float) this.client.getWindow().getFramebufferHeight();
 
             RenderSystem.backupProjectionMatrix();
-            RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(-aspectRatio, aspectRatio, -1, 1, -1000, 3000));
+            RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(-aspectRatio, aspectRatio, -1, 1, -1000, 3000), VertexSorter.BY_Z);
 
             var modelViewStack = RenderSystem.getModelViewStack();
             modelViewStack.push();
@@ -152,6 +151,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             RenderSystem.applyModelViewMatrix();
 
+            var matrices = context.getMatrices();
             matrices.push();
 
             matrices.loadIdentity();
@@ -261,16 +261,15 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                         if (i > 0) yOffset += 3;
 
                         if (entry instanceof InWorldTooltipProvider.TextEntry textEntry) {
-                            client.textRenderer.draw(matrices, textEntry.icon(), mouseX + 10 + 1, mouseY + yOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
+                            context.drawText(client.textRenderer, textEntry.icon(), mouseX + 10 + 1, mouseY + yOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF, false);
                         } else if (entry instanceof InWorldTooltipProvider.TextAndIconEntry iconEntry) {
                             RenderSystem.enableBlend();
                             RenderSystem.setShaderColor(1, 1, 1, progress);
-                            RenderSystem.setShaderTexture(0, iconEntry.texture());
                             RenderSystem.enableDepthTest();
-                            Drawer.drawTexture(matrices, mouseX + 10, mouseY + yOffset, iconEntry.u(), iconEntry.v(), 8, 8, 32, 32);
+                            context.drawTexture(iconEntry.texture(), mouseX + 10, mouseY + yOffset, iconEntry.u(), iconEntry.v(), 8, 8, 32, 32);
                         }
 
-                        client.textRenderer.drawWithShadow(matrices, entry.label(), mouseX + 10 + 15, mouseY + yOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
+                        context.drawText(client.textRenderer, entry.label(), mouseX + 10 + 15, mouseY + yOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF, true);
                     }
 
                     RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
@@ -282,7 +281,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             }
         }
 
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
 
         this.age += delta;
         Interpolator.update(delta * .75f, this.scale, this.rotation, this.slant, this.xOffset, this.yOffset);

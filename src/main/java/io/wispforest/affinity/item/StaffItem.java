@@ -88,7 +88,7 @@ public abstract class StaffItem extends Item {
         final var consumption = this.getAethumConsumption(stack);
 
         if (this.isContinuous(stack)) {
-            if (aethum.getAethum() < consumption * 20) return TypedActionResult.pass(stack);
+            if (aethum.getAethum() < consumption * 20 && !user.isCreative()) return TypedActionResult.pass(stack);
 
             if (this.executeSpell(world, user, stack, this.getMaxUseTime(stack), clickedBlock).getResult().isAccepted()) {
                 user.setCurrentHand(hand);
@@ -97,7 +97,7 @@ public abstract class StaffItem extends Item {
                 return TypedActionResult.pass(stack);
             }
         } else {
-            if (aethum.getAethum() < consumption) return TypedActionResult.pass(stack);
+            if (aethum.getAethum() < consumption && !user.isCreative()) return TypedActionResult.pass(stack);
 
             var result = this.executeSpell(world, user, stack, -1, clickedBlock);
             if (result.getResult().isAccepted()) aethum.addAethum(-consumption);
@@ -111,13 +111,11 @@ public abstract class StaffItem extends Item {
         if (!(user instanceof PlayerEntity player)) return;
 
         final var aethum = AffinityComponents.PLAYER_AETHUM.get(player);
-        final var consumption = this.getAethumConsumption(stack);
-        if (aethum.getAethum() < consumption) {
+        if (!aethum.tryConsumeAethum(this.getAethumConsumption(stack))) {
             user.stopUsingItem();
             return;
         }
 
-        aethum.addAethum(-consumption);
         if (!this.executeSpell(world, player, stack, remainingUseTicks, null).getResult().isAccepted()) {
             user.stopUsingItem();
         }

@@ -14,15 +14,13 @@ import java.util.ArrayList;
 
 public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixingRecipe> {
 
-    public static final PotionMixingRecipeSerializer INSTANCE = new PotionMixingRecipeSerializer();
-
     private static final Ingrediente.Serializer<Boolean> INGREDIENTE_SERIALIZER = Ingrediente.makeSerializer(
             PacketByteBuf::writeBoolean,
             PacketByteBuf::readBoolean,
             object -> JsonHelper.getBoolean(object, "copy_nbt", false)
     );
 
-    private PotionMixingRecipeSerializer() {}
+    public PotionMixingRecipeSerializer() {}
 
     @Override
     public PotionMixingRecipe read(Identifier id, JsonObject json) {

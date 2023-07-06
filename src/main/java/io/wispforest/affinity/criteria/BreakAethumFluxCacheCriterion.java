@@ -10,6 +10,7 @@ import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -18,7 +19,7 @@ public class BreakAethumFluxCacheCriterion extends AbstractCriterion<BreakAethum
     public static final Identifier ID = Affinity.id("break_aethum_flux_cache");
 
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
         return new Conditions(playerPredicate, NumberRange.IntRange.fromJson(obj.get("aethum")), NumberRange.FloatRange.fromJson(obj.get("aethum_percentage")));
     }
 
@@ -36,7 +37,7 @@ public class BreakAethumFluxCacheCriterion extends AbstractCriterion<BreakAethum
         private final NumberRange.IntRange aethum;
         private final NumberRange.FloatRange aethumPercentage;
 
-        public Conditions(EntityPredicate.Extended player, NumberRange.IntRange aethum, NumberRange.FloatRange aethumPercentage) {
+        public Conditions(LootContextPredicate player, NumberRange.IntRange aethum, NumberRange.FloatRange aethumPercentage) {
             super(ID, player);
             this.aethum = aethum;
             this.aethumPercentage = aethumPercentage;

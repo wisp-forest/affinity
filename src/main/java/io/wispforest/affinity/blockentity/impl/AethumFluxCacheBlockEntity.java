@@ -351,7 +351,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
     static {
         AffinityNetwork.CHANNEL.registerServerbound(RequestCacheDataPacket.class, (message, access) -> {
-            if (!(access.player().world.getBlockEntity(message.pos()) instanceof AethumFluxCacheBlockEntity cache)) return;
+            if (!(access.player().getWorld().getBlockEntity(message.pos()) instanceof AethumFluxCacheBlockEntity cache)) return;
             AffinityNetwork.CHANNEL.serverHandle(access.player()).send(new CacheDataUpdatePacket(cache));
         });
 

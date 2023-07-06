@@ -28,22 +28,30 @@ public class AssemblyAugmentBlockEntityRenderer implements BlockEntityRenderer<A
 
         matrices.translate(.5, 0, .5);
 
-        if (!entity.craftingInput().isEmpty()) {
+        boolean inputEmpty = true;
+        for (int i = 0; i < 9; i++) {
+            if (!entity.inventory().getStack(i).isEmpty()) {
+                inputEmpty = false;
+                break;
+            }
+        }
+
+        if (!inputEmpty) {
             matrices.multiply(RotationAxis.NEGATIVE_Y.rotation((float) (entity.previewAngle + Math.PI / 2)));
 
             matrices.translate(0, .5, 0);
             matrices.scale(.125f, .125f, .125f);
             matrices.translate(1, -1, 0);
 
-            var stacks = entity.craftingInput().stacks;
-            for (int i = 0; i < stacks.size(); i++) {
+            var stacks = entity.inventory().stacks;
+            for (int i = 0; i < 9; i++) {
                 matrices.push();
                 matrices.translate(-(i % 3), -(i / 3), 0);
                 client.getItemRenderer().renderItem(stacks.get(i), ModelTransformationMode.FIXED, light, overlay, matrices, vertexConsumers, client.world, 0);
                 matrices.pop();
             }
         } else {
-            this.renderItem(entity, matrices, vertexConsumers, entity.outputInventory().getStack(0), 5000, .5f, 0, .15f, 0, light, overlay);
+            this.renderItem(entity, matrices, vertexConsumers, entity.inventory().getStack(AssemblyAugmentBlockEntity.OUTPUT_SLOT), 5000, .5f, 0, .15f, 0, light, overlay);
         }
 
         matrices.pop();

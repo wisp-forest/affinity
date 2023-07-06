@@ -1,0 +1,52 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 400,
+  "flux_cost_per_tick": 40,
+  "output": {
+    "item": "affinity:azalea_bow"
+  },
+  "primary_input": {
+    "item": "minecraft:bow"
+  },
+  "inputs": [
+    {
+      "item": "affinity:uncanny_rod"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "affinity:azalea_planks"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "minecraft:infinity"
+        }
+      ]
+    },
+    {
+      "fabric:type": "affinity:potion",
+      "potion": "minecraft:strong_swiftness"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "affinity:azalea_planks"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    }
+  ]
+}

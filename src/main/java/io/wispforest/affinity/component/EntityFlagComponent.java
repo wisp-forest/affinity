@@ -8,6 +8,7 @@ public class EntityFlagComponent implements Component, AutoSyncedComponent {
 
     public static final int NO_DROPS = 0x1;
     public static final int ITEM_GLOW = 0x2;
+    public static final int SHOT_BY_AZALEA_BOW = 0x4;
 
     private int flags = 0;
 

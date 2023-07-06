@@ -31,8 +31,6 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     private static final NbtKey<NbtList> ACTIVE_EFFECTS_KEY = new NbtKey.ListKey<>("ActiveEffects", NbtKey.Type.STRING);
     private static final BiMap<Identifier, LatchingAethumEffect> EFFECT_REGISTRY = HashBiMap.create();
 
-    private static final Direction[] HORIZONTAL_DIRECTIONS = {Direction.NORTH, Direction.WEST, Direction.SOUTH, Direction.EAST};
-
     private final ChunkPos pos;
     private boolean neighborsCached = false;
     private final ChunkAethumComponent[] neighbors = new ChunkAethumComponent[4];
@@ -50,7 +48,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         this.holder.setNeedsSaving(true);
     }
 
-    public boolean hasEffectActive(LatchingAethumEffect effect) {
+    public boolean isEffectActive(LatchingAethumEffect effect) {
         return this.activeEffects.contains(effect);
     }
 
@@ -60,7 +58,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         final var world = chunk.getWorld();
 
         if (!this.neighborsCached) {
-            for (var dir : HORIZONTAL_DIRECTIONS) {
+            for (var dir : Direction.Type.HORIZONTAL) {
                 final var neighborChunk = world.getChunk(this.pos.x + dir.getOffsetX(),
                         this.pos.z + dir.getOffsetZ(), ChunkStatus.FULL);
 
@@ -85,7 +83,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
 
         final double previousAethum = this.aethum;
 
-        for (var dir : HORIZONTAL_DIRECTIONS) {
+        for (var dir : Direction.Type.HORIZONTAL) {
             final var neighbor = this.neighbors[dir.getHorizontal()];
             if (neighbor == null) continue;
 
@@ -107,7 +105,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
         double min = this.aethum;
         double max = this.aethum;
 
-        for (var dir : HORIZONTAL_DIRECTIONS) {
+        for (var dir : Direction.Type.HORIZONTAL) {
             final var neighbor = neighbors[dir.getHorizontal()];
             if (neighbor == null) continue;
 

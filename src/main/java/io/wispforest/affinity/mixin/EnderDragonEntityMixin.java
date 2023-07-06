@@ -21,7 +21,7 @@ public abstract class EnderDragonEntityMixin extends MobEntity {
 
     @Inject(method = "updatePostDeath", at = @At("HEAD"))
     protected void dropDragonDrop(CallbackInfo ci) {
-        if (this.world.isClient || this.ticksSinceDeath != 185) return;
+        if (this.getWorld().isClient || this.ticksSinceDeath != 185) return;
         this.dropStack(AffinityItems.DRAGON_DROP.getDefaultStack());
     }
 }

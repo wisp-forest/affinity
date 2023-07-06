@@ -7,6 +7,7 @@ import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -15,7 +16,7 @@ public class ConstructSpiritIntegrationApparatusCriterion extends AbstractCriter
     public static final Identifier ID = Affinity.id("construct_spirit_integration_apparatus");
 
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
         return new Conditions(playerPredicate, NumberRange.IntRange.fromJson(obj.get("completion")));
     }
 
@@ -32,7 +33,7 @@ public class ConstructSpiritIntegrationApparatusCriterion extends AbstractCriter
 
         private final NumberRange.IntRange completion;
 
-        public Conditions(EntityPredicate.Extended entity, NumberRange.IntRange completion) {
+        public Conditions(LootContextPredicate entity, NumberRange.IntRange completion) {
             super(ID, entity);
             this.completion = completion;
         }

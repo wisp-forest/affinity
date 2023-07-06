@@ -5,8 +5,10 @@ import io.wispforest.affinity.Affinity;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.entity.Entity;
+import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -15,9 +17,9 @@ public class KinesisProjectileHitCriterion extends AbstractCriterion<KinesisProj
     public static final Identifier ID = Affinity.id("kinesis_projectile_hit");
 
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
-        var targetPredicate = EntityPredicate.Extended.getInJson(obj, "target", predicateDeserializer);
-        var projectilePredicate = EntityPredicate.Extended.getInJson(obj, "projectile", predicateDeserializer);
+    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+        var targetPredicate = LootContextPredicate.fromJson("target", predicateDeserializer, obj, LootContextTypes.ADVANCEMENT_ENTITY);
+        var projectilePredicate = LootContextPredicate.fromJson("projectile", predicateDeserializer, obj, LootContextTypes.ADVANCEMENT_ENTITY);
         return new Conditions(playerPredicate, targetPredicate, projectilePredicate);
     }
 
@@ -34,10 +36,10 @@ public class KinesisProjectileHitCriterion extends AbstractCriterion<KinesisProj
 
     public static class Conditions extends AbstractCriterionConditions {
 
-        private final EntityPredicate.Extended targetPredicate;
-        private final EntityPredicate.Extended projectilePredicate;
+        private final LootContextPredicate targetPredicate;
+        private final LootContextPredicate projectilePredicate;
 
-        public Conditions(EntityPredicate.Extended player, EntityPredicate.Extended targetPredicate, EntityPredicate.Extended projectilePredicate) {
+        public Conditions(LootContextPredicate player, LootContextPredicate targetPredicate, LootContextPredicate projectilePredicate) {
             super(ID, player);
             this.targetPredicate = targetPredicate;
             this.projectilePredicate = projectilePredicate;

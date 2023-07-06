@@ -43,12 +43,12 @@ public class GravecallerEnchantment extends AbsoluteEnchantment implements Encha
             minions.add(EntityReference.of(undead));
         }
 
-        if (undeadEntities.size() > 6 && bearer.world.getTime() % 20 == 0) {
+        if (undeadEntities.size() > 6 && bearer.getWorld().getTime() % 20 == 0) {
             bearer.heal(undeadEntities.size() - 6);
         }
 
         var spawner = AffinityEntityAddon.getDataOrSetDefault(bearer, SPAWNER_KEY);
-        spawner.serverTick((ServerWorld) bearer.world, bearer.getBlockPos());
+        spawner.serverTick((ServerWorld) bearer.getWorld(), bearer.getBlockPos());
     }
 
     public void clientTick(LivingEntity bearer) {
@@ -56,7 +56,7 @@ public class GravecallerEnchantment extends AbsoluteEnchantment implements Encha
     }
 
     private List<Entity> getUndeadEntities(LivingEntity master) {
-        return master.world.getOtherEntities(
+        return master.getWorld().getOtherEntities(
                 null,
                 master.getBoundingBox().expand(15),
                 entity -> entity instanceof LivingEntity living && living.getGroup() == EntityGroup.UNDEAD);
@@ -86,7 +86,7 @@ public class GravecallerEnchantment extends AbsoluteEnchantment implements Encha
         LivingEntityTickCallback.EVENT.register(entity -> {
             if (!AffinityEnchantments.GRAVECALLER.hasCompleteArmor(entity)) return;
 
-            if (!entity.world.isClient) {
+            if (!entity.getWorld().isClient) {
                 AffinityEnchantments.GRAVECALLER.serverTick(entity);
             } else {
                 AffinityEnchantments.GRAVECALLER.clientTick(entity);

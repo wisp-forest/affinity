@@ -147,7 +147,7 @@ public class KinesisStaffItem extends StaffItem {
     }
 
     public void performThrow(PlayerEntity player, ItemStack stack, PacketByteBuf extraData) {
-        var targetEntity = player.world.getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
+        var targetEntity = player.getWorld().getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
         if (targetEntity == null) return;
 
         var aethum = AffinityComponents.PLAYER_AETHUM.get(player);
@@ -195,7 +195,7 @@ public class KinesisStaffItem extends StaffItem {
         LivingEntityTickCallback.EVENT.register(entity -> {
             if (!AffinityEntityAddon.hasData(entity, MODIFIER_APPLIED_TICK)) return;
 
-            if (entity.world.getTime() - AffinityEntityAddon.getData(entity, MODIFIER_APPLIED_TICK) > 2) {
+            if (entity.getWorld().getTime() - AffinityEntityAddon.getData(entity, MODIFIER_APPLIED_TICK) > 2) {
                 AffinityEntityAddon.removeData(entity, MODIFIER_APPLIED_TICK);
                 entity.getAttributes().removeModifiers(ImmutableMultimap.of(EntityAttributes.GENERIC_MOVEMENT_SPEED, MODIFIER));
             }
