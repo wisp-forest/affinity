@@ -75,7 +75,6 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
     private float focusViewTime = 0;
 
     public FluxNetworkVisualizerScreen(AethumNetworkMemberBlockEntity initialMember) {
-//        super(FlowLayout.class, DataSource.file("../src/main/resources/assets/affinity/owo_ui/flux_network_visualizer.xml"));
         super(FlowLayout.class, DataSource.asset(Affinity.id("flux_network_visualizer")));
 
         var members = AethumNetworkMember.traverseNetwork(MinecraftClient.getInstance().world, initialMember.getPos(), (peer, isMultiblockChild) -> {
@@ -248,6 +247,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                 }
 
                 if (blockEntity instanceof InWorldTooltipProvider statProvider) {
+                    statProvider.updateTooltipEntries(this.focusViewTime == 0, client.getLastFrameDuration());
+
                     var entries = new ArrayList<InWorldTooltipProvider.Entry>();
                     statProvider.appendTooltipEntries(entries);
 
