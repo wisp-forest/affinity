@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin;
 
+import io.wispforest.affinity.blockentity.impl.VoidBeaconBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.enchantment.impl.BastionEnchantment;
@@ -7,7 +8,9 @@ import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.misc.LivingEntityTickCallback;
+import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
+import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.object.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -17,14 +20,17 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,6 +43,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.Comparator;
 import java.util.Map;
 
 @Mixin(LivingEntity.class)
@@ -78,6 +85,9 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow
     public abstract double getAttributeValue(EntityAttribute attribute);
+
+    @Shadow
+    protected float lastDamageTaken;
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTickEnd(CallbackInfo ci) {
@@ -143,7 +153,8 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (AffinityEntityAddon.hasData(attacker, CriticalGambleEnchantment.ACTIVATED_AT)) {
             long critTick = AffinityEntityAddon.removeData(attacker, CriticalGambleEnchantment.ACTIVATED_AT);
-            if (critTick != this.getWorld().getTime() || this.getType().isIn(CriticalGambleEnchantment.BLACKLIST)) return;
+            if (critTick != this.getWorld().getTime() || this.getType().isIn(CriticalGambleEnchantment.BLACKLIST))
+                return;
 
             affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
         }
@@ -202,6 +213,42 @@ public abstract class LivingEntityMixin extends Entity {
             serverPlayer.incrementStat(Stats.USED.getOrCreateStat(AffinityItems.AETHUM_OVERCHARGER));
             AffinityCriteria.USED_OVERCHARGER.trigger(serverPlayer);
         }
+
+        cir.setReturnValue(true);
+    }
+
+    @Inject(method = "tryUseTotem", at = @At("HEAD"), cancellable = true)
+    private void tryUseVoidBeacon(DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+        if (!source.getTypeRegistryEntry().matchesKey(DamageTypes.OUT_OF_WORLD) || !((Object) this instanceof ServerPlayerEntity player)) {
+            return;
+        }
+
+        var beaconPoi = BlockFinder.findPoi(this.getWorld(), AffinityPoiTypes.VOID_BEACON, this.getBlockPos(), 384)
+                .min(Comparator.comparingDouble(poi -> poi.getPos().getSquaredDistance(this.getPos())));
+        if (beaconPoi.isEmpty()) return;
+
+        var beaconEntity = this.getWorld().getBlockEntity(beaconPoi.get().getPos());
+        if (!(beaconEntity instanceof VoidBeaconBlockEntity beacon) || !beacon.active() || beacon.flux() < 64000) {
+            return;
+        }
+
+        beacon.updateFlux(beacon.flux() - 64000);
+
+        this.setHealth(4f);
+        this.clearStatusEffects();
+        this.timeUntilRegen = 40;
+        this.lastDamageTaken = Float.POSITIVE_INFINITY;
+
+        var targetPos = beaconPoi.get().getPos();
+        for (var testPos : BlockPos.iterate(targetPos.up(2), targetPos.up(15))) {
+            if (this.getWorld().getBlockState(testPos).isAir()) {
+                targetPos = testPos.toImmutable();
+                break;
+            }
+        }
+
+        player.requestTeleport(targetPos.getX() + .5f, targetPos.getY() + .5f, targetPos.getZ() + .5f);
+        ServerTasks.doDelayed((ServerWorld) this.getWorld(), 1, () -> AffinityParticleSystems.VOID_BEACON_TELEPORT.spawn(this.getWorld(), this.getPos(), this.getId()));
 
         cir.setReturnValue(true);
     }

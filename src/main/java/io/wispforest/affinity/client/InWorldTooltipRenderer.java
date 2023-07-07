@@ -48,9 +48,9 @@ public class InWorldTooltipRenderer {
                 modelViewStack.multiplyPositionMatrix(context.matrixStack().peek().getPositionMatrix());
 
                 var targetShape = blockEntity.getCachedState().getOutlineShape(client.world, target).getBoundingBox();
-                var pos = Vec3d.of(target)
+                var pos = provider.applyTooltipOffset(Vec3d.of(target)
                         .subtract(context.camera().getPos())
-                        .add(targetShape.minX + (targetShape.maxX - targetShape.minX) / 2, targetShape.maxY + .15, targetShape.minZ + (targetShape.maxZ - targetShape.minZ) / 2);
+                        .add(targetShape.minX + (targetShape.maxX - targetShape.minX) / 2, targetShape.maxY + .15, targetShape.minZ + (targetShape.maxZ - targetShape.minZ) / 2));
 
                 modelViewStack.translate(pos.x, pos.y, pos.z);
                 modelViewStack.scale(.01f, -.01f, .01f);

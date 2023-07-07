@@ -13,9 +13,11 @@ import io.wispforest.owo.particles.systems.ParticleSystemController;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.*;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 
@@ -178,12 +180,12 @@ public class AffinityParticleSystems {
         ClientParticles.spawn(ArcaneTreetapBlock.PARTICLE, world, pos.subtract(0, .1, 0), .35f);
     });
 
-    public static final ParticleSystem<Integer> AETHUM_OVERCHARGE = CONTROLLER.register(Integer.class, (world, pos, entityId) -> {
+    public static final ParticleSystem<Integer> AETHUM_OVERCHARGE = CONTROLLER.register(int.class, (world, pos, entityId) -> {
         var entity = world.getEntityById(entityId);
         var client = MinecraftClient.getInstance();
 
         client.particleManager.addEmitter(entity, ParticleTypes.TOTEM_OF_UNDYING, 30);
-        world.playSound(entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_TOTEM_USE, entity.getSoundCategory(), 1.0F, 1.0F, false);
+        world.playSound(entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_TOTEM_USE, entity.getSoundCategory(), 1f, 1f, false);
 
         if (entity == client.player) {
             ItemStack overcharger = null;
@@ -196,6 +198,26 @@ public class AffinityParticleSystems {
 
             if (overcharger == null) return;
             client.gameRenderer.showFloatingItem(overcharger);
+        }
+    });
+
+    public static final ParticleSystem<Integer> VOID_BEACON_TELEPORT = CONTROLLER.register(Integer.class, (world, pos, entityId) -> {
+        var entity = world.getEntityById(entityId);
+        var client = MinecraftClient.getInstance();
+
+        ClientParticles.setParticleCount(25);
+        ClientParticles.randomizeVelocityOnAxis(.25f, Direction.Axis.Y);
+        ClientParticles.spawn(ParticleTypes.FIREWORK, world, pos, 1d);
+
+        ClientParticles.setParticleCount(100);
+        ClientParticles.randomizeVelocity(.5f);
+        ClientParticles.spawn(ParticleTypes.REVERSE_PORTAL, world, pos, 1d);
+
+        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1f, 0.75f, false);
+        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_ENDER_DRAGON_AMBIENT, SoundCategory.PLAYERS, .5f, 0.5f, false);
+
+        if (entity == client.player) {
+            client.gameRenderer.showFloatingItem(AffinityItems.DRAGON_DROP.getDefaultStack());
         }
     });
 

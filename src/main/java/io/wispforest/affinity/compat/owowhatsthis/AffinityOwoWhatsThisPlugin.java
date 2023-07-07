@@ -1,16 +1,20 @@
 package io.wispforest.affinity.compat.owowhatsthis;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
 import io.wispforest.affinity.blockentity.impl.ItemTransferNodeBlockEntity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.item.NimbleStaffItem;
+import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.network.serialization.PacketBufSerializer;
+import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owowhatsthis.NumberFormatter;
 import io.wispforest.owowhatsthis.OwoWhatsThis;
 import io.wispforest.owowhatsthis.client.DisplayAdapters;
 import io.wispforest.owowhatsthis.client.component.ColoredProgressBarComponent;
+import io.wispforest.owowhatsthis.client.component.TexturedProgressBarComponent;
 import io.wispforest.owowhatsthis.compat.OwoWhatsThisPlugin;
 import io.wispforest.owowhatsthis.information.BlockStateWithPosition;
 import io.wispforest.owowhatsthis.information.InformationProvider;
@@ -18,7 +22,11 @@ import io.wispforest.owowhatsthis.information.InformationProviders;
 import io.wispforest.owowhatsthis.information.TargetType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 
@@ -26,11 +34,16 @@ import java.util.List;
 
 public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
 
+    static {
+        PacketBufSerializer.register(PotionMixture.class, (buf, potionMixture) -> buf.writeNbt(potionMixture.toNbt()), buf -> PotionMixture.fromNbt(buf.readNbt()));
+    }
+
     @Override
     public void loadServer() {
         Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("block_aethum_flux_storage"), BLOCK_AETHUM_FLUX_STORAGE);
         Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("nimble_staff_direction"), NIMBLE_STAFF_DIRECTION);
         Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("item_transfer_node_queue"), ITEM_TRANSFER_NODE_QUEUE);
+        Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("brewing_potion_mixture"), BREWING_CAULDRON_MIXTURE);
     }
 
     @Override
@@ -38,6 +51,7 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
         DisplayAdapters.register(BLOCK_AETHUM_FLUX_STORAGE, Client.AETHUM_STORAGE);
         DisplayAdapters.register(NIMBLE_STAFF_DIRECTION, InformationProviders.DisplayAdapters.TEXT);
         DisplayAdapters.register(ITEM_TRANSFER_NODE_QUEUE, InformationProviders.DisplayAdapters.ITEM_STACK_LIST);
+        DisplayAdapters.register(BREWING_CAULDRON_MIXTURE, Client.POTION_MIXTURE);
     }
 
     public static final InformationProvider<BlockStateWithPosition, AethumStorageData> BLOCK_AETHUM_FLUX_STORAGE = InformationProvider.server(
@@ -76,7 +90,20 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
             }
     );
 
+    public static final InformationProvider<BlockStateWithPosition, BrewingCauldronData> BREWING_CAULDRON_MIXTURE = InformationProvider.server(
+            TargetType.BLOCK, true, 0,
+            BrewingCauldronData.class,
+            (player, world, target) -> {
+                if (!(world.getBlockEntity(target.pos()) instanceof BrewingCauldronBlockEntity cauldron)) return null;
+                if (cauldron.storedPotion().isEmpty() || !cauldron.canPotionBeExtracted()) return null;
+
+                return new BrewingCauldronData(cauldron.storedPotion(), cauldron.fillPercentage());
+            }
+    );
+
     public record AethumStorageData(long stored, long capacity) {}
+
+    public record BrewingCauldronData(PotionMixture mixture, float fillLevel) {}
 
     @Environment(EnvType.CLIENT)
     public static class Client {
@@ -90,6 +117,14 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
             return new ColoredProgressBarComponent(fuelText)
                     .progress(data.stored / (float) data.capacity)
                     .color(Affinity.AETHUM_FLUX_COLOR);
+        };
+
+        public static final InformationProvider.DisplayAdapter<BrewingCauldronData> POTION_MIXTURE = data -> {
+            return TexturedProgressBarComponent.ofSprite(
+                    Text.translatable(data.mixture.basePotion().finishTranslationKey(Items.POTION.getTranslationKey() + ".effect.")),
+                    data.fillLevel,
+                    FluidVariantRendering.getSprite(FluidVariant.of(Fluids.WATER))
+            ).color(Color.ofRgb(data.mixture.color()));
         };
     }
 }

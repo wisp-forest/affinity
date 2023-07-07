@@ -253,6 +253,10 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         return 0.3f + fillLevel * 0.2f;
     }
 
+    public float fillPercentage() {
+        return fillLevel / 3f;
+    }
+
     @NotNull
     public PotionMixture storedPotion() {
         return this.storedPotion;

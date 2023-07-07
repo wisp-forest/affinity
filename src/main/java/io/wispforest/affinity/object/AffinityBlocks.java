@@ -64,6 +64,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block ITEM_TRANSFER_NODE = new ItemTransferNodeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block AETHUM_PROBE = new AethumProbeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block EMERALD_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK));
+    @Tab(AffinityItemGroup.MAIN) public static final Block VOID_BEACON = new VoidBeaconBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
 
     @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
@@ -177,6 +178,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<MatterHarvestingHearthBlockEntity> MATTER_HARVESTING_HEARTH =
                 make(MatterHarvestingHearthBlockEntity::new, AffinityBlocks.MATTER_HARVESTING_HEARTH);
 
+        public static final BlockEntityType<VoidBeaconBlockEntity> VOID_BEACON =
+                make(VoidBeaconBlockEntity::new, AffinityBlocks.VOID_BEACON);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
@@ -196,6 +200,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(SUNSHINE_MONOLITH);
             Affinity.AETHUM_MEMBER.registerSelf(STAFF_PEDESTAL);
             Affinity.AETHUM_MEMBER.registerSelf(MATTER_HARVESTING_HEARTH);
+            Affinity.AETHUM_MEMBER.registerSelf(VOID_BEACON);
         }
 
         @Override

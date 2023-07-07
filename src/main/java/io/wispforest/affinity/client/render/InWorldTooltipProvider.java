@@ -3,6 +3,7 @@ package io.wispforest.affinity.client.render;
 import io.wispforest.affinity.Affinity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
 
@@ -22,6 +23,16 @@ public interface InWorldTooltipProvider {
      * @param delta The duration of the last frame, in partial ticks
      */
     default void updateTooltipEntries(boolean force, float delta) {}
+
+    /**
+     * Optionally apply an offset to the anchor
+     * position for this provider's tooltip. A copy
+     * of {@code tooltipPos} with the desired offset
+     * shall be returned
+     */
+    default Vec3d applyTooltipOffset(Vec3d tooltipPos) {
+        return tooltipPos;
+    }
 
     /**
      * The statistics this provider should currently

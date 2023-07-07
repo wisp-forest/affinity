@@ -18,5 +18,8 @@ public class AffinityPoiTypes {
     public static final PointOfInterestType ARCANE_TREETAP = PointOfInterestHelper.register(Affinity.id("arcane_treetap"), 0, 1,
             AffinityBlocks.ARCANE_TREETAP);
 
+    public static final PointOfInterestType VOID_BEACON = PointOfInterestHelper.register(Affinity.id("void_beacon"), 0, 1,
+            AffinityBlocks.VOID_BEACON);
+
     public static void initialize() {}
 }
