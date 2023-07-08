@@ -43,8 +43,7 @@ public class FlyRandomlyGoal extends Goal {
         super.stop();
     }
 
-    @Nullable
-    protected Vec3d getTarget() {
+    protected @Nullable Vec3d getTarget() {
         return NoPenaltyTargeting.find(this.wisp, 10, 10);
     }
 }

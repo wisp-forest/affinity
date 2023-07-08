@@ -15,6 +15,7 @@ public class ViciousWispEntity extends WispEntity {
 
     public ViciousWispEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
+        this.experiencePoints = 8;
     }
 
     @Override

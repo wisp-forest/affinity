@@ -120,7 +120,6 @@ public class PotionMixture {
         }
 
         nbt.putBoolean("Pure", pure);
-
         nbt.putIfNotNull(EXTRA_DATA, extraNbt);
 
         return nbt;

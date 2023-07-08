@@ -1,6 +1,7 @@
 package io.wispforest.affinity.object.wisps;
 
 import io.wispforest.owo.ops.TextOps;
+import net.minecraft.item.Item;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -32,6 +33,12 @@ public interface WispType {
      * in the Matter Harvesting Hearth
      */
     int aethumFluxPerSecond();
+
+    /**
+     * @return The Wisp Mist item corresponding
+     * to this type
+     */
+    Item mistItem();
 
     default Text createTooltip() {
         return TextOps.withColor(this.icon(), this.color()).append(" ").append(Text.translatable(this.translationKey()).formatted(Formatting.GRAY));

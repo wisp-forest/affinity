@@ -15,6 +15,7 @@
   "entity.affinity.asteroid": "Asteroid",
   "entity.affinity.aethum_missile": "Aethum Missile",
   "item.affinity.wisp_matter": "Wisp Matter",
+  "item.affinity.wisp_mist": "Wisp Mist",
   "item.affinity.wisp_spawn_egg": "Wisp Spawn Egg",
   "wispType.affinity.inert": "Inert",
   "wispType.affinity.wise": "Wise",
@@ -205,6 +206,7 @@
   "item.affinity.crystallized_experience": "Crystallized Experience",
   "item.affinity.uncanny_rod": "Uncanny Rod",
   "item.affinity.staff_prototype": "Staff Prototype",
+  "item.affinity.misty_potion": {"text": "Misty Potion", "italic": false},
   "item.affinity.potion_of_infinite_prowess": {
     "text": "Potion of Infinite Prowess",
     "italic": false,

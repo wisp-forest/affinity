@@ -24,8 +24,8 @@ public class WispEntityModel extends EntityModel<WispEntity> {
         var modelData = new ModelData();
 
         modelData.getRoot().addChild("main",
-                ModelPartBuilder.create().uv(0, 0).cuboid(-1.0F, -3.0F, -1.0F, 2.0F, 2.0F, 2.0F),
-                ModelTransform.pivot(0.0F, 24.0F, 0.0F));
+                ModelPartBuilder.create().uv(0, 0).cuboid(-1f, -3f, -1f, 2f, 2f, 2f),
+                ModelTransform.pivot(0f, 24f, 0f));
 
         return TexturedModelData.of(modelData, 16, 16);
     }
@@ -40,6 +40,6 @@ public class WispEntityModel extends EntityModel<WispEntity> {
 
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-        main.render(matrices, vertices, light, overlay, this.r, this.g, this.b, alpha);
+        this.main.render(matrices, vertices, light, overlay, this.r, this.g, this.b, alpha);
     }
 }

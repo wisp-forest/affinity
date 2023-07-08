@@ -50,8 +50,11 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item SOUP_OF_BEE = new SoupOfBeeItem();
 
     public static final Item INERT_WISP_MATTER = new WispMatterItem(AffinityWispTypes.INERT);
+    public static final Item INERT_WISP_MIST = new WispMistItem(AffinityWispTypes.INERT);
     public static final Item WISE_WISP_MATTER = new WispMatterItem(AffinityWispTypes.WISE);
+    public static final Item WISE_WISP_MIST = new WispMistItem(AffinityWispTypes.WISE);
     public static final Item VICIOUS_WISP_MATTER = new WispMatterItem(AffinityWispTypes.VICIOUS);
+    public static final Item VICIOUS_WISP_MIST = new WispMistItem(AffinityWispTypes.VICIOUS);
 
     public static final Item STONE_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.RUDIMENTARY);
     public static final Item PRISMARINE_SOCLE_ORNAMENT = new SocleOrnamentItem(AffinityRitualSocleTypes.REFINED);

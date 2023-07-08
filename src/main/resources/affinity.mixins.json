@@ -16,6 +16,7 @@
     "BoatEntityTypeMixin",
     "BowItemMixin",
     "BreedTaskMixin",
+    "BrewingRecipeRegistryAccessor",
     "BrewingRecipeRegistryMixin",
     "ChainRestrictedNeighborUpdaterMixin",
     "ChestBoatEntityMixin",

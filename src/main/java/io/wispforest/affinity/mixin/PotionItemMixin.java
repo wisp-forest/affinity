@@ -10,6 +10,7 @@ import net.minecraft.item.PotionItem;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -17,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PotionItem.class)
 public class PotionItemMixin {
+    @Unique
     private static final ThreadLocal<ItemStack> affinity$itemStack = new ThreadLocal<>();
 
     @Inject(method = "finishUsing", at = @At("HEAD"))

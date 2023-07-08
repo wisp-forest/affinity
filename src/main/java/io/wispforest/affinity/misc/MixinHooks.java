@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.enchantment.impl.BerserkerEnchantment;
 import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
+import io.wispforest.affinity.item.WispMistItem;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
@@ -17,9 +18,15 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Unique;
+
+import java.util.List;
 
 public class MixinHooks {
 
@@ -71,6 +78,36 @@ public class MixinHooks {
         if (effect.getEffectType() instanceof AffinityStatusEffect affinityEffect) {
             affinityEffect.onPotionApplied(target, data);
         }
+    }
+
+    public static boolean isMistInfusion(ItemStack ingredient, @Nullable ItemStack potionInput) {
+        var potionMatches = true;
+        if (potionInput != null) {
+            var effects = PotionUtil.getPotionEffects(potionInput);
+            potionMatches = !effects.isEmpty() && effects.stream().allMatch(effect -> effect.getAmplifier() == 1);
+        }
+
+        return potionMatches && ingredient.getItem() instanceof WispMistItem;
+    }
+
+    public static ItemStack craftMistInfusion(ItemStack ingredient, ItemStack potionInput) {
+        var result = potionInput.copy();
+        var effects = PotionUtil.getPotionEffects(result);
+
+        result.setCustomName(Text.translatable("item.affinity.misty_potion").formatted(Rarity.UNCOMMON.formatting));
+        result.getOrCreateNbt().putInt(PotionUtil.CUSTOM_POTION_COLOR_KEY, ((WispMistItem)ingredient.getItem()).type().color());
+
+        PotionUtil.setPotion(result, Potions.WATER);
+        PotionUtil.setCustomPotionEffects(result, effects.stream().map(instance -> new StatusEffectInstance(
+                instance.getEffectType(),
+                instance.getDuration(),
+                instance.getAmplifier() + 1,
+                instance.isAmbient(),
+                instance.shouldShowParticles(),
+                instance.shouldShowIcon()
+        )).toList());
+
+        return result;
     }
 
     public record PotionUtilData(StatusEffectInstance effectInst, float durationMultiplier) {}

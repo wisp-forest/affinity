@@ -10,6 +10,7 @@ import net.minecraft.potion.Potion;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -20,6 +21,7 @@ public class ArrowEntityMixin {
 
     @Shadow private Potion potion;
 
+    @Unique
     private @Nullable NbtCompound affinity$extraPotionNbt;
 
     @Inject(method = "initFromStack", at = @At("RETURN"))
@@ -36,7 +38,7 @@ public class ArrowEntityMixin {
     private int addDuration(int duration) {
         if (this.affinity$extraPotionNbt == null) return duration;
 
-        duration *= this.affinity$extraPotionNbt.getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
+        duration *= this.affinity$extraPotionNbt.getOr(PotionMixture.EXTEND_DURATION_BY, 1f);
         return duration;
     }
 

@@ -10,6 +10,8 @@ import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
 import io.wispforest.affinity.compat.rei.category.*;
 import io.wispforest.affinity.compat.rei.display.*;
 import io.wispforest.affinity.item.SocleOrnamentItem;
+import io.wispforest.affinity.misc.MixinHooks;
+import io.wispforest.affinity.mixin.BrewingRecipeRegistryAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.recipe.*;
@@ -22,12 +24,15 @@ import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import me.shedaniel.rei.plugin.common.displays.brewing.DefaultBrewingDisplay;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -82,6 +87,27 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
 
         registry.registerFiller(ShapedAssemblyRecipe.class, ShapedAssemblyDisplay::new);
         registry.registerFiller(ShapelessAssemblyRecipe.class, ShapelessAssemblyDisplay::new);
+
+        for (var item : Registries.ITEM) {
+            var testStack = item.getDefaultStack();
+            if (!MixinHooks.isMistInfusion(testStack, null)) continue;
+
+            BrewingRecipeRegistryAccessor.affinity$getPotionTypes()
+                    .stream()
+                    .flatMap(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStack::copy))
+                    .forEach(potionStack -> {
+                        for (var potion : Registries.POTION) {
+                            PotionUtil.setPotion(potionStack, potion);
+                            if (!MixinHooks.isMistInfusion(testStack, potionStack)) continue;
+
+                            registry.add(new DefaultBrewingDisplay(
+                                    EntryIngredients.of(potionStack),
+                                    EntryIngredients.of(testStack),
+                                    EntryStacks.of(MixinHooks.craftMistInfusion(testStack, potionStack))
+                            ));
+                        }
+                    });
+        }
 
         Registries.ITEM.stream()
                 .filter(SocleOrnamentItem.class::isInstance)
