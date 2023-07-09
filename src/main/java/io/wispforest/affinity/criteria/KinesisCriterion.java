@@ -18,7 +18,7 @@ public class KinesisCriterion extends AbstractCriterion<KinesisCriterion.Conditi
 
     @Override
     protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
-        return new Conditions(playerPredicate, LootContextPredicate.fromJson("entity", predicateDeserializer, obj, LootContextTypes.ADVANCEMENT_ENTITY));
+        return new Conditions(playerPredicate, LootContextPredicate.fromJson("entity", predicateDeserializer, obj.get("entity"), LootContextTypes.ADVANCEMENT_ENTITY));
     }
 
     public void trigger(ServerPlayerEntity player, Entity entity) {
