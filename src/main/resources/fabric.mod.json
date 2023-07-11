@@ -71,7 +71,8 @@
       "affinity:banishment",
       "affinity:world_pins",
       "affinity:local_weather",
-      "affinity:player_weather_tracker"
+      "affinity:player_weather_tracker",
+      "affinity:extra_arrow_damage"
     ]
   }
 }

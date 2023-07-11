@@ -12,6 +12,7 @@ import dev.onyxstudios.cca.api.v3.world.WorldComponentInitializer;
 import io.wispforest.affinity.Affinity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 
 public class AffinityComponents implements EntityComponentInitializer, ChunkComponentInitializer, WorldComponentInitializer {
 
@@ -31,6 +32,8 @@ public class AffinityComponents implements EntityComponentInitializer, ChunkComp
             ComponentRegistry.getOrCreate(Affinity.id("local_weather"), LocalWeatherComponent.class);
     public static final ComponentKey<PlayerWeatherTrackerComponent> PLAYER_WEATHER_TRACKER =
             ComponentRegistry.getOrCreate(Affinity.id("player_weather_tracker"), PlayerWeatherTrackerComponent.class);
+    public static final ComponentKey<ExtraArrowDamageComponent> EXTRA_ARROW_DAMAGE =
+            ComponentRegistry.getOrCreate(Affinity.id("extra_arrow_damage"), ExtraArrowDamageComponent.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
@@ -40,6 +43,7 @@ public class AffinityComponents implements EntityComponentInitializer, ChunkComp
         registry.registerFor(Entity.class, GLOWING_COLOR, GlowingColorComponent::new);
         registry.registerFor(Entity.class, ENTITY_FLAGS, entity -> new EntityFlagComponent());
         registry.registerFor(LivingEntity.class, BANISHMENT, player -> new BanishmentComponent());
+        registry.registerFor(PersistentProjectileEntity.class, EXTRA_ARROW_DAMAGE, player -> new ExtraArrowDamageComponent());
     }
 
     @Override

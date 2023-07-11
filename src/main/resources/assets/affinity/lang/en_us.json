@@ -121,6 +121,7 @@
   "attribute.name.generic.affinity.damage_taken": "Damage Taken",
   "attribute.name.generic.affinity.knockback_susceptibility": "Knockback Susceptibility",
   "attribute.name.generic.affinity.fall_resistance": "Fall Resistance",
+  "attribute.name.generic.affinity.extra_arrow_damage": "Arrow Damage",
 
   "item.affinity.emerald_wand_of_iridescence": "Emerald Wand of Iridescence",
   "item.affinity.sapphire_wand_of_iridescence": "Sapphire Wand of Iridescence",
@@ -202,6 +203,7 @@
   "item.affinity.archetypal_iron_ring": "Archetypal Iron Ring",
   "item.affinity.featherweight_ring": "Featherweight Ring",
   "item.affinity.lavaliere_of_safe_keeping": "Lavaliere of Safe Keeping",
+  "item.affinity.assassins_quiver": "Assassin's Quiver",
   "item.affinity.budding_experience_crystal": "Budding Experience Crystal",
   "item.affinity.crystallized_experience": "Crystallized Experience",
   "item.affinity.uncanny_rod": "Uncanny Rod",

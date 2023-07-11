@@ -258,7 +258,8 @@ public abstract class LivingEntityMixin extends Entity {
         cir.getReturnValue()
                 .add(AffinityEntityAttributes.DAMAGE_TAKEN, 0)
                 .add(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY, 0)
-                .add(AffinityEntityAttributes.FALL_RESISTANCE, 0);
+                .add(AffinityEntityAttributes.FALL_RESISTANCE, 0)
+                .add(AffinityEntityAttributes.EXTRA_ARROW_DAMAGE, 0);
     }
 
     @ModifyVariable(method = "applyArmorToDamage", at = @At(value = "LOAD", ordinal = 1), argsOnly = true)
