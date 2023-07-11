@@ -40,7 +40,17 @@ public abstract class MobEntityMixin extends LivingEntity {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void injectGravecallerGoals(CallbackInfo ci) {
-        if (this.getGroup() != EntityGroup.UNDEAD) return;
+        // since we are running this code before the subclass constructor,
+        // there is a nonzero chance this method invocation might
+        // fail in *some* way
+        //
+        // if so, just assume that this is probably irrelevant to us,
+        // since no normal mob would do that, and bail
+        try {
+            if (this.getGroup() != EntityGroup.UNDEAD) return;
+        } catch (Throwable ignored) {
+            return;
+        }
 
         final var mob = (MobEntity) (Object) this;
         this.targetSelector.add(-2, new TrackMasterAttackerGoal(mob));
