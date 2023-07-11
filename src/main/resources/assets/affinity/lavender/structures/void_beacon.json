@@ -1,0 +1,19 @@
+{
+  "keys": {
+    "v": "affinity:void_beacon",
+    "a": "minecraft:amethyst_block",
+    "anchor": "minecraft:amethyst_block"
+  },
+  "layers": [
+    [
+      "   ",
+      " v ",
+      "   "
+    ],
+    [
+      "aaa",
+      "a#a",
+      "aaa"
+    ]
+  ]
+}

@@ -5,7 +5,7 @@ import io.wispforest.affinity.item.*;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.affinity.object.wisps.AffinityWispTypes;
-import io.wispforest.lavender.book.BookItem;
+import io.wispforest.lavender.book.LavenderBookItem;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.annotations.IterationIgnored;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 public class AffinityItems implements ItemRegistryContainer {
 
     @IterationIgnored
-    public static final Item WISPEN_TESTAMENT = BookItem.registerForBook(Affinity.id("wispen_testament"), settings(AffinityItemGroup.MAIN).maxCount(1));
+    public static final Item WISPEN_TESTAMENT = LavenderBookItem.registerForBook(Affinity.id("wispen_testament"), settings(AffinityItemGroup.MAIN).maxCount(1));
 
     public static final Item AETHUM_FLUX_BOTTLE = new AethumFluxBottleItem();
     public static final Item BARE_RESPLENDENT_GEM = new Item(settings(AffinityItemGroup.ENCHANTMENTS).maxCount(1));
