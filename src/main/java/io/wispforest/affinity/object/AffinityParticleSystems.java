@@ -45,6 +45,21 @@ public class AffinityParticleSystems {
         ClientParticles.spawnLine(new DustParticleEffect(MathUtil.rgbToVec3f(data.color), 1), world, pos, data.target, .15f);
     });
 
+    public static final ParticleSystem<Vec3d> NIMBLE_STAFF_FLING = CONTROLLER.register(Vec3d.class, (world, pos, target) -> {
+        var length = target.subtract(pos).length();
+
+        ClientParticles.setParticleCount((int) Math.round(length * 5));
+        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.rgbToVec3f(0xb0ffce), 1), world, pos, target, .015f);
+        ClientParticles.setParticleCount((int) Math.round(length));
+        ClientParticles.spawnLine(ParticleTypes.SNOWFLAKE, world, pos, target, .05f);
+
+        ClientParticles.setParticleCount(20);
+        ClientParticles.setVelocity(target.subtract(pos).normalize());
+        ClientParticles.spawn(ParticleTypes.CLOUD, world, pos, 3f);
+
+        world.playSound(pos.x, pos.y, pos.z, AffinitySoundEvents.ITEM_NIMBLE_STAFF_FLING, SoundCategory.PLAYERS, .75f, .75f + world.random.nextFloat() * .5f, false);
+    });
+
     public static final ParticleSystem<BlockPos> TIME_STAFF_ACCELERATE = CONTROLLER.register(BlockPos.class, (world, pos, data) -> {
         ClientParticles.spawn(
                 new OrbitingEmitterParticleEffect(

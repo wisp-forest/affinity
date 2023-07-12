@@ -9,6 +9,11 @@
       "affinity:item/iridescence_wand_bind"
     ]
   },
+  "item.nimble_staff.fling": {
+    "sounds": [
+      "affinity:item/nimble_staff_fling"
+    ]
+  },
   "item.satiating_potion.start_drinking": {
     "sounds": [
       "affinity:item/satiating_potion_start_drinking"

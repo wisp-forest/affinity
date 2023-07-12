@@ -135,9 +135,7 @@ public class NimbleStaffItem extends StaffItem {
         player.addVelocity(velocity.x, velocity.y, velocity.z);
 
         if (world.isClient) return TypedActionResult.success(stack);
-        AffinityParticleSystems.WISP_ATTACK.spawn(world, player.getEyePos(), new AffinityParticleSystems.LineData(
-                targetCenter, 0xFEF5AC
-        ));
+        AffinityParticleSystems.NIMBLE_STAFF_FLING.spawn(world, player.getEyePos(), targetCenter);
 
         player.getItemCooldownManager().set(this, 15);
         return TypedActionResult.success(stack);

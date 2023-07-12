@@ -3,7 +3,10 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "affinity:uncanny_rod"
+      "item": "affinity:azalea_log"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
     },
     {
       "item": "minecraft:amethyst_shard"
