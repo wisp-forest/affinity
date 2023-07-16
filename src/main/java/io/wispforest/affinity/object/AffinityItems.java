@@ -85,6 +85,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item FEATHERWEIGHT_RING = new FeatherweightRingItem();
     public static final Item LAVALIERE_OF_SAFE_KEEPING = new LavaliereOfSafeKeepingItem();
     public static final Item ASSASSINS_QUIVER = new AssassinsQuiverItem();
+    public static final Item AETHUM_FIRE_EXTINGUISHER = new AethumFireExtinguisherItem();
     public static final Item BUDDING_EXPERIENCE_CRYSTAL = new BuddingExperienceCrystalItem();
     public static final Item CRYSTALLIZED_EXPERIENCE = new CrystallizedExperienceItem();
 

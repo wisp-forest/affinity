@@ -205,6 +205,7 @@
   "item.affinity.featherweight_ring": "Featherweight Ring",
   "item.affinity.lavaliere_of_safe_keeping": "Lavaliere of Safe Keeping",
   "item.affinity.assassins_quiver": "Assassin's Quiver",
+  "item.affinity.aethum_fire_extinguisher": "Aethum Fire Extinguisher",
   "item.affinity.budding_experience_crystal": "Budding Experience Crystal",
   "item.affinity.crystallized_experience": "Crystallized Experience",
   "item.affinity.uncanny_rod": "Uncanny Rod",
@@ -229,7 +230,7 @@
   ],
   "item.affinity.staff.tooltip.consumption_per_use": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per use", "color": "gray"}],
   "item.affinity.staff.tooltip.consumption_per_second": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per second", "color": "gray"}],
-  "item.affinity.staff.tooltip.cycle_mode_hint": [{"text": "⇄", "color": "#4D4C7D"}, {"text": " Sneak-Click to cycle modes", "color": "gray"}],
+  "item.affinity.staff.tooltip.cycle_mode_hint": [{"text": "⇄", "color": "#4D4C7D"}, {"text": " Sneak-use to cycle modes", "color": "gray"}],
 
   "item.affinity.kinesis_staff.tooltip.consumption_per_throw": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per throw", "color": "gray"}],
   "item.affinity.astrokinesis_staff.tooltip.consumption_per_throw": [

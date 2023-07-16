@@ -19,6 +19,11 @@
       "affinity:item/satiating_potion_start_drinking"
     ]
   },
+  "item.aethum_fire_extinguisher.spray": {
+    "sounds": [
+      "affinity:item/aethum_fire_extinguisher_spray"
+    ]
+  },
   "block.spirit_integration_apparatus.ritual_success": {
     "sounds": [
       "affinity:block/spirit_assimilation_success"

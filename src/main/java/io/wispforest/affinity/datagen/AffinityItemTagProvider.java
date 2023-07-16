@@ -1,6 +1,7 @@
 package io.wispforest.affinity.datagen;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.item.AethumFireExtinguisherItem;
 import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
@@ -66,7 +67,7 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
         );
 
         FieldRegistrationHandler.process(AffinityItems.class, (value, name, field) -> {
-            if (!(value instanceof StaffItem)) return;
+            if (!(value instanceof StaffItem) || value instanceof AethumFireExtinguisherItem) return;
             this.getOrCreateTagBuilder(STAFFS).add(value);
         }, false);
     }
