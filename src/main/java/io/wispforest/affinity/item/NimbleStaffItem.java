@@ -33,10 +33,10 @@ public class NimbleStaffItem extends StaffItem {
 
     private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 2, 4);
     private static final Map<Direction, Text> ARROW_BY_DIRECTION = new ImmutableMap.Builder<Direction, Text>()
-            .put(Direction.NORTH, TextOps.withColor("↑", 0xFEF5AC))
-            .put(Direction.SOUTH, TextOps.withColor("↓", 0xFEF5AC))
-            .put(Direction.EAST, TextOps.withColor("→", 0xFEF5AC))
-            .put(Direction.WEST, TextOps.withColor("←", 0xFEF5AC))
+            .put(Direction.NORTH, TextOps.withColor("↑", 0xb0ffce))
+            .put(Direction.SOUTH, TextOps.withColor("↓", 0xb0ffce))
+            .put(Direction.EAST, TextOps.withColor("→", 0xb0ffce))
+            .put(Direction.WEST, TextOps.withColor("←", 0xb0ffce))
             .build();
 
     public NimbleStaffItem() {

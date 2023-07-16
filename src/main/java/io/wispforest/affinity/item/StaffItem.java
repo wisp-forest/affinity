@@ -5,7 +5,11 @@ import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -16,14 +20,14 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class StaffItem extends Item {
+public abstract class StaffItem extends Item implements SpecialTransformItem {
 
     protected StaffItem(Settings settings) {
         super(settings);
@@ -153,17 +157,18 @@ public abstract class StaffItem extends Item {
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return this.isContinuous(stack)
-                ? UseAction.BOW
-                : UseAction.NONE;
-    }
-
-    @Override
     public int getMaxUseTime(ItemStack stack) {
         return this.isContinuous(stack)
                 ? 72000
                 : 0;
     }
 
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void applyUseActionTransform(ItemStack stack, AbstractClientPlayerEntity player, MatrixStack matrices, float tickDelta, float swingProgress) {
+        matrices.translate(-.5, -.5, -.5);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-45 + (float) Math.sin((player.clientWorld.getTime() + tickDelta) / 20)));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.sin((player.clientWorld.getTime() + tickDelta) / 30)));
+        matrices.translate(.5, .75, .5);
+    }
 }
