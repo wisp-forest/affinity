@@ -11,7 +11,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -45,23 +45,27 @@ public class AethumFireExtinguisherItem extends StaffItem {
         if (!(world instanceof ServerWorld serverWorld)) {
             ClientParticles.setParticleCount(3);
             ClientParticles.setVelocity(lookDirection);
-            ClientParticles.spawn(ParticleTypes.CLOUD, world, streamOrigin, 1.25f);
+            ClientParticles.spawn(ParticleTypes.CLOUD, world, streamOrigin.add(lookDirection), 1.25f);
 
             if (world.getTime() % 5 == 0) {
                 world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvent.of(Affinity.id("item.aethum_fire_extinguisher.spray")), SoundCategory.PLAYERS, 1f, 1f, false);
             }
         } else {
             var iterationPos = streamOrigin;
-            var entitiesInPath = new HashSet<LivingEntity>();
+            var entitiesInPath = new HashSet<Entity>();
             for (int i = 0; i < 10; i++) {
                 if (!world.getBlockState(BlockPos.ofFloored(iterationPos)).isAir()) break;
 
-                entitiesInPath.addAll(world.getNonSpectatingEntities(LivingEntity.class, new Box(iterationPos.subtract(1, 1, 1), iterationPos.add(1, 1, 1))));
+                entitiesInPath.addAll(world.getNonSpectatingEntities(Entity.class, new Box(iterationPos.subtract(1, 1, 1), iterationPos.add(1, 1, 1))));
                 iterationPos = iterationPos.add(lookDirection);
             }
 
             entitiesInPath.remove(player);
-            entitiesInPath.forEach(living -> living.addVelocity(lookDirection.multiply(.075f)));
+            entitiesInPath.forEach(entity -> {
+                entity.extinguish();
+                entity.addVelocity(lookDirection.multiply(.075f));
+                entity.velocityDirty = true;
+            });
 
             var targetPos = player.raycast(10, 0f, false);
             if (targetPos instanceof BlockHitResult blockHit && blockHit.getType() != HitResult.Type.MISS) {
