@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -170,5 +171,17 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-45 + (float) Math.sin((player.clientWorld.getTime() + tickDelta) / 20)));
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.sin((player.clientWorld.getTime() + tickDelta) / 30)));
         matrices.translate(.5, .75, .5);
+    }
+
+    @Override
+    public void applyUseActionLeftArmPose(ItemStack stack, AbstractClientPlayerEntity player, PlayerEntityModel<AbstractClientPlayerEntity> model) {
+        model.leftArm.yaw = .1f + model.head.yaw;
+        model.leftArm.pitch = -(float) Math.PI / 3.5f + model.head.pitch * .5f;
+    }
+
+    @Override
+    public void applyUseActionRightArmPose(ItemStack stack, AbstractClientPlayerEntity player, PlayerEntityModel<AbstractClientPlayerEntity> model) {
+        model.rightArm.yaw = -.1f + model.head.yaw;
+        model.rightArm.pitch = -(float) Math.PI / 3.5f + model.head.pitch * .5f;
     }
 }

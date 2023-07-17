@@ -70,6 +70,7 @@
     "access.ParticleManagerInvoker",
     "client.ArmorFeatureRendererMixin",
     "client.BeaconBlockEntityRendererMixin",
+    "client.BipedEntityModelMixin",
     "client.BlockEntityRenderDispatcherMixin",
     "client.BufferBuilderStorageMixin",
     "client.CameraInvoker",
