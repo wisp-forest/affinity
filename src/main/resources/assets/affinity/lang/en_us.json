@@ -263,6 +263,7 @@
     {"index": 1, "color": "gray"}
   ],
   "item.affinity.scintillant_anthracite_blend": "Scintillant Anthracite Blend",
+  "item.affinity.crystalline_wisp_matter_composite": "Crystalline Wisp Matter Composite",
   "item.affinity.aethum_map_prototype": "Aethum Map Prototype",
   "item.affinity.realized_aethum_map": "Realized Aethum Map",
   "item.affinity.realized_aethum_map.tooltip.locked": {"text": "Locked", "color": "gray"},
