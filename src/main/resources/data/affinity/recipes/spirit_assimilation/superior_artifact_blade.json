@@ -39,6 +39,9 @@
       ]
     },
     {
+      "item": "affinity:crystalline_wisp_matter_composite"
+    },
+    {
       "item": "affinity:vicious_wisp_matter"
     },
     {
@@ -58,6 +61,9 @@
     },
     {
       "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "affinity:crystalline_wisp_matter_composite"
     },
     {
       "fabric:type": "affinity:enchantments",

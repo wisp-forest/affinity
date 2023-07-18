@@ -1,0 +1,33 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "z": {
+      "tag": "affinity:azalea_logs"
+    },
+    "w": {
+      "item": "affinity:wise_wisp_matter"
+    },
+    "h": {
+      "item": "minecraft:hopper"
+    },
+    "p":     {
+      "fabric:type": "affinity:potion",
+      "potion": "affinity:strong_freezing"
+    }
+  },
+  "pattern": [
+    "hzw",
+    "ipi",
+    "aza"
+  ],
+  "result": {
+    "item": "affinity:aethum_fire_extinguisher"
+  }
+}

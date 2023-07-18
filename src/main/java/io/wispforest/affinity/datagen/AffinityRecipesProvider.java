@@ -50,6 +50,8 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
         offerBoatRecipe(exporter, AZALEA_BOAT, AffinityBlocks.AZALEA_PLANKS);
         offerChestBoatRecipe(exporter, AZALEA_CHEST_BOAT, AZALEA_BOAT);
         offerPlanksRecipe(exporter, AffinityBlocks.AZALEA_PLANKS, TagKey.of(RegistryKeys.ITEM, Affinity.id("azalea_logs")), 4);
+        offerBarkBlockRecipe(exporter, AffinityBlocks.AZALEA_WOOD, AffinityBlocks.AZALEA_LOG);
+        offerBarkBlockRecipe(exporter, AffinityBlocks.STRIPPED_AZALEA_WOOD, AffinityBlocks.STRIPPED_AZALEA_LOG);
         generateFamily(exporter, AffinityBlockFamilies.AZALEA);
     }
 

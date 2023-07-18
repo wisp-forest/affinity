@@ -7,7 +7,7 @@
   },
   "inputs": [
     {
-      "item": "minecraft:diamond"
+      "item": "affinity:crystalline_wisp_matter_composite"
     },
     {
       "item": "minecraft:ender_pearl"

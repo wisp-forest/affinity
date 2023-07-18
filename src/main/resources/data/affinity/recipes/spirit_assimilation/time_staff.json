@@ -22,6 +22,9 @@
       "potion": "minecraft:strong_swiftness"
     },
     {
+      "item": "affinity:crystalline_wisp_matter_composite"
+    },
+    {
       "item": "affinity:greatly_attuned_amethyst_shard"
     },
     {
@@ -36,6 +39,9 @@
     },
     {
       "item": "affinity:greatly_attuned_amethyst_shard"
+    },
+    {
+      "item": "affinity:crystalline_wisp_matter_composite"
     }
   ],
   "output": {

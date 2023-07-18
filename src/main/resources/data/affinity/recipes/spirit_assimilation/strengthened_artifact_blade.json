@@ -18,7 +18,7 @@
   ],
   "socle_inputs": [
     {
-      "item": "minecraft:wither_skeleton_skull"
+      "item": "affinity:crystalline_wisp_matter_composite"
     },
     {
       "item": "affinity:vicious_wisp_matter"
