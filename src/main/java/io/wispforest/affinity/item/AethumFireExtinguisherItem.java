@@ -34,7 +34,7 @@ import java.util.List;
 public class AethumFireExtinguisherItem extends StaffItem {
 
     public AethumFireExtinguisherItem() {
-        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT));
+        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
     }
 
     @Override

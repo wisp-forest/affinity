@@ -24,7 +24,7 @@ public class SoupOfBeeItem extends Item {
                         .statusEffect(new StatusEffectInstance(StatusEffects.POISON, 200), 1f)
                         .alwaysEdible()
                         .build()
-        ));
+        ).maxCount(1));
     }
 
     @Override

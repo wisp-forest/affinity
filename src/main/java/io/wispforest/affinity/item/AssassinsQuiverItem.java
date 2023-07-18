@@ -19,7 +19,7 @@ public class AssassinsQuiverItem extends TrinketItem {
     private final Multimap<EntityAttribute, EntityAttributeModifier> modifiers;
 
     public AssassinsQuiverItem() {
-        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT));
+        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
 
         this.modifiers = ImmutableMultimap.of(
                 AffinityEntityAttributes.EXTRA_ARROW_DAMAGE, new EntityAttributeModifier(MODIFIER_ID, "a t t r i b u t e s", 3, EntityAttributeModifier.Operation.ADDITION)

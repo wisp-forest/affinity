@@ -26,7 +26,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item WISPEN_TESTAMENT = LavenderBookItem.registerForBook(Affinity.id("wispen_testament"), settings(AffinityItemGroup.MAIN).maxCount(1));
 
     public static final Item AETHUM_FLUX_BOTTLE = new AethumFluxBottleItem();
-    public static final Item BARE_RESPLENDENT_GEM = new Item(settings(AffinityItemGroup.ENCHANTMENTS).maxCount(1));
+    public static final Item BARE_RESPLENDENT_GEM = new Item(settings(AffinityItemGroup.ENCHANTMENTS).maxCount(4));
     public static final Item RESPLENDENT_GEM = new ResplendentGemItem();
 
     public static final Item MILDLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.MILDLY_ATTUNED);
