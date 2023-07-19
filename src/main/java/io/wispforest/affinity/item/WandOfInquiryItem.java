@@ -168,8 +168,8 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
         var lastOutlineBlock = new MutableObject<>(BlockPos.ORIGIN);
 
         var colorProgress = new MutableFloat(0f);
-        var outlineColor = Color.ofRgb(0x191825);
-        var activeOutlineColor = Color.ofRgb(0x301E67);
+        var outlineColor = Color.ofRgb(0x0f132e);
+        var activeOutlineColor = Color.ofRgb(0x2943a5);
 
         WorldRenderEvents.BLOCK_OUTLINE.register((worldContext, outlineContext) -> {
             var client = worldContext.gameRenderer().getClient();
