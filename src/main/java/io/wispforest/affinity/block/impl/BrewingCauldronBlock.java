@@ -3,6 +3,8 @@ package io.wispforest.affinity.block.impl;
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
 import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.misc.util.ListUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -110,7 +112,7 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
             if (!world.isClient()) {
                 final var item = new ItemEntity(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5,
                         ListUtil.getAndRemoveLast(cauldron.getItems()));
-                item.addCommandTag(BrewingCauldronBlockEntity.NO_INSERT_MARKER);
+                item.getComponent(AffinityComponents.ENTITY_FLAGS).setFlag(EntityFlagComponent.SPAWNED_BY_BREWING_CAULDRON);
 
                 world.spawnEntity(item);
                 cauldron.markDirty(false);

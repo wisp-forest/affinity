@@ -18,7 +18,7 @@ public class WorldPinBlockEntity extends AethumNetworkMemberBlockEntity implemen
 
     @Override
     public void tickServer() {
-        long flux = flux();
+        long flux = this.flux();
         boolean shouldBeEnabled = flux >= 4;
 
         if (shouldBeEnabled != getCachedState().get(Properties.ENABLED)) {
@@ -32,7 +32,7 @@ public class WorldPinBlockEntity extends AethumNetworkMemberBlockEntity implemen
         }
 
         if (shouldBeEnabled) {
-            updateFlux(flux - 4);
+            this.updateFlux(flux - 4);
         }
     }
 

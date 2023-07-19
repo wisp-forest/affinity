@@ -3,6 +3,8 @@ package io.wispforest.affinity.blockentity.impl;
 import io.wispforest.affinity.block.impl.AffineCandleBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.ListUtil;
@@ -46,8 +48,6 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
             NbtKey.Type.COMPOUND.then(PotionMixture::fromNbt, PotionMixture::toNbt)
     );
 
-    public static final String NO_INSERT_MARKER = "NoSuckySuckInCauldron";
-
     @NotNull
     private PotionMixture storedPotion = PotionMixture.EMPTY;
     private int fillLevel = 0;
@@ -89,7 +89,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
     @Override
     public void tickClient() {
-        this.updateCraftingState();
+        this.updateAndTestCraftingPreconditions();
 
         if (this.processTick < 1) return;
 
@@ -119,7 +119,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     public void tickServer() {
         for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos), itemEntity -> true)) {
             if (!this.canAddItem()) break;
-            if (item.getCommandTags().contains(NO_INSERT_MARKER)) continue;
+            if (item.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.SPAWNED_BY_BREWING_CAULDRON)) continue;
 
             ListUtil.addItem(this.items, ItemOps.singleCopy(item.getStack()));
             this.markDirty();
@@ -129,9 +129,12 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
             world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1, 0.25f + world.random.nextFloat() * 0.5f);
         }
 
-        this.updateCraftingState();
+        if (!this.updateAndTestCraftingPreconditions()) {
+            this.processTick = 0;
+            return;
+        }
 
-        if (this.processTick < 1) return;
+        this.updateFlux(this.flux() - 20);
         if (this.processTick++ < 100) {
             if (this.processTick % 20 == 0 || this.processTick == 2) {
                 this.spawnCandleParticles();
@@ -165,29 +168,30 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         this.cachedRecipe = null;
     }
 
-    private void updateCraftingState() {
+    private boolean updateAndTestCraftingPreconditions() {
+        if (this.flux() < 20) return false;
+
         this.cachedRecipe = PotionMixingRecipe.getMatching(this.world.getRecipeManager(), this.storedPotion, this.items).orElse(null);
-        if (this.cachedRecipe == null) {
-            this.processTick = 0;
-            return;
-        }
+        if (this.cachedRecipe == null) return false;
 
         if (this.sporeBlossomPos == null || !this.world.getBlockState(this.sporeBlossomPos).isOf(Blocks.SPORE_BLOSSOM)) {
             this.sporeBlossomPos = null;
+
             for (var pos : BlockPos.iterate(pos.add(0, 1, 0), pos.add(0, 4, 0))) {
                 if (!this.world.getBlockState(pos).isOf(Blocks.SPORE_BLOSSOM)) continue;
+
                 this.sporeBlossomPos = pos;
                 break;
             }
         }
 
-        if (this.sporeBlossomPos == null) {
-            this.processTick = 0;
-            return;
+        if (this.sporeBlossomPos == null) return false;
+
+        if (this.processTick == 0) {
+            this.processTick = 1;
         }
 
-        if (this.processTick != 0) return;
-        this.processTick = 1;
+        return true;
     }
 
     private int countCandles() {
