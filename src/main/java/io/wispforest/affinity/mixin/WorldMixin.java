@@ -26,7 +26,7 @@ public abstract class WorldMixin {
             return instance.isRaining();
         }
 
-        var component = AffinityComponents.LOCAL_WEATHER.get(chunk);
+        var component = chunk.getComponent(AffinityComponents.LOCAL_WEATHER);
 
         return component.getRainGradient() > 0.2;
     }

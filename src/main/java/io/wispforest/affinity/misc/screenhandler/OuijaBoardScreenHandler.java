@@ -66,7 +66,7 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
             this.seed.set(this.player().getEnchantmentTableSeed());
 
             this.context.run((world, blockPos) -> {
-                AffinityComponents.CHUNK_AETHUM.get(world.getChunk(blockPos)).tryConsumeAethum(5);
+                world.getChunk(blockPos).getComponent(AffinityComponents.CHUNK_AETHUM).tryConsumeAethum(5);
             });
         } else {
             this.sendMessage(message);

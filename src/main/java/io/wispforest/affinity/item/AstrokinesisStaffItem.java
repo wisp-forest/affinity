@@ -118,7 +118,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
             var target = player.raycast(100, 0, false);
             if (!(target instanceof BlockHitResult blockHit)) return;
 
-            var aethum = AffinityComponents.PLAYER_AETHUM.get(player);
+            var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
             if (!aethum.tryConsumeAethum(ASTEROID_THROW_COST)) return;
 
             this.spawnAsteroid(player.getWorld(), blockHit.getBlockPos(), 5f, player, extraData.readFloat());
@@ -152,7 +152,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
     @Override
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
         return stack.has(PERFORMING_ASTROKINESIS)
-                ? AffinityEntityAddon.hasData(player, ASTEROID_ORIGIN) && AffinityComponents.PLAYER_AETHUM.get(player).getAethum() >= ASTEROID_THROW_COST
+                ? AffinityEntityAddon.hasData(player, ASTEROID_ORIGIN) && player.getComponent(AffinityComponents.PLAYER_AETHUM).getAethum() >= ASTEROID_THROW_COST
                 : super.canThrow(stack, player);
     }
 

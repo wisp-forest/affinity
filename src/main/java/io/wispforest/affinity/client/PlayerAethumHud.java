@@ -32,7 +32,7 @@ public class PlayerAethumHud {
                 var player = MinecraftClient.getInstance().player;
                 if (player == null) return;
 
-                var component = AffinityComponents.PLAYER_AETHUM.get(player);
+                var component = player.getComponent(AffinityComponents.PLAYER_AETHUM);
                 var maxAethum = component.maxAethum();
 
                 if (this.lastMaxAethum != maxAethum) {

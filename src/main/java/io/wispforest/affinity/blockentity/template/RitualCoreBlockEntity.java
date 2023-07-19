@@ -228,7 +228,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         var soclePOIs = BlockFinder.findPoi(world, AffinityPoiTypes.RITUAL_SOCLE, pos, 8)
                 .filter(poi -> poi.getPos().getY() == pos.getY()).toList();
 
-        double stability = AffinityComponents.CHUNK_AETHUM.get(world.getChunk(pos)).aethumAt(pos.getX(), pos.getZ());
+        double stability = world.getChunk(pos).getComponent(AffinityComponents.CHUNK_AETHUM).aethumAt(pos.getX(), pos.getZ());
 
         List<Double> allDistances = new ArrayList<>((soclePOIs.size() - 1) * soclePOIs.size());
 

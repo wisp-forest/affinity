@@ -22,12 +22,12 @@ public class WorldPinBlockEntity extends AethumNetworkMemberBlockEntity implemen
         boolean shouldBeEnabled = flux >= 4;
 
         if (shouldBeEnabled != getCachedState().get(Properties.ENABLED)) {
-            world.setBlockState(pos, getCachedState().with(Properties.ENABLED, shouldBeEnabled));
+            this.world.setBlockState(pos, getCachedState().with(Properties.ENABLED, shouldBeEnabled));
 
             if (shouldBeEnabled) {
-                AffinityComponents.WORLD_PINS.get(world).addPin(pos, 4);
+                this.world.getComponent(AffinityComponents.WORLD_PINS).addPin(pos, 4);
             } else {
-                AffinityComponents.WORLD_PINS.get(world).removePin(pos, 4);
+                this.world.getComponent(AffinityComponents.WORLD_PINS).removePin(pos, 4);
             }
         }
 
@@ -41,6 +41,6 @@ public class WorldPinBlockEntity extends AethumNetworkMemberBlockEntity implemen
     public void onBroken() {
         super.onBroken();
 
-        AffinityComponents.WORLD_PINS.get(world).removePin(pos, 4);
+        this.world.getComponent(AffinityComponents.WORLD_PINS).removePin(pos, 4);
     }
 }

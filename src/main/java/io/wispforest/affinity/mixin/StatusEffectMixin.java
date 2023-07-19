@@ -16,7 +16,7 @@ public class StatusEffectMixin {
     @Inject(method = "onRemoved", at = @At("HEAD"))
     private void removeGlowingColor(LivingEntity entity, AttributeContainer attributes, int amplifier, CallbackInfo ci) {
         if (!(entity instanceof PlayerEntity player)) return;
-        AffinityComponents.GLOWING_COLOR.get(player).reset();
+        player.getComponent(AffinityComponents.GLOWING_COLOR).reset();
     }
 
 }

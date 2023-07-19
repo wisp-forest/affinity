@@ -80,7 +80,7 @@ public class ArtifactBladeItem extends SwordItem {
         var playerStack = user.getStackInHand(hand);
         if (playerStack.has(ABILITY_START_TIME)) return TypedActionResult.pass(playerStack);
 
-        var aethum = AffinityComponents.PLAYER_AETHUM.get(user);
+        var aethum = user.getComponent(AffinityComponents.PLAYER_AETHUM);
         if (!(aethum.tryConsumeAethum(aethum.maxAethum() * this.tier.data.abilityAethumCost))) return TypedActionResult.pass(playerStack);
 
         playerStack.put(ABILITY_START_TIME, world.getTime());

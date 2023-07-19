@@ -45,7 +45,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
         ServerTasks.doNext(server -> {
             var entity = outerEntity;
 
-            var component = AffinityComponents.BANISHMENT.get(entity);
+            var component = entity.getComponent(AffinityComponents.BANISHMENT);
             var world = server.getWorld(RegistryKey.of(RegistryKeys.WORLD, component.dimension));
 
             spawnCloud(entity);
@@ -68,7 +68,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
         if (target.hasStatusEffect(AffinityStatusEffects.BANISHED))
             target.removeStatusEffectInternal(AffinityStatusEffects.BANISHED);
 
-        var component = AffinityComponents.BANISHMENT.get(target);
+        var component = target.getComponent(AffinityComponents.BANISHMENT);
         component.pos = target.getBlockPos();
         component.dimension = target.getWorld().getRegistryKey().getValue();
 

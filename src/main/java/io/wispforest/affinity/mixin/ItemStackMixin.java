@@ -39,7 +39,7 @@ public abstract class ItemStackMixin {
     private void cancelInteractionsInDyingChunks(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
         if (!context.getStack().isIn(AFFINITY$CANNOT_USE_IN_DYING_CHUNKS)) return;
 
-        var component = AffinityComponents.CHUNK_AETHUM.get(context.getWorld().getChunk(context.getBlockPos()));
+        var component = context.getWorld().getChunk(context.getBlockPos()).getComponent(AffinityComponents.CHUNK_AETHUM);
         if (!component.isEffectActive(ChunkAethumComponent.INFERTILITY)) return;
 
         cir.setReturnValue(ActionResult.PASS);

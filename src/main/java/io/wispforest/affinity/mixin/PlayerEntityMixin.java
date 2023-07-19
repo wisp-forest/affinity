@@ -176,7 +176,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     public void preserveExperience(CallbackInfoReturnable<Integer> cir) {
         if (!AffinityEntityAddon.getData(this, LavaliereOfSafeKeepingItem.IS_EQUIPPED)) return;
 
-        var aethum = AffinityComponents.PLAYER_AETHUM.get(this);
+        var aethum = this.getComponent(AffinityComponents.PLAYER_AETHUM);
         int limit = (int) (.12 * aethum.getAethum() * aethum.getAethum() * 100);
 
         int levelExperience = ExperienceUtil.toPoints(this.experienceLevel);

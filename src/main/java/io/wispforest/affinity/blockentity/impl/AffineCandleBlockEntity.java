@@ -36,7 +36,7 @@ public class AffineCandleBlockEntity extends AethumNetworkMemberBlockEntity impl
         if (this.time % 80 != 0) return;
         if (flux <= 50) return;
 
-        final var component = AffinityComponents.CHUNK_AETHUM.get(this.world.getChunk(this.pos));
+        final var component = this.world.getChunk(this.pos).getComponent(AffinityComponents.CHUNK_AETHUM);
         if (component.getAethum() >= 99.9) return;
 
         component.addAethum(0.1);

@@ -29,7 +29,7 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
 
     @ModifyArgs(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V", ordinal = 0))
     private void injectAzaleaBowParticles(Args args) {
-        if (!AffinityComponents.ENTITY_FLAGS.get(this).hasFlag(EntityFlagComponent.SHOT_BY_AZALEA_BOW)) return;
+        if (!this.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.SHOT_BY_AZALEA_BOW)) return;
 
         this.getWorld().addParticle(ParticleTypes.FIREWORK, args.<Double>get(1), args.<Double>get(2), args.<Double>get(3), 0, 0, 0);
         args.set(0, new ColoredFallingDustParticleEffect(MathUtil.rgbToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb())));
@@ -39,13 +39,13 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
     private void setExtraDamage(Entity owner, CallbackInfo ci) {
         if (!(owner instanceof LivingEntity living)) return;
 
-        var damageComponent = AffinityComponents.EXTRA_ARROW_DAMAGE.get(this);
+        var damageComponent = this.getComponent(AffinityComponents.EXTRA_ARROW_DAMAGE);
         damageComponent.extraDamage = (int) living.getAttributeValue(AffinityEntityAttributes.EXTRA_ARROW_DAMAGE);
     }
 
     @ModifyVariable(method = "onEntityHit", at = @At(value = "STORE", ordinal = 0), ordinal = 0)
     private int applyExtraDamage(int damage) {
-        return damage + AffinityComponents.EXTRA_ARROW_DAMAGE.get(this).extraDamage;
+        return damage + this.getComponent(AffinityComponents.EXTRA_ARROW_DAMAGE).extraDamage;
     }
 
 }

@@ -37,7 +37,7 @@ public class MobSpawnerLogicMixin {
             zombie.setCanPickUpLoot(true);
         }
 
-        AffinityComponents.ENTITY_FLAGS.get(entity).setFlag(EntityFlagComponent.NO_DROPS);
+        entity.getComponent(AffinityComponents.ENTITY_FLAGS).setFlag(EntityFlagComponent.NO_DROPS);
     }
 
 }

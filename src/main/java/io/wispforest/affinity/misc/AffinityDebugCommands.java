@@ -91,8 +91,8 @@ public class AffinityDebugCommands {
     }
 
     private static int regenerateChunkAethum(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        AffinityComponents.CHUNK_AETHUM.get(context.getSource().getPlayer().getWorld()
-                .getChunk(BlockPosArgumentType.getBlockPos(context, "chunk"))).regenerate();
+        context.getSource().getPlayer().getWorld().getChunk(BlockPosArgumentType.getBlockPos(context, "chunk"))
+                .getComponent(AffinityComponents.CHUNK_AETHUM).regenerate();
 
         context.getSource().sendFeedback(() -> simpleFeedback("chunk aethum regenerated"), true);
 
@@ -104,7 +104,7 @@ public class AffinityDebugCommands {
         final var pos = BlockPosArgumentType.getBlockPos(context, "chunk");
         final var aethum = DoubleArgumentType.getDouble(context, "aethum");
 
-        AffinityComponents.CHUNK_AETHUM.get(player.getWorld().getChunk(pos)).setAethum(aethum);
+        player.getWorld().getChunk(pos).getComponent(AffinityComponents.CHUNK_AETHUM).setAethum(aethum);
         context.getSource().sendFeedback(() -> simpleFeedback("chunk aethum updated"), true);
 
         return (int) Math.round(aethum);
@@ -114,7 +114,7 @@ public class AffinityDebugCommands {
         final var player = context.getSource().getPlayer();
         final var pos = BlockPosArgumentType.getBlockPos(context, "chunk");
 
-        final double chunkAethum = AffinityComponents.CHUNK_AETHUM.get(player.getWorld().getChunk(pos)).getAethum();
+        final double chunkAethum = player.getWorld().getChunk(pos).getComponent(AffinityComponents.CHUNK_AETHUM).getAethum();
         context.getSource().sendFeedback(() -> valueFeedback("chunk aethum", chunkAethum), true);
 
         return (int) Math.round(chunkAethum);
@@ -123,7 +123,7 @@ public class AffinityDebugCommands {
     private static int getWorldAethum(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         final var pos = BlockPosArgumentType.getBlockPos(context, "position");
 
-        final double worldAethum = AffinityComponents.CHUNK_AETHUM.get(context.getSource().getWorld().getChunk(pos)).aethumAt(pos.getX(), pos.getZ());
+        final double worldAethum = context.getSource().getWorld().getChunk(pos).getComponent(AffinityComponents.CHUNK_AETHUM).aethumAt(pos.getX(), pos.getZ());
         context.getSource().sendFeedback(() -> valueFeedback("world aethum", worldAethum), true);
 
         return (int) Math.round(worldAethum);
@@ -173,7 +173,7 @@ public class AffinityDebugCommands {
     }
 
     private static int getPlayerAethum(CommandContext<ServerCommandSource> context) {
-        final double playerAethum = AffinityComponents.PLAYER_AETHUM.get(context.getSource().getPlayer()).getAethum();
+        final double playerAethum = context.getSource().getPlayer().getComponent(AffinityComponents.PLAYER_AETHUM).getAethum();
         context.getSource().sendFeedback(() -> valueFeedback("player aethum", playerAethum), true);
 
         return (int) Math.round(playerAethum);
@@ -181,7 +181,7 @@ public class AffinityDebugCommands {
 
     private static int setPlayerAethum(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         final var aethum = DoubleArgumentType.getDouble(context, "aethum");
-        AffinityComponents.PLAYER_AETHUM.get(EntityArgumentType.getPlayer(context, "player")).setAethum(aethum);
+        EntityArgumentType.getPlayer(context, "player").getComponent(AffinityComponents.PLAYER_AETHUM).setAethum(aethum);
 
         context.getSource().sendFeedback(() -> simpleFeedback("player aethum updated"), true);
 

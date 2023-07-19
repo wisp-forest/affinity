@@ -29,7 +29,7 @@ public class PlayerWeatherTrackerComponent implements TransientComponent, Server
 
     @Override
     public void serverTick() {
-        var chunkWeather = AffinityComponents.LOCAL_WEATHER.get(player.getWorld().getChunk(player.getBlockPos()));
+        var chunkWeather = player.getWorld().getChunk(player.getBlockPos()).getComponent(AffinityComponents.LOCAL_WEATHER);
 
         if (!this.hasTicked) {
             this.hasTicked = true;

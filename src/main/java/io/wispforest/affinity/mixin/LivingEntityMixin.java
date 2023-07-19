@@ -173,14 +173,14 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "dropLoot", at = @At("HEAD"), cancellable = true)
     private void disableLootIfNecessary(DamageSource source, boolean causedByPlayer, CallbackInfo ci) {
-        if (AffinityComponents.ENTITY_FLAGS.get(this).hasFlag(EntityFlagComponent.NO_DROPS)) {
+        if (this.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.NO_DROPS)) {
             ci.cancel();
         }
     }
 
     @Inject(method = "dropXp", at = @At("HEAD"), cancellable = true)
     private void disableXpIfNecessary(CallbackInfo ci) {
-        if (AffinityComponents.ENTITY_FLAGS.get(this).hasFlag(EntityFlagComponent.NO_DROPS)) {
+        if (this.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.NO_DROPS)) {
             ci.cancel();
         }
     }

@@ -107,7 +107,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
             AffinityCriteria.SACRIFICED_TO_RITUAL.trigger(serverPlayer);
         }
 
-        AffinityComponents.ENTITY_FLAGS.get(sacrifice).setFlag(EntityFlagComponent.NO_DROPS);
+        sacrifice.getComponent(AffinityComponents.ENTITY_FLAGS).setFlag(EntityFlagComponent.NO_DROPS);
         sacrifice.damage(DAMAGE_TYPE.source(this.world), Float.MAX_VALUE);
 
         return true;
@@ -167,7 +167,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
                 this.world.random.nextTriangular(0.2, 0.115),
                 this.world.random.nextTriangular(0.0, 0.115)
         );
-        AffinityComponents.ENTITY_FLAGS.get(item).setFlag(EntityFlagComponent.ITEM_GLOW);
+        item.getComponent(AffinityComponents.ENTITY_FLAGS).setFlag(EntityFlagComponent.ITEM_GLOW);
         AffinityComponents.ENTITY_FLAGS.sync(item);
         this.world.spawnEntity(item);
         AffinityParticleSystems.ARCANE_FADE_CRAFT.spawn(this.world, pos);

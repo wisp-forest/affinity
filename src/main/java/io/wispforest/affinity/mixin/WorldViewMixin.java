@@ -18,7 +18,7 @@ public interface WorldViewMixin {
 
             if (chunk instanceof EmptyChunk) return orig;
 
-            var component = AffinityComponents.LOCAL_WEATHER.get(chunk);
+            var component = chunk.getComponent(AffinityComponents.LOCAL_WEATHER);
 //
 //            if (component.getAmbientDarkness() != orig) {
 //                System.out.printf("%s != %d%n", component.getAmbientDarkness(), orig);

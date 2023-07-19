@@ -72,7 +72,7 @@ public class MixinHooks {
 
     public static void potionApplied(StatusEffectInstance effect, LivingEntity target, @Nullable NbtCompound data) {
         if (effect.getEffectType() == StatusEffects.GLOWING && data != null && data.has(GlowingPotion.COLOR_KEY)) {
-            AffinityComponents.GLOWING_COLOR.get(target).setColor(data.get(GlowingPotion.COLOR_KEY));
+            target.getComponent(AffinityComponents.GLOWING_COLOR).setColor(data.get(GlowingPotion.COLOR_KEY));
         }
 
         if (effect.getEffectType() instanceof AffinityStatusEffect affinityEffect) {

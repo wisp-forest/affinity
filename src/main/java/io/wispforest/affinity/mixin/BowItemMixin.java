@@ -55,7 +55,7 @@ public class BowItemMixin {
         if ((Object) this != AffinityItems.AZALEA_BOW) return arrow;
 
         arrow.setDamage(arrow.getDamage() / 1.5f);
-        AffinityComponents.ENTITY_FLAGS.get(arrow).setFlag(EntityFlagComponent.SHOT_BY_AZALEA_BOW);
+        arrow.getComponent(AffinityComponents.ENTITY_FLAGS).setFlag(EntityFlagComponent.SHOT_BY_AZALEA_BOW);
         return arrow;
     }
 
@@ -63,7 +63,7 @@ public class BowItemMixin {
     private void enforceAzaleaBowAethumCost(ItemStack stack, World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci) {
         if (((Object) this != AffinityItems.AZALEA_BOW) || !(user instanceof PlayerEntity player)) return;
 
-        var aethum = AffinityComponents.PLAYER_AETHUM.get(player);
+        var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
         if (!aethum.tryConsumeAethum(AzaleaBowItem.AETHUM_COST_PER_SHOT)) {
             ci.cancel();
         }

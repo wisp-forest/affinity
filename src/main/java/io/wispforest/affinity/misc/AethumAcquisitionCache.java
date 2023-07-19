@@ -37,7 +37,7 @@ public class AethumAcquisitionCache {
                     loadChunks ? ChunkStatus.EMPTY : ChunkStatus.FULL, loadChunks);
             if (chunk == null) continue;
 
-            final var component = AffinityComponents.CHUNK_AETHUM.get(chunk);
+            final var component = chunk.getComponent(AffinityComponents.CHUNK_AETHUM);
 
             this.chunkComponentCache[i] = component;
             this.adjustedChunkAethumCache[i] = component.adjustedAethum();

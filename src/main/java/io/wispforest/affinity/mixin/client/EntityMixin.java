@@ -12,7 +12,7 @@ public class EntityMixin {
 
     @Inject(method = "getTeamColorValue", at = @At("HEAD"), cancellable = true)
     private void injectGlowingColor(CallbackInfoReturnable<Integer> cir) {
-        var color = AffinityComponents.GLOWING_COLOR.get(this).color();
+        var color = ((Entity) (Object) this).getComponent(AffinityComponents.GLOWING_COLOR).color();
         if (color == null) return;
 
         cir.setReturnValue(color.getSignColor());

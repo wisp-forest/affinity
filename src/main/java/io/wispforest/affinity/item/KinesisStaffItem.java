@@ -150,7 +150,7 @@ public class KinesisStaffItem extends StaffItem {
         var targetEntity = player.getWorld().getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
         if (targetEntity == null) return;
 
-        var aethum = AffinityComponents.PLAYER_AETHUM.get(player);
+        var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
         if (!aethum.tryConsumeAethum(ENTITY_THROW_COST)) return;
 
         stack.delete(ACTIVE_TARGET_ENTITY);
@@ -162,7 +162,7 @@ public class KinesisStaffItem extends StaffItem {
     }
 
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
-        return stack.has(ACTIVE_TARGET_ENTITY) && AffinityComponents.PLAYER_AETHUM.get(player).getAethum() >= ENTITY_THROW_COST;
+        return stack.has(ACTIVE_TARGET_ENTITY) && player.getComponent(AffinityComponents.PLAYER_AETHUM).getAethum() >= ENTITY_THROW_COST;
     }
 
     public void writeExtraThrowData(ItemStack stack, PlayerEntity player, PacketByteBuf buffer) {}

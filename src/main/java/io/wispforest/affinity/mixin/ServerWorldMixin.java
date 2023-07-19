@@ -52,7 +52,7 @@ public abstract class ServerWorldMixin extends World {
     private BlockState cancelRandomTicksInDeadChunks(BlockState state, WorldChunk chunk, int randomTickSpeed) {
         if (!state.isIn(AFFINITY$NO_RANDOM_TICKS)) return state;
 
-        var component = AffinityComponents.CHUNK_AETHUM.get(chunk);
+        var component = chunk.getComponent(AffinityComponents.CHUNK_AETHUM);
         if (!component.isEffectActive(ChunkAethumComponent.INFERTILITY)) return state;
 
         return AFFINITY$MOCK_STATE;
@@ -86,7 +86,7 @@ public abstract class ServerWorldMixin extends World {
 
         if (chunk instanceof EmptyChunk) return pos;
 
-        var component = AffinityComponents.LOCAL_WEATHER.get(chunk);
+        var component = chunk.getComponent(AffinityComponents.LOCAL_WEATHER);
 
         if (component.hasMonolith()) {
             return new BlockPos(0, -255, 0);

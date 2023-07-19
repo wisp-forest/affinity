@@ -29,7 +29,7 @@ public class AethumProbeBlockEntity extends BlockEntity implements TickedBlockEn
     }
 
     private void updateRedstoneState() {
-        var aethum = AffinityComponents.CHUNK_AETHUM.get(this.world.getChunk(this.pos)).aethumAt(this.pos.getX(), this.pos.getZ());
+        var aethum = this.world.getChunk(this.pos).getComponent(AffinityComponents.CHUNK_AETHUM).aethumAt(this.pos.getX(), this.pos.getZ());
         var threshold = 90 - this.getCachedState().get(AethumProbeBlock.CRYSTALS) * 20;
 
         boolean shouldBePowered = aethum >= threshold;

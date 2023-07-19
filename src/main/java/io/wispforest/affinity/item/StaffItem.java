@@ -89,7 +89,7 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
     private TypedActionResult<ItemStack> handleItemUse(World world, PlayerEntity user, Hand hand, @Nullable BlockPos clickedBlock) {
         final var stack = user.getStackInHand(hand);
 
-        final var aethum = AffinityComponents.PLAYER_AETHUM.get(user);
+        final var aethum = user.getComponent(AffinityComponents.PLAYER_AETHUM);
         final var consumption = this.getAethumConsumption(stack);
 
         if (this.isContinuous(stack)) {
@@ -115,7 +115,7 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (!(user instanceof PlayerEntity player)) return;
 
-        final var aethum = AffinityComponents.PLAYER_AETHUM.get(player);
+        final var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
         if (!aethum.tryConsumeAethum(this.getAethumConsumption(stack))) {
             user.stopUsingItem();
             return;

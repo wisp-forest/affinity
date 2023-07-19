@@ -15,7 +15,7 @@ public class BreedTaskMixin {
 
     @Inject(method = "shouldRun(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/passive/AnimalEntity;)Z", at = @At("HEAD"), cancellable = true)
     private void cannotMateWhenTheWorldIsDying(ServerWorld serverWorld, AnimalEntity animal, CallbackInfoReturnable<Boolean> cir) {
-        var component = AffinityComponents.CHUNK_AETHUM.get(animal.getWorld().getChunk(animal.getBlockPos()));
+        var component = animal.getWorld().getChunk(animal.getBlockPos()).getComponent(AffinityComponents.CHUNK_AETHUM);
         if (!component.isEffectActive(ChunkAethumComponent.INFERTILITY)) return;
 
         cir.setReturnValue(false);

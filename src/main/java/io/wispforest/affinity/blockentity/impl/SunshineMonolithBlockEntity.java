@@ -50,7 +50,7 @@ public class SunshineMonolithBlockEntity extends AethumNetworkMemberBlockEntity 
 
         for (int x = blockChunkX - radius; x <= blockChunkX + radius; x++) {
             for (int z = blockChunkZ - radius; z <= blockChunkZ + radius; z++) {
-                AffinityComponents.LOCAL_WEATHER.get(world.getChunk(x, z)).addMonolith(this.pos);
+                world.getChunk(x, z).getComponent(AffinityComponents.LOCAL_WEATHER).addMonolith(this.pos);
             }
         }
     }
@@ -62,7 +62,7 @@ public class SunshineMonolithBlockEntity extends AethumNetworkMemberBlockEntity 
 
         for (int x = blockChunkX - radius; x <= blockChunkX + radius; x++) {
             for (int z = blockChunkZ - radius; z <= blockChunkZ + radius; z++) {
-                AffinityComponents.LOCAL_WEATHER.get(world.getChunk(x, z)).removeMonolith(this.pos);
+                world.getChunk(x, z).getComponent(AffinityComponents.LOCAL_WEATHER).removeMonolith(this.pos);
             }
         }
     }
