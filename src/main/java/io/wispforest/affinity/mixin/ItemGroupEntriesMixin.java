@@ -24,7 +24,7 @@ public class ItemGroupEntriesMixin {
 
     @Inject(method = "add", at = @At("HEAD"), cancellable = true)
     private void yeetAffinityEnchantments(ItemStack stack, ItemGroup.StackVisibility visibility, CallbackInfo ci) {
-        if (this.group == AffinityItemGroup.GROUP || this.group == ItemGroups.getSearchGroup()) return;
+        if (this.group == AffinityItemGroup.group() || this.group == ItemGroups.getSearchGroup()) return;
         if (!(stack.getItem() instanceof EnchantedBookItem)) return;
 
         for (var enchantment : EnchantmentHelper.get(stack).keySet()) {

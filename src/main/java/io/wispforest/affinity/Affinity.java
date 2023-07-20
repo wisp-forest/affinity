@@ -14,7 +14,6 @@ import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.Owo;
-import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.ModInitializer;
@@ -45,8 +44,6 @@ public class Affinity implements ModInitializer {
     public static final String MOD_ID = "affinity";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    public static final OwoItemGroup AFFINITY_GROUP = AffinityItemGroup.GROUP;
-
     public static final Color AETHUM_FLUX_COLOR = Color.ofRgb(0x6A67CE);
 
     public static final BlockApiLookup<AethumNetworkMember, Void> AETHUM_MEMBER = BlockApiLookup.get(id("aethum_member"), AethumNetworkMember.class, Void.class);
@@ -54,6 +51,8 @@ public class Affinity implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        AffinityItemGroup.register();
+
         FieldRegistrationHandler.register(AffinityBlocks.class, MOD_ID, true);
         FieldRegistrationHandler.register(AffinityItems.class, MOD_ID, false);
         FieldRegistrationHandler.register(AffinityEnchantments.class, MOD_ID, false);
@@ -85,7 +84,7 @@ public class Affinity implements ModInitializer {
         signBlocks = ImmutableSet.<Block>builder().addAll(signBlocks).add(AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN).build();
         ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$setBlocks(signBlocks);
 
-        AFFINITY_GROUP.initialize();
+        AffinityItemGroup.group().initialize();
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, builder, source) -> {
             if (!EntityType.WARDEN.getLootTableId().equals(id)) return;

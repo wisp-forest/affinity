@@ -15,6 +15,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 
+import java.util.Objects;
+
 public class AffinityItemGroup {
 
     public static final int MAIN = 0;
@@ -22,27 +24,32 @@ public class AffinityItemGroup {
     public static final int EQUIPMENT = 2;
     public static final int ENCHANTMENTS = 3;
 
-    public static final OwoItemGroup GROUP = OwoItemGroup.builder(Affinity.id("affinity"), () -> Icon.of(AffinityItems.INERT_WISP_MATTER)).initializer(group -> {
-        group.addTab(Icon.of(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE), "main", null, true);
-        group.addTab(Icon.of(AffinityBlocks.AZALEA_LOG), "nature", null, false);
-        group.addTab(Icon.of(AffinityItems.RESOUNDING_CHIME), "equipment", null, false);
-        group.addCustomTab(Icon.of(AffinityItems.RESPLENDENT_GEM), "enchantments", (context, entries) -> {
-            Registries.ENCHANTMENT.getIds().stream()
-                    .filter(id -> id.getNamespace().equals(Affinity.MOD_ID))
-                    .map(Registries.ENCHANTMENT::get)
-                    .filter(enchantment -> !(enchantment instanceof AbsoluteEnchantment))
-                    .map(enchantment -> new EnchantmentLevelEntry(enchantment, enchantment.getMaxLevel()))
-                    .map(EnchantedBookItem::forEnchantment)
-                    .forEach(entries::add);
-        }, false);
+    private static OwoItemGroup GROUP;
+    public static void register() {
+        GROUP = OwoItemGroup.builder(Affinity.id("affinity"), () -> Icon.of(AffinityItems.INERT_WISP_MATTER)).initializer(group -> {
+            group.addTab(Icon.of(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE), "main", null, true);
+            group.addTab(Icon.of(AffinityBlocks.AZALEA_LOG), "nature", null, false);
+            group.addTab(Icon.of(AffinityItems.RESOUNDING_CHIME), "equipment", null, false);
+            group.addCustomTab(Icon.of(AffinityItems.RESPLENDENT_GEM), "enchantments", (context, entries) -> {
+                Registries.ENCHANTMENT.getIds().stream()
+                        .filter(id -> id.getNamespace().equals(Affinity.MOD_ID))
+                        .map(Registries.ENCHANTMENT::get)
+                        .filter(enchantment -> !(enchantment instanceof AbsoluteEnchantment))
+                        .map(enchantment -> new EnchantmentLevelEntry(enchantment, enchantment.getMaxLevel()))
+                        .map(EnchantedBookItem::forEnchantment)
+                        .forEach(entries::add);
+            }, false);
 
-        group.addButton(ItemGroupButton.github(group, "https://github.com/wisp-forest/affinity"));
-    }).build();
+            group.addButton(ItemGroupButton.github(group, "https://github.com/wisp-forest/affinity"));
+        }).build();
 
-    static {
         ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, GROUP.id())).register(entries -> {
-            if (GROUP.getSelectedTabIndex() != 0) return;
+            if (!GROUP.isTabSelected(0)) return;
             entries.addBefore(AffinityItems.MILDLY_ATTUNED_AMETHYST_SHARD, Items.AMETHYST_SHARD);
         });
+    }
+
+    public static OwoItemGroup group() {
+        return Objects.requireNonNull(GROUP, "Affinity item group not initialized");
     }
 }

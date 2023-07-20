@@ -247,7 +247,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
                 : BlockItem::new;
 
         Registry.register(Registries.ITEM, new Identifier(namespace, identifier),
-                factory.apply(value, new OwoItemSettings().tab(tab).group(Affinity.AFFINITY_GROUP)));
+                factory.apply(value, new OwoItemSettings().tab(tab).group(AffinityItemGroup.group())));
     }
 
     @Retention(RetentionPolicy.RUNTIME)
