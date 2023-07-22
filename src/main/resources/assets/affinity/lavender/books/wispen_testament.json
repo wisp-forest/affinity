@@ -1,5 +1,5 @@
 {
   "display_completion": true,
   "dynamic_book_model": "affinity:wispen_testament",
-  "texture": "lavender:textures/gui/purple_book.png"
+  "texture": "affinity:textures/gui/wispen_testament.png"
 }
