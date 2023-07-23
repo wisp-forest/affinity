@@ -24,5 +24,10 @@
     [
       "tick"
     ]
-  ]
+  ],
+  "rewards": {
+    "loot": [
+      "affinity:rewards/wispen_testament"
+    ]
+  }
 }

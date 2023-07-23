@@ -41,6 +41,13 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
                 .criterion(hasItem(Items.COOKED_BEEF), conditionsFromItem(Items.COOKED_BEEF))
                 .offerTo(exporter, craftingRecipe(SATIATING_POTION));
 
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.TOOLS, WISPEN_TESTAMENT)
+                .input(Items.BOOK)
+                .input(Items.AMETHYST_SHARD)
+                .input(Items.GOLD_NUGGET)
+                .criterion(hasItem(Items.AMETHYST_SHARD), conditionsFromItem(Items.AMETHYST_SHARD))
+                .offerTo(exporter, craftingRecipe(WISPEN_TESTAMENT));
+
         CookingRecipeJsonBuilder.createBlasting(Ingredient.ofItems(UNFIRED_CLAY_CUP), RecipeCategory.MISC, CLAY_CUP, .1f, 200)
                 .criterion(hasItem(UNFIRED_CLAY_CUP), conditionsFromItem(UNFIRED_CLAY_CUP))
                 .offerTo(exporter);
