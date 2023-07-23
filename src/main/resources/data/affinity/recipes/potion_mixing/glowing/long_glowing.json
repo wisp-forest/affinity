@@ -1,8 +1,8 @@
 {
   "type": "affinity:potion_mixing",
   "output": "affinity:long_glowing",
-  "effect_inputs": [
-  ],
+  "strong": true,
+  "effect_inputs": [],
   "item_inputs": [
     {
       "item": "minecraft:glow_ink_sac"

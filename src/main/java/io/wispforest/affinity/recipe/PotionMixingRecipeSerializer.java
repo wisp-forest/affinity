@@ -27,6 +27,7 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
 
         final var effectInputsJson = JsonHelper.getArray(json, "effect_inputs");
         final var itemInputsJson = JsonHelper.getArray(json, "item_inputs");
+        boolean strong = JsonHelper.getBoolean(json, "strong", false);
 
         final var outputPotion = Registries.POTION.getOrEmpty(Identifier.tryParse(JsonHelper.getString(json, "output"))).orElseThrow(() -> new JsonSyntaxException("Invalid potion: " + JsonHelper.getString(json, "output")));
 
@@ -40,7 +41,7 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
             itemInputs.add(INGREDIENTE_SERIALIZER.fromJson(element));
         }
 
-        return new PotionMixingRecipe(id, itemInputs, inputEffects, outputPotion);
+        return new PotionMixingRecipe(id, itemInputs, inputEffects, outputPotion, strong);
     }
 
     @Override
@@ -49,8 +50,9 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
 
         final var effectInputs = buf.readCollection(value -> new ArrayList<>(), buf1 -> Registries.STATUS_EFFECT.get(buf1.readVarInt()));
         final var itemInputs = buf.readCollection(value -> new ArrayList<>(), INGREDIENTE_SERIALIZER::fromPacket);
+        boolean strong = buf.readBoolean();
 
-        return new PotionMixingRecipe(id, itemInputs, effectInputs, potion);
+        return new PotionMixingRecipe(id, itemInputs, effectInputs, potion, strong);
     }
 
     @Override
@@ -59,5 +61,6 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
 
         buf.writeCollection(recipe.getEffectInputs(), (buf1, effect) -> buf1.writeVarInt(Registries.STATUS_EFFECT.getRawId(effect)));
         buf.writeCollection(recipe.getItemInputs(), INGREDIENTE_SERIALIZER::writeToPacket);
+        buf.writeBoolean(recipe.strong);
     }
 }

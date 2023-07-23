@@ -1,6 +1,7 @@
 {
   "type": "affinity:potion_mixing",
   "output": "affinity:strong_levitation",
+  "strong": true,
   "effect_inputs": [
     "minecraft:slow_falling"
   ],

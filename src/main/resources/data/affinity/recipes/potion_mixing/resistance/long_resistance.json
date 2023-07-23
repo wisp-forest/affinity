@@ -1,6 +1,7 @@
 {
   "type": "affinity:potion_mixing",
   "output": "affinity:long_resistance",
+  "strong": true,
   "effect_inputs": [
     "minecraft:resistance",
     "minecraft:slowness",

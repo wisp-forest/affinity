@@ -6,5 +6,15 @@
     "minecraft:instant_damage",
     "minecraft:poison"
   ],
-  "item_inputs": []
+  "item_inputs": [
+    {
+      "item": "affinity:azalea_flowers"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ]
 }

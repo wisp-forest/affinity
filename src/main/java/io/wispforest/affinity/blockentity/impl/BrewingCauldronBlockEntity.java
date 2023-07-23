@@ -134,7 +134,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
             return;
         }
 
-        this.updateFlux(this.flux() - 20);
+        this.updateFlux(this.flux() - this.craftingFluxCost());
         if (this.processTick++ < 100) {
             if (this.processTick % 20 == 0 || this.processTick == 2) {
                 this.spawnCandleParticles();
@@ -142,8 +142,6 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
             return;
         }
-
-        if (this.cachedRecipe == null) return;
 
         world.playSound(null, this.pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1, 1);
         this.storedPotion = this.cachedRecipe.craftPotion(this.items);
@@ -169,8 +167,6 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     }
 
     private boolean updateAndTestCraftingPreconditions() {
-        if (this.flux() < 20) return false;
-
         this.cachedRecipe = PotionMixingRecipe.getMatching(this.world.getRecipeManager(), this.storedPotion, this.items).orElse(null);
         if (this.cachedRecipe == null) return false;
 
@@ -186,12 +182,17 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         }
 
         if (this.sporeBlossomPos == null) return false;
+        if (this.flux() < this.craftingFluxCost()) return false;
 
         if (this.processTick == 0) {
             this.processTick = 1;
         }
 
         return true;
+    }
+
+    private int craftingFluxCost() {
+        return this.cachedRecipe == null || !this.cachedRecipe.strong ? 20 : 40;
     }
 
     private int countCandles() {

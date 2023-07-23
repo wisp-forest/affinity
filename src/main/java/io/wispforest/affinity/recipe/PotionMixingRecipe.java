@@ -28,15 +28,16 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
     private final List<Ingrediente<Boolean>> itemInputs;
     private final List<StatusEffect> effectInputs;
     private final Potion output;
+    public final boolean strong;
 
     private final Identifier id;
 
-    public PotionMixingRecipe(Identifier id, List<Ingrediente<Boolean>> itemInputs, List<StatusEffect> effectInputs, Potion output) {
+    public PotionMixingRecipe(Identifier id, List<Ingrediente<Boolean>> itemInputs, List<StatusEffect> effectInputs, Potion output, boolean strong) {
         this.id = id;
-
         this.itemInputs = itemInputs;
         this.effectInputs = effectInputs;
         this.output = output;
+        this.strong = strong;
     }
 
     @Override
@@ -126,16 +127,16 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
     }
 
     public List<Ingrediente<Boolean>> getItemInputs() {
-        return itemInputs;
+        return this.itemInputs;
     }
 
     public List<StatusEffect> getEffectInputs() {
-        return effectInputs;
+        return this.effectInputs;
     }
 
     @Override
     public Identifier getId() {
-        return id;
+        return this.id;
     }
 
     @Override

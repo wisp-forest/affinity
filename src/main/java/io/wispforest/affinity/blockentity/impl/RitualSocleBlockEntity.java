@@ -47,22 +47,11 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
     }
 
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (player.isSneaking()) {
-            if (this.world.isClient) return ActionResult.SUCCESS;
+        if (this.world.isClient) return ActionResult.SUCCESS;
+        if (this.ritualLock.isActive()) return ActionResult.PASS;
 
-            final var core = this.closestCore(10);
-
-            if (core == null) return ActionResult.SUCCESS;
-            this.beginExtraction(core.getPos(), 40);
-
-            return ActionResult.SUCCESS;
-        } else {
-            if (this.world.isClient) return ActionResult.SUCCESS;
-            if (this.ritualLock.isActive()) return ActionResult.PASS;
-
-            return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
-                    () -> this.item, stack -> this.item = stack, this::markDirty);
-        }
+        return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
+                () -> this.item, stack -> this.item = stack, this::markDirty);
     }
 
     public void beginExtraction(BlockPos corePosition, int duration) {
@@ -92,13 +81,6 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
             this.item = ItemStack.EMPTY;
             this.markDirty();
         }
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    private PointOfInterest closestCore(int radius) {
-        return BlockFinder.findPoi(this.world, AffinityPoiTypes.RITUAL_CORE, this.pos, radius)
-                .min(Comparator.comparingDouble(value -> this.pos.getSquaredDistance(value.getPos())))
-                .orElse(null);
     }
 
     @Override

@@ -1,26 +1,21 @@
 {
   "type": "affinity:potion_mixing",
-  "output": "affinity:strong_wither",
+  "output": "affinity:long_life_leech",
   "strong": true,
   "effect_inputs": [
+    "minecraft:instant_health",
     "minecraft:instant_damage",
     "minecraft:poison"
   ],
   "item_inputs": [
     {
-      "item": "minecraft:wither_rose"
-    },
-    {
-      "item": "minecraft:wither_rose"
+      "item": "affinity:azalea_flowers"
     },
     {
       "item": "minecraft:blaze_powder"
     },
     {
-      "item": "minecraft:glowstone_dust"
-    },
-    {
-      "item": "minecraft:pufferfish"
+      "item": "minecraft:redstone"
     }
   ]
 }
