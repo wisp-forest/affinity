@@ -5,7 +5,10 @@
             <children>
                 <flow-layout direction="vertical">
                     <children>
-                        <texture texture="affinity:textures/gui/ritual_socle_composer.png" region-width="176" region-height="175"/>
+                        <texture texture="affinity:textures/gui/ritual_socle_composer.png" region-width="176" region-height="175">
+                            <z-index>-2</z-index>
+                        </texture>
+
                         <label>
                             <text translate="true">block.affinity.ritual_socle_composer</text>
                             <color>#404040</color>

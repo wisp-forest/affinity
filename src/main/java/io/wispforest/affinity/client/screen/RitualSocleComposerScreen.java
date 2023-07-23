@@ -17,7 +17,7 @@ public class RitualSocleComposerScreen extends BaseUIModelHandledScreen<FlowLayo
     private ButtonComponent mergeButton, splitButton;
 
     public RitualSocleComposerScreen(RitualSocleComposerScreenHandler handler, PlayerInventory inventory, Text title) {
-        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.asset(Affinity.id("ritual_socle_composer")));
+        super(handler, inventory, title, FlowLayout.class, Affinity.id("ritual_socle_composer"));
         this.backgroundHeight = 175;
 
         this.titleY = 69420;

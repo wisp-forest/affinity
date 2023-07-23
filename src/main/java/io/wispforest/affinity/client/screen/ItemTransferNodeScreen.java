@@ -33,8 +33,7 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
     private CheckboxComponent invertFilterToggle;
 
     public ItemTransferNodeScreen(ItemTransferNodeScreenHandler handler, PlayerInventory inventory, Text title) {
-//        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.file("../src/main/resources/assets/affinity/owo_ui/item_transfer_node.xml"));
-        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.asset(Affinity.id("item_transfer_node")));
+        super(handler, inventory, title, FlowLayout.class, Affinity.id("item_transfer_node"));
 
         this.backgroundHeight += 26;
 

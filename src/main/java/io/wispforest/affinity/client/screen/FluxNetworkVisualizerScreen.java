@@ -75,7 +75,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
     private float focusViewTime = 0;
 
     public FluxNetworkVisualizerScreen(AethumNetworkMemberBlockEntity initialMember) {
-        super(FlowLayout.class, DataSource.asset(Affinity.id("flux_network_visualizer")));
+        super(FlowLayout.class, Affinity.id("flux_network_visualizer"));
 
         var members = AethumNetworkMember.traverseNetwork(MinecraftClient.getInstance().world, initialMember.getPos(), (peer, isMultiblockChild) -> {
             if (!isMultiblockChild) {

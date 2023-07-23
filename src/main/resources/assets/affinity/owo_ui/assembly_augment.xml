@@ -5,7 +5,9 @@
             <children>
                 <flow-layout direction="vertical">
                     <children>
-                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="176" region-height="166"/>
+                        <texture texture="affinity:textures/gui/assembly_augment.png" region-width="176" region-height="166">
+                            <z-index>-2</z-index>
+                        </texture>
 
                         <label>
                             <text translate="true">gui.affinity.augmented_crafting_table.title</text>

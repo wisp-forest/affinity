@@ -6,7 +6,9 @@
             <children>
                 <flow-layout direction="vertical">
                     <children>
-                        <texture texture="affinity:textures/gui/ouija_board.png" region-width="176" region-height="168"/>
+                        <texture texture="affinity:textures/gui/ouija_board.png" region-width="176" region-height="168">
+                            <z-index>-2</z-index>
+                        </texture>
 
                         <template name="curse-button">
                             <position>60,16</position>

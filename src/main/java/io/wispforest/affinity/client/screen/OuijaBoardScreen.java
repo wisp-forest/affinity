@@ -36,8 +36,7 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
     private final ButtonComponent[] curseButtons = new ButtonComponent[3];
 
     public OuijaBoardScreen(OuijaBoardScreenHandler handler, PlayerInventory inventory, Text title) {
-//        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.file("../src/main/resources/assets/affinity/owo_ui/ouija_board.xml"));
-        super(handler, inventory, title, FlowLayout.class, BaseUIModelScreen.DataSource.asset(Affinity.id("ouija_board")));
+        super(handler, inventory, title, FlowLayout.class, Affinity.id("ouija_board"));
 
         this.backgroundHeight += 2;
         this.playerInventoryTitleY += 2;
