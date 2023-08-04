@@ -1,0 +1,26 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:long_banished",
+  "strong": true,
+  "effect_inputs": [
+    "minecraft:speed"
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "minecraft:echo_shard",
+      "copy_nbt": true,
+      "data": {
+        "Bound": true
+      }
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ]
+}

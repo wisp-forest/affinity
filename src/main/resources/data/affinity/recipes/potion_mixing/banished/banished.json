@@ -14,6 +14,12 @@
       "data": {
         "Bound": true
       }
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:sugar"
     }
   ]
 }

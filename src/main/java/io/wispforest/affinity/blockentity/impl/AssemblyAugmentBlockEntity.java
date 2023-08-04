@@ -262,7 +262,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
         @SuppressWarnings("ConstantConditions")
         public InputInventory(DefaultedList<ItemStack> backingList) {
             super(null, 3, 3);
-            ((CraftingInventoryAccessor) (Object) this).affinity$setStacks(backingList);
+            ((CraftingInventoryAccessor) (Object) this).affinity$setStacks(new DefaultedList<>(backingList.subList(0, backingList.size() - 1), ItemStack.EMPTY) {});
         }
     }
 }

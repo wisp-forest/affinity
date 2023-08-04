@@ -29,3 +29,10 @@ Once you have obtained {gold}at least one{} treetap alongside your augment, you 
 
 ... and then continue by installing all treetaps onto {gold}naturally grown trees{} in close vicinity of the augmented
 crafting table.
+
+;;;;;
+
+You may reference the following setup as an example of how to properly
+power the {light_purple}Assembly Augment{}:
+
+![](affinity:textures/gui/wispen_testament/assembly_augment_setup.png,fit)
