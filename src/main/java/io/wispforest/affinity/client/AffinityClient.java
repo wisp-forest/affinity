@@ -49,6 +49,7 @@ import net.minecraft.util.Formatting;
 public class AffinityClient implements ClientModInitializer {
 
     public static final SkyBlitProgram SKY_BLIT_PROGRAM = new SkyBlitProgram();
+    public static final DownsampleProgram DOWNSAMPLE_PROGRAM = new DownsampleProgram();
 
     @Override
     public void onInitializeClient() {

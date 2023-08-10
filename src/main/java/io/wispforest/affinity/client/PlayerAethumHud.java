@@ -5,14 +5,22 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.owo.ui.base.BaseComponent;
 import io.wispforest.owo.ui.core.*;
+import io.wispforest.owo.ui.event.WindowResizeCallback;
 import io.wispforest.owo.ui.hud.Hud;
 import io.wispforest.owo.ui.util.Delta;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.gl.SimpleFramebuffer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.Identifier;
 
 public class PlayerAethumHud {
 
     public static final Identifier COMPONENT_ID = Affinity.id("player_aethum");
+
+    private static Framebuffer hudFramebuffer = null;
 
     static void initialize() {
         Hud.add(COMPONENT_ID, () -> new BaseComponent() {
@@ -29,10 +37,10 @@ public class PlayerAethumHud {
 
             @Override
             public void draw(OwoUIDrawContext context, int mouseX, int mouseY, float partialTicks, float delta) {
-                var player = MinecraftClient.getInstance().player;
-                if (player == null) return;
+                var client = MinecraftClient.getInstance();
+                if (client.player == null) return;
 
-                var component = player.getComponent(AffinityComponents.PLAYER_AETHUM);
+                var component = client.player.getComponent(AffinityComponents.PLAYER_AETHUM);
                 var maxAethum = component.maxAethum();
 
                 if (this.lastMaxAethum != maxAethum) {
@@ -55,6 +63,10 @@ public class PlayerAethumHud {
                 this.warningColorWeight += Delta.compute(this.warningColorWeight, component.getAethum() < 3 ? 1 : 0, delta * .25f);
 
                 RenderSystem.setShaderColor(1, 1, 1, Math.min(this.alpha, 1));
+
+                hudFramebuffer().setClearColor(0, 0, 0, 0);
+                hudFramebuffer().clear(MinecraftClient.IS_SYSTEM_MAC);
+                hudFramebuffer().beginWrite(false);
 
                 context.drawRing(
                         this.x + this.width / 2,
@@ -79,16 +91,31 @@ public class PlayerAethumHud {
                 this.drawAethumRing(context, this.displayAethum / maxAethum, Affinity.AETHUM_FLUX_COLOR.interpolate(Color.ofRgb(0xce2424), this.warningColorWeight));
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
+                client.getFramebuffer().beginWrite(false);
+
+                AffinityClient.DOWNSAMPLE_PROGRAM.prepare(hudFramebuffer());
+                AffinityClient.DOWNSAMPLE_PROGRAM.use();
+
+                var transform = context.getMatrices().peek().getPositionMatrix();
+                var buffer = Tessellator.getInstance().getBuffer();
+
+                buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
+                buffer.vertex(transform, 0f, 0f, 0f).next();
+                buffer.vertex(transform, 0f, 1f * client.getWindow().getScaledHeight(), 0f).next();
+                buffer.vertex(transform, 1f * client.getWindow().getScaledWidth(), 1f * client.getWindow().getScaledHeight(), 0f).next();
+                buffer.vertex(transform, 1f * client.getWindow().getScaledWidth(), 0f, 0f).next();
+                Tessellator.getInstance().draw();
             }
 
             private void drawAethumRing(OwoUIDrawContext context, double progress, Color color) {
+                var colorHsv = color.hsv();
                 context.drawRing(
                         this.x + this.width / 2,
                         this.y + this.height / 2,
-                        360 - progress * 360 + 90, 360 + 90,
+                        360 - progress * 360 + 90, 360 + 90.05,
                         (int) Math.round(50 * progress),
                         3, 8,
-                        color, color
+                        color, Color.ofHsv(Math.min(colorHsv[0] + .065f, 1) , colorHsv[1] * 1.3f, colorHsv[2])
                 );
             }
 
@@ -102,6 +129,17 @@ public class PlayerAethumHud {
                 return 16;
             }
         }.positioning(Positioning.relative(50, 50)).margins(Insets.left(32)));
+    }
+
+    private static Framebuffer hudFramebuffer() {
+        if (hudFramebuffer == null) {
+            var client = MinecraftClient.getInstance();
+
+            hudFramebuffer = new SimpleFramebuffer(client.getFramebuffer().textureWidth, client.getFramebuffer().textureHeight, true, MinecraftClient.IS_SYSTEM_MAC);
+            WindowResizeCallback.EVENT.register((client_, window) -> hudFramebuffer.resize(window.getFramebufferWidth(), window.getFramebufferHeight(), MinecraftClient.IS_SYSTEM_MAC));
+        }
+
+        return hudFramebuffer;
     }
 
 }
