@@ -26,6 +26,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -36,7 +37,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BooleanSupplier;
-import java.util.function.Predicate;
 
 public class KinesisStaffItem extends StaffItem {
 
@@ -156,6 +156,7 @@ public class KinesisStaffItem extends StaffItem {
         stack.delete(ACTIVE_TARGET_ENTITY);
         player.stopUsingItem();
         player.getItemCooldownManager().set(stack.getItem(), 10);
+        player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
 
         targetEntity.addVelocity(player.getRotationVec(0).multiply(2.5f));
         if (targetEntity instanceof ProjectileEntity) AffinityEntityAddon.setData(targetEntity, PROJECTILE_THROWER, player.getUuid());
