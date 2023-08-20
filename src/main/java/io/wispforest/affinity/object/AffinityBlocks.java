@@ -63,6 +63,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block OUIJA_BOARD = new OuijaBoardBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block ITEM_TRANSFER_NODE = new ItemTransferNodeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block AETHUM_PROBE = new AethumProbeBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block FIELD_COHERENCE_MODULATOR = new FieldCoherenceModulatorBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block EMERALD_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK));
     @Tab(AffinityItemGroup.MAIN) public static final Block VOID_BEACON = new VoidBeaconBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
@@ -181,6 +182,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<VoidBeaconBlockEntity> VOID_BEACON =
                 make(VoidBeaconBlockEntity::new, AffinityBlocks.VOID_BEACON);
 
+        public static final BlockEntityType<FieldCoherenceModulatorBlockEntity> FIELD_COHERENCE_MODULATOR =
+                make(FieldCoherenceModulatorBlockEntity::new, AffinityBlocks.FIELD_COHERENCE_MODULATOR);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
@@ -201,6 +205,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(STAFF_PEDESTAL);
             Affinity.AETHUM_MEMBER.registerSelf(MATTER_HARVESTING_HEARTH);
             Affinity.AETHUM_MEMBER.registerSelf(VOID_BEACON);
+            Affinity.AETHUM_MEMBER.registerSelf(FIELD_COHERENCE_MODULATOR);
         }
 
         @Override

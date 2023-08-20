@@ -1,5 +1,6 @@
 package io.wispforest.affinity.blockentity.template;
 
+import io.wispforest.affinity.blockentity.impl.FieldCoherenceModulatorBlockEntity;
 import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
 import io.wispforest.affinity.client.particle.BezierPathEmitterParticle;
 import io.wispforest.affinity.client.render.CuboidRenderer;
@@ -33,6 +34,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.poi.PointOfInterest;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +44,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, InquirableOutlineProvider {
 
@@ -126,13 +129,15 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         if (setup.isEmpty()) return ActionResult.PASS;
 
         if (!this.onRitualStart(setup)) return ActionResult.PASS;
-        if (setup.duration() < 0)
+        if (setup.duration() < 0) {
             throw new IllegalStateException("No ritual length was configured. If you're a player, report this issue");
+        }
 
         this.cachedSetup = setup;
         Collections.shuffle(this.cachedSetup.socles, ThreadLocalRandom.current());
 
         this.cachedSetup.forEachSocle(world, socle -> socle.ritualLock.acquire(this));
+        this.cachedSetup.forEachModulator(world, modulator -> modulator.updateFlux(modulator.flux() - 32000));
 
         if (this.cachedSetup.stability / 100d < this.world.random.nextDouble()) {
             this.ritualFailureTick = 20 + this.world.random.nextInt(this.cachedSetup.duration() - 20);
@@ -282,24 +287,36 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         stability += (100 - stability) * 0.05 * world.getEntitiesByClass(WiseWispEntity.class, new Box(pos).expand(5, 3, 5), Entity::isAlive).size();
 
+        var modulators = BlockFinder.findPoi(world, AffinityPoiTypes.FIELD_COHERENCE_MODULATOR, pos, 6)
+                .map(PointOfInterest::getPos)
+                .filter(modulatorPos -> {
+                    if (modulatorPos.getY() - pos.getY() != 1) return false;
+                    if (!(world.getBlockEntity(modulatorPos) instanceof FieldCoherenceModulatorBlockEntity modulator)) return false;
+                    return modulator.flux() >= 32000;
+                }).toList();
+
+        stability = Math.min(100, stability + 5 * modulators.size());
+
         if (world.getBlockState(pos.down()).isOf(AffinityBlocks.INVERSION_STONE)) {
             stability = 100 - stability;
         }
 
-        return new RitualSetup(MathHelper.clamp(stability, 0, 100), socles);
+        return new RitualSetup(MathHelper.clamp(stability, 0, 100), socles, modulators);
     }
 
     public static final class RitualSetup {
         public final double stability;
         public final List<RitualSocleEntry> socles;
+        public final List<BlockPos> modulators;
 
         private int duration = -1;
         private int durationPerSocle = -1;
         private int socleDelay = -1;
 
-        public RitualSetup(double stability, List<RitualSocleEntry> socles) {
+        public RitualSetup(double stability, List<RitualSocleEntry> socles, List<BlockPos> modulators) {
             this.stability = stability;
             this.socles = socles;
+            this.modulators = modulators;
         }
 
         public boolean isEmpty() {
@@ -330,11 +347,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         }
 
         public List<RitualSocleBlockEntity> resolveSocles(World world) {
-            var socleEntities = new ArrayList<RitualSocleBlockEntity>(this.socles.size());
-            for (var entry : this.socles) {
-                socleEntities.add((RitualSocleBlockEntity) world.getBlockEntity(entry.position()));
-            }
-            return socleEntities;
+            return this.socles.stream()
+                    .map(RitualSocleEntry::position)
+                    .map(world::getBlockEntity)
+                    .filter(RitualSocleBlockEntity.class::isInstance)
+                    .map(RitualSocleBlockEntity.class::cast)
+                    .toList();
         }
 
         public RitualSocleBlockEntity resolveSocle(World world, int index) {
@@ -342,14 +360,24 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
             return entity instanceof RitualSocleBlockEntity socle ? socle : null;
         }
 
+        public List<FieldCoherenceModulatorBlockEntity> resolveModulators(World world) {
+            return this.modulators.stream()
+                    .map(world::getBlockEntity)
+                    .filter(FieldCoherenceModulatorBlockEntity.class::isInstance)
+                    .map(FieldCoherenceModulatorBlockEntity.class::cast)
+                    .toList();
+        }
+
         public void forEachSocle(World world, Consumer<RitualSocleBlockEntity> action) {
             for (var socle : this.resolveSocles(world)) action.accept(socle);
         }
 
+        public void forEachModulator(World world, Consumer<FieldCoherenceModulatorBlockEntity> action) {
+            for (var socle : this.resolveModulators(world)) action.accept(socle);
+        }
     }
 
-    public record RitualSocleEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {
-    }
+    public record RitualSocleEntry(BlockPos position, double meanDistance, double minDistance, double coreDistance) {}
 
     static {
         AffinityNetwork.CHANNEL.registerClientbound(RemoveBezierEmitterParticlesPacket.class, (message, access) -> {
@@ -365,8 +393,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         }, AffinityBlocks.Entities.ASP_RITE_CORE, AffinityBlocks.Entities.SPIRIT_INTEGRATION_APPARATUS);
     }
 
-    public record RemoveBezierEmitterParticlesPacket(List<BlockPos> soclePositions, Vec3d offset) {
-    }
+    public record RemoveBezierEmitterParticlesPacket(List<BlockPos> soclePositions, Vec3d offset) {}
 
     public static class SocleInventory implements ReadOnlyInventory.ListBacked {
 

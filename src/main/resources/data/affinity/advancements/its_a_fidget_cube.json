@@ -1,0 +1,56 @@
+{
+  "parent": "affinity:i_still_use_paint",
+  "display": {
+    "icon": {
+      "item": "affinity:field_coherence_modulator"
+    },
+    "title": {
+      "translate": "advancement.affinity.its_a_fidget_cube.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.its_a_fidget_cube.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "triggerfinger": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "player",
+                "stats": [
+                  {
+                    "type": "minecraft:custom",
+                    "stat": "affinity:interact_with_field_coherence_modulator",
+                    "value": {
+                      "min": 500
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "affinity:field_coherence_modulator"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "triggerfinger"
+    ]
+  ]
+}

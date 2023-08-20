@@ -31,6 +31,8 @@
   "category.affinity.ornament_carving": "Ornament Carving",
   "category.affinity.socle_composing": "Socle Composing",
 
+  "stat.affinity.interact_with_field_coherence_modulator": "Interactions with Field Modulator",
+
   "block.affinity.brewing_cauldron": "Brewing Cauldron",
   "block.affinity.sundial": "Sundial",
   "block.affinity.copper_plated_aethum_flux_node": "Copper Plated Aethum Flux Node",
@@ -68,6 +70,7 @@
   "block.affinity.item_transfer_node": "Item Transfer Node",
   "block.affinity.aethum_probe": "Aethum Probe",
   "block.affinity.void_beacon": "Void Beacon",
+  "block.affinity.field_coherence_modulator": "Field Coherence Modulator",
   "block.affinity.infused_stone": "Infused Stone",
   "block.affinity.matter_harvesting_hearth": "Matter Harvesting Hearth",
 
@@ -374,6 +377,8 @@
   "advancement.affinity.intermix_chamber.description": "Infuse a Brewing Cauldron",
   "advancement.affinity.you_cheated.title": "You Cheated",
   "advancement.affinity.you_cheated.description": "Obtain a creative-only item",
+  "advancement.affinity.its_a_fidget_cube.title": "It's a Fidget Cube",
+  "advancement.affinity.its_a_fidget_cube.description": "I'm sure that won't cause RSI",
   "advancement.affinity.a_severe_and_continuous_lapse_in_your_judgement.title": "A Severe and Continuous Lapse in your Judgement",
   "advancement.affinity.a_severe_and_continuous_lapse_in_your_judgement.description": "Put on a helmet enchanted with both Curse of Illiteracy and Curse of Binding",
   "advancement.affinity.living_is_wise_if_you_never_ever_think_twice.title": "Living Is Wise, If You Never Ever Think Twice",

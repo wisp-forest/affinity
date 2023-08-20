@@ -10,7 +10,7 @@
 }
 ```
 
-Getting hold of some {gold}Ametyhst{} is of essential necessity before you can start constructing your {light_purple}Assembly 
+Getting hold of some {gold}Amethyst{} is of essential necessity before you can start constructing your {light_purple}Assembly 
 Augment{} and associated {light_purple}Arcane Treetaps{}.
 
 <recipe;affinity:crafting/arcane_treetap>

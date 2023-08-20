@@ -207,6 +207,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ASSEMBLY_AUGMENT, AssemblyAugmentBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.AFFINE_INFUSER, AffineInfuserBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.VOID_BEACON, VoidBeaconBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.FIELD_COHERENCE_MODULATOR, FieldCoherenceModulatorBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {
