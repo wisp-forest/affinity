@@ -8,7 +8,7 @@ Welcome to {dark_purple}Affinity{}
 
 
 Your journey will begin upon uncovering an {gold}Amethyst Geode{} which
-will allow you to construct and empower the [Assembly Augment](^affinity:assembly_augment)
+you will use to construct and empower the [Assembly Augment](^affinity:assembly_augment)
 
 
 If you want to chat, join the

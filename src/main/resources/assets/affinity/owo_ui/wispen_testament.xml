@@ -104,5 +104,12 @@
                 </sizing>
             </flow-layout>
         </template>
+
+        <template name="entry-end-marker">
+            <texture texture="{{book-texture}}" texture-width="512" texture-height="256"
+                     u="55" v="247" region-width="109" region-height="7">
+                <blend>true</blend>
+            </texture>
+        </template>
     </templates>
 </owo-ui>
