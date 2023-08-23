@@ -12,7 +12,7 @@ public class StyleMixin {
 
     @Inject(method = "isObfuscated", at = @At("HEAD"), cancellable = true)
     private void weObfuscaten(CallbackInfoReturnable<Boolean> cir) {
-        if (!MixinHooks.TEXT_OBFUSCATION) return;
+        if (!MixinHooks.textObfuscation) return;
         cir.setReturnValue(true);
     }
 

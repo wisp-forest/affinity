@@ -47,7 +47,7 @@ public class MinecraftClientMixin {
 
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
     private void onDisconnect(Screen screen, CallbackInfo ci) {
-        MixinHooks.TEXT_OBFUSCATION = false;
+        MixinHooks.textObfuscation = false;
     }
 
     @Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;isPressed()Z", ordinal = 2))

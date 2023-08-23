@@ -13,9 +13,9 @@ public class WorldChunkMixin {
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(method = "setBlockState", at = @At(value = "STORE", ordinal = 1))
     private BlockEntity insertQueueBlockEntity(BlockEntity blockEntity) {
-        if (MixinHooks.QUEUED_BLOCKENTITY != null) {
-            var queuedBlockentity = MixinHooks.QUEUED_BLOCKENTITY;
-            MixinHooks.QUEUED_BLOCKENTITY = null;
+        if (MixinHooks.queuedBlockEntity != null) {
+            var queuedBlockentity = MixinHooks.queuedBlockEntity;
+            MixinHooks.queuedBlockEntity = null;
 
             return queuedBlockentity;
         } else {

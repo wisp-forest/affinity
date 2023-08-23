@@ -32,12 +32,12 @@ public abstract class ItemRendererMixin {
             )
     )
     private void callPostRenderEvent(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
-        var item = MixinHooks.RENDER_ITEM != null && MixinHooks.RENDER_ITEM.present()
-                ? MixinHooks.RENDER_ITEM.get()
+        var item = MixinHooks.renderItem != null && MixinHooks.renderItem.present()
+                ? MixinHooks.renderItem.get()
                 : null;
 
         PostItemRenderCallback.EVENT.invoker().postRender(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model, item);
 
-        MixinHooks.RENDER_ITEM = null;
+        MixinHooks.renderItem = null;
     }
 }

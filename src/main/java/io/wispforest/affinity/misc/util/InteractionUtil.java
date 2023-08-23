@@ -22,7 +22,7 @@ public class InteractionUtil {
     public static EntityHitResult raycastEntities(Entity entity, double reach, double margin, Predicate<Entity> predicate) {
         var maxReach = entity.getRotationVec(0).multiply(reach);
 
-        MixinHooks.EXTRA_TARGETING_MARGIN = margin;
+        MixinHooks.extraTargetingMargin = margin;
         var entityTarget = ProjectileUtil.raycast(
                 entity,
                 entity.getEyePos(),
@@ -34,7 +34,7 @@ public class InteractionUtil {
                 },
                 reach * reach
         );
-        MixinHooks.EXTRA_TARGETING_MARGIN = 0;
+        MixinHooks.extraTargetingMargin = 0;
 
         return entityTarget;
     }

@@ -173,14 +173,14 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
                 LinkRenderer.reset();
 
-                MixinHooks.FORCE_BLOCK_ENTITY_RENDERING = true;
+                MixinHooks.forceBlockEntityRendering = true;
                 this.mesh.renderInfo().blockEntities().forEach((blockPos, entity) -> {
                     matrices.push();
                     matrices.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                     this.client.getBlockEntityRenderDispatcher().render(entity, 0, matrices, this.client.getBufferBuilders().getEntityVertexConsumers());
                     matrices.pop();
                 });
-                MixinHooks.FORCE_BLOCK_ENTITY_RENDERING = false;
+                MixinHooks.forceBlockEntityRendering = false;
 
                 matrices.push();
                 matrices.translate(-mesh.startPos().getX(), -mesh.startPos().getY(),  -mesh.startPos().getZ());

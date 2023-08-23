@@ -13,8 +13,8 @@ public abstract class CraftingScreenHandlerMixin {
 
     @ModifyArg(method = "<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/screen/ScreenHandlerContext;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/AbstractRecipeScreenHandler;<init>(Lnet/minecraft/screen/ScreenHandlerType;I)V"), index = 0)
     private static ScreenHandlerType<?> injectAugmentType(ScreenHandlerType<?> in) {
-        if (!MixinHooks.INJECT_ASSEMBLY_AUGMENT_SCREEN) return in;
-        MixinHooks.INJECT_ASSEMBLY_AUGMENT_SCREEN = false;
+        if (!MixinHooks.injectAssemblyAugmentScreen) return in;
+        MixinHooks.injectAssemblyAugmentScreen = false;
 
         return AffinityScreenHandlerTypes.ASSEMBLY_AUGMENT;
     }

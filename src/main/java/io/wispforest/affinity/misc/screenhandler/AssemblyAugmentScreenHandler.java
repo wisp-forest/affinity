@@ -31,12 +31,12 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
     private CraftingRecipe autocraftingRecipe;
 
     public static AssemblyAugmentScreenHandler client(int syncId, PlayerInventory inventory) {
-        MixinHooks.INJECT_ASSEMBLY_AUGMENT_SCREEN = true;
+        MixinHooks.injectAssemblyAugmentScreen = true;
         return new AssemblyAugmentScreenHandler(syncId, inventory, null);
     }
 
     public static AssemblyAugmentScreenHandler server(int syncId, PlayerInventory inventory, AssemblyAugmentBlockEntity augment) {
-        MixinHooks.INJECT_ASSEMBLY_AUGMENT_SCREEN = true;
+        MixinHooks.injectAssemblyAugmentScreen = true;
         return new AssemblyAugmentScreenHandler(syncId, inventory, augment);
     }
 

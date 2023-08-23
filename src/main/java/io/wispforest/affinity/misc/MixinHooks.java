@@ -29,12 +29,12 @@ public class MixinHooks {
 
     private static final Identifier IMPENDING_DOOM_ID = Affinity.id("impending_doom");
 
-    public static boolean TEXT_OBFUSCATION = false;
-    public static boolean INJECT_ASSEMBLY_AUGMENT_SCREEN = false;
-    public static boolean FORCE_BLOCK_ENTITY_RENDERING = false;
-    public static double EXTRA_TARGETING_MARGIN = 0;
-    public static @Nullable BlockEntity QUEUED_BLOCKENTITY = null;
-    public static @Nullable EntityReference<ItemEntity> RENDER_ITEM = null;
+    public static boolean textObfuscation = false;
+    public static boolean injectAssemblyAugmentScreen = false;
+    public static boolean forceBlockEntityRendering = false;
+    public static double extraTargetingMargin = 0;
+    public static @Nullable BlockEntity queuedBlockEntity = null;
+    public static @Nullable EntityReference<ItemEntity> renderItem = null;
 
     public static final DamageTypeKey THREW_DOOM_POTION_DAMAGE = new DamageTypeKey(Affinity.id("threw_doom_potion"), DamageTypeKey.Attribution.NEVER_ATTRIBUTE);
 

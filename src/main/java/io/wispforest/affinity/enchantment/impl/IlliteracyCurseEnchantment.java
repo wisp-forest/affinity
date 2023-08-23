@@ -29,7 +29,7 @@ public class IlliteracyCurseEnchantment extends CurseEnchantment implements Ench
 
     static {
         AffinityNetwork.CHANNEL.registerClientbound(IlliteracyPacket.class, (message, access) -> {
-            MixinHooks.TEXT_OBFUSCATION = message.illiterate;
+            MixinHooks.textObfuscation = message.illiterate;
         });
     }
 

@@ -283,7 +283,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
                             matrices.translate(-.5 - mesh.dimensions().getXLength() / 2, 0, -.5 - mesh.dimensions().getZLength() / 2);
 
                             if (Affinity.CONFIG.renderBlockEntitiesInStereopticonSectionImprints()) {
-                                MixinHooks.FORCE_BLOCK_ENTITY_RENDERING = true;
+                                MixinHooks.forceBlockEntityRendering = true;
                                 mesh.renderInfo().blockEntities().forEach((blockPos, entity) -> {
                                     if (entity instanceof HolographicStereopticonBlockEntity) return;
 
@@ -292,7 +292,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
                                     client.getBlockEntityRenderDispatcher().render(entity, 0, matrices, vertexConsumers);
                                     matrices.pop();
                                 });
-                                MixinHooks.FORCE_BLOCK_ENTITY_RENDERING = false;
+                                MixinHooks.forceBlockEntityRendering = false;
                             }
 
                             if (Affinity.CONFIG.renderEntitiesInStereopticonSectionImprints()) {
