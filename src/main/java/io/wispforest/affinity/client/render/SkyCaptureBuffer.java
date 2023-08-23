@@ -4,6 +4,8 @@ import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.wispforest.affinity.client.AffinityClient;
+import io.wispforest.affinity.misc.quack.AffinityFramebufferExtension;
 import io.wispforest.owo.ui.event.WindowResizeCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
@@ -75,6 +77,7 @@ public class SkyCaptureBuffer extends RenderLayer {
         MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
+        AffinityClient.SKY_BLIT_PROGRAM.setupSamplers(skyStencil.getDepthAttachment());
         skyStencil.draw(skyStencil.textureWidth, skyStencil.textureHeight, false);
         RenderSystem.disableBlend();
     }
@@ -105,6 +108,7 @@ public class SkyCaptureBuffer extends RenderLayer {
 
         public StencilFramebuffer(int width, int height) {
             super(width, height, true, MinecraftClient.IS_SYSTEM_MAC);
+            ((AffinityFramebufferExtension) this).affinity$setBlitProgram(AffinityClient.SKY_BLIT_PROGRAM::program);
         }
 
         @Override

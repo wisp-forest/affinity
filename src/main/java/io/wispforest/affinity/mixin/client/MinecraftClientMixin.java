@@ -2,6 +2,7 @@ package io.wispforest.affinity.mixin.client;
 
 import io.wispforest.affinity.block.template.AttackInteractionReceiver;
 import io.wispforest.affinity.item.KinesisStaffItem;
+import io.wispforest.affinity.misc.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -22,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
@@ -80,6 +83,15 @@ public class MinecraftClientMixin {
 
         this.options.attackKey.setPressed(false);
         cir.setReturnValue(true);
+    }
+
+    @Inject(method = "doItemUse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;crosshairTarget:Lnet/minecraft/util/hit/HitResult;", ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    private void invokeDoItemUseCallback(CallbackInfo ci, Hand[] var1, int var2, int var3, Hand hand, ItemStack itemStack) {
+        var result = ClientDoItemUseCallback.EVENT.invoker().doItemUse(this.player, hand);
+        if (result.isAccepted()) {
+            if (result.shouldSwingHand()) this.player.swingHand(hand);
+            ci.cancel();
+        }
     }
 
 }

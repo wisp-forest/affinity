@@ -87,6 +87,33 @@
     " cores"
   ],
 
+  "block.affinity.holographic_stereopticon": "Holographic Stereopticon",
+  "block.affinity.holographic_stereopticon.imprint_block_hint": [
+    {"text": "Sneak-use on", "color": "gray"},
+    {"text": " block ", "color": "blue"},
+    "to imprint"
+  ],
+  "block.affinity.holographic_stereopticon.imprint_item_hint": [
+    {"text": "Right-click onto", "color": "gray"},
+    {"text": " item ", "color": "blue"},
+    "to imprint"
+  ],
+  "block.affinity.holographic_stereopticon.imprint_entity_hint": [
+    {"text": "Sneak-use on", "color": "gray"},
+    {"text": " entity ", "color": "blue"},
+    "to imprint"
+  ],
+  "block.affinity.holographic_stereopticon.imprint_section_hint": [
+    {"text": "Sneak-use to imprint", "color": "gray"},
+    {"text": " world section ", "color": "blue"}
+  ],
+  "block.affinity.holographic_stereopticon.cycle_imprint_kind_hint": {"text": "Right-click to cycle imprint kind", "color": "gray"},
+  "block.affinity.holographic_stereopticon.imprinted.section_at": ["Section at ", {"index": 0}],
+  "block.affinity.holographic_stereopticon.imprinted": [
+    {"text": "Imprinted: ", "color": "gray"},
+    {"index": 0, "color": "dark_gray"}
+  ],
+
   "block.affinity.azalea_planks": "Azalea Planks",
   "block.affinity.azalea_log": "Azalea Log",
   "block.affinity.stripped_azalea_log": "Stripped Azalea Log",
@@ -400,6 +427,23 @@
   "advancement.affinity.when_the_world_is_calling_you.description": "Sacrifice yourself to a ritual",
   "advancement.affinity.gamedesign.title": "Gamedesign!",
   "advancement.affinity.gamedesign.description": "64 nuggets in a block",
+
+  "text.config.affinity.title": [
+    "",
+    {"text": "[", "color": "gray"},
+    {"text":"A","color":"#0096ff"},
+    {"text":"f","color":"#009fff"},
+    {"text":"f","color":"#00a8ff"},
+    {"text":"i","color":"#00b1ff"},
+    {"text":"n","color":"#00bbff"},
+    {"text":"i","color":"#00c4ff"},
+    {"text":"t","color":"#00cdff"},
+    {"text":"y","color":"#00d7ff"},
+    {"text": "]", "color": "gray"},
+    " Configuration"
+  ],
+  "text.config.affinity.option.renderEntitiesInStereopticonSectionImprints": "Show entities",
+  "text.config.affinity.option.renderBlockEntitiesInStereopticonSectionImprints": "Show block entities",
 
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.dripping.desc": "Got that drip",

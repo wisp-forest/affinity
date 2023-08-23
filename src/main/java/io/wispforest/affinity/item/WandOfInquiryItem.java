@@ -117,7 +117,7 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
     }
 
     @Override
-    public boolean shouldHandleInteraction(World world, BlockPos pos, BlockState state) {
+    public boolean shouldHandleInteraction(ItemStack stack, World world, BlockPos pos, BlockState state) {
         return Affinity.AETHUM_MEMBER.find(world, pos, null) != null;
     }
 

@@ -12,9 +12,12 @@ public class SkyBlitProgram extends GlProgram {
         super(Affinity.id("blit_sky"), VertexFormats.BLIT_SCREEN);
     }
 
-    public ShaderProgram setupAndGet() {
+    public void setupSamplers(int secondaryDepthSampler) {
         this.backingProgram.addSampler("MainDepthSampler", MinecraftClient.getInstance().getFramebuffer().getDepthAttachment());
-        this.backingProgram.addSampler("SkyDepthSampler", SkyCaptureBuffer.skyStencil.getDepthAttachment());
+        this.backingProgram.addSampler("SkyDepthSampler", secondaryDepthSampler);
+    }
+
+    public ShaderProgram program() {
         return this.backingProgram;
     }
 

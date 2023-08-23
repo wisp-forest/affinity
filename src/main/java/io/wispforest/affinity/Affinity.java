@@ -43,6 +43,7 @@ public class Affinity implements ModInitializer {
 
     public static final String MOD_ID = "affinity";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static final io.wispforest.affinity.AffinityConfig CONFIG = io.wispforest.affinity.AffinityConfig.createAndLoad();
 
     public static final Color AETHUM_FLUX_COLOR = Color.ofRgb(0x6A67CE);
 

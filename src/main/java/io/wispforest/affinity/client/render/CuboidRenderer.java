@@ -75,6 +75,7 @@ public class CuboidRenderer {
                 currentCuboid.targetCompleteness = 1f;
             } else {
                 cuboid.prepare(owner);
+                cuboid.completeness = currentCuboid.completeness;
                 CUBOIDS.put(owner, cuboid);
             }
         } else {
@@ -234,13 +235,20 @@ public class CuboidRenderer {
         }
 
         private void prepare(BlockPos owner) {
-            this.minX = owner.getX() + this.from.getX();
-            this.minY = owner.getY() + this.from.getY();
-            this.minZ = owner.getZ() + this.from.getZ();
+            var minX = owner.getX() + this.from.getX();
+            var minY = owner.getY() + this.from.getY();
+            var minZ = owner.getZ() + this.from.getZ();
 
-            this.maxX = owner.getX() + this.to.getX();
-            this.maxY = owner.getY() + this.to.getY();
-            this.maxZ = owner.getZ() + this.to.getZ();
+            var maxX = owner.getX() + this.to.getX();
+            var maxY = owner.getY() + this.to.getY();
+            var maxZ = owner.getZ() + this.to.getZ();
+
+            this.minX = Math.min(minX, maxX);
+            this.minY = Math.min(minY, maxY);
+            this.minZ = Math.min(minZ, maxZ);
+            this.maxX = Math.max(minX, maxX);
+            this.maxY = Math.max(minY, maxY);
+            this.maxZ = Math.max(minZ, maxZ);
         }
 
         private boolean matches(Cuboid other) {

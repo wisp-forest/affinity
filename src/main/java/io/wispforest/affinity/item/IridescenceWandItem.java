@@ -61,7 +61,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     }
 
     @Override
-    public boolean shouldHandleInteraction(World world, BlockPos pos, BlockState state) {
+    public boolean shouldHandleInteraction(ItemStack stack, World world, BlockPos pos, BlockState state) {
         return world.getBlockEntity(pos) instanceof LinkableBlockEntity;
     }
 

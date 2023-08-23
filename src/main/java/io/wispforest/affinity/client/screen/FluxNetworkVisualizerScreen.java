@@ -1,6 +1,5 @@
 package io.wispforest.affinity.client.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.systems.VertexSorter;
 import io.wispforest.affinity.Affinity;
@@ -9,22 +8,21 @@ import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
+import io.wispforest.affinity.client.render.PostEffectBuffer;
 import io.wispforest.affinity.client.render.blockentity.LinkRenderer;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.mixin.client.CameraInvoker;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Easing;
-import io.wispforest.owo.ui.event.WindowResizeCallback;
 import io.wispforest.owo.ui.util.Delta;
 import io.wispforest.worldmesher.WorldMesh;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.world.ClientWorld;
@@ -42,9 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL30C;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,7 +49,7 @@ import java.util.Set;
 
 public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
-    private static Framebuffer visualizerFramebuffer = null;
+    private static final PostEffectBuffer visualizerBuffer = new PostEffectBuffer();
 
     private final WorldMesh mesh;
     private final BlockRenderView world;
@@ -169,19 +165,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             //noinspection deprecation
             RenderSystem.runAsFancy(() -> {
-                int prevFramebuffer = GlStateManager.getBoundFramebuffer();
-                visualizerFramebuffer().clear(MinecraftClient.IS_SYSTEM_MAC);
-
-                GlStateManager._glBindFramebuffer(GL30C.GL_READ_FRAMEBUFFER, prevFramebuffer);
-                GlStateManager._glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, visualizerFramebuffer.fbo);
-                GL30.glBlitFramebuffer(
-                        0, 0,
-                        visualizerFramebuffer.textureWidth, visualizerFramebuffer.textureHeight,
-                        0, 0,
-                        visualizerFramebuffer.textureWidth, visualizerFramebuffer.textureHeight,
-                        GL30.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST
-                );
-                visualizerFramebuffer.beginWrite(false);
+                visualizerBuffer.beginWrite(true, GL30.GL_COLOR_BUFFER_BIT);
 
                 modelViewStack.translate(-this.xSize / 2f, -this.ySize / 2f, -this.zSize / 2f);
                 this.mesh.render(modelViewStack);
@@ -205,7 +189,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
                 this.client.getBufferBuilders().getEntityVertexConsumers().draw();
 
-                GlStateManager._glBindFramebuffer(GL30C.GL_FRAMEBUFFER, prevFramebuffer);
+                visualizerBuffer.end();
             });
 
             // Raycast while we still can,
@@ -227,13 +211,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             // End model view / projection crimes
 
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            MinecraftClient.getInstance().gameRenderer.blitScreenProgram.colorModulator.set(new float[]{1, 1, 1, Easing.SINE.apply(ageScalar)});
-
-            RenderSystem.backupProjectionMatrix();
-            visualizerFramebuffer.draw(visualizerFramebuffer.textureWidth, visualizerFramebuffer.textureHeight, false);
-            RenderSystem.restoreProjectionMatrix();
+            visualizerBuffer.draw(new Color(1f, 1f, 1f, Easing.SINE.apply(ageScalar)));
 
             if (raycastResult instanceof BlockHitResult blockHit && blockHit.getType() != HitResult.Type.MISS) {
                 var blockEntity = this.world.getBlockEntity(blockHit.getBlockPos());
@@ -286,15 +264,6 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
         this.age += delta;
         Interpolator.update(delta * .75f, this.scale, this.rotation, this.slant, this.xOffset, this.yOffset);
-    }
-
-    private Framebuffer visualizerFramebuffer() {
-        if (visualizerFramebuffer == null) {
-            visualizerFramebuffer = new SimpleFramebuffer(this.client.getFramebuffer().textureWidth, this.client.getFramebuffer().textureHeight, true, MinecraftClient.IS_SYSTEM_MAC);
-            WindowResizeCallback.EVENT.register((client_, window) -> visualizerFramebuffer.resize(window.getFramebufferWidth(), window.getFramebufferHeight(), MinecraftClient.IS_SYSTEM_MAC));
-        }
-
-        return visualizerFramebuffer;
     }
 
     private HitResult raycast(Matrix4f projection, Matrix4f viewMatrix, double mouseX, double mouseY) {

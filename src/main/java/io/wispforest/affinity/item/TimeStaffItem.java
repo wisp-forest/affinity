@@ -162,7 +162,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     }
 
     @Override
-    public boolean shouldHandleInteraction(World world, BlockPos pos, BlockState state) {
+    public boolean shouldHandleInteraction(ItemStack stack, World world, BlockPos pos, BlockState state) {
         return !state.isOf(AffinityBlocks.STAFF_PEDESTAL);
     }
 

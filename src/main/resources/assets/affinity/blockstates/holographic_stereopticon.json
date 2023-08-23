@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "affinity:block/holographic_stereopticon",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "affinity:block/holographic_stereopticon"
+    },
+    "facing=east": {
+      "model": "affinity:block/holographic_stereopticon",
+      "y": -90
+    },
+    "facing=west": {
+      "model": "affinity:block/holographic_stereopticon",
+      "y": 90
+    }
+  }
+}

@@ -33,9 +33,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
 
     @Override
     public NbtCompound toInitialChunkDataNbt() {
-        final var nbt = new NbtCompound();
-        this.writeNbt(nbt);
-        return nbt;
+        return this.createNbt();
     }
 
     @Nullable

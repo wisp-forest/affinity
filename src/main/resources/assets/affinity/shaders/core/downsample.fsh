@@ -24,5 +24,5 @@ void main() {
     col += -0.12487566 * texture(InputSampler, samplePos + vec2(0.0, -2.90709914) / InputResolution);
     col += -0.12487566 * texture(InputSampler, samplePos + vec2(0.0, 2.90709914) / InputResolution);
 
-    fragColor = col;
+    fragColor = col * ColorModulator;
 }

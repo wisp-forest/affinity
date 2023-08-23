@@ -3,6 +3,12 @@ package io.wispforest.affinity.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.block.Block;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.CopyNbtLootFunction;
+import net.minecraft.loot.provider.nbt.ContextLootNbtProvider;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 
 import static io.wispforest.affinity.object.AffinityBlocks.*;
 
@@ -19,7 +25,7 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
                 ARBOREAL_ACCUMULATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE, REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, ASSEMBLY_AUGMENT,
                 SPIRIT_INTEGRATION_APPARATUS, RITUAL_SOCLE_COMPOSER, AFFINE_INFUSER, RANTHRACITE_WIRE, CROP_REAPER, WORLD_PIN, SUNDIAL, ARCANE_TREETAP,
                 STAFF_PEDESTAL, OUIJA_BOARD, ITEM_TRANSFER_NODE, AETHUM_PROBE, EMERALD_BLOCK, AFFINE_CANDLE, EMERALD_BLOCK, THE_SKY, INVERSION_STONE,
-                INFUSED_STONE, MATTER_HARVESTING_HEARTH, ASP_RITE_CORE
+                INFUSED_STONE, MATTER_HARVESTING_HEARTH, ASP_RITE_CORE, FIELD_COHERENCE_MODULATOR
         );
 
         this.addDrop(BUDDING_AZALEA_LEAVES, block -> dropsWithShears(BUDDING_AZALEA_LEAVES));
@@ -29,6 +35,18 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
         for (var block : AffinityBlockFamilies.AZALEA.getVariants().values()) {
             this.drops(block);
         }
+
+        this.addDrop(HOLOGRAPHIC_STEREOPTICON, block -> {
+            return LootTable.builder().pool(this.addSurvivesExplosionCondition(
+                    block,
+                    LootPool.builder()
+                            .rolls(ConstantLootNumberProvider.create(1.0F))
+                            .with(ItemEntry.builder(block).apply(
+                                    CopyNbtLootFunction.builder(ContextLootNbtProvider.BLOCK_ENTITY)
+                                            .withOperation("{}", "BlockEntityTag")
+                            ))
+            ));
+        });
     }
 
     private void selfDrop(Block... blocks) {

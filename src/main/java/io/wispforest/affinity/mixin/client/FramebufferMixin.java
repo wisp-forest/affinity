@@ -1,20 +1,39 @@
 package io.wispforest.affinity.mixin.client;
 
-import io.wispforest.affinity.client.AffinityClient;
-import io.wispforest.affinity.client.render.SkyCaptureBuffer;
+import io.wispforest.affinity.misc.quack.AffinityFramebufferExtension;
+import io.wispforest.owo.ui.core.Color;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.ShaderProgram;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import java.util.function.Supplier;
+
 @Mixin(Framebuffer.class)
-public class FramebufferMixin {
+public class FramebufferMixin implements AffinityFramebufferExtension {
+
+    @Unique
+    private Supplier<ShaderProgram> blitProgram = null;
 
     @ModifyVariable(method = "drawInternal", at = @At(value = "CONSTANT", args = "stringValue=DiffuseSampler", shift = At.Shift.BEFORE))
     private ShaderProgram iLikeShaders(ShaderProgram value) {
-        if (!((Object) this instanceof SkyCaptureBuffer.StencilFramebuffer stencilFramebuffer)) return value;
-        return AffinityClient.SKY_BLIT_PROGRAM.setupAndGet();
+        return this.blitProgram != null ? this.blitProgram.get(): value;
     }
 
+    @Override
+    public void affinity$setBlitProgram(Supplier<ShaderProgram> blitProgram) {
+        this.blitProgram = blitProgram;
+    }
+
+    @Override
+    public void affinity$setRenderColor(Color color) {
+        if (this.blitProgram != null) {
+            this.blitProgram.get().colorModulator.set(color.red(), color.green(), color.blue(), color.alpha());
+        } else {
+            MinecraftClient.getInstance().gameRenderer.blitScreenProgram.colorModulator.set(color.red(), color.green(), color.blue(), color.alpha());
+        }
+    }
 }

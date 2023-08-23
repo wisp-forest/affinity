@@ -63,7 +63,7 @@ public class AffinityClient implements ClientModInitializer {
             boolean hasItemGlow = item != null && item.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.ITEM_GLOW);
             if (mode == ModelTransformationMode.GUI || (!stack.isOf(AffinityItems.DRAGON_DROP) && !hasItemGlow)) return;
 
-            ((VertexConsumerProvider.Immediate) vertexConsumers).draw();
+            if (vertexConsumers instanceof VertexConsumerProvider.Immediate immediate) immediate.draw();
 
             matrices.push();
             matrices.translate(.5f, .5f, .5f);
@@ -208,6 +208,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.AFFINE_INFUSER, AffineInfuserBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.VOID_BEACON, VoidBeaconBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.FIELD_COHERENCE_MODULATOR, FieldCoherenceModulatorBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.HOLOGRAPHIC_STEREOPTICON, HolographicStereopticonBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {

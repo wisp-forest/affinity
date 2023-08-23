@@ -64,6 +64,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block ITEM_TRANSFER_NODE = new ItemTransferNodeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block AETHUM_PROBE = new AethumProbeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block FIELD_COHERENCE_MODULATOR = new FieldCoherenceModulatorBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block HOLOGRAPHIC_STEREOPTICON = new HolographicStereopticonBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block EMERALD_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK));
     @Tab(AffinityItemGroup.MAIN) public static final Block VOID_BEACON = new VoidBeaconBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
@@ -184,6 +185,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<FieldCoherenceModulatorBlockEntity> FIELD_COHERENCE_MODULATOR =
                 make(FieldCoherenceModulatorBlockEntity::new, AffinityBlocks.FIELD_COHERENCE_MODULATOR);
+
+        public static final BlockEntityType<HolographicStereopticonBlockEntity> HOLOGRAPHIC_STEREOPTICON =
+                make(HolographicStereopticonBlockEntity::new, AffinityBlocks.HOLOGRAPHIC_STEREOPTICON);
 
         @Override
         public void afterFieldProcessing() {

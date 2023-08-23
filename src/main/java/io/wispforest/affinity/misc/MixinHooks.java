@@ -24,9 +24,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Unique;
-
-import java.util.List;
 
 public class MixinHooks {
 
