@@ -16,7 +16,6 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.sound.SoundCategory;
@@ -61,7 +60,7 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
         var newState = basket.containedState();
         if (newState == null) return ActionResult.FAIL;
 
-        MixinHooks.QUEUED_BLOCKENTITY = basket.containedBlockEntity();
+        MixinHooks.queuedBlockEntity = basket.containedBlockEntity();
         world.setBlockState(pos, newState, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
 
         world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.4F + 0.8F);

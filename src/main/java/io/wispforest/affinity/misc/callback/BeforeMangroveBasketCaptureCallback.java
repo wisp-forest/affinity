@@ -1,4 +1,4 @@
-package io.wispforest.affinity.misc;
+package io.wispforest.affinity.misc.callback;
 
 import net.fabricmc.fabric.api.event.AutoInvokingEvent;
 import net.fabricmc.fabric.api.event.Event;

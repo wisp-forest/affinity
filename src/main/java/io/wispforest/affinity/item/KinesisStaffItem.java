@@ -5,7 +5,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.component.AffinityComponents;
-import io.wispforest.affinity.misc.LivingEntityTickCallback;
+import io.wispforest.affinity.misc.callback.LivingEntityTickCallback;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.network.AffinityNetwork;

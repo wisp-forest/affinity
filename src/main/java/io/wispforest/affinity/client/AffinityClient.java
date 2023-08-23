@@ -18,6 +18,8 @@ import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.item.CarbonCopyItem;
+import io.wispforest.affinity.misc.callback.PostItemRenderCallback;
+import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.affinity.object.rituals.RitualSocleType;

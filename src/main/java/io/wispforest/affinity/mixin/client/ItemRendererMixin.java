@@ -1,7 +1,7 @@
 package io.wispforest.affinity.mixin.client;
 
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
-import io.wispforest.affinity.client.render.PostItemRenderCallback;
+import io.wispforest.affinity.misc.callback.PostItemRenderCallback;
 import io.wispforest.affinity.misc.MixinHooks;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;

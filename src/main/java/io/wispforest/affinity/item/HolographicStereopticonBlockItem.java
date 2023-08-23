@@ -5,7 +5,7 @@ import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntit
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity.ImprintKind;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity.SectionData;
 import io.wispforest.affinity.client.render.CuboidRenderer;
-import io.wispforest.affinity.misc.ClientDoItemUseCallback;
+import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.NbtQuery;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;

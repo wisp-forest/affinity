@@ -7,7 +7,7 @@ import io.wispforest.affinity.enchantment.impl.BastionEnchantment;
 import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
 import io.wispforest.affinity.item.ArtifactBladeItem;
-import io.wispforest.affinity.misc.LivingEntityTickCallback;
+import io.wispforest.affinity.misc.callback.LivingEntityTickCallback;
 import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.util.BlockFinder;

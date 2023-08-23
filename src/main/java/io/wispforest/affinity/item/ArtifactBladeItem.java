@@ -3,7 +3,7 @@ package io.wispforest.affinity.item;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.client.ReplaceAttackDamageTextCallback;
+import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;

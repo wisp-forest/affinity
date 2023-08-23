@@ -6,7 +6,7 @@ import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxStorage;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
-import io.wispforest.affinity.misc.BeforeMangroveBasketCaptureCallback;
+import io.wispforest.affinity.misc.callback.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.network.FluxSyncHandler;
 import io.wispforest.owo.nbt.NbtKey;

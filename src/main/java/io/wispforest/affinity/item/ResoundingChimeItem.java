@@ -1,6 +1,6 @@
 package io.wispforest.affinity.item;
 
-import io.wispforest.affinity.client.ReplaceAttackDamageTextCallback;
+import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import io.wispforest.owo.ops.TextOps;

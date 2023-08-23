@@ -2,7 +2,7 @@ package io.wispforest.affinity.mixin.client;
 
 import io.wispforest.affinity.block.template.AttackInteractionReceiver;
 import io.wispforest.affinity.item.KinesisStaffItem;
-import io.wispforest.affinity.misc.ClientDoItemUseCallback;
+import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
