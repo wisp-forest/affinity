@@ -50,7 +50,7 @@ import net.minecraft.util.Formatting;
 @Environment(EnvType.CLIENT)
 public class AffinityClient implements ClientModInitializer {
 
-    public static final SkyBlitProgram SKY_BLIT_PROGRAM = new SkyBlitProgram();
+    public static final DepthMergeBlitProgram DEPTH_MERGE_BLIT_PROGRAM = new DepthMergeBlitProgram();
     public static final DownsampleProgram DOWNSAMPLE_PROGRAM = new DownsampleProgram();
 
     @Override

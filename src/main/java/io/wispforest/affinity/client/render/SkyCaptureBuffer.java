@@ -30,8 +30,8 @@ public class SkyCaptureBuffer extends RenderLayer {
                     .build(true)
     );
 
-    static Framebuffer skyCapture = null;
-    static StencilFramebuffer skyStencil = null;
+    private static Framebuffer skyCapture = null;
+    private static StencilFramebuffer skyStencil = null;
 
     private SkyCaptureBuffer(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
         super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
@@ -77,7 +77,7 @@ public class SkyCaptureBuffer extends RenderLayer {
         MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
-        AffinityClient.SKY_BLIT_PROGRAM.setupSamplers(skyStencil.getDepthAttachment());
+        AffinityClient.DEPTH_MERGE_BLIT_PROGRAM.setupSamplers(skyStencil.getDepthAttachment());
         skyStencil.draw(skyStencil.textureWidth, skyStencil.textureHeight, false);
         RenderSystem.disableBlend();
     }
@@ -108,52 +108,48 @@ public class SkyCaptureBuffer extends RenderLayer {
 
         public StencilFramebuffer(int width, int height) {
             super(width, height, true, MinecraftClient.IS_SYSTEM_MAC);
-            ((AffinityFramebufferExtension) this).affinity$setBlitProgram(AffinityClient.SKY_BLIT_PROGRAM::program);
+            ((AffinityFramebufferExtension) this).affinity$setBlitProgram(AffinityClient.DEPTH_MERGE_BLIT_PROGRAM::program);
         }
 
         @Override
         public void initFbo(int width, int height, boolean getError) {
             RenderSystem.assertOnRenderThreadOrInit();
-            int i = RenderSystem.maxSupportedTextureSize();
-            if (width > 0 && width <= i && height > 0 && height <= i) {
-                this.viewportWidth = width;
-                this.viewportHeight = height;
-                this.textureWidth = width;
-                this.textureHeight = height;
-                this.fbo = GlStateManager.glGenFramebuffers();
-                this.colorAttachment = TextureUtil.generateTextureId();
-                if (this.useDepthAttachment) {
-                    this.depthAttachment = TextureUtil.generateTextureId();
-                    GlStateManager._bindTexture(this.depthAttachment);
-                    GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_MIN_FILTER, GlConst.GL_NEAREST);
-                    GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_MAG_FILTER, GlConst.GL_NEAREST);
-                    GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_COMPARE_MODE, 0);
-                    GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_S, GlConst.GL_CLAMP_TO_EDGE);
-                    GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_T, GlConst.GL_CLAMP_TO_EDGE);
-                    GlStateManager._texImage2D(
-                            GlConst.GL_TEXTURE_2D, 0, GL30.GL_DEPTH24_STENCIL8, this.textureWidth, this.textureHeight, 0, GL30.GL_DEPTH_COMPONENT, GL30.GL_UNSIGNED_BYTE, null
-                    );
-                }
 
-                this.setTexFilter(GlConst.GL_NEAREST);
-                GlStateManager._bindTexture(this.colorAttachment);
+            this.viewportWidth = width;
+            this.viewportHeight = height;
+            this.textureWidth = width;
+            this.textureHeight = height;
+            this.fbo = GlStateManager.glGenFramebuffers();
+            this.colorAttachment = TextureUtil.generateTextureId();
+            if (this.useDepthAttachment) {
+                this.depthAttachment = TextureUtil.generateTextureId();
+                GlStateManager._bindTexture(this.depthAttachment);
+                GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_MIN_FILTER, GlConst.GL_NEAREST);
+                GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_MAG_FILTER, GlConst.GL_NEAREST);
+                GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_COMPARE_MODE, 0);
                 GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_S, GlConst.GL_CLAMP_TO_EDGE);
                 GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_T, GlConst.GL_CLAMP_TO_EDGE);
                 GlStateManager._texImage2D(
-                        GlConst.GL_TEXTURE_2D, 0, GlConst.GL_RGBA8, this.textureWidth, this.textureHeight, 0, GlConst.GL_RGBA, GlConst.GL_UNSIGNED_BYTE, null
+                        GlConst.GL_TEXTURE_2D, 0, GL30.GL_DEPTH24_STENCIL8, this.textureWidth, this.textureHeight, 0, GL30.GL_DEPTH_COMPONENT, GL30.GL_UNSIGNED_BYTE, null
                 );
-                GlStateManager._glBindFramebuffer(GlConst.GL_FRAMEBUFFER, this.fbo);
-                GlStateManager._glFramebufferTexture2D(GlConst.GL_FRAMEBUFFER, GlConst.GL_COLOR_ATTACHMENT0, GlConst.GL_TEXTURE_2D, this.colorAttachment, 0);
-                if (this.useDepthAttachment) {
-                    GlStateManager._glFramebufferTexture2D(GlConst.GL_FRAMEBUFFER, GL30.GL_DEPTH_STENCIL_ATTACHMENT, GlConst.GL_TEXTURE_2D, this.depthAttachment, 0);
-                }
-
-                this.checkFramebufferStatus();
-                this.clear(getError);
-                this.endRead();
-            } else {
-                throw new IllegalArgumentException("Window " + width + "x" + height + " size out of bounds (max. size: " + i + ")");
             }
+
+            this.setTexFilter(GlConst.GL_NEAREST);
+            GlStateManager._bindTexture(this.colorAttachment);
+            GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_S, GlConst.GL_CLAMP_TO_EDGE);
+            GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_T, GlConst.GL_CLAMP_TO_EDGE);
+            GlStateManager._texImage2D(
+                    GlConst.GL_TEXTURE_2D, 0, GlConst.GL_RGBA8, this.textureWidth, this.textureHeight, 0, GlConst.GL_RGBA, GlConst.GL_UNSIGNED_BYTE, null
+            );
+            GlStateManager._glBindFramebuffer(GlConst.GL_FRAMEBUFFER, this.fbo);
+            GlStateManager._glFramebufferTexture2D(GlConst.GL_FRAMEBUFFER, GlConst.GL_COLOR_ATTACHMENT0, GlConst.GL_TEXTURE_2D, this.colorAttachment, 0);
+            if (this.useDepthAttachment) {
+                GlStateManager._glFramebufferTexture2D(GlConst.GL_FRAMEBUFFER, GL30.GL_DEPTH_STENCIL_ATTACHMENT, GlConst.GL_TEXTURE_2D, this.depthAttachment, 0);
+            }
+
+            this.checkFramebufferStatus();
+            this.clear(getError);
+            this.endRead();
         }
 
         @Override

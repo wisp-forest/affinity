@@ -5,7 +5,7 @@
         "dstrgb": "1-srcalpha"
     },
     "vertex": "blit_screen",
-    "fragment": "affinity:blit_sky",
+    "fragment": "affinity:blit_merge_depth",
     "attributes": [
         "Position",
         "UV",
@@ -14,7 +14,7 @@
     "samplers": [
         { "name": "DiffuseSampler" },
         { "name": "MainDepthSampler" },
-        { "name": "SkyDepthSampler" }
+        { "name": "SecondaryDepthSampler" }
     ],
     "uniforms": [
         { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },

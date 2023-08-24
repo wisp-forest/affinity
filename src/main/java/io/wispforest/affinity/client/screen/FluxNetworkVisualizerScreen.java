@@ -189,7 +189,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
                 this.client.getBufferBuilders().getEntityVertexConsumers().draw();
 
-                visualizerBuffer.end();
+                visualizerBuffer.endWrite();
             });
 
             // Raycast while we still can,

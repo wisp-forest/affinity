@@ -46,7 +46,7 @@ public class PostEffectBuffer {
         this.framebuffer.beginWrite(false);
     }
 
-    public void end() {
+    public void endWrite() {
         GlStateManager._glBindFramebuffer(GL30C.GL_FRAMEBUFFER, this.prevBuffer);
     }
 

@@ -2,15 +2,13 @@ package io.wispforest.affinity.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.client.render.PostEffectBuffer;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.owo.ui.base.BaseComponent;
 import io.wispforest.owo.ui.core.*;
-import io.wispforest.owo.ui.event.WindowResizeCallback;
 import io.wispforest.owo.ui.hud.Hud;
 import io.wispforest.owo.ui.util.Delta;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
@@ -20,7 +18,7 @@ public class PlayerAethumHud {
 
     public static final Identifier COMPONENT_ID = Affinity.id("player_aethum");
 
-    private static Framebuffer hudFramebuffer = null;
+    private static final PostEffectBuffer BUFFER = new PostEffectBuffer();
 
     static void initialize() {
         Hud.add(COMPONENT_ID, () -> new BaseComponent() {
@@ -63,10 +61,7 @@ public class PlayerAethumHud {
                 this.warningColorWeight += Delta.compute(this.warningColorWeight, component.getAethum() < 3 ? 1 : 0, delta * .25f);
 
                 RenderSystem.setShaderColor(1, 1, 1, Math.min(this.alpha, 1));
-
-                hudFramebuffer().setClearColor(0, 0, 0, 0);
-                hudFramebuffer().clear(MinecraftClient.IS_SYSTEM_MAC);
-                hudFramebuffer().beginWrite(false);
+                BUFFER.beginWrite(true, 0);
 
                 context.drawRing(
                         this.x + this.width / 2,
@@ -91,9 +86,9 @@ public class PlayerAethumHud {
                 this.drawAethumRing(context, this.displayAethum / maxAethum, Affinity.AETHUM_FLUX_COLOR.interpolate(Color.ofRgb(0xce2424), this.warningColorWeight));
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
-                client.getFramebuffer().beginWrite(false);
+                BUFFER.endWrite();
 
-                AffinityClient.DOWNSAMPLE_PROGRAM.prepare(hudFramebuffer());
+                AffinityClient.DOWNSAMPLE_PROGRAM.prepare(BUFFER.buffer());
                 AffinityClient.DOWNSAMPLE_PROGRAM.use();
 
                 var transform = context.getMatrices().peek().getPositionMatrix();
@@ -130,16 +125,4 @@ public class PlayerAethumHud {
             }
         }.positioning(Positioning.relative(50, 50)).margins(Insets.left(32)));
     }
-
-    private static Framebuffer hudFramebuffer() {
-        if (hudFramebuffer == null) {
-            var client = MinecraftClient.getInstance();
-
-            hudFramebuffer = new SimpleFramebuffer(client.getFramebuffer().textureWidth, client.getFramebuffer().textureHeight, true, MinecraftClient.IS_SYSTEM_MAC);
-            WindowResizeCallback.EVENT.register((client_, window) -> hudFramebuffer.resize(window.getFramebufferWidth(), window.getFramebufferHeight(), MinecraftClient.IS_SYSTEM_MAC));
-        }
-
-        return hudFramebuffer;
-    }
-
 }

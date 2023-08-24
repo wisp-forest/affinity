@@ -44,15 +44,15 @@ public class HolographicStereopticonBlockEntityRenderer implements BlockEntityRe
         VERTEX_CONSUMERS.draw();
 
         matrices.pop();
-        BUFFER.end();
+        BUFFER.endWrite();
     }
 
     static {
-        ((AffinityFramebufferExtension) BUFFER.buffer()).affinity$setBlitProgram(AffinityClient.SKY_BLIT_PROGRAM::program);
+        ((AffinityFramebufferExtension) BUFFER.buffer()).affinity$setBlitProgram(AffinityClient.DEPTH_MERGE_BLIT_PROGRAM::program);
 
         WorldRenderEvents.START.register(context -> BUFFER.clear());
         WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
-            AffinityClient.SKY_BLIT_PROGRAM.setupSamplers(BUFFER.buffer().getDepthAttachment());
+            AffinityClient.DEPTH_MERGE_BLIT_PROGRAM.setupSamplers(BUFFER.buffer().getDepthAttachment());
             BUFFER.draw(new Color(1f, 1f, 1f, .75f));
         });
     }

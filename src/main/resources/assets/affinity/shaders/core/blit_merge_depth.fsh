@@ -2,7 +2,7 @@
 
 uniform sampler2D DiffuseSampler;
 uniform sampler2D MainDepthSampler;
-uniform sampler2D SkyDepthSampler;
+uniform sampler2D SecondaryDepthSampler;
 
 uniform vec4 ColorModulator;
 
@@ -12,7 +12,7 @@ in vec4 vertexColor;
 out vec4 fragColor;
 
 void main() {
-    if (texture(SkyDepthSampler, texCoord).x >= texture(MainDepthSampler, texCoord).x) {
+    if (texture(SecondaryDepthSampler, texCoord).x >= texture(MainDepthSampler, texCoord).x) {
         discard;
     }
 
