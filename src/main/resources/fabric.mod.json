@@ -62,6 +62,9 @@
     "worldmesher": ">=0.3.0",
     "lavender": "*"
   },
+  "breaks": {
+    "sodium": "<0.5.0"
+  },
   "custom": {
     "cardinal-components": [
       "affinity:glowing_color",

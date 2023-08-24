@@ -94,8 +94,10 @@
     "client.StyleMixin",
     "client.WorldRendererMixin",
     "client.iris.WorldRenderingPhaseMixin",
-    "client.sodium.BlockRenderPassManagerMixin",
-    "client.sodium.BlockRenderPassMixin"
+    "client.sodium.DefaultMaterialsMixin",
+    "client.sodium.DefaultTerrainRenderPassesMixin",
+    "client.sodium.SodiumWorldRendererMixin",
+    "client.sodium.TerrainRenderPassAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
