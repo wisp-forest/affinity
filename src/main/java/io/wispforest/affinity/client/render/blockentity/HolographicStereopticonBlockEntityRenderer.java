@@ -20,6 +20,8 @@ public class HolographicStereopticonBlockEntityRenderer implements BlockEntityRe
     private static final PostEffectBuffer BUFFER = new PostEffectBuffer();
     private static final BasicVertexConsumerProvider VERTEX_CONSUMERS = new BasicVertexConsumerProvider(4096);
 
+    private static boolean rendering = false;
+
     public HolographicStereopticonBlockEntityRenderer(BlockEntityRendererFactory.Context context) {}
 
     @Override
@@ -36,15 +38,23 @@ public class HolographicStereopticonBlockEntityRenderer implements BlockEntityRe
                     : entity.currentRotation + Delta.compute(entity.currentRotation, entity.currentRotation < 180 ? 0 : 360, frameDelta * .1f);
         }
 
+        var nested = rendering;
+        if (!nested) {
+            BUFFER.beginWrite(false, 0);
+            matrices.push();
 
-        BUFFER.beginWrite(false, 0);
-        matrices.push();
+            rendering = true;
+        }
 
         delegate.render(entity.visualRenderScale, entity.currentRotation - rotationOffset, matrices, VERTEX_CONSUMERS, tickDelta, light, overlay);
         VERTEX_CONSUMERS.draw();
 
-        matrices.pop();
-        BUFFER.endWrite();
+        if (!nested) {
+            matrices.pop();
+            BUFFER.endWrite();
+
+            rendering = false;
+        }
     }
 
     static {

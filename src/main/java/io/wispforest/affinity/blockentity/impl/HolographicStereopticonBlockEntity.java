@@ -32,7 +32,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,20 +51,14 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     public static final NbtKey<Float> RENDER_SCALE_KEY = new NbtKey<>("RenderScale", NbtKey.Type.FLOAT);
     public static final NbtKey<Boolean> SPIN_KEY = new NbtKey<>("Spin", NbtKey.Type.BOOLEAN);
 
-    @Environment(EnvType.CLIENT)
-    private Renderer currentRenderer = Renderer.EMPTY;
-    @Environment(EnvType.CLIENT)
-    private @Nullable Renderer nextRenderer = null;
+    @Environment(EnvType.CLIENT) private Renderer currentRenderer = Renderer.EMPTY;
+    @Environment(EnvType.CLIENT) private @Nullable Renderer nextRenderer = null;
 
-    @Environment(EnvType.CLIENT)
-    private long updateTimestamp = 0;
-    @Environment(EnvType.CLIENT)
-    private long refreshIn = 0;
+    @Environment(EnvType.CLIENT) private long updateTimestamp = 0;
+    @Environment(EnvType.CLIENT) private long refreshIn = 0;
 
-    @Environment(EnvType.CLIENT)
-    public float visualRenderScale = 0f;
-    @Environment(EnvType.CLIENT)
-    public float currentRotation = 0;
+    @Environment(EnvType.CLIENT) public float visualRenderScale = 0f;
+    @Environment(EnvType.CLIENT) public float currentRotation = 0;
 
     private NbtCompound rendererData = null;
     private float renderScale = 1f;
@@ -102,7 +99,6 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
         }
     }
 
-    // TODO world mesh disposal
     private void refreshRenderer() {
         if (this.world == null || !this.world.isClient) return;
         if (this.world.getTime() - this.updateTimestamp < this.currentRenderer.updateDelay()) {
@@ -254,23 +250,21 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
                     var mesh = new WorldMesh.Builder(client.world, data.start, data.end).build();
                     var updateDelay = (int) (mesh.dimensions().getXLength() * mesh.dimensions().getYLength() * mesh.dimensions().getZLength()) / 20000;
 
-                    client.send(() -> {
-                        ChunkSectionPos.stream(
-                                ChunkSectionPos.getSectionCoord(mesh.startPos().getX()),
-                                ChunkSectionPos.getSectionCoord(mesh.startPos().getY()),
-                                ChunkSectionPos.getSectionCoord(mesh.startPos().getZ()),
-                                ChunkSectionPos.getSectionCoord(mesh.endPos().getX()),
-                                ChunkSectionPos.getSectionCoord(mesh.endPos().getY()),
-                                ChunkSectionPos.getSectionCoord(mesh.endPos().getZ())
-                        ).forEach(chunkSectionPos -> {
-                            ((AffinityClientWorldExtension) client.world).affinity$addChunkSectionListener(
-                                    chunkSectionPos,
-                                    stereopticon::refreshRenderer
-                            );
-                        });
-                    });
+                    var realMeshDimensions = new Box(mesh.startPos(), mesh.endPos().add(1, 1, 1));
+                    AffinityClientWorldExtension.BlockUpdateListener listener = (pos, from, to) -> {
+                        if (!realMeshDimensions.contains(pos.getX(), pos.getY(), pos.getZ())) return true;
+                        if (!client.getBakedModelManager().shouldRerender(from, to)) return true;
+
+                        stereopticon.refreshRenderer();
+                        return false;
+                    };
+                    client.send(() -> ((AffinityClientWorldExtension) client.world).affinity$addBlockUpdateListener(listener));
 
                     var renderer = new Renderer() {
+
+                        private static int recursionDepth = 0;
+                        private final AffinityClientWorldExtension.BlockUpdateListener noGcPlease = listener;
+
                         @Override
                         public void render(float scale, float rotation, MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta, int light, int overlay) {
                             if (!mesh.canRender()) return;
@@ -285,18 +279,24 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
                             if (Affinity.CONFIG.renderBlockEntitiesInStereopticonSectionImprints()) {
                                 MixinHooks.forceBlockEntityRendering = true;
                                 mesh.renderInfo().blockEntities().forEach((blockPos, entity) -> {
-                                    if (entity instanceof HolographicStereopticonBlockEntity) return;
+                                    if (entity instanceof HolographicStereopticonBlockEntity && recursionDepth > Affinity.CONFIG.stereopticonSectionImprintRecursionLimit() - 1) {
+                                        return;
+                                    }
 
                                     matrices.push();
                                     matrices.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+
+                                    recursionDepth++;
                                     client.getBlockEntityRenderDispatcher().render(entity, 0, matrices, vertexConsumers);
+                                    recursionDepth--;
+
                                     matrices.pop();
                                 });
                                 MixinHooks.forceBlockEntityRendering = false;
                             }
 
                             if (Affinity.CONFIG.renderEntitiesInStereopticonSectionImprints()) {
-                                client.world.getOtherEntities(null, new Box(mesh.startPos(), mesh.endPos().add(1, 1, 1))).forEach(entity -> {
+                                client.world.getOtherEntities(null, realMeshDimensions).forEach(entity -> {
                                     var pos = entity.getLerpedPos(tickDelta).subtract(mesh.startPos().getX(), mesh.startPos().getY(), mesh.startPos().getZ());
                                     client.getEntityRenderDispatcher().render(entity, pos.x, pos.y, pos.z, entity.getYaw(tickDelta), tickDelta, matrices, vertexConsumers, light);
                                 });

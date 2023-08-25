@@ -15,6 +15,7 @@ public class AffinityConfig extends ConfigWrapper<io.wispforest.affinity.Affinit
 
     private final Option<java.lang.Boolean> renderEntitiesInStereopticonSectionImprints = this.optionForKey(this.keys.renderEntitiesInStereopticonSectionImprints);
     private final Option<java.lang.Boolean> renderBlockEntitiesInStereopticonSectionImprints = this.optionForKey(this.keys.renderBlockEntitiesInStereopticonSectionImprints);
+    private final Option<java.lang.Integer> stereopticonSectionImprintRecursionLimit = this.optionForKey(this.keys.stereopticonSectionImprintRecursionLimit);
 
     private AffinityConfig() {
         super(io.wispforest.affinity.AffinityConfigModel.class);
@@ -52,10 +53,19 @@ public class AffinityConfig extends ConfigWrapper<io.wispforest.affinity.Affinit
         renderBlockEntitiesInStereopticonSectionImprints.set(value);
     }
 
+    public int stereopticonSectionImprintRecursionLimit() {
+        return stereopticonSectionImprintRecursionLimit.value();
+    }
+
+    public void stereopticonSectionImprintRecursionLimit(int value) {
+        stereopticonSectionImprintRecursionLimit.set(value);
+    }
+
 
     public static class Keys {
         public final Option.Key renderEntitiesInStereopticonSectionImprints = new Option.Key("renderEntitiesInStereopticonSectionImprints");
         public final Option.Key renderBlockEntitiesInStereopticonSectionImprints = new Option.Key("renderBlockEntitiesInStereopticonSectionImprints");
+        public final Option.Key stereopticonSectionImprintRecursionLimit = new Option.Key("stereopticonSectionImprintRecursionLimit");
     }
 }
 
