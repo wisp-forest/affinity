@@ -168,8 +168,8 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
     @Environment(EnvType.CLIENT)
     public void applyUseActionTransform(ItemStack stack, AbstractClientPlayerEntity player, MatrixStack matrices, float tickDelta, float swingProgress) {
         matrices.translate(-.5, -.5, -.5);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-45 + (float) Math.sin((player.clientWorld.getTime() + tickDelta) / 20)));
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.sin((player.clientWorld.getTime() + tickDelta) / 30)));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-45 + (float) Math.sin((player.clientWorld.getTime() + (double) tickDelta) / 20d)));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) Math.sin((player.clientWorld.getTime() + (double) tickDelta) / 30)));
         matrices.translate(.5, .75, .5);
     }
 

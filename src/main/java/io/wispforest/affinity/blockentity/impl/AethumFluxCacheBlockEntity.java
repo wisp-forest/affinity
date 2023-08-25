@@ -27,6 +27,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +40,8 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity, MultiblockAethumNetworkMember {
+
+    private static final Vec3d LINK_ATTACHMENT_POINT = new Vec3d(0, -.45, 0);
 
     @Environment(EnvType.CLIENT) public float renderFluxY = 0;
     @Environment(EnvType.CLIENT) public boolean tickedOnce = false;
@@ -347,6 +350,11 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
     public ParentStorageReference parent() {
         return parentRef;
+    }
+
+    @Override
+    public Vec3d linkAttachmentPointOffset() {
+        return LINK_ATTACHMENT_POINT;
     }
 
     static {

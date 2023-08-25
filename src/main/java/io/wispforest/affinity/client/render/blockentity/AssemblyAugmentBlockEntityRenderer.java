@@ -4,28 +4,34 @@ import io.wispforest.affinity.blockentity.impl.AssemblyAugmentBlockEntity;
 import io.wispforest.owo.ui.util.Delta;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
-public class AssemblyAugmentBlockEntityRenderer implements BlockEntityRenderer<AssemblyAugmentBlockEntity>, RotatingItemRenderer {
+public class AssemblyAugmentBlockEntityRenderer extends AffinityBlockEntityRenderer<AssemblyAugmentBlockEntity> {
 
-    public AssemblyAugmentBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
+    private final FloatingItemRenderer itemRenderer;
+
+    public AssemblyAugmentBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+        super(ctx);
+
+        this.itemRenderer = new FloatingItemRenderer(ctx.getItemRenderer());
+        this.itemRenderer.scale = .5f;
+        this.itemRenderer.y = .15f;
+    }
 
     @Override
-    public void render(AssemblyAugmentBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    protected void render(AssemblyAugmentBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         var client = MinecraftClient.getInstance();
 
         var offset = client.player.getPos().subtract(Vec3d.ofCenter(entity.getPos()));
         double targetAngle = Math.atan2(offset.z, offset.x);
 
-        entity.previewAngle += Delta.compute(entity.previewAngle, targetAngle, client.getLastFrameDuration() * .1);
+        entity.previewAngle += Delta.compute(entity.previewAngle, targetAngle, frameDelta * .1);
 
         matrices.push();
-
         matrices.translate(.5, 0, .5);
 
         boolean inputEmpty = true;
@@ -47,11 +53,11 @@ public class AssemblyAugmentBlockEntityRenderer implements BlockEntityRenderer<A
             for (int i = 0; i < 9; i++) {
                 matrices.push();
                 matrices.translate(-(i % 3), -(i / 3), 0);
-                client.getItemRenderer().renderItem(stacks.get(i), ModelTransformationMode.FIXED, light, overlay, matrices, vertexConsumers, client.world, 0);
+                this.ctx.getItemRenderer().renderItem(stacks.get(i), ModelTransformationMode.FIXED, light, overlay, matrices, vertexConsumers, entity.getWorld(), 0);
                 matrices.pop();
             }
         } else {
-            this.renderItem(entity, matrices, vertexConsumers, entity.inventory().getStack(AssemblyAugmentBlockEntity.OUTPUT_SLOT), 5000, .5f, 0, .15f, 0, light, overlay);
+            this.itemRenderer.renderFloatingItem(matrices, vertexConsumers, time, entity.getPos().asLong(), entity.inventory().getStack(AssemblyAugmentBlockEntity.OUTPUT_SLOT), entity.getWorld(), light, overlay);
         }
 
         matrices.pop();

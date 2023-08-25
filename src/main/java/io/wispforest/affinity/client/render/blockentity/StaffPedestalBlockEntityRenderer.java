@@ -2,19 +2,27 @@ package io.wispforest.affinity.client.render.blockentity;
 
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class StaffPedestalBlockEntityRenderer implements BlockEntityRenderer<StaffPedestalBlockEntity>, RotatingItemRenderer {
+public class StaffPedestalBlockEntityRenderer extends AffinityBlockEntityRenderer<StaffPedestalBlockEntity> {
 
-    public StaffPedestalBlockEntityRenderer(BlockEntityRendererFactory.Context context) {}
+    private final FloatingItemRenderer itemRenderer;
+
+    public StaffPedestalBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
+        super(context);
+
+        this.itemRenderer = new FloatingItemRenderer(ctx.getItemRenderer());
+        this.itemRenderer.scale = .75f;
+        this.itemRenderer.x = .5f;
+        this.itemRenderer.y = 1.15f;
+        this.itemRenderer.z = .5f;
+        this.itemRenderer.zRotation = 45f;
+        this.itemRenderer.bobScale = .05f;
+    }
 
     @Override
-    public void render(StaffPedestalBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        final var stack = entity.getItem();
-        if (stack.isEmpty()) return;
-
-        this.renderItem(entity, matrices, vertexConsumers, stack, 5000, .75f, .5f, 1.15f, .5f, 45f, .05f, light, overlay);
+    protected void render(StaffPedestalBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        this.itemRenderer.renderFloatingItem(matrices, vertexConsumers, time, entity.getPos().asLong(), entity.getItem(), entity.getWorld(), light, overlay);
     }
 }

@@ -9,28 +9,27 @@ import io.wispforest.affinity.misc.quack.AffinityFramebufferExtension;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.util.Delta;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class HolographicStereopticonBlockEntityRenderer implements BlockEntityRenderer<HolographicStereopticonBlockEntity> {
+public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEntityRenderer<HolographicStereopticonBlockEntity> {
 
     private static final PostEffectBuffer BUFFER = new PostEffectBuffer();
     private static final BasicVertexConsumerProvider VERTEX_CONSUMERS = new BasicVertexConsumerProvider(4096);
 
     private static boolean rendering = false;
 
-    public HolographicStereopticonBlockEntityRenderer(BlockEntityRendererFactory.Context context) {}
+    public HolographicStereopticonBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+        super(ctx);
+    }
 
     @Override
-    public void render(HolographicStereopticonBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    protected void render(HolographicStereopticonBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         var rotationOffset = entity.getCachedState().get(HolographicStereopticonBlock.FACING).asRotation();
 
         var delegate = entity.renderer();
         if (delegate != HolographicStereopticonBlockEntity.Renderer.EMPTY && delegate.ready()) {
-            var frameDelta = MinecraftClient.getInstance().getLastFrameDuration();
             entity.visualRenderScale += Delta.compute(entity.visualRenderScale, entity.renderScale(), frameDelta);
 
             entity.currentRotation = entity.spin()

@@ -31,8 +31,18 @@ public class MangroveBasketItemRenderer implements BuiltinItemRendererRegistry.D
         }
 
         var containedBlockEntity = BlockEntity.createFromNbt(pos, containedState, nbt.getCompound("ContainedBlockEntity"));
-        containedBlockEntity.setWorld(MinecraftClient.getInstance().world);
+        containedBlockEntity.setWorld(client.world);
 
-        MangroveBasketBlockEntityRenderer.renderContents(containedState, containedBlockEntity, client.getTickDelta(), matrices, vertexConsumers, light, overlay);
+        MangroveBasketBlockEntityRenderer.renderContents(
+                client.getBlockRenderManager(),
+                client.getBlockEntityRenderDispatcher(),
+                containedState,
+                containedBlockEntity,
+                client.getTickDelta(),
+                matrices,
+                vertexConsumers,
+                light,
+                overlay
+        );
     }
 }

@@ -8,14 +8,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
 
-public class AffineInfuserBlockEntityRenderer implements BlockEntityRenderer<AffineInfuserBlockEntity>, BuiltinItemRendererRegistry.DynamicItemRenderer {
+public class AffineInfuserBlockEntityRenderer extends AffinityBlockEntityRenderer<AffineInfuserBlockEntity> implements BuiltinItemRendererRegistry.DynamicItemRenderer {
 
     public static final ModelPart FLOATING_SHARD;
 
@@ -27,21 +26,23 @@ public class AffineInfuserBlockEntityRenderer implements BlockEntityRenderer<Aff
         FLOATING_SHARD = TexturedModelData.of(floatingShardData, 16, 16).createModel();
     }
 
-    public AffineInfuserBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
+    public AffineInfuserBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+        super(ctx);
+    }
 
     @Override
-    public void render(AffineInfuserBlockEntity node, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        this.renderShards(matrices, vertexConsumers, light, overlay);
+    protected void render(AffineInfuserBlockEntity node, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        this.renderShards(time, matrices, vertexConsumers, light, overlay);
     }
 
     @Override
     public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(AffinityBlocks.AFFINE_INFUSER.getDefaultState(), matrices, vertexConsumers, light, overlay);
-        this.renderShards(matrices, vertexConsumers, light, overlay);
+        this.renderShards(System.currentTimeMillis(), matrices, vertexConsumers, light, overlay);
     }
 
-    private void renderShards(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        float angle = (float) ((System.currentTimeMillis() / -2000d) % (2 * Math.PI));
+    private void renderShards(long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        float angle = (float) ((time / -2000d) % (2 * Math.PI));
         var consumer = AttunedShardTiers.CRUDE.sprite().getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
 
         matrices.push();

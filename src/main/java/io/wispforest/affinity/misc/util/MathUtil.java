@@ -107,20 +107,5 @@ public class MathUtil {
 
         return new Vector3f(x, y, z).normalize().mul(radius);
     }
-
-    @Environment(EnvType.CLIENT)
-    public static float proportionalApproach(float value, float targetValue, float minChange, float coefficient) {
-        float diff = value - targetValue;
-
-        if (Math.abs(diff) > minChange) {
-            if (diff > 0) {
-                return Math.max(targetValue, value - diff * coefficient * (MinecraftClient.getInstance().getLastFrameDuration() / .005f));
-            } else {
-                return Math.min(targetValue, value - diff * coefficient * (MinecraftClient.getInstance().getLastFrameDuration() / .005f));
-            }
-        } else {
-            return targetValue;
-        }
-    }
 }
 

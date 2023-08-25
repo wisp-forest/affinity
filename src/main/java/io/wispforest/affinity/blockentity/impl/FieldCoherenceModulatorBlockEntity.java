@@ -19,16 +19,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public class FieldCoherenceModulatorBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity {
 
-    @Environment(EnvType.CLIENT)
-    public double spinSpeed = 1d;
-    @Environment(EnvType.CLIENT)
-    public double time = 0d;
-    @Environment(EnvType.CLIENT)
-    public final int timeOffset = ThreadLocalRandom.current().nextInt(0, 100);
+    @Environment(EnvType.CLIENT) public double spinSpeed = 1d;
+    @Environment(EnvType.CLIENT) public double spin = 0d;
 
     public FieldCoherenceModulatorBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.FIELD_COHERENCE_MODULATOR, pos, state);
@@ -38,18 +32,16 @@ public class FieldCoherenceModulatorBlockEntity extends AethumNetworkMemberBlock
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (this.world.isClient) {
-            this.spinSpeed += 10d;
-        }
-
+        this.spinSpeed += 10d;
         return ActionResult.SUCCESS;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public void tickClient() {
-        var time = this.world.getTime() + timeOffset;
+        var time = this.world.getTime() + this.timeOffset();
 
         double x = Math.sin(Math.toRadians(time) * 15) * .5;
         double y = .05 + Math.cos(Math.toRadians(time) * 10) * .25;
@@ -70,5 +62,10 @@ public class FieldCoherenceModulatorBlockEntity extends AethumNetworkMemberBlock
 
             modulator.spinSpeed = Math.max(1d, this.spinSpeed * .5);
         }
+    }
+
+    @Environment(EnvType.CLIENT)
+    public int timeOffset() {
+        return (int) (this.pos.asLong() % 25000);
     }
 }

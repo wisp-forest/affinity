@@ -83,7 +83,6 @@
     "client.EntityMixin",
     "client.FramebufferMixin",
     "client.HeldItemRendererMixin",
-    "client.InGameHudMixin",
     "client.ItemEntityRendererMixin",
     "client.ItemFrameEntityRendererMixin",
     "client.ItemRendererMixin",
