@@ -23,6 +23,8 @@ Once you have obtained {gold}at least one{} treetap alongside your augment, you 
 {light_purple}Crafting Table{} like shown on the next page...
 
 
+@next-page
+
 ;;;;;
 
 <structure;affinity:augmented_crafting_table>

@@ -4,6 +4,8 @@
   "texture": "affinity:textures/gui/wispen_testament.png",
   "macros": {
     "@next-page": "{gray}*⟳ Continued on next page...*{}",
-    "@entry-end": "<|entry-end-marker@affinity:wispen_testament|>"
+    "@entry-end": "<|entry-end-marker@affinity:wispen_testament|>",
+    "{item}": "{light_purple}",
+    "{concept}": "{gold}"
   }
 }

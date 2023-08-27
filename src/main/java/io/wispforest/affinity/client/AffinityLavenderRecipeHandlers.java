@@ -37,7 +37,7 @@ public class AffinityLavenderRecipeHandlers {
         });
 
         LavenderBookScreen.registerRecipeHandler(WISPEN_TESTAMENT_BOOK_ID, AffinityRecipeTypes.ASPEN_INFUSION, (componentSource, recipeInstance) -> {
-            int inputSize = 75;
+            int inputSize = 76;
             var root = Containers.horizontalFlow(Sizing.content(), Sizing.fixed(inputSize));
             root.verticalAlignment(VerticalAlignment.CENTER).horizontalAlignment(HorizontalAlignment.CENTER);
 

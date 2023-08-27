@@ -287,7 +287,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
                                     matrices.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
 
                                     recursionDepth++;
-                                    client.getBlockEntityRenderDispatcher().render(entity, 0, matrices, vertexConsumers);
+                                    client.getBlockEntityRenderDispatcher().render(entity, tickDelta, matrices, vertexConsumers);
                                     recursionDepth--;
 
                                     matrices.pop();
