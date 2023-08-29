@@ -76,6 +76,8 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
         var targetWorldId = extraData.get(EchoShardExtension.WORLD);
         var targetWorld = target.getServer().getWorld(RegistryKey.of(RegistryKeys.WORLD, targetWorldId));
 
+        if (targetWorld == null) return;
+
         ServerTasks.doNext(server -> {
             spawnCloud(target);
             var newEntity = EntityTeleporter.teleport(target, targetWorld, Vec3d.ofCenter(pos), target.getYaw(), target.getPitch());

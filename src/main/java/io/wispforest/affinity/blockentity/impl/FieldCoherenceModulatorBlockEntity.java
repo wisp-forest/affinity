@@ -4,6 +4,7 @@ import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntit
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.misc.util.MathUtil;
+import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.particle.ColoredFallingDustParticleEffect;
 import io.wispforest.owo.particles.ClientParticles;
@@ -32,9 +33,11 @@ public class FieldCoherenceModulatorBlockEntity extends AethumNetworkMemberBlock
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        this.spinSpeed += 10d;
+        if (!player.getWorld().isClient) {
+            AffinityNetwork.server(this).send(new InteractionPacket(this.pos));
+        }
+
         return ActionResult.SUCCESS;
     }
 
@@ -68,4 +71,16 @@ public class FieldCoherenceModulatorBlockEntity extends AethumNetworkMemberBlock
     public int timeOffset() {
         return (int) (this.pos.asLong() % 25000);
     }
+
+    static {
+        AffinityNetwork.CHANNEL.registerClientbound(InteractionPacket.class, (message, access) -> {
+            if (!(access.runtime().world.getBlockEntity(message.pos) instanceof FieldCoherenceModulatorBlockEntity fieldCoherenceModulator)) {
+                return;
+            }
+
+            fieldCoherenceModulator.spinSpeed += 10d;
+        });
+    }
+
+    public record InteractionPacket(BlockPos pos) {}
 }

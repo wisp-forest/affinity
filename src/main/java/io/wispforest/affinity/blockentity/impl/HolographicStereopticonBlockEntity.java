@@ -1,5 +1,6 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import com.mojang.authlib.GameProfile;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
@@ -8,9 +9,11 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.quack.AffinityClientWorldExtension;
 import io.wispforest.affinity.misc.util.MathUtil;
+import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
+import io.wispforest.owo.ui.component.EntityComponent;
 import io.wispforest.worldmesher.WorldMesh;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,9 +31,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -153,6 +158,8 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     public void changeScale(boolean direction) {
         this.renderScale = MathHelper.clamp(this.renderScale + (direction ? .25f : -.25f), .25f, 5f);
         this.world.markDirty(this.pos);
+
+        this.sendPropertyUpdate();
     }
 
     @Override
@@ -162,8 +169,27 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
         this.spin = !this.spin;
         this.world.markDirty(this.pos);
 
+        this.sendPropertyUpdate();
         return ActionResult.SUCCESS;
     }
+
+    private void sendPropertyUpdate() {
+        if (this.world.isClient) return;
+        AffinityNetwork.server(this).send(new StereopticonPropertiesPacket(this.pos, this.spin, this.renderScale));
+    }
+
+    public static void initNetwork() {
+        AffinityNetwork.CHANNEL.registerClientbound(HolographicStereopticonBlockEntity.StereopticonPropertiesPacket.class, (message, access) -> {
+            if (!(access.runtime().world.getBlockEntity(message.pos) instanceof HolographicStereopticonBlockEntity stereopticon)) {
+                return;
+            }
+
+            stereopticon.spin = message.spin;
+            stereopticon.renderScale = message.renderScale;
+        });
+    }
+
+    public record StereopticonPropertiesPacket(BlockPos pos, boolean spin, float renderScale) {}
 
     public interface Renderer {
         @Environment(EnvType.CLIENT)

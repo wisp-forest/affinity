@@ -3,6 +3,7 @@ package io.wispforest.affinity.network;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.template.AttackInteractionReceiver;
 import io.wispforest.affinity.block.template.ScrollInteractionReceiver;
+import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.owo.network.OwoNetChannel;
@@ -75,6 +76,7 @@ public class AffinityNetwork {
             player.swingHand(Hand.MAIN_HAND);
         });
 
+        HolographicStereopticonBlockEntity.initNetwork();
         RitualSocleComposerScreenHandler.initNetwork();
     }
 
