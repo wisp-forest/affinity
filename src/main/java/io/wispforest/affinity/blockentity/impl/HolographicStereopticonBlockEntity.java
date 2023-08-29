@@ -406,7 +406,17 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
             @Override
             public @Nullable Entity readData(NbtCompound nbt) {
                 if (!nbt.contains("Entity", NbtElement.COMPOUND_TYPE)) return null;
-                return EntityType.getEntityFromNbt(nbt.getCompound("Entity"), MinecraftClient.getInstance().world).orElse(null);
+                var entityData = nbt.getCompound("Entity");
+
+                var entityId = Identifier.tryParse(entityData.getString("id"));
+                if (Registries.ENTITY_TYPE.getId(EntityType.PLAYER).equals(entityId)) {
+                    var player = EntityComponent.createRenderablePlayer(new GameProfile(entityData.getUuid("UUID"), entityData.getString("affinity:player_name")));
+                    player.readNbt(entityData);
+
+                    return player;
+                }
+
+                return EntityType.getEntityFromNbt(entityData, MinecraftClient.getInstance().world).orElse(null);
             }
 
             @Override
@@ -414,7 +424,13 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
                 if (data instanceof EnderDragonPart dragonPart) data = dragonPart.owner;
 
                 var entityNbt = new NbtCompound();
-                data.saveSelfNbt(entityNbt);
+                if (data instanceof PlayerEntity player) {
+                    entityNbt.putString("affinity:player_name", player.getEntityName());
+                    entityNbt.putString("id", Registries.ENTITY_TYPE.getId(EntityType.PLAYER).toString());
+                    data.writeNbt(entityNbt);
+                } else {
+                    data.saveSelfNbt(entityNbt);
+                }
 
                 nbt.put("Entity", entityNbt);
             }
