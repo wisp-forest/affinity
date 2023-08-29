@@ -17,6 +17,7 @@ import io.wispforest.owo.ui.component.EntityComponent;
 import io.wispforest.worldmesher.WorldMesh;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -43,12 +44,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Debug;
 
 import java.lang.ref.Cleaner;
 import java.util.List;
 
 public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implements InWorldTooltipProvider, TickedBlockEntity, InteractableBlockEntity {
 
+    @Environment(EnvType.CLIENT)
     private static final Cleaner MESH_CLEANER = Cleaner.create();
 
     public static final String IMPRINT_KIND_KEY_NAME = "ImprintKind";
@@ -56,8 +59,8 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     public static final NbtKey<Float> RENDER_SCALE_KEY = new NbtKey<>("RenderScale", NbtKey.Type.FLOAT);
     public static final NbtKey<Boolean> SPIN_KEY = new NbtKey<>("Spin", NbtKey.Type.BOOLEAN);
 
-    @Environment(EnvType.CLIENT) private Renderer currentRenderer = Renderer.EMPTY;
-    @Environment(EnvType.CLIENT) private @Nullable Renderer nextRenderer = null;
+    @Environment(EnvType.CLIENT) private Renderer currentRenderer;
+    @Environment(EnvType.CLIENT) private @Nullable Renderer nextRenderer;
 
     @Environment(EnvType.CLIENT) private long updateTimestamp = 0;
     @Environment(EnvType.CLIENT) private long refreshIn = 0;
@@ -71,12 +74,20 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
     public HolographicStereopticonBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.HOLOGRAPHIC_STEREOPTICON, pos, state);
+
+        // i am frankly baffled why this is necessary
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            this.currentRenderer = Renderer.EMPTY;
+        }
     }
 
     @Override
     public void setWorld(World world) {
         super.setWorld(world);
-        this.refreshRenderer();
+
+        if (this.world != null && this.world.isClient) {
+            this.refreshRenderer();
+        }
     }
 
     @Override
@@ -85,7 +96,10 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
         this.renderScale = nbt.get(RENDER_SCALE_KEY);
         this.spin = nbt.getOr(SPIN_KEY, true);
         this.rendererData = nbt.getOr(RENDERER_DATA_KEY, null);
-        this.refreshRenderer();
+
+        if (this.world != null && this.world.isClient) {
+            this.refreshRenderer();
+        }
     }
 
     @Override
@@ -104,8 +118,8 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
         }
     }
 
+    @Environment(EnvType.CLIENT)
     private void refreshRenderer() {
-        if (this.world == null || !this.world.isClient) return;
         if (this.world.getTime() - this.updateTimestamp < this.currentRenderer.updateDelay()) {
             this.refreshIn = this.currentRenderer.updateDelay() - (this.world.getTime() - this.updateTimestamp);
             return;
@@ -155,13 +169,6 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
         }
     }
 
-    public void changeScale(boolean direction) {
-        this.renderScale = MathHelper.clamp(this.renderScale + (direction ? .25f : -.25f), .25f, 5f);
-        this.world.markDirty(this.pos);
-
-        this.sendPropertyUpdate();
-    }
-
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!player.isSneaking()) return ActionResult.PASS;
@@ -171,6 +178,13 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
         this.sendPropertyUpdate();
         return ActionResult.SUCCESS;
+    }
+
+    public void changeScale(boolean direction) {
+        this.renderScale = MathHelper.clamp(this.renderScale + (direction ? .25f : -.25f), .25f, 5f);
+        this.world.markDirty(this.pos);
+
+        this.sendPropertyUpdate();
     }
 
     private void sendPropertyUpdate() {
@@ -191,11 +205,10 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
     public record StereopticonPropertiesPacket(BlockPos pos, boolean spin, float renderScale) {}
 
+    @Environment(EnvType.CLIENT)
     public interface Renderer {
-        @Environment(EnvType.CLIENT)
         Renderer EMPTY = (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {};
 
-        @Environment(EnvType.CLIENT)
         void render(float scale, float rotation, MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta, int light, int overlay);
 
         default boolean ready() {
@@ -206,7 +219,6 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
             return 0;
         }
 
-        @Environment(EnvType.CLIENT)
         static Renderer read(HolographicStereopticonBlockEntity stereopticon, @Nullable NbtCompound nbt) {
             if (nbt == null) return EMPTY;
             return switch (nbt.getString(IMPRINT_KIND_KEY_NAME)) {
@@ -404,6 +416,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
         public static final ImprintKind<Entity> ENTITY = new ImprintKind<>("entity") {
             @Override
+            @Environment(EnvType.CLIENT)
             public @Nullable Entity readData(NbtCompound nbt) {
                 if (!nbt.contains("Entity", NbtElement.COMPOUND_TYPE)) return null;
                 var entityData = nbt.getCompound("Entity");
