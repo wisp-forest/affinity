@@ -160,12 +160,12 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     public void appendTooltipEntries(List<Entry> entries) {
         entries.add(Entry.text(
                 this.spin ? TextOps.withColor("✔", 0x28FFBF) : TextOps.withColor("❌ ", 0xEB1D36),
-                Text.literal(this.spin ? "Spin" : "Don't spin")
+                Text.translatable(this.getCachedState().getBlock().getTranslationKey() + ".tooltip_" + (this.spin ? "spin" : "dont_spin"))
         ));
         entries.add(Entry.icon(Text.literal(MathUtil.rounded(this.renderScale, 2) + "x"), 24, 0));
 
         if (!this.currentRenderer.ready()) {
-            entries.add(Entry.text(Text.empty(), Text.literal("Assembling...")));
+            entries.add(Entry.text(Text.empty(), Text.translatable(this.getCachedState().getBlock().getTranslationKey() + ".tooltip_assembling")));
         }
     }
 
