@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Pseudo
-@Mixin(DefaultTerrainRenderPasses.class)
+@Mixin(value = DefaultTerrainRenderPasses.class, remap = false)
 public class DefaultTerrainRenderPassesMixin {
 
     @Mutable
