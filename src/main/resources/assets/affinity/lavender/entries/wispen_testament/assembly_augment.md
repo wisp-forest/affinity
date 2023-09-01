@@ -10,8 +10,8 @@
 }
 ```
 
-Getting hold of some {gold}Amethyst{} is of essential necessity before you can start constructing your {light_purple}Assembly 
-Augment{} and associated {light_purple}Arcane Treetaps{}.
+Getting hold of some {concept}Amethyst{} is of essential necessity before you can start constructing your {item}Assembly 
+Augment{} and associated {item}Arcane Treetaps{}.
 
 <recipe;affinity:crafting/arcane_treetap>
 
@@ -19,8 +19,8 @@ Augment{} and associated {light_purple}Arcane Treetaps{}.
 
 <recipe;affinity:crafting/assembly_augment>
 
-Once you have obtained {gold}at least one{} treetap alongside your augment, you can place the augment atop a 
-{light_purple}Crafting Table{} like shown on the next page...
+Once you have obtained {concept}at least one{} treetap alongside your augment, you can place the augment atop a 
+{item}Crafting Table{} like shown on the next page...
 
 
 @next-page
@@ -29,12 +29,12 @@ Once you have obtained {gold}at least one{} treetap alongside your augment, you 
 
 <structure;affinity:augmented_crafting_table>
 
-... and then continue by installing all treetaps onto {gold}naturally grown trees{} in close vicinity of the augmented
+... and then continue by installing all treetaps onto {concept}naturally grown trees{} in close vicinity of the augmented
 crafting table.
 
 ;;;;;
 
 You may reference the following setup as an example of how to properly
-power the {light_purple}Assembly Augment{}:
+power the {item}Assembly Augment{}:
 
 ![](affinity:textures/gui/wispen_testament/assembly_augment_setup.png,fit)

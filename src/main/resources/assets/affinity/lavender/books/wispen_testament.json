@@ -5,7 +5,7 @@
   "macros": {
     "@next-page": "{gray}*⟳ Continued on next page...*{}",
     "@entry-end": "<|entry-end-marker@affinity:wispen_testament|>",
-    "{item}": "{light_purple}",
-    "{concept}": "{gold}"
+    "{item}": "{#FA00FA}",
+    "{concept}": "{#179FA6}"
   }
 }
