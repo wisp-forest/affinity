@@ -305,6 +305,18 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         return this.hasShard() && this.allLinksValid && this.links.size() <= this.maxConnections();
     }
 
+    @Override
+    public long insert(long max, TransactionContext transaction) {
+        if (!this.validForTransfer()) return 0;
+        return super.insert(max, transaction);
+    }
+
+    @Override
+    public long extract(long max, TransactionContext transaction) {
+        if (!this.validForTransfer()) return 0;
+        return super.extract(max, transaction);
+    }
+
     // -------------
     // Serialization
     // -------------

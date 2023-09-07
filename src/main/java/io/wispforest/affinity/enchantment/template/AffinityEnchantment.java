@@ -20,4 +20,9 @@ public abstract class AffinityEnchantment extends Enchantment {
     public boolean isAvailableForRandomSelection() {
         return false;
     }
+
+    @Override
+    public boolean isAvailableForEnchantedBookOffer() {
+        return false;
+    }
 }
