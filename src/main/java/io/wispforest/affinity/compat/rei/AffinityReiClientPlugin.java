@@ -51,6 +51,11 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
     }
 
     @Override
+    public double getPriority() {
+        return -69d;
+    }
+
+    @Override
     public void registerCategories(CategoryRegistry registry) {
         registry.add(new PotionMixingCategory());
         registry.addWorkstations(AffinityReiCommonPlugin.POTION_MIXING, EntryStacks.of(Blocks.SPORE_BLOSSOM), EntryStacks.of(AffinityBlocks.BREWING_CAULDRON));
