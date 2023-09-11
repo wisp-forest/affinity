@@ -43,5 +43,10 @@
     "sounds": [
       "affinity:block/aspen_infusion_active"
     ]
+  },
+  "block.graviton_transducer.transduce": {
+    "sounds": [
+      "affinity:block/graviton_transducer_transduce"
+    ]
   }
 }

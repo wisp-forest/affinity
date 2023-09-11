@@ -13,6 +13,7 @@ public class AffinitySoundEvents implements SimpleFieldProcessingSubject<SoundEv
     public static final SoundEvent BLOCK_SPIRIT_INTEGRATION_APPARATUS_RITUAL_START = SoundEvent.of(Affinity.id("block.spirit_integration_apparatus.ritual_start"));
     public static final SoundEvent BLOCK_ASP_RITE_CORE_CRAFT = SoundEvent.of(Affinity.id("block.asp_rite_core.craft"));
     public static final SoundEvent BLOCK_ASP_RITE_CORE_ACTIVE = SoundEvent.of(Affinity.id("block.asp_rite_core.active"));
+    public static final SoundEvent BLOCK_GRAVITON_TRANSDUCER_TRANSDUCE = SoundEvent.of(Affinity.id("block.graviton_transducer.transduce"));
     public static final SoundEvent ITEM_ARTIFACT_BLADE_SMASH = SoundEvent.of(Affinity.id("item.artifact_blade.smash"));
     public static final SoundEvent ITEM_IRIDESCENCE_WAND_BIND = SoundEvent.of(Affinity.id("item.iridescence_wand.bind"));
     public static final SoundEvent ITEM_SATIATING_POTION_START_DRINKING = SoundEvent.of(Affinity.id("item.satiating_potion.start_drinking"));

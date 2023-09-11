@@ -236,13 +236,39 @@ public class AffinityParticleSystems {
         }
     });
 
+    public static final ParticleSystem<BlockPos> TRANSDUCE_SHULKER_BULLET = CONTROLLER.register(BlockPos.class, (world, pos, transducerPos) -> {
+        for (var axis : Direction.Axis.VALUES) {
+            ClientParticles.setParticleCount(7);
+            ClientParticles.randomizeVelocityOnAxis(.25f, axis);
+            ClientParticles.spawn(ParticleTypes.END_ROD, world, pos, .25);
+        }
+
+        ClientParticles.setParticleCount(20);
+        ClientParticles.spawn(ArcaneTreetapBlock.PARTICLE, world, pos, .5);
+
+        ClientParticles.spawn(
+                new GenericEmitterParticleEffect(
+                        ParticleTypes.END_ROD, Vec3d.ofCenter(transducerPos).subtract(pos).normalize().multiply(.3),
+                        1, .15f, false, 5
+                ),
+                world, pos, .15
+        );
+
+        world.playSound(
+                pos.x, pos.y, pos.z,
+                AffinitySoundEvents.BLOCK_GRAVITON_TRANSDUCER_TRANSDUCE, SoundCategory.BLOCKS,
+                1f, .75f + world.random.nextFloat() * .3f, false
+        );
+    });
+
     // Context data types
 
     public record DissolveData(ItemStack suckWhat, Vec3d suckWhere, int duration, int particleMaxAge) {}
 
     public record LineData(Vec3d target, int color) {}
 
-    public record BezierVortexData(ParticleEffect particle, List<Vec3d> originPositions, int emitDuration, int travelDuration, boolean randomPath) {}
+    public record BezierVortexData(ParticleEffect particle, List<Vec3d> originPositions, int emitDuration,
+                                   int travelDuration, boolean randomPath) {}
 
     public record ArtifactBladeAreaAttackData(Vec3d targetPos, List<Vec3d> entityPositions) {}
 

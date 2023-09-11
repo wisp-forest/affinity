@@ -73,6 +73,7 @@
   "block.affinity.field_coherence_modulator": "Field Coherence Modulator",
   "block.affinity.infused_stone": "Infused Stone",
   "block.affinity.matter_harvesting_hearth": "Matter Harvesting Hearth",
+  "block.affinity.graviton_transducer": "Graviton Transducer",
 
   "block.affinity.spirit_integration_apparatus": "Spirit Integration Apparatus",
   "block.affinity.spirit_integration_apparatus.tooltip.complete": "Complete",

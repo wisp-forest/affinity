@@ -42,6 +42,11 @@ public class SingleStackStorageProvider extends SingleStackStorage {
         return this;
     }
 
+    public SingleStackStorageProvider canExtract(Predicate<ItemVariant> canExtract) {
+        this.canExtract = canExtract;
+        return this;
+    }
+
     public BooleanSupplier active() {
         return active;
     }

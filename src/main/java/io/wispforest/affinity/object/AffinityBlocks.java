@@ -67,6 +67,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block HOLOGRAPHIC_STEREOPTICON = new HolographicStereopticonBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block EMERALD_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK));
     @Tab(AffinityItemGroup.MAIN) public static final Block VOID_BEACON = new VoidBeaconBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block GRAVITON_TRANSDUCER = new GravitonTransducerBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
 
     @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
@@ -189,6 +190,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<HolographicStereopticonBlockEntity> HOLOGRAPHIC_STEREOPTICON =
                 make(HolographicStereopticonBlockEntity::new, AffinityBlocks.HOLOGRAPHIC_STEREOPTICON);
 
+        public static final BlockEntityType<GravitonTransducerBlockEntity> GRAVITON_TRANSDUCER =
+                make(GravitonTransducerBlockEntity::new, AffinityBlocks.GRAVITON_TRANSDUCER);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
@@ -210,6 +214,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(MATTER_HARVESTING_HEARTH);
             Affinity.AETHUM_MEMBER.registerSelf(VOID_BEACON);
             Affinity.AETHUM_MEMBER.registerSelf(FIELD_COHERENCE_MODULATOR);
+            Affinity.AETHUM_MEMBER.registerSelf(GRAVITON_TRANSDUCER);
         }
 
         @Override
