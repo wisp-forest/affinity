@@ -56,6 +56,11 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
         }
     }
 
+    @Override
+    public boolean rendersOutsideBoundingBox(HolographicStereopticonBlockEntity beaconBlockEntity) {
+        return true;
+    }
+
     static {
         ((AffinityFramebufferExtension) BUFFER.buffer()).affinity$setBlitProgram(AffinityClient.DEPTH_MERGE_BLIT_PROGRAM::program);
 

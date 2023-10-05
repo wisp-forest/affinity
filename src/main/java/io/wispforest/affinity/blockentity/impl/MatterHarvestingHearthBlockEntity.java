@@ -40,7 +40,10 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
 
     @NotNull
     private ItemStack currentlyHarvesting = ItemStack.EMPTY;
-    private final SingleStackStorageProvider storageProvider = new SingleStackStorageProvider(() -> this.currentlyHarvesting, stack -> this.currentlyHarvesting = stack, this::markDirty).capacity(1);
+    private final SingleStackStorageProvider storageProvider = new SingleStackStorageProvider(() -> this.currentlyHarvesting, stack -> this.currentlyHarvesting = stack, this::markDirty)
+            .canInsert(itemVariant -> itemVariant.getItem() instanceof WispMatterItem)
+            .canExtract(itemVariant -> false)
+            .capacity(1);
 
     private int time = 0;
     private int harvestTicks = 0;
