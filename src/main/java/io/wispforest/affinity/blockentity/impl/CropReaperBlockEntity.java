@@ -28,7 +28,7 @@ public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implem
 
         int addedAethum = 0;
 
-        for (var pos : BlockPos.iterate(this.pos.add(-8, -1, -8), this.pos.add(8, 1, 8))) {
+        for (var pos : BlockPos.iterate(this.pos.add(-8, 0, -8), this.pos.add(8, 2, 8))) {
             var state = this.world.getBlockState(pos);
             if (!(state.getBlock() instanceof CropBlock crop) || !crop.isMature(state)) continue;
 
@@ -43,6 +43,6 @@ public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implem
 
     @Override
     public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
-        return CuboidRenderer.Cuboid.symmetrical(8, 1, 8);
+        return CuboidRenderer.Cuboid.of(new BlockPos(-8, 0, -8), new BlockPos(9, 3, 9));
     }
 }
