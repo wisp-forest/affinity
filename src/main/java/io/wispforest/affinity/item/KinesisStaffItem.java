@@ -123,7 +123,7 @@ public class KinesisStaffItem extends StaffItem {
             }
         }
 
-        if (entity == null) {
+        if (entity == null || (entity instanceof PlayerEntity && entity.isSneaking())) {
             stack.delete(ACTIVE_TARGET_ENTITY);
             return TypedActionResult.pass(stack);
         }
@@ -133,6 +133,7 @@ public class KinesisStaffItem extends StaffItem {
         entity.setVelocity(targetVelocity);
         entity.fallDistance = 0;
         entity.velocityDirty = true;
+        entity.velocityModified = true;
 
         return TypedActionResult.success(stack);
     }
@@ -159,7 +160,12 @@ public class KinesisStaffItem extends StaffItem {
         player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
 
         targetEntity.addVelocity(player.getRotationVec(0).multiply(2.5f));
-        if (targetEntity instanceof ProjectileEntity) AffinityEntityAddon.setData(targetEntity, PROJECTILE_THROWER, player.getUuid());
+        targetEntity.velocityDirty = true;
+        targetEntity.velocityModified = true;
+
+        if (targetEntity instanceof ProjectileEntity) {
+            AffinityEntityAddon.setData(targetEntity, PROJECTILE_THROWER, player.getUuid());
+        }
     }
 
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
