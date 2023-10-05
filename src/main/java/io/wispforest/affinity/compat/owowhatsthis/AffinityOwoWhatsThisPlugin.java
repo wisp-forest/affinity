@@ -41,7 +41,6 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
     @Override
     public void loadServer() {
         Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("block_aethum_flux_storage"), BLOCK_AETHUM_FLUX_STORAGE);
-        Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("nimble_staff_direction"), NIMBLE_STAFF_DIRECTION);
         Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("item_transfer_node_queue"), ITEM_TRANSFER_NODE_QUEUE);
         Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("brewing_potion_mixture"), BREWING_CAULDRON_MIXTURE);
     }
@@ -49,7 +48,6 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
     @Override
     public void loadClient() {
         DisplayAdapters.register(BLOCK_AETHUM_FLUX_STORAGE, Client.AETHUM_STORAGE);
-        DisplayAdapters.register(NIMBLE_STAFF_DIRECTION, InformationProviders.DisplayAdapters.TEXT);
         DisplayAdapters.register(ITEM_TRANSFER_NODE_QUEUE, InformationProviders.DisplayAdapters.ITEM_STACK_LIST);
         DisplayAdapters.register(BREWING_CAULDRON_MIXTURE, Client.POTION_MIXTURE);
     }
@@ -64,19 +62,6 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
                 return member instanceof AethumNetworkMemberBlockEntity be
                         ? new AethumStorageData(be.displayFlux(), be.displayFluxCapacity())
                         : new AethumStorageData(member.flux(), member.fluxCapacity());
-            }
-    );
-
-    public static final InformationProvider<BlockStateWithPosition, Text> NIMBLE_STAFF_DIRECTION = InformationProvider.client(
-            TargetType.BLOCK, 0,
-            (player, world, target) -> {
-                if (!(world.getBlockEntity(target.pos()) instanceof StaffPedestalBlockEntity pedestal)) return null;
-
-                var item = pedestal.getItem();
-                if (!(item.isOf(AffinityItems.NIMBLE_STAFF))) return null;
-
-                var direction = NimbleStaffItem.getDirection(item);
-                return Text.translatable(item.getTranslationKey() + ".direction." + direction.asString());
             }
     );
 

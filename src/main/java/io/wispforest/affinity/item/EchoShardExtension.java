@@ -1,5 +1,6 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.owo.nbt.NbtCarrier;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
@@ -23,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -76,6 +78,12 @@ public class EchoShardExtension {
         var coordinateText = TextOps.withFormatting(pos.getX() + " " + pos.getY() + " " + pos.getZ(), Formatting.GRAY);
 
         tooltip.add(Text.translatable("text.affinity.echo_shard_location", coordinateText, worldText).formatted(Formatting.DARK_GRAY));
+    }
+
+    public static @Nullable BlockPos tryGetLocationInWorld(World world, NbtCarrier shard) {
+        if (!shard.getOr(BOUND, false)) return null;
+        if (!shard.get(WORLD).equals(world.getRegistryKey().getValue())) return null;
+        return shard.get(POS);
     }
 
 }

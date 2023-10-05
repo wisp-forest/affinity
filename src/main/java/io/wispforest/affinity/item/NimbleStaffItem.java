@@ -8,9 +8,11 @@ import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -30,6 +32,7 @@ import java.util.function.BooleanSupplier;
 public class NimbleStaffItem extends StaffItem {
 
     public static final NbtKey<Direction> DIRECTION = new NbtKey<>("Direction", NbtKey.Type.STRING.then(Direction::byName, Direction::asString));
+    public static final NbtKey<BlockPos> ECHO_SHARD_TARGET = new NbtKey<>("EchoShardTarget", NbtKey.Type.LONG.then(BlockPos::fromLong, BlockPos::asLong));
 
     private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 2, 4);
     private static final Map<Direction, Text> ARROW_BY_DIRECTION = new ImmutableMap.Builder<Direction, Text>()
@@ -50,24 +53,43 @@ public class NimbleStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        moveEntities(world, pos, pedestal, () -> {
-            if (!pedestal.hasFlux(25)) return false;
+        final var direction = getDirection(pedestal.getItem());
+        var pushDelta = Vec3d.of(direction.getVector());
 
-            pedestal.consumeFlux(25);
+        var echoShardTarget = tryFindBoundEchoShard(pos, pedestal);
+        if (echoShardTarget != null) {
+            pushDelta = Vec3d.ofCenter(echoShardTarget).subtract(Vec3d.ofCenter(pos)).normalize();
+
+            if (!echoShardTarget.equals(pedestal.getItem().getOr(ECHO_SHARD_TARGET, null))) {
+                pedestal.getItem().put(ECHO_SHARD_TARGET, echoShardTarget);
+                pedestal.markDirty();
+            }
+        } else if (pedestal.getItem().has(ECHO_SHARD_TARGET)) {
+            pedestal.getItem().delete(ECHO_SHARD_TARGET);
+            pedestal.markDirty();
+        }
+
+        moveEntities(world, pos, pushDelta, () -> {
+            if (!pedestal.hasFlux(5)) return false;
+
+            pedestal.consumeFlux(5);
             return true;
         });
     }
 
     @Override
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        moveEntities(world, pos, pedestal, () -> pedestal.hasFlux(25));
+        final var echoShardTarget = pedestal.getItem().getOr(ECHO_SHARD_TARGET, null);
+        var pushDelta = echoShardTarget != null
+                ? Vec3d.ofCenter(echoShardTarget).subtract(Vec3d.ofCenter(pos)).normalize()
+                : Vec3d.of(getDirection(pedestal.getItem()).getVector());
+
+        moveEntities(world, pos, pushDelta, () -> pedestal.hasFlux(5));
     }
 
-    protected static void moveEntities(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, BooleanSupplier shouldContinue) {
-        final var direction = getDirection(pedestal.getItem());
-
-        var pushDelta = Vec3d.of(direction.getVector()).multiply(.2);
-        var stuckPosition = Vec3d.ofCenter(pos.offset(direction.getOpposite()));
+    protected static void moveEntities(World world, BlockPos pos, Vec3d direction, BooleanSupplier shouldContinue) {
+        var stuckPosition = Vec3d.ofCenter(pos).add(direction);
+        var pushDelta = direction.multiply(.2);
         var unstuckDelta = pushDelta.rotateY(45);
 
         for (var entity : world.getNonSpectatingEntities(Entity.class, new Box(pos).expand(4, 2, 4))) {
@@ -80,6 +102,23 @@ public class NimbleStaffItem extends StaffItem {
                 entity.addVelocity(pushDelta);
             }
         }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    private static @Nullable BlockPos tryFindBoundEchoShard(BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        var storageBelow = ItemStorage.SIDED.find(pedestal.getWorld(), pos.down(), Direction.UP);
+        if (storageBelow == null) return null;
+
+        BlockPos targetPos = null;
+        for (var view : storageBelow) {
+            if (!view.getResource().isOf(Items.ECHO_SHARD)) continue;
+            if (!view.getResource().hasNbt()) continue;
+
+            targetPos = EchoShardExtension.tryGetLocationInWorld(pedestal.getWorld(), view.getResource().getNbt());
+            if (targetPos != null) break;
+        }
+
+        return targetPos;
     }
 
     @Override
@@ -108,36 +147,46 @@ public class NimbleStaffItem extends StaffItem {
 
     @Override
     public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<InWorldTooltipProvider.Entry> entries) {
-        var direction = getDirection(pedestal.getItem());
-        entries.add(InWorldTooltipProvider.Entry.text(
-                ARROW_BY_DIRECTION.get(direction),
-                Text.translatable(this.getTranslationKey() + ".direction." + direction.asString())
-        ));
+        if (pedestal.getItem().getOr(ECHO_SHARD_TARGET, null) != null) {
+            var targetPos = pedestal.getItem().get(ECHO_SHARD_TARGET);
+            entries.add(InWorldTooltipProvider.Entry.icon(
+                    Text.literal(targetPos.getX() + " " + targetPos.getY() + " " + targetPos.getZ()),
+                    16, 0
+            ));
+        } else {
+            var direction = getDirection(pedestal.getItem());
+            entries.add(InWorldTooltipProvider.Entry.text(
+                    ARROW_BY_DIRECTION.get(direction),
+                    Text.translatable(this.getTranslationKey() + ".direction." + direction.asString())
+            ));
+        }
     }
 
-    public static Direction getDirection(ItemStack stack) {
+    private static Direction getDirection(ItemStack stack) {
         return stack.getOr(DIRECTION, Direction.NORTH);
     }
 
     @Override
     protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {
         var target = player.raycast(50, 0, false);
-        if (!(target instanceof BlockHitResult blockHit)) return TypedActionResult.fail(stack);
-        if (world.isAir(blockHit.getBlockPos())) return TypedActionResult.fail(stack);
+        if (!(target instanceof BlockHitResult blockHit) || world.isAir(blockHit.getBlockPos())) {
+            return TypedActionResult.fail(stack);
+        }
+
+        player.getItemCooldownManager().set(this, 15);
+        if (world.isClient) return TypedActionResult.success(stack);
 
         var targetCenter = Vec3d.ofCenter(blockHit.getBlockPos());
-
         final var velocity = targetCenter.subtract(player.getPos()).multiply(
                 player.isOnGround()
                         ? 0.15
                         : player.isFallFlying() ? 0.025 : 0.1
         );
+
         player.addVelocity(velocity.x, velocity.y, velocity.z);
+        player.velocityModified = true;
 
-        if (world.isClient) return TypedActionResult.success(stack);
         AffinityParticleSystems.NIMBLE_STAFF_FLING.spawn(world, player.getEyePos(), targetCenter);
-
-        player.getItemCooldownManager().set(this, 15);
         return TypedActionResult.success(stack);
     }
 

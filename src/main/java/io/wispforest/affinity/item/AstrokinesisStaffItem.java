@@ -71,12 +71,8 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
             if (!view.getResource().isOf(Items.ECHO_SHARD)) continue;
             if (!view.getResource().hasNbt()) continue;
 
-            var nbt = view.getResource().getNbt();
-            if (!nbt.has(EchoShardExtension.BOUND)) continue;
-            if (!nbt.get(EchoShardExtension.WORLD).equals(world.getRegistryKey().getValue())) continue;
-
-            targetPos = nbt.get(EchoShardExtension.POS);
-            break;
+            targetPos = EchoShardExtension.tryGetLocationInWorld(world, view.getResource().getNbt());
+            if (targetPos != null) break;
         }
 
         if (targetPos == null) return;
