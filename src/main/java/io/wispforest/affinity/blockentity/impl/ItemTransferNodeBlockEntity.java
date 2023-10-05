@@ -1,10 +1,8 @@
 package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.block.impl.ItemTransferNodeBlock;
-import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
-import io.wispforest.affinity.blockentity.template.LinkableBlockEntity;
-import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
-import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.blockentity.template.*;
+import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.misc.callback.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
@@ -55,7 +53,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 @SuppressWarnings("UnstableApiUsage")
-public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, InWorldTooltipProvider, LinkableBlockEntity, InteractableBlockEntity, BeforeMangroveBasketCaptureCallback {
+public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, InWorldTooltipProvider, LinkableBlockEntity, InteractableBlockEntity, InquirableOutlineProvider, BeforeMangroveBasketCaptureCallback {
 
     public static final NbtKey<Mode> MODE_KEY = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
     public static final NbtKey<Integer> STACK_SIZE_KEY = new NbtKey<>("StackSize", NbtKey.Type.INT);
@@ -166,30 +164,36 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     @Override
     public void tickServer() {
         if (this.entries.removeIf(entry -> {
-            if (++entry.age >= 10) {
-                if (!entry.insert) return true;
+            if (++entry.age < 10) return false;
+            if (!entry.insert) return true;
 
-                var item = this.storageTransaction((storage, transaction) -> {
-                    int inserted = (int) storage.insert(ItemVariant.of(entry.item), entry.item.getCount(), transaction);
-                    transaction.commit();
+            var item = this.storageTransaction((storage, transaction) -> {
+                int inserted = (int) storage.insert(ItemVariant.of(entry.item), entry.item.getCount(), transaction);
+                transaction.commit();
 
-                    if (inserted != entry.item.getCount()) {
-                        return entry.item.copyWithCount(entry.item.getCount() - inserted);
-                    } else {
-                        return ItemStack.EMPTY;
-                    }
-                });
+                if (inserted != entry.item.getCount()) {
+                    return entry.item.copyWithCount(entry.item.getCount() - inserted);
+                } else {
+                    return ItemStack.EMPTY;
+                }
+            });
 
+            var origin = this.world.getBlockEntity(entry.originNode);
+            if (origin instanceof ItemTransferNodeBlockEntity originNode && originNode != this) {
+                if (item == null) {
+                    this.sendToNode(originNode, entry.item, entry.item.getCount());
+                } else if (!item.isEmpty()) {
+                    this.sendToNode(originNode, item, item.getCount());
+                }
+            } else {
                 if (item == null) {
                     this.dropItem(entry.item);
                 } else if (!item.isEmpty()) {
                     this.dropItem(item);
                 }
-
-                return true;
-            } else {
-                return false;
             }
+
+            return true;
         })) {
             this.markDirty();
         }
@@ -221,7 +225,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
             if (stack == null || stack.isEmpty()) return;
 
-            this.entries.add(new ItemEntry(stack.copy(), 0, false));
+            this.entries.add(new ItemEntry(this.pos, stack.copy(), 0, false));
             this.markDirty();
 
             if (!targets.isEmpty()) {
@@ -243,19 +247,22 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
                     int insertCount = Math.min(node.maxInsertCount(insertVariant), Math.min(countPerTarget, stack.getCount()));
                     if (insertCount == 0) continue;
 
-                    var transferTime = Math.max(15, (int) Math.round(Math.sqrt(node.pos.getSquaredDistance(this.pos))) * 5);
-
-                    AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, particleOrigin(this), new AffinityParticleSystems.DissolveData(
-                            stack, particleOrigin(node), 10, transferTime
-                    ));
-
-                    node.insertItem(stack.copyWithCount(insertCount), transferTime + 10);
-                    stack.decrement(insertCount);
+                    this.sendToNode(node, stack, insertCount);
                 }
             }
 
-            if (!stack.isEmpty()) this.insertItem(stack, 0);
+            if (!stack.isEmpty()) this.insertItem(this, stack, 0);
         }
+    }
+
+    private void sendToNode(ItemTransferNodeBlockEntity targetNode, ItemStack stack, int insertCount) {
+        var transferTime = Math.max(15, (int) Math.round(Math.sqrt(targetNode.pos.getSquaredDistance(this.pos))) * 5);
+        AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, particleOrigin(this), new AffinityParticleSystems.DissolveData(
+                stack, particleOrigin(targetNode), 10, transferTime
+        ));
+
+        targetNode.insertItem(this, stack.copyWithCount(insertCount), transferTime + 10);
+        stack.decrement(insertCount);
     }
 
     @Override
@@ -275,8 +282,8 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         }
     }
 
-    private void insertItem(ItemStack item, int delay) {
-        this.entries.add(new ItemEntry(item, -delay, true));
+    private void insertItem(ItemTransferNodeBlockEntity origin,ItemStack item, int delay) {
+        this.entries.add(new ItemEntry(origin.pos, item, -delay, true));
         this.markDirty();
     }
 
@@ -429,6 +436,11 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         NbtUtil.processBlockEntityNbt(stack, this, nbt -> nbt.remove("Links"));
     }
 
+    @Override
+    public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
+        return CuboidRenderer.Cuboid.symmetrical(15, 15, 15);
+    }
+
     public ItemStack previewItem() {
         return this.entries.isEmpty() || this.entries.get(0).age < 0
                 ? ItemStack.EMPTY
@@ -463,13 +475,15 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     }
 
     public static final class ItemEntry {
+        private final BlockPos originNode;
         private final ItemStack item;
         private final boolean insert;
 
         private int age;
         private @Nullable ItemVariant variant = null;
 
-        public ItemEntry(ItemStack item, int age, boolean insert) {
+        public ItemEntry(BlockPos originNode, ItemStack item, int age, boolean insert) {
+            this.originNode = originNode;
             this.item = item;
             this.age = age;
             this.insert = insert;
@@ -485,6 +499,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
             for (var entry : entries) {
                 var entryNbt = new NbtCompound();
+                entryNbt.putLong("OriginNode", entry.originNode.asLong());
                 entryNbt.put("Item", entry.item.writeNbt(new NbtCompound()));
                 entryNbt.putInt("Age", entry.age);
                 entryNbt.putBoolean("Insert", entry.insert);
@@ -502,6 +517,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
             for (var entryNbt : list) {
                 var entryData = (NbtCompound) entryNbt;
                 entries.add(new ItemEntry(
+                        BlockPos.fromLong(entryData.getLong("OriginNode")),
                         ItemStack.fromNbt(entryData.getCompound("Item")),
                         entryData.getInt("Age"),
                         entryData.getBoolean("Insert")
