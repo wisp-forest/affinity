@@ -69,7 +69,5 @@ public class CarbonCopyItem extends Item {
     }
 
     public record TooltipData(CraftingRecipe recipe,
-                              ItemStack result) implements net.minecraft.client.item.TooltipData {
-    }
-
+                              ItemStack result) implements net.minecraft.client.item.TooltipData {}
 }

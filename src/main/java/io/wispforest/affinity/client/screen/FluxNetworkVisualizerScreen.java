@@ -6,6 +6,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
+import io.wispforest.affinity.aethumflux.storage.AethumFluxContainer;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.client.render.PostEffectBuffer;
@@ -42,10 +43,7 @@ import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
@@ -57,7 +55,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
     private int networkMembers = 0;
     private int networkNodes = 0;
-    private int networkCapacity = 0;
+    private long networkCapacity = 0;
+    private final List<AethumNetworkMember> members = new ArrayList<>();
 
     private final Interpolator xOffset = new Interpolator(0), yOffset = new Interpolator(0);
     private final Interpolator rotation = new Interpolator(45), slant = new Interpolator(30);
@@ -74,6 +73,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         super(FlowLayout.class, Affinity.id("flux_network_visualizer"));
 
         var members = AethumNetworkMember.traverseNetwork(MinecraftClient.getInstance().world, initialMember.getPos(), (peer, isMultiblockChild) -> {
+            this.members.add(peer);
+
             if (!isMultiblockChild) {
                 this.networkMembers++;
                 this.networkCapacity += peer.fluxCapacity();
@@ -120,6 +121,11 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
 
+        this.component(LabelComponent.class, "total-flux-label").text(Text.translatable(
+                "gui.affinity.flux_network_visualizer.total_flux",
+                this.members.stream().mapToLong(AethumFluxContainer::flux).sum()
+        ));
+
         if (this.mesh.canRender()) {
 
             // Begin model view / projection crimes
@@ -161,7 +167,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             var camera = MinecraftClient.getInstance().gameRenderer.getCamera();
             var prevCameraPos = camera.getPos();
 
-            ((CameraInvoker) camera).affinity$etPos(new Vec3d(near.x, near.y, near.z));
+            ((CameraInvoker) camera).affinity$etPos(new Vec3d(prevCameraPos.x + near.x, prevCameraPos.y +near.y, prevCameraPos.z +near.z));
 
             //noinspection deprecation
             RenderSystem.runAsFancy(() -> {
@@ -183,7 +189,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                 MixinHooks.forceBlockEntityRendering = false;
 
                 matrices.push();
-                matrices.translate(-mesh.startPos().getX(), -mesh.startPos().getY(),  -mesh.startPos().getZ());
+                matrices.translate(-this.mesh.startPos().getX(), -this.mesh.startPos().getY(), -this.mesh.startPos().getZ());
                 LinkRenderer.draw(matrices, this.client.getBufferBuilders().getEntityVertexConsumers(), LightmapTextureManager.MAX_LIGHT_COORDINATE);
                 matrices.pop();
 

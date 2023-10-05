@@ -2,6 +2,7 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.aethumflux.net.AethumLink;
+import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.block.impl.AethumFluxCacheBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
@@ -47,7 +48,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     @Environment(EnvType.CLIENT) public boolean tickedOnce = false;
 
     private boolean isPrimaryStorage;
-    @Nullable private ParentStorageReference parentRef = null;
+    private ParentStorageReference parentRef = null;
     @Nullable private List<AethumFluxCacheBlockEntity> childCache = null;
 
     public AethumFluxCacheBlockEntity(BlockPos pos, BlockState state) {
@@ -348,8 +349,13 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         return AethumLink.Type.PUSH;
     }
 
-    public ParentStorageReference parent() {
-        return parentRef;
+    @Override
+    public AethumNetworkMember parent() {
+        return this.parentRef.entity;
+    }
+
+    public ParentStorageReference parentRef() {
+        return this.parentRef;
     }
 
     @Override

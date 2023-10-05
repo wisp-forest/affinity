@@ -37,7 +37,7 @@ public class AethumFluxCacheBlockEntityRenderer extends AffinityBlockEntityRende
         var targetFluxY = bottomY + (entity.flux() / (float) entity.fluxCapacity()) * (topY - bottomY);
         entity.renderFluxY += Delta.compute(entity.renderFluxY, targetFluxY, frameDelta);
 
-        var parent = entity.parent();
+        var parent = entity.parentRef();
         var noFluxAbove = parent == null || parent.nextIsEmpty();
 
         if (!entity.tier().isNone() && (entity.flux() > 1 || cachePart.isBase) && noFluxAbove) {

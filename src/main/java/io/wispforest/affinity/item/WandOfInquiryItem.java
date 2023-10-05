@@ -98,7 +98,8 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
             return ActionResult.SUCCESS;
         } else if (blockEntity instanceof AethumNetworkMemberBlockEntity member) {
             if (member instanceof MultiblockAethumNetworkMember multiblock && !multiblock.isParent()) {
-                return ActionResult.PASS;
+                if (!(multiblock.parent() instanceof AethumNetworkMemberBlockEntity parentMember)) return ActionResult.PASS;
+                member = parentMember;
             }
 
             if (world.isClient) {

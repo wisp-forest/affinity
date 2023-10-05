@@ -16,4 +16,10 @@ public interface MultiblockAethumNetworkMember extends AethumNetworkMember {
      */
     boolean isParent();
 
+    /**
+     * @return The parent member of this multiblock,
+     * may return self if this member is the parent
+     */
+    AethumNetworkMember parent();
+
 }

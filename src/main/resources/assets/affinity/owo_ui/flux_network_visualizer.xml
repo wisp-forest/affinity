@@ -23,6 +23,9 @@
                         <label id="flux-capacity-label">
                             <color>gray</color>
                         </label>
+                        <label id="total-flux-label">
+                            <color>gray</color>
+                        </label>
                     </children>
 
                     <gap>3</gap>
