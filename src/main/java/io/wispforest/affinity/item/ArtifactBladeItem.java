@@ -3,9 +3,9 @@ package io.wispforest.affinity.item;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.DamageTypeKey;
+import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
 import io.wispforest.affinity.object.AffinityItems;
@@ -55,13 +55,9 @@ public class ArtifactBladeItem extends SwordItem {
         super(tier, 0, tier.data.attackSpeed, AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1).rarity(tier.data.rarity).trackUsageStat());
         this.tier = tier;
 
-        var modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder().putAll(super.getAttributeModifiers(EquipmentSlot.MAINHAND));
-
-        if (this.tier == Tier.ASTRAL) {
-            modifiers.put(AffinityEntityAttributes.MAX_AETHUM, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes", 1, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
-                    .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes episode 2", 3, EntityAttributeModifier.Operation.MULTIPLY_TOTAL));
-        }
-
+        var modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .putAll(super.getAttributeModifiers(EquipmentSlot.MAINHAND))
+                .putAll(this.tier.data.modifiers());
         this.modifiers = modifiers.build();
 
         modifiers.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, DAMAGE_MODIFIER);
@@ -81,7 +77,9 @@ public class ArtifactBladeItem extends SwordItem {
         if (playerStack.has(ABILITY_START_TIME)) return TypedActionResult.pass(playerStack);
 
         var aethum = user.getComponent(AffinityComponents.PLAYER_AETHUM);
-        if (!(aethum.tryConsumeAethum(aethum.maxAethum() * this.tier.data.abilityAethumCost))) return TypedActionResult.pass(playerStack);
+        if (!(aethum.tryConsumeAethum(aethum.maxAethum() * this.tier.data.abilityAethumCost))) {
+            return TypedActionResult.pass(playerStack);
+        }
 
         playerStack.put(ABILITY_START_TIME, world.getTime());
         return TypedActionResult.success(playerStack);
@@ -161,11 +159,35 @@ public class ArtifactBladeItem extends SwordItem {
     }
 
     public enum Tier implements ToolMaterial {
-        FORGOTTEN(new TierData(500, 2, 20, 6, 7f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f)),
-        STABILIZED(new TierData(1000, 3, 25, 6.5f, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .6f)),
-        STRENGTHENED(new TierData(1500, 4, 35, 11, 12f, -2f, Rarity.RARE, 160, 400, .6f)),
-        SUPERIOR(new TierData(3000, 5, 40, 15, 15f, -1.8f, Rarity.EPIC, 200, 800, .8f)),
-        ASTRAL(new TierData(69000, 6, 100, 6969, 75f, 21f, Rarity.EPIC, 200, 800, 1f));
+        FORGOTTEN(new TierData(
+                500, 2, 20, 6, 7f, -2.4f, Rarity.UNCOMMON, 100, 300, .35f,
+                ImmutableMultimap.of()
+        )),
+        STABILIZED(new TierData(
+                1000, 3, 25, 6.5f, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f,
+                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes season 4: remade", .15, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
+                        .build()
+        )),
+        STRENGTHENED(new TierData(
+                1500, 4, 35, 11, 12f, -2f, Rarity.RARE, 160, 400, .65f,
+                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes season 3 the prequel", .35, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
+                        .build()
+        )),
+        SUPERIOR(new TierData(
+                3000, 5, 40, 15, 15f, -1.8f, Rarity.EPIC, 200, 800, .75f,
+                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes season 2", .5, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
+                        .build()
+        )),
+        ASTRAL(new TierData(
+                69000, 6, 100, 6969, 75f, 21f, Rarity.EPIC, 200, 800, 1f,
+                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                        .put(AffinityEntityAttributes.MAX_AETHUM, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes", 1, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
+                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes episode 2", 3, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
+                        .build()
+        ));
 
         private final TierData data;
 
@@ -203,7 +225,9 @@ public class ArtifactBladeItem extends SwordItem {
             return Ingredient.EMPTY;
         }
 
-        private record TierData(int durability, int miningLevel, int enchantability, float attackDamage, float miningSpeedMultiplier, float attackSpeed,
-                                Rarity rarity, int abilityDuration, int abilityCooldown, float abilityAethumCost) {}
+        private record TierData(int durability, int miningLevel, int enchantability, float attackDamage,
+                                float miningSpeedMultiplier, float attackSpeed,
+                                Rarity rarity, int abilityDuration, int abilityCooldown, float abilityAethumCost,
+                                Multimap<EntityAttribute, EntityAttributeModifier> modifiers) {}
     }
 }
