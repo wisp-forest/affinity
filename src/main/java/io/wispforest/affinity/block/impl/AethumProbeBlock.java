@@ -119,7 +119,7 @@ public class AethumProbeBlock extends BlockWithEntity {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.AETHUM_PROBE, !world.isClient ? TickedBlockEntity.ticker() : null);
+        return validateTicker(type, AffinityBlocks.Entities.AETHUM_PROBE, !world.isClient ? TickedBlockEntity.ticker() : null);
     }
 
     @Override

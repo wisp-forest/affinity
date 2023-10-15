@@ -61,7 +61,7 @@ public class StaffPedestalBlock extends AethumNetworkMemberBlock implements Scro
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.STAFF_PEDESTAL, TickedBlockEntity.ticker());
+        return validateTicker(type, AffinityBlocks.Entities.STAFF_PEDESTAL, TickedBlockEntity.ticker());
     }
 
     @Nullable

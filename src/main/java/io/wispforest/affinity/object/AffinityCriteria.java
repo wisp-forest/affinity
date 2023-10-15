@@ -1,5 +1,6 @@
 package io.wispforest.affinity.object;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.criteria.*;
 import io.wispforest.owo.registration.reflect.SimpleFieldProcessingSubject;
 import net.minecraft.advancement.criterion.Criteria;
@@ -20,7 +21,7 @@ public class AffinityCriteria implements SimpleFieldProcessingSubject<Criterion<
 
     @Override
     public void processField(Criterion<?> value, String identifier, Field field) {
-        Criteria.register(value);
+        Criteria.register(Affinity.idPlain(identifier), value);
     }
 
     @Override

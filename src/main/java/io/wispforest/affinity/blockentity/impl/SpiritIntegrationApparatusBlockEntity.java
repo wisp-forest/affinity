@@ -89,7 +89,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
         final var recipeOptional = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.SPIRIT_ASSIMILATION, inventory, this.world);
 
         if (recipeOptional.isEmpty()) return false;
-        this.cachedRecipe = recipeOptional.get();
+        this.cachedRecipe = recipeOptional.get().value();
 
         setup.configureLength(this.cachedRecipe.duration);
         this.ritualLock.acquire(this);
@@ -161,7 +161,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     protected boolean onRitualCompleted() {
         final var pos = Vec3d.ofCenter(this.ritualCenterPos(), 2.5);
 
-        var item = new ItemEntity(this.world, pos.x, pos.y - .25, pos.z, this.cachedRecipe.getOutput(null));
+        var item = new ItemEntity(this.world, pos.x, pos.y - .25, pos.z, this.cachedRecipe.getResult(null));
         item.setVelocity(
                 this.world.random.nextTriangular(0.0, 0.115),
                 this.world.random.nextTriangular(0.2, 0.115),

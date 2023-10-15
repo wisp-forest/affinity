@@ -14,6 +14,7 @@ import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.mixin.BrewingRecipeRegistryAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.recipe.*;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
@@ -85,13 +86,13 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerDisplays(DisplayRegistry registry) {
-        registry.registerFiller(PotionMixingRecipe.class, PotionMixingDisplay::new);
-        registry.registerFiller(AspenInfusionRecipe.class, AspenInfusionDisplay::new);
-        registry.registerFiller(SpiritAssimilationRecipe.class, SpiritAssimilationDisplay::new);
-        registry.registerFiller(OrnamentCarvingRecipe.class, OrnamentCarvingDisplay::new);
+        registry.registerRecipeFiller(PotionMixingRecipe.class, AffinityRecipeTypes.POTION_MIXING, PotionMixingDisplay::new);
+        registry.registerRecipeFiller(AspenInfusionRecipe.class, AffinityRecipeTypes.ASPEN_INFUSION, AspenInfusionDisplay::new);
+        registry.registerRecipeFiller(SpiritAssimilationRecipe.class, AffinityRecipeTypes.SPIRIT_ASSIMILATION, SpiritAssimilationDisplay::new);
+        registry.registerRecipeFiller(OrnamentCarvingRecipe.class, AffinityRecipeTypes.ORNAMENT_CARVING, OrnamentCarvingDisplay::new);
 
-        registry.registerFiller(ShapedAssemblyRecipe.class, ShapedAssemblyDisplay::new);
-        registry.registerFiller(ShapelessAssemblyRecipe.class, ShapelessAssemblyDisplay::new);
+        registry.registerRecipeFiller(ShapedAssemblyRecipe.class, AffinityRecipeTypes.ASSEMBLY, ShapedAssemblyDisplay::new);
+        registry.registerRecipeFiller(ShapelessAssemblyRecipe.class, AffinityRecipeTypes.ASSEMBLY, ShapelessAssemblyDisplay::new);
 
         for (var item : Registries.ITEM) {
             var testStack = item.getDefaultStack();

@@ -18,8 +18,8 @@ import net.minecraft.world.World;
 
 public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
 
-    public GlowingPotionDyeRecipe(Identifier id, CraftingRecipeCategory category) {
-        super(id, category);
+    public GlowingPotionDyeRecipe(CraftingRecipeCategory category) {
+        super(category);
     }
 
     @Override

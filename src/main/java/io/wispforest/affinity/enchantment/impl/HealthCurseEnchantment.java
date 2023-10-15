@@ -32,7 +32,7 @@ public class HealthCurseEnchantment extends CurseEnchantment implements Enchantm
     @Override
     public void onUnequip(LivingEntity entity, EquipmentSlot slot, ItemStack stack) {
         if (!this.slotTypes.contains(slot)) return;
-        this.healthAttribute(entity).removeModifier(HEALTH_ADDITION);
+        this.healthAttribute(entity).removeModifier(HEALTH_ADDITION.getId());
 
         this.healthAttribute(entity).addPersistentModifier(new EntityAttributeModifier(UUID.randomUUID(),
                 "Curse of Health - Penalty", -10, EntityAttributeModifier.Operation.ADDITION));

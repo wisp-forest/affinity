@@ -8,11 +8,11 @@ import net.minecraft.registry.Registry;
 
 public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>> {
 
-    public static final SimpleType<PotionMixingRecipe> POTION_MIXING = new SimpleType<>();
-    public static final SimpleType<AspenInfusionRecipe> ASPEN_INFUSION = new SimpleType<>();
-    public static final SimpleType<SpiritAssimilationRecipe> SPIRIT_ASSIMILATION = new SimpleType<>();
-    public static final SimpleType<OrnamentCarvingRecipe> ORNAMENT_CARVING = new SimpleType<>();
-    public static final SimpleType<CraftingRecipe> ASSEMBLY = new SimpleType<>();
+    public static final RecipeType<PotionMixingRecipe> POTION_MIXING = new SimpleType<>();
+    public static final RecipeType<AspenInfusionRecipe> ASPEN_INFUSION = new SimpleType<>();
+    public static final RecipeType<SpiritAssimilationRecipe> SPIRIT_ASSIMILATION = new SimpleType<>();
+    public static final RecipeType<OrnamentCarvingRecipe> ORNAMENT_CARVING = new SimpleType<>();
+    public static final RecipeType<CraftingRecipe> ASSEMBLY = new SimpleType<>();
 
     public static class Serializers implements AutoRegistryContainer<RecipeSerializer<?>> {
 

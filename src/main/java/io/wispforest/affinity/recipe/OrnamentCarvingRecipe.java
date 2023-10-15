@@ -1,9 +1,11 @@
 package io.wispforest.affinity.recipe;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
@@ -11,19 +13,22 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.registry.Registries;
 import net.minecraft.world.World;
 
 public class OrnamentCarvingRecipe implements Recipe<Inventory> {
 
-    public final Ingredient input;
+    public static final Codec<OrnamentCarvingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(
+                    Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input").forGetter(recipe -> recipe.input),
+                    Registries.ITEM.getCodec().xmap(Item::getDefaultStack, ItemStack::getItem).fieldOf("output").forGetter(recipe -> recipe.output)
+            )
+            .apply(instance, OrnamentCarvingRecipe::new));
 
-    private final Identifier id;
+    public final Ingredient input;
     private final ItemStack output;
 
-    public OrnamentCarvingRecipe(Identifier id, Ingredient input, ItemStack output) {
-        this.id = id;
+    public OrnamentCarvingRecipe(Ingredient input, ItemStack output) {
         this.input = input;
         this.output = output;
     }
@@ -44,13 +49,8 @@ public class OrnamentCarvingRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager drm) {
+    public ItemStack getResult(DynamicRegistryManager drm) {
         return this.output.copy();
-    }
-
-    @Override
-    public Identifier getId() {
-        return this.id;
     }
 
     @Override
@@ -73,15 +73,13 @@ public class OrnamentCarvingRecipe implements Recipe<Inventory> {
         public Serializer() {}
 
         @Override
-        public OrnamentCarvingRecipe read(Identifier id, JsonObject json) {
-            var input = Ingredient.fromJson(JsonHelper.getObject(json, "input"));
-            var output = JsonHelper.getItem(json, "output").getDefaultStack();
-            return new OrnamentCarvingRecipe(id, input, output);
+        public Codec<OrnamentCarvingRecipe> codec() {
+            return OrnamentCarvingRecipe.CODEC;
         }
 
         @Override
-        public OrnamentCarvingRecipe read(Identifier id, PacketByteBuf buf) {
-            return new OrnamentCarvingRecipe(id, Ingredient.fromPacket(buf), buf.readItemStack());
+        public OrnamentCarvingRecipe read(PacketByteBuf buf) {
+            return new OrnamentCarvingRecipe(Ingredient.fromPacket(buf), buf.readItemStack());
         }
 
         @Override

@@ -152,7 +152,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
             extraNbt.put(PotionMixture.EXTEND_DURATION_BY, 1 + Math.min(affineCandleCount * 0.05F, 0.45F));
         }
 
-        for (var ingredient : this.cachedRecipe.getItemInputs()) {
+        for (var ingredient : this.cachedRecipe.itemInputs) {
             for (int i = 0; i < this.items.size(); i++) {
                 if (!ingredient.test(this.items.get(i))) continue;
                 this.items.set(i, ItemStack.EMPTY);

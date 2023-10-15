@@ -10,12 +10,12 @@ import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.util.Optional;
+
 public class SacrificedToRitualCriterion extends AbstractCriterion<SacrificedToRitualCriterion.Conditions> {
 
-    public static final Identifier ID = Affinity.id("sacrificed_to_ritual");
-
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+    protected Conditions conditionsFromJson(JsonObject obj, Optional<LootContextPredicate> playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
         return new Conditions(playerPredicate);
     }
 
@@ -23,14 +23,9 @@ public class SacrificedToRitualCriterion extends AbstractCriterion<SacrificedToR
         this.trigger(player, conditions -> true);
     }
 
-    @Override
-    public Identifier getId() {
-        return ID;
-    }
-
     public static class Conditions extends AbstractCriterionConditions {
-        public Conditions(LootContextPredicate player) {
-            super(ID, player);
+        public Conditions(Optional<LootContextPredicate> player) {
+            super(player);
         }
     }
 

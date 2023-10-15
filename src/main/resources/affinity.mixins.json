@@ -43,7 +43,6 @@
     "ProjectileUtilMixin",
     "ServerChunkManagerMixin",
     "ServerWorldMixin",
-    "StatusEffectMixin",
     "StatusEffectUtilMixin",
     "ThreadedAnvilChunkStorageMixin",
     "ThrowablePotionItemMixin",

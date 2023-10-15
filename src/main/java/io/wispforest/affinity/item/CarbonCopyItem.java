@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -33,7 +34,9 @@ public class CarbonCopyItem extends Item {
         if (recipeId == null || result == null) return Optional.empty();
 
         var recipe = MinecraftClient.getInstance().world.getRecipeManager().get(recipeId);
-        if (recipe.isEmpty() || !(recipe.get() instanceof CraftingRecipe craftingRecipe)) return Optional.empty();
+        if (recipe.isEmpty() || !(recipe.get().value() instanceof CraftingRecipe craftingRecipe)) {
+            return Optional.empty();
+        }
 
         return Optional.of(new TooltipData(craftingRecipe, result));
     }
@@ -51,21 +54,25 @@ public class CarbonCopyItem extends Item {
                 : Text.translatable(this.getTranslationKey(), resultStack.getCount(), resultStack.getName());
     }
 
-    public static ItemStack create(CraftingRecipe recipe, ItemStack result) {
+    public static ItemStack create(RecipeEntry<CraftingRecipe> recipe, ItemStack result) {
         var stack = AffinityItems.CARBON_COPY.getDefaultStack();
 
-        stack.put(RECIPE_KEY, recipe.getId());
+        stack.put(RECIPE_KEY, recipe.id());
         stack.put(RESULT_KEY, result);
 
         return stack;
     }
 
-    public static @Nullable CraftingRecipe getRecipe(ItemStack stack, World world) {
+    @SuppressWarnings("unchecked")
+    public static @Nullable RecipeEntry<CraftingRecipe> getRecipe(ItemStack stack, World world) {
         if (!stack.has(RECIPE_KEY)) return null;
-        if (!(world.getRecipeManager().get(stack.get(RECIPE_KEY)).orElse(null) instanceof CraftingRecipe recipe))
-            return null;
 
-        return recipe;
+        var entry = world.getRecipeManager().get(stack.get(RECIPE_KEY)).orElse(null);
+        if (entry == null || !(entry.value() instanceof CraftingRecipe)) {
+            return null;
+        }
+
+        return (RecipeEntry<CraftingRecipe>) entry;
     }
 
     public record TooltipData(CraftingRecipe recipe,

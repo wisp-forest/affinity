@@ -55,7 +55,7 @@ public class AspRiteCoreBlock extends RitualCoreBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.ASP_RITE_CORE, TickedBlockEntity.ticker());
+        return validateTicker(type, AffinityBlocks.Entities.ASP_RITE_CORE, TickedBlockEntity.ticker());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package io.wispforest.affinity.recipe.ingredient;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityIngredients;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
@@ -12,11 +13,14 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 
 import java.util.List;
 
 public class PotionIngredient implements CustomIngredient {
+
+    public static final Codec<PotionIngredient> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(Registries.POTION.getCodec().fieldOf("potion").forGetter(ingredient -> ingredient.requiredPotion))
+            .apply(instance, PotionIngredient::new));
 
     private final Potion requiredPotion;
 
@@ -56,8 +60,8 @@ public class PotionIngredient implements CustomIngredient {
         }
 
         @Override
-        public PotionIngredient read(JsonObject json) {
-            return new PotionIngredient(Registries.POTION.getOrEmpty(new Identifier(JsonHelper.getString(json, "potion"))).orElseThrow());
+        public Codec<PotionIngredient> getCodec(boolean allowEmpty) {
+            return PotionIngredient.CODEC;
         }
 
         @Override
@@ -69,8 +73,5 @@ public class PotionIngredient implements CustomIngredient {
         public void write(PacketByteBuf buf, PotionIngredient ingredient) {
             buf.writeRegistryValue(Registries.POTION, ingredient.requiredPotion);
         }
-
-        @Override
-        public void write(JsonObject json, PotionIngredient ingredient) {}
     }
 }

@@ -285,7 +285,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
                     if (data == null) yield EMPTY;
 
                     var mesh = new WorldMesh.Builder(client.world, data.start, data.end).build();
-                    var updateDelay = (int) (mesh.dimensions().getXLength() * mesh.dimensions().getYLength() * mesh.dimensions().getZLength()) / 20000;
+                    var updateDelay = (int) (mesh.dimensions().getLengthX() * mesh.dimensions().getLengthY() * mesh.dimensions().getLengthZ()) / 20000;
 
                     var realMeshDimensions = new Box(mesh.startPos(), mesh.endPos().add(1, 1, 1));
                     AffinityClientWorldExtension.BlockUpdateListener listener = (pos, from, to) -> {
@@ -309,9 +309,9 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
                             matrices.translate(.5f, .75f, .5f);
                             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
 
-                            float meshScale = Math.min(.75f, 3f / (int) Math.max(mesh.dimensions().getXLength(), Math.max(mesh.dimensions().getYLength(), mesh.dimensions().getZLength())));
+                            float meshScale = Math.min(.75f, 3f / (int) Math.max(mesh.dimensions().getLengthX(), Math.max(mesh.dimensions().getLengthY(), mesh.dimensions().getLengthZ())));
                             matrices.scale(meshScale * scale, meshScale * scale, meshScale * scale);
-                            matrices.translate(-.5 - mesh.dimensions().getXLength() / 2, 0, -.5 - mesh.dimensions().getZLength() / 2);
+                            matrices.translate(-.5 - mesh.dimensions().getLengthX() / 2, 0, -.5 - mesh.dimensions().getLengthZ() / 2);
 
                             if (Affinity.CONFIG.renderBlockEntitiesInStereopticonSectionImprints()) {
                                 MixinHooks.forceBlockEntityRendering = true;

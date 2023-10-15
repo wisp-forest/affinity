@@ -12,6 +12,7 @@ import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.object.*;
+import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -251,6 +252,17 @@ public abstract class LivingEntityMixin extends Entity {
         ServerTasks.doDelayed((ServerWorld) this.getWorld(), 1, () -> AffinityParticleSystems.VOID_BEACON_TELEPORT.spawn(this.getWorld(), this.getPos(), this.getId()));
 
         cir.setReturnValue(true);
+    }
+
+    @Inject(method = "onStatusEffectRemoved", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/effect/StatusEffect;onRemoved(Lnet/minecraft/entity/attribute/AttributeContainer;)V", shift =  At.Shift.AFTER))
+    private void passEntityContextToStatusEffect(StatusEffectInstance effect, CallbackInfo ci) {
+        if (effect.getEffectType() == StatusEffects.GLOWING && (Object) this instanceof PlayerEntity player) {
+            player.getComponent(AffinityComponents.GLOWING_COLOR).reset();
+        }
+
+        if (effect.getEffectType() instanceof AffinityStatusEffect affinityEffect) {
+            affinityEffect.onRemovedFromEntity((LivingEntity) (Object) this);
+        }
     }
 
     @Inject(method = "createLivingAttributes", at = @At("RETURN"))

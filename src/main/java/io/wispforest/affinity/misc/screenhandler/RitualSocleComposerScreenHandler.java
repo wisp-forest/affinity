@@ -78,10 +78,11 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
         this.context.run((world, blockPos) -> {
             if (world.isClient()) return;
 
-            var recipe = world.getRecipeManager()
-                    .getFirstMatch(AffinityRecipeTypes.ORNAMENT_CARVING, inventory, world);
+            var resultStack = world.getRecipeManager()
+                    .getFirstMatch(AffinityRecipeTypes.ORNAMENT_CARVING, inventory, world)
+                    .map(entry -> entry.value().getResult(world.getRegistryManager()))
+                    .orElse(ItemStack.EMPTY);
 
-            final var resultStack = recipe.isEmpty() ? ItemStack.EMPTY : recipe.get().getOutput(world.getRegistryManager());
             this.resultInventory.setStack(0, resultStack);
             this.setPreviousTrackedSlot(ORNAMENT_CRAFT_SLOT, resultStack);
 

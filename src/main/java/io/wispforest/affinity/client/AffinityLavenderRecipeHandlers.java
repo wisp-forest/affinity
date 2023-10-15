@@ -15,6 +15,7 @@ import io.wispforest.owo.ui.parsing.UIModelLoader;
 import me.shedaniel.math.Point;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -26,17 +27,20 @@ public class AffinityLavenderRecipeHandlers {
     public static void initialize() {
         LavenderBookScreen.registerRecipeHandler(WISPEN_TESTAMENT_BOOK_ID, AffinityRecipeTypes.ASSEMBLY, new RecipeFeature.RecipeHandler<>() {
             @Override
-            public @NotNull Component buildRecipePreview(BookCompiler.ComponentSource componentSource, CraftingRecipe recipe) {
+            public @NotNull Component buildRecipePreview(BookCompiler.ComponentSource componentSource, RecipeEntry<CraftingRecipe> recipeEntry) {
+                var recipe = recipeEntry.value();
                 var recipeComponent = componentSource.template(UIModelLoader.get(Affinity.id("wispen_testament")), ParentComponent.class, "assembly-recipe");
 
-                this.populateIngredientsGrid(recipe, recipe.getIngredients(), recipeComponent.childById(ParentComponent.class, "input-grid"), 3, 3);
-                recipeComponent.childById(ItemComponent.class, "output").stack(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()));
+                this.populateIngredientsGrid(recipeEntry, recipe.getIngredients(), recipeComponent.childById(ParentComponent.class, "input-grid"), 3, 3);
+                recipeComponent.childById(ItemComponent.class, "output").stack(recipe.getResult(MinecraftClient.getInstance().world.getRegistryManager()));
 
                 return recipeComponent;
             }
         });
 
-        LavenderBookScreen.registerRecipeHandler(WISPEN_TESTAMENT_BOOK_ID, AffinityRecipeTypes.ASPEN_INFUSION, (componentSource, recipeInstance) -> {
+        LavenderBookScreen.registerRecipeHandler(WISPEN_TESTAMENT_BOOK_ID, AffinityRecipeTypes.ASPEN_INFUSION, (componentSource, recipeEntry) -> {
+            var recipeInstance = recipeEntry.value();
+
             int inputSize = 76;
             var root = Containers.horizontalFlow(Sizing.content(), Sizing.fixed(inputSize));
             root.verticalAlignment(VerticalAlignment.CENTER).horizontalAlignment(HorizontalAlignment.CENTER);
@@ -73,7 +77,7 @@ public class AffinityLavenderRecipeHandlers {
 
                 container.child(Containers.stack(Sizing.content(), Sizing.content())
                         .child(Components.texture(Affinity.id("textures/gui/wispen_testament.png"), 345, 140, 24, 24, 512, 256).blend(true))
-                        .child(Components.item(recipeInstance.getOutput(null)).setTooltipFromStack(true))
+                        .child(Components.item(recipeInstance.getResult(null)).setTooltipFromStack(true))
                         .horizontalAlignment(HorizontalAlignment.CENTER).verticalAlignment(VerticalAlignment.CENTER)
                         .positioning(Positioning.relative(50, 2))
                 );

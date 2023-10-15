@@ -94,9 +94,7 @@ public class Affinity implements ModInitializer {
                     .conditionally(EntityPropertiesLootCondition.builder(
                             LootContext.EntityTarget.KILLER_PLAYER, EntityPredicate.Builder.create()
                                     .equipment(EntityEquipmentPredicate.Builder.create()
-                                            .mainhand(ItemPredicate.Builder.create()
-                                                    .tag(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades")))
-                                                    .build())
+                                            .mainhand(ItemPredicate.Builder.create().tag(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades"))))
                                             .build()))
                     ));
         });

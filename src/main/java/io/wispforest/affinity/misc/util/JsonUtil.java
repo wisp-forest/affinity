@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.StringNbtReader;
@@ -11,6 +12,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+import net.minecraft.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,13 +64,7 @@ public class JsonUtil {
 
     public static List<Ingredient> readIngredientList(JsonObject json, String key) {
         final var array = JsonHelper.getArray(json, key);
-        final var list = new ArrayList<Ingredient>();
-
-        for (var element : array) {
-            list.add(Ingredient.fromJson(element));
-        }
-
-        return list;
+        return Util.getResult(Ingredient.DISALLOW_EMPTY_CODEC.listOf().parse(JsonOps.INSTANCE, array), JsonParseException::new);
     }
 
 }

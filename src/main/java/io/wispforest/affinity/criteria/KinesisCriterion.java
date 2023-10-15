@@ -12,31 +12,26 @@ import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.util.Optional;
+
 public class KinesisCriterion extends AbstractCriterion<KinesisCriterion.Conditions> {
 
-    public static final Identifier ID = Affinity.id("kinesis");
-
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
-        return new Conditions(playerPredicate, LootContextPredicate.fromJson("entity", predicateDeserializer, obj.get("entity"), LootContextTypes.ADVANCEMENT_ENTITY));
+    protected Conditions conditionsFromJson(JsonObject obj, Optional<LootContextPredicate> playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+        return new Conditions(playerPredicate, LootContextPredicate.fromJson("entity", predicateDeserializer, obj.get("entity"), LootContextTypes.ADVANCEMENT_ENTITY).orElseGet(Optional::empty));
     }
 
     public void trigger(ServerPlayerEntity player, Entity entity) {
         var context = EntityPredicate.createAdvancementEntityLootContext(player, entity);
-        this.trigger(player, conditions -> conditions.entity.test(context));
-    }
-
-    @Override
-    public Identifier getId() {
-        return ID;
+        this.trigger(player, conditions -> conditions.entity.map(predicate -> predicate.test(context)).orElse(true));
     }
 
     public static class Conditions extends AbstractCriterionConditions {
 
-        private final LootContextPredicate entity;
+        private final Optional<LootContextPredicate> entity;
 
-        public Conditions(LootContextPredicate player, LootContextPredicate entity) {
-            super(ID, player);
+        public Conditions(Optional<LootContextPredicate> player, Optional<LootContextPredicate> entity) {
+            super(player);
             this.entity = entity;
         }
     }

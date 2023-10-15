@@ -1,6 +1,6 @@
 package io.wispforest.affinity.recipe;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import io.wispforest.affinity.mixin.access.ShapelessRecipeAccessor;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.item.ItemStack;
@@ -10,13 +10,12 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 
 public class ShapelessAssemblyRecipe extends ShapelessRecipe {
 
-    public ShapelessAssemblyRecipe(Identifier id, String group, CraftingRecipeCategory category, ItemStack output, DefaultedList<Ingredient> input) {
-        super(id, group, category, output, input);
+    public ShapelessAssemblyRecipe(String group, CraftingRecipeCategory category, ItemStack output, DefaultedList<Ingredient> input) {
+        super(group, category, output, input);
     }
 
     @Override
@@ -30,16 +29,19 @@ public class ShapelessAssemblyRecipe extends ShapelessRecipe {
     }
 
     public static class Serializer extends ShapelessRecipe.Serializer {
+
         @Override
-        public ShapelessRecipe read(Identifier identifier, JsonObject jsonObject) {
-            final var recipe = super.read(identifier, jsonObject);
-            return new ShapelessAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getOutput(), recipe.getIngredients());
+        public Codec<ShapelessRecipe> codec() {
+            return super.codec().xmap(
+                    recipe -> new ShapelessAssemblyRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getResult(), recipe.getIngredients()),
+                    recipe -> new ShapelessRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getResult(), recipe.getIngredients())
+            );
         }
 
         @Override
-        public ShapelessRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
-            var recipe = super.read(identifier, packetByteBuf);
-            return new ShapelessAssemblyRecipe(recipe.getId(), recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getOutput(), recipe.getIngredients());
+        public ShapelessRecipe read(PacketByteBuf packetByteBuf) {
+            var recipe = super.read(packetByteBuf);
+            return new ShapelessAssemblyRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getResult(), recipe.getIngredients());
         }
     }
 

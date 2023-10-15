@@ -41,7 +41,7 @@ public class AffineInfuserBlock extends AethumNetworkMemberBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.AFFINE_INFUSER, TickedBlockEntity.ticker());
+        return validateTicker(type, AffinityBlocks.Entities.AFFINE_INFUSER, TickedBlockEntity.ticker());
     }
 
     @Nullable

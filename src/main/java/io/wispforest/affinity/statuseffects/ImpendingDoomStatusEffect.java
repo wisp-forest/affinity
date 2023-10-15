@@ -15,7 +15,7 @@ public class ImpendingDoomStatusEffect extends AffinityStatusEffect {
     }
 
     @Override
-    public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+    public void onRemovedFromEntity(LivingEntity entity) {
         entity.damage(DAMAGE_TYPE.source(entity.getWorld()), Float.MAX_VALUE);
     }
 }

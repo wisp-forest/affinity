@@ -15,14 +15,12 @@ import java.util.List;
 
 public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventory> implements Recipe<I> {
 
-    protected final Identifier id;
     protected final List<Ingredient> socleInputs;
 
     public final int duration;
     public final int fluxCostPerTick;
 
-    protected RitualRecipe(Identifier id, List<Ingredient> socleInputs, int duration, int fluxCostPerTick) {
-        this.id = id;
+    protected RitualRecipe(List<Ingredient> socleInputs, int duration, int fluxCostPerTick) {
         this.socleInputs = socleInputs;
         this.duration = duration;
         this.fluxCostPerTick = fluxCostPerTick;
@@ -63,11 +61,6 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventor
         return true;
     }
 
-    @Override
-    public Identifier getId() {
-        return this.id;
-    }
-
     private record MatchingRecipe(DefaultedList<Ingredient> ingredients) implements Recipe<Inventory> {
 
         @Override
@@ -91,12 +84,7 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventor
         }
 
         @Override
-        public ItemStack getOutput(DynamicRegistryManager drm) {
-            return null;
-        }
-
-        @Override
-        public Identifier getId() {
+        public ItemStack getResult(DynamicRegistryManager drm) {
             return null;
         }
 

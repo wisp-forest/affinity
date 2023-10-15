@@ -44,7 +44,7 @@ public class BerserkerEnchantment extends AbsoluteEnchantment implements Enchant
         if (!this.hasCompleteArmor(entity)) {
             AffinityEntityAddon.setData(entity, BERSERK_KEY, false);
 
-            this.healthAttribute(entity).removeModifier(HEALTH_ADDITION);
+            this.healthAttribute(entity).removeModifier(HEALTH_ADDITION.getId());
             entity.damage(entity.getDamageSources().outOfWorld(), Float.MIN_NORMAL);
         }
     }

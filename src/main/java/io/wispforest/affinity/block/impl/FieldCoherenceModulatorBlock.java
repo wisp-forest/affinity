@@ -47,7 +47,7 @@ public class FieldCoherenceModulatorBlock extends AethumNetworkMemberBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.FIELD_COHERENCE_MODULATOR, TickedBlockEntity.ticker());
+        return validateTicker(type, AffinityBlocks.Entities.FIELD_COHERENCE_MODULATOR, TickedBlockEntity.ticker());
     }
 
     @Override

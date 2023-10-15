@@ -33,7 +33,7 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
         final var recipeOptional = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASPEN_INFUSION, inventory, this.world);
 
         if (recipeOptional.isEmpty()) return false;
-        this.cachedRecipe = recipeOptional.get();
+        this.cachedRecipe = recipeOptional.get().value();
 
         setup.configureLength(this.cachedRecipe.duration);
 
@@ -62,7 +62,7 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected boolean onRitualCompleted() {
-        this.item = this.cachedRecipe.getOutput(null);
+        this.item = this.cachedRecipe.getResult(null);
 
         AffinityParticleSystems.ASPEN_INFUSION_CRAFT.spawn(this.world, Vec3d.ofCenter(this.pos, 1f));
         WorldOps.playSound(this.world, this.pos, AffinitySoundEvents.BLOCK_ASP_RITE_CORE_CRAFT, SoundCategory.BLOCKS);

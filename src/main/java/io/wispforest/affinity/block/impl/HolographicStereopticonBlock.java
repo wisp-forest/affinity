@@ -91,7 +91,7 @@ public class HolographicStereopticonBlock extends BlockWithEntity implements Blo
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient ? checkType(type, AffinityBlocks.Entities.HOLOGRAPHIC_STEREOPTICON, TickedBlockEntity.ticker()) : null;
+        return world.isClient ? validateTicker(type, AffinityBlocks.Entities.HOLOGRAPHIC_STEREOPTICON, TickedBlockEntity.ticker()) : null;
     }
     @Override
     public Item createBlockItem(Block block, OwoItemSettings settings) {

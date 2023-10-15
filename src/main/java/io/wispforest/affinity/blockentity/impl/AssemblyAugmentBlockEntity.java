@@ -29,6 +29,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -54,7 +55,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     private static final Map<World, Map<BlockPos, BlockPos>> BLOCKED_TREETAPS_PER_WORLD = new WeakHashMap<>();
     private Map<BlockPos, BlockPos> blockedTreetaps;
 
-    private CraftingRecipe autocraftingRecipe;
+    private RecipeEntry<CraftingRecipe> autocraftingRecipe;
 
     private final Set<BlockPos> treetapCache = new HashSet<>();
     private int activeTreetaps = 0;
@@ -80,10 +81,10 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     public void tickServer() {
         this.autocraftingRecipe = CarbonCopyItem.getRecipe(this.templateInventory.getStack(0), this.world);
 
-        CraftingRecipe currentRecipe = null;
+        RecipeEntry<CraftingRecipe> currentRecipe = null;
         if (this.autocraftingRecipe == null) {
             currentRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world).orElse(null);
-        } else if (this.autocraftingRecipe.matches(this.craftingView, this.world)) {
+        } else if (this.autocraftingRecipe.value().matches(this.craftingView, this.world)) {
             currentRecipe = this.autocraftingRecipe;
         }
 
@@ -101,7 +102,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
             }
         }
 
-        var currentRecipeResult = this.activeTreetaps > 0 ? currentRecipe.craft(this.craftingView, this.world.getRegistryManager()) : null;
+        var currentRecipeResult = this.activeTreetaps > 0 ? currentRecipe.value().craft(this.craftingView, this.world.getRegistryManager()) : null;
         if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipeResult)) {
             if (this.craftingTick % 20 == 0) {
                 AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, .2), new AffinityParticleSystems.BezierVortexData(
@@ -158,11 +159,11 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
                 .forEach(this.treetapCache::add);
     }
 
-    public @Nullable CraftingRecipe autocraftingRecipe() {
+    public @Nullable RecipeEntry<CraftingRecipe> autocraftingRecipe() {
         return this.autocraftingRecipe;
     }
 
-    public Optional<CraftingRecipe> fetchActiveRecipe() {
+    public Optional<RecipeEntry<CraftingRecipe>> fetchActiveRecipe() {
         return this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingView, this.world).or(() -> this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world));
     }
 
@@ -209,7 +210,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
         outer:
         for (height = 1; height <= 3; height++) {
             for (width = 1; width <= 3; width++) {
-                if (!this.autocraftingRecipe.fits(width, height)) continue;
+                if (!this.autocraftingRecipe.value().fits(width, height)) continue;
                 break outer;
             }
         }
@@ -217,7 +218,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
         int x = slot % 3, y = slot / 3;
         if (x >= width || y >= height) return false;
 
-        return this.inventory.getStack(slot).isEmpty() && this.autocraftingRecipe.getIngredients().get(y * width + x).test(stack);
+        return this.inventory.getStack(slot).isEmpty() && this.autocraftingRecipe.value().getIngredients().get(y * width + x).test(stack);
     }
 
     @Override

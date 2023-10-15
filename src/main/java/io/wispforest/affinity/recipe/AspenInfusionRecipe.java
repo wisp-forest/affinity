@@ -1,17 +1,16 @@
 package io.wispforest.affinity.recipe;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.blockentity.impl.AspRiteCoreBlockEntity;
-import io.wispforest.affinity.misc.util.JsonUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeCodecs;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -19,11 +18,21 @@ import java.util.List;
 
 public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.AspenInfusionInventory> {
 
+    private static final Codec<AspenInfusionRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(
+                    Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("primary_input").forGetter(recipe -> recipe.primaryInput),
+                    Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("inputs").forGetter(recipe -> recipe.socleInputs),
+                    RecipeCodecs.CRAFTING_RESULT.fieldOf("output").forGetter(recipe -> recipe.output),
+                    Codec.INT.optionalFieldOf("duration", 100).forGetter(recipe -> recipe.duration),
+                    Codec.INT.optionalFieldOf("flux_cost_per_tick", 0).forGetter(recipe -> recipe.fluxCostPerTick)
+            )
+            .apply(instance, AspenInfusionRecipe::new));
+
     public final Ingredient primaryInput;
     private final ItemStack output;
 
-    public AspenInfusionRecipe(Identifier id, Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, int duration, int fluxCostPerTick) {
-        super(id, inputs, duration, fluxCostPerTick);
+    public AspenInfusionRecipe(Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, int duration, int fluxCostPerTick) {
+        super(inputs, duration, fluxCostPerTick);
         this.primaryInput = primaryInput;
         this.output = output;
     }
@@ -39,7 +48,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager drm) {
+    public ItemStack getResult(DynamicRegistryManager drm) {
         return this.output.copy();
     }
 
@@ -55,23 +64,14 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
     public static final class Serializer implements RecipeSerializer<AspenInfusionRecipe> {
 
-        public Serializer() {}
-
         @Override
-        public AspenInfusionRecipe read(Identifier id, JsonObject json) {
-            return new AspenInfusionRecipe(id,
-                    Ingredient.fromJson(JsonHelper.getObject(json, "primary_input")),
-                    JsonUtil.readIngredientList(json, "inputs"),
-                    JsonUtil.readChadStack(json, "output"),
-                    JsonHelper.getInt(json, "duration", 100),
-                    JsonHelper.getInt(json, "flux_cost_per_tick", 0)
-            );
+        public Codec<AspenInfusionRecipe> codec() {
+            return AspenInfusionRecipe.CODEC;
         }
 
         @Override
-        public AspenInfusionRecipe read(Identifier id, PacketByteBuf buf) {
+        public AspenInfusionRecipe read(PacketByteBuf buf) {
             return new AspenInfusionRecipe(
-                    id,
                     Ingredient.fromPacket(buf),
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
                     buf.readItemStack(),

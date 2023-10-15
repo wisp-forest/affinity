@@ -14,31 +14,26 @@ import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.util.Optional;
+
 public class BreakAethumFluxCacheCriterion extends AbstractCriterion<BreakAethumFluxCacheCriterion.Conditions> {
 
-    public static final Identifier ID = Affinity.id("break_aethum_flux_cache");
-
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
-        return new Conditions(playerPredicate, NumberRange.IntRange.fromJson(obj.get("aethum")), NumberRange.FloatRange.fromJson(obj.get("aethum_percentage")));
+    protected Conditions conditionsFromJson(JsonObject obj, Optional<LootContextPredicate> predicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+        return new Conditions(predicate, NumberRange.IntRange.fromJson(obj.get("aethum")), NumberRange.DoubleRange.fromJson(obj.get("aethum_percentage")));
     }
 
     public void trigger(ServerPlayerEntity player, AethumFluxCacheBlockEntity cache) {
         this.trigger(player, conditions -> conditions.aethum.test((int) cache.flux()) && conditions.aethumPercentage.test(cache.flux() / (double) cache.fluxCapacity()));
     }
 
-    @Override
-    public Identifier getId() {
-        return ID;
-    }
-
     public static class Conditions extends AbstractCriterionConditions {
 
         private final NumberRange.IntRange aethum;
-        private final NumberRange.FloatRange aethumPercentage;
+        private final NumberRange.DoubleRange aethumPercentage;
 
-        public Conditions(LootContextPredicate player, NumberRange.IntRange aethum, NumberRange.FloatRange aethumPercentage) {
-            super(ID, player);
+        public Conditions(Optional<LootContextPredicate> player, NumberRange.IntRange aethum, NumberRange.DoubleRange aethumPercentage) {
+            super(player);
             this.aethum = aethum;
             this.aethumPercentage = aethumPercentage;
         }

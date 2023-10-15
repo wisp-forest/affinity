@@ -13,4 +13,5 @@ public class AffinityStatusEffect extends StatusEffect {
     }
 
     public void onPotionApplied(LivingEntity target, @Nullable NbtCompound extraData) {}
+    public void onRemovedFromEntity(LivingEntity entity) {}
 }

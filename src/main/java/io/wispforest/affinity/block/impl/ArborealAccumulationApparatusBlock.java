@@ -40,7 +40,7 @@ public class ArborealAccumulationApparatusBlock extends AethumNetworkMemberBlock
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.ARBOREAL_ACCUMULATION_APPARATUS, TickedBlockEntity.ticker());
+        return validateTicker(type, AffinityBlocks.Entities.ARBOREAL_ACCUMULATION_APPARATUS, TickedBlockEntity.ticker());
     }
 
     @Override

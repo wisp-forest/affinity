@@ -39,7 +39,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
     }
 
     @Override
-    public void onRemoved(final LivingEntity outerEntity, AttributeContainer attributes, int amplifier) {
+    public void onRemovedFromEntity(LivingEntity outerEntity) {
         if (outerEntity.getWorld().isClient) return;
 
         ServerTasks.doNext(server -> {

@@ -146,7 +146,7 @@ public class SpiritIntegrationApparatusBlock extends RitualCoreBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.SPIRIT_INTEGRATION_APPARATUS, TickedBlockEntity.ticker());
+        return validateTicker(type, AffinityBlocks.Entities.SPIRIT_INTEGRATION_APPARATUS, TickedBlockEntity.ticker());
     }
 
     @Override

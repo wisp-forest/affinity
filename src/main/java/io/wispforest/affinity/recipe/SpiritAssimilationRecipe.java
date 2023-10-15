@@ -3,6 +3,9 @@ package io.wispforest.affinity.recipe;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.blockentity.impl.SpiritIntegrationApparatusBlockEntity;
 import io.wispforest.affinity.misc.util.JsonUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
@@ -12,12 +15,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeCodecs;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,21 +33,39 @@ import java.util.Optional;
 
 public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory> {
 
+    private static final Codec<SpiritAssimilationRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(
+                    Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("core_inputs").forGetter(recipe -> recipe.coreInputs),
+                    Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("socle_inputs").forGetter(recipe -> recipe.socleInputs),
+                    EntityData.CODEC.fieldOf("entity").forGetter(recipe -> new EntityData(recipe.entityType, Optional.ofNullable(recipe.entityNbt))),
+                    RecipeCodecs.CRAFTING_RESULT.fieldOf("output").forGetter(recipe -> recipe.output),
+                    Codec.INT.optionalFieldOf("duration", 100).forGetter(recipe -> recipe.duration),
+                    Codecs.validate(Codec.INT, duration -> {
+                        if (duration % 4 != 0) {
+                            return DataResult.error(() -> "Spirit assimilation flux cost must be divisible by 4");
+                        } else {
+                            return DataResult.success(duration);
+                        }
+                    }).optionalFieldOf("flux_cost_per_tick", 0).forGetter(recipe -> recipe.fluxCostPerTick)
+            )
+            .apply(instance, (coreInputs, socleInputs, entityData, result, duration, fluxCost) -> {
+                return new SpiritAssimilationRecipe(coreInputs, socleInputs, entityData.type, entityData.nbt.orElse(null), duration, fluxCost, result);
+            }));
+
     public final List<Ingredient> coreInputs;
     public final EntityType<?> entityType;
     @Nullable private final NbtCompound entityNbt;
 
     private final ItemStack output;
 
-    protected SpiritAssimilationRecipe(Identifier id,
-                                       List<Ingredient> coreInputs,
+    protected SpiritAssimilationRecipe(List<Ingredient> coreInputs,
                                        List<Ingredient> inputs,
                                        EntityType<?> entityType,
                                        @Nullable NbtCompound entityNbt,
                                        int duration,
                                        int fluxCostPerTick,
                                        ItemStack output) {
-        super(id, inputs, duration, fluxCostPerTick);
+        super(inputs, duration, fluxCostPerTick);
         this.coreInputs = ImmutableList.copyOf(coreInputs);
         this.entityType = entityType;
         this.entityNbt = entityNbt;
@@ -63,7 +86,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager drm) {
+    public ItemStack getResult(DynamicRegistryManager drm) {
         return this.output.copy();
     }
 
@@ -83,34 +106,26 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
         return AffinityRecipeTypes.SPIRIT_ASSIMILATION;
     }
 
+    private record EntityData(EntityType<?> type, Optional<NbtCompound> nbt) {
+        public static final Codec<EntityData> CODEC = RecordCodecBuilder.create(instance -> instance
+                .group(
+                        Registries.ENTITY_TYPE.getCodec().fieldOf("id").forGetter(EntityData::type),
+                        NbtCompound.CODEC.optionalFieldOf("data").forGetter(EntityData::nbt)
+                ).apply(instance, EntityData::new));
+    }
+
     public static final class Serializer implements RecipeSerializer<SpiritAssimilationRecipe> {
 
         public Serializer() {}
 
         @Override
-        public SpiritAssimilationRecipe read(Identifier id, JsonObject json) {
-            final var entityObject = JsonHelper.getObject(json, "entity");
-
-            int fluxCostPerTick = JsonHelper.getInt(json, "flux_cost_per_tick", 0);
-            if (fluxCostPerTick % 4 != 0) {
-                throw new JsonParseException("Spirit assimilation flux cost must be divisible by 4");
-            }
-
-            return new SpiritAssimilationRecipe(id,
-                    JsonUtil.readIngredientList(json, "core_inputs"),
-                    JsonUtil.readIngredientList(json, "socle_inputs"),
-                    JsonUtil.readFromRegistry(entityObject, "id", Registries.ENTITY_TYPE),
-                    entityObject.has("data") ? JsonUtil.readNbt(entityObject, "data") : null,
-                    JsonHelper.getInt(json, "duration", 100),
-                    fluxCostPerTick,
-                    JsonUtil.readChadStack(json, "output")
-            );
+        public Codec<SpiritAssimilationRecipe> codec() {
+            return SpiritAssimilationRecipe.CODEC;
         }
 
         @Override
-        public SpiritAssimilationRecipe read(Identifier id, PacketByteBuf buf) {
+        public SpiritAssimilationRecipe read(PacketByteBuf buf) {
             return new SpiritAssimilationRecipe(
-                    id,
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
                     Registries.ENTITY_TYPE.get(buf.readVarInt()),

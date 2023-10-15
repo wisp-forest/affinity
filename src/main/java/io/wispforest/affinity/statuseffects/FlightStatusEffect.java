@@ -20,7 +20,7 @@ public class FlightStatusEffect extends AffinityStatusEffect {
     }
 
     @Override
-    public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+    public void onApplied(LivingEntity entity, int amplifier) {
         if (entity instanceof ServerPlayerEntity player) {
             Pal.grantAbility(player, VanillaAbilities.ALLOW_FLYING, FLIGHT_POTION);
         } else {
@@ -40,7 +40,7 @@ public class FlightStatusEffect extends AffinityStatusEffect {
     }
 
     @Override
-    public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
+    public void onRemovedFromEntity(LivingEntity entity) {
         if (entity instanceof ServerPlayerEntity player) {
             Pal.revokeAbility(player, VanillaAbilities.ALLOW_FLYING, FLIGHT_POTION);
         } else {

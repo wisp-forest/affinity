@@ -44,7 +44,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
         var effectContainer = Containers.horizontalFlow(Sizing.content(), Sizing.content());
         inputContainer.child(effectContainer);
 
-        for (var effect : display.recipe.getEffectInputs()) {
+        for (var effect : display.recipe.effectInputs) {
             var ingredient = EntryIngredients.of(AffinityReiCommonPlugin.EFFECT_ENTRY_TYPE, List.of(effect));
 
             effectContainer.child(adapter.wrap(
@@ -53,7 +53,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
             ).margins(Insets.of(1)));
         }
 
-        if (!(display.recipe.getEffectInputs().isEmpty() || display.recipe.getItemInputs().isEmpty())) {
+        if (!(display.recipe.effectInputs.isEmpty() || display.recipe.itemInputs.isEmpty())) {
             inputContainer.child(
                     Components.box(Sizing.fixed(70), Sizing.fixed(1))
                             .color(Color.ofFormatting(Formatting.GRAY))
@@ -61,7 +61,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
             );
         }
 
-        var inputs = display.recipe.getItemInputs();
+        var inputs = display.recipe.itemInputs;
         inputs:
         for (int row = 0; row < MathHelper.ceilDiv(inputs.size(), 3); row++) {
             var rowContainer = Containers.horizontalFlow(Sizing.content(), Sizing.content());
@@ -73,7 +73,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
 
                 rowContainer.child(adapter.wrap(
                         Widgets::createSlot,
-                        slot -> slot.entries(EntryIngredients.ofIngredient(inputs.get(idx).itemPredicate())).markInput()
+                        slot -> slot.entries(EntryIngredients.ofIngredient(inputs.get(idx))).markInput()
                 ).margins(Insets.of(1)));
             }
         }

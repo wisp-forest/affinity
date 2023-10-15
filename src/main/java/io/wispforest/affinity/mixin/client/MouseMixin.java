@@ -21,9 +21,8 @@ public class MouseMixin {
     @Final
     private MinecraftClient client;
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
-    @Inject(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;scrollInHotbar(D)V"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private void captureScroll(long window, double horizontal, double vertical, CallbackInfo ci, double d, int i) {
+    @Inject(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;scrollInHotbar(D)V"), cancellable = true)
+    private void captureScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
         if (client.world == null || !client.player.isSneaking()) return;
         if (!(client.crosshairTarget instanceof BlockHitResult blockHit)) return;
 

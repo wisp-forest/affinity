@@ -31,10 +31,10 @@ public class AnthracitePowderItem extends Item implements DirectInteractionHandl
         var recipe = possibleRecipe.get();
         for (int height = 1; height <= 3; height++) {
             for (int width = 1; width <= 3; width++) {
-                if (!recipe.fits(width, height)) continue;
+                if (!recipe.value().fits(width, height)) continue;
 
                 ItemOps.decrementPlayerHandItem(context.getPlayer(), context.getHand());
-                context.getPlayer().getInventory().offerOrDrop(CarbonCopyItem.create(recipe, recipe.getOutput(context.getWorld().getRegistryManager())));
+                context.getPlayer().getInventory().offerOrDrop(CarbonCopyItem.create(recipe, recipe.value().getResult(context.getWorld().getRegistryManager())));
                 return ActionResult.SUCCESS;
             }
         }

@@ -23,7 +23,7 @@ public class VoidBeaconBlock extends AethumNetworkMemberBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, AffinityBlocks.Entities.VOID_BEACON, TickedBlockEntity.ticker());
+        return validateTicker(type, AffinityBlocks.Entities.VOID_BEACON, TickedBlockEntity.ticker());
     }
 
     @Nullable

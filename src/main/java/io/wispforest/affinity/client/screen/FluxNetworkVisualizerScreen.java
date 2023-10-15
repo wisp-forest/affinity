@@ -100,9 +100,9 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         this.world = new RenderView(members);
         this.mesh = new WorldMesh.Builder(this.world, new BlockPos(minX, minY, minZ), new BlockPos(maxX, maxY, maxZ)).build();
 
-        this.xSize = this.mesh.dimensions().getXLength() + 1;
-        this.ySize = this.mesh.dimensions().getYLength() + 1;
-        this.zSize = this.mesh.dimensions().getZLength() + 1;
+        this.xSize = this.mesh.dimensions().getLengthX() + 1;
+        this.ySize = this.mesh.dimensions().getLengthY() + 1;
+        this.zSize = this.mesh.dimensions().getLengthZ() + 1;
 
         this.scale = new Interpolator(Math.min(15 / (Math.max(xSize, Math.max(ySize, zSize))), 5));
     }
@@ -119,8 +119,6 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
-
         this.component(LabelComponent.class, "total-flux-label").text(Text.translatable(
                 "gui.affinity.flux_network_visualizer.total_flux",
                 this.members.stream().mapToLong(AethumFluxContainer::flux).sum()
@@ -335,8 +333,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        this.scale.targetAdd(amount * .15 * this.scale.get());
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        this.scale.targetAdd(verticalAmount * .15 * this.scale.get());
         return true;
     }
 

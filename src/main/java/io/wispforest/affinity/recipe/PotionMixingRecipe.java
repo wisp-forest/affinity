@@ -1,6 +1,7 @@
 package io.wispforest.affinity.recipe;
 
-import io.wispforest.affinity.misc.Ingrediente;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.entity.effect.StatusEffect;
@@ -10,11 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeManager;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -25,17 +24,26 @@ import java.util.stream.Stream;
 
 public class PotionMixingRecipe implements Recipe<Inventory> {
 
-    private final List<Ingrediente<Boolean>> itemInputs;
-    private final List<StatusEffect> effectInputs;
+    public static final Codec<PotionMixingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(
+                    Registries.STATUS_EFFECT.getCodec().listOf().fieldOf("effect_inputs").forGetter(recipe -> recipe.effectInputs),
+                    Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("item_inputs").forGetter(recipe -> recipe.itemInputs),
+                    Codec.INT.optionalFieldOf("copy_nbt_index", -1).forGetter(recipe -> recipe.copyNbtIndex),
+                    Registries.POTION.getCodec().fieldOf("output").forGetter(recipe -> recipe.output),
+                    Codec.BOOL.optionalFieldOf("strong", false).forGetter(recipe -> recipe.strong)
+            )
+            .apply(instance, PotionMixingRecipe::new));
+
+    public final List<StatusEffect> effectInputs;
+    public final List<Ingredient> itemInputs;
+    public final int copyNbtIndex;
     private final Potion output;
     public final boolean strong;
 
-    private final Identifier id;
-
-    public PotionMixingRecipe(Identifier id, List<Ingrediente<Boolean>> itemInputs, List<StatusEffect> effectInputs, Potion output, boolean strong) {
-        this.id = id;
-        this.itemInputs = itemInputs;
+    public PotionMixingRecipe(List<StatusEffect> effectInputs, List<Ingredient> itemInputs, int copyNbtIndex, Potion output, boolean strong) {
         this.effectInputs = effectInputs;
+        this.itemInputs = itemInputs;
+        this.copyNbtIndex = copyNbtIndex;
         this.output = output;
         this.strong = strong;
     }
@@ -54,10 +62,11 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
     public static Optional<PotionMixingRecipe> getMatching(RecipeManager manager, PotionMixture inputMixture, List<ItemStack> inputStacks) {
         if (inputMixture.isEmpty()) return Optional.empty();
 
-        for (var recipe : manager.listAllOfType(AffinityRecipeTypes.POTION_MIXING)) {
+        for (var recipeEntry : manager.listAllOfType(AffinityRecipeTypes.POTION_MIXING)) {
+            var recipe = recipeEntry.value();
 
-            final var effectInputs = Stream.concat(inputMixture.effects().stream(), inputMixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).toList();
-            final var itemInputs = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
+            var effectInputs = Stream.concat(inputMixture.effects().stream(), inputMixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).toList();
+            var itemInputs = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
 
             if (effectInputs.size() != recipe.effectInputs.size() || itemInputs.size() != recipe.itemInputs.size()) continue;
 
@@ -98,7 +107,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
     @Override
     @Deprecated
-    public ItemStack getOutput(DynamicRegistryManager drm) {
+    public ItemStack getResult(DynamicRegistryManager drm) {
         return ItemStack.EMPTY;
     }
 
@@ -109,11 +118,10 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
     public PotionMixture craftPotion(List<ItemStack> inputStacks) {
         var extraNbt = new NbtCompound();
 
-        for (var ingredient : itemInputs) {
-            if (!ingredient.extraData()) continue;
-
+        if (this.copyNbtIndex != -1) {
+            var copyNbtIngredient = this.itemInputs.get(this.copyNbtIndex);
             for (var stack : inputStacks) {
-                if (!ingredient.test(stack)) continue;
+                if (!copyNbtIngredient.test(stack)) continue;
 
                 if (stack.hasNbt()) {
                     extraNbt.copyFrom(stack.getNbt());
@@ -124,19 +132,6 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
         }
 
         return new PotionMixture(this.potionOutput(), extraNbt.isEmpty() ? null : extraNbt);
-    }
-
-    public List<Ingrediente<Boolean>> getItemInputs() {
-        return this.itemInputs;
-    }
-
-    public List<StatusEffect> getEffectInputs() {
-        return this.effectInputs;
-    }
-
-    @Override
-    public Identifier getId() {
-        return this.id;
     }
 
     @Override
