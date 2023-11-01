@@ -3,6 +3,7 @@ package io.wispforest.affinity.entity;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.affinity.misc.util.MathUtil;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.entity.Entity;
@@ -12,7 +13,9 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Uuids;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -79,6 +82,10 @@ public class AethumMissileEntity extends ProjectileEntity {
             living.timeUntilRegen = 0;
             living.hurtTime = 0;
             living.damage(DAMAGE_TYPE.source(this, this.getOwner()), 1f);
+
+            if (this.getOwner() instanceof ServerPlayerEntity player) {
+                player.playSound(AffinitySoundEvents.ITEM_SALVO_STAFF_HIT, SoundCategory.PLAYERS, 1f, .85f + this.getWorld().random.nextFloat() * .3f);
+            }
         }
 
         this.discard();

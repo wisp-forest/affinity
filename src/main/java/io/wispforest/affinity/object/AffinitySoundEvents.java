@@ -18,6 +18,7 @@ public class AffinitySoundEvents implements SimpleFieldProcessingSubject<SoundEv
     public static final SoundEvent ITEM_IRIDESCENCE_WAND_BIND = SoundEvent.of(Affinity.id("item.iridescence_wand.bind"));
     public static final SoundEvent ITEM_SATIATING_POTION_START_DRINKING = SoundEvent.of(Affinity.id("item.satiating_potion.start_drinking"));
     public static final SoundEvent ITEM_NIMBLE_STAFF_FLING = SoundEvent.of(Affinity.id("item.nimble_staff.fling"));
+    public static final SoundEvent ITEM_SALVO_STAFF_HIT = SoundEvent.of(Affinity.id("item.salvo_staff.hit"));
 
     @Override
     public void processField(SoundEvent value, String identifier, Field field) {
