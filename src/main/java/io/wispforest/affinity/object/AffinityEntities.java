@@ -3,10 +3,7 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.entity.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.entity.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.world.Heightmap;
@@ -25,6 +22,11 @@ public class AffinityEntities implements AutoRegistryContainer<EntityType<?>> {
     public static final EntityType<AethumMissileEntity> AETHUM_MISSILE = FabricEntityTypeBuilder.create()
             .entityFactory(AethumMissileEntity::new)
             .dimensions(EntityDimensions.fixed(.15f, .15f))
+            .build();
+
+    public static final EntityType<EmancipatedBlockEntity> EMANCIPATED_BLOCK = FabricEntityTypeBuilder.<EmancipatedBlockEntity>create()
+            .entityFactory(EmancipatedBlockEntity::new)
+            .dimensions(EntityDimensions.fixed(1f, 1f))
             .build();
 
     private static <W extends WispEntity> EntityType<W> createWispType(EntityType.EntityFactory<W> factory) {

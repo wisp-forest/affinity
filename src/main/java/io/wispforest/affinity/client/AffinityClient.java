@@ -4,13 +4,15 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.RanthraciteWireBlock;
 import io.wispforest.affinity.block.impl.RitualSocleBlock;
 import io.wispforest.affinity.client.particle.*;
-import io.wispforest.affinity.client.render.*;
+import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
+import io.wispforest.affinity.client.render.LightLeakRenderer;
+import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.client.render.blockentity.*;
-import io.wispforest.affinity.client.render.entity.AsteroidEntityModel;
-import io.wispforest.affinity.client.render.entity.AsteroidEntityRenderer;
-import io.wispforest.affinity.client.render.entity.WispEntityModel;
-import io.wispforest.affinity.client.render.entity.WispEntityRenderer;
+import io.wispforest.affinity.client.render.entity.*;
 import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
+import io.wispforest.affinity.client.render.program.DepthMergeBlitProgram;
+import io.wispforest.affinity.client.render.program.DownsampleProgram;
+import io.wispforest.affinity.client.render.program.FizzleProgram;
 import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
 import io.wispforest.affinity.client.screen.ItemTransferNodeScreen;
 import io.wispforest.affinity.client.screen.OuijaBoardScreen;
@@ -52,6 +54,7 @@ public class AffinityClient implements ClientModInitializer {
 
     public static final DepthMergeBlitProgram DEPTH_MERGE_BLIT_PROGRAM = new DepthMergeBlitProgram();
     public static final DownsampleProgram DOWNSAMPLE_PROGRAM = new DownsampleProgram();
+    public static final FizzleProgram FIZZLE_PROGRAM = new FizzleProgram();
 
     @Override
     public void onInitializeClient() {
@@ -135,6 +138,7 @@ public class AffinityClient implements ClientModInitializer {
         EntityRendererRegistry.register(AffinityEntities.VICIOUS_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.ASTEROID, AsteroidEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.AETHUM_MISSILE, EmptyEntityRenderer::new);
+        EntityRendererRegistry.register(AffinityEntities.EMANCIPATED_BLOCK, EmancipatedBlockEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putFluid(AffinityBlocks.Fluids.ARCANE_FADE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putFluid(AffinityBlocks.Fluids.ARCANE_FADE_FLOWING, RenderLayer.getTranslucent());

@@ -1,4 +1,4 @@
-package io.wispforest.affinity.client.render;
+package io.wispforest.affinity.client.render.program;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.owo.shader.GlProgram;
