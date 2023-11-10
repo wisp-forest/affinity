@@ -80,7 +80,7 @@ public class GravitonTransducerBlockEntity extends AethumNetworkMemberBlockEntit
 
         this.updateFlux(this.flux() + generationFactor);
 
-        AttunedShardItem.damageShard(this.shard, (.25f + this.world.random.nextFloat() * .25f) / 100f);
+        AttunedShardItem.damageShard(this.shard, (.1f + this.world.random.nextFloat() * .1f) / 100f);
         if (AttunedShardItem.getShardHealth(this.shard) == 0) {
             this.shard = ItemStack.EMPTY;
             this.markDirty();

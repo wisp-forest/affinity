@@ -35,6 +35,7 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,10 +100,10 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
         var offset = otherPoint.subtract(thisPoint).multiply(this.world.random.nextFloat());
         var startPos = thisPoint.add(offset);
-        var endPos = thisPoint.add(offset.normalize().multiply(.25f + this.world.random.nextInt() * .5f));
+        var endPos = thisPoint.add(offset.normalize().multiply(.25f + this.world.random.nextFloat() * .5f));
 
-        ClientParticles.setParticleCount(1 + this.world.random.nextInt(5));
-        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.rgbToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb()), .5f), this.world, startPos, endPos, .15f);
+        ClientParticles.setParticleCount(1 + this.world.random.nextInt(MathHelper.ceil(offset.length())));
+        ClientParticles.spawnLine(new DustParticleEffect(MathUtil.rgbToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb()), .5f), this.world, startPos, endPos, .015f);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package io.wispforest.affinity.entity;
 
-import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.entity.goal.FlyRandomlyGoal;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.wisps.WispType;
@@ -26,11 +25,9 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ServerWorldAccess;
@@ -38,11 +35,9 @@ import net.minecraft.world.World;
 
 public abstract class WispEntity extends PathAwareEntity {
 
-    private static final MutableText DEFAULT_NAME = Text.translatable(Util.createTranslationKey("entity", Affinity.id("wisp")));
     private static final NbtKey<Boolean> MISTY_KEY = new NbtKey<>("Misty", NbtKey.Type.BOOLEAN);
 
     private static final TrackedData<Boolean> MISTY = DataTracker.registerData(WispEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
     private final DustParticleEffect particles;
 
     public WispEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
@@ -71,13 +66,8 @@ public abstract class WispEntity extends PathAwareEntity {
     }
 
     @Override
-    public Text getName() {
-        return Text.translatable(type().translationKey()).append(" ").append(super.getName());
-    }
-
-    @Override
     protected Text getDefaultName() {
-        return DEFAULT_NAME;
+        return Text.translatable(this.type().translationKey()).append(" ").append(Text.translatable("entity.affinity.wisp"));
     }
 
     @Override
