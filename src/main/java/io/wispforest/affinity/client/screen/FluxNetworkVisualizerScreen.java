@@ -124,6 +124,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                 this.members.stream().mapToLong(AethumFluxContainer::flux).sum()
         ));
 
+        this.renderInGameBackground(context);
+
         if (this.mesh.canRender()) {
 
             // Begin model view / projection crimes
