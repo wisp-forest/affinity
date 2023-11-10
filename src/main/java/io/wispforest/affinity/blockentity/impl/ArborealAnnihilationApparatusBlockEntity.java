@@ -89,9 +89,9 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
                 var unauthorizedState = this.world.getBlockState(unauthorizedPos);
                 if (unauthorizedState.isAir()) continue;
 
-                this.world.removeBlock(unauthorizedPos, false);
-                EmancipatedBlockEntity.spawn(this.world, unauthorizedPos, unauthorizedState, 30);
+                EmancipatedBlockEntity.spawn(this.world, unauthorizedPos, unauthorizedState, this.world.getBlockEntity(unauthorizedPos), 30);
                 WorldOps.playSound(this.world, unauthorizedPos, unauthorizedState.getSoundGroup().getBreakSound(), SoundCategory.BLOCKS);
+                this.world.removeBlock(unauthorizedPos, false);
 
                 if (unauthorizedState.isOf(AffinityBlocks.UNFLOWERING_AZALEA_LEAVES)) {
                     UnfloweringAzaleaLeavesBlock.unflower(this.world, unauthorizedPos);

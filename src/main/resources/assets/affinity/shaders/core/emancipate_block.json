@@ -4,8 +4,8 @@
     "srcrgb": "srcalpha",
     "dstrgb": "1-srcalpha"
   },
-  "vertex": "affinity:fizzle",
-  "fragment": "affinity:fizzle",
+  "vertex": "affinity:emancipate_block",
+  "fragment": "affinity:emancipate_block",
   "attributes": [
     "Position",
     "Color",

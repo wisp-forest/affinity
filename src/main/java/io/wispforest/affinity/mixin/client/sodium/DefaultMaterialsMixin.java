@@ -1,6 +1,7 @@
 package io.wispforest.affinity.mixin.client.sodium;
 
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
+import io.wispforest.affinity.misc.CompatMixin;
 import me.jellysquid.mods.sodium.client.render.chunk.terrain.DefaultTerrainRenderPasses;
 import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.DefaultMaterials;
 import me.jellysquid.mods.sodium.client.render.chunk.terrain.material.Material;
@@ -16,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Arrays;
 
 @Pseudo
+@CompatMixin("sodium")
 @Mixin(value = DefaultMaterials.class, remap = false)
 public abstract class DefaultMaterialsMixin {
 

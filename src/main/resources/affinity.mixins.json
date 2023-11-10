@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "io.wispforest.affinity.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "io.wispforest.affinity.mixin.AffinityMixinPlugin",
   "mixins": [
     "AbstractBlockMixin",
     "AbstractBlockMixin$AbstractBlockStateMixin",
@@ -64,6 +65,9 @@
     "access.StatusEffectInstanceAccessor",
     "access.StructureFeatureAccessor",
     "access.WorldAccessor",
+    "client.MultiPhaseParametersAccessor",
+    "client.MultiPhaseRenderLayerAccessor",
+    "client.sodium.AlphaMaskConsumerMixin",
     "client.WorldRendererAccessor"
   ],
   "client": [

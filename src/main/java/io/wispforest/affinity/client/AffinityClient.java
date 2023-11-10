@@ -54,7 +54,8 @@ public class AffinityClient implements ClientModInitializer {
 
     public static final DepthMergeBlitProgram DEPTH_MERGE_BLIT_PROGRAM = new DepthMergeBlitProgram();
     public static final DownsampleProgram DOWNSAMPLE_PROGRAM = new DownsampleProgram();
-    public static final FizzleProgram FIZZLE_PROGRAM = new FizzleProgram();
+    public static final FizzleProgram EMANCIPATE_BLOCK_PROGRAM = new FizzleProgram(Affinity.id("emancipate_block"));
+    public static final FizzleProgram EMANCIPATE_ENTITY_PROGRAM = new FizzleProgram(Affinity.id("emancipate_entity"));
 
     @Override
     public void onInitializeClient() {

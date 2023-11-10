@@ -1,6 +1,7 @@
 package io.wispforest.affinity.mixin.client.sodium;
 
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
+import io.wispforest.affinity.misc.CompatMixin;
 import me.jellysquid.mods.sodium.client.render.SodiumWorldRenderer;
 import me.jellysquid.mods.sodium.client.render.chunk.ChunkRenderMatrices;
 import me.jellysquid.mods.sodium.client.render.chunk.RenderSectionManager;
@@ -16,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Pseudo
+@CompatMixin("sodium")
 @Mixin(value = SodiumWorldRenderer.class, remap = false)
 public class SodiumWorldRendererMixin {
 
