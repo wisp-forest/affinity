@@ -5,11 +5,13 @@ import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.util.Delta;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -84,6 +86,18 @@ public class CuboidRenderer {
         }
     }
 
+    public static void drawCuboid(MatrixStack matrixStack, VertexConsumerProvider consumers, Cuboid cuboid) {
+        drawCuboid(matrixStack, consumers, cuboid, 1f);
+    }
+
+    public static void drawCuboid(MatrixStack matrixStack, VertexConsumerProvider consumers, Cuboid cuboid, float completeness) {
+        cuboid.completeness = completeness;
+        cuboid.prepare(BlockPos.ORIGIN);
+
+        renderCuboidEdges(matrixStack, consumers.getBuffer(OUTLINE_LAYER), cuboid);
+        renderCuboidFaces(matrixStack, consumers.getBuffer(BOX_LAYER), MinecraftClient.getInstance().gameRenderer.getCamera().getPos(), cuboid);
+    }
+
     static {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.isPaused()) return;
@@ -115,40 +129,47 @@ public class CuboidRenderer {
 
             for (var cuboid : CUBOIDS.values()) {
                 cuboid.completeness += Delta.compute(cuboid.completeness, cuboid.targetCompleteness, MinecraftClient.getInstance().getLastFrameDuration() * .25f);
-
-                var outlineColor = cuboid.outlineColor;
-                var outlineThickness = .02f * cuboid.completeness;
-
-                line(matrices, outlineBuffer, cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.minX, cuboid.minY, cuboid.maxZ, outlineColor, outlineThickness);
-                line(matrices, outlineBuffer, cuboid.maxX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.minY, cuboid.maxZ, outlineColor, outlineThickness);
-                line(matrices, outlineBuffer, cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.minY, cuboid.minZ, outlineColor, outlineThickness);
-                line(matrices, outlineBuffer, cuboid.minX, cuboid.minY, cuboid.maxZ, cuboid.maxX, cuboid.minY, cuboid.maxZ, outlineColor, outlineThickness);
-
-                line(matrices, outlineBuffer, cuboid.minX, cuboid.maxY, cuboid.minZ, cuboid.minX, cuboid.maxY, cuboid.maxZ, outlineColor, outlineThickness);
-                line(matrices, outlineBuffer, cuboid.maxX, cuboid.maxY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ, outlineColor, outlineThickness);
-                line(matrices, outlineBuffer, cuboid.minX, cuboid.maxY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.minZ, outlineColor, outlineThickness);
-                line(matrices, outlineBuffer, cuboid.minX, cuboid.maxY, cuboid.maxZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ, outlineColor, outlineThickness);
-
-                line(matrices, outlineBuffer, cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.minX, cuboid.maxY, cuboid.minZ, outlineColor, outlineThickness);
-                line(matrices, outlineBuffer, cuboid.minX, cuboid.minY, cuboid.maxZ, cuboid.minX, cuboid.maxY, cuboid.maxZ, outlineColor, outlineThickness);
-                line(matrices, outlineBuffer, cuboid.maxX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.minZ, outlineColor, outlineThickness);
-                line(matrices, outlineBuffer, cuboid.maxX, cuboid.minY, cuboid.maxZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ, outlineColor, outlineThickness);
+                renderCuboidEdges(matrices, outlineBuffer, cuboid);
             }
 
             final var boxBuffer = context.consumers().getBuffer(BOX_LAYER);
             for (var cuboid : CUBOIDS.values()) {
-                var boxColor = new Color(cuboid.fillColor.red(), cuboid.fillColor.green(), cuboid.fillColor.blue(), .15f * cuboid.completeness);
-
-                if (cam.x >= cuboid.minX && cam.y >= cuboid.minY && cam.z >= cuboid.minZ && cam.x <= cuboid.maxX && cam.y <= cuboid.maxY && cam.z <= cuboid.maxZ) {
-                    cuboid(matrices, boxBuffer, cuboid.maxX, cuboid.maxY, cuboid.maxZ, cuboid.minX, cuboid.minY, cuboid.minZ, boxColor);
-                } else {
-                    cuboid(matrices, boxBuffer, cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ, boxColor);
-                }
+                renderCuboidFaces(matrices, boxBuffer, cam, cuboid);
             }
 
             matrices.pop();
             ((VertexConsumerProvider.Immediate) context.consumers()).draw();
         });
+    }
+
+    private static void renderCuboidEdges(MatrixStack matrices, VertexConsumer buffer, Cuboid cuboid) {
+        var outlineColor = cuboid.outlineColor;
+        var outlineThickness = .02f * cuboid.completeness;
+
+        line(matrices, buffer, cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.minX, cuboid.minY, cuboid.maxZ, outlineColor, outlineThickness);
+        line(matrices, buffer, cuboid.maxX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.minY, cuboid.maxZ, outlineColor, outlineThickness);
+        line(matrices, buffer, cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.minY, cuboid.minZ, outlineColor, outlineThickness);
+        line(matrices, buffer, cuboid.minX, cuboid.minY, cuboid.maxZ, cuboid.maxX, cuboid.minY, cuboid.maxZ, outlineColor, outlineThickness);
+
+        line(matrices, buffer, cuboid.minX, cuboid.maxY, cuboid.minZ, cuboid.minX, cuboid.maxY, cuboid.maxZ, outlineColor, outlineThickness);
+        line(matrices, buffer, cuboid.maxX, cuboid.maxY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ, outlineColor, outlineThickness);
+        line(matrices, buffer, cuboid.minX, cuboid.maxY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.minZ, outlineColor, outlineThickness);
+        line(matrices, buffer, cuboid.minX, cuboid.maxY, cuboid.maxZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ, outlineColor, outlineThickness);
+
+        line(matrices, buffer, cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.minX, cuboid.maxY, cuboid.minZ, outlineColor, outlineThickness);
+        line(matrices, buffer, cuboid.minX, cuboid.minY, cuboid.maxZ, cuboid.minX, cuboid.maxY, cuboid.maxZ, outlineColor, outlineThickness);
+        line(matrices, buffer, cuboid.maxX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.minZ, outlineColor, outlineThickness);
+        line(matrices, buffer, cuboid.maxX, cuboid.minY, cuboid.maxZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ, outlineColor, outlineThickness);
+    }
+
+    private static void renderCuboidFaces(MatrixStack matrices, VertexConsumer buffer, Vec3d cam, Cuboid cuboid) {
+        var boxColor = new Color(cuboid.fillColor.red(), cuboid.fillColor.green(), cuboid.fillColor.blue(), .15f * cuboid.completeness * cuboid.fillColor.alpha());
+
+        if (cam.x >= cuboid.minX && cam.y >= cuboid.minY && cam.z >= cuboid.minZ && cam.x <= cuboid.maxX && cam.y <= cuboid.maxY && cam.z <= cuboid.maxZ) {
+            cuboid(matrices, buffer, cuboid.maxX, cuboid.maxY, cuboid.maxZ, cuboid.minX, cuboid.minY, cuboid.minZ, boxColor);
+        } else {
+            cuboid(matrices, buffer, cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.maxX, cuboid.maxY, cuboid.maxZ, boxColor);
+        }
     }
 
     public static void line(MatrixStack matrices, VertexConsumer buffer, float fromX, float fromY, float fromZ, float toX, float toY, float toZ, Color color, float thickness) {

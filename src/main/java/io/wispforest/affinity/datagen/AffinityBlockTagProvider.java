@@ -38,7 +38,7 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
         this.getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(EMERALD_BLOCK, PECULIAR_CLUMP, INFUSED_STONE);
 
         this.getOrCreateTagBuilder(BlockTags.AXE_MINEABLE).add(
-                STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ACCUMULATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT,
+                STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ANNIHILATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT,
                 MATTER_HARVESTING_HEARTH, CROP_REAPER
         );
 

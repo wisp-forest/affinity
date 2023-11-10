@@ -216,6 +216,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.FIELD_COHERENCE_MODULATOR, FieldCoherenceModulatorBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.HOLOGRAPHIC_STEREOPTICON, HolographicStereopticonBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.GRAVITON_TRANSDUCER, GravitonTransducerBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.ARBOREAL_ANNIHILATION_APPARATUS, ArborealAnnihilationApparatusBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {

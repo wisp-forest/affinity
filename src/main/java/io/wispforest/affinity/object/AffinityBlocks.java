@@ -43,7 +43,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block CREATIVE_AETHUM_FLUX_CACHE = new CreativeAethumFluxCacheBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block SUNDIAL = new SundialBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block ARBOREAL_ACCUMULATION_APPARATUS = new ArborealAccumulationApparatusBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block ARBOREAL_ANNIHILATION_APPARATUS = new ArborealAnnihilationApparatusBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block MATTER_HARVESTING_HEARTH = new MatterHarvestingHearthBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block BLANK_RITUAL_SOCLE = new BlankRitualSocleBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block RUDIMENTARY_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.RUDIMENTARY);
@@ -145,8 +145,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<SundialBlockEntity> SUNDIAL =
                 make(SundialBlockEntity::new, AffinityBlocks.SUNDIAL);
 
-        public static final BlockEntityType<ArborealAccumulationApparatusBlockEntity> ARBOREAL_ACCUMULATION_APPARATUS =
-                make(ArborealAccumulationApparatusBlockEntity::new, AffinityBlocks.ARBOREAL_ACCUMULATION_APPARATUS);
+        public static final BlockEntityType<ArborealAnnihilationApparatusBlockEntity> ARBOREAL_ANNIHILATION_APPARATUS =
+                make(ArborealAnnihilationApparatusBlockEntity::new, AffinityBlocks.ARBOREAL_ANNIHILATION_APPARATUS);
 
         public static final BlockEntityType<CropReaperBlockEntity> CROP_REAPER =
                 make(CropReaperBlockEntity::new, AffinityBlocks.CROP_REAPER);
@@ -202,7 +202,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(CREATIVE_AETHUM_FLUX_CACHE);
             Affinity.AETHUM_MEMBER.registerSelf(BREWING_CAULDRON);
             Affinity.AETHUM_MEMBER.registerSelf(SUNDIAL);
-            Affinity.AETHUM_MEMBER.registerSelf(ARBOREAL_ACCUMULATION_APPARATUS);
+            Affinity.AETHUM_MEMBER.registerSelf(ARBOREAL_ANNIHILATION_APPARATUS);
             Affinity.AETHUM_MEMBER.registerSelf(ASP_RITE_CORE);
             Affinity.AETHUM_MEMBER.registerSelf(SPIRIT_INTEGRATION_APPARATUS);
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_INFUSER);

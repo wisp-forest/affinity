@@ -15,6 +15,7 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.random.Random;
 import org.joml.*;
 
@@ -57,14 +58,26 @@ public class EmancipatedBlockEntityRenderer extends EntityRenderer<EmancipatedBl
         matrices.push();
         matrices.translate(-.5f, 0, -.5f);
 
-        /*(float) (.5f + Math.sin(time / 500d % (Math.PI * 2)) * .5f)*/
+        var random = Random.create(entity.getId());
+        float animationProgress = (entity.age + tickDelta) / entity.maxAge();
+
+        matrices.translate(
+                animationProgress * (random.nextFloat() - .5) * .35,
+                animationProgress * (random.nextFloat() - .5) * .35,
+                animationProgress * (random.nextFloat() - .5) * .35
+        );
+
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(animationProgress * (random.nextFloat() - .5f) * 20f));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(animationProgress * (random.nextFloat() - .5f) * 20f));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(animationProgress * (random.nextFloat() - .5f) * 20f));
+
         this.blockRenderManager.getModelRenderer().render(
                 entity.getWorld(),
                 blockRenderManager.getModel(entity.emancipatedState()),
                 entity.emancipatedState(),
                 BlockPos.ofFloored(entity.getX(), entity.getBoundingBox().maxY, entity.getZ()),
                 matrices,
-                new AlphaMaskConsumer(vertexConsumers.getBuffer(FIZZLE_LAYER), matrices.peek().getPositionMatrix(), matrices.peek().getNormalMatrix(), (float) (1 - Math.pow(1 - (entity.age + tickDelta) / entity.maxAge(), 3))),
+                new AlphaMaskConsumer(vertexConsumers.getBuffer(FIZZLE_LAYER), matrices.peek().getPositionMatrix(), matrices.peek().getNormalMatrix(), (float) (1 - Math.pow(1 - animationProgress, 3))),
                 false,
                 Random.create(),
                 entity.emancipatedState().getRenderingSeed(entity.getBlockPos()),

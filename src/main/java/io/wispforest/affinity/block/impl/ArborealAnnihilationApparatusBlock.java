@@ -1,7 +1,7 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
-import io.wispforest.affinity.blockentity.impl.ArborealAccumulationApparatusBlockEntity;
+import io.wispforest.affinity.blockentity.impl.ArborealAnnihilationApparatusBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class ArborealAccumulationApparatusBlock extends AethumNetworkMemberBlock {
+public class ArborealAnnihilationApparatusBlock extends AethumNetworkMemberBlock {
 
     private static final VoxelShape SHAPE = Stream.of(
             Block.createCuboidShape(4, 0, 9, 7, 12, 12),
@@ -33,14 +33,14 @@ public class ArborealAccumulationApparatusBlock extends AethumNetworkMemberBlock
             Block.createCuboidShape(9, 0, 9, 12, 12, 12)
     ).reduce(VoxelShapes::union).get();
 
-    public ArborealAccumulationApparatusBlock() {
+    public ArborealAnnihilationApparatusBlock() {
         super(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque());
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return validateTicker(type, AffinityBlocks.Entities.ARBOREAL_ACCUMULATION_APPARATUS, TickedBlockEntity.ticker());
+        return validateTicker(type, AffinityBlocks.Entities.ARBOREAL_ANNIHILATION_APPARATUS, TickedBlockEntity.ticker());
     }
 
     @Override
@@ -51,6 +51,6 @@ public class ArborealAccumulationApparatusBlock extends AethumNetworkMemberBlock
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new ArborealAccumulationApparatusBlockEntity(pos, state);
+        return new ArborealAnnihilationApparatusBlockEntity(pos, state);
     }
 }

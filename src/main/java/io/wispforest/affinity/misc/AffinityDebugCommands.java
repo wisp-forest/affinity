@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxContainer;
 import io.wispforest.affinity.component.AffinityComponents;
-import io.wispforest.affinity.object.AffinityEntities;
+import io.wispforest.affinity.entity.EmancipatedBlockEntity;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -44,11 +44,7 @@ public class AffinityDebugCommands {
                 if (targetState.isAir()) return 0;
 
                 player.getWorld().removeBlock(targetPos, false);
-
-                var emancipated = AffinityEntities.EMANCIPATED_BLOCK.create(player.getWorld());
-                emancipated.setPos(targetPos.getX() + .5, targetPos.getY(), targetPos.getZ() + .5);
-                emancipated.setEmancipatedState(targetState);
-                player.getWorld().spawnEntity(emancipated);
+                EmancipatedBlockEntity.spawn(player.getWorld(), targetPos, targetState, 20);
 
                 return 1;
             }));

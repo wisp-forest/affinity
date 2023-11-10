@@ -1,5 +1,6 @@
 package io.wispforest.affinity.entity;
 
+import io.wispforest.affinity.object.AffinityEntities;
 import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -15,6 +16,8 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EmancipatedBlockEntity extends Entity {
@@ -32,11 +35,21 @@ public class EmancipatedBlockEntity extends Entity {
         super(type, world);
     }
 
+    public static EmancipatedBlockEntity spawn(World world, BlockPos emancipatedPos, BlockState emancipatedState, int decayTime) {
+        var emancipated = AffinityEntities.EMANCIPATED_BLOCK.create(world);
+        emancipated.setPos(emancipatedPos.getX() + .5, emancipatedPos.getY(), emancipatedPos.getZ() + .5);
+        emancipated.setEmancipatedState(emancipatedState);
+        emancipated.setMaxAge(decayTime);
+
+        world.spawnEntity(emancipated);
+        return emancipated;
+    }
+
     @Override
     public void tick() {
         super.tick();
 
-        if (this.age >= this.maxAge()) {
+        if (!this.getWorld().isClient && this.age >= this.maxAge()) {
             this.discard();
         }
     }
@@ -60,6 +73,11 @@ public class EmancipatedBlockEntity extends Entity {
     @Override
     protected void initDataTracker() {
         this.dataTracker.startTracking(MAX_AGE, 15);
+    }
+
+    @Override
+    protected Text getDefaultName() {
+        return Text.translatable("entity.affinity.emancipated_block_state", this.emancipatedState.getBlock().getName());
     }
 
     @Override

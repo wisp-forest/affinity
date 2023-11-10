@@ -27,13 +27,7 @@ public class UnfloweringAzaleaLeavesBlock extends LeavesBlock {
         if (!player.isSneaking()) return ActionResult.PASS;
 
         if (!world.isClient) {
-            for (var testPos : BlockPos.iterate(pos.add(16, 3, 16), pos.add(-16, -3, -16))) {
-                final var testState = world.getBlockState(testPos);
-                if (!(testState.getBlock() instanceof PlantBlock)) continue;
-
-                Block.dropStacks(testState, world, testPos);
-                world.removeBlock(testPos, false);
-            }
+            unflower(world, pos);
             WorldOps.breakBlockWithItem(world, pos, ItemStack.EMPTY);
         }
 
@@ -46,5 +40,15 @@ public class UnfloweringAzaleaLeavesBlock extends LeavesBlock {
 
         ClientParticles.setParticleCount(15);
         ClientParticles.spawnCenteredOnBlock(dust, world, pos, 1.25);
+    }
+
+    public static void unflower(World world, BlockPos leavesPos) {
+        for (var testPos : BlockPos.iterate(leavesPos.add(16, 3, 16), leavesPos.add(-16, -3, -16))) {
+            final var testState = world.getBlockState(testPos);
+            if (!(testState.getBlock() instanceof PlantBlock)) continue;
+
+            Block.dropStacks(testState, world, testPos);
+            world.removeBlock(testPos, false);
+        }
     }
 }
