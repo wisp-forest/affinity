@@ -9,6 +9,7 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.quack.AffinityClientWorldExtension;
 import io.wispforest.affinity.misc.util.MathUtil;
+import io.wispforest.affinity.mixin.client.WorldRendererAccessor;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.nbt.NbtKey;
@@ -334,8 +335,16 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
                             if (Affinity.CONFIG.renderEntitiesInStereopticonSectionImprints()) {
                                 client.world.getOtherEntities(null, realMeshDimensions).forEach(entity -> {
+                                    var entityVisible = ((WorldRendererAccessor) client.worldRenderer).affinity$getFrustum() != null && client.getEntityRenderDispatcher().shouldRender(
+                                            entity,
+                                            ((WorldRendererAccessor) client.worldRenderer).affinity$getFrustum(),
+                                            client.getEntityRenderDispatcher().camera.getPos().x,
+                                            client.getEntityRenderDispatcher().camera.getPos().y,
+                                            client.getEntityRenderDispatcher().camera.getPos().z
+                                    );
+
                                     var pos = entity.getLerpedPos(tickDelta).subtract(mesh.startPos().getX(), mesh.startPos().getY(), mesh.startPos().getZ());
-                                    client.getEntityRenderDispatcher().render(entity, pos.x, pos.y, pos.z, entity.getYaw(tickDelta), tickDelta, matrices, vertexConsumers, light);
+                                    client.getEntityRenderDispatcher().render(entity, pos.x, pos.y, pos.z, entity.getYaw(tickDelta), entityVisible ? tickDelta : 0, matrices, vertexConsumers, light);
                                 });
                             }
 

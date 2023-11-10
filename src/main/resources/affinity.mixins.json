@@ -63,7 +63,8 @@
     "access.ShapelessRecipeAccessor",
     "access.StatusEffectInstanceAccessor",
     "access.StructureFeatureAccessor",
-    "access.WorldAccessor"
+    "access.WorldAccessor",
+    "client.WorldRendererAccessor"
   ],
   "client": [
     "access.ParticleManagerInvoker",
