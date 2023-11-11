@@ -33,6 +33,7 @@
     "MapStateMixin",
     "MinecraftServerMixin",
     "MobEntityMixin",
+    "MobSpawnerLogicAccessor",
     "MobSpawnerLogicMixin",
     "PersistentProjectileEntityMixin",
     "PlayerEntityMixin",
@@ -67,10 +68,12 @@
     "access.WorldAccessor",
     "client.MultiPhaseParametersAccessor",
     "client.MultiPhaseRenderLayerAccessor",
-    "client.sodium.AlphaMaskConsumerMixin",
-    "client.WorldRendererAccessor"
+    "client.WorldRendererAccessor",
+    "client.sodium.AlphaMaskConsumerMixin"
   ],
   "client": [
+    "BeaconBlockEntityMixin",
+    "MobSpawnerBlockEntityMixin",
     "access.ParticleManagerInvoker",
     "client.ArmorFeatureRendererMixin",
     "client.BeaconBlockEntityRendererMixin",
