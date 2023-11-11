@@ -55,6 +55,7 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
     @Override
     public void tickServer() {
         this.time++;
+        if (this.world.getReceivedRedstonePower(this.pos) > 0) return;
 
         if (this.time % 40 == 0) {
             for (var pos : BlockPos.iterate(this.pos.add(-3, 0, -3), this.pos.add(3, 2, 3))) {
