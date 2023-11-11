@@ -38,14 +38,14 @@ public class EmancipatedBlockEntityRenderer extends EntityRenderer<EmancipatedBl
         var random = Random.create(entity.getId());
 
         matrices.translate(
-                animationProgress * (random.nextFloat() - .5) * .35,
-                animationProgress * (random.nextFloat() - .5) * .35,
-                animationProgress * (random.nextFloat() - .5) * .35
+                animationProgress * (random.nextFloat() - .5) * .35 * entity.animationScale(),
+                animationProgress * (random.nextFloat() - .5) * .35 * entity.animationScale(),
+                animationProgress * (random.nextFloat() - .5) * .35 * entity.animationScale()
         );
 
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(animationProgress * (random.nextFloat() - .5f) * 20f));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(animationProgress * (random.nextFloat() - .5f) * 20f));
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(animationProgress * (random.nextFloat() - .5f) * 20f));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(animationProgress * (random.nextFloat() - .5f) * 20f * entity.animationScale()));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(animationProgress * (random.nextFloat() - .5f) * 20f * entity.animationScale()));
+        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(animationProgress * (random.nextFloat() - .5f) * 20f * entity.animationScale()));
 
         if (entity.emancipatedState().getRenderType() == BlockRenderType.MODEL) {
             this.blockRenderManager.getModelRenderer().render(

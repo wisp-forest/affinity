@@ -36,6 +36,7 @@ public class EmancipatedBlockEntity extends Entity {
     }
 
     private static final NbtKey<Integer> MAX_AGE_KEY = new NbtKey<>("max_age", NbtKey.Type.INT);
+    private static final NbtKey<Float> ANIMATION_SCALE_KEY = new NbtKey<>("animation_scale", NbtKey.Type.FLOAT);
     private static final NbtKey<NbtCompound> EMANCIPATED_BLOCK_ENTITY_DATA_KEY = new NbtKey<>("emancipated_block_entity", NbtKey.Type.COMPOUND);
     private static final NbtKey<BlockState> EMANCIPATED_STATE_KEY = new NbtKey<>(
             "emancipated_state",
@@ -47,6 +48,7 @@ public class EmancipatedBlockEntity extends Entity {
     public BlockEntity renderBlockEntity = null;
 
     private static final TrackedData<Integer> MAX_AGE = DataTracker.registerData(EmancipatedBlockEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Float> ANIMATION_SCALE = DataTracker.registerData(EmancipatedBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
     private static final TrackedData<Optional<NbtCompound>> EMANCIPATED_BLOCK_ENTITY_DATA = DataTracker.registerData(EmancipatedBlockEntity.class, OPTIONAL_NBT);
     private BlockState emancipatedState = Blocks.AIR.getDefaultState();
 
@@ -54,11 +56,12 @@ public class EmancipatedBlockEntity extends Entity {
         super(type, world);
     }
 
-    public static EmancipatedBlockEntity spawn(World world, BlockPos emancipatedPos, BlockState emancipatedState, @Nullable BlockEntity emancipatedBlockEntity, int decayTime) {
+    public static EmancipatedBlockEntity spawn(World world, BlockPos emancipatedPos, BlockState emancipatedState, @Nullable BlockEntity emancipatedBlockEntity, int decayTime, float animationScale) {
         var emancipated = AffinityEntities.EMANCIPATED_BLOCK.create(world);
         emancipated.setPos(emancipatedPos.getX() + .5, emancipatedPos.getY(), emancipatedPos.getZ() + .5);
         emancipated.setEmancipatedState(emancipatedState);
         emancipated.setMaxAge(decayTime);
+        emancipated.setAnimationScale(animationScale);
 
         if (emancipatedBlockEntity != null) {
             emancipated.setEmancipatedBlockEntityData(emancipatedBlockEntity.createNbtWithId());
@@ -71,6 +74,7 @@ public class EmancipatedBlockEntity extends Entity {
     @Override
     protected void initDataTracker() {
         this.dataTracker.startTracking(MAX_AGE, 15);
+        this.dataTracker.startTracking(ANIMATION_SCALE, 1f);
         this.dataTracker.startTracking(EMANCIPATED_BLOCK_ENTITY_DATA, Optional.empty());
     }
 
@@ -107,6 +111,14 @@ public class EmancipatedBlockEntity extends Entity {
         this.dataTracker.set(MAX_AGE, maxAge);
     }
 
+    public float animationScale() {
+        return this.dataTracker.get(ANIMATION_SCALE);
+    }
+
+    public void setAnimationScale(float animationScale) {
+        this.dataTracker.set(ANIMATION_SCALE, animationScale);
+    }
+
     @Override
     protected Text getDefaultName() {
         return Text.translatable("entity.affinity.emancipated_block_state", this.emancipatedState.getBlock().getName());
@@ -117,6 +129,7 @@ public class EmancipatedBlockEntity extends Entity {
         nbt.put(EMANCIPATED_STATE_KEY, this.emancipatedState);
         nbt.putIfNotNull(EMANCIPATED_BLOCK_ENTITY_DATA_KEY, this.emancipatedBlockEntityData());
         nbt.put(MAX_AGE_KEY, this.maxAge());
+        nbt.put(ANIMATION_SCALE_KEY, this.animationScale());
     }
 
     @Override
@@ -124,6 +137,7 @@ public class EmancipatedBlockEntity extends Entity {
         this.emancipatedState = nbt.getOr(EMANCIPATED_STATE_KEY, Blocks.AIR.getDefaultState());
         this.setEmancipatedBlockEntityData(nbt.getOr(EMANCIPATED_BLOCK_ENTITY_DATA_KEY, null));
         this.setMaxAge(nbt.getOr(MAX_AGE_KEY, 15));
+        this.setAnimationScale(nbt.getOr(ANIMATION_SCALE_KEY, 1f));
     }
 
     @Override

@@ -43,7 +43,7 @@ public class AffinityDebugCommands {
                 var targetState = player.getWorld().getBlockState(targetPos);
                 if (targetState.isAir()) return 0;
 
-                EmancipatedBlockEntity.spawn(player.getWorld(), targetPos, targetState, player.getWorld().getBlockEntity(targetPos), 20);
+                EmancipatedBlockEntity.spawn(player.getWorld(), targetPos, targetState, player.getWorld().getBlockEntity(targetPos), 20, 0f);
                 player.getWorld().removeBlock(targetPos, false);
 
                 return 1;
