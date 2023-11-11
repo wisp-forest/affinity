@@ -31,6 +31,8 @@ import java.util.Set;
 
 public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InquirableOutlineProvider {
 
+    private static final Vec3d LINK_ATTACHMENT_POINT = new Vec3d(0, -.35, 0);
+
     @Environment(EnvType.CLIENT) public BlockPos beamTarget = null;
     @Environment(EnvType.CLIENT) public float beamStrength = 1;
 
@@ -49,7 +51,7 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
         if (this.world.random.nextFloat() < .95f) return;
 
         ClientParticles.setParticleCount(5);
-        ClientParticles.spawn(new DustParticleEffect(MathUtil.rgbToVec3f(AffinityWispTypes.VICIOUS.color()), 1), this.world, Vec3d.ofCenter(this.pos, .9), .15);
+        ClientParticles.spawn(new DustParticleEffect(MathUtil.rgbToVec3f(AffinityWispTypes.VICIOUS.color()), 1), this.world, Vec3d.ofCenter(this.pos, .75), .15);
     }
 
     @Override
@@ -81,7 +83,7 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
             }
         }
 
-        if (this.time % 4 == 0) {
+        if (this.time % 4 == 0 && this.flux() <= this.fluxCapacity() - 10) {
             var iter = this.unauthorizedEquipment.iterator();
             while (iter.hasNext()) {
                 var unauthorizedPos = iter.next();
@@ -98,12 +100,17 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
                     UnfloweringAzaleaLeavesBlock.unflower(this.world, unauthorizedPos);
                 }
 
-                this.updateFlux(Math.min(this.fluxCapacity(), this.flux() + 10));
+                this.updateFlux(this.flux() + 10);
 
                 AffinityNetwork.server(this).send(new EmancipatePacket(this.pos, unauthorizedPos));
                 break;
             }
         }
+    }
+
+    @Override
+    public Vec3d linkAttachmentPointOffset() {
+        return LINK_ATTACHMENT_POINT;
     }
 
     @Override

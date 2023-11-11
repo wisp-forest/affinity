@@ -39,7 +39,7 @@ public class ArborealAnnihilationApparatusBlockEntityRenderer extends AffinityBl
     @Override
     protected void render(ArborealAnnihilationApparatusBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.push();
-        matrices.translate(.5, .9, .5);
+        matrices.translate(.5, .75, .5);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(time / 50f));
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(time / 50f + 100));
         matrices.scale(1.15f, 1.15f, 1.15f);
@@ -51,7 +51,7 @@ public class ArborealAnnihilationApparatusBlockEntityRenderer extends AffinityBl
 
         if (entity.beamTarget != null && entity.beamStrength >= .1f) {
             matrices.push();
-            matrices.translate(.5, .9, .5);
+            matrices.translate(.5, .75, .5);
 
             var targetBlock = entity.beamTarget;
             entity.beamStrength += Delta.compute(entity.beamStrength, 0, frameDelta * .5f);

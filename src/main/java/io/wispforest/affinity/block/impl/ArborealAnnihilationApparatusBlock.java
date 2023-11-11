@@ -14,24 +14,13 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.stream.Stream;
-
 public class ArborealAnnihilationApparatusBlock extends AethumNetworkMemberBlock {
 
-    private static final VoxelShape SHAPE = Stream.of(
-            Block.createCuboidShape(4, 0, 9, 7, 12, 12),
-            Block.createCuboidShape(9, 0, 4, 12, 12, 7),
-            Block.createCuboidShape(5, 0, 7, 7, 10, 9),
-            Block.createCuboidShape(9, 0, 7, 11, 10, 9),
-            Block.createCuboidShape(7, 0, 5, 9, 10, 11),
-            Block.createCuboidShape(4, 0, 4, 7, 12, 7),
-            Block.createCuboidShape(9, 0, 9, 12, 12, 12)
-    ).reduce(VoxelShapes::union).get();
+    private static final VoxelShape SHAPE = Block.createCuboidShape(3, 0, 3, 13, 14, 13);
 
     public ArborealAnnihilationApparatusBlock() {
         super(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque());
