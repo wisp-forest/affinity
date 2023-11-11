@@ -31,6 +31,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +41,9 @@ import java.util.function.BooleanSupplier;
 
 public class KinesisStaffItem extends StaffItem {
 
-    private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 4, 4);
+    private static final InquirableOutlineProvider.Outline UP_AOE = new InquirableOutlineProvider.Outline(-4, 0, -4, 4, 2, 4);
+    private static final InquirableOutlineProvider.Outline DOWN_AOE = new InquirableOutlineProvider.Outline(-4, -2, -4, 4, 0, 4);
+
     private static final float ENTITY_THROW_COST = 2.5f;
 
     private static final NbtKey<Integer> ACTIVE_TARGET_ENTITY = new NbtKey<>("TargetEntity", NbtKey.Type.INT);
@@ -62,7 +65,7 @@ public class KinesisStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        slowDownEntities(world, pos, () -> {
+        slowDownEntities(world, pos.add(0, pedestal.up(), 0), () -> {
             if (!pedestal.hasFlux(15)) return false;
 
             pedestal.consumeFlux(15);
@@ -72,11 +75,11 @@ public class KinesisStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        slowDownEntities(world, pos, () -> pedestal.hasFlux(15));
+        slowDownEntities(world, pos.add(0, pedestal.up(), 0), () -> pedestal.hasFlux(15));
     }
 
     protected static void slowDownEntities(World world, BlockPos pos, BooleanSupplier shouldContinue) {
-        for (var entity : world.getNonSpectatingEntities(Entity.class, new Box(pos).expand(4, 4, 4))) {
+        for (var entity : world.getNonSpectatingEntities(Entity.class, new Box(pos).expand(4, 1, 4))) {
             if (entity.isSneaking() || !(entity instanceof LivingEntity living)) continue;
             if (!shouldContinue.getAsBoolean()) return;
 
@@ -100,8 +103,8 @@ public class KinesisStaffItem extends StaffItem {
     }
 
     @Override
-    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
-        return AOE;
+    public InquirableOutlineProvider.Outline getAreaOfEffect(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        return pedestal.facing() == Direction.UP ? UP_AOE : DOWN_AOE;
     }
 
     @Override

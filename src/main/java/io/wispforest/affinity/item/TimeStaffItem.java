@@ -90,7 +90,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     }
 
     @Override
-    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
+    public InquirableOutlineProvider.Outline getAreaOfEffect(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
         return AOE;
     }
 

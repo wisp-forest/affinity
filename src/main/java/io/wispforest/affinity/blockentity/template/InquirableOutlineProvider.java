@@ -17,8 +17,18 @@ public interface InquirableOutlineProvider {
     @Nullable CuboidRenderer.Cuboid getActiveOutline();
 
     record Outline(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+
+        public Outline(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+            this.minX = minX;
+            this.minY = minY;
+            this.minZ = minZ;
+            this.maxX = maxX + 1;
+            this.maxY = maxY + 1;
+            this.maxZ = maxZ + 1;
+        }
+
         public static Outline symmetrical(int x, int y, int z) {
-            return new Outline(-x, -y, -z, x + 1, y + 1, z + 1);
+            return new Outline(-x, -y, -z, x, y, z);
         }
     }
 }

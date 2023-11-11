@@ -36,7 +36,8 @@ import java.util.List;
 
 public class CollectionStaffItem extends StaffItem {
 
-    private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(5, 2, 5);
+    private static final InquirableOutlineProvider.Outline UP_AOE = new InquirableOutlineProvider.Outline(-5, 0, -5, 5, 4, 5);
+    private static final InquirableOutlineProvider.Outline DOWN_AOE = new InquirableOutlineProvider.Outline(-5, -4, -5, 5, 0, 5);
 
     public CollectionStaffItem() {
         super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1).trackUsageStat());
@@ -57,10 +58,10 @@ public class CollectionStaffItem extends StaffItem {
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
         if (pedestal.time() % 20 != 0) return;
 
-        var storage = ItemStorage.SIDED.find(world, pos.down(), Direction.UP);
+        var storage = ItemStorage.SIDED.find(world, pos.add(0, pedestal.down(), 0), pedestal.facing().getOpposite());
         if (storage == null) return;
 
-        final var items = world.getEntitiesByClass(ItemEntity.class, new Box(pos).expand(5, 2, 5), Entity::isAlive);
+        final var items = world.getEntitiesByClass(ItemEntity.class, new Box(pos.add(0, pedestal.up() * 2, 0)).expand(5, 2, 5), Entity::isAlive);
         final var iter = items.iterator();
 
         while (iter.hasNext()) {
@@ -94,16 +95,16 @@ public class CollectionStaffItem extends StaffItem {
     @SuppressWarnings("UnstableApiUsage")
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
         if (pedestal.flux() < 8) return;
-        if (ItemStorage.SIDED.find(world, pos.down(), Direction.UP) == null) return;
+        if (ItemStorage.SIDED.find(world, pos.add(0, pedestal.down(), 0), pedestal.facing().getOpposite()) == null) return;
 
-        for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos).expand(5, 2, 5), Entity::isAlive)) {
+        for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos.add(0, pedestal.up() * 2, 0)).expand(5, 2, 5), Entity::isAlive)) {
             ClientParticles.spawn(ParticleTypes.WITCH, world, item.getPos().add(0, .125, 0), .25);
         }
     }
 
     @Override
-    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
-        return AOE;
+    public InquirableOutlineProvider.Outline getAreaOfEffect(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        return pedestal.facing() == Direction.UP ? UP_AOE : DOWN_AOE;
     }
 
     @Override

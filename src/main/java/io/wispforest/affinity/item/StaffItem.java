@@ -68,7 +68,7 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
         return ActionResult.PASS;
     }
 
-    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
+    public InquirableOutlineProvider.Outline getAreaOfEffect(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
         return null;
     }
 

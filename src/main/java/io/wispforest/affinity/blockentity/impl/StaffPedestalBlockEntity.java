@@ -1,5 +1,6 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.block.impl.StaffPedestalBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
@@ -22,6 +23,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,7 +85,7 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
     public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
         if (!(this.item.getItem() instanceof StaffItem staff)) return null;
 
-        var aoe = staff.getAreaOfEffect();
+        var aoe = staff.getAreaOfEffect(this.world, this.pos, this);
         if (aoe == null) return null;
 
         return CuboidRenderer.Cuboid.of(
@@ -108,6 +110,18 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
 
     public void consumeFlux(long flux) {
         this.updateFlux(this.flux() - flux);
+    }
+
+    public Direction facing() {
+        return this.getCachedState().get(StaffPedestalBlock.FACING);
+    }
+
+    public int down() {
+        return this.facing() == Direction.UP ? -1 : 1;
+    }
+
+    public int up() {
+        return this.facing() == Direction.UP ? 1 : -1;
     }
 
     @Override
