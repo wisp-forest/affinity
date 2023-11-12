@@ -452,6 +452,7 @@
   "text.config.affinity.option.renderBlockEntitiesInStereopticonSectionImprints": "Show block entities",
   "text.config.affinity.option.stereopticonSectionImprintRecursionLimit": "Recursion limit",
   "text.config.affinity.option.stereopticonSectionImprintRecursionLimit.tooltip": "How many times a stereopticon's section may be rendered\nwhen nested inside another stereopticon's section",
+  "text.config.affinity.option.maxFluxNodeShards": "Maximum outer shards per Flux Node",
 
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.dripping.desc": "Got that drip",

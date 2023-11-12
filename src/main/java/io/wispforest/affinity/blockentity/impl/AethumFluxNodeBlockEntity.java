@@ -52,7 +52,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     private long lastTick = 0;
     private Collection<AethumNetworkMember> cachedMembers = null;
 
-    private final DefaultedList<ItemStack> outerShards = DefaultedList.ofSize(5, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> outerShards = DefaultedList.ofSize(Affinity.CONFIG.maxFluxNodeShards(), ItemStack.EMPTY);
     private int outerShardCount = 0;
     private boolean allLinksValid = false;
 
