@@ -53,6 +53,10 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
                 : this.holder.getAttributeValue(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED);
     }
 
+    public boolean hasAethum(double amount) {
+        return this.holder.isCreative() || this.aethum >= aethum;
+    }
+
     @Override
     public boolean tryConsumeAethum(double amount) {
         var result = super.tryConsumeAethum(amount);

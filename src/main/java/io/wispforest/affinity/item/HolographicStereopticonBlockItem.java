@@ -208,7 +208,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
                 return ActionResult.PASS;
             }
 
-            var entity = InteractionUtil.raycastEntities(player, 7, 1f, $ -> true);
+            var entity = InteractionUtil.raycastEntities(player, 1f, 7, 1f, $ -> true);
             if (entity == null) return ActionResult.PASS;
 
             ClientParticles.setParticleCount(25);
@@ -228,7 +228,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
                 return;
             }
 
-            var entity = InteractionUtil.raycastEntities(access.player(), 7, 1f, $ -> true);
+            var entity = InteractionUtil.raycastEntities(access.player(), 1f, 7, 1f, $ -> true);
             if (entity == null) return;
 
             writeRendererData(playerStack, ImprintKind.ENTITY, entity.getEntity());

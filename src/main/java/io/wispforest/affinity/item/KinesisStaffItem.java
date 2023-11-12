@@ -115,7 +115,7 @@ public class KinesisStaffItem extends StaffItem {
         if (stack.has(ACTIVE_TARGET_ENTITY)) {
             entity = world.getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
         } else {
-            var entityTarget = InteractionUtil.raycastEntities(player, 25, 1.5, candidate -> !candidate.getType().isIn(IMMUNE_ENTITIES));
+            var entityTarget = InteractionUtil.raycastEntities(player, 1f, 25, 1.5, candidate -> !candidate.getType().isIn(IMMUNE_ENTITIES));
 
             if (entityTarget == null) return TypedActionResult.pass(stack);
             entity = entityTarget.getEntity();
@@ -172,7 +172,7 @@ public class KinesisStaffItem extends StaffItem {
     }
 
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
-        return stack.has(ACTIVE_TARGET_ENTITY) && player.getComponent(AffinityComponents.PLAYER_AETHUM).getAethum() >= ENTITY_THROW_COST;
+        return stack.has(ACTIVE_TARGET_ENTITY) && player.getComponent(AffinityComponents.PLAYER_AETHUM).hasAethum(ENTITY_THROW_COST);
     }
 
     public void writeExtraThrowData(ItemStack stack, PlayerEntity player, PacketByteBuf buffer) {}

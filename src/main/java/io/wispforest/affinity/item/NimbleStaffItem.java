@@ -170,7 +170,7 @@ public class NimbleStaffItem extends StaffItem {
 
     @Override
     protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {
-        var target = player.raycast(50, 1, false);
+        var target = player.raycast(50, 1f, false);
         if (!(target instanceof BlockHitResult blockHit) || world.isAir(blockHit.getBlockPos())) {
             return TypedActionResult.fail(stack);
         }

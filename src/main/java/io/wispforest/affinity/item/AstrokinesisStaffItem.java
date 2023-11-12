@@ -148,7 +148,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
     @Override
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
         return stack.has(PERFORMING_ASTROKINESIS)
-                ? AffinityEntityAddon.hasData(player, ASTEROID_ORIGIN) && player.getComponent(AffinityComponents.PLAYER_AETHUM).getAethum() >= ASTEROID_THROW_COST
+                ? AffinityEntityAddon.hasData(player, ASTEROID_ORIGIN) && player.getComponent(AffinityComponents.PLAYER_AETHUM).hasAethum(ASTEROID_THROW_COST)
                 : super.canThrow(stack, player);
     }
 

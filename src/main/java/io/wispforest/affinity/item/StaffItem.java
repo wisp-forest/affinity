@@ -93,7 +93,7 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
         final var consumption = this.getAethumConsumption(stack);
 
         if (this.isContinuous(stack)) {
-            if (aethum.getAethum() < consumption * 20 && !user.isCreative()) return TypedActionResult.pass(stack);
+            if (!aethum.hasAethum(consumption * 20)) return TypedActionResult.pass(stack);
 
             if (this.executeSpell(world, user, stack, this.getMaxUseTime(stack), clickedBlock).getResult().isAccepted()) {
                 user.setCurrentHand(hand);
@@ -102,7 +102,7 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
                 return TypedActionResult.pass(stack);
             }
         } else {
-            if (aethum.getAethum() < consumption && !user.isCreative()) return TypedActionResult.pass(stack);
+            if (!aethum.hasAethum(consumption)) return TypedActionResult.pass(stack);
 
             var result = this.executeSpell(world, user, stack, -1, clickedBlock);
             if (result.getResult().isAccepted()) aethum.addAethum(-consumption);
