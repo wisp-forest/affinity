@@ -5,7 +5,6 @@ import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.util.Delta;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.texture.NativeImageBackedTexture;

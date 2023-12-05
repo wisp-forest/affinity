@@ -125,8 +125,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @ModifyVariable(method = "attack", at = @At(value = "STORE", ordinal = 3), ordinal = 0)
     private float applyArtifactBladeJumpDamage(float damage, Entity entity) {
-        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.getWorld(), this.getMainHandStack(), 2))
+        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.getWorld(), this.getMainHandStack(), 2)) {
             return damage;
+        }
 
         float multiplier = Math.min(this.fallDistance * .4f, 3f);
         return this.affinity$lastJumpAttackDamage = damage * multiplier;
@@ -140,8 +141,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private void artifactBladeAreaDamage(Entity target, CallbackInfo ci) {
-        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.getWorld(), this.getMainHandStack(), 2))
+        if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.getWorld(), this.getMainHandStack(), 2)) {
             return;
+        }
 
         var entityPositions = new ArrayList<Vec3d>();
 

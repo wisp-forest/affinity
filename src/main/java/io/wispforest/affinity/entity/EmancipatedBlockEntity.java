@@ -1,7 +1,9 @@
 package io.wispforest.affinity.entity;
 
 import io.wispforest.affinity.object.AffinityEntities;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -15,12 +17,10 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -31,17 +31,15 @@ import java.util.Optional;
 public class EmancipatedBlockEntity extends Entity {
 
     private static final TrackedDataHandler<Optional<NbtCompound>> OPTIONAL_NBT = TrackedDataHandler.ofOptional(PacketByteBuf::writeNbt, PacketByteBuf::readNbt);
+
     static {
         TrackedDataHandlerRegistry.register(OPTIONAL_NBT);
     }
 
-    private static final NbtKey<Integer> MAX_AGE_KEY = new NbtKey<>("max_age", NbtKey.Type.INT);
-    private static final NbtKey<Float> ANIMATION_SCALE_KEY = new NbtKey<>("animation_scale", NbtKey.Type.FLOAT);
-    private static final NbtKey<NbtCompound> EMANCIPATED_BLOCK_ENTITY_DATA_KEY = new NbtKey<>("emancipated_block_entity", NbtKey.Type.COMPOUND);
-    private static final NbtKey<BlockState> EMANCIPATED_STATE_KEY = new NbtKey<>(
-            "emancipated_state",
-            NbtKey.Type.COMPOUND.then(nbt -> NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), nbt), NbtHelper::fromBlockState)
-    );
+    private static final KeyedEndec<Integer> MAX_AGE_KEY = Endec.INT.keyed("max_age", 15);
+    private static final KeyedEndec<Float> ANIMATION_SCALE_KEY = Endec.FLOAT.keyed("animation_scale", 1f);
+    private static final KeyedEndec<NbtCompound> EMANCIPATED_BLOCK_ENTITY_DATA_KEY = NbtEndec.COMPOUND.keyed("emancipated_block_entity", (NbtCompound) null);
+    private static final KeyedEndec<BlockState> EMANCIPATED_STATE_KEY = Endec.ofCodec(BlockState.CODEC).keyed("emancipated_state", Blocks.AIR.getDefaultState());
 
     @Nullable
     @Environment(EnvType.CLIENT)
@@ -134,10 +132,10 @@ public class EmancipatedBlockEntity extends Entity {
 
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {
-        this.emancipatedState = nbt.getOr(EMANCIPATED_STATE_KEY, Blocks.AIR.getDefaultState());
-        this.setEmancipatedBlockEntityData(nbt.getOr(EMANCIPATED_BLOCK_ENTITY_DATA_KEY, null));
-        this.setMaxAge(nbt.getOr(MAX_AGE_KEY, 15));
-        this.setAnimationScale(nbt.getOr(ANIMATION_SCALE_KEY, 1f));
+        this.emancipatedState = nbt.get(EMANCIPATED_STATE_KEY);
+        this.setEmancipatedBlockEntityData(nbt.get(EMANCIPATED_BLOCK_ENTITY_DATA_KEY));
+        this.setMaxAge(nbt.get(MAX_AGE_KEY));
+        this.setAnimationScale(nbt.get(ANIMATION_SCALE_KEY));
     }
 
     @Override

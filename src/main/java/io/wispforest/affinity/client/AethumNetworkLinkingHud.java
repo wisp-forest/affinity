@@ -58,11 +58,14 @@ public class AethumNetworkLinkingHud {
 
                                 var linkData = stack.get(IridescenceWandItem.LINK_DATA_KEY);
                                 if (!linkData.has(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY)) break;
-                                if (linkData.get(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY) != AethumLink.Type.PUSH) break;
+                                if (linkData.get(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY) != AethumLink.Type.PUSH) {
+                                    break;
+                                }
 
                                 linkActionLabel = Text.literal("→").styled(style -> style.withColor(0x3955E5));
                             }
-                            case RELEASE -> linkActionLabel = Text.literal("-").styled(style -> style.withColor(0xEB1D36));
+                            case RELEASE ->
+                                    linkActionLabel = Text.literal("-").styled(style -> style.withColor(0xEB1D36));
                         }
 
                         layout.child(Components.label(linkActionLabel)

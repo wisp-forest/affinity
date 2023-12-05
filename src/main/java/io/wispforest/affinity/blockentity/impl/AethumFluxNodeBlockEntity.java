@@ -173,7 +173,9 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
         while (!queue.isEmpty()) {
             var memberPos = queue.poll();
-            if (!(Affinity.AETHUM_NODE.find(this.world, memberPos, null) instanceof AethumFluxNodeBlockEntity node)) continue;
+            if (!(Affinity.AETHUM_NODE.find(this.world, memberPos, null) instanceof AethumFluxNodeBlockEntity node)) {
+                continue;
+            }
             if (!node.validForTransfer()) continue;
 
             visitedNodes.add(memberPos);

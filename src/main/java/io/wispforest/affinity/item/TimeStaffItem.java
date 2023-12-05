@@ -7,7 +7,8 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -33,7 +34,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
 
     private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(2, 1, 2);
 
-    public static final NbtKey<Mode> MODE = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
+    public static final KeyedEndec<Mode> MODE = Mode.ENDEC.keyed("Mode", Mode.NORMAL);
 
     public static final TagKey<Block> IMMUNE_BLOCKS = TagKey.of(RegistryKeys.BLOCK, Affinity.id("time_staff_immune"));
 
@@ -171,6 +172,12 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
         FAST("fast", 3, 0.4f),
         LUDICROUS("ludicrous", 7, 1);
 
+        public static final Endec<Mode> ENDEC = Endec.STRING.xmap(id -> switch (id) {
+            default -> Mode.NORMAL;
+            case "fast" -> Mode.FAST;
+            case "ludicrous" -> Mode.LUDICROUS;
+        }, mode -> mode.id);
+
         private final String id;
         private final int repeatTicks;
         private final float aethumDrain;
@@ -191,14 +198,6 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
             if (idx > Mode.values().length - 1) idx -= Mode.values().length;
 
             return Mode.values()[idx];
-        }
-
-        public static Mode byId(String id) {
-            return switch (id) {
-                default -> Mode.NORMAL;
-                case "fast" -> Mode.FAST;
-                case "ludicrous" -> Mode.LUDICROUS;
-            };
         }
     }
 }

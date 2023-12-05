@@ -32,8 +32,9 @@ public class WispFleeFromPlayerGoal extends Goal {
         if (closestPlayer == null) return false;
 
         var fleePos = NoPenaltyTargeting.findFrom(this.wisp, 10, 10, this.wisp.getPos().add(0, 5, 0));
-        if (fleePos == null || closestPlayer.squaredDistanceTo(fleePos) < closestPlayer.squaredDistanceTo(this.wisp))
+        if (fleePos == null || closestPlayer.squaredDistanceTo(fleePos) < closestPlayer.squaredDistanceTo(this.wisp)) {
             return false;
+        }
 
         this.fleePath = this.wisp.getNavigation().findPathTo(fleePos.x, fleePos.y, fleePos.z, 0);
         return true;

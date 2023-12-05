@@ -3,9 +3,10 @@ package io.wispforest.affinity.entity;
 import io.wispforest.affinity.entity.goal.FlyRandomlyGoal;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.wisps.WispType;
-import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -35,7 +36,7 @@ import net.minecraft.world.World;
 
 public abstract class WispEntity extends PathAwareEntity {
 
-    private static final NbtKey<Boolean> MISTY_KEY = new NbtKey<>("Misty", NbtKey.Type.BOOLEAN);
+    private static final KeyedEndec<Boolean> MISTY_KEY = Endec.BOOLEAN.keyed("Misty", true);
 
     private static final TrackedData<Boolean> MISTY = DataTracker.registerData(WispEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private final DustParticleEffect particles;
@@ -141,7 +142,7 @@ public abstract class WispEntity extends PathAwareEntity {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.dataTracker.set(MISTY, nbt.getOr(MISTY_KEY, true));
+        this.dataTracker.set(MISTY, nbt.get(MISTY_KEY));
     }
 
     public boolean misty() {

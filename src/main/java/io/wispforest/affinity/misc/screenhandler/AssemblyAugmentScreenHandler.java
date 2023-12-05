@@ -84,7 +84,7 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
     @Override
     public void sendContentUpdates() {
         if (this.augment != null) {
-            this.onContentChanged(((CraftingScreenHandlerAccessor)this).affinity$getInput());
+            this.onContentChanged(((CraftingScreenHandlerAccessor) this).affinity$getInput());
 
             this.craftingProgress.set(this.augment.craftingTick() / (float) this.augment.craftingDuration());
             this.displayTreetaps.set(this.augment.displayTreetaps());

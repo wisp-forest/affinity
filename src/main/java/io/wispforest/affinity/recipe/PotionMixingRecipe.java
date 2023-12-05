@@ -14,7 +14,6 @@ import net.minecraft.potion.Potions;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -68,7 +67,9 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
             var effectInputs = Stream.concat(inputMixture.effects().stream(), inputMixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).toList();
             var itemInputs = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
 
-            if (effectInputs.size() != recipe.effectInputs.size() || itemInputs.size() != recipe.itemInputs.size()) continue;
+            if (effectInputs.size() != recipe.effectInputs.size() || itemInputs.size() != recipe.itemInputs.size()) {
+                continue;
+            }
 
             int confirmedItemInputs = 0;
 

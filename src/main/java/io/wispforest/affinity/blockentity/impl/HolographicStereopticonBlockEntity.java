@@ -12,8 +12,10 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.mixin.client.WorldRendererAccessor;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import io.wispforest.owo.ui.component.EntityComponent;
 import io.wispforest.worldmesher.WorldMesh;
 import net.fabricmc.api.EnvType;
@@ -55,12 +57,13 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     private static final Cleaner MESH_CLEANER = Cleaner.create();
 
     public static final String IMPRINT_KIND_KEY_NAME = "ImprintKind";
-    public static final NbtKey<NbtCompound> RENDERER_DATA_KEY = new NbtKey<>("RendererData", NbtKey.Type.COMPOUND);
-    public static final NbtKey<Float> RENDER_SCALE_KEY = new NbtKey<>("RenderScale", NbtKey.Type.FLOAT);
-    public static final NbtKey<Boolean> SPIN_KEY = new NbtKey<>("Spin", NbtKey.Type.BOOLEAN);
+    public static final KeyedEndec<NbtCompound> RENDERER_DATA_KEY = NbtEndec.COMPOUND.keyed("RendererData", (NbtCompound) null);
+    public static final KeyedEndec<Float> RENDER_SCALE_KEY = Endec.FLOAT.keyed("RenderScale", 1f);
+    public static final KeyedEndec<Boolean> SPIN_KEY = Endec.BOOLEAN.keyed("Spin", true);
 
     @Environment(EnvType.CLIENT) private Renderer currentRenderer;
-    @Environment(EnvType.CLIENT) private @Nullable Renderer nextRenderer;
+    @Environment(EnvType.CLIENT)
+    private @Nullable Renderer nextRenderer;
 
     @Environment(EnvType.CLIENT) private long updateTimestamp = 0;
     @Environment(EnvType.CLIENT) private long refreshIn = 0;
@@ -94,8 +97,8 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.renderScale = nbt.get(RENDER_SCALE_KEY);
-        this.spin = nbt.getOr(SPIN_KEY, true);
-        this.rendererData = nbt.getOr(RENDERER_DATA_KEY, null);
+        this.spin = nbt.get(SPIN_KEY);
+        this.rendererData = nbt.get(RENDERER_DATA_KEY);
 
         if (this.world != null && this.world.isClient) {
             this.refreshRenderer();

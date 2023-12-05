@@ -5,7 +5,6 @@ import io.wispforest.affinity.blockentity.impl.ItemTransferNodeBlockEntity;
 import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
-import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.CheckboxComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.ItemComponent;

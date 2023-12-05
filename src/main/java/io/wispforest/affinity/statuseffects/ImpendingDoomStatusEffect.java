@@ -3,7 +3,6 @@ package io.wispforest.affinity.statuseffects;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.DamageTypeKey;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffectCategory;
 
 public class ImpendingDoomStatusEffect extends AffinityStatusEffect {

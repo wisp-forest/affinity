@@ -2,7 +2,8 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.serialization.endec.BuiltInEndecs;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -19,8 +20,8 @@ import java.util.Optional;
 
 public class CarbonCopyItem extends Item {
 
-    public static final NbtKey<Identifier> RECIPE_KEY = new NbtKey<>("Recipe", NbtKey.Type.IDENTIFIER);
-    public static final NbtKey<ItemStack> RESULT_KEY = new NbtKey<>("Result", NbtKey.Type.ITEM_STACK);
+    public static final KeyedEndec<Identifier> RECIPE_KEY = BuiltInEndecs.IDENTIFIER.keyed("Recipe", (Identifier) null);
+    public static final KeyedEndec<ItemStack> RESULT_KEY = BuiltInEndecs.ITEM_STACK.keyed("Result", (ItemStack) null);
 
     public CarbonCopyItem() {
         super(new OwoItemSettings().maxCount(1));
@@ -29,8 +30,8 @@ public class CarbonCopyItem extends Item {
     @Override
     @Environment(EnvType.CLIENT)
     public Optional<net.minecraft.client.item.TooltipData> getTooltipData(ItemStack stack) {
-        var recipeId = stack.getOr(RECIPE_KEY, null);
-        var result = stack.getOr(RESULT_KEY, null);
+        var recipeId = stack.get(RECIPE_KEY);
+        var result = stack.get(RESULT_KEY);
         if (recipeId == null || result == null) return Optional.empty();
 
         var recipe = MinecraftClient.getInstance().world.getRecipeManager().get(recipeId);
@@ -48,7 +49,7 @@ public class CarbonCopyItem extends Item {
 
     @Override
     public Text getName(ItemStack stack) {
-        var resultStack = stack.getOr(RESULT_KEY, null);
+        var resultStack = stack.get(RESULT_KEY);
         return resultStack == null
                 ? this.getName()
                 : Text.translatable(this.getTranslationKey(), resultStack.getCount(), resultStack.getName());

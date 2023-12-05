@@ -95,7 +95,9 @@ public class CollectionStaffItem extends StaffItem {
     @SuppressWarnings("UnstableApiUsage")
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
         if (pedestal.flux() < 8) return;
-        if (ItemStorage.SIDED.find(world, pos.add(0, pedestal.down(), 0), pedestal.facing().getOpposite()) == null) return;
+        if (ItemStorage.SIDED.find(world, pos.add(0, pedestal.down(), 0), pedestal.facing().getOpposite()) == null) {
+            return;
+        }
 
         for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos.add(0, pedestal.up() * 2, 0)).expand(5, 2, 5), Entity::isAlive)) {
             ClientParticles.spawn(ParticleTypes.WITCH, world, item.getPos().add(0, .125, 0), .25);

@@ -4,8 +4,9 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.ItemOps;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.block.Block;
@@ -41,7 +42,7 @@ import java.util.function.Predicate;
 
 public abstract class ArcaneFadeFluid extends FlowableFluid {
 
-    public static final NbtKey<Boolean> REMOVE_ENCHANTMENT_GLINT_KEY = new NbtKey<>("affinity:remove_enchantment_glint", NbtKey.Type.BOOLEAN);
+    public static final KeyedEndec<Boolean> REMOVE_ENCHANTMENT_GLINT_KEY = Endec.BOOLEAN.keyed("affinity:remove_enchantment_glint", false);
 
     public static final Event<OnTouch> ENTITY_TOUCH_EVENT = EventFactory.createArrayBacked(OnTouch.class, listeners -> entity -> {
         for (var listener : listeners) {
@@ -71,7 +72,7 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
                 output.put(REMOVE_ENCHANTMENT_GLINT_KEY, true);
 
                 input.setStack(output);
-            })) return;
+            })) {return;}
 
             if (tryCraft(items, input -> input.getStack().getRepairCost() != 0, catalyst -> catalyst.getStack().isOf(Items.POTION) && PotionUtil.getPotion(catalyst.getStack()) == Potions.HEALING, (input, catalyst) -> {
                 if (ItemOps.emptyAwareDecrement(catalyst.getStack())) {
@@ -81,7 +82,7 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
                 }
 
                 input.getStack().setRepairCost(0);
-            })) return;
+            })) {return;}
         });
 
         ENTITY_TICK_IN_FADE_EVENT.register(entity -> {

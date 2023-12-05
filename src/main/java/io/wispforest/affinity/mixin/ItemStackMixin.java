@@ -29,7 +29,9 @@ public abstract class ItemStackMixin {
     private void injectNameColorForIncandescence(CallbackInfoReturnable<Text> cir) {
         final var stack = (ItemStack) (Object) this;
         if (!(PotionUtil.getPotion(stack) instanceof GlowingPotion)) return;
-        if (!stack.has(PotionMixture.EXTRA_DATA) || !stack.get(PotionMixture.EXTRA_DATA).has(GlowingPotion.COLOR_KEY)) return;
+        if (!stack.has(PotionMixture.EXTRA_DATA) || !stack.get(PotionMixture.EXTRA_DATA).has(GlowingPotion.COLOR_KEY)) {
+            return;
+        }
 
         var color = stack.get(PotionMixture.EXTRA_DATA).get(GlowingPotion.COLOR_KEY);
         cir.setReturnValue(cir.getReturnValue().copy().styled(style -> style.withColor(Color.ofDye(color).rgb())));
@@ -47,7 +49,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "hasGlint", at = @At("HEAD"), cancellable = true)
     private void removeGlint(CallbackInfoReturnable<Boolean> cir) {
-        if (!((ItemStack) (Object) this).getOr(ArcaneFadeFluid.REMOVE_ENCHANTMENT_GLINT_KEY, false)) return;
+        if (!((ItemStack) (Object) this).get(ArcaneFadeFluid.REMOVE_ENCHANTMENT_GLINT_KEY)) return;
         cir.setReturnValue(false);
     }
 

@@ -2,14 +2,15 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 public class AttunedShardItem extends Item {
 
-    public static final NbtKey<Float> HEALTH_KEY = new NbtKey<>("Health", NbtKey.Type.FLOAT);
+    public static final KeyedEndec<Float> HEALTH_KEY = Endec.FLOAT.keyed("Health", 1f);
 
     private final AttunedShardTier tier;
 
@@ -27,6 +28,6 @@ public class AttunedShardItem extends Item {
     }
 
     public static float getShardHealth(ItemStack shard) {
-        return shard.getOr(HEALTH_KEY, 1f);
+        return shard.get(HEALTH_KEY);
     }
 }

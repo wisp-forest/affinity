@@ -13,8 +13,9 @@ import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
-import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.ItemOps;
+import io.wispforest.owo.serialization.endec.BuiltInEndecs;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import io.wispforest.owo.util.ImplementedInventory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,7 +51,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     public static final int OUTPUT_SLOT = 9;
     private static final int[] ALL_SLOTS = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, OUTPUT_SLOT};
 
-    private static final NbtKey<ItemStack> TEMPLATE_KEY = new NbtKey<>("Template", NbtKey.Type.ITEM_STACK);
+    private static final KeyedEndec<ItemStack> TEMPLATE_KEY = BuiltInEndecs.ITEM_STACK.keyed("Template", ItemStack.EMPTY);
 
     private static final Map<World, Map<BlockPos, BlockPos>> BLOCKED_TREETAPS_PER_WORLD = new WeakHashMap<>();
     private Map<BlockPos, BlockPos> blockedTreetaps;

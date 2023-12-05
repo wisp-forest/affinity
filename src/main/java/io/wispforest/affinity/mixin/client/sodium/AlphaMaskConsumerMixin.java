@@ -39,7 +39,8 @@ public abstract class AlphaMaskConsumerMixin extends FixedColorVertexConsumer im
                 if (!format.containsElement(element)) continue;
 
                 switch (element) {
-                    case POSITION -> this.pos.set(PositionAttribute.getX(elementIdx), PositionAttribute.getY(elementIdx), PositionAttribute.getZ(elementIdx));
+                    case POSITION ->
+                            this.pos.set(PositionAttribute.getX(elementIdx), PositionAttribute.getY(elementIdx), PositionAttribute.getZ(elementIdx));
                     case COLOR -> this.color(ColorAttribute.get(elementIdx));
                     case TEXTURE -> this.texture.set(TextureAttribute.get(elementIdx));
                     case LIGHT -> this.light = LightAttribute.get(elementIdx);

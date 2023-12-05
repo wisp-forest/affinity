@@ -11,7 +11,8 @@ import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityCriteria;
 import io.wispforest.affinity.object.AffinityItems;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -46,7 +47,7 @@ public class KinesisStaffItem extends StaffItem {
 
     private static final float ENTITY_THROW_COST = 2.5f;
 
-    private static final NbtKey<Integer> ACTIVE_TARGET_ENTITY = new NbtKey<>("TargetEntity", NbtKey.Type.INT);
+    private static final KeyedEndec<Integer> ACTIVE_TARGET_ENTITY = Endec.INT.keyed("TargetEntity", -1);
     private static final TagKey<EntityType<?>> IMMUNE_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE, Affinity.id("kinesis_staff_immune"));
 
     private static final EntityAttributeModifier MODIFIER = new EntityAttributeModifier(UUID.fromString("bc21b17e-2832-4762-acef-361df22a96f1"), "", -0.65, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);

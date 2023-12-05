@@ -47,7 +47,9 @@ public class AbstractBlockMixin {
             final var playerStack = player.getStackInHand(hand);
             if (!(playerStack.getItem() instanceof DirectInteractionHandler handler)) return;
 
-            if (!handler.shouldHandleInteraction(playerStack, world, hit.getBlockPos(), ((BlockState) (Object) this))) return;
+            if (!handler.shouldHandleInteraction(playerStack, world, hit.getBlockPos(), ((BlockState) (Object) this))) {
+                return;
+            }
             cir.setReturnValue(ActionResult.PASS);
         }
 

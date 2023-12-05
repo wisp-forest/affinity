@@ -54,7 +54,8 @@ public class DamageTypeKey {
 
             var killer = switch (DamageTypeKey.this.attributionType) {
                 case NEVER_ATTRIBUTE -> null;
-                case ATTACKER_THEN_ADVERSARY -> this.getAttacker() != null ? this.getAttacker() : killed.getPrimeAdversary();
+                case ATTACKER_THEN_ADVERSARY ->
+                        this.getAttacker() != null ? this.getAttacker() : killed.getPrimeAdversary();
             };
 
             if (killer != null) {

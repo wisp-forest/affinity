@@ -55,7 +55,9 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
     }
 
     private void parentedItem(ItemModelGenerator generator, Block... blocks) {
-        for (var block : blocks) generator.writer.accept(ModelIds.getItemModelId(block.asItem()), new SimpleModelSupplier(ModelIds.getBlockModelId(block)));
+        for (var block : blocks) {
+            generator.writer.accept(ModelIds.getItemModelId(block.asItem()), new SimpleModelSupplier(ModelIds.getBlockModelId(block)));
+        }
     }
 
     private void generatedItem(ItemModelGenerator generator, ItemConvertible... items) {

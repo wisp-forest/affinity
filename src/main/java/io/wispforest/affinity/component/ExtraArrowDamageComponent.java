@@ -1,12 +1,13 @@
 package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.minecraft.nbt.NbtCompound;
 
 public class ExtraArrowDamageComponent implements Component {
 
-    private static final NbtKey<Integer> DAMAGE_KEY = new NbtKey<>("Damage", NbtKey.Type.INT);
+    private static final KeyedEndec<Integer> DAMAGE_KEY = Endec.INT.keyed("Damage", 0);
     public int extraDamage = 0;
 
     @Override

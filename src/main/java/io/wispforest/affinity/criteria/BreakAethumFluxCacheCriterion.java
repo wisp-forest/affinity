@@ -1,7 +1,6 @@
 package io.wispforest.affinity.criteria;
 
 import com.google.gson.JsonObject;
-import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
 import io.wispforest.affinity.object.AffinityCriteria;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -9,10 +8,8 @@ import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
-import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 
 import java.util.Optional;
 

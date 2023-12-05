@@ -58,7 +58,9 @@ public class BlockFinder {
     }
 
     public static Stream<PointOfInterest> findPoi(World world, PointOfInterestType type, BlockPos center, int maxDistance) {
-        if (!(world instanceof ServerWorld serverWorld)) throw new UnsupportedOperationException("Attempted POI lookup on the client");
+        if (!(world instanceof ServerWorld serverWorld)) {
+            throw new UnsupportedOperationException("Attempted POI lookup on the client");
+        }
         return serverWorld.getPointOfInterestStorage().getInSquare(poiEntry -> poiEntry.value() == type, center, maxDistance, PointOfInterestStorage.OccupationStatus.ANY);
     }
 

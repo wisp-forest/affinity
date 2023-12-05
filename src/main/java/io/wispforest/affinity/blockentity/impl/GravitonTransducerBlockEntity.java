@@ -12,9 +12,10 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
-import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.serialization.endec.BuiltInEndecs;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -40,7 +41,7 @@ import org.joml.Vector3f;
 @SuppressWarnings("UnstableApiUsage")
 public class GravitonTransducerBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity, InquirableOutlineProvider {
 
-    private static final NbtKey<ItemStack> SHARD_KEY = new NbtKey<>("Shard", NbtKey.Type.ITEM_STACK);
+    private static final KeyedEndec<ItemStack> SHARD_KEY = BuiltInEndecs.ITEM_STACK.keyed("Shard", ItemStack.EMPTY);
 
     @NotNull private ItemStack shard = ItemStack.EMPTY;
     private final SingleStackStorageProvider shardStorage = new SingleStackStorageProvider(() -> this.shard, stack -> this.shard = stack, this::markDirty)

@@ -8,9 +8,11 @@ import io.wispforest.affinity.item.WispMatterItem;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.BuiltInEndecs;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -35,8 +37,8 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
 
     private static final Vec3d LINK_ATTACHMENT_POINT = new Vec3d(0, -.35f, 0);
 
-    private static final NbtKey<ItemStack> CURRENTLY_HARVESTING_KEY = new NbtKey<>("CurrentlyHarvesting", NbtKey.Type.ITEM_STACK);
-    private static final NbtKey<Integer> HARVEST_TICKS_KEY = new NbtKey<>("HarvestTicks", NbtKey.Type.INT);
+    private static final KeyedEndec<ItemStack> CURRENTLY_HARVESTING_KEY = BuiltInEndecs.ITEM_STACK.keyed("CurrentlyHarvesting", ItemStack.EMPTY);
+    private static final KeyedEndec<Integer> HARVEST_TICKS_KEY = Endec.INT.keyed("HarvestTicks", 0);
 
     @NotNull
     private ItemStack currentlyHarvesting = ItemStack.EMPTY;

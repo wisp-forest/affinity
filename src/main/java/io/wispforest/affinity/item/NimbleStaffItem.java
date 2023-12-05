@@ -6,8 +6,10 @@ import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.BuiltInEndecs;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,8 +33,8 @@ import java.util.function.BooleanSupplier;
 
 public class NimbleStaffItem extends StaffItem {
 
-    public static final NbtKey<Direction> DIRECTION = new NbtKey<>("Direction", NbtKey.Type.STRING.then(Direction::byName, Direction::asString));
-    public static final NbtKey<BlockPos> ECHO_SHARD_TARGET = new NbtKey<>("EchoShardTarget", NbtKey.Type.LONG.then(BlockPos::fromLong, BlockPos::asLong));
+    public static final KeyedEndec<Direction> DIRECTION = Endec.ofCodec(Direction.CODEC).keyed("Direction", Direction.NORTH);
+    public static final KeyedEndec<BlockPos> ECHO_SHARD_TARGET = BuiltInEndecs.BLOCK_POS.keyed("EchoShardTarget", (BlockPos) null);
 
     private static final InquirableOutlineProvider.Outline UP_AOE = new InquirableOutlineProvider.Outline(-4, 0, -4, 4, 4, 4);
     private static final InquirableOutlineProvider.Outline DOWN_AOE = new InquirableOutlineProvider.Outline(-4, -4, -4, 4, 0, 4);
@@ -62,7 +64,7 @@ public class NimbleStaffItem extends StaffItem {
         if (echoShardTarget != null) {
             pushDelta = Vec3d.ofCenter(echoShardTarget).subtract(Vec3d.ofCenter(pos)).normalize();
 
-            if (!echoShardTarget.equals(pedestal.getItem().getOr(ECHO_SHARD_TARGET, null))) {
+            if (!echoShardTarget.equals(pedestal.getItem().get(ECHO_SHARD_TARGET))) {
                 pedestal.getItem().put(ECHO_SHARD_TARGET, echoShardTarget);
                 pedestal.markDirty();
             }
@@ -81,7 +83,7 @@ public class NimbleStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        final var echoShardTarget = pedestal.getItem().getOr(ECHO_SHARD_TARGET, null);
+        final var echoShardTarget = pedestal.getItem().get(ECHO_SHARD_TARGET);
         var pushDelta = echoShardTarget != null
                 ? Vec3d.ofCenter(echoShardTarget).subtract(Vec3d.ofCenter(pos)).normalize()
                 : Vec3d.of(getDirection(pedestal.getItem()).getVector());
@@ -149,7 +151,7 @@ public class NimbleStaffItem extends StaffItem {
 
     @Override
     public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<InWorldTooltipProvider.Entry> entries) {
-        if (pedestal.getItem().getOr(ECHO_SHARD_TARGET, null) != null) {
+        if (pedestal.getItem().get(ECHO_SHARD_TARGET) != null) {
             var targetPos = pedestal.getItem().get(ECHO_SHARD_TARGET);
             entries.add(InWorldTooltipProvider.Entry.icon(
                     Text.literal(targetPos.getX() + " " + targetPos.getY() + " " + targetPos.getZ()),
@@ -165,7 +167,7 @@ public class NimbleStaffItem extends StaffItem {
     }
 
     private static Direction getDirection(ItemStack stack) {
-        return stack.getOr(DIRECTION, Direction.NORTH);
+        return stack.get(DIRECTION);
     }
 
     @Override

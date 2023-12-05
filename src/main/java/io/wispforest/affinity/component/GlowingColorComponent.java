@@ -18,7 +18,7 @@ public class GlowingColorComponent implements Component, AutoSyncedComponent {
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        this.color = tag.getOr(GlowingPotion.COLOR_KEY, null);
+        this.color = tag.get(GlowingPotion.COLOR_KEY);
     }
 
     @Override

@@ -3,7 +3,8 @@ package io.wispforest.affinity.particle;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.wispforest.affinity.object.AffinityParticleTypes;
-import io.wispforest.owo.network.serialization.RecordSerializer;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.RecordEndec;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ItemStackParticleEffect;
@@ -12,10 +13,11 @@ import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 
-public record BezierPathEmitterParticleEffect(ParticleEffect effect, Vec3d splineEndpoint, int travelDuration, int emitterDuration,
+public record BezierPathEmitterParticleEffect(ParticleEffect effect, Vec3d splineEndpoint, int travelDuration,
+                                              int emitterDuration,
                                               boolean randomPath) implements ParticleEffect {
 
-    private static final RecordSerializer<BezierPathEmitterParticleEffect> SERIALIZER = RecordSerializer.create(BezierPathEmitterParticleEffect.class);
+    private static final Endec<BezierPathEmitterParticleEffect> ENDEC = RecordEndec.create(BezierPathEmitterParticleEffect.class);
 
     public static BezierPathEmitterParticleEffect item(ItemStack stack, Vec3d splineEndpoint, int travelDuration, int emitterDuration, boolean randomPath) {
         return new BezierPathEmitterParticleEffect(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), splineEndpoint, travelDuration, emitterDuration, randomPath);
@@ -28,7 +30,7 @@ public record BezierPathEmitterParticleEffect(ParticleEffect effect, Vec3d splin
 
     @Override
     public void write(PacketByteBuf buf) {
-        SERIALIZER.write(buf, this);
+        buf.write(ENDEC, this);
     }
 
     @Override
@@ -62,7 +64,7 @@ public record BezierPathEmitterParticleEffect(ParticleEffect effect, Vec3d splin
 
         @Override
         public BezierPathEmitterParticleEffect read(ParticleType<BezierPathEmitterParticleEffect> type, PacketByteBuf buf) {
-            return SERIALIZER.read(buf);
+            return buf.read(ENDEC);
         }
     };
 }

@@ -1,18 +1,19 @@
 package io.wispforest.affinity.misc.potion;
 
 import com.google.common.collect.ImmutableList;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.BuiltInEndecs;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.endec.StructEndecBuilder;
+import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,16 @@ import java.util.Objects;
  */
 public class PotionMixture {
 
-    public static final NbtKey<NbtCompound> EXTRA_DATA = new NbtKey<>("ExtraPotionData", NbtKey.Type.COMPOUND);
+    public static final Endec<PotionMixture> ENDEC = StructEndecBuilder.of(
+            BuiltInEndecs.ofRegistry(Registries.POTION).fieldOf("Potion", PotionMixture::basePotion),
+            NbtEndec.COMPOUND.xmap(StatusEffectInstance::fromNbt, instance -> instance.writeNbt(new NbtCompound())).listOf().optionalFieldOf("Effects", PotionMixture::effects, List.of()),
+            Endec.BOOLEAN.fieldOf("Pure", mixture -> mixture.pure),
+            NbtEndec.COMPOUND.optionalFieldOf("ExtraPotionData", PotionMixture::extraNbt, (NbtCompound) null),
+            PotionMixture::new
+    );
 
-    public static final NbtKey<Float> EXTEND_DURATION_BY = new NbtKey<>("ExtendDurationBy", NbtKey.Type.FLOAT);
+    public static final KeyedEndec<NbtCompound> EXTRA_DATA = NbtEndec.COMPOUND.keyed("ExtraPotionData", (NbtCompound) null);
+    public static final KeyedEndec<Float> EXTEND_DURATION_BY = Endec.FLOAT.keyed("ExtendDurationBy", 1f);
 
     public static final PotionMixture EMPTY = new PotionMixture(Potions.EMPTY, ImmutableList.of(), true, null);
     public static final Potion DUBIOUS_POTION = new Potion("dubious");
@@ -77,52 +85,7 @@ public class PotionMixture {
         final var potion = PotionUtil.getPotion(stack);
         final var effects = PotionUtil.getCustomPotionEffects(stack);
 
-        return new PotionMixture(potion, effects, true, stack.getOr(EXTRA_DATA, null));
-    }
-
-    public static PotionMixture fromNbt(NbtCompound nbt) {
-
-        var potion = Potions.EMPTY;
-        var effects = new ArrayList<StatusEffectInstance>();
-
-        if (nbt.contains("Potion", NbtElement.COMPOUND_TYPE)) {
-            final var potionNbt = nbt.getCompound("Potion");
-            potion = Registries.POTION.get(Identifier.tryParse(potionNbt.getString("id")));
-        }
-
-        if (nbt.contains("Effects", NbtElement.LIST_TYPE)) {
-            final var effectsNbt = nbt.getList("Effects", NbtElement.COMPOUND_TYPE);
-            for (var effect : effectsNbt) {
-                effects.add(StatusEffectInstance.fromNbt((NbtCompound) effect));
-            }
-        }
-
-        return new PotionMixture(potion, effects, nbt.getBoolean("Pure"), nbt.getOr(EXTRA_DATA, null));
-    }
-
-    public NbtCompound toNbt() {
-        final var nbt = new NbtCompound();
-
-        if (basePotion != Potions.EMPTY) {
-            final var potionNbt = new NbtCompound();
-            potionNbt.putString("id", Registries.POTION.getId(basePotion).toString());
-
-            nbt.put("Potion", potionNbt);
-        }
-
-        if (!effects.isEmpty()) {
-            final var effectsNbt = new NbtList();
-            for (var effect : effects) {
-                effectsNbt.add(effect.writeNbt(new NbtCompound()));
-            }
-
-            nbt.put("Effects", effectsNbt);
-        }
-
-        nbt.putBoolean("Pure", pure);
-        nbt.putIfNotNull(EXTRA_DATA, extraNbt);
-
-        return nbt;
+        return new PotionMixture(potion, effects, true, stack.get(EXTRA_DATA));
     }
 
     public ItemStack toStack() {

@@ -38,7 +38,7 @@ public abstract class PotionEntityMixin extends ThrownItemEntity {
         if (!(entity instanceof LivingEntity target)) return entity;
 
         var stack = this.getStack();
-        final var extraData = stack.getOr(PotionMixture.EXTRA_DATA, null);
+        final var extraData = stack.get(PotionMixture.EXTRA_DATA);
         PotionUtil.getPotionEffects(stack).forEach(x -> MixinHooks.potionApplied(x, target, extraData));
 
         return entity;
@@ -52,7 +52,7 @@ public abstract class PotionEntityMixin extends ThrownItemEntity {
     @ModifyVariable(method = "method_48575", at = @At(value = "HEAD"), argsOnly = true)
     private static double extendDuration(double duration) {
         if (affinity$stackContext.has(PotionMixture.EXTRA_DATA)) {
-            duration *= affinity$stackContext.get(PotionMixture.EXTRA_DATA).getOr(PotionMixture.EXTEND_DURATION_BY, 1.0F);
+            duration *= affinity$stackContext.get(PotionMixture.EXTRA_DATA).get(PotionMixture.EXTEND_DURATION_BY);
         }
 
         affinity$stackContext = null;

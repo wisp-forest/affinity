@@ -43,7 +43,7 @@ public class ShapelessMatch {
 
     private ShapelessMatch(int size) {
         match = new int[size];
-        bitSet = new BitSet(size * (size+1));
+        bitSet = new BitSet(size * (size + 1));
     }
 
     private boolean augment(int l) {

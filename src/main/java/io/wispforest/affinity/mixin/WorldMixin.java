@@ -17,8 +17,7 @@ public abstract class WorldMixin {
 
     @Redirect(method = "hasRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isRaining()Z"))
     private boolean useLocalWeather(World instance, BlockPos pos) {
-        if (instance.isClient)
-            return instance.isRaining();
+        if (instance.isClient) {return instance.isRaining();}
 
         var chunk = getWorldChunk(pos);
 

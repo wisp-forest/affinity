@@ -1,18 +1,13 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.item.WispMistItem;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityItems;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.recipe.BrewingRecipeRegistry;
-import net.minecraft.text.Text;
-import net.minecraft.util.Rarity;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

@@ -6,7 +6,6 @@ import io.github.ladysnake.pal.VanillaAbilities;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;

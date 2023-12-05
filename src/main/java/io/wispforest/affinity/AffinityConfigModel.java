@@ -16,6 +16,6 @@ public class AffinityConfigModel {
     public int stereopticonSectionImprintRecursionLimit = 0;
 
     @RestartRequired
-    @RangeConstraint(min = 3, max = 100)
+    @RangeConstraint(min = 3, max = 127)
     public int maxFluxNodeShards = 5;
 }

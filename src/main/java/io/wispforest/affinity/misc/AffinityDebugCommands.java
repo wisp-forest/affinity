@@ -38,7 +38,7 @@ public class AffinityDebugCommands {
         CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> {
             dispatcher.register(literal("emancipate").executes(context -> {
                 var player = context.getSource().getPlayer();
-                var targetPos = ((BlockHitResult)player.raycast(5, 0, false)).getBlockPos();
+                var targetPos = ((BlockHitResult) player.raycast(5, 0, false)).getBlockPos();
 
                 var targetState = player.getWorld().getBlockState(targetPos);
                 if (targetState.isAir()) return 0;

@@ -5,10 +5,11 @@ import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
-import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -39,7 +40,7 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public class CultivationStaffItem extends StaffItem {
 
-    public static final NbtKey<Boolean> SUPER_FORAGING_MODE_KEY = new NbtKey<>("SuperForagingMode", NbtKey.Type.BOOLEAN);
+    public static final KeyedEndec<Boolean> SUPER_FORAGING_MODE_KEY = Endec.BOOLEAN.keyed("SuperForagingMode", false);
 
     private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 0, 4);
 

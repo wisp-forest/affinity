@@ -11,7 +11,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -29,13 +28,16 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
     }
 
     static {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
-                if (PotionUtil.getPotionEffects(stack).stream().noneMatch(x -> x.getEffectType() == AffinityStatusEffects.BANISHED)) return;
+                if (PotionUtil.getPotionEffects(stack).stream().noneMatch(x -> x.getEffectType() == AffinityStatusEffects.BANISHED)) {
+                    return;
+                }
                 if (!stack.has(PotionMixture.EXTRA_DATA)) return;
 
                 EchoShardExtension.formatLocationTooltip(stack.get(PotionMixture.EXTRA_DATA), lines);
             });
+        }
     }
 
     @Override
@@ -65,8 +67,9 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
         if (extraData == null) return;
         if (target.getWorld().isClient) return;
 
-        if (target.hasStatusEffect(AffinityStatusEffects.BANISHED))
+        if (target.hasStatusEffect(AffinityStatusEffects.BANISHED)) {
             target.removeStatusEffectInternal(AffinityStatusEffects.BANISHED);
+        }
 
         var component = target.getComponent(AffinityComponents.BANISHMENT);
         component.pos = target.getBlockPos();

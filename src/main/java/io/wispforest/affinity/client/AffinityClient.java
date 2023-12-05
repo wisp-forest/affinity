@@ -94,7 +94,7 @@ public class AffinityClient implements ClientModInitializer {
         PostItemRenderCallback.EVENT.register((stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
             if (!stack.isOf(AffinityItems.CARBON_COPY) || renderMode != ModelTransformationMode.GUI) return;
 
-            var resultStack = stack.getOr(CarbonCopyItem.RESULT_KEY, null);
+            var resultStack = stack.get(CarbonCopyItem.RESULT_KEY);
             if (resultStack == null) return;
 
             matrices.translate(.75, .25, 1);

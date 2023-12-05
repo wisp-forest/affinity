@@ -92,7 +92,7 @@ public class MixinHooks {
         var effects = PotionUtil.getPotionEffects(result);
 
         result.setCustomName(Text.translatable("item.affinity.misty_potion").formatted(Rarity.UNCOMMON.formatting));
-        result.getOrCreateNbt().putInt(PotionUtil.CUSTOM_POTION_COLOR_KEY, ((WispMistItem)ingredient.getItem()).type().color());
+        result.getOrCreateNbt().putInt(PotionUtil.CUSTOM_POTION_COLOR_KEY, ((WispMistItem) ingredient.getItem()).type().color());
 
         PotionUtil.setPotion(result, Potions.WATER);
         PotionUtil.setCustomPotionEffects(result, effects.stream().map(instance -> new StatusEffectInstance(

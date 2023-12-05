@@ -14,7 +14,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.Util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class JsonUtil {

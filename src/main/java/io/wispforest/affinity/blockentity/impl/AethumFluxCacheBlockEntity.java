@@ -181,7 +181,9 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
         var pushTargets = this.getLinksByType(AethumLink.Type.PUSH);
 
         long totalFlux = this.fluxStorage.flux();
-        if (!this.childCache.isEmpty()) totalFlux += this.childCache.stream().mapToLong(value -> value.fluxStorage.flux()).sum();
+        if (!this.childCache.isEmpty()) {
+            totalFlux += this.childCache.stream().mapToLong(value -> value.fluxStorage.flux()).sum();
+        }
 
         if (!pushTargets.isEmpty() && this.tier.maxTransfer() > 0) {
             final long maxTransferPerNode = Math.min(this.tier.maxTransfer(), (long) Math.ceil(totalFlux / (double) pushTargets.size()));
@@ -301,7 +303,9 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!this.isPrimaryStorage) return this.parentRef == null ? ActionResult.PASS : this.parentRef.entity.onUse(player, hand, hit);
+        if (!this.isPrimaryStorage) {
+            return this.parentRef == null ? ActionResult.PASS : this.parentRef.entity.onUse(player, hand, hit);
+        }
 
         final var playerStack = player.getStackInHand(hand);
 
@@ -365,12 +369,16 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
     static {
         AffinityNetwork.CHANNEL.registerServerbound(RequestCacheDataPacket.class, (message, access) -> {
-            if (!(access.player().getWorld().getBlockEntity(message.pos()) instanceof AethumFluxCacheBlockEntity cache)) return;
+            if (!(access.player().getWorld().getBlockEntity(message.pos()) instanceof AethumFluxCacheBlockEntity cache)) {
+                return;
+            }
             AffinityNetwork.CHANNEL.serverHandle(access.player()).send(new CacheDataUpdatePacket(cache));
         });
 
         AffinityNetwork.CHANNEL.registerClientbound(CacheDataUpdatePacket.class, (message, access) -> {
-            if (!(access.runtime().world.getBlockEntity(message.cachePos()) instanceof AethumFluxCacheBlockEntity cache)) return;
+            if (!(access.runtime().world.getBlockEntity(message.cachePos()) instanceof AethumFluxCacheBlockEntity cache)) {
+                return;
+            }
             cache.updateForStateChangeClient(message.children(), AttunedShardTier.forItem(message.shard.getItem()));
         });
     }

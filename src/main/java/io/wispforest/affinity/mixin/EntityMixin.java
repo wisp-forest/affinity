@@ -92,7 +92,9 @@ public abstract class EntityMixin implements AffinityEntityAddon {
         boolean wasTouchingFade = this.affinity$touchingBleach;
         this.touchingWater |= this.affinity$touchingBleach = this.updateMovementInFluid(ARCANE_FADE, 0.014);
 
-        if (this.affinity$touchingBleach && !wasTouchingFade) ArcaneFadeFluid.ENTITY_TOUCH_EVENT.invoker().onTouch((Entity) (Object) this);
+        if (this.affinity$touchingBleach && !wasTouchingFade) {
+            ArcaneFadeFluid.ENTITY_TOUCH_EVENT.invoker().onTouch((Entity) (Object) this);
+        }
 
         return value || this.touchingWater;
     }

@@ -9,7 +9,8 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.misc.callback.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.network.FluxSyncHandler;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import io.wispforest.owo.ui.util.Delta;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -30,8 +31,8 @@ import java.util.*;
 @SuppressWarnings("UnstableApiUsage")
 public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity implements AethumNetworkMember, AethumFluxStorage.CommitCallback, InWorldTooltipProvider, BeforeMangroveBasketCaptureCallback, LinkableBlockEntity {
 
-    public static final NbtKey<AethumLink.Element> LINK_ELEMENT_KEY = new NbtKey<>("Element", NbtKey.Type.INT.then(ordinal -> AethumLink.Element.values()[ordinal], Enum::ordinal));
-    public static final NbtKey<AethumLink.Type> LINK_TYPE_KEY = new NbtKey<>("Type", NbtKey.Type.INT.then(ordinal -> AethumLink.Type.values()[ordinal], Enum::ordinal));
+    public static final KeyedEndec<AethumLink.Element> LINK_ELEMENT_KEY = Endec.forEnum(AethumLink.Element.class).keyed("Element", (AethumLink.Element) null);
+    public static final KeyedEndec<AethumLink.Type> LINK_TYPE_KEY = Endec.forEnum(AethumLink.Type.class).keyed("Type", AethumLink.Type.NORMAL);
 
     @Environment(EnvType.CLIENT) private long tooltipFlux = 0;
 

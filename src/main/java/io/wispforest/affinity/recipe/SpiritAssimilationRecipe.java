@@ -1,13 +1,10 @@
 package io.wispforest.affinity.recipe;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.blockentity.impl.SpiritIntegrationApparatusBlockEntity;
-import io.wispforest.affinity.misc.util.JsonUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
@@ -20,8 +17,6 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;

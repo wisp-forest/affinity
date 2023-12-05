@@ -3,8 +3,10 @@ package io.wispforest.affinity.item;
 import io.wispforest.affinity.blockentity.template.LinkableBlockEntity;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinitySoundEvents;
-import io.wispforest.owo.nbt.NbtKey;
 import io.wispforest.owo.ops.TextOps;
+import io.wispforest.owo.serialization.Endec;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,9 +29,9 @@ import java.util.Objects;
 
 public class IridescenceWandItem extends Item implements DirectInteractionHandler {
 
-    public static final NbtKey<Mode> MODE_KEY = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
-    public static final NbtKey<NbtCompound> LINK_DATA_KEY = new NbtKey<>("LinkData", NbtKey.Type.COMPOUND);
-    public static final NbtKey<Boolean> RETAIN_MODE_KEY = new NbtKey<>("RetainMode", NbtKey.Type.BOOLEAN);
+    public static final KeyedEndec<Mode> MODE_KEY = Mode.ENDEC.keyed("Mode", Mode.BIND);
+    public static final KeyedEndec<NbtCompound> LINK_DATA_KEY = NbtEndec.COMPOUND.keyed("LinkData", (NbtCompound) null);
+    public static final KeyedEndec<Boolean> RETAIN_MODE_KEY = Endec.BOOLEAN.keyed("RetainMode", false);
 
     private static final String WAND_OF_IRIDESCENCE_PREFIX = "item.affinity.wand_of_iridescence";
 
@@ -67,7 +69,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public Text getName(ItemStack stack) {
-        final var mode = stack.getOr(MODE_KEY, Mode.BIND);
+        final var mode = stack.get(MODE_KEY);
 
         return Text.translatable(this.getTranslationKey()).append(Text.translatable(
                 WAND_OF_IRIDESCENCE_PREFIX + ".mode_suffix",
@@ -77,7 +79,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        final var mode = stack.getOr(MODE_KEY, Mode.BIND);
+        final var mode = stack.get(MODE_KEY);
 
         tooltip.add(Text.empty());
 
@@ -89,7 +91,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
                 Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".help")).setStyle(Style.EMPTY.withColor(mode.color)));
 
         tooltip.add(Text.empty());
-        tooltip.add(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".retain_mode." + (stack.getOr(RETAIN_MODE_KEY, false) ? "enabled" : "disabled")).styled(style -> style.withColor(mode.color)));
+        tooltip.add(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".retain_mode." + (stack.get(RETAIN_MODE_KEY) ? "enabled" : "disabled")).styled(style -> style.withColor(mode.color)));
     }
 
     @Override
@@ -153,6 +155,8 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         BIND(0x721B26),
         RELEASE(0x11667C);
 
+        public static final Endec<Mode> ENDEC = Endec.STRING.xmap(id -> "release".equals(id) ? RELEASE : BIND, mode -> mode.id);
+
         public final String id;
         public final int color;
 
@@ -166,10 +170,6 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
                 case RELEASE -> BIND;
                 case BIND -> RELEASE;
             };
-        }
-
-        public static Mode byId(String id) {
-            return "release".equals(id) ? RELEASE : BIND;
         }
     }
 }

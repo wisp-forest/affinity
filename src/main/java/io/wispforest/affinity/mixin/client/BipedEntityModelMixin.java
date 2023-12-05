@@ -25,8 +25,9 @@ public class BipedEntityModelMixin<T extends LivingEntity> {
 
     @Inject(method = "positionRightArm", at = @At("TAIL"))
     private void injectRightArmPose(T entity, CallbackInfo ci) {
-        if (this.rightArmPose != BipedEntityModel.ArmPose.ITEM || !(entity instanceof AbstractClientPlayerEntity player) || !((Object) this instanceof PlayerEntityModel<?>))
+        if (this.rightArmPose != BipedEntityModel.ArmPose.ITEM || !(entity instanceof AbstractClientPlayerEntity player) || !((Object) this instanceof PlayerEntityModel<?>)) {
             return;
+        }
 
         var stack = player.getStackInHand(player.getMainArm() == Arm.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND);
         if (player.getActiveItem() != stack || !(stack.getItem() instanceof SpecialTransformItem item)) return;
@@ -36,8 +37,9 @@ public class BipedEntityModelMixin<T extends LivingEntity> {
 
     @Inject(method = "positionLeftArm", at = @At("TAIL"))
     private void injectLeftArmPose(T entity, CallbackInfo ci) {
-        if (this.leftArmPose != BipedEntityModel.ArmPose.ITEM || !(entity instanceof AbstractClientPlayerEntity player) || !((Object) this instanceof PlayerEntityModel<?>))
+        if (this.leftArmPose != BipedEntityModel.ArmPose.ITEM || !(entity instanceof AbstractClientPlayerEntity player) || !((Object) this instanceof PlayerEntityModel<?>)) {
             return;
+        }
 
         var stack = player.getStackInHand(player.getMainArm() == Arm.LEFT ? Hand.MAIN_HAND : Hand.OFF_HAND);
         if (player.getActiveItem() != stack || !(stack.getItem() instanceof SpecialTransformItem item)) return;

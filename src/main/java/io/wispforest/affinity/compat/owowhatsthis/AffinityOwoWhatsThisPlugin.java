@@ -3,12 +3,10 @@ package io.wispforest.affinity.compat.owowhatsthis;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
 import io.wispforest.affinity.blockentity.impl.ItemTransferNodeBlockEntity;
-import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
-import io.wispforest.affinity.item.NimbleStaffItem;
 import io.wispforest.affinity.misc.potion.PotionMixture;
-import io.wispforest.affinity.object.AffinityItems;
-import io.wispforest.owo.network.serialization.PacketBufSerializer;
+import io.wispforest.owo.serialization.endec.BuiltInEndecs;
+import io.wispforest.owo.serialization.endec.ReflectiveEndecBuilder;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owowhatsthis.NumberFormatter;
 import io.wispforest.owowhatsthis.OwoWhatsThis;
@@ -35,7 +33,7 @@ import java.util.List;
 public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
 
     static {
-        PacketBufSerializer.register(PotionMixture.class, (buf, potionMixture) -> buf.writeNbt(potionMixture.toNbt()), buf -> PotionMixture.fromNbt(buf.readNbt()));
+        ReflectiveEndecBuilder.register(PotionMixture.ENDEC, PotionMixture.class);
     }
 
     @Override
@@ -65,10 +63,9 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
             }
     );
 
-    @SuppressWarnings("unchecked")
     public static final InformationProvider<BlockStateWithPosition, List<ItemStack>> ITEM_TRANSFER_NODE_QUEUE = InformationProvider.server(
             TargetType.BLOCK, true, 0,
-            (PacketBufSerializer<List<ItemStack>>) (Object) PacketBufSerializer.createCollectionSerializer(List.class, ItemStack.class),
+            BuiltInEndecs.ITEM_STACK.listOf(),
             (player, world, target) -> {
                 if (!(world.getBlockEntity(target.pos()) instanceof ItemTransferNodeBlockEntity node)) return null;
                 return node.displayItems();
