@@ -1,6 +1,6 @@
 ```json
 {
-  "title": "Lavaliere of Safe Keeping",
+  "title": "Lavaliere of Safekeeping",
   "icon": "affinity:lavaliere_of_safe_keeping",
   "category": "affinity:basics",
   "required_advancements": [
@@ -13,7 +13,7 @@
 ```
 
 A piece of [Crystallized Experience](^affinity:crystallized_experience) worn as a necklace makes for a pretty trinket,
-you think. Surprisingly, it appears, the thus-obtained {item}Lavaliere of Safe Keeping{} also has a convenient side effect.
+you think. Surprisingly, it appears, the thus-obtained {item}Lavaliere of Safekeeping{} also has a convenient side effect.
 
 
 When the wearer dies, the amount of experience they leave behind {concept}increases with their strength of Aethum at{}
@@ -26,4 +26,4 @@ When the wearer dies, the amount of experience they leave behind {concept}increa
 {concept}up to 35 levels{} to be retained instead of the customary 7.
 
 
-Boosting Aethum strength, therefore, may be desirable
+Boosting Aethum strength, therefore, may be desirable.

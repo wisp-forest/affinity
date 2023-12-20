@@ -17,7 +17,8 @@ the {item}Featherweight Ring{} effectively reduces the effects of gravity on the
 of fall resistance{}.
 
 
-This means that, unlike the average being, the wearer will start to {concept}take fall after 6 blocks over the usual 3{}.
+This means that, unlike the average being, the wearer will start to [{concept}get hurt{}](https://en.wikipedia.org/wiki/Get_Hurt)
+{concept} after 6 blocks over the usual 3{}.
 
 ;;;;;
 

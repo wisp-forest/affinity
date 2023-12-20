@@ -24,14 +24,14 @@ a carrying device - the first {item}Mangrove Basket{} is created.
 <recipe;affinity:assembly/mangrove_basket>
 
 Fused using [Scintillant Anthracite Blend](^affinity:scintillant_anthracite_blend), it provides a strong enclosure with
-a convenient handle which can be {concept}placed onto any block entity{}. After the basket is in place,
+a convenient handle which can be {concept}placed onto any block entity{}. After the basket is in place, ...
 
 
 @next-page
 
 ;;;;;
 
-the {concept}block can be safely broken{} and will {concept}retain all of its contents{} when doing so.
+... the {concept}block can be safely broken{} and will {concept}retain all of its contents{} when doing so.
 
 
 The basket containing the block can now be {concept}freely placed and broken{} as many times as is desired. Only once

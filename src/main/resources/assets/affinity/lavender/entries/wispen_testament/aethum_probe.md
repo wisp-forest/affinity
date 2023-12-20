@@ -16,7 +16,7 @@ Introducing the Aethum-affine properties of an {item}Amethyst Shard{} into the p
 Comparator{}, it appears, lets the resulting appliance {concept}compare and measure the Aethum of its surroundings{}.
 
 
-In particular, if the detected presence of the Aethum is {concept}stronger than the device's threshold{}, it will 
+In particular, if the detected presence of Aethum is {concept}stronger than the device's threshold{}, it will 
 {concept}output a strong Redstone signal{}.
 
 ;;;;;
