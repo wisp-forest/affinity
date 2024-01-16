@@ -5,6 +5,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.owo.util.RegistryAccess;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
+import net.minecraft.structure.pool.alias.StructurePoolAliasLookup;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureType;
@@ -45,7 +46,8 @@ public class BikeshedStructure extends Structure {
                 centerPos,
                 false,
                 Optional.of(Heightmap.Type.WORLD_SURFACE_WG),
-                16
+                16,
+                StructurePoolAliasLookup.EMPTY
         );
     }
 

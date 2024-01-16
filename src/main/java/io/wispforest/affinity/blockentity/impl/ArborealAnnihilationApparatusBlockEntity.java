@@ -1,5 +1,6 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.UnfloweringAzaleaLeavesBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
@@ -33,8 +34,8 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
 
     private static final Vec3d LINK_ATTACHMENT_POINT = new Vec3d(0, -.35, 0);
 
-    @Environment(EnvType.CLIENT) public BlockPos beamTarget = null;
-    @Environment(EnvType.CLIENT) public float beamStrength = 1;
+    @Environment(EnvType.CLIENT) public BlockPos beamTarget;
+    @Environment(EnvType.CLIENT) public float beamStrength;
 
     private final Set<BlockPos> unauthorizedEquipment = new LinkedHashSet<>();
     private int time = 0;
@@ -44,6 +45,10 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
 
         this.fluxStorage.setFluxCapacity(8000);
         this.fluxStorage.setMaxExtract(250);
+
+        if (Affinity.onClient()) {
+            this.beamStrength = 1f;
+        }
     }
 
     @Override

@@ -19,8 +19,8 @@ public class BufferBuilderStorageMixin {
     @Shadow
     private static void assignBufferBuilder(Object2ObjectLinkedOpenHashMap<RenderLayer, BufferBuilder> builderStorage, RenderLayer layer) {}
 
-    @Inject(method = "method_22999", at = @At("TAIL"))
-    private void addGlintTypes(Object2ObjectLinkedOpenHashMap<RenderLayer, BufferBuilder> builderStorage, CallbackInfo callbackInfo) {
+    @Inject(method = "method_54639", at = @At("TAIL"))
+    private void insertAffinityLayers(Object2ObjectLinkedOpenHashMap<RenderLayer, BufferBuilder> builderStorage, CallbackInfo callbackInfo) {
         AbsoluteEnchantmentGlintHandler.assignBuffers(renderLayer -> assignBufferBuilder(builderStorage, renderLayer));
         assignBufferBuilder(builderStorage, SkyCaptureBuffer.SKY_STENCIL_LAYER);
     }

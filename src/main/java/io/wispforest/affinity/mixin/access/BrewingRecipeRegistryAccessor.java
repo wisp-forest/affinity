@@ -1,4 +1,4 @@
-package io.wispforest.affinity.mixin;
+package io.wispforest.affinity.mixin.access;
 
 import net.minecraft.recipe.BrewingRecipeRegistry;
 import net.minecraft.recipe.Ingredient;

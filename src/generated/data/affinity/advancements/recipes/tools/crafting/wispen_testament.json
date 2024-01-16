@@ -30,6 +30,5 @@
     "recipes": [
       "affinity:crafting/wispen_testament"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.AssemblyAugmentBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
@@ -140,6 +141,11 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
         }
 
         super.onStateReplaced(state, world, pos, newState, moved);
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
     }
 
     private static void openScreen(PlayerEntity player, AssemblyAugmentBlockEntity augment) {

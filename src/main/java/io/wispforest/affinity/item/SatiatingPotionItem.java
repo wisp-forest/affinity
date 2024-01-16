@@ -76,7 +76,7 @@ public class SatiatingPotionItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        PotionUtil.buildTooltip(List.of(EFFECT.get()), tooltip, 1f);
+        PotionUtil.buildTooltip(List.of(EFFECT.get()), tooltip, 1f, world != null ? world.getTickManager().getTickRate() : 20f);
     }
 
     @Override

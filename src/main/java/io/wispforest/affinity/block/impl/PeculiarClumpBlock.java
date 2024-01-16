@@ -27,12 +27,12 @@ public class PeculiarClumpBlock extends Block {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
-        if (world.isClient()) return;
+        if (world.isClient()) return state;
 
         var hitResult = player.raycast(15, 1f, false);
-        if (!(hitResult instanceof BlockHitResult blockResult)) return;
+        if (!(hitResult instanceof BlockHitResult blockResult)) return state;
 
         final var side = blockResult.getSide();
         final var validDirection = getValidDirection(pos);
@@ -41,6 +41,8 @@ public class PeculiarClumpBlock extends Block {
         if (player instanceof ServerPlayerEntity serverPlayer) {
             AffinityCriteria.MINED_PECULIAR_CLUMP.trigger(serverPlayer, side == validDirection);
         }
+
+        return state;
     }
 
     public static boolean getAndClearMinedState(MinecraftServer server, BlockPos pos) {

@@ -104,7 +104,7 @@ public class NbtUtil {
         //
         // glisco, 25.02.2023
         var loreList = new NbtList();
-        loreList.add(NbtString.of(Text.Serializer.toJson(
+        loreList.add(NbtString.of(Text.Serialization.toJsonString(
                 Text.empty().styled(style -> style.withItalic(false)).formatted(Formatting.DARK_GRAY)
                         .append(Text.literal("["))
                         .append(Text.literal("+").formatted(Formatting.GRAY))

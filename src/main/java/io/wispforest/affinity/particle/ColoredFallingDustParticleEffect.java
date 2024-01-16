@@ -2,7 +2,7 @@ package io.wispforest.affinity.particle;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.wispforest.affinity.mixin.BlockFallingDustParticleInvoker;
+import io.wispforest.affinity.mixin.client.BlockFallingDustParticleInvoker;
 import io.wispforest.affinity.object.AffinityParticleTypes;
 import io.wispforest.owo.util.VectorSerializer;
 import net.fabricmc.api.EnvType;

@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.lavender.client.LavenderBookScreen;
+import io.wispforest.lavender.md.ItemListComponent;
 import io.wispforest.lavender.md.compiler.BookCompiler;
 import io.wispforest.lavender.md.features.RecipeFeature;
 import io.wispforest.owo.ui.component.Components;
@@ -59,7 +60,7 @@ public class AffinityLavenderRecipeHandlers {
             for (int i = 0; i < recipeInstance.getIngredients().size(); i++) {
                 double angle = angleStep * i - Math.PI / 2;
 
-                inputContainer.child(new RecipeFeature.IngredientComponent()
+                inputContainer.child(new ItemListComponent()
                         .ingredient(recipeInstance.getIngredients().get(i))
                         .positioning(Positioning.absolute((int) (center.x + Math.cos(angle) * 30), (int) (center.y + Math.sin(angle) * 30)))
                 );
@@ -67,7 +68,7 @@ public class AffinityLavenderRecipeHandlers {
 
             inputContainer.child(Containers.stack(Sizing.content(), Sizing.content())
                     .child(Components.texture(Affinity.id("textures/gui/wispen_testament.png"), 406, 139, 20, 20, 512, 256).blend(true))
-                    .child(new RecipeFeature.IngredientComponent().ingredient(recipeInstance.primaryInput))
+                    .child(new ItemListComponent().ingredient(recipeInstance.primaryInput))
                     .horizontalAlignment(HorizontalAlignment.CENTER).verticalAlignment(VerticalAlignment.CENTER));
 
             // Arrow
@@ -126,7 +127,7 @@ public class AffinityLavenderRecipeHandlers {
             for (int i = 0; i < recipeInstance.getIngredients().size(); i++) {
                 double angle = angleStep * i - Math.PI / 2;
 
-                inputContainer.child(new RecipeFeature.IngredientComponent()
+                inputContainer.child(new ItemListComponent()
                         .ingredient(recipeInstance.getIngredients().get(i))
                         .positioning(Positioning.absolute((int) (center.x + Math.cos(angle) * 40), (int) (center.y + Math.sin(angle) * 40)))
                 );
@@ -135,10 +136,10 @@ public class AffinityLavenderRecipeHandlers {
             inputContainer.child(Containers.stack(Sizing.content(), Sizing.content())
                     .child(Components.texture(Affinity.id("textures/gui/wispen_testament.png"), 452, 139, 37, 37, 512, 256).blend(true))
                     .child(Containers.grid(Sizing.content(), Sizing.content(), 2, 2)
-                            .child(new RecipeFeature.IngredientComponent().ingredient(recipeInstance.coreInputs.get(0)).margins(Insets.of(1)), 0, 0)
-                            .child(new RecipeFeature.IngredientComponent().ingredient(recipeInstance.coreInputs.get(1)), 0, 1)
-                            .child(new RecipeFeature.IngredientComponent().ingredient(recipeInstance.coreInputs.get(2)), 1, 0)
-                            .child(new RecipeFeature.IngredientComponent().ingredient(recipeInstance.coreInputs.get(3)), 1, 1)
+                            .child(new ItemListComponent().ingredient(recipeInstance.coreInputs.get(0)).margins(Insets.of(1)), 0, 0)
+                            .child(new ItemListComponent().ingredient(recipeInstance.coreInputs.get(1)), 0, 1)
+                            .child(new ItemListComponent().ingredient(recipeInstance.coreInputs.get(2)), 1, 0)
+                            .child(new ItemListComponent().ingredient(recipeInstance.coreInputs.get(3)), 1, 1)
                             .horizontalAlignment(HorizontalAlignment.CENTER).verticalAlignment(VerticalAlignment.CENTER))
                     .horizontalAlignment(HorizontalAlignment.CENTER).verticalAlignment(VerticalAlignment.CENTER));
 

@@ -30,6 +30,5 @@
     "recipes": [
       "affinity:crafting/satiating_potion"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

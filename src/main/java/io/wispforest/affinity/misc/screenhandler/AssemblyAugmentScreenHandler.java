@@ -61,7 +61,7 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
 
         if (this.augment != null) {
             ((CraftingInventoryAccessor) ((CraftingScreenHandlerAccessor) this).affinity$getInput()).affinity$setStacks(
-                    this.augment.inventory().stacks
+                    this.augment.inventory().heldStacks
             );
 
             this.autocraftingRecipeId.observe(identifier -> {

@@ -87,7 +87,7 @@ public class AffinityWorldgen {
                         PlacedFeatures.createEntry(
                                 Feature.SIMPLE_BLOCK,
                                 new SimpleBlockFeatureConfig(new WeightedBlockStateProvider(DataPool.<BlockState>builder()
-                                        .add(Blocks.GRASS.getDefaultState(), 4)
+                                        .add(Blocks.GRASS_BLOCK.getDefaultState(), 4)
                                         .add(Blocks.TALL_GRASS.getDefaultState(), 1)
                                         .add(Blocks.FERN.getDefaultState(), 2)
                                 ))

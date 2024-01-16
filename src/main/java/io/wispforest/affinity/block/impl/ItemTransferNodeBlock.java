@@ -1,6 +1,7 @@
 package io.wispforest.affinity.block.impl;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.block.template.ScrollInteractionReceiver;
 import io.wispforest.affinity.blockentity.impl.ItemTransferNodeBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
@@ -101,5 +102,10 @@ public class ItemTransferNodeBlock extends BlockWithEntity implements ScrollInte
             if (world.getBlockEntity(pos) instanceof ItemTransferNodeBlockEntity node) node.onBroken();
             super.onStateReplaced(state, world, pos, newState, moved);
         }
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
     }
 }

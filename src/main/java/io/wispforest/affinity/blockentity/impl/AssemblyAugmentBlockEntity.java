@@ -62,7 +62,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     private int activeTreetaps = 0;
 
     private final SimpleInventory inventory = new SimpleInventory(10);
-    private final InputInventory craftingView = new InputInventory(this.inventory.stacks);
+    private final InputInventory craftingView = new InputInventory(this.inventory.heldStacks);
     private final SimpleInventory templateInventory = new SimpleInventory(1);
 
     private int craftingTick = 0;
@@ -120,8 +120,8 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
 
             if (this.craftingTick++ > this.craftingDuration()) {
                 for (int i = 0; i < 9; i++) {
-                    if (!ItemOps.emptyAwareDecrement(this.inventory.stacks.get(i))) {
-                        this.inventory.stacks.set(i, ItemStack.EMPTY);
+                    if (!ItemOps.emptyAwareDecrement(this.inventory.heldStacks.get(i))) {
+                        this.inventory.heldStacks.set(i, ItemStack.EMPTY);
                     }
                 }
 
@@ -180,7 +180,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
         super.readNbt(nbt);
 
         this.inventory.clear();
-        Inventories.readNbt(nbt, this.inventory.stacks);
+        Inventories.readNbt(nbt, this.inventory.heldStacks);
 
         this.templateInventory.setStack(0, nbt.get(TEMPLATE_KEY));
     }
@@ -189,13 +189,13 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
-        Inventories.writeNbt(nbt, this.inventory.stacks);
+        Inventories.writeNbt(nbt, this.inventory.heldStacks);
         nbt.put(TEMPLATE_KEY, this.templateInventory.getStack(0));
     }
 
     @Override
     public DefaultedList<ItemStack> getItems() {
-        return this.inventory.stacks;
+        return this.inventory.heldStacks;
     }
 
     @Override

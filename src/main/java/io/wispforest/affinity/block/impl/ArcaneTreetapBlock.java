@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.owo.particles.ClientParticles;
@@ -142,5 +143,10 @@ public class ArcaneTreetapBlock extends HorizontalFacingBlock {
                 .mapToInt(counted::get).sum();
 
         return logCount > 5 && leavesCount > 40;
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return null;
     }
 }

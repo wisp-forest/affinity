@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.blockentity.impl.OuijaBoardBlockEntity;
 import io.wispforest.affinity.misc.screenhandler.OuijaBoardScreenHandler;
 import io.wispforest.owo.particles.ClientParticles;
@@ -77,5 +78,10 @@ public class OuijaBoardBlock extends BlockWithEntity {
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new OuijaBoardBlockEntity(pos, state);
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
     }
 }

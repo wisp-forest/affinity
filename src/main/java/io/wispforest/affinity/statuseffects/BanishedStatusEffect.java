@@ -1,5 +1,6 @@
 package io.wispforest.affinity.statuseffects;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.item.EchoShardExtension;
 import io.wispforest.affinity.misc.EntityTeleporter;
@@ -7,9 +8,7 @@ import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityStatusEffects;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -28,7 +27,7 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
     }
 
     static {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+        if (Affinity.onClient()) {
             ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
                 if (PotionUtil.getPotionEffects(stack).stream().noneMatch(x -> x.getEffectType() == AffinityStatusEffects.BANISHED)) {
                     return;

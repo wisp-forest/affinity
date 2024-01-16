@@ -1,6 +1,7 @@
 package io.wispforest.affinity.recipe;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.mixin.access.ShapelessRecipeAccessor;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.item.ItemStack;
@@ -32,10 +33,10 @@ public class ShapelessAssemblyRecipe extends ShapelessRecipe {
 
         @Override
         public Codec<ShapelessRecipe> codec() {
-            return super.codec().xmap(
+            return ((MapCodec.MapCodecCodec<ShapelessRecipe>) super.codec()).codec().<ShapelessRecipe>xmap(
                     recipe -> new ShapelessAssemblyRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getResult(), recipe.getIngredients()),
                     recipe -> new ShapelessRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getResult(), recipe.getIngredients())
-            );
+            ).codec();
         }
 
         @Override

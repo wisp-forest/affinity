@@ -49,7 +49,7 @@ public class AssemblyAugmentBlockEntityRenderer extends AffinityBlockEntityRende
             matrices.scale(.125f, .125f, .125f);
             matrices.translate(1, -1, 0);
 
-            var stacks = entity.inventory().stacks;
+            var stacks = entity.inventory().heldStacks;
             for (int i = 0; i < 9; i++) {
                 matrices.push();
                 matrices.translate(-(i % 3), -(i / 3), 0);

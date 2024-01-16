@@ -6,6 +6,8 @@ import io.wispforest.affinity.misc.EntityReference;
 import io.wispforest.affinity.misc.callback.LivingEntityTickCallback;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEnchantments;
+import net.minecraft.block.spawner.MobSpawnerEntry;
+import net.minecraft.block.spawner.MobSpawnerLogic;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.*;
 import net.minecraft.item.ItemStack;
@@ -13,8 +15,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.MobSpawnerEntry;
-import net.minecraft.world.MobSpawnerLogic;
 import net.minecraft.world.World;
 
 import java.util.HashSet;

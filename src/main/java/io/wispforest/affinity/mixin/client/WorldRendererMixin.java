@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin.client;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.client.render.LightLeakRenderer;
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
@@ -177,10 +178,9 @@ public abstract class WorldRendererMixin {
         SkyCaptureBuffer.captureSky();
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/DimensionEffects;isDarkened()Z", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void renderSkyStencilLayer(MatrixStack matrices, float tickDelta, long arg2, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f positionMatrix, CallbackInfo ci, Profiler profiler, Vec3d vec3d, double d, double e, double f, Matrix4f matrix4f, boolean bl2, Frustum frustum, float g, boolean bl3) {
-        this.renderLayer(SkyCaptureBuffer.SKY_STENCIL_LAYER, matrices, d, e, f, positionMatrix);
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/DimensionEffects;isDarkened()Z", shift = At.Shift.AFTER))
+    private void renderSkyStencilLayer(MatrixStack matrices, float tickDelta, long arg2, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f positionMatrix, CallbackInfo ci, @Local(ordinal = 0) double x, @Local(ordinal = 1) double y, @Local(ordinal = 2) double z) {
+        this.renderLayer(SkyCaptureBuffer.SKY_STENCIL_LAYER, matrices, x, y, z, positionMatrix);
     }
 
     @Inject(method = "render", at = @At("TAIL"))

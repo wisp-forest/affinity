@@ -28,6 +28,5 @@
     "recipes": [
       "affinity:azalea_planks"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

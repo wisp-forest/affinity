@@ -7,7 +7,6 @@ import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeCodecs;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -22,7 +21,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
             .group(
                     Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("primary_input").forGetter(recipe -> recipe.primaryInput),
                     Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("inputs").forGetter(recipe -> recipe.socleInputs),
-                    RecipeCodecs.CRAFTING_RESULT.fieldOf("output").forGetter(recipe -> recipe.output),
+                    ItemStack.RECIPE_RESULT_CODEC.fieldOf("output").forGetter(recipe -> recipe.output),
                     Codec.INT.optionalFieldOf("duration", 100).forGetter(recipe -> recipe.duration),
                     Codec.INT.optionalFieldOf("flux_cost_per_tick", 0).forGetter(recipe -> recipe.fluxCostPerTick)
             )

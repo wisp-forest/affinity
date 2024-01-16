@@ -39,13 +39,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SuppressWarnings({"UnstableApiUsage", "deprecation"})
+@SuppressWarnings({"deprecation"})
 public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity, MultiblockAethumNetworkMember {
 
     private static final Vec3d LINK_ATTACHMENT_POINT = new Vec3d(0, -.45, 0);
 
-    @Environment(EnvType.CLIENT) public float renderFluxY = 0;
-    @Environment(EnvType.CLIENT) public boolean tickedOnce = false;
+    @Environment(EnvType.CLIENT) public float renderFluxY;
+    @Environment(EnvType.CLIENT) public boolean tickedOnce;
 
     private boolean isPrimaryStorage;
     private ParentStorageReference parentRef = null;

@@ -12,7 +12,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeCodecs;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -33,7 +32,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
                     Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("core_inputs").forGetter(recipe -> recipe.coreInputs),
                     Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("socle_inputs").forGetter(recipe -> recipe.socleInputs),
                     EntityData.CODEC.fieldOf("entity").forGetter(recipe -> new EntityData(recipe.entityType, Optional.ofNullable(recipe.entityNbt))),
-                    RecipeCodecs.CRAFTING_RESULT.fieldOf("output").forGetter(recipe -> recipe.output),
+                    ItemStack.RECIPE_RESULT_CODEC.fieldOf("output").forGetter(recipe -> recipe.output),
                     Codec.INT.optionalFieldOf("duration", 100).forGetter(recipe -> recipe.duration),
                     Codecs.validate(Codec.INT, duration -> {
                         if (duration % 4 != 0) {

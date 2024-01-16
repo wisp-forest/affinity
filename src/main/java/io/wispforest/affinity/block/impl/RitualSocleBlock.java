@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
@@ -85,4 +86,8 @@ public class RitualSocleBlock extends BlockWithEntity {
         return new RitualSocleBlockEntity(pos, state);
     }
 
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
+    }
 }

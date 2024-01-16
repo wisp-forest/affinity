@@ -30,6 +30,5 @@
     "recipes": [
       "minecraft:blank_ritual_socle_from_infused_stone_stonecutting"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

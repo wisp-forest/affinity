@@ -1,6 +1,6 @@
-package io.wispforest.affinity.mixin;
+package io.wispforest.affinity.mixin.access;
 
-import net.minecraft.world.MobSpawnerLogic;
+import net.minecraft.block.spawner.MobSpawnerLogic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 

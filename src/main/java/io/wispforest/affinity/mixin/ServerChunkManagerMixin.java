@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.ChunkAethumComponent;
 import net.minecraft.server.world.ServerChunkManager;
@@ -26,19 +27,19 @@ public class ServerChunkManagerMixin {
 
     @Shadow
     @Final
-    private ServerWorld world;
+    ServerWorld world;
 
     @Shadow private boolean spawnAnimals;
 
     @Shadow private boolean spawnMonsters;
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
-    @Inject(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SpawnHelper;spawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/SpawnHelper$Info;ZZZ)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void theMobsDoInFactSeemToBeSpawningSomewhatSwiftlyToday(CallbackInfo ci, long l, long m, WorldProperties worldProperties, Profiler profiler, int i, boolean bl2, int j, SpawnHelper.Info info, List<?> list, boolean bl3, Iterator<?> var14, @Coerce Object bruh, WorldChunk worldChunk2, ChunkPos chunkPos) {
-        if (!worldChunk2.getComponent(AffinityComponents.CHUNK_AETHUM).isEffectActive(ChunkAethumComponent.INCREASED_NATURAL_SPAWNING)) {
+    @Inject(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SpawnHelper;spawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/SpawnHelper$Info;ZZZ)V", shift = At.Shift.AFTER))
+    private void theMobsDoInFactSeemToBeSpawningSomewhatSwiftlyToday(CallbackInfo ci, @Local WorldChunk worldChunk, @Local SpawnHelper.Info info, @Local(ordinal = 1) boolean bl2) {
+        if (!worldChunk.getComponent(AffinityComponents.CHUNK_AETHUM).isEffectActive(ChunkAethumComponent.INCREASED_NATURAL_SPAWNING)) {
             return;
         }
-        SpawnHelper.spawn(this.world, worldChunk2, info, this.spawnAnimals, this.spawnMonsters, bl2);
+
+        SpawnHelper.spawn(this.world, worldChunk, info, this.spawnAnimals, this.spawnMonsters, bl2);
     }
 
 }

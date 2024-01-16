@@ -30,6 +30,5 @@
     "recipes": [
       "affinity:crafting/flowering_azalea"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

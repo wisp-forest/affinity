@@ -16,9 +16,11 @@ import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.Owo;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import io.wispforest.owo.ui.core.Color;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
@@ -111,4 +113,7 @@ public class Affinity implements ModInitializer {
         return id(path).toString();
     }
 
+    public static boolean onClient() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+    }
 }

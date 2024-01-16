@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.blockentity.impl.AethumProbeBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -136,5 +137,10 @@ public class AethumProbeBlock extends BlockWithEntity {
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         return hasTopRim(world, pos.down());
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
     }
 }

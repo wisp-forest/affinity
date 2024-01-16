@@ -44,7 +44,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.text.LiteralTextContent;
+import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
@@ -156,7 +156,7 @@ public class AffinityClient implements ClientModInitializer {
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
             for (int i = 0; i < lines.size(); i++) {
                 var line = lines.get(i);
-                if (!(line.getContent() instanceof LiteralTextContent) || line.getSiblings().isEmpty()) continue;
+                if (!(line.getContent() instanceof PlainTextContent.Literal) || line.getSiblings().isEmpty()) continue;
 
                 var sibling = line.getSiblings().get(0);
                 if (!(sibling.getContent() instanceof TranslatableTextContent modifierTranslatable)) continue;

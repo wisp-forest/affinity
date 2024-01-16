@@ -6,10 +6,7 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
-import io.wispforest.affinity.misc.MixinHooks;
-import io.wispforest.affinity.misc.quack.AffinityClientWorldExtension;
 import io.wispforest.affinity.misc.util.MathUtil;
-import io.wispforest.affinity.mixin.client.WorldRendererAccessor;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.ops.TextOps;
@@ -17,16 +14,10 @@ import io.wispforest.owo.serialization.Endec;
 import io.wispforest.owo.serialization.endec.KeyedEndec;
 import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import io.wispforest.owo.ui.component.EntityComponent;
-import io.wispforest.worldmesher.WorldMesh;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.boss.dragon.EnderDragonPart;
@@ -42,19 +33,15 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.Cleaner;
 import java.util.List;
 
-public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implements InWorldTooltipProvider, TickedBlockEntity, InteractableBlockEntity {
+import static io.wispforest.affinity.client.render.blockentity.HolographicStereopticonBlockEntityRenderer.Renderer;
 
-    @Environment(EnvType.CLIENT)
-    private static final Cleaner MESH_CLEANER = Cleaner.create();
+public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implements InWorldTooltipProvider, TickedBlockEntity, InteractableBlockEntity {
 
     public static final String IMPRINT_KIND_KEY_NAME = "ImprintKind";
     public static final KeyedEndec<NbtCompound> RENDERER_DATA_KEY = NbtEndec.COMPOUND.keyed("RendererData", (NbtCompound) null);
@@ -65,11 +52,11 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     @Environment(EnvType.CLIENT)
     private @Nullable Renderer nextRenderer;
 
-    @Environment(EnvType.CLIENT) private long updateTimestamp = 0;
-    @Environment(EnvType.CLIENT) private long refreshIn = 0;
+    @Environment(EnvType.CLIENT) private long updateTimestamp;
+    @Environment(EnvType.CLIENT) private long refreshIn;
 
-    @Environment(EnvType.CLIENT) public float visualRenderScale = 0f;
-    @Environment(EnvType.CLIENT) public float currentRotation = 0;
+    @Environment(EnvType.CLIENT) public float visualRenderScale;
+    @Environment(EnvType.CLIENT) public float currentRotation;
 
     private NbtCompound rendererData = null;
     private float renderScale = 1f;
@@ -78,8 +65,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     public HolographicStereopticonBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.HOLOGRAPHIC_STEREOPTICON, pos, state);
 
-        // i am frankly baffled why this is necessary
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+        if (Affinity.onClient()) {
             this.currentRenderer = Renderer.EMPTY;
         }
     }
@@ -122,7 +108,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     }
 
     @Environment(EnvType.CLIENT)
-    private void refreshRenderer() {
+    public void refreshRenderer() {
         if (this.world.getTime() - this.updateTimestamp < this.currentRenderer.updateDelay()) {
             this.refreshIn = this.currentRenderer.updateDelay() - (this.world.getTime() - this.updateTimestamp);
             return;
@@ -208,171 +194,6 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
     public record StereopticonPropertiesPacket(BlockPos pos, boolean spin, float renderScale) {}
 
-    @Environment(EnvType.CLIENT)
-    public interface Renderer {
-        Renderer EMPTY = (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {};
-
-        void render(float scale, float rotation, MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta, int light, int overlay);
-
-        default boolean ready() {
-            return true;
-        }
-
-        default int updateDelay() {
-            return 0;
-        }
-
-        static Renderer read(HolographicStereopticonBlockEntity stereopticon, @Nullable NbtCompound nbt) {
-            if (nbt == null) return EMPTY;
-            return switch (nbt.getString(IMPRINT_KIND_KEY_NAME)) {
-                case "item" -> {
-                    var client = MinecraftClient.getInstance();
-                    var item = ImprintKind.ITEM.readData(nbt);
-                    if (item == null) yield EMPTY;
-
-                    yield (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {
-                        matrices.translate(.5f, .75f, .5f);
-                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
-                        matrices.scale(scale, scale, scale);
-
-                        matrices.translate(0, client.getItemRenderer().getModel(item, client.world, null, 0).hasDepth() ? -.05 : .125, 0);
-
-                        client.getItemRenderer().renderItem(item, ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, client.world, 0);
-                    };
-                }
-                case "block" -> {
-                    var client = MinecraftClient.getInstance();
-                    var data = ImprintKind.BLOCK.readData(nbt);
-                    if (data == null) yield EMPTY;
-
-                    BlockEntity entity;
-                    if (data.nbt != null) {
-                        entity = BlockEntity.createFromNbt(stereopticon.pos, data.state, data.nbt);
-                        entity.setWorld(client.world);
-                    } else {
-                        entity = null;
-                    }
-
-                    yield (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {
-                        matrices.translate(.5f, .75f, .5f);
-                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
-                        matrices.scale(.5f * scale, .5f * scale, .5f * scale);
-                        matrices.translate(-.5f, 0, -.5f);
-
-                        client.getBlockRenderManager().renderBlockAsEntity(data.state, matrices, vertexConsumers, light, overlay);
-                        if (entity != null) {
-                            client.getBlockEntityRenderDispatcher().renderEntity(entity, matrices, vertexConsumers, light, overlay);
-                        }
-                    };
-                }
-                case "entity" -> {
-                    var client = MinecraftClient.getInstance();
-                    var entity = ImprintKind.ENTITY.readData(nbt);
-                    if (entity == null) yield EMPTY;
-
-                    entity.updatePosition(stereopticon.pos.getX(), stereopticon.pos.getY(), stereopticon.pos.getZ());
-
-                    yield (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {
-                        matrices.translate(.5f, .75f, .5f);
-                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
-                        matrices.scale(.35f * scale, .35f * scale, .35f * scale);
-
-                        client.getEntityRenderDispatcher().setRenderShadows(false);
-                        client.getEntityRenderDispatcher().render(entity, 0, 0, 0, 0, 0, matrices, vertexConsumers, light);
-                        client.getEntityRenderDispatcher().setRenderShadows(true);
-                    };
-                }
-                case "section" -> {
-                    var client = MinecraftClient.getInstance();
-
-                    var data = ImprintKind.SECTION.readData(nbt);
-                    if (data == null) yield EMPTY;
-
-                    var mesh = new WorldMesh.Builder(client.world, data.start, data.end).build();
-                    var updateDelay = (int) (mesh.dimensions().getLengthX() * mesh.dimensions().getLengthY() * mesh.dimensions().getLengthZ()) / 20000;
-
-                    var realMeshDimensions = new Box(mesh.startPos(), mesh.endPos().add(1, 1, 1));
-                    AffinityClientWorldExtension.BlockUpdateListener listener = (pos, from, to) -> {
-                        if (!realMeshDimensions.contains(pos.getX(), pos.getY(), pos.getZ())) return true;
-                        if (!client.getBakedModelManager().shouldRerender(from, to)) return true;
-
-                        stereopticon.refreshRenderer();
-                        return false;
-                    };
-                    client.send(() -> ((AffinityClientWorldExtension) client.world).affinity$addBlockUpdateListener(listener));
-
-                    var renderer = new Renderer() {
-
-                        private static int recursionDepth = 0;
-                        private final AffinityClientWorldExtension.BlockUpdateListener noGcPlease = listener;
-
-                        @Override
-                        public void render(float scale, float rotation, MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta, int light, int overlay) {
-                            if (!mesh.canRender()) return;
-
-                            matrices.translate(.5f, .75f, .5f);
-                            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
-
-                            float meshScale = Math.min(.75f, 3f / (int) Math.max(mesh.dimensions().getLengthX(), Math.max(mesh.dimensions().getLengthY(), mesh.dimensions().getLengthZ())));
-                            matrices.scale(meshScale * scale, meshScale * scale, meshScale * scale);
-                            matrices.translate(-.5 - mesh.dimensions().getLengthX() / 2, 0, -.5 - mesh.dimensions().getLengthZ() / 2);
-
-                            if (Affinity.CONFIG.renderBlockEntitiesInStereopticonSectionImprints()) {
-                                MixinHooks.forceBlockEntityRendering = true;
-                                mesh.renderInfo().blockEntities().forEach((blockPos, entity) -> {
-                                    if (entity instanceof HolographicStereopticonBlockEntity && recursionDepth > Affinity.CONFIG.stereopticonSectionImprintRecursionLimit() - 1) {
-                                        return;
-                                    }
-
-                                    matrices.push();
-                                    matrices.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-
-                                    recursionDepth++;
-                                    client.getBlockEntityRenderDispatcher().render(entity, tickDelta, matrices, vertexConsumers);
-                                    recursionDepth--;
-
-                                    matrices.pop();
-                                });
-                                MixinHooks.forceBlockEntityRendering = false;
-                            }
-
-                            if (Affinity.CONFIG.renderEntitiesInStereopticonSectionImprints()) {
-                                client.world.getOtherEntities(null, realMeshDimensions).forEach(entity -> {
-                                    var entityVisible = ((WorldRendererAccessor) client.worldRenderer).affinity$getFrustum() != null && client.getEntityRenderDispatcher().shouldRender(
-                                            entity,
-                                            ((WorldRendererAccessor) client.worldRenderer).affinity$getFrustum(),
-                                            client.getEntityRenderDispatcher().camera.getPos().x,
-                                            client.getEntityRenderDispatcher().camera.getPos().y,
-                                            client.getEntityRenderDispatcher().camera.getPos().z
-                                    );
-
-                                    var pos = entity.getLerpedPos(tickDelta).subtract(mesh.startPos().getX(), mesh.startPos().getY(), mesh.startPos().getZ());
-                                    client.getEntityRenderDispatcher().render(entity, pos.x, pos.y, pos.z, entity.getYaw(tickDelta), entityVisible ? tickDelta : 0, matrices, vertexConsumers, light);
-                                });
-                            }
-
-                            mesh.render(matrices);
-                        }
-
-                        @Override
-                        public boolean ready() {
-                            return mesh.canRender();
-                        }
-
-                        @Override
-                        public int updateDelay() {
-                            return updateDelay;
-                        }
-                    };
-
-                    MESH_CLEANER.register(renderer, () -> MinecraftClient.getInstance().execute(mesh::reset));
-                    yield renderer;
-                }
-                default -> EMPTY;
-            };
-        }
-    }
-
     public static abstract class ImprintKind<T> {
 
         private static final String STEREOPTICON_TRANSLATION_KEY = AffinityBlocks.HOLOGRAPHIC_STEREOPTICON.getTranslationKey();
@@ -449,7 +270,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
                 var entityNbt = new NbtCompound();
                 if (data instanceof PlayerEntity player) {
-                    entityNbt.putString("affinity:player_name", player.getEntityName());
+                    entityNbt.putString("affinity:player_name", player.getNameForScoreboard());
                     entityNbt.putString("id", Registries.ENTITY_TYPE.getId(EntityType.PLAYER).toString());
                     data.writeNbt(entityNbt);
                 } else {

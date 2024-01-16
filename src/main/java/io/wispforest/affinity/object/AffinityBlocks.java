@@ -12,8 +12,8 @@ import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.object.builder.v1.block.type.BlockSetTypeRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.block.type.WoodTypeRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.block.type.BlockSetTypeBuilder;
+import net.fabricmc.fabric.api.object.builder.v1.block.type.WoodTypeBuilder;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -79,8 +79,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
 
     public static BoatEntity.Type AZALEA_BOAT_TYPE;
-    public static final BlockSetType AZALEA_BLOCK_SET_TYPE = BlockSetTypeRegistry.registerWood(Affinity.id("azalea"));
-    public static final WoodType AZALEA_WOOD_TYPE = WoodTypeRegistry.register(Affinity.id("azalea"), AZALEA_BLOCK_SET_TYPE);
+    public static final BlockSetType AZALEA_BLOCK_SET_TYPE = BlockSetTypeBuilder.copyOf(BlockSetType.OAK).build(Affinity.id("azalea"));
+    public static final WoodType AZALEA_WOOD_TYPE = WoodTypeBuilder.copyOf(WoodType.OAK).build(Affinity.id("azalea"), AZALEA_BLOCK_SET_TYPE);
 
     public static final Block AZALEA_LOG = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG));
     public static final Block AZALEA_WOOD = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD));
@@ -90,14 +90,14 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AZALEA_STAIRS = new StairsBlock(AZALEA_PLANKS.getDefaultState(), FabricBlockSettings.copyOf(Blocks.OAK_STAIRS));
     public static final Block AZALEA_SLAB = new SlabBlock(FabricBlockSettings.copyOf(Blocks.OAK_SLAB));
     public static final Block AZALEA_FENCE = new FenceBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE));
-    public static final Block AZALEA_FENCE_GATE = new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), AZALEA_WOOD_TYPE);
-    public static final Block AZALEA_DOOR = new DoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_DOOR), AZALEA_BLOCK_SET_TYPE);
-    public static final Block AZALEA_TRAPDOOR = new TrapdoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR), AZALEA_BLOCK_SET_TYPE);
-    public static final Block AZALEA_PRESSURE_PLATE = new PressurePlateBlock(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE), AZALEA_BLOCK_SET_TYPE);
-    public static final Block AZALEA_BUTTON = new ButtonBlock(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON), AZALEA_BLOCK_SET_TYPE, 30, true);
+    public static final Block AZALEA_FENCE_GATE = new FenceGateBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
+    public static final Block AZALEA_DOOR = new DoorBlock(AZALEA_BLOCK_SET_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_DOOR));
+    public static final Block AZALEA_TRAPDOOR = new TrapdoorBlock(AZALEA_BLOCK_SET_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR));
+    public static final Block AZALEA_PRESSURE_PLATE = new PressurePlateBlock(AZALEA_BLOCK_SET_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE));
+    public static final Block AZALEA_BUTTON = new ButtonBlock(AZALEA_BLOCK_SET_TYPE, 30, FabricBlockSettings.copyOf(Blocks.OAK_BUTTON));
 
-    @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_WOOD_TYPE);
-    @NoBlockItem public static final Block AZALEA_WALL_SIGN = new WallSignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_WOOD_TYPE);
+    @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
+    @NoBlockItem public static final Block AZALEA_WALL_SIGN = new WallSignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
 
     @NoBlockItem public static final FluidBlock ARCANE_FADE = new ArcaneFadeBlock();
     public static final Block THE_SKY = new Block(FabricBlockSettings.copyOf(Blocks.STONE));

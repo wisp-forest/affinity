@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.MangroveBasketBlockEntity;
 import io.wispforest.affinity.item.MangroveBasketItem;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -38,7 +40,7 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity blockEntity) {
             if (!world.isClient && player.isCreative()) {
                 ItemEntity itemEntity = new ItemEntity(world, (double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5, blockEntity.toItem());
@@ -47,7 +49,7 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
             }
         }
 
-        super.onBreak(world, pos, state, player);
+        return super.onBreak(world, pos, state, player);
     }
 
     @Override
@@ -102,7 +104,7 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
     }
 
     @Override
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+    public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
         return world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity basket
                 ? basket.toItem()
                 : super.getPickStack(world, pos, state);
@@ -117,5 +119,10 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
     @Override
     public Item createBlockItem(Block block, OwoItemSettings settings) {
         return new MangroveBasketItem(block, settings);
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
     }
 }

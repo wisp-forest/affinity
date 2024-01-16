@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.block.template.ScrollInteractionReceiver;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
@@ -93,14 +94,17 @@ public class HolographicStereopticonBlock extends BlockWithEntity implements Blo
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return world.isClient ? validateTicker(type, AffinityBlocks.Entities.HOLOGRAPHIC_STEREOPTICON, TickedBlockEntity.ticker()) : null;
     }
+
     @Override
     public Item createBlockItem(Block block, OwoItemSettings settings) {
         return new HolographicStereopticonBlockItem(block, settings);
     }
+
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         return InteractableBlockEntity.tryHandle(world, pos, player, hand, hit);
     }
+
     @Override
     public @NotNull ActionResult onScroll(World world, BlockState state, BlockPos pos, PlayerEntity player, boolean direction) {
         if (!(world.getBlockEntity(pos) instanceof HolographicStereopticonBlockEntity stereopticon)) {
@@ -109,5 +113,10 @@ public class HolographicStereopticonBlock extends BlockWithEntity implements Blo
 
         stereopticon.changeScale(direction);
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
     }
 }

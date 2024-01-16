@@ -30,6 +30,5 @@
     "recipes": [
       "affinity:azalea_pressure_plate"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

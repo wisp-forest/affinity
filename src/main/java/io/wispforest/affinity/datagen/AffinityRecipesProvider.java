@@ -15,6 +15,7 @@ import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.util.Identifier;
 
 import static io.wispforest.affinity.object.AffinityItems.*;
@@ -57,7 +58,7 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
         offerPlanksRecipe(exporter, AffinityBlocks.AZALEA_PLANKS, TagKey.of(RegistryKeys.ITEM, Affinity.id("azalea_logs")), 4);
         offerBarkBlockRecipe(exporter, AffinityBlocks.AZALEA_WOOD, AffinityBlocks.AZALEA_LOG);
         offerBarkBlockRecipe(exporter, AffinityBlocks.STRIPPED_AZALEA_WOOD, AffinityBlocks.STRIPPED_AZALEA_LOG);
-        generateFamily(exporter, AffinityBlockFamilies.AZALEA);
+        generateFamily(exporter, AffinityBlockFamilies.AZALEA, FeatureFlags.DEFAULT_ENABLED_FEATURES);
     }
 
     private static Identifier craftingRecipe(ItemConvertible item) {

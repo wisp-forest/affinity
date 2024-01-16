@@ -1,4 +1,4 @@
-package io.wispforest.affinity.mixin;
+package io.wispforest.affinity.mixin.client;
 
 import net.minecraft.client.particle.BlockFallingDustParticle;
 import net.minecraft.client.particle.SpriteProvider;

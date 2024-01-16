@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.template;
 
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -24,5 +25,10 @@ public abstract class AethumNetworkMemberBlock extends BlockWithEntity {
             if (world.getBlockEntity(pos) instanceof AethumNetworkMemberBlockEntity member) member.onBroken();
             super.onStateReplaced(state, world, pos, newState, moved);
         }
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
     }
 }

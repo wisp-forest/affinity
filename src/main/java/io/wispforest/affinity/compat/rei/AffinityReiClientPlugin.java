@@ -11,7 +11,7 @@ import io.wispforest.affinity.compat.rei.category.*;
 import io.wispforest.affinity.compat.rei.display.*;
 import io.wispforest.affinity.item.SocleOrnamentItem;
 import io.wispforest.affinity.misc.MixinHooks;
-import io.wispforest.affinity.mixin.BrewingRecipeRegistryAccessor;
+import io.wispforest.affinity.mixin.access.BrewingRecipeRegistryAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
