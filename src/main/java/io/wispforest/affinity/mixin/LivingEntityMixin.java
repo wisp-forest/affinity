@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.blockentity.impl.VoidBeaconBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
@@ -118,22 +119,20 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Inject(method = "getEquipmentChanges", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/entity/attribute/AttributeContainer;addTemporaryModifiers(Lcom/google/common/collect/Multimap;)V"),
-            locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onItemEquip(CallbackInfoReturnable<@Nullable Map<EquipmentSlot, ItemStack>> cir, Map<EquipmentSlot, ItemStack> map, EquipmentSlot[] var2, int var3, int var4, EquipmentSlot equipmentSlot, ItemStack itemStack, ItemStack itemStack2) {
-        for (var enchantment : EnchantmentHelper.get(itemStack2).keySet()) {
+            target = "Lnet/minecraft/entity/attribute/AttributeContainer;addTemporaryModifiers(Lcom/google/common/collect/Multimap;)V"))
+    private void onItemEquip(CallbackInfoReturnable<@Nullable Map<EquipmentSlot, ItemStack>> cir, @Local EquipmentSlot equipmentSlot, @Local(ordinal = 1) ItemStack equippedStack) {
+        for (var enchantment : EnchantmentHelper.get(equippedStack).keySet()) {
             if (!(enchantment instanceof EnchantmentEquipEventReceiver receiver)) continue;
-            receiver.onEquip((LivingEntity) (Object) this, equipmentSlot, itemStack2);
+            receiver.onEquip((LivingEntity) (Object) this, equipmentSlot, equippedStack);
         }
     }
 
     @Inject(method = "getEquipmentChanges", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/entity/attribute/AttributeContainer;removeModifiers(Lcom/google/common/collect/Multimap;)V"),
-            locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onItemUnequip(CallbackInfoReturnable<@Nullable Map<EquipmentSlot, ItemStack>> cir, Map<EquipmentSlot, ItemStack> map, EquipmentSlot[] var2, int var3, int var4, EquipmentSlot equipmentSlot, ItemStack itemStack, ItemStack itemStack2) {
-        for (var enchantment : EnchantmentHelper.get(itemStack).keySet()) {
+            target = "Lnet/minecraft/entity/attribute/AttributeContainer;removeModifiers(Lcom/google/common/collect/Multimap;)V"))
+    private void onItemUnequip(CallbackInfoReturnable<@Nullable Map<EquipmentSlot, ItemStack>> cir, @Local EquipmentSlot equipmentSlot, @Local(ordinal = 0) ItemStack unequippedStack) {
+        for (var enchantment : EnchantmentHelper.get(unequippedStack).keySet()) {
             if (!(enchantment instanceof EnchantmentEquipEventReceiver receiver)) continue;
-            receiver.onUnequip((LivingEntity) (Object) this, equipmentSlot, itemStack);
+            receiver.onUnequip((LivingEntity) (Object) this, equipmentSlot, unequippedStack);
         }
     }
 

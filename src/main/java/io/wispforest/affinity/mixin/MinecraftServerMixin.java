@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.component.AffinityComponents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
@@ -14,8 +15,8 @@ import java.util.Iterator;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin {
-    @Inject(method = "prepareStartRegion", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getPersistentStateManager()Lnet/minecraft/world/PersistentStateManager;"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void loadPinChunks(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci, Iterator var5, ServerWorld serverWorld2) {
-        serverWorld2.getComponent(AffinityComponents.WORLD_PINS).addAllPins();
+    @Inject(method = "prepareStartRegion", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getPersistentStateManager()Lnet/minecraft/world/PersistentStateManager;"))
+    private void loadPinChunks(WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci, @Local(ordinal = 0) ServerWorld world) {
+        world.getComponent(AffinityComponents.WORLD_PINS).addAllPins();
     }
 }

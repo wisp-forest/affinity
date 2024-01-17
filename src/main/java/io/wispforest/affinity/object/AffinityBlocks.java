@@ -79,8 +79,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
 
     public static BoatEntity.Type AZALEA_BOAT_TYPE;
-    public static final BlockSetType AZALEA_BLOCK_SET_TYPE = BlockSetTypeBuilder.copyOf(BlockSetType.OAK).build(Affinity.id("azalea"));
-    public static final WoodType AZALEA_WOOD_TYPE = WoodTypeBuilder.copyOf(WoodType.OAK).build(Affinity.id("azalea"), AZALEA_BLOCK_SET_TYPE);
+    public static final BlockSetType AZALEA_BLOCK_SET_TYPE = BlockSetTypeBuilder.copyOf(BlockSetType.OAK).register(Affinity.id("azalea"));
+    public static final WoodType AZALEA_WOOD_TYPE = WoodTypeBuilder.copyOf(WoodType.OAK).register(Affinity.id("azalea"), AZALEA_BLOCK_SET_TYPE);
 
     public static final Block AZALEA_LOG = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG));
     public static final Block AZALEA_WOOD = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD));

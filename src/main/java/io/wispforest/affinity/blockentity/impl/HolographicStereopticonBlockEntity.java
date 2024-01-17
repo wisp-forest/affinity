@@ -154,7 +154,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
         entries.add(Entry.icon(Text.literal(MathUtil.rounded(this.renderScale, 2) + "x"), 24, 0));
 
         if (!this.currentRenderer.ready()) {
-            entries.add(Entry.text(Text.empty(), Text.translatable(this.getCachedState().getBlock().getTranslationKey() + ".tooltip_assembling")));
+            entries.add(Entry.text(Text.empty(), Text.translatable(this.getCachedState().getBlock().getTranslationKey() + ".tooltip.assembling")));
         }
     }
 

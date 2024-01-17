@@ -92,7 +92,7 @@
   "block.affinity.holographic_stereopticon": "Holographic Stereopticon",
   "block.affinity.holographic_stereopticon.tooltip_spin": "Spin",
   "block.affinity.holographic_stereopticon.tooltip_dont_spin": "Don't spin",
-  "block.affinity.holographic_stereopticon.assembling": "Assembling...",
+  "block.affinity.holographic_stereopticon.tooltip.assembling": "Assembling...",
   "block.affinity.holographic_stereopticon.imprint_block_hint": [
     {"text": "Sneak-use on", "color": "gray"},
     {"text": " block ", "color": "blue"},

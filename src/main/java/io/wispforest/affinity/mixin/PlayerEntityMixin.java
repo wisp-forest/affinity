@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
 import io.wispforest.affinity.item.ArtifactBladeItem;
@@ -110,10 +111,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         return damage * ((1.5f + .1f * woundingLevel) / 1.5f);
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
-    @Inject(method = "attack",
-            at = @At(value = "CONSTANT", args = "floatValue=1.5", shift = At.Shift.BY, by = 4), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void storeCritState(Entity target, CallbackInfo ci, float f, float g, boolean bl, boolean bl2, int i, boolean crit) {
+    @Inject(method = "attack", at = @At(value = "CONSTANT", args = "floatValue=1.5", shift = At.Shift.BY, by = 4))
+    private void storeCritState(Entity target, CallbackInfo ci, @Local(ordinal = 2) boolean crit) {
         AffinityEntityAddon.setData(this, ArtifactBladeItem.DID_CRIT, crit);
     }
 

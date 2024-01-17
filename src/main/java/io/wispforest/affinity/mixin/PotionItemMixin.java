@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.mixin.access.StatusEffectInstanceAccessor;
@@ -18,27 +19,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PotionItem.class)
 public class PotionItemMixin {
-    @Unique
-    private static final ThreadLocal<ItemStack> affinity$itemStack = new ThreadLocal<>();
-
     @Inject(method = "finishUsing", at = @At("HEAD"))
     private void doPotionApplication(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
-        affinity$itemStack.set(stack);
-
         final var extraData = stack.get(PotionMixture.EXTRA_DATA);
         PotionUtil.getPotionEffects(stack).forEach(effect -> MixinHooks.potionApplied(effect, user, extraData));
     }
 
-    @Inject(method = "finishUsing", at = @At("RETURN"))
-    private void injectColor(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
-        affinity$itemStack.remove();
-    }
-
     @ModifyArg(method = "finishUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;addStatusEffect(Lnet/minecraft/entity/effect/StatusEffectInstance;)Z"))
-    private StatusEffectInstance extendPotionEffect(StatusEffectInstance effect) {
-        if (!affinity$itemStack.get().has(PotionMixture.EXTRA_DATA)) return effect;
+    private StatusEffectInstance extendPotionEffect(StatusEffectInstance effect, @Local(argsOnly = true) ItemStack stack) {
+        if (!stack.has(PotionMixture.EXTRA_DATA)) return effect;
 
-        final var extraData = affinity$itemStack.get().get(PotionMixture.EXTRA_DATA);
+        final var extraData = stack.get(PotionMixture.EXTRA_DATA);
         if (extraData.has(PotionMixture.EXTEND_DURATION_BY)) {
             ((StatusEffectInstanceAccessor) effect).setDuration((int) (effect.getDuration() * extraData.get(PotionMixture.EXTEND_DURATION_BY)));
         }

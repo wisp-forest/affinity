@@ -20,22 +20,23 @@ public abstract class DrawContextMixin {
     @Shadow
     public abstract void fill(RenderLayer layer, int x1, int x2, int y1, int y2, int color);
 
-    private boolean affinity$itemBarRendered = false;
+    @Unique
+    private boolean itemBarRendered = false;
 
     @Inject(method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At("HEAD"))
     private void resetItemBarState(TextRenderer textRenderer, ItemStack stack, int x, int y, String countOverride, CallbackInfo ci) {
-        this.affinity$itemBarRendered = false;
+        this.itemBarRendered = false;
     }
 
     @Inject(method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(Lnet/minecraft/client/render/RenderLayer;IIIII)V", ordinal = 0))
     private void injectSecondaryItemBar(TextRenderer textRenderer, ItemStack stack, int x, int y, String countOverride, CallbackInfo ci) {
-        this.affinity$itemBarRendered = true;
+        this.itemBarRendered = true;
         this.affinity$renderSecondaryBar(x + 2, y + 11, stack);
     }
 
     @Inject(method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;player:Lnet/minecraft/client/network/ClientPlayerEntity;", opcode = Opcodes.GETFIELD))
     private void injectLateSecondaryItemBar(TextRenderer textRenderer, ItemStack stack, int x, int y, String countOverride, CallbackInfo ci) {
-        if (this.affinity$itemBarRendered) return;
+        if (this.itemBarRendered) return;
         this.affinity$renderSecondaryBar(x + 2, y + 13, stack);
     }
 

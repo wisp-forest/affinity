@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin.client;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.block.template.AttackInteractionReceiver;
 import io.wispforest.affinity.item.KinesisStaffItem;
 import io.wispforest.affinity.misc.MixinHooks;
@@ -87,8 +88,8 @@ public class MinecraftClientMixin {
         cir.setReturnValue(true);
     }
 
-    @Inject(method = "doItemUse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;crosshairTarget:Lnet/minecraft/util/hit/HitResult;", ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private void invokeDoItemUseCallback(CallbackInfo ci, Hand[] var1, int var2, int var3, Hand hand, ItemStack itemStack) {
+    @Inject(method = "doItemUse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;crosshairTarget:Lnet/minecraft/util/hit/HitResult;", ordinal = 1), cancellable = true)
+    private void invokeDoItemUseCallback(CallbackInfo ci, @Local Hand hand) {
         var result = ClientDoItemUseCallback.EVENT.invoker().doItemUse(this.player, hand);
         if (result.isAccepted()) {
             if (result.shouldSwingHand()) this.player.swingHand(hand);

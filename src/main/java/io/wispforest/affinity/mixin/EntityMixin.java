@@ -31,6 +31,7 @@ public abstract class EntityMixin implements AffinityEntityAddon {
     @Shadow
     protected boolean touchingWater;
 
+    @Unique
     private static final TagKey<Fluid> ARCANE_FADE = TagKey.of(RegistryKeys.FLUID, Affinity.id("arcane_fade"));
 
     @Unique
