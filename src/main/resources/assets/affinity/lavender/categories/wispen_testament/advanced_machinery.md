@@ -1,7 +1,8 @@
 ```json
 {
   "title": "Advanced Machinery",
-  "icon": "affinity:void_beacon"
+  "icon": "affinity:void_beacon",
+  "ordinal": 3
 }
 ```
 

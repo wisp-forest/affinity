@@ -23,7 +23,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class AffinityLavenderRecipeHandlers {
+public class AffinityLavenderRecipePreviewBuilders {
 
     public static final Identifier WISPEN_TESTAMENT_BOOK_ID = Affinity.id("wispen_testament");
 
@@ -39,6 +39,15 @@ public class AffinityLavenderRecipeHandlers {
 
                 return recipeComponent;
             }
+        });
+
+        LavenderBookScreen.registerRecipePreviewBuilder(WISPEN_TESTAMENT_BOOK_ID, AffinityRecipeTypes.ORNAMENT_CARVING, (componentSource, recipeEntry) -> {
+            var recipeComponent = componentSource.template(UIModelLoader.get(Affinity.id("wispen_testament")), ParentComponent.class, "ornament-carving-recipe");
+
+            recipeComponent.childById(ItemListComponent.class, "input").ingredient(recipeEntry.value().input);
+            recipeComponent.childById(ItemComponent.class, "output").stack(recipeEntry.value().getResult(null));
+
+            return recipeComponent;
         });
 
         LavenderBookScreen.registerRecipePreviewBuilder(WISPEN_TESTAMENT_BOOK_ID, AffinityRecipeTypes.ASPEN_INFUSION, (componentSource, recipeEntry) -> {

@@ -32,7 +32,7 @@ import java.util.List;
 
 public class AspenInfusionCategory implements DisplayCategory<AspenInfusionDisplay> {
 
-    public static final TagKey<Item> RECIPE_RITUAL_SOCLE_PREVIEW = TagKey.of(RegistryKeys.ITEM, Affinity.id("recipe_ritual_socle_preview"));
+    public static final TagKey<Item> RECIPE_RITUAL_SOCLE_PREVIEW = TagKey.of(RegistryKeys.ITEM, Affinity.id("ritual_socles"));
 
     @Override
     public List<Widget> setupDisplay(AspenInfusionDisplay display, Rectangle bounds) {

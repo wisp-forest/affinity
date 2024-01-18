@@ -114,7 +114,7 @@ public class AffinityClient implements ClientModInitializer {
         AethumNetworkLinkingHud.initialize();
         PlayerAethumHud.initialize();
         InWorldTooltipRenderer.initialize();
-        AffinityLavenderRecipeHandlers.initialize();
+        AffinityLavenderRecipePreviewBuilders.initialize();
 
         AffinityModelPredicateProviders.applyDefaults();
 
