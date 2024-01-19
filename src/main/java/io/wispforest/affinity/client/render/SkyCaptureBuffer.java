@@ -32,6 +32,7 @@ public class SkyCaptureBuffer extends RenderLayer {
 
     private static Framebuffer skyCapture = null;
     private static StencilFramebuffer skyStencil = null;
+    private static int lastFramebuffer = 0;
 
     private SkyCaptureBuffer(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
         super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
@@ -83,6 +84,8 @@ public class SkyCaptureBuffer extends RenderLayer {
     }
 
     private static void beginStencilWrite() {
+        lastFramebuffer = GlStateManager.getBoundFramebuffer();
+
         skyStencil.beginWrite(false);
         GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, MinecraftClient.getInstance().getFramebuffer().fbo);
 
@@ -94,7 +97,7 @@ public class SkyCaptureBuffer extends RenderLayer {
 
     private static void endStencilWrite() {
         GL11.glDisable(GL11.GL_STENCIL_TEST);
-        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, lastFramebuffer);
     }
 
     static {

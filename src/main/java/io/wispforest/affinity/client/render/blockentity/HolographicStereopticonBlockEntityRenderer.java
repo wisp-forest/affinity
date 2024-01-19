@@ -87,7 +87,6 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
         });
     }
 
-
     public interface Renderer {
         Renderer EMPTY = (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {};
 
