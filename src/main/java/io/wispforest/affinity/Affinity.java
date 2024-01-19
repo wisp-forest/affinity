@@ -14,6 +14,7 @@ import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.Owo;
+import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.EnvType;
@@ -56,14 +57,14 @@ public class Affinity implements ModInitializer {
     public void onInitialize() {
         AffinityItemGroup.register();
 
-        FieldRegistrationHandler.register(AffinityBlocks.class, MOD_ID, true);
-        FieldRegistrationHandler.register(AffinityItems.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityEnchantments.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityEntities.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityEntityAttributes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityParticleTypes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityRecipeTypes.class, MOD_ID, true);
-        FieldRegistrationHandler.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityBlocks.class, MOD_ID, true);
+        AutoRegistryContainer.register(AffinityItems.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityEnchantments.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityEntities.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityEntityAttributes.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityParticleTypes.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityRecipeTypes.class, MOD_ID, true);
+        AutoRegistryContainer.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
 
         FieldRegistrationHandler.processSimple(AffinitySoundEvents.class, false);
         FieldRegistrationHandler.processSimple(AffinityCriteria.class, false);

@@ -1,5 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
+import io.wispforest.affinity.entity.EmancipatedBlockEntity;
 import io.wispforest.affinity.object.AffinityCriteria;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
@@ -40,6 +41,10 @@ public class PeculiarClumpBlock extends Block {
 
         if (player instanceof ServerPlayerEntity serverPlayer) {
             AffinityCriteria.MINED_PECULIAR_CLUMP.trigger(serverPlayer, side == validDirection);
+        }
+
+        if (side != validDirection) {
+            EmancipatedBlockEntity.spawn(world, pos, state, null, 10, 0f);
         }
 
         return state;
