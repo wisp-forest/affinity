@@ -12,7 +12,7 @@
 }
 ```
 
-Useful as though the [Assembly Augment](#affinity:assembly_augment) is, its insignificant physical size and inability
+Useful as though the [Assembly Augment](^affinity:assembly_augment) is, its insignificant physical size and inability
 to process {concept}Aethum Flux{} considerably limit the selection of objects it can manufacture.
 
 
@@ -79,15 +79,16 @@ Finally, to perform a ritual, its ingredients must be...
 it must be available to the core as well.
 
 
-Once this preparation is completed, the core can be {concept}sneak-interacted{} with using an empty hand (alternatively,
-it also seems to react to redstone).
+Once this preparation is completed, the core can be {concept}sneak-interacted{} with using an empty hand to initiate the 
+procedure (alternatively, it also seems to react to redstone).
 
 
-When all goes well, the ingredients on the socles are {concept}consumed one-by-one{} and
+When all goes well, the ingredients on the socles
 
 ;;;;;
 
-infused into the prime ingredient on the core. If, due to insufficient flux-field stability, the ritual fails, 
-{concept}all ingredients and Aethum Flux{} consumed up to that point are {concept}irrevocably lost{}
+are {concept}consumed one-by-one{} and infused into the prime ingredient on the core. If, due to insufficient
+flux-field stability, the ritual fails, {concept}all ingredients and Aethum Flux{} consumed up to that point are
+{concept}irrevocably lost{}.
 
 @entry-end
