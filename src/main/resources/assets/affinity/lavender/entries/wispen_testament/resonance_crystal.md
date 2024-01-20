@@ -28,4 +28,4 @@ dealt - making them unsuited for this procedure.
 
 
 Instead, the killer must wield an [Artifact Blade](^affinity:artifact_blades). Built with magical rigor
-and imbued with surgical precision, they enable a successful extraction procedure
+and imbued with surgical precision, they enable a successful extraction procedure.

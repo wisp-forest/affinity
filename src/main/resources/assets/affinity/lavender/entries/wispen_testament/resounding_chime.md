@@ -31,4 +31,4 @@ foes with strong armor.
 
 
 Additionally, the intensity of damage taken {concept}increases with successive strikes{} in a
-sufficiently short timeframe
+sufficiently short timeframe.

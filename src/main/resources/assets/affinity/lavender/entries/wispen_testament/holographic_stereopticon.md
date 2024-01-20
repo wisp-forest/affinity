@@ -45,6 +45,6 @@ instructions in the resulting tooltip. It should further be noted that any impri
 
 
 Merely {concept}section imprints{} form an exception to this rule, as they constantly evolve to match
-the changes in the world around them
+the changes in the world around them.
 
 @entry-end
