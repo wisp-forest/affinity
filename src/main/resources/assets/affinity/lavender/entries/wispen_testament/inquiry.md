@@ -56,7 +56,7 @@ worry, it won't be mad) entices it to start displaying the outline.
 ---
 
 The penultimate, arguably most insightful, modus operandi is the {concept}visualization of Aethum Flux networks{}. To
-inspect a network, simply {concept}interact with{} any device capable of storing or transferring {concept}Aethum Flux{} -
+inspect a network, simply {concept}interact with{} any device capable of storing or transferring [Aethum Flux](^affinity:aethum_flux) -
 your wand will do the rest.
 
 ;;;;;

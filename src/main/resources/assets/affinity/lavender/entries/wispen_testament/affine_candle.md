@@ -17,7 +17,7 @@ to {concept}increase the Aethum present in a certain place{}.
 
 
 You find the answer to this in the {item}Affine Candle{}. Remarkably simple in construction, it disperses any 
-{concept}Aethum Flux{} in its buffer into its surroundings. This way, it slowly but surely 
+[Aethum Flux](^affinity:aethum_flux) in its buffer into its surroundings. This way, it slowly but surely 
 
 ;;;;;
 

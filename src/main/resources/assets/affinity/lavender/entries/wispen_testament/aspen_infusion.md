@@ -13,7 +13,7 @@
 ```
 
 Useful as though the [Assembly Augment](^affinity:assembly_augment) is, its insignificant physical size and inability
-to process {concept}Aethum Flux{} considerably limit the selection of objects it can manufacture.
+to process [Aethum Flux](^affinity:aethum_flux) considerably limit the selection of objects it can manufacture.
 
 
 To address both of these shortcomings at once, you devise the {item}Asp Rite Core{} - a wondrous piece of machinery
@@ -31,7 +31,7 @@ In concert with a collection of [Ritual Socles](^affinity:socle_composition), it
 
 ;;;;;
 
-...incorporating a supply of {concept}Aethum Flux{}.
+...incorporating a supply of [Aethum Flux](^affinity:aethum_flux).
 
 ---
 
@@ -75,7 +75,7 @@ Finally, to perform a ritual, its ingredients must be...
 
 ;;;;;
 
-...inserted into the core and placed on socles as specified by a given recipe. If {concept}Aethum Flux{} is required,
+...inserted into the core and placed on socles as specified by a given recipe. If [Aethum Flux](^affinity:aethum_flux) is required,
 it must be available to the core as well.
 
 

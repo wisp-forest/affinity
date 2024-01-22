@@ -12,7 +12,7 @@
 }
 ```
 
-It appears a rather logical idea to try infusing the {item}Totem of Undying{} with some {concept}Aethum Flux{}, seeing
+It appears a rather logical idea to try infusing the {item}Totem of Undying{} with some [Aethum Flux](^affinity:aethum_flux), seeing
 how they both deal with the very essence of life and death.
 
 
