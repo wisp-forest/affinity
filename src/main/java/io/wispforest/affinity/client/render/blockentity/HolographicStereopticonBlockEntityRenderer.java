@@ -193,7 +193,7 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
 
                             float meshScale = Math.min(.75f, 3f / (int) Math.max(mesh.dimensions().getLengthX(), Math.max(mesh.dimensions().getLengthY(), mesh.dimensions().getLengthZ())));
                             matrices.scale(meshScale * scale, meshScale * scale, meshScale * scale);
-                            matrices.translate(-.5 - mesh.dimensions().getLengthX() / 2, 0, -.5 - mesh.dimensions().getLengthZ() / 2);
+                            matrices.translate(-mesh.dimensions().getLengthX() / 2, 0, -mesh.dimensions().getLengthZ() / 2);
 
                             if (Affinity.CONFIG.renderBlockEntitiesInStereopticonSectionImprints()) {
                                 MixinHooks.forceBlockEntityRendering = true;
