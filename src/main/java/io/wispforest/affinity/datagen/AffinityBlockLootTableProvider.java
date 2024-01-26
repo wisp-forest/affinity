@@ -34,7 +34,7 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
 
         this.selfDrop(AZALEA_LOG, AZALEA_WOOD, STRIPPED_AZALEA_LOG, STRIPPED_AZALEA_WOOD, AZALEA_PLANKS);
         for (var block : AffinityBlockFamilies.AZALEA.getVariants().values()) {
-            this.drops(block);
+            this.selfDrop(block);
         }
 
         this.addDrop(HOLOGRAPHIC_STEREOPTICON, block -> {
