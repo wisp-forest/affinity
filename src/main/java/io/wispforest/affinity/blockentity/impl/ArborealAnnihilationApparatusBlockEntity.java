@@ -14,15 +14,25 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.wisps.AffinityWispTypes;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.event.BlockPositionSource;
+import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.event.PositionSource;
+import net.minecraft.world.event.Vibrations;
+import net.minecraft.world.event.listener.GameEventListener;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -30,12 +40,18 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InquirableOutlineProvider {
+public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InquirableOutlineProvider, Vibrations, GameEventListener.Holder<Vibrations.VibrationListener> {
 
+    private static final TagKey<GameEvent> RAVE_NOISES = TagKey.of(RegistryKeys.GAME_EVENT, Affinity.id("rave_noises"));
     private static final Vec3d LINK_ATTACHMENT_POINT = new Vec3d(0, -.35, 0);
 
     @Environment(EnvType.CLIENT) public BlockPos beamTarget;
     @Environment(EnvType.CLIENT) public float beamStrength;
+    @Environment(EnvType.CLIENT) public long lastRaveTimestamp;
+
+    private final Vibrations.ListenerData listenerData = new ListenerData();
+    private final Vibrations.Callback callback = new VibrationsCallback();
+    private final Vibrations.VibrationListener listener = new VibrationListener(this);
 
     private final Set<BlockPos> unauthorizedEquipment = new LinkedHashSet<>();
     private int time = 0;
@@ -51,17 +67,30 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
         }
     }
 
+    @Environment(EnvType.CLIENT)
+    public boolean isRaving() {
+        return this.world.getTime() - this.lastRaveTimestamp < 40;
+    }
+
     @Override
     public void tickClient() {
         if (this.world.random.nextFloat() < .95f) return;
 
-        ClientParticles.setParticleCount(5);
-        ClientParticles.spawn(new DustParticleEffect(MathUtil.rgbToVec3f(AffinityWispTypes.VICIOUS.color()), 1), this.world, Vec3d.ofCenter(this.pos, .75), .15);
+        if (!this.isRaving()) {
+            ClientParticles.setParticleCount(5);
+            ClientParticles.spawn(new DustParticleEffect(MathUtil.rgbToVec3f(AffinityWispTypes.VICIOUS.color()), 1), this.world, Vec3d.ofCenter(this.pos, .75), .15);
+        } else {
+            for (int i = 0; i < 5; i++) {
+                ClientParticles.spawn(new DustParticleEffect(MathUtil.rgbToVec3f(Color.ofHsv(this.world.random.nextFloat(), .65f, 1f).rgb()), 1), this.world, Vec3d.ofCenter(this.pos, .75), .15);
+            }
+        }
     }
 
     @Override
     public void tickServer() {
         this.time++;
+        Vibrations.Ticker.tick(this.world, this.listenerData, this.callback);
+
         if (this.world.getReceivedRedstonePower(this.pos) > 0) return;
 
         if (this.time % 40 == 0) {
@@ -114,6 +143,21 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
     }
 
     @Override
+    public ListenerData getVibrationListenerData() {
+        return this.listenerData;
+    }
+
+    @Override
+    public Callback getVibrationCallback() {
+        return this.callback;
+    }
+
+    @Override
+    public VibrationListener getEventListener() {
+        return this.listener;
+    }
+
+    @Override
     public Vec3d linkAttachmentPointOffset() {
         return LINK_ATTACHMENT_POINT;
     }
@@ -125,14 +169,54 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
 
     static {
         AffinityNetwork.CHANNEL.registerClientbound(EmancipatePacket.class, (message, access) -> {
-            if (!(access.runtime().world.getBlockEntity(message.accumulatorPos) instanceof ArborealAnnihilationApparatusBlockEntity apparatus)) {
+            if (!(access.runtime().world.getBlockEntity(message.annihilatorPos) instanceof ArborealAnnihilationApparatusBlockEntity apparatus)) {
                 return;
             }
 
             apparatus.beamTarget = message.emancipatedBlock.subtract(apparatus.pos);
             apparatus.beamStrength = 1f;
         });
+
+        AffinityNetwork.CHANNEL.registerClientbound(RaveNoisePacket.class, (message, access) -> {
+            if (!(access.runtime().world.getBlockEntity(message.annihilatorPos) instanceof ArborealAnnihilationApparatusBlockEntity apparatus)) {
+                return;
+            }
+
+            apparatus.lastRaveTimestamp = message.timestamp;
+        });
     }
 
-    public record EmancipatePacket(BlockPos accumulatorPos, BlockPos emancipatedBlock) {}
+    public record EmancipatePacket(BlockPos annihilatorPos, BlockPos emancipatedBlock) {}
+
+    public record RaveNoisePacket(BlockPos annihilatorPos, long timestamp) {}
+
+    private final class VibrationsCallback implements Vibrations.Callback {
+
+        private final PositionSource positionSource = new BlockPositionSource(ArborealAnnihilationApparatusBlockEntity.this.pos);
+
+        @Override
+        public int getRange() {
+            return 16;
+        }
+
+        @Override
+        public PositionSource getPositionSource() {
+            return this.positionSource;
+        }
+
+        @Override
+        public TagKey<GameEvent> getTag() {
+            return RAVE_NOISES;
+        }
+
+        @Override
+        public boolean accepts(ServerWorld world, BlockPos pos, GameEvent event, GameEvent.Emitter emitter) {
+            return true;
+        }
+
+        @Override
+        public void accept(ServerWorld world, BlockPos pos, GameEvent event, @Nullable Entity sourceEntity, @Nullable Entity entity, float distance) {
+            AffinityNetwork.server(ArborealAnnihilationApparatusBlockEntity.this).send(new RaveNoisePacket(ArborealAnnihilationApparatusBlockEntity.this.pos, world.getTime()));
+        }
+    }
 }
