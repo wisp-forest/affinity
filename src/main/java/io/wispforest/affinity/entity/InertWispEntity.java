@@ -18,12 +18,8 @@ public class InertWispEntity extends WispEntity {
     }
 
     @Override
-    protected void tickClient() {
-
-    }
+    protected void tickClient() {}
 
     @Override
-    protected void tickServer() {
-
-    }
+    protected void tickServer() {}
 }
