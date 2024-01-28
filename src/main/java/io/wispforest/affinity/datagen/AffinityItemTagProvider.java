@@ -3,6 +3,7 @@ package io.wispforest.affinity.datagen;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.item.AethumFireExtinguisherItem;
 import io.wispforest.affinity.item.StaffItem;
+import io.wispforest.affinity.item.WispMatterItem;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -25,6 +26,7 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     public static final TagKey<Item> AZALEA_LOGS = TagKey.of(RegistryKeys.ITEM, Affinity.id("azalea_logs"));
     public static final TagKey<Item> STAFFS = TagKey.of(RegistryKeys.ITEM, Affinity.id("staffs"));
+    public static final TagKey<Item> WISP_MATTER = TagKey.of(RegistryKeys.ITEM, Affinity.id("wisp_matter"));
 
     public AffinityItemTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture, @Nullable BlockTagProvider blockTagProvider) {
         super(output, completableFuture, blockTagProvider);
@@ -66,9 +68,14 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 FORGOTTEN_ARTIFACT_BLADE, STABILIZED_ARTIFACT_BLADE, STRENGTHENED_ARTIFACT_BLADE, SUPERIOR_ARTIFACT_BLADE, ASTRAL_ARTIFACT_BLADE
         );
 
-        FieldRegistrationHandler.process(AffinityItems.class, (value, name, field) -> {
-            if (!(value instanceof StaffItem) || value instanceof AethumFireExtinguisherItem) return;
-            this.getOrCreateTagBuilder(STAFFS).add(value);
+        FieldRegistrationHandler.process(AffinityItems.class, (item, name, field) -> {
+            if (item instanceof StaffItem && !(item instanceof AethumFireExtinguisherItem)) {
+                this.getOrCreateTagBuilder(STAFFS).add(item);
+            }
+
+            if (item instanceof WispMatterItem) {
+                this.getOrCreateTagBuilder(WISP_MATTER).add(item);
+            }
         }, false);
     }
 }
