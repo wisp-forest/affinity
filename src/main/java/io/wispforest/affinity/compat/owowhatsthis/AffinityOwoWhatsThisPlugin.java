@@ -40,7 +40,7 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
     public void loadServer() {
         Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("block_aethum_flux_storage"), BLOCK_AETHUM_FLUX_STORAGE);
         Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("item_transfer_node_queue"), ITEM_TRANSFER_NODE_QUEUE);
-        Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("brewing_potion_mixture"), BREWING_CAULDRON_MIXTURE);
+        Registry.register(OwoWhatsThis.INFORMATION_PROVIDER, Affinity.id("brewing_cauldron_mixture"), BREWING_CAULDRON_MIXTURE);
     }
 
     @Override

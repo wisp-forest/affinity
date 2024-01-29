@@ -3,6 +3,9 @@ package io.wispforest.affinity.client;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.RanthraciteWireBlock;
 import io.wispforest.affinity.block.impl.RitualSocleBlock;
+import io.wispforest.affinity.client.hud.AethumNetworkLinkingHud;
+import io.wispforest.affinity.client.hud.NimbleStaffHud;
+import io.wispforest.affinity.client.hud.PlayerAethumHud;
 import io.wispforest.affinity.client.particle.*;
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
 import io.wispforest.affinity.client.render.LightLeakRenderer;
@@ -113,6 +116,7 @@ public class AffinityClient implements ClientModInitializer {
 
         AethumNetworkLinkingHud.initialize();
         PlayerAethumHud.initialize();
+        NimbleStaffHud.initialize();
         InWorldTooltipRenderer.initialize();
         AffinityLavenderRecipePreviewBuilders.initialize();
 

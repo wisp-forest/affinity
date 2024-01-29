@@ -1,4 +1,4 @@
-package io.wispforest.affinity.client;
+package io.wispforest.affinity.client.hud;
 
 import com.google.common.base.Suppliers;
 import io.wispforest.affinity.Affinity;
@@ -21,7 +21,7 @@ public class AethumNetworkLinkingHud {
 
     public static final Identifier COMPONENT_ID = Affinity.id("aethum_linking");
 
-    static void initialize() {
+    public static void initialize() {
         var component = Suppliers.<Component>memoize(() -> {
             return Containers.verticalFlow(Sizing.content(), Sizing.content())
                     .positioning(Positioning.relative(50, 50))

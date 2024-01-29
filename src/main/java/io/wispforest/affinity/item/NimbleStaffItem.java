@@ -108,7 +108,6 @@ public class NimbleStaffItem extends StaffItem {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     private static @Nullable BlockPos tryFindBoundEchoShard(BlockPos pos, StaffPedestalBlockEntity pedestal) {
         var storageBelow = ItemStorage.SIDED.find(pedestal.getWorld(), pos.add(0, pedestal.down(), 0), pedestal.facing().getOpposite());
         if (storageBelow == null) return null;
@@ -170,17 +169,26 @@ public class NimbleStaffItem extends StaffItem {
         return stack.get(DIRECTION);
     }
 
+    public static @Nullable BlockHitResult findFlingTarget(PlayerEntity player) {
+        if (!player.isHolding(AffinityItems.NIMBLE_STAFF)) return null;
+
+        var target = player.raycast(50, 1f, false);
+        return target instanceof BlockHitResult blockHit && !player.getWorld().isAir(blockHit.getBlockPos())
+                ? blockHit
+                : null;
+    }
+
     @Override
     protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {
-        var target = player.raycast(50, 1f, false);
-        if (!(target instanceof BlockHitResult blockHit) || world.isAir(blockHit.getBlockPos())) {
+        var target = findFlingTarget(player);
+        if (target == null) {
             return TypedActionResult.fail(stack);
         }
 
         player.getItemCooldownManager().set(this, 15);
         if (world.isClient) return TypedActionResult.success(stack);
 
-        var targetCenter = Vec3d.ofCenter(blockHit.getBlockPos());
+        var targetCenter = Vec3d.ofCenter(target.getBlockPos());
         final var velocity = targetCenter.subtract(player.getPos()).multiply(
                 player.isOnGround()
                         ? 0.15

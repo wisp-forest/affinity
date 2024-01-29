@@ -1,7 +1,8 @@
-package io.wispforest.affinity.client;
+package io.wispforest.affinity.client.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.client.AffinityClient;
 import io.wispforest.affinity.client.render.PostEffectBuffer;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.owo.ui.base.BaseComponent;
@@ -20,7 +21,7 @@ public class PlayerAethumHud {
 
     private static final PostEffectBuffer BUFFER = new PostEffectBuffer();
 
-    static void initialize() {
+    public static void initialize() {
         Hud.add(COMPONENT_ID, () -> new BaseComponent() {
 
             private double displayAethum = 0f;
@@ -60,6 +61,7 @@ public class PlayerAethumHud {
                 this.alpha += Delta.compute(this.alpha, component.getAethum() >= maxAethum ? 0 : 10, delta * .25f);
                 this.warningColorWeight += Delta.compute(this.warningColorWeight, component.getAethum() < 3 ? 1 : 0, delta * .25f);
 
+                var color = RenderSystem.getShaderColor().clone();
                 RenderSystem.setShaderColor(1, 1, 1, Math.min(this.alpha, 1));
                 BUFFER.beginWrite(true, 0);
 
@@ -85,7 +87,7 @@ public class PlayerAethumHud {
 
                 this.drawAethumRing(context, this.displayAethum / maxAethum, Affinity.AETHUM_FLUX_COLOR.interpolate(Color.ofRgb(0xce2424), this.warningColorWeight));
 
-                RenderSystem.setShaderColor(1, 1, 1, 1);
+                RenderSystem.setShaderColor(color[0], color[1], color[2], color[3]);
                 BUFFER.endWrite();
 
                 AffinityClient.DOWNSAMPLE_PROGRAM.prepare(BUFFER.buffer());
