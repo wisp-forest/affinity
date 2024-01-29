@@ -7,6 +7,7 @@ import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.entity.EmancipatedBlockEntity;
+import io.wispforest.affinity.entity.WispEntity;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -21,7 +22,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
@@ -42,7 +42,6 @@ import java.util.Set;
 
 public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InquirableOutlineProvider, Vibrations, GameEventListener.Holder<Vibrations.VibrationListener> {
 
-    private static final TagKey<GameEvent> RAVE_NOISES = TagKey.of(RegistryKeys.GAME_EVENT, Affinity.id("rave_noises"));
     private static final Vec3d LINK_ATTACHMENT_POINT = new Vec3d(0, -.35, 0);
 
     @Environment(EnvType.CLIENT) public BlockPos beamTarget;
@@ -206,7 +205,7 @@ public class ArborealAnnihilationApparatusBlockEntity extends AethumNetworkMembe
 
         @Override
         public TagKey<GameEvent> getTag() {
-            return RAVE_NOISES;
+            return WispEntity.RAVE_NOISES;
         }
 
         @Override

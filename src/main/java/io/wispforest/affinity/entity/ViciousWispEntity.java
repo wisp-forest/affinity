@@ -30,6 +30,8 @@ public class ViciousWispEntity extends WispEntity {
 
     @Override
     protected void mobTick() {
+        super.mobTick();
+
         if (attackCooldown > 0) {
             attackCooldown--;
             return;
