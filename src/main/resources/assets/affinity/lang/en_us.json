@@ -14,6 +14,17 @@
   "structure.affinity.void_beacon": "Void Beacon",
   "structure.affinity.rudimentary_aspen_infusion": "Rudimentary Aspen Infusion",
 
+  "text.affinity.aethum_flux_consumer": {"translate": "text.affinity.aethum_flux_member_template", "with": ["consumer"]},
+  "text.affinity.aethum_flux_generator": {"translate": "text.affinity.aethum_flux_member_template", "with": ["generator"]},
+  "text.affinity.aethum_flux_node": {"translate": "text.affinity.aethum_flux_member_template", "with": ["node"]},
+  "text.affinity.aethum_flux_storage": {"translate": "text.affinity.aethum_flux_member_template", "with": ["storage"]},
+  "text.affinity.aethum_flux_member_template": [
+    "",
+    {"text": "a", "font": "affinity:symbols"},
+    {"text": " Flux ", "color": "gray"},
+    {"index": 0, "color": "gray"}
+  ],
+
   "entity.affinity.wisp": "Wisp",
   "entity.affinity.asteroid": "Asteroid",
   "entity.affinity.aethum_missile": "Aethum Missile",

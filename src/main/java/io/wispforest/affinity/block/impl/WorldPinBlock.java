@@ -43,7 +43,7 @@ public class WorldPinBlock extends AethumNetworkMemberBlock {
     ).reduce(VoxelShapes::union).get();
 
     public WorldPinBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES).mapColor(MapColor.CYAN).sounds(BlockSoundGroup.METAL).luminance(10));
+        super(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES).mapColor(MapColor.CYAN).sounds(BlockSoundGroup.METAL).luminance(10), CONSUMER_TOOLTIP);
         this.setDefaultState(this.getDefaultState().with(ENABLED, false));
     }
 

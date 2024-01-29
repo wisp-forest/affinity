@@ -23,7 +23,7 @@ public class CreativeAethumFluxCacheBlock extends AethumNetworkMemberBlock {
     public static final VoxelShape SHAPE = AethumFluxCacheBlock.STANDALONE_SHAPE;
 
     public CreativeAethumFluxCacheBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10).sounds(BlockSoundGroup.COPPER));
+        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10).sounds(BlockSoundGroup.COPPER), STORAGE_TOOLTIP);
     }
 
     @Override

@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class VoidBeaconBlock extends AethumNetworkMemberBlock {
 
     public VoidBeaconBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.BEACON));
+        super(FabricBlockSettings.copyOf(Blocks.BEACON), CONSUMER_TOOLTIP);
     }
 
     @Nullable

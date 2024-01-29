@@ -30,7 +30,7 @@ public class AffineInfuserBlock extends AethumNetworkMemberBlock {
     ).reduce(VoxelShapes::union).get();
 
     public AffineInfuserBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
+        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS), CONSUMER_TOOLTIP);
     }
 
     @Override

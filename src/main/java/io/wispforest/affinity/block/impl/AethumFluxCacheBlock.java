@@ -73,7 +73,7 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
     public static final VoxelShape STANDALONE_SHAPE = VoxelShapes.union(TOP_SHAPE, BOTTOM_SHAPE);
 
     public AethumFluxCacheBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10).sounds(BlockSoundGroup.COPPER));
+        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10).sounds(BlockSoundGroup.COPPER), STORAGE_TOOLTIP);
         this.setDefaultState(this.getDefaultState().with(PART, Part.STANDALONE));
     }
 

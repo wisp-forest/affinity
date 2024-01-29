@@ -1,0 +1,16 @@
+{
+  "providers": [
+    {
+      "type": "reference",
+      "id": "minecraft:include/space"
+    },
+    {
+      "type": "bitmap",
+      "file": "affinity:gui/aethum_flux_glyph.png",
+      "ascent": 7,
+      "chars": [
+        "a"
+      ]
+    }
+  ]
+}

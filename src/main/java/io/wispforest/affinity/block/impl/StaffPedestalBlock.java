@@ -64,7 +64,7 @@ public class StaffPedestalBlock extends AethumNetworkMemberBlock implements Scro
     public static final EnumProperty<Direction> FACING = Properties.VERTICAL_DIRECTION;
 
     public StaffPedestalBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque());
+        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque(), CONSUMER_TOOLTIP);
         this.setDefaultState(this.getDefaultState().with(FACING, Direction.UP));
     }
 

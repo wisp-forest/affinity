@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 public abstract class RitualCoreBlock extends AethumNetworkMemberBlock {
 
     protected RitualCoreBlock(Settings settings) {
-        super(settings);
+        super(settings, CONSUMER_TOOLTIP);
     }
 
     @Override
