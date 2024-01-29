@@ -35,6 +35,10 @@
   "category.affinity.ornament_carving": "Ornament Carving",
   "category.affinity.socle_composing": "Socle Composing",
 
+  "informationProvider.affinity.block_aethum_flux_storage": "aethum flux storage",
+  "informationProvider.affinity.item_transfer_node_queue": "item transfer node queue",
+  "informationProvider.affinity.brewing_cauldron_mixture": "brewing cauldron mixture",
+
   "stat.affinity.interact_with_field_coherence_modulator": "Interactions with Field Modulator",
 
   "block.affinity.brewing_cauldron": "Brewing Cauldron",
