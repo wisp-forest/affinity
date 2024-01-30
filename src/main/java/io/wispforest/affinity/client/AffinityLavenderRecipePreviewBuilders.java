@@ -88,7 +88,7 @@ public class AffinityLavenderRecipePreviewBuilders {
 
                 container.child(Containers.stack(Sizing.content(), Sizing.content())
                         .child(Components.texture(Affinity.id("textures/gui/wispen_testament.png"), 345, 140, 24, 24, 512, 256).blend(true))
-                        .child(Components.item(recipeInstance.getResult(null)).setTooltipFromStack(true))
+                        .child(Components.item(recipeInstance.getResult(null)).showOverlay(true).setTooltipFromStack(true))
                         .horizontalAlignment(HorizontalAlignment.CENTER).verticalAlignment(VerticalAlignment.CENTER)
                         .positioning(Positioning.relative(50, 2))
                 );
@@ -181,7 +181,7 @@ public class AffinityLavenderRecipePreviewBuilders {
 
                 container.child(Containers.stack(Sizing.content(), Sizing.content())
                         .child(Components.texture(Affinity.id("textures/gui/wispen_testament.png"), 345, 140, 24, 24, 512, 256).blend(true))
-                        .child(Components.item(recipeInstance.getResult(null)).setTooltipFromStack(true))
+                        .child(Components.item(recipeInstance.getResult(null)).showOverlay(true).setTooltipFromStack(true))
                         .horizontalAlignment(HorizontalAlignment.CENTER).verticalAlignment(VerticalAlignment.CENTER)
                         .positioning(Positioning.relative(90, 60))
                 );

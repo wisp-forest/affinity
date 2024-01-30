@@ -78,6 +78,7 @@
 
                             <item id="output">
                                 <set-tooltip-from-stack>true</set-tooltip-from-stack>
+                                <show-overlay>true</show-overlay>
                                 <positioning type="absolute">83,19</positioning>
                             </item>
 
