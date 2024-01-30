@@ -16,16 +16,20 @@ import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.serialization.endec.BuiltInEndecs;
 import io.wispforest.owo.serialization.endec.KeyedEndec;
-import io.wispforest.owo.util.ImplementedInventory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -34,28 +38,27 @@ import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.poi.PointOfInterest;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-@SuppressWarnings("UnstableApiUsage")
-public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, ImplementedInventory, SidedInventory, InquirableOutlineProvider {
+public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, InquirableOutlineProvider {
 
     @Environment(EnvType.CLIENT)
-    public double previewAngle = 0d;
+    public double previewAngle;
 
     public static final int OUTPUT_SLOT = 9;
-    private static final int[] ALL_SLOTS = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, OUTPUT_SLOT};
 
     private static final KeyedEndec<ItemStack> TEMPLATE_KEY = BuiltInEndecs.ITEM_STACK.keyed("Template", ItemStack.EMPTY);
 
     private static final Map<World, Map<BlockPos, BlockPos>> BLOCKED_TREETAPS_PER_WORLD = new WeakHashMap<>();
     private Map<BlockPos, BlockPos> blockedTreetaps;
 
+    @Nullable
     private RecipeEntry<CraftingRecipe> autocraftingRecipe;
 
     private final Set<BlockPos> treetapCache = new HashSet<>();
@@ -64,12 +67,79 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     private final SimpleInventory inventory = new SimpleInventory(10);
     private final InputInventory craftingView = new InputInventory(this.inventory.heldStacks);
     private final SimpleInventory templateInventory = new SimpleInventory(1);
+    private final Storage<ItemVariant> storage;
 
     private int craftingTick = 0;
 
     public AssemblyAugmentBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ASSEMBLY_AUGMENT, pos, state);
         this.inventory.addListener(sender -> this.markDirty());
+
+        var inventoryStorage = InventoryStorage.of(AssemblyAugmentBlockEntity.this.inventory, null);
+        var parts = new ArrayList<SingleSlotStorage<ItemVariant>>();
+        for (int i = 0; i < 9; i++) {
+            var slot = inventoryStorage.getSlot(i);
+            parts.add(new SingleSlotStorage<>() {
+                @Override
+                public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {return slot.insert(resource, maxAmount, transaction);}
+                @Override
+                public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {return 0;}
+                @Override
+                public boolean isResourceBlank() {return slot.isResourceBlank();}
+                @Override
+                public ItemVariant getResource() {return slot.getResource();}
+                @Override
+                public long getAmount() {return slot.getAmount();}
+                @Override
+                public long getCapacity() {return slot.getCapacity();}
+            });
+        }
+        parts.add(inventoryStorage.getSlot(OUTPUT_SLOT));
+
+        this.storage = new CombinedStorage<>(parts) {
+            @Override
+            public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
+                if (AssemblyAugmentBlockEntity.this.autocraftingRecipe == null) return 0;
+                var recipe = AssemblyAugmentBlockEntity.this.autocraftingRecipe.value();
+
+                int height, width = 1;
+                outer:
+                for (height = 1; height <= 3; height++) {
+                    for (width = 1; width <= 3; width++) {
+                        if (!recipe.fits(width, height)) continue;
+                        break outer;
+                    }
+                }
+
+                var candidateSlots = new ArrayList<SingleSlotStorage<ItemVariant>>();
+
+                var ingredients = recipe.getIngredients();
+                for (int slot = 0; slot < ingredients.size(); slot++) {
+                    int x = slot % 3, y = slot / 3;
+                    if (x >= width || y >= height) continue;
+
+                    if (ingredients.get(slot).test(resource.toStack())) candidateSlots.add(inventoryStorage.getSlot(slot));
+                }
+
+                candidateSlots.sort(Comparator.comparingLong(StorageView::getAmount));
+
+                long remaining = maxAmount;
+
+                if (candidateSlots.size() != 1 && candidateSlots.get(0).getAmount() < candidateSlots.get(candidateSlots.size() - 1).getAmount()) {
+                    for (var slot : candidateSlots) {
+                        var insertCount = candidateSlots.get(candidateSlots.size() - 1).getAmount() - slot.getAmount();
+                        remaining -= slot.insert(resource, Math.min(insertCount, remaining), transaction);
+                    }
+                }
+
+                for (int i = 0; i < candidateSlots.size(); i++) {
+                    var insertCount = (int) Math.ceil((remaining) / (double) (candidateSlots.size() - i));
+                    remaining -= candidateSlots.get(i).insert(resource, Math.min(insertCount, remaining), transaction);
+                }
+
+                return maxAmount - remaining;
+            }
+        };
     }
 
     @Override
@@ -193,40 +263,6 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
         nbt.put(TEMPLATE_KEY, this.templateInventory.getStack(0));
     }
 
-    @Override
-    public DefaultedList<ItemStack> getItems() {
-        return this.inventory.heldStacks;
-    }
-
-    @Override
-    public int[] getAvailableSlots(Direction side) {
-        return ALL_SLOTS;
-    }
-
-    @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        if (slot == OUTPUT_SLOT || this.autocraftingRecipe == null || dir == Direction.UP) return false;
-
-        int height, width = 1;
-        outer:
-        for (height = 1; height <= 3; height++) {
-            for (width = 1; width <= 3; width++) {
-                if (!this.autocraftingRecipe.value().fits(width, height)) continue;
-                break outer;
-            }
-        }
-
-        int x = slot % 3, y = slot / 3;
-        if (x >= width || y >= height) return false;
-
-        return this.inventory.getStack(slot).isEmpty() && this.autocraftingRecipe.value().getIngredients().get(y * width + x).test(stack);
-    }
-
-    @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return slot == OUTPUT_SLOT;
-    }
-
     public int displayTreetaps() {
         return (int) this.treetapCache.stream()
                 .filter(blockPos -> !this.blockedTreetaps.containsKey(blockPos) || this.blockedTreetaps.get(blockPos) == this.pos)
@@ -250,9 +286,10 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     }
 
     static {
+        ItemStorage.SIDED.registerForBlockEntity((augment, direction) -> augment.storage, AffinityBlocks.Entities.ASSEMBLY_AUGMENT);
         ItemStorage.SIDED.registerFallback((tableWorld, tablePos, state, blockEntity, context) -> {
             if (state.isOf(Blocks.CRAFTING_TABLE) && tableWorld.getBlockEntity(tablePos.up()) instanceof AssemblyAugmentBlockEntity augment) {
-                return InventoryStorage.of(augment, context);
+                return augment.storage;
             } else {
                 return null;
             }

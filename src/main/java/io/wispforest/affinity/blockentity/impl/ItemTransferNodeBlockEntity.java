@@ -53,7 +53,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-@SuppressWarnings("UnstableApiUsage")
 public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, InWorldTooltipProvider, LinkableBlockEntity, InteractableBlockEntity, InquirableOutlineProvider, BeforeMangroveBasketCaptureCallback {
 
     public static final KeyedEndec<Set<BlockPos>> LINKS_KEY = BuiltInEndecs.BLOCK_POS.listOf().<Set<BlockPos>>xmap(HashSet::new, ArrayList::new).keyed("Links", HashSet::new);
