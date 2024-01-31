@@ -20,26 +20,6 @@ import java.util.function.Consumer;
 
 public class NbtUtil {
 
-    public static void writeBlockPosCollection(NbtCompound nbt, String key, Collection<BlockPos> positions) {
-        var posArray = new long[positions.size()];
-
-        int idx = 0;
-        for (var pos : positions) {
-            posArray[idx] = pos.asLong();
-            idx++;
-        }
-
-        nbt.putLongArray(key, posArray);
-    }
-
-    public static void readBlockPosCollection(NbtCompound nbt, String key, Collection<BlockPos> positions) {
-        positions.clear();
-
-        for (var pos : nbt.getLongArray(key)) {
-            positions.add(BlockPos.fromLong(pos));
-        }
-    }
-
     public static void writeItemStackList(NbtCompound nbt, String key, DefaultedList<ItemStack> items) {
         final var nbtList = new NbtList();
 

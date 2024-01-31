@@ -10,10 +10,7 @@
             "entries": [
               {
                 "data": {
-                  "Name": "minecraft:grass_block",
-                  "Properties": {
-                    "snowy": "false"
-                  }
+                  "Name": "minecraft:short_grass"
                 },
                 "weight": 4
               },
