@@ -1,6 +1,7 @@
 ```json
 {
   "title": "Aethum",
+  "icon_sprite": "affinity:aethum_flux_icon",
   "category": "affinity:basics",
   "required_advancements": [
     "affinity:some_assembly_required"
