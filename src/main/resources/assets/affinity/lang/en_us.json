@@ -487,6 +487,13 @@
   "item.minecraft.lingering_potion.effect.life_leech": "Lingering Potion of Life Leech",
   "item.minecraft.tipped_arrow.effect.life_leech": "Arrow of Life Leech",
 
+  "effect.affinity.cat_anxiety": "Cat Anxiety",
+  "effect.affinity.cat_anxiety.desc": "Aw man",
+  "item.minecraft.potion.effect.cat_anxiety": "Potion of Cat Anxiety",
+  "item.minecraft.splash_potion.effect.cat_anxiety": "Splash Potion of Cat Anxiety",
+  "item.minecraft.lingering_potion.effect.cat_anxiety": "Lingering Potion of Cat Anxiety",
+  "item.minecraft.tipped_arrow.effect.cat_anxiety": "Arrow of Cat Anxiety",
+
   "effect.affinity.steadfast": "Steadfast",
   "effect.affinity.steadfast.desc": "Temporary Knockback Resistance",
   "item.minecraft.potion.effect.steadfast": "Potion of Knockback Resistance",

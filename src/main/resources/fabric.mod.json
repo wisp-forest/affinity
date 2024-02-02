@@ -75,7 +75,8 @@
       "affinity:world_pins",
       "affinity:local_weather",
       "affinity:player_weather_tracker",
-      "affinity:extra_arrow_damage"
+      "affinity:extra_arrow_damage",
+      "affinity:inner_creeper"
     ]
   }
 }

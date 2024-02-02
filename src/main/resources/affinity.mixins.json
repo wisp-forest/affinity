@@ -24,6 +24,7 @@
     "EnchantmentHelperMixin",
     "EnderDragonEntityMixin",
     "EntityMixin",
+    "ExplosionMixin",
     "HungerManagerMixin",
     "ItemGroupEntriesMixin",
     "ItemStackMixin",
@@ -32,6 +33,7 @@
     "MinecraftServerMixin",
     "MobEntityMixin",
     "MobSpawnerLogicMixin",
+    "PathAwareEntityMixin",
     "PersistentProjectileEntityMixin",
     "PlayerEntityMixin",
     "PlayerManagerMixin",
@@ -56,6 +58,7 @@
     "access.CraftingInventoryAccessor",
     "access.CraftingScreenHandlerAccessor",
     "access.FilledMapItemInvoker",
+    "access.LivingEntityAccessor",
     "access.MapStateAccessor",
     "access.MobSpawnerLogicAccessor",
     "access.OverworldBiomeCreatorInvoker",
@@ -64,7 +67,8 @@
     "access.ShapelessRecipeAccessor",
     "access.StatusEffectInstanceAccessor",
     "access.StructureFeatureAccessor",
-    "access.WorldAccessor"
+    "access.WorldAccessor",
+    "client.LivingEntityRendererMixin"
   ],
   "client": [
     "BeaconBlockEntityMixin",
