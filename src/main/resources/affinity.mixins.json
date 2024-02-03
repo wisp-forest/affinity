@@ -89,6 +89,7 @@
     "client.DrawContextMixin",
     "client.EntityMixin",
     "client.FramebufferMixin",
+    "client.HeadFeatureRendererMixin",
     "client.HeldItemRendererMixin",
     "client.ItemEntityRendererMixin",
     "client.ItemFrameEntityRendererMixin",

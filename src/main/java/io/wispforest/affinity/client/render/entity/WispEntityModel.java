@@ -8,9 +8,10 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.render.entity.model.ModelWithHead;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class WispEntityModel extends EntityModel<WispEntity> {
+public class WispEntityModel extends EntityModel<WispEntity> implements ModelWithHead {
 
     public static final EntityModelLayer LAYER = new EntityModelLayer(Affinity.id("wisp"), "main");
     private final ModelPart main;
@@ -47,5 +48,10 @@ public class WispEntityModel extends EntityModel<WispEntity> {
     @Override
     public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
         this.main.render(matrices, vertices, light, overlay, this.r, this.g, this.b, alpha);
+    }
+
+    @Override
+    public ModelPart getHead() {
+        return this.main;
     }
 }

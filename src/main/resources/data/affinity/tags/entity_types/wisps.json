@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "affinity:inert_wisp",
+    "affinity:wise_wisp",
+    "affinity:vicious_wisp"
+  ]
+}

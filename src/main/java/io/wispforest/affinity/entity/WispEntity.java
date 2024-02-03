@@ -78,6 +78,16 @@ public abstract class WispEntity extends PathAwareEntity implements Vibrations {
     public abstract WispType type();
 
     @Override
+    public boolean canBeLeashedBy(PlayerEntity player) {
+        return !this.isLeashed();
+    }
+
+    @Override
+    public boolean canImmediatelyDespawn(double distanceSquared) {
+        return false;
+    }
+
+    @Override
     protected void initGoals() {
         this.goalSelector.add(10, new FlyRandomlyGoal(this));
     }
