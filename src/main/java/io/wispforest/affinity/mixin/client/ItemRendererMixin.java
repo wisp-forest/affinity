@@ -1,8 +1,12 @@
 package io.wispforest.affinity.mixin.client;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
+import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.callback.PostItemRenderCallback;
+import io.wispforest.affinity.object.AffinityBlocks;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
@@ -39,5 +43,14 @@ public abstract class ItemRendererMixin {
         PostItemRenderCallback.EVENT.invoker().postRender(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model, item);
 
         MixinHooks.renderItem = null;
+    }
+
+    @Inject(
+            method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
+            at = @At("HEAD")
+    )
+    private void punchAHoleIntoYourInventory(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci, @Local(argsOnly = true) LocalRef<VertexConsumerProvider> consumers) {
+        if (!stack.isOf(AffinityBlocks.THE_SKY.asItem())) return;
+        consumers.set(layer -> vertexConsumers.getBuffer(SkyCaptureBuffer.SKY_IMMEDIATE_LAYER));
     }
 }

@@ -16,6 +16,7 @@ import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
 import io.wispforest.affinity.client.render.program.DepthMergeBlitProgram;
 import io.wispforest.affinity.client.render.program.DownsampleProgram;
 import io.wispforest.affinity.client.render.program.FizzleProgram;
+import io.wispforest.affinity.client.render.program.SolidFromFramebufferProgram;
 import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
 import io.wispforest.affinity.client.screen.ItemTransferNodeScreen;
 import io.wispforest.affinity.client.screen.OuijaBoardScreen;
@@ -56,6 +57,7 @@ import net.minecraft.util.Formatting;
 public class AffinityClient implements ClientModInitializer {
 
     public static final DepthMergeBlitProgram DEPTH_MERGE_BLIT_PROGRAM = new DepthMergeBlitProgram();
+    public static final SolidFromFramebufferProgram SOLID_FROM_FRAMEBUFFER = new SolidFromFramebufferProgram();
     public static final DownsampleProgram DOWNSAMPLE_PROGRAM = new DownsampleProgram();
     public static final FizzleProgram EMANCIPATE_BLOCK_PROGRAM = new FizzleProgram(Affinity.id("emancipate_block"));
     public static final FizzleProgram EMANCIPATE_ENTITY_PROGRAM = new FizzleProgram(Affinity.id("emancipate_entity"));

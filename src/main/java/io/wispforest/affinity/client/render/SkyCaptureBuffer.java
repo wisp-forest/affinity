@@ -11,6 +11,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import org.lwjgl.opengl.GL11;
@@ -27,6 +28,17 @@ public class SkyCaptureBuffer extends RenderLayer {
                     .program(SOLID_PROGRAM)
                     .target(new Target("affinity:sky_stencil", SkyCaptureBuffer::beginStencilWrite, SkyCaptureBuffer::endStencilWrite))
                     .texture(BLOCK_ATLAS_TEXTURE)
+                    .build(true)
+    );
+
+    public static final RenderLayer SKY_IMMEDIATE_LAYER = RenderLayer.of("affinity:sky_immediate",
+            VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL,
+            VertexFormat.DrawMode.QUADS,
+            0x200000,
+            MultiPhaseParameters.builder()
+                    .program(new ShaderProgram(AffinityClient.SOLID_FROM_FRAMEBUFFER::program))
+                    .target(RenderPhase.MAIN_TARGET)
+                    .texture(new TextureBase(() -> RenderSystem.setShaderTexture(0, SkyCaptureBuffer.skyCapture.getColorAttachment()), () -> {}))
                     .build(true)
     );
 
@@ -81,6 +93,9 @@ public class SkyCaptureBuffer extends RenderLayer {
         AffinityClient.DEPTH_MERGE_BLIT_PROGRAM.setupSamplers(skyStencil.getDepthAttachment());
         skyStencil.draw(skyStencil.textureWidth, skyStencil.textureHeight, false);
         RenderSystem.disableBlend();
+
+        skyStencil.clear(MinecraftClient.IS_SYSTEM_MAC);
+        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
     }
 
     private static void beginStencilWrite() {
