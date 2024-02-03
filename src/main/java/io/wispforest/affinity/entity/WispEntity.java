@@ -9,10 +9,9 @@ import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.serialization.Endec;
 import io.wispforest.owo.serialization.endec.KeyedEndec;
 import io.wispforest.owo.ui.core.Color;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.control.FlightMoveControl;
 import net.minecraft.entity.ai.pathing.BirdNavigation;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
@@ -127,16 +126,34 @@ public abstract class WispEntity extends PathAwareEntity implements Vibrations {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         var playerStack = player.getStackInHand(hand);
-        if (!playerStack.isOf(Items.GLASS_BOTTLE) || !this.misty()) return ActionResult.PASS;
+        if (playerStack.isOf(Items.GLASS_BOTTLE) && this.misty()) {
+            ItemOps.decrementPlayerHandItem(player, hand);
+            if (!this.getWorld().isClient) {
+                player.getInventory().offerOrDrop(this.type().mistItem().getDefaultStack());
+                this.dataTracker.set(MISTY, false);
+            }
 
-        ItemOps.decrementPlayerHandItem(player, hand);
+            return ActionResult.SUCCESS;
+        } else if (LivingEntity.getPreferredEquipmentSlot(playerStack) == EquipmentSlot.HEAD
+                || playerStack.isEmpty()
+                || FabricLoader.getInstance().isModLoaded("wearthat")) {
+            var existingHelmet = this.getEquippedStack(EquipmentSlot.HEAD);
 
-        if (!this.getWorld().isClient) {
-            player.getInventory().offerOrDrop(this.type().mistItem().getDefaultStack());
-            this.dataTracker.set(MISTY, false);
+            this.equipStack(EquipmentSlot.HEAD, ItemOps.singleCopy(playerStack));
+            ItemOps.decrementPlayerHandItem(player, hand);
+
+            if (!existingHelmet.isEmpty()) {
+                if (playerStack.isEmpty()) {
+                    player.setStackInHand(hand, existingHelmet);
+                } else {
+                    this.dropStack(existingHelmet);
+                }
+            }
+
+            return ActionResult.SUCCESS;
+        } else {
+            return ActionResult.SUCCESS;
         }
-
-        return ActionResult.SUCCESS;
     }
 
     @Override
