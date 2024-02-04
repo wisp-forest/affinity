@@ -2,7 +2,7 @@
 {
   "title": "Aethum Overcharger",
   "icon": "affinity:aethum_overcharger",
-  "category": "affinity:basics",
+  "category": "affinity:equipment",
   "required_advancements": [
     "affinity:resistance_is_futile"
   ],

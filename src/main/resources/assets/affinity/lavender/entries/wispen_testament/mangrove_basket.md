@@ -2,7 +2,7 @@
 {
   "title": "Mangrove Basket",
   "icon": "affinity:mangrove_basket",
-  "category": "affinity:basics",
+  "category": "affinity:magical_artifacts",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],

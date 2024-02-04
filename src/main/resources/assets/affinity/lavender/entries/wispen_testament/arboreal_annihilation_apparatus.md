@@ -2,7 +2,7 @@
 {
   "title": "Arboreal Annihilation Apparatus",
   "icon": "affinity:arboreal_annihilation_apparatus",
-  "category": "affinity:basics",
+  "category": "affinity:aethum_flux_networks",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],

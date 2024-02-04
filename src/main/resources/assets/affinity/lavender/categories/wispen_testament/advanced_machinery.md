@@ -2,7 +2,7 @@
 {
   "title": "Advanced Machinery",
   "icon": "affinity:void_beacon",
-  "ordinal": 3
+  "ordinal": 4
 }
 ```
 

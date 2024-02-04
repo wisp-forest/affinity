@@ -2,7 +2,7 @@
 {
   "title": "Matter Harvesting Hearth",
   "icon": "affinity:matter_harvesting_hearth",
-  "category": "affinity:basics",
+  "category": "affinity:aethum_flux_networks",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],

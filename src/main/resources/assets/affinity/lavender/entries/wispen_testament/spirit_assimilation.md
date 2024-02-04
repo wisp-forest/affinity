@@ -43,7 +43,7 @@ To prepare a {concept}Spirit Assimilation{} setup, 4 {item}Spirit{}
 
 ;;;;;
 
-{concept}Integration Apparatus{} must be arranged as follows:
+{item}Integration Apparatus{} must be arranged as follows:
 
 <structure-visualizer;affinity:spirit_integration_apparatus>
 

@@ -40,8 +40,8 @@ Hardly any reliable methods to {concept}locate a Wisp Forest{} are known - keepi
 ...eye for {concept}Azalea Trees{} whilst traveling is the best advice that can be offered.
 
 
-The presence of said {concept}Azalea Trees{} in the {concept}Wisp Forests{} is hardly a coincidence - it is for the same
-[Aethum](^affinity:aethum){concept}-affine properties{} which make their wood the perfect material for
+The presence of said {concept}Azalea Trees{} in the {concept}Wisp Forests{} is hardly a coincidence - it is due to
+the same [Aethum](^affinity:aethum){concept}-affine properties{} which make their wood the perfect material for
 [Staffs](^affinity:staffs).
 
 @entry-end

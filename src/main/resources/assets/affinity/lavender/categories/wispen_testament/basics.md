@@ -11,5 +11,5 @@ The most essential concepts, the first tools and the basic practices - that is w
 
 Of critical importance are:
 - [Assembly Augment](^affinity:assembly_augment)
+- [Anthracite Extraction](^affinity:anthracite_extraction)
 - [Aethum](^affinity:aethum)
-- [Aethum Flux](^affinity:aethum_flux)

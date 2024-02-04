@@ -2,7 +2,7 @@
 {
   "title": "Resounding Chime",
   "icon": "affinity:resounding_chime",
-  "category": "affinity:basics",
+  "category": "affinity:equipment",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],

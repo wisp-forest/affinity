@@ -2,7 +2,7 @@
 {
   "title": "Graviton Transducer",
   "icon": "affinity:graviton_transducer",
-  "category": "affinity:basics",
+  "category": "affinity:aethum_flux_networks",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],

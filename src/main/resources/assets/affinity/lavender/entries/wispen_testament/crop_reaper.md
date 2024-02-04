@@ -2,7 +2,7 @@
 {
   "title": "Crop Reaper",
   "icon": "affinity:crop_reaper",
-  "category": "affinity:basics",
+  "category": "affinity:aethum_flux_networks",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],

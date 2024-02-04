@@ -2,7 +2,7 @@
 {
   "title": "Lavaliere of Safekeeping",
   "icon": "affinity:lavaliere_of_safe_keeping",
-  "category": "affinity:basics",
+  "category": "affinity:equipment",
   "required_advancements": [
     "affinity:i_still_use_paint"
   ],

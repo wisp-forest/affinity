@@ -2,7 +2,7 @@
 {
   "title": "Holographic Stereopticon",
   "icon": "affinity:holographic_stereopticon",
-  "category": "affinity:basics",
+  "category": "affinity:magical_artifacts",
   "required_advancements": [
     "affinity:i_still_use_paint"
   ],

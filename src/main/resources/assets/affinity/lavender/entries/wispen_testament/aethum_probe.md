@@ -2,7 +2,7 @@
 {
   "title": "Aethum Probe",
   "icon": "affinity:aethum_probe",
-  "category": "affinity:basics",
+  "category": "affinity:magical_artifacts",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],

@@ -2,7 +2,7 @@
 {
   "title": "Resonance Crystal",
   "icon": "affinity:resonance_crystal",
-  "category": "affinity:basics",
+  "category": "affinity:magical_artifacts",
   "required_advancements": [
     "affinity:i_still_use_paint"
   ],

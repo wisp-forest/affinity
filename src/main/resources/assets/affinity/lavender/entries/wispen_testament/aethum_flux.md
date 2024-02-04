@@ -2,7 +2,7 @@
 {
   "title": "Aethum Flux",
   "icon": "affinity:stone_banded_aethum_flux_node",
-  "category": "affinity:basics",
+  "category": "affinity:aethum_flux_networks",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],

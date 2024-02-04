@@ -2,7 +2,7 @@
 {
   "title": "Featherweight Ring",
   "icon": "affinity:featherweight_ring",
-  "category": "affinity:basics",
+  "category": "affinity:equipment",
   "required_advancements": [
     "affinity:i_still_use_paint"
   ],

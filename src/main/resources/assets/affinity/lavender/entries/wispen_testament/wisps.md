@@ -23,7 +23,7 @@ properties and thus serves
 ;;;;;
 
 as a crucial ingredient in a majority of recipes. It goes without saying that to obtain a Wisp's matter, it
-{concept}must be killed{}.
+{concept}must be slain{}.
 
 
 Now, over many generations of evolution, the Wisps have separated into {concept}three distinct castes{}, which are to be
@@ -70,7 +70,7 @@ Contrary to the others, they love {item}Azalea Flowers{} and will follow anyone 
 
 ;;;;;
 
-the {concept}Wisp Wisps{} possess knowledge of the [ritual flux-field](^affinity:conducting_rituals) and, when sufficiently
+the {concept}Wise Wisps{} possess knowledge of the [ritual flux-field](^affinity:conducting_rituals) and, when sufficiently
 close to a ritual-in-progress, {concept}boost its stability{}.
 
 
@@ -92,7 +92,7 @@ Compared to their brethren, they patrol in groups much larger yet also significa
 
 ;;;;;
 
-Caution is of the essence when dealing with a pack, as the {concept}Vicious Wisp{} does not fool around.
+Caution is of the essence when dealing with a pack, as the {concept}Vicious Wisps{} do not fool around.
 
 
 This unyielding quality of strength, destruction and combat makes the {item}Vicious Wisp Matter{} a formidable material,

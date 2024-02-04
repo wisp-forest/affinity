@@ -2,7 +2,7 @@
 {
   "title": "Crystallized Experience",
   "icon": "affinity:crystallized_experience",
-  "category": "affinity:basics",
+  "category": "affinity:magical_artifacts",
   "required_advancements": [
     "affinity:i_still_use_paint"
   ],
