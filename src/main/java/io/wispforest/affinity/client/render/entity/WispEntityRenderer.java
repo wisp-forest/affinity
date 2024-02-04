@@ -4,7 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.entity.WispEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
+import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.feature.HeadFeatureRenderer;
@@ -17,7 +17,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-public class WispEntityRenderer extends LivingEntityRenderer<WispEntity, WispEntityModel> {
+public class WispEntityRenderer extends MobEntityRenderer<WispEntity, WispEntityModel> {
 
     public static final Identifier TEXTURE = Affinity.id("textures/entity/wisp.png");
 
@@ -52,11 +52,6 @@ public class WispEntityRenderer extends LivingEntityRenderer<WispEntity, WispEnt
     @Override
     protected RenderLayer getRenderLayer(WispEntity entity, boolean showBody, boolean translucent, boolean showOutline) {
         return super.getRenderLayer(entity, showBody, true, showOutline);
-    }
-
-    @Override
-    protected boolean hasLabel(WispEntity wisp) {
-        return super.hasLabel(wisp) && (wisp.shouldRenderName() || wisp.hasCustomName() && wisp == this.dispatcher.targetedEntity);
     }
 
     @Override

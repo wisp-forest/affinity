@@ -35,6 +35,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -79,6 +80,11 @@ public abstract class WispEntity extends PathAwareEntity implements Vibrations {
     @Override
     public boolean canBeLeashedBy(PlayerEntity player) {
         return !this.isLeashed();
+    }
+
+    @Override
+    protected Vec3d getLeashOffset() {
+        return new Vec3d(0, .1f, 0);
     }
 
     @Override
