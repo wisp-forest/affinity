@@ -5,7 +5,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.blockentity.impl.SpiritIntegrationApparatusBlockEntity;
+import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
+import io.wispforest.owo.serialization.SerializationAttribute;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -32,7 +34,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
                     Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("core_inputs").forGetter(recipe -> recipe.coreInputs),
                     Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("socle_inputs").forGetter(recipe -> recipe.socleInputs),
                     EntityData.CODEC.fieldOf("entity").forGetter(recipe -> new EntityData(recipe.entityType, Optional.ofNullable(recipe.entityNbt))),
-                    ItemStack.RECIPE_RESULT_CODEC.fieldOf("output").forGetter(recipe -> recipe.output),
+                    EndecUtil.RECIPE_RESULT_ENDEC.codec(SerializationAttribute.HUMAN_READABLE).fieldOf("output").forGetter(recipe -> recipe.output),
                     Codec.INT.optionalFieldOf("duration", 100).forGetter(recipe -> recipe.duration),
                     Codecs.validate(Codec.INT, duration -> {
                         if (duration % 4 != 0) {
