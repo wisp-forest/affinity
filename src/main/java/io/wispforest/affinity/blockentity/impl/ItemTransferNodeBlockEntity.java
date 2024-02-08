@@ -184,7 +184,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
             var origin = this.world.getBlockEntity(entry.originNode);
             if (origin instanceof ItemTransferNodeBlockEntity originNode && originNode != this) {
                 if (item == null) {
-                    this.sendToNode(originNode, entry.item, entry.item.getCount());
+                    this.dropItem(entry.item);
                 } else if (!item.isEmpty()) {
                     this.sendToNode(originNode, item, item.getCount());
                 }
