@@ -51,8 +51,8 @@
       "fabric:type": "affinity:enchantments",
       "enchantments": [
         {
-          "id": "affinity:wounding",
-          "level": 5
+          "id": "minecraft:sweeping",
+          "level": 3
         }
       ]
     },
