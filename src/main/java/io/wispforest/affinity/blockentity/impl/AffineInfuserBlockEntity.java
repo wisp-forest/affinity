@@ -29,8 +29,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InquirableOutlineProvider {
 
-    private static final int REPAIR_COST_PER_ITEM = 100;
-
     private static final MutableInt currentRepairCost = new MutableInt();
 
     public AffineInfuserBlockEntity(BlockPos pos, BlockState state) {
@@ -42,7 +40,7 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
 
     @Override
     public void tickClient() {
-        if (this.shouldBeDisabled() || this.flux() < REPAIR_COST_PER_ITEM || this.world.random.nextFloat() > .15f) {
+        if (this.shouldBeDisabled() || this.flux() < repairCostPerItem() || this.world.random.nextFloat() > .15f) {
             return;
         }
 
@@ -63,11 +61,11 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
         currentRepairCost.setValue(0);
 
         for (var entity : this.world.getNonSpectatingEntities(Entity.class, searchArea)) {
-            if (currentRepairCost.getValue() > this.flux() - REPAIR_COST_PER_ITEM) break;
+            if (currentRepairCost.getValue() > this.flux() - repairCostPerItem()) break;
 
             if (entity instanceof LivingEntity living && living.hasStatusEffect(AffinityStatusEffects.AFFINE) && living.getMaxHealth() > living.getHealth()) {
                 ((LivingEntity) entity).heal(1);
-                currentRepairCost.add(REPAIR_COST_PER_ITEM);
+                currentRepairCost.add(repairCostPerItem());
             }
 
             if (entity instanceof PlayerEntity) {
@@ -96,6 +94,10 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
         if (stack.getDamage() < 1) return;
 
         stack.setDamage(stack.getDamage() - 1);
-        currentRepairCost.add(REPAIR_COST_PER_ITEM);
+        currentRepairCost.add(repairCostPerItem());
+    }
+
+    private static int repairCostPerItem() {
+        return Affinity.CONFIG.affineInfuserCostPerDurabilityPoint();
     }
 }

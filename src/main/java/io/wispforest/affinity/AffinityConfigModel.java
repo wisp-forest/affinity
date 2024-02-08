@@ -15,6 +15,8 @@ public class AffinityConfigModel {
     @RangeConstraint(min = 0, max = 10)
     public int stereopticonSectionImprintRecursionLimit = 0;
 
+    public int affineInfuserCostPerDurabilityPoint = 50;
+
     @RestartRequired
     @RangeConstraint(min = 3, max = 127)
     public int maxFluxNodeShards = 5;
