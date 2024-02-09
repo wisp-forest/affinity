@@ -28,6 +28,8 @@
   "entity.affinity.wisp": "Wisp",
   "entity.affinity.asteroid": "Asteroid",
   "entity.affinity.aethum_missile": "Aethum Missile",
+  "death.attack.aethum_missile": "%s got liquidated by a concentrated Aethum charge",
+  "death.attack.aethum_missile.player": "%s got liquidated by %s's concentrated Aethum charge",
   "entity.affinity.emancipated_block": "Emancipated Block",
   "entity.affinity.emancipated_block_state": "Emancipated %s",
   "item.affinity.wisp_matter": "Wisp Matter",
