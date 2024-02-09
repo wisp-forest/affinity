@@ -1,5 +1,5 @@
 {
-  "parent": "affinity:root",
+  "parent": "affinity:i_still_use_paint",
   "display": {
     "icon": {
       "item": "affinity:kinesis_staff"
