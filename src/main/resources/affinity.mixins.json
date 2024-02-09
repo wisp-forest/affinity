@@ -101,6 +101,7 @@
     "client.MultiPhaseRenderLayerAccessor",
     "client.RenderLayerAccessor",
     "client.RenderLayerMixin",
+    "client.RenderLayersMixin",
     "client.StyleMixin",
     "client.WorldRendererAccessor",
     "client.WorldRendererMixin",

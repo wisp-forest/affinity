@@ -42,11 +42,7 @@ public class CuboidRenderer {
             256, false, true,
             RenderLayer.MultiPhaseParameters.builder()
                     .program(RenderPhase.ENTITY_SOLID_PROGRAM)
-// TODO this is kinda cringe, but otherwise the stereopticon dies
-// i guess the proper approach here is to fix the depth merge program,
-// since this same issue also affects beacons and really shouldn't be happening
-// thonk, oh well
-//                    .writeMaskState(RenderPhase.COLOR_MASK)
+                    .writeMaskState(RenderPhase.COLOR_MASK)
                     .transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
                     .texture(WHITE_TEXTURE)
                     .target(RenderPhase.MAIN_TARGET)

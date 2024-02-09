@@ -27,7 +27,7 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
         // Everything else
 
         this.primitiveCubeAllState(generator,
-                PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, THE_SKY, INVERSION_STONE, INFUSED_STONE
+                PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, INVERSION_STONE, INFUSED_STONE
         );
 
         generator.excludeFromSimpleItemModelGeneration(AFFINE_INFUSER);
