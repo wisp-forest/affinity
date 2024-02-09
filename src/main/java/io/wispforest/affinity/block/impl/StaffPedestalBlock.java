@@ -73,11 +73,6 @@ public class StaffPedestalBlock extends AethumNetworkMemberBlock implements Scro
         builder.add(FACING);
     }
 
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return world.getBlockState(pos.offset(state.get(FACING).getOpposite())).isSideSolid(world, pos, state.get(FACING), SideShapeType.FULL);
-    }
-
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
