@@ -25,8 +25,6 @@ Indeed, combined with some other common (and less common) items of magical merit
 
 @next-page
 
-;;;;;
-
 When equipped during an otherwise fatal event, it will activate and {concept}temporarily bring the user back from the
 brink of death{} in a somewhat incorporeal manner.
 

@@ -27,8 +27,6 @@ device, you dub your invention the {item}Holographic Stereopticon{}.
 
 @next-page
 
-;;;;;
-
 At last, you figure out how to make it support {concept}4 different kinds of imprint:{}
 
  - Items

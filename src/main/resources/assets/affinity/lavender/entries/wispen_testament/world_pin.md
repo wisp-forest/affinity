@@ -30,8 +30,6 @@ Contrary to numerous other, popular, mechanisms which...
 
 @next-page
 
-;;;;;
-
 ...achieve this same effect, the particle stream produced by the
 {item}World Pin{} also {concept}establishes the correct conditions for plant life to flourish{} 
 (that is, the loaded chunks properly random-tick)

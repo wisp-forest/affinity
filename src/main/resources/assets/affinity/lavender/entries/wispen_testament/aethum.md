@@ -36,8 +36,6 @@ functionality...{}
 
 @next-page
 
-;;;;;
-
 {concept}...of most magical equipment{}. In fact, using such a tool will impact your balance - after which {concept}it 
 needs some time to recover{}, to prevent a painful death as outlined previously.
 
@@ -59,8 +57,6 @@ should be used.
 
 
 @next-page
-
-;;;;;
 
 <recipe;affinity:assembly/aethum_map_prototype>
 

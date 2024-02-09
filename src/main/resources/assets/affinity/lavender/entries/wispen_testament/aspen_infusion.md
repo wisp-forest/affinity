@@ -29,8 +29,6 @@ In concert with a collection of [Ritual Socles](^affinity:socle_composition), it
 
 @next-page
 
-;;;;;
-
 ...incorporating a supply of [Aethum Flux](^affinity:aethum_flux).
 
 ---
@@ -53,8 +51,6 @@ distance may be inspected using the [Wand of Inquiry](^affinity:inquiry). In ord
 
 @next-page
 
-;;;;;
-
 ...infuse an {item}Uncanny Rod{} with the necessary materials, the following setup (which obeys all guidelines) 
 may be used:
 
@@ -72,8 +68,6 @@ Finally, to perform a ritual, its ingredients must be...
 
 
 @next-page
-
-;;;;;
 
 ...inserted into the core and placed on socles as specified by a given recipe. If [Aethum Flux](^affinity:aethum_flux) is required,
 it must be available to the core as well.

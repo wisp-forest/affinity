@@ -30,8 +30,6 @@ Of course, further required is a means of...
 
 @next-page
 
-;;;;;
-
 ...forming flux (of which there are numerous) - the [Matter Harvesting Hearth](^affinity:matter_harvesting_heart)
 might present a good starting point.
 
@@ -52,8 +50,6 @@ Lastly, the node must be joined with the desired {concept}Aethum Flux-powered de
 
 @next-page
 
-;;;;;
-
 Note that the node is vital, as it facilitates flux movement through its mounted {concept}Amethyst Shard{}. It can do
 this for {concept}up to 5 connected devices{}, including other nodes, which allows for forming grand power delivery
 networks. If superior transfer rates, further distances and more connections are desired, the more refined
@@ -72,8 +68,6 @@ Reminiscent of a fluid tank yet distinguished in...
 
 
 @next-page
-
-;;;;;
 
 ...function, it can {concept}permanently buffer{} an {concept}impressive quantity of flux{}. Additionally, many caches
 can be stacked vertically to {concept}access their combined capacity{} through the bottommost transfer-point.

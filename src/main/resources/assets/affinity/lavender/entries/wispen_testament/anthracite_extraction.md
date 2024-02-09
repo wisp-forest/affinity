@@ -35,8 +35,6 @@ A highly sensitive piece of equipment is required to...
 
 @next-page
 
-;;;;;
-
 ...discern the stable side - the {item}Geological Resonator{}.
 
 <recipe;affinity:assembly/geological_resonator>

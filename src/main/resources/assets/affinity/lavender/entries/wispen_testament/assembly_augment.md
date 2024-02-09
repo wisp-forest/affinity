@@ -25,8 +25,6 @@ Once you have obtained {concept}at least one{} treetap alongside your augment, y
 
 @next-page
 
-;;;;;
-
 <structure;affinity:augmented_crafting_table>
 
 ... and then continue by installing all treetaps onto {concept}naturally grown trees{} in close vicinity of the augmented

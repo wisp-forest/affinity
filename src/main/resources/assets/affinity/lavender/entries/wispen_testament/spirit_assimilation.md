@@ -30,8 +30,6 @@ provided through a number of [Ritual Socles](^affinity:socle_composition).
 
 @next-page
 
-;;;;;
-
 In contrast to the [Aspen Infusion](^affinity:aspen_infusion) however (and as hinted by its name and the inclusion of
 [Vicious Wisp Matter](^affinity:wisps#7)), the {concept}Spirit Assimilation{} further incorporates some or all features
 of a {concept}sacrifice's soul{} - enabling the fabrication of far more powerful magical artifacts.
@@ -48,8 +46,6 @@ To prepare a {concept}Spirit Assimilation{} setup, 4 {item}Spirit{}
 <structure-visualizer;affinity:spirit_integration_apparatus>
 
 @next-page
-
-;;;;;
 
 Then, [Ritual Socles](^affinity:socle_composition) shall be arranged around the now-formed ritual core, closely
 observing the [familiar rules](^affinity:aspen_infusion#3).

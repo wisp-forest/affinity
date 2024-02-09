@@ -29,8 +29,6 @@ steady production rate, a {item}Hopper{} might prove useful.
 
 @next-page
 
-;;;;;
-
 It is also to note that {concept}differing types{} of {item}Wisp Matter{} release {concept}differing amounts of
 Aethum Flux{}. This amount is indicated when inspecting the {item}Matter Harvesting Hearth{} with the respective type of
 {item}Wisp Matter{} inserted.

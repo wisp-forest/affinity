@@ -4,7 +4,7 @@
   "icon": "affinity:graviton_transducer",
   "category": "affinity:aethum_flux_networks",
   "required_advancements": [
-    "affinity:some_assembly_required"
+    "affinity:resistance_is_futile"
   ],
   "associated_items": [
     "affinity:graviton_transducer"
@@ -24,8 +24,6 @@ to the {item}Shulker's{} life - making them a perfect candidate for [Aethum Flux
 <recipe;affinity:spirit_assimilation/graviton_transducer>
 
 @next-page
-
-;;;;;
 
 Through a range of reactions, some physical and some magical in nature, the {item}Graviton Transducer{} is able to
 {concept}obtain a superb quantity of Aethum Flux{} from a single {item}Shulker Bullet{} - once its gets in range.

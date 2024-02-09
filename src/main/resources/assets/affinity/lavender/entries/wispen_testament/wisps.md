@@ -32,8 +32,6 @@ discussed on the following pages.
 
 @next-page
 
-;;;;;
-
 <|item-spotlight@lavender:book_components|item=affinity:inert_wisp_matter|>
 
 The {concept}Inert Wisp{} is the most frequent and least distinguished of the bunch.
@@ -57,8 +55,6 @@ qualities of the others.
 
 @next-page
 
-;;;;;
-
 <|item-spotlight@lavender:book_components|item=affinity:wise_wisp_matter|>
 
 As implied by their name, the {concept}Wise Wisps{} are the most intelligent inhabitants of the
@@ -79,8 +75,6 @@ or the processing of information is required.
 
 
 @next-page
-
-;;;;;
 
 <|item-spotlight@lavender:book_components|item=affinity:vicious_wisp_matter|>
 

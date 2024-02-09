@@ -30,8 +30,6 @@ Eerily similar in appearance and function to a {item}Stonecutter{}, the {item}Ri
 
 @next-page
 
-;;;;;
-
 At this time, the following three materials are known to produce admissible {concept}socle ornaments{}:
 
 <recipe;affinity:ornament_carving/stone_socle_ornament>

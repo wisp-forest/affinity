@@ -29,8 +29,6 @@ times{} and produces shards with both a {concept}higher{}...
 
 @next-page
 
-;;;;;
-
 ...{concept}maximum conduction rate{} and {concept}distance{}. A prime application of these improved shards lies in the
 [Copper Plated Aethum Flux Node](^affinity:copper_plated_aethum_flux_node).
 

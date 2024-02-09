@@ -28,8 +28,6 @@ flux-field{}. To employ it for...
 
 @next-page
 
-;;;;;
-
 ...this purpose, it need only be {concept}used on the core{} of the ritual-under-test. 
 
 
