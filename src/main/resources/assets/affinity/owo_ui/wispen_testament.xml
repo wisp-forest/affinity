@@ -147,5 +147,49 @@
                 <blend>true</blend>
             </texture>
         </template>
+
+        <template name="staff-pedestal-header">
+            <flow-layout direction="vertical">
+                <children>
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <item>
+                                <set-tooltip-from-stack>true</set-tooltip-from-stack>
+                                <stack>affinity:staff_pedestal</stack>
+
+                                <sizing>
+                                    <horizontal method="fixed">12</horizontal>
+                                    <vertical method="fixed">12</vertical>
+                                </sizing>
+                            </item>
+
+                            <label>
+                                <text translate="true">text.affinity.wispen_testament.staff_pedestal_function</text>
+                            </label>
+                        </children>
+
+                        <gap>3</gap>
+                        <vertical-alignment>center</vertical-alignment>
+                    </flow-layout>
+
+                    <texture texture="{{book-texture}}" texture-width="512" texture-height="256" u="170"
+                             v="247" region-width="107" region-height="2">
+                        <blend>true</blend>
+                    </texture>
+                </children>
+
+                <gap>2</gap>
+                <horizontal-alignment>center</horizontal-alignment>
+
+                <sizing>
+                    <horizontal method="fill">100</horizontal>
+                </sizing>
+
+                <margins>
+                    <top>4</top>
+                    <bottom>6</bottom>
+                </margins>
+            </flow-layout>
+        </template>
     </templates>
 </owo-ui>

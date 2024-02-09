@@ -10,6 +10,7 @@
 
   "item.affinity.wispen_testament": "The Wispen Testament",
   "text.affinity.wispen_testament.next_page": "Continued on next page...",
+  "text.affinity.wispen_testament.staff_pedestal_function": {"text": "On Staff Pedestal", "color": "dark_gray"},
   "structure.affinity.augmented_crafting_table": "Augmented Crafting Table",
   "structure.affinity.void_beacon": "Void Beacon",
   "structure.affinity.rudimentary_aspen_infusion": "Rudimentary Aspen Infusion",
