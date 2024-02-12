@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
@@ -209,14 +210,16 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
             var targets = this.linkedNodes(mode -> mode != Mode.SENDING);
 
-            if (!targets.isEmpty()) this.startIndex = (this.startIndex + 1) % targets.size();
-            var firstTarget = targets.isEmpty() ? null : targets.get(this.startIndex);
+            if (targets.isEmpty()) return;
 
-            Predicate<ItemVariant> predicate = firstTarget == null
-                    ? this::acceptsItem
-                    : item -> this.acceptsItem(item) && firstTarget.acceptsItem(item);
+            this.startIndex = (this.startIndex + 1) % targets.size();
+            var firstTarget = targets.get(this.startIndex);
 
             var stack = this.storageTransaction((storage, transaction) -> {
+                Predicate<ItemVariant> predicate = item -> this.acceptsItem(item)
+                        && firstTarget.acceptsItem(item)
+                        && firstTarget.maxInsertCount(item, Transaction.getCurrentUnsafe()) > 0;
+
                 var resource = StorageUtil.findExtractableResource(storage, predicate, transaction);
                 if (resource == null) return ItemStack.EMPTY;
 
@@ -247,7 +250,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
                     var node = targets.get(i % targets.size());
                     if (!node.acceptsItem(insertVariant)) continue;
 
-                    int insertCount = Math.min(node.maxInsertCount(insertVariant), Math.min(countPerTarget, stack.getCount()));
+                    int insertCount = Math.min(node.maxInsertCount(insertVariant, null), Math.min(countPerTarget, stack.getCount()));
                     if (insertCount == 0) continue;
 
                     this.sendToNode(node, stack, insertCount);
@@ -324,11 +327,11 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         }
     }
 
-    private int maxInsertCount(ItemVariant variant) {
+    private int maxInsertCount(ItemVariant variant, @Nullable TransactionContext outerTransaction) {
         var storage = this.attachedStorage();
         if (storage == null) return Integer.MAX_VALUE;
 
-        try (var transaction = Transaction.openOuter()) {
+        try (var transaction = Transaction.openNested(outerTransaction)) {
             for (var entry : this.entries) {
                 if (!entry.insert) continue;
                 storage.insert(entry.variant(), entry.item.getCount(), transaction);
