@@ -7,6 +7,7 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.ops.TextOps;
+import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.serialization.Endec;
 import io.wispforest.owo.serialization.endec.BuiltInEndecs;
 import io.wispforest.owo.serialization.endec.KeyedEndec;
@@ -15,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -89,6 +91,10 @@ public class NimbleStaffItem extends StaffItem {
                 : Vec3d.of(getDirection(pedestal.getItem()).getVector());
 
         moveEntities(world, pos.add(0, pedestal.up() * 2, 0), pushDelta, () -> pedestal.hasFlux(5));
+
+        ClientParticles.setVelocity(pushDelta.multiply(.35));
+        ClientParticles.setParticleCount(2);
+        ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, Vec3d.ofCenter(pos, 1.5), 9, 5, 9);
     }
 
     protected static void moveEntities(World world, BlockPos pos, Vec3d direction, BooleanSupplier shouldContinue) {
