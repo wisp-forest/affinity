@@ -1,5 +1,6 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
@@ -8,9 +9,11 @@ import io.wispforest.owo.serialization.endec.BuiltInEndecs;
 import io.wispforest.owo.serialization.endec.KeyedEndec;
 import io.wispforest.owo.serialization.util.MapCarrier;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -18,10 +21,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -43,6 +43,23 @@ public class EchoShardExtension {
                 if (!stack.isOf(Items.ECHO_SHARD)) return;
                 if (stack.has(BOUND)) {
                     formatLocationTooltip(stack.getNbt(), lines);
+                }
+            });
+
+            ClientTickEvents.END_WORLD_TICK.register(world -> {
+                if (world.random.nextFloat() > .2) return;
+
+                var player = MinecraftClient.getInstance().player;
+                for (var hand : Hand.values()) {
+                    var stack = player.getStackInHand(hand);
+                    if (!stack.isOf(Items.ECHO_SHARD) || !stack.has(BOUND) || !stack.get(WORLD).equals(MinecraftClient.getInstance().world.getRegistryKey().getValue())) continue;
+
+                    ClientParticles.spawn(
+                            new BezierPathEmitterParticleEffect(ParticleTypes.PORTAL, Vec3d.ofCenter(stack.get(POS)), 30, 10, false),
+                            world,
+                            Vec3d.ofCenter(stack.get(POS), -.5),
+                            1.5
+                    );
                 }
             });
         }
