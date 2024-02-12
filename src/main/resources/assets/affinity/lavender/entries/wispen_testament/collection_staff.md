@@ -13,7 +13,7 @@
 ```
 
 Collecting a bunch of items scattered across the ground can be a frequent nuisance - an endeavor the
-{item}Cultivation Staff{} exists to aid with.
+{item}Collection Staff{} exists to aid with.
 
 
 Upon use, it will, for a small [Aethum](^affinity:aethum) cost, teleport all items in a {concept}9-block distance{} to
@@ -30,7 +30,7 @@ When anchored on a [Staff Pedestal](^affinity:staff_pedestal) with a suitable st
 
 @next-page
 
-...base, the {item}Collection Staff{} will periodically (every second) deposit all items in a {concept}5-block distance{}
-into the storage below at a cost of {concept}8 [Aethum Flux](^affinity:aethum_flux) per item collected.{}
+...base, the {item}Collection Staff{} will periodically (every second) deposit all items within a {concept}5-block distance{}
+into the attached storage at a cost of {concept}8 [Aethum Flux](^affinity:aethum_flux) per item collected.{}
 
 @entry-end

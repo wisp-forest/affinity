@@ -17,12 +17,12 @@ Fusing the supplied {item}Diamond{} crystals with all three variants of [Wisp Ma
 demands a rather large quantity of [Aethum Flux](^affinity:aethum_flux).
 
 
-Yet, this is no doubt a worthwhile thing to - the resultant {item}Crystalline Wisp Matter Composite{} exhibits a
+Yet, this is no doubt a worthwhile thing to do - the resultant {item}Crystalline Wisp Matter Composite{} exhibits a
 
 ;;;;;
 
 <recipe;affinity:aspen_infusion/crystalline_wisp_matter_composite>
 
 range of useful qualities - of which unparalleled [Aethum](^affinity:aethum) conduction is only one. For this reason,
-most high-tier recipes makes use of it. 
+most high-tier recipes make use of it.
 

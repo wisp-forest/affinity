@@ -16,7 +16,7 @@ True to its name, the {item}Nimble Staff{} considerably enhances its user's agil
 
 
 When sufficiently close to a wall or other suitable anchor point (as indicated by the {concept}arrows pointing towards
-your crosshair{}), using the staff will impart a sudden burst of momentum - sending you flying towards the targeted
+your crosshair{}), using the staff will impart a sudden burst of momentum - sending you hurtling towards the targeted
 location.
 
 ;;;;;

@@ -17,7 +17,7 @@ itself a formidable weapon.
 
 
 The intensity of its gravity waves strengthened by the use of a {item}Warden{}'s
-[Resonance Crystal](^affinity:resonance_crystal), it is capable of {concept}yanking asteroids from the skies{} and
+[Resonance Crystal](^affinity:resonance_crystal), it is capable of {concept}yanking asteroids from the heavens{} and
 hurling them towards foes. To do this, wield the staff while...
 
 ;;;;;
