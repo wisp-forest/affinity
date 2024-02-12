@@ -10,6 +10,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,5 +47,10 @@ public class TheSkyBlock extends TransparentBlock {
         if (world.isReceivingRedstonePower(pos) == state.get(ENABLED)) {
             world.setBlockState(pos, state.cycle(ENABLED), Block.NOTIFY_LISTENERS);
         }
+    }
+
+    @Override
+    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+        return stateFrom.isOf(this) && !state.get(ENABLED);
     }
 }
