@@ -16,7 +16,11 @@
     "Aikoyori",
     "Noaaan"
   ],
-  "contact": {},
+  "contact": {
+    "homepage": "https://modrinth.com/mod/affinity",
+    "sources": "https://github.com/wisp-forest/affinity",
+    "issues": "https://github.com/wisp-forest/affinity/issues"
+  },
   "license": "MIT",
   "icon": "assets/affinity/icon.png",
   "accessWidener": "affinity.accesswidener",
@@ -51,16 +55,16 @@
     "affinity.mixins.json"
   ],
   "depends": {
-    "fabricloader": "*",
+    "fabricloader": ">=0.15.0",
     "fabric": "*",
-    "minecraft": ">=1.19.4",
-    "trinkets": ">=3.0.0",
-    "owo": ">=0.9.3+1.9.3",
+    "minecraft": ">=1.20.4",
+    "trinkets": "*",
+    "owo": ">=0.12.3+1.20.3",
     "terrablender": "*",
-    "cardinal-components-entity": ">=5.1.0",
-    "cardinal-components-chunk": ">=5.1.0",
-    "worldmesher": ">=0.3.0",
-    "lavender": "*"
+    "cardinal-components-entity": "*",
+    "cardinal-components-chunk": "*",
+    "worldmesher": ">=0.4.0",
+    "lavender": ">=0.1.2"
   },
   "breaks": {
     "sodium": "<0.5.0"
