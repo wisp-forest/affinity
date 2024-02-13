@@ -13,8 +13,11 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
@@ -27,13 +30,12 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class StaffPedestalBlock extends AethumNetworkMemberBlock implements ScrollInteractionReceiver {
+public class StaffPedestalBlock extends AethumNetworkMemberBlock implements ScrollInteractionReceiver, Waterloggable {
 
     private static final VoxelShape UP_SHAPE = Stream.of(
             Block.createCuboidShape(2, 9, 2, 4, 16, 4),
@@ -62,25 +64,32 @@ public class StaffPedestalBlock extends AethumNetworkMemberBlock implements Scro
     ).reduce(VoxelShapes::union).get();
 
     public static final EnumProperty<Direction> FACING = Properties.VERTICAL_DIRECTION;
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public StaffPedestalBlock() {
         super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque(), CONSUMER_TOOLTIP);
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.UP));
+        this.setDefaultState(this.getDefaultState().with(FACING, Direction.UP).with(WATERLOGGED, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, WATERLOGGED);
     }
 
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getSide() == Direction.DOWN ? Direction.DOWN : Direction.UP);
+        return this.getDefaultState()
+                .with(FACING, ctx.getSide() == Direction.DOWN ? Direction.DOWN : Direction.UP)
+                .with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+
         return this.canPlaceAt(state, world, pos)
                 ? state
                 : Blocks.AIR.getDefaultState();
@@ -94,6 +103,11 @@ public class StaffPedestalBlock extends AethumNetworkMemberBlock implements Scro
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         return InteractableBlockEntity.tryHandle(world, pos, player, hand, hit);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Nullable
