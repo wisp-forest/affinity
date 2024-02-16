@@ -94,7 +94,7 @@ public class NimbleStaffItem extends StaffItem {
 
         ClientParticles.setVelocity(pushDelta.multiply(.35));
         ClientParticles.setParticleCount(2);
-        ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, Vec3d.ofCenter(pos, 1.5), 9, 5, 9);
+        ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, Vec3d.ofCenter(pos, 1.5 * pedestal.up()), 9, 5, 9);
     }
 
     protected static void moveEntities(World world, BlockPos pos, Vec3d direction, BooleanSupplier shouldContinue) {
