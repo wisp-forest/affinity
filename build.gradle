@@ -106,11 +106,6 @@ dependencies {
     modCompileOnly "maven.modrinth:sodium:${project.sodium_version}"
     modCompileOnly "maven.modrinth:iris:${project.iris_version}"
 
-    // dev utils
-
-    modLocalRuntime "maven.modrinth:emoji-type:2.0.0+1.19"
-    modLocalRuntime "maven.modrinth:lazydfu:0.1.3"
-
 //    modLocalRuntime "io.vram:canvas-fabric:${project.canvas_version}"
 //    modLocalRuntime "io.wispforest:gadget:${project.gadget_version}"
 }
