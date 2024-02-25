@@ -37,7 +37,7 @@ public class CropReaperBlockEntity extends AethumNetworkMemberBlockEntity implem
             this.world.setBlockState(pos, crop.withAge(0), Block.NOTIFY_LISTENERS);
             this.world.syncWorldEvent(WorldEvents.BLOCK_BROKEN, pos, Block.getRawIdFromState(state));
 
-            addedAethum += 50;
+            addedAethum += 75;
         }
 
         if (addedAethum > 0) {

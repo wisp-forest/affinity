@@ -208,7 +208,6 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_INFUSER);
             Affinity.AETHUM_MEMBER.registerSelf(CROP_REAPER);
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_CANDLE);
-            Affinity.AETHUM_MEMBER.registerSelf(WORLD_PIN);
             Affinity.AETHUM_MEMBER.registerSelf(SUNSHINE_MONOLITH);
             Affinity.AETHUM_MEMBER.registerSelf(STAFF_PEDESTAL);
             Affinity.AETHUM_MEMBER.registerSelf(MATTER_HARVESTING_HEARTH);
