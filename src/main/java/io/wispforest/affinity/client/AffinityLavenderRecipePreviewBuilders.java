@@ -14,7 +14,6 @@ import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.parsing.UIModelLoader;
-import me.shedaniel.math.Point;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.recipe.CraftingRecipe;
@@ -63,7 +62,7 @@ public class AffinityLavenderRecipePreviewBuilders {
             inputContainer.verticalAlignment(VerticalAlignment.CENTER).horizontalAlignment(HorizontalAlignment.CENTER);
             root.child(inputContainer);
 
-            var center = new Point(inputSize / 2 - 8, inputSize / 2 - 8);
+            int centerX = inputSize / 2 - 8, centerY = inputSize / 2 - 8;
             double angleStep = Math.PI / (recipeInstance.getIngredients().size()) * 2;
 
             for (int i = 0; i < recipeInstance.getIngredients().size(); i++) {
@@ -71,7 +70,7 @@ public class AffinityLavenderRecipePreviewBuilders {
 
                 inputContainer.child(new ItemListComponent()
                         .ingredient(recipeInstance.getIngredients().get(i))
-                        .positioning(Positioning.absolute((int) (center.x + Math.cos(angle) * 30), (int) (center.y + Math.sin(angle) * 30)))
+                        .positioning(Positioning.absolute((int) (centerX + Math.cos(angle) * 30), (int) (centerY + Math.sin(angle) * 30)))
                 );
             }
 
@@ -130,7 +129,7 @@ public class AffinityLavenderRecipePreviewBuilders {
             inputContainer.verticalAlignment(VerticalAlignment.CENTER).horizontalAlignment(HorizontalAlignment.CENTER);
             root.child(inputContainer);
 
-            var center = new Point(inputSize / 2 - 8, inputSize / 2 - 8);
+            int centerX = inputSize / 2 - 8, centerY = inputSize / 2 - 8;
             double angleStep = Math.PI / (recipeInstance.getIngredients().size()) * 2;
 
             for (int i = 0; i < recipeInstance.getIngredients().size(); i++) {
@@ -138,7 +137,7 @@ public class AffinityLavenderRecipePreviewBuilders {
 
                 inputContainer.child(new ItemListComponent()
                         .ingredient(recipeInstance.getIngredients().get(i))
-                        .positioning(Positioning.absolute((int) (center.x + Math.cos(angle) * 40), (int) (center.y + Math.sin(angle) * 40)))
+                        .positioning(Positioning.absolute((int) (centerX + Math.cos(angle) * 40), (int) (centerY + Math.sin(angle) * 40)))
                 );
             }
 

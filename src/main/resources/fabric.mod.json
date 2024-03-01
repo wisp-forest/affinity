@@ -64,6 +64,7 @@
     "cardinal-components-entity": "*",
     "cardinal-components-chunk": "*",
     "cardinal-components-world": "*",
+    "cardinal-components-scoreboard": "*",
     "worldmesher": ">=0.4.0",
     "lavender": ">=0.1.2"
   },
