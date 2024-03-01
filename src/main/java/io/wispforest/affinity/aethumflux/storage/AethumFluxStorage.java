@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.nbt.NbtCompound;
 
-@SuppressWarnings("UnstableApiUsage")
 public class AethumFluxStorage extends SnapshotParticipant<Long> implements AethumFluxContainer {
 
     private final CommitCallback commitCallback;

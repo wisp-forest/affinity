@@ -31,7 +31,7 @@ public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlo
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return getShape();
+        return this.getShape();
     }
 
     @Nullable

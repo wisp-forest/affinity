@@ -63,6 +63,7 @@
     "terrablender": "*",
     "cardinal-components-entity": "*",
     "cardinal-components-chunk": "*",
+    "cardinal-components-world": "*",
     "worldmesher": ">=0.4.0",
     "lavender": ">=0.1.2"
   },
