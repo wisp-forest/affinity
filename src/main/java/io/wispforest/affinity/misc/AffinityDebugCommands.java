@@ -14,6 +14,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.visitor.NbtTextFormatter;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -46,6 +48,19 @@ public class AffinityDebugCommands {
                 EmancipatedBlockEntity.spawn(player.getWorld(), targetPos, targetState, player.getWorld().getBlockEntity(targetPos), 20, 0f);
                 player.getWorld().removeBlock(targetPos, false);
 
+                return 1;
+            }));
+
+            dispatcher.register(literal("debug-ethereal-data").executes(context -> {
+                var storage = context.getSource()
+                        .getWorld()
+                        .getScoreboard()
+                        .getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE);
+
+                var tag = new NbtCompound();
+                storage.writeToNbt(tag);
+
+                context.getSource().sendFeedback(() -> new NbtTextFormatter(" ", 0).apply(tag), false);
                 return 1;
             }));
 

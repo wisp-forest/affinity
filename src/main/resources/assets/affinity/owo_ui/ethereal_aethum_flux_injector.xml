@@ -1,0 +1,101 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20.3/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <stack-layout>
+                    <children>
+                        <flow-layout direction="vertical" id="node-list-anchor">
+                            <children/>
+                        </flow-layout>
+
+                        <block state="affinity:ethereal_aethum_flux_injector[facing=down]">
+                            <sizing>
+                                <horizontal method="fixed">64</horizontal>
+                                <vertical method="fixed">64</vertical>
+                            </sizing>
+                            <margins>
+                                <top>-24</top>
+                            </margins>
+                        </block>
+                    </children>
+
+                    <sizing>
+                        <horizontal method="fill">100</horizontal>
+                        <vertical method="fill">100</vertical>
+                    </sizing>
+
+                    <positioning type="absolute">0,0</positioning>
+
+                    <horizontal-alignment>center</horizontal-alignment>
+                    <vertical-alignment>center</vertical-alignment>
+                </stack-layout>
+
+                <flow-layout direction="vertical">
+                    <children>
+                        <flow-layout direction="horizontal">
+                            <children>
+
+                                <button id="public-button">
+                                    <text translate="true">text.affinity.ethereal_aethum_flux_injector.global_nodes</text>
+                                    <renderer>
+                                        <flat color="#00000000" hovered-color="#40000000" disabled-color="#00000000"/>
+                                    </renderer>
+                                </button>
+                            </children>
+
+                            <vertical-alignment>center</vertical-alignment>
+                        </flow-layout>
+                        <flow-layout direction="horizontal">
+                            <children>
+                                <template name="button-selection-marker"/>
+                                <button id="private-button">
+                                    <text translate="true">text.affinity.ethereal_aethum_flux_injector.private_nodes</text>
+                                    <renderer>
+                                        <flat color="#00000000" hovered-color="#40000000" disabled-color="#00000000"/>
+                                    </renderer>
+                                </button>
+                            </children>
+                            <vertical-alignment>center</vertical-alignment>
+                        </flow-layout>
+                    </children>
+
+                    <surface>
+                        <tooltip/>
+                    </surface>
+
+                    <padding>
+                        <all>2</all>
+                    </padding>
+
+                    <margins>
+                        <left>5</left>
+                    </margins>
+
+                    <positioning type="relative">0,50</positioning>
+                </flow-layout>
+            </children>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+        </flow-layout>
+    </components>
+
+    <templates>
+        <template name="button-selection-marker">
+            <box id="button-selection-marker">
+                <sizing>
+                    <horizontal method="fixed">2</horizontal>
+                    <vertical method="fixed">10</vertical>
+                </sizing>
+
+                <color>white</color>
+                <fill>false</fill>
+            </box>
+        </template>
+    </templates>
+</owo-ui>

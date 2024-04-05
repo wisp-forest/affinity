@@ -11,6 +11,22 @@
       "chars": [
         "a"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "affinity:gui/locked_padlock_glyph.png",
+      "ascent": 7,
+      "chars": [
+        "l"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "affinity:gui/unlocked_padlock_glyph.png",
+      "ascent": 7,
+      "chars": [
+        "u"
+      ]
     }
   ]
 }

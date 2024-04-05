@@ -1,0 +1,58 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "affinity:block/ethereal_aethum_flux_injector",
+		"particle": "affinity:block/ethereal_aethum_flux_injector"
+	},
+	"elements": [
+		{
+			"from": [2, 0, 2],
+			"to": [14, 3, 5],
+			"faces": {
+				"north": {"uv": [2, 13, 14, 16], "texture": "#0"},
+				"east": {"uv": [11, 13, 14, 16], "texture": "#0"},
+				"south": {"uv": [2, 13, 14, 16], "texture": "#0"},
+				"west": {"uv": [2, 13, 5, 16], "texture": "#0"},
+				"up": {"uv": [2, 1, 14, 4], "texture": "#0"},
+				"down": {"uv": [2, 10, 14, 13], "texture": "#0"}
+			}
+		},
+		{
+			"from": [2, 0, 5],
+			"to": [5, 3, 11],
+			"faces": {
+				"north": {"uv": [11, 13, 14, 16], "texture": "#0"},
+				"east": {"uv": [5, 13, 11, 16], "texture": "#0"},
+				"south": {"uv": [2, 13, 5, 16], "texture": "#0"},
+				"west": {"uv": [5, 13, 11, 16], "texture": "#0"},
+				"up": {"uv": [2, 4, 5, 10], "texture": "#0"},
+				"down": {"uv": [2, 4, 5, 10], "texture": "#0"}
+			}
+		},
+		{
+			"from": [11, 0, 5],
+			"to": [14, 3, 11],
+			"faces": {
+				"north": {"uv": [2, 13, 5, 16], "texture": "#0"},
+				"east": {"uv": [5, 13, 11, 16], "texture": "#0"},
+				"south": {"uv": [11, 13, 14, 16], "texture": "#0"},
+				"west": {"uv": [5, 13, 11, 16], "texture": "#0"},
+				"up": {"uv": [11, 4, 14, 10], "texture": "#0"},
+				"down": {"uv": [11, 4, 14, 10], "texture": "#0"}
+			}
+		},
+		{
+			"from": [2, 0, 11],
+			"to": [14, 3, 14],
+			"faces": {
+				"north": {"uv": [2, 13, 14, 16], "texture": "#0"},
+				"east": {"uv": [2, 13, 5, 16], "texture": "#0"},
+				"south": {"uv": [2, 13, 14, 16], "texture": "#0"},
+				"west": {"uv": [11, 13, 14, 16], "texture": "#0"},
+				"up": {"uv": [2, 10, 14, 13], "texture": "#0"},
+				"down": {"uv": [2, 1, 14, 4], "texture": "#0"}
+			}
+		}
+	]
+}

@@ -15,6 +15,17 @@
   "structure.affinity.void_beacon": "Void Beacon",
   "structure.affinity.rudimentary_aspen_infusion": "Rudimentary Aspen Infusion",
 
+  "text.affinity.ethereal_aethum_flux_injector.global_nodes": [
+    "",
+    {"text": "u ", "font": "affinity:symbols"},
+    "All public nodes"
+  ],
+  "text.affinity.ethereal_aethum_flux_injector.private_nodes": [
+    "",
+    {"text": "l ", "font": "affinity:symbols"},
+    "My nodes only"
+  ],
+
   "text.affinity.aethum_flux_consumer": {"translate": "text.affinity.aethum_flux_member_template", "with": ["consumer"]},
   "text.affinity.aethum_flux_generator": {"translate": "text.affinity.aethum_flux_member_template", "with": ["generator"]},
   "text.affinity.aethum_flux_node": {"translate": "text.affinity.aethum_flux_member_template", "with": ["node"]},
@@ -95,6 +106,8 @@
   "block.affinity.infused_stone": "Infused Stone",
   "block.affinity.matter_harvesting_hearth": "Matter Harvesting Hearth",
   "block.affinity.graviton_transducer": "Graviton Transducer",
+  "block.affinity.ethereal_aethum_flux_node": "Ethereal Aethum Flux Node",
+  "block.affinity.ethereal_aethum_flux_injector": "Ethereal Aethum Flux Injector",
 
   "block.affinity.spirit_integration_apparatus": "Spirit Integration Apparatus",
   "block.affinity.spirit_integration_apparatus.tooltip.complete": "Complete",
@@ -309,6 +322,7 @@
   "item.affinity.mildly_attuned_amethyst_shard": "Mildly Attuned Amethyst Shard",
   "item.affinity.fairly_attuned_amethyst_shard": "Fairly Attuned Amethyst Shard",
   "item.affinity.greatly_attuned_amethyst_shard": "Greatly Attuned Amethyst Shard",
+  "item.affinity.sculk_resonant_ethereal_amethyst_shard": "Sculk-Resonant Ethereal Amethyst Shard",
 
   "item.affinity.anthracite_powder": "Anthracite Powder",
   "item.affinity.carbon_copy.empty": "Carbon Copy of ... Nothing?",

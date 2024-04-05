@@ -68,6 +68,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block EMERALD_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK));
     @Tab(AffinityItemGroup.MAIN) public static final Block VOID_BEACON = new VoidBeaconBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block GRAVITON_TRANSDUCER = new GravitonTransducerBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block ETHEREAL_AETHUM_FLUX_NODE = new EtherealAethumFluxNodeBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block ETHEREAL_AETHUM_FLUX_INJECTOR = new EtherealAethumFluxInjectorBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
 
     @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
@@ -193,6 +195,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<GravitonTransducerBlockEntity> GRAVITON_TRANSDUCER =
                 make(GravitonTransducerBlockEntity::new, AffinityBlocks.GRAVITON_TRANSDUCER);
 
+        public static final BlockEntityType<EtherealAethumFluxNodeBlockEntity> ETHEREAL_AETHUM_FLUX_NODE =
+                make(EtherealAethumFluxNodeBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_NODE);
+
+        public static final BlockEntityType<EtherealAethumFluxInjectorBlockEntity> ETHEREAL_AETHUM_FLUX_INJECTOR =
+                make(EtherealAethumFluxInjectorBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_INJECTOR);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
@@ -214,6 +222,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(VOID_BEACON);
             Affinity.AETHUM_MEMBER.registerSelf(FIELD_COHERENCE_MODULATOR);
             Affinity.AETHUM_MEMBER.registerSelf(GRAVITON_TRANSDUCER);
+            Affinity.AETHUM_MEMBER.registerSelf(ETHEREAL_AETHUM_FLUX_NODE);
         }
 
         @Override
@@ -269,3 +278,4 @@ public class AffinityBlocks implements BlockRegistryContainer {
         int value();
     }
 }
+
