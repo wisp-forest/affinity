@@ -62,7 +62,7 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
     }
 
     private CheckboxComponent bindToggle(String id, Observable<Boolean> target) {
-        var toggle = this.uiAdapter.rootComponent.childById(CheckboxComponent.class, id);
+        var toggle = this.component(CheckboxComponent.class, id);
         toggle.onChanged(checked -> this.sendFilterState());
 
         this.bind(target, toggle::checked);
@@ -82,7 +82,7 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
         var nodeNbt = new NbtCompound();
         nodeNbt.put(ItemTransferNodeBlockEntity.FILTER_STACK_KEY, stack);
 
-        this.uiAdapter.rootComponent.childById(FlowLayout.class, "node-preview-anchor").<FlowLayout>configure(anchor -> {
+        this.component(FlowLayout.class, "node-preview-anchor").<FlowLayout>configure(anchor -> {
             anchor.clearChildren();
             anchor.child(Components.block(AffinityBlocks.ITEM_TRANSFER_NODE.getDefaultState(), nodeNbt).sizing(Sizing.fixed(150)));
         });
@@ -90,11 +90,11 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
         if (!stack.isEmpty()) {
             var tooltip = ItemComponent.tooltipFromItem(stack, this.client.player, null);
             tooltip.add(TooltipComponent.of(OrderedText.empty()));
-            tooltip.add(TooltipComponent.of(Text.literal("Click to clear filter").formatted(Formatting.GRAY).asOrderedText()));
+            tooltip.add(TooltipComponent.of(Text.translatable("block.affinity.item_transfer_node.clear_filter_hint").formatted(Formatting.GRAY).asOrderedText()));
 
-            this.uiAdapter.rootComponent.childById(FlowLayout.class, "node-click-area").tooltip(tooltip);
+            this.component(FlowLayout.class, "node-click-area").tooltip(tooltip);
         } else {
-            this.uiAdapter.rootComponent.childById(FlowLayout.class, "node-click-area").tooltip((List<TooltipComponent>) null);
+            this.component(FlowLayout.class, "node-click-area").tooltip((List<TooltipComponent>) null);
         }
     }
 
