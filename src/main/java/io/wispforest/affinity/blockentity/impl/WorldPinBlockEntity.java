@@ -8,6 +8,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 
+// TODO some type of actually usable range visualization
 public class WorldPinBlockEntity extends BlockEntity implements TickedBlockEntity {
     public WorldPinBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.WORLD_PIN, pos, state);

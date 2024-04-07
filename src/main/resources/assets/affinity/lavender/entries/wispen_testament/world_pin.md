@@ -16,8 +16,8 @@ A rather unexpected, yet unexpectedly useful, application of the [Resonance Crys
 out to be the {item}World Pin{}.
 
 
-Reminiscent of the anchors of olden times, it transmogrifies its incoming flow of [Aethum Flux](^affinity:aethum_flux) into a
-stabilizing particle stream capable of {concept}animating its surroundings{} (in layman's terms, it keeps the chunks loaded).
+Reminiscent of the anchors of olden times, it emits a stabilizing particle stream capable of
+{concept}animating its surroundings{} (in layman's terms, it keeps the chunks loaded).
 
 ;;;;;
 
