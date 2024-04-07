@@ -21,6 +21,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -52,7 +53,7 @@ public class EtherealAethumFluxNodeBlock extends AethumNetworkMemberBlock {
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
-            world.getScoreboard().getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE).removeNode(pos);
+            world.getScoreboard().getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE).removeNode(GlobalPos.create(world.getRegistryKey(), pos));
 
             super.onStateReplaced(state, world, pos, newState, moved);
         }

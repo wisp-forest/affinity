@@ -5,6 +5,7 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.screen.EtherealAethumFluxInjectorScreen;
 import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -12,7 +13,6 @@ import io.wispforest.owo.network.ClientAccess;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.serialization.Endec;
 import io.wispforest.owo.serialization.annotations.NullableComponent;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
 import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,6 +26,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
@@ -36,13 +37,13 @@ import java.util.Map;
 
 public class EtherealAethumFluxInjectorBlockEntity extends BlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
-    private static final KeyedEndec<BlockPos> LAST_KNOWN_SOURCE_NODE_KEY = BuiltInEndecs.BLOCK_POS.keyed("last_known_source_node", (BlockPos) null);
+    private static final KeyedEndec<GlobalPos> LAST_KNOWN_SOURCE_NODE_KEY = EndecUtil.GLOBAL_POS_ENDEC.keyed("last_known_source_node", (GlobalPos) null);
     private static final KeyedEndec<Long> LAST_INSERTION_TIMESTAMP_KEY = Endec.LONG.keyed("last_insertion_timestamp", 0L);
 
     @Environment(EnvType.CLIENT) public Vector4f particle1Offset;
     @Environment(EnvType.CLIENT) public Vector4f particle2Offset;
 
-    private @Nullable BlockPos lastKnownSourceNode = null;
+    private @Nullable GlobalPos lastKnownSourceNode = null;
     private long lastInsertionTimestamp = 0L;
 
     public EtherealAethumFluxInjectorBlockEntity(BlockPos pos, BlockState state) {
@@ -74,14 +75,14 @@ public class EtherealAethumFluxInjectorBlockEntity extends BlockEntity implement
 
             if (this.lastKnownSourceNode != null
                     && (storage.listInjectors(this.lastKnownSourceNode) == null
-                    || !storage.listInjectors(this.lastKnownSourceNode).contains(this.pos))) {
+                    || !storage.listInjectors(this.lastKnownSourceNode).contains(GlobalPos.create(this.world.getRegistryKey(), this.pos)))) {
                 this.lastKnownSourceNode = null;
                 this.markDirty();
             }
 
             var globalNodes = storage.listGlobalNodes().toList();
             var privateNodes = storage.listNodes(player.getUuid()).toList();
-            var nodeNames = new HashMap<BlockPos, Text>();
+            var nodeNames = new HashMap<GlobalPos, Text>();
 
             for (var nodePos : Iterables.concat(globalNodes, privateNodes)) {
                 var name = storage.nodeName(nodePos);
@@ -112,19 +113,19 @@ public class EtherealAethumFluxInjectorBlockEntity extends BlockEntity implement
         this.lastInsertionTimestamp = nbt.get(LAST_INSERTION_TIMESTAMP_KEY);
     }
 
-    public BlockPos lastKnownSourceNode() {
+    public GlobalPos lastKnownSourceNode() {
         return this.lastKnownSourceNode;
     }
 
     public record OpenScreenPacket(
             BlockPos injectorPos,
-            List<BlockPos> globalNodes,
-            List<BlockPos> privateNodes,
-            Map<BlockPos, Text> nodeNames,
-            @NullableComponent BlockPos currentNode
+            List<GlobalPos> globalNodes,
+            List<GlobalPos> privateNodes,
+            Map<GlobalPos, Text> nodeNames,
+            @NullableComponent GlobalPos currentNode
     ) {}
 
-    public record SetInjectorNodePacket(BlockPos injectorPos, BlockPos nodePos) {}
+    public record SetInjectorNodePacket(BlockPos injectorPos, GlobalPos nodePos) {}
 
     public static void initNetwork() {
         //noinspection Convert2MethodRef
@@ -136,11 +137,13 @@ public class EtherealAethumFluxInjectorBlockEntity extends BlockEntity implement
                 return;
             }
 
+            var globalInjectorPos = GlobalPos.create(access.player().getWorld().getRegistryKey(), message.injectorPos);
+
             var storage = access.player().getWorld().getScoreboard().getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE);
-            storage.addInjector(message.nodePos, message.injectorPos);
+            storage.addInjector(message.nodePos, globalInjectorPos);
 
             if (injector.lastKnownSourceNode != null) {
-                storage.removeInjector(injector.lastKnownSourceNode, message.injectorPos);
+                storage.removeInjector(injector.lastKnownSourceNode, globalInjectorPos);
             }
 
             injector.lastKnownSourceNode = message.nodePos;

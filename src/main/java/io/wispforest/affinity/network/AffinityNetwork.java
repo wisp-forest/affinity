@@ -7,7 +7,9 @@ import io.wispforest.affinity.blockentity.impl.EtherealAethumFluxInjectorBlockEn
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
+import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.owo.network.OwoNetChannel;
+import io.wispforest.owo.serialization.endec.ReflectiveEndecBuilder;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -15,6 +17,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 
 import java.util.Collection;
 
@@ -43,6 +46,8 @@ public class AffinityNetwork {
     }
 
     public static void initialize() {
+        ReflectiveEndecBuilder.register(EndecUtil.GLOBAL_POS_ENDEC, GlobalPos.class);
+
         CHANNEL.registerClientbound(FluxSyncHandler.FluxSyncPacket.class, (message, access) -> {
             final var chunk = access.runtime().world.getChunk(message.chunk().x, message.chunk().z);
             message.updates().forEach((pos, flux) -> {

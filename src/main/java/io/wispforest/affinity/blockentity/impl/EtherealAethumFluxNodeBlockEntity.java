@@ -20,6 +20,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
 import net.minecraft.util.ActionResult;
@@ -28,6 +29,7 @@ import net.minecraft.util.Nameable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
@@ -66,21 +68,26 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
 
     @Override
     public void tickServer() {
-        var storage = this.world.getScoreboard().getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE);
-        storage.addNode(this.pos, this.owner, this.customName, this.global);
+        final var globalNodePos = GlobalPos.create(this.world.getRegistryKey(), this.pos);
 
-        var injectors = storage.listInjectors(this.pos);
+        var storage = this.world.getScoreboard().getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE);
+        storage.addNode(globalNodePos, this.owner, this.customName, this.global);
+
+        var injectors = storage.listInjectors(globalNodePos);
         if (injectors == null) return;
 
         for (var injectorPos : injectors) {
-            if (!this.world.isChunkLoaded(ChunkSectionPos.getSectionCoord(injectorPos.getX()), ChunkSectionPos.getSectionCoord(injectorPos.getZ()))) {
+            var world = ((ServerWorld) this.world).getServer().getWorld(injectorPos.getDimension());
+            if (world == null) continue;
+
+            if (!world.isChunkLoaded(ChunkSectionPos.getSectionCoord(injectorPos.getPos().getX()), ChunkSectionPos.getSectionCoord(injectorPos.getPos().getZ()))) {
                 continue;
             }
 
-            var be = this.world.getBlockEntity(injectorPos);
+            var be = world.getBlockEntity(injectorPos.getPos());
             if (!(be instanceof EtherealAethumFluxInjectorBlockEntity injector) || !injector.canInsert()) continue;
 
-            var attachedMember = Affinity.AETHUM_MEMBER.find(world, injectorPos.offset(injector.getCachedState().get(EtherealAethumFluxInjectorBlock.FACING)), null);
+            var attachedMember = Affinity.AETHUM_MEMBER.find(world, injectorPos.getPos().offset(injector.getCachedState().get(EtherealAethumFluxInjectorBlock.FACING)), null);
             if (attachedMember == null) continue;
 
             try (var transaction = Transaction.openOuter()) {
@@ -104,23 +111,23 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
         super.appendTooltipEntries(entries);
 
         if (this.hasCustomName()) {
-            entries.add(0, Entry.icon(this.getDisplayName(), 0, 8));
+            entries.add(1, Entry.icon(this.getDisplayName(), 0, 8));
         }
 
         if (MinecraftClient.getInstance().player.getUuid().equals(this.owner)) {
             entries.add(Entry.icon(
-                    this.global ? Text.literal("Accessible to everyone") : Text.literal("Accessible only to you"),
+                    Text.translatable(this.getCachedState().getBlock().getTranslationKey() + ".tooltip." + (this.global ? "visibility_public" : "visibility_private")),
                     this.global ? 16 : 8, 8
             ));
 
             entries.add(Entry.text(
                     Text.empty(),
-                    Text.literal("Owned by you")
+                    Text.translatable(this.getCachedState().getBlock().getTranslationKey() + ".tooltip.owned_by_you")
             ));
         } else {
             entries.add(Entry.text(
                     Text.empty(),
-                    Text.literal("Owned by someone else")
+                    Text.translatable(this.getCachedState().getBlock().getTranslationKey() + ".tooltip.owned_by_someone_else")
             ));
         }
     }

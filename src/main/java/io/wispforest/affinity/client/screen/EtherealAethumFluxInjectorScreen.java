@@ -6,11 +6,12 @@ import io.wispforest.affinity.blockentity.impl.EtherealAethumFluxInjectorBlockEn
 import io.wispforest.affinity.client.render.blockentity.LinkRenderer;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ui.base.BaseParentComponent;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.BlockComponent;
 import io.wispforest.owo.ui.component.ButtonComponent;
+import io.wispforest.owo.ui.component.Components;
+import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.util.Delta;
@@ -23,6 +24,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
@@ -36,9 +38,9 @@ import java.util.Map;
 public class EtherealAethumFluxInjectorScreen extends BaseUIModelScreen<FlowLayout> {
 
     private final BlockPos injectorPos;
-    private final List<BlockPos> globalNodes, privateNodes;
-    private final Map<BlockPos, Text> nodeNames;
-    private BlockPos currentSource;
+    private final List<GlobalPos> globalNodes, privateNodes;
+    private final Map<GlobalPos, Text> nodeNames;
+    private GlobalPos currentSource;
 
     private boolean showingPrivateNodes = true;
 
@@ -46,10 +48,10 @@ public class EtherealAethumFluxInjectorScreen extends BaseUIModelScreen<FlowLayo
 
     public EtherealAethumFluxInjectorScreen(
             BlockPos injectorPos,
-            List<BlockPos> globalNodes,
-            List<BlockPos> privateNodes,
-            Map<BlockPos, Text> nodeNames,
-            @Nullable BlockPos currentSource
+            List<GlobalPos> globalNodes,
+            List<GlobalPos> privateNodes,
+            Map<GlobalPos, Text> nodeNames,
+            @Nullable GlobalPos currentSource
     ) {
         super(FlowLayout.class, Affinity.id("ethereal_aethum_flux_injector"));
         this.injectorPos = injectorPos;
@@ -123,35 +125,51 @@ public class EtherealAethumFluxInjectorScreen extends BaseUIModelScreen<FlowLayo
         this.nodeList.<RadialLayout>configure(layout -> {
             layout.clearChildren();
             for (var nodePos : nodes) {
-                layout.child(new InjectorSourceComponent().<InjectorSourceComponent>configure(component -> {
+                var nodeItem = Containers.verticalFlow(Sizing.content(), Sizing.content());
+                nodeItem.horizontalAlignment(HorizontalAlignment.CENTER);
+
+                nodeItem.child(new InjectorSourceComponent().<InjectorSourceComponent>configure(component -> {
                     component.sizing(Sizing.fixed(48));
-                    component.mouseDown().subscribe((mouseX, mouseY, button) -> {
-                        this.currentSource = nodePos;
-
-                        UISounds.playInteractionSound();
-                        AffinityNetwork.CHANNEL.clientHandle().send(new EtherealAethumFluxInjectorBlockEntity.SetInjectorNodePacket(
-                                this.injectorPos,
-                                nodePos
-                        ));
-
-                        component.parent().queue(this::rebuildNodeList);
-                        return true;
-                    });
 
                     var tooltip = new ArrayList<Text>();
-                    tooltip.add(this.nodeNames.containsKey(nodePos) ? this.nodeNames.get(nodePos) : Text.literal(nodePos.getX() + " " + nodePos.getY() + " " + nodePos.getZ()));
+                    tooltip.add(Text.literal(nodePos.getPos().getX() + " " + nodePos.getPos().getY() + " " + nodePos.getPos().getZ()));
 
                     if (nodePos.equals(this.currentSource)) {
                         component.selected = true;
                         component.scale = 1f;
 
-                        tooltip.add(TextOps.withColor("[§⌘§] §Linked", Formatting.DARK_GRAY.getColorValue(), Affinity.AETHUM_FLUX_COLOR.rgb(), Formatting.DARK_GRAY.getColorValue(), Formatting.GRAY.getColorValue()));
+                        tooltip.add(Text.translatable("text.affinity.ethereal_aethum_flux_injector.linked_node_tooltip"));
                     } else {
-                        tooltip.add(TextOps.withFormatting("[§+§] §Click to link", Formatting.DARK_GRAY, Formatting.GREEN, Formatting.DARK_GRAY, Formatting.GRAY));
+                        tooltip.add(Text.translatable("text.affinity.ethereal_aethum_flux_injector.unlinked_node_tooltip"));
+
+                        component.cursorStyle(CursorStyle.HAND);
+                        component.mouseDown().subscribe((mouseX, mouseY, button) -> {
+                            this.currentSource = nodePos;
+
+                            UISounds.playInteractionSound();
+                            AffinityNetwork.CHANNEL.clientHandle().send(new EtherealAethumFluxInjectorBlockEntity.SetInjectorNodePacket(
+                                    this.injectorPos,
+                                    nodePos
+                            ));
+
+                            component.parent().queue(this::rebuildNodeList);
+                            return true;
+                        });
                     }
 
                     component.tooltip(tooltip);
                 }));
+
+                if (this.nodeNames.containsKey(nodePos)) {
+                    nodeItem.child(Components.label(this.nodeNames.get(nodePos))
+                            .color(Color.ofFormatting(Formatting.GRAY))
+                            .shadow(true)
+                            .maxWidth(60)
+                            .horizontalTextAlignment(HorizontalAlignment.CENTER)
+                            .margins(Insets.top(-5)));
+                }
+
+                layout.child(nodeItem);
             }
         });
     }
@@ -237,8 +255,6 @@ public class EtherealAethumFluxInjectorScreen extends BaseUIModelScreen<FlowLayo
                 prepareBlockEntity(DISPLAY_STATE, be, null);
                 return be;
             }));
-
-            this.cursorStyle(CursorStyle.HAND);
         }
 
         @Override

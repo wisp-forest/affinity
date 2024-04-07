@@ -21,6 +21,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -124,7 +125,7 @@ public class EtherealAethumFluxInjectorBlock extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
             if (world.getBlockEntity(pos) instanceof EtherealAethumFluxInjectorBlockEntity injector && injector.lastKnownSourceNode() != null) {
-                world.getScoreboard().getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE).removeInjector(injector.lastKnownSourceNode(), injector.getPos());
+                world.getScoreboard().getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE).removeInjector(injector.lastKnownSourceNode(), GlobalPos.create(world.getRegistryKey(), injector.getPos()));
             }
 
             super.onStateReplaced(state, world, pos, newState, moved);
