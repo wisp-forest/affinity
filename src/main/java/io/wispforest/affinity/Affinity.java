@@ -88,6 +88,10 @@ public class Affinity implements ModInitializer {
         signBlocks = ImmutableSet.<Block>builder().addAll(signBlocks).add(AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN).build();
         ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$setBlocks(signBlocks);
 
+        var hangingSignBlocks = ((BlockEntityTypeAccessor) BlockEntityType.HANGING_SIGN).affinity$getBlocks();
+        hangingSignBlocks = ImmutableSet.<Block>builder().addAll(hangingSignBlocks).add(AffinityBlocks.AZALEA_HANGING_SIGN, AffinityBlocks.AZALEA_WALL_HANGING_SIGN).build();
+        ((BlockEntityTypeAccessor) BlockEntityType.HANGING_SIGN).affinity$setBlocks(hangingSignBlocks);
+
         AffinityItemGroup.group().initialize();
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, builder, source) -> {

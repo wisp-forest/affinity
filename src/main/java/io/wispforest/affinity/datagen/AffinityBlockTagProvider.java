@@ -58,6 +58,8 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
         this.getOrCreateTagBuilder(BlockTags.PLANKS).add(AZALEA_PLANKS);
         this.getOrCreateTagBuilder(BlockTags.STANDING_SIGNS).add(AZALEA_SIGN);
         this.getOrCreateTagBuilder(BlockTags.WALL_SIGNS).add(AZALEA_WALL_SIGN);
+        this.getOrCreateTagBuilder(BlockTags.CEILING_HANGING_SIGNS).add(AZALEA_HANGING_SIGN);
+        this.getOrCreateTagBuilder(BlockTags.WALL_HANGING_SIGNS).add(AZALEA_WALL_HANGING_SIGN);
         this.getOrCreateTagBuilder(BlockTags.WOODEN_BUTTONS).add(AZALEA_BUTTON);
         this.getOrCreateTagBuilder(BlockTags.WOODEN_DOORS).add(AZALEA_DOOR);
         this.getOrCreateTagBuilder(BlockTags.WOODEN_FENCES).add(AZALEA_FENCE);

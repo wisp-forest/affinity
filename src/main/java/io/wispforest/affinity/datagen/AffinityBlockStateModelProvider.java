@@ -23,6 +23,7 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
         generator.registerCubeAllModelTexturePool(AZALEA_PLANKS).family(AffinityBlockFamilies.AZALEA);
         generator.registerLog(AZALEA_LOG).log(AZALEA_LOG).wood(AZALEA_WOOD);
         generator.registerLog(STRIPPED_AZALEA_LOG).log(STRIPPED_AZALEA_LOG).wood(STRIPPED_AZALEA_WOOD);
+        generator.registerHangingSign(STRIPPED_AZALEA_LOG, AZALEA_HANGING_SIGN, AZALEA_WALL_HANGING_SIGN);
 
         // Everything else
 

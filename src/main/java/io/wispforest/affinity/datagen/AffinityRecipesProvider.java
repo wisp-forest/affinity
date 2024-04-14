@@ -58,6 +58,7 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
         offerPlanksRecipe(exporter, AffinityBlocks.AZALEA_PLANKS, TagKey.of(RegistryKeys.ITEM, Affinity.id("azalea_logs")), 4);
         offerBarkBlockRecipe(exporter, AffinityBlocks.AZALEA_WOOD, AffinityBlocks.AZALEA_LOG);
         offerBarkBlockRecipe(exporter, AffinityBlocks.STRIPPED_AZALEA_WOOD, AffinityBlocks.STRIPPED_AZALEA_LOG);
+        offerHangingSignRecipe(exporter, AffinityBlocks.AZALEA_HANGING_SIGN, AffinityBlocks.AZALEA_PLANKS);
         generateFamily(exporter, AffinityBlockFamilies.AZALEA, FeatureFlags.DEFAULT_ENABLED_FEATURES);
     }
 

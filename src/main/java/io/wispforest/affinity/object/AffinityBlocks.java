@@ -99,6 +99,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AZALEA_BUTTON = new ButtonBlock(AZALEA_BLOCK_SET_TYPE, 30, FabricBlockSettings.copyOf(Blocks.OAK_BUTTON));
 
     @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
+    @NoBlockItem public static final Block AZALEA_HANGING_SIGN = new HangingSignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
+    @NoBlockItem public static final Block AZALEA_WALL_HANGING_SIGN = new WallHangingSignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
     @NoBlockItem public static final Block AZALEA_WALL_SIGN = new WallSignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
 
     @NoBlockItem public static final FluidBlock ARCANE_FADE = new ArcaneFadeBlock();

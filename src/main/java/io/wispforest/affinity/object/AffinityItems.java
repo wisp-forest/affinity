@@ -72,6 +72,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item STAFF_PROTOTYPE = new Item(settings(AffinityItemGroup.MAIN).maxCount(7));
 
     public static final Item AZALEA_SIGN = new SignItem(settings(AffinityItemGroup.NATURE).maxCount(16), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
+    public static final Item AZALEA_HANGING_SIGN = new HangingSignItem(AffinityBlocks.AZALEA_HANGING_SIGN, AffinityBlocks.AZALEA_WALL_HANGING_SIGN, settings(AffinityItemGroup.NATURE).maxCount(16));
     public static final Item AZALEA_BOAT = new BoatItem(false, AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
     public static final Item AZALEA_CHEST_BOAT = new BoatItem(true, AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
 
