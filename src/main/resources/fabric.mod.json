@@ -83,7 +83,8 @@
       "affinity:player_weather_tracker",
       "affinity:extra_arrow_damage",
       "affinity:inner_creeper",
-      "affinity:ethereal_node_storage"
+      "affinity:ethereal_node_storage",
+      "affinity:evade"
     ]
   }
 }

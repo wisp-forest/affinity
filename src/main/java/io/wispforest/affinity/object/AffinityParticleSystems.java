@@ -60,6 +60,14 @@ public class AffinityParticleSystems {
         world.playSound(pos.x, pos.y, pos.z, AffinitySoundEvents.ITEM_NIMBLE_STAFF_FLING, SoundCategory.PLAYERS, .75f, .75f + world.random.nextFloat() * .5f, false);
     });
 
+    public static final ParticleSystem<Vec3d> EVADE = CONTROLLER.register(Vec3d.class, (world, pos, direction) -> {
+        ClientParticles.setParticleCount(20);
+        ClientParticles.setVelocity(direction.normalize().multiply(.45));
+        ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, pos, .5f, 1f, .5f);
+
+        world.playSound(pos.x, pos.y, pos.z, AffinitySoundEvents.ITEM_EVADE_RING_EVADE, SoundCategory.PLAYERS, 1f, .75f + world.random.nextFloat() * .5f, false);
+    });
+
     public static final ParticleSystem<BlockPos> TIME_STAFF_ACCELERATE = CONTROLLER.register(BlockPos.class, (world, pos, data) -> {
         ClientParticles.spawn(
                 new OrbitingEmitterParticleEffect(

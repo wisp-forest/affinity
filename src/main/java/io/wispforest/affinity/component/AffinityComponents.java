@@ -40,11 +40,14 @@ public class AffinityComponents implements EntityComponentInitializer, ChunkComp
             ComponentRegistry.getOrCreate(Affinity.id("inner_creeper"), InnerCreeperComponent.class);
     public static final ComponentKey<EtherealNodeStorageComponent> ETHEREAL_NODE_STORAGE =
             ComponentRegistry.getOrCreate(Affinity.id("ethereal_node_storage"), EtherealNodeStorageComponent.class);
+    public static final ComponentKey<EvadeComponent> EVADE =
+            ComponentRegistry.getOrCreate(Affinity.id("evade"), EvadeComponent.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.registerForPlayers(PLAYER_AETHUM, PlayerAethumComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
         registry.registerForPlayers(PLAYER_WEATHER_TRACKER, PlayerWeatherTrackerComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
+        registry.registerForPlayers(EVADE, EvadeComponent::new, RespawnCopyStrategy.NEVER_COPY);
 
         registry.registerFor(Entity.class, GLOWING_COLOR, GlowingColorComponent::new);
         registry.registerFor(Entity.class, ENTITY_FLAGS, entity -> new EntityFlagComponent());

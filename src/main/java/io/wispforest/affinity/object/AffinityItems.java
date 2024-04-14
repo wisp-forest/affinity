@@ -87,6 +87,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item AETHUM_OVERCHARGER = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.RARE).maxCount(1));
     public static final Item ARCHETYPAL_IRON_RING = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item FEATHERWEIGHT_RING = new FeatherweightRingItem();
+    public static final Item EVADE_RING = new EvadeRingItem();
     public static final Item LAVALIERE_OF_SAFE_KEEPING = new LavaliereOfSafeKeepingItem();
     public static final Item ASSASSINS_QUIVER = new AssassinsQuiverItem();
     public static final Item AETHUM_FIRE_EXTINGUISHER = new AethumFireExtinguisherItem();

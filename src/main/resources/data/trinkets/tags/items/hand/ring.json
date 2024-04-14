@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "affinity:featherweight_ring"
+    "affinity:featherweight_ring",
+    "affinity:evade_ring"
   ]
 }

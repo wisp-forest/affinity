@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client;
 
+import dev.emi.trinkets.api.TrinketsApi;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.RanthraciteWireBlock;
 import io.wispforest.affinity.block.impl.RitualSocleBlock;
@@ -24,8 +25,10 @@ import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.item.CarbonCopyItem;
+import io.wispforest.affinity.item.EvadeRingItem;
 import io.wispforest.affinity.misc.callback.PostItemRenderCallback;
 import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
+import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
@@ -35,13 +38,16 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
@@ -52,6 +58,8 @@ import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.Vec3d;
+import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
 public class AffinityClient implements ClientModInitializer {
@@ -61,6 +69,8 @@ public class AffinityClient implements ClientModInitializer {
     public static final DownsampleProgram DOWNSAMPLE_PROGRAM = new DownsampleProgram();
     public static final FizzleProgram EMANCIPATE_BLOCK_PROGRAM = new FizzleProgram(Affinity.id("emancipate_block"));
     public static final FizzleProgram EMANCIPATE_ENTITY_PROGRAM = new FizzleProgram(Affinity.id("emancipate_entity"));
+
+    public static final KeyBinding ACTIVATE_EVADE_RING = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.activate_evade_ring", GLFW.GLFW_KEY_LEFT_CONTROL, "key.categories.movement"));
 
     @Override
     public void onInitializeClient() {
@@ -114,6 +124,31 @@ public class AffinityClient implements ClientModInitializer {
             return data instanceof CarbonCopyItem.TooltipData tooltipData
                     ? new CarbonCopyTooltipComponent(tooltipData)
                     : null;
+        });
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            while (ACTIVATE_EVADE_RING.wasPressed()) {
+                if (!TrinketsApi.getTrinketComponent(client.player).get().isEquipped(AffinityItems.EVADE_RING)) return;
+                if (client.player.getItemCooldownManager().isCoolingDown(AffinityItems.EVADE_RING)) continue;
+
+                var forward = new Vec3d(0, 0, 1).rotateY((float) -Math.toRadians(client.player.headYaw));
+                Vec3d direction = null;
+
+                if (client.options.forwardKey.isPressed()) {
+                    direction = forward;
+                } else if (client.options.backKey.isPressed()) {
+                    direction = forward.multiply(-1);
+                } else if (client.options.leftKey.isPressed()) {
+                    direction = forward.rotateY((float) Math.toRadians(90));
+                } else if (client.options.rightKey.isPressed()) {
+                    direction = forward.rotateY((float) Math.toRadians(-90));
+                }
+
+                if (direction != null && client.player.getComponent(AffinityComponents.PLAYER_AETHUM).tryConsumeAethum(EvadeRingItem.AETHUM_PER_USE)) {
+                    AffinityNetwork.CHANNEL.clientHandle().send(new EvadeRingItem.EvadePacket(direction));
+                    client.player.getComponent(AffinityComponents.EVADE).evade(direction);
+                }
+            }
         });
 
         AethumNetworkLinkingHud.initialize();
