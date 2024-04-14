@@ -66,6 +66,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item SCINTILLANT_ANTHRACITE_BLEND = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item RANTHRACITE_DUST = new AliasedBlockItem(AffinityBlocks.RANTHRACITE_WIRE, settings(AffinityItemGroup.MAIN));
     public static final Item CRYSTALLINE_WISP_MATTER_COMPOSITE = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
+    public static final Item BLACKSTONE_PRISM = new Item(settings(AffinityItemGroup.MAIN).maxCount(8));
     public static final Item AETHUM_MAP_PROTOTYPE = new AethumMapPrototypeItem();
     public static final Item REALIZED_AETHUM_MAP = new RealizedAethumMapItem();
     public static final Item UNCANNY_ROD = new Item(settings(AffinityItemGroup.MAIN).maxCount(16));
