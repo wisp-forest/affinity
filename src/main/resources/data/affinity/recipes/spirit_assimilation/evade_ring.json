@@ -1,6 +1,6 @@
 {
   "type": "affinity:spirit_assimilation",
-  "duration": 500,
+  "duration": 800,
   "flux_cost_per_tick": 80,
   "core_inputs": [
     {
