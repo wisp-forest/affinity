@@ -82,6 +82,7 @@
     "client.BufferBuilderStorageMixin",
     "client.CameraInvoker",
     "client.ClientPlayerEntityMixin",
+    "client.ClientPlayerInteractionManagerMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.ClientWorldMixin",
     "client.CrackParticleMixin",
