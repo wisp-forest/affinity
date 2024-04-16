@@ -44,7 +44,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
 
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (this.world.isClient) return ActionResult.SUCCESS;
-        if (this.ritualLock.isActive()) return ActionResult.PASS;
+        if (this.ritualLock.isHeld()) return ActionResult.PASS;
 
         return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
                 () -> this.item, stack -> this.item = stack, this::markDirty);
@@ -88,7 +88,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
     }
 
     public void onBroken() {
-        if (this.ritualLock.isActive()) {
+        if (this.ritualLock.isHeld()) {
             this.ritualLock.holder().onSocleDestroyed(this.pos);
         }
 

@@ -17,6 +17,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Tameable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -57,18 +58,18 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
         this.fluxStorage.setFluxCapacity(24000);
         this.fluxStorage.setMaxInsert(500);
 
-        this.storageProvider.active(() -> !this.ritualLock.isActive() && this.storageProvider.active().getAsBoolean());
+        this.storageProvider.active(() -> !this.ritualLock.isHeld() && this.storageProvider.active().getAsBoolean());
     }
 
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (this.ritualLock.isActive()) return ActionResult.PASS;
+        if (this.ritualLock.isHeld()) return ActionResult.PASS;
         return super.onUse(player, hand, hit);
     }
 
     @Override
     protected boolean onRitualStart(RitualSetup setup) {
-        if (this.ritualLock.isActive()) return false;
+        if (this.ritualLock.isHeld()) return false;
 
         this.neighborPositions = SpiritIntegrationApparatusBlock.findValidApparatusSet(this.world, this.pos);
         if (this.neighborPositions == null) return false;
@@ -100,8 +101,8 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
             this.createDissolveParticle(neighbor.item, neighbor.pos, setup.duration());
         }
 
-        AffinityParticleSystems.LAVA_ERUPTION.spawn(world, MathUtil.entityCenterPos(sacrifice));
-        WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_SPIRIT_INTEGRATION_APPARATUS_RITUAL_START, SoundCategory.BLOCKS);
+        AffinityParticleSystems.LAVA_ERUPTION.spawn(this.world, MathUtil.entityCenterPos(sacrifice));
+        WorldOps.playSound(this.world, this.pos, AffinitySoundEvents.BLOCK_SPIRIT_INTEGRATION_APPARATUS_RITUAL_START, SoundCategory.BLOCKS);
 
         if (sacrifice instanceof ServerPlayerEntity serverPlayer) {
             AffinityCriteria.SACRIFICED_TO_RITUAL.trigger(serverPlayer);
@@ -229,7 +230,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     public void onBroken() {
         super.onBroken();
 
-        if (!this.ritualLock.isActive()) return;
+        if (!this.ritualLock.isHeld()) return;
         this.ritualLock.holder().endRitual(this.ritualLock.holder()::onRitualInterrupted, false);
     }
 

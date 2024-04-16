@@ -6,7 +6,7 @@ public class RitualLock<T> {
 
     @Nullable private T holder = null;
 
-    public boolean isActive() {
+    public boolean isHeld() {
         return this.holder != null;
     }
 
