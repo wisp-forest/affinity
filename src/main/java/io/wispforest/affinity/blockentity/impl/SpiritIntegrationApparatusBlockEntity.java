@@ -108,6 +108,13 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
             AffinityCriteria.SACRIFICED_TO_RITUAL.trigger(serverPlayer);
         }
 
+        if (sacrifice instanceof Tameable tameable && tameable.getOwnerUuid() != null) {
+            var players = world.getNonSpectatingEntities(ServerPlayerEntity.class, new Box(this.pos).expand(7, 3, 7));
+            for (var player : players) {
+                AffinityCriteria.SACRIFICE_PET.trigger(player, sacrifice);
+            }
+        }
+
         sacrifice.getComponent(AffinityComponents.ENTITY_FLAGS).setFlag(EntityFlagComponent.NO_DROPS);
         sacrifice.damage(DAMAGE_TYPE.source(this.world), Float.MAX_VALUE);
 

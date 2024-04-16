@@ -18,6 +18,7 @@ public class AffinityCriteria implements SimpleFieldProcessingSubject<Criterion<
     public static final SacrificedToRitualCriterion SACRIFICED_TO_RITUAL = new SacrificedToRitualCriterion();
     public static final ConstructSpiritIntegrationApparatusCriterion CONSTRUCT_SPIRIT_INTEGRATION_APPARATUS = new ConstructSpiritIntegrationApparatusCriterion();
     public static final MinedPeculiarClumpCriterion MINED_PECULIAR_CLUMP = new MinedPeculiarClumpCriterion();
+    public static final SacrificePetCriterion SACRIFICE_PET = new SacrificePetCriterion();
 
     @Override
     public void processField(Criterion<?> value, String identifier, Field field) {

@@ -139,6 +139,7 @@
     {"index": 0, "color": "blue"},
     " cores"
   ],
+  "death.attack.ritual_sacrifice": "%s was commited to the Way of the Goat",
 
   "block.affinity.holographic_stereopticon": "Holographic Stereopticon",
   "block.affinity.holographic_stereopticon.tooltip_spin": "Spin",
@@ -490,6 +491,8 @@
   "advancement.affinity.when_the_world_is_calling_you.description": "Sacrifice yourself to a ritual",
   "advancement.affinity.gamedesign.title": "Gamedesign!",
   "advancement.affinity.gamedesign.description": "64 nuggets in a block",
+  "advancement.affinity.pure_shot_of_poison_to_my_heart.title": "Pure Shot Of Poison To My Heart",
+  "advancement.affinity.pure_shot_of_poison_to_my_heart.description": "Sacrifice a tamed animal to a ritual",
   "advancement.affinity.the_sky_suit.title": "The Sky Suit!",
 
   "text.config.affinity.title": [

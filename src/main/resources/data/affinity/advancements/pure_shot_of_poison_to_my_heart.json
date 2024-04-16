@@ -1,0 +1,28 @@
+{
+  "parent": "affinity:resistance_is_futile",
+  "display": {
+    "icon": {
+      "item": "minecraft:name_tag"
+    },
+    "title": {
+      "translate": "advancement.affinity.pure_shot_of_poison_to_my_heart.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.pure_shot_of_poison_to_my_heart.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "pure_shot_of_poison_to_my_heart": {
+      "trigger": "affinity:sacrifice_pet"
+    }
+  },
+  "requirements": [
+    [
+      "pure_shot_of_poison_to_my_heart"
+    ]
+  ]
+}
