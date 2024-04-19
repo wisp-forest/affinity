@@ -138,6 +138,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
                         AffinityBlocks.REFINED_RITUAL_SOCLE,
                         AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
 
+        public static final BlockEntityType<BlankRitualSocleBlockEntity> BLANK_RITUAL_SOCLE =
+                make(BlankRitualSocleBlockEntity::new, AffinityBlocks.BLANK_RITUAL_SOCLE);
+
         public static final BlockEntityType<AspRiteCoreBlockEntity> ASP_RITE_CORE =
                 make(AspRiteCoreBlockEntity::new, AffinityBlocks.ASP_RITE_CORE);
         public static final BlockEntityType<SpiritIntegrationApparatusBlockEntity> SPIRIT_INTEGRATION_APPARATUS =

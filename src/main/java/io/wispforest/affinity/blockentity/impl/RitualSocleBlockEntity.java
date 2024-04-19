@@ -1,9 +1,6 @@
 package io.wispforest.affinity.blockentity.impl;
 
-import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
-import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
-import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
-import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.blockentity.template.*;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -24,7 +21,7 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("UnusedReturnValue")
-public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
+public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity, ItemSocleBlockEntity {
 
     private static final KeyedEndec<ItemStack> ITEM_KEY = BuiltInEndecs.ITEM_STACK.keyed("Item", ItemStack.EMPTY);
 

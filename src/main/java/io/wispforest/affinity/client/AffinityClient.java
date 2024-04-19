@@ -245,7 +245,8 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.BREWING_CAULDRON, BrewingCauldronBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.AETHUM_FLUX_NODE, AethumFluxNodeBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.AETHUM_FLUX_CACHE, AethumFluxCacheBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(AffinityBlocks.Entities.RITUAL_SOCLE, RitualSocleBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.RITUAL_SOCLE, ItemSocleBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.BLANK_RITUAL_SOCLE, ItemSocleBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ASP_RITE_CORE, AspRiteCoreBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.SPIRIT_INTEGRATION_APPARATUS, SpiritIntegrationApparatusBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.MANGROVE_BASKET, MangroveBasketBlockEntityRenderer::new);
