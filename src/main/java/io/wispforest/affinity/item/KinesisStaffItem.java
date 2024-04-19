@@ -19,6 +19,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -138,6 +139,8 @@ public class KinesisStaffItem extends StaffItem {
         entity.fallDistance = 0;
         entity.velocityDirty = true;
         entity.velocityModified = true;
+
+        if (entity instanceof MobEntity mob) mob.getNavigation().stop();
 
         return TypedActionResult.success(stack);
     }
