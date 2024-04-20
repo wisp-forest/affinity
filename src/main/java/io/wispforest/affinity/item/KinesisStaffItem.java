@@ -31,6 +31,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -117,7 +118,11 @@ public class KinesisStaffItem extends StaffItem {
         if (stack.has(ACTIVE_TARGET_ENTITY)) {
             entity = world.getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
         } else {
-            var entityTarget = InteractionUtil.raycastEntities(player, 1f, 25, 1.5, candidate -> !candidate.getType().isIn(IMMUNE_ENTITIES));
+            EntityHitResult entityTarget = null;
+            for (int i = 0; i < 4; i++) {
+                entityTarget = InteractionUtil.raycastEntities(player, 1f, 25, .5 * i, candidate -> !candidate.getType().isIn(IMMUNE_ENTITIES));
+                if (entityTarget != null) break;
+            }
 
             if (entityTarget == null) return TypedActionResult.pass(stack);
             entity = entityTarget.getEntity();
