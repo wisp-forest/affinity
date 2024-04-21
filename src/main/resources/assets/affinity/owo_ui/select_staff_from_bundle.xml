@@ -1,0 +1,58 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20.3/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <item id="bundle-preview">
+                    <sizing>
+                        <horizontal method="fixed">80</horizontal>
+                        <vertical method="fixed">80</vertical>
+                    </sizing>
+                </item>
+
+                <flow-layout direction="ltr-text-flow" id="bundled-staffs-row">
+                    <children/>
+                    <sizing>
+                        <horizontal method="fill">85</horizontal>
+                    </sizing>
+
+                    <horizontal-alignment>center</horizontal-alignment>
+                    <vertical-alignment>center</vertical-alignment>
+
+                    <margins>
+                        <top>25</top>
+                    </margins>
+                </flow-layout>
+            </children>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+        </flow-layout>
+    </components>
+
+    <templates>
+        <template name="bundled-staff">
+            <stack-layout>
+                <children>
+                    <affinity.sprite atlas="minecraft:textures/atlas/gui.png" sprite="affinity:staff_bundle_selector_slot">
+                        <blend>true</blend>
+                    </affinity.sprite>
+                    <item id="stack">
+                        <set-tooltip-from-stack>true</set-tooltip-from-stack>
+                    </item>
+                </children>
+
+                <margins>
+                    <all>5</all>
+                </margins>
+
+                <vertical-alignment>center</vertical-alignment>
+                <horizontal-alignment>center</horizontal-alignment>
+            </stack-layout>
+        </template>
+    </templates>
+</owo-ui>

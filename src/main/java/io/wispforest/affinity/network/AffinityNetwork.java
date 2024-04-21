@@ -6,6 +6,7 @@ import io.wispforest.affinity.block.template.ScrollInteractionReceiver;
 import io.wispforest.affinity.blockentity.impl.EtherealAethumFluxInjectorBlockEntity;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.owo.network.OwoNetChannel;
@@ -85,6 +86,7 @@ public class AffinityNetwork {
         HolographicStereopticonBlockEntity.initNetwork();
         RitualSocleComposerScreenHandler.initNetwork();
         EtherealAethumFluxInjectorBlockEntity.initNetwork();
+        StaffItem.initNetwork();
     }
 
 }

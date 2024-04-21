@@ -18,14 +18,12 @@ import io.wispforest.affinity.client.render.program.DepthMergeBlitProgram;
 import io.wispforest.affinity.client.render.program.DownsampleProgram;
 import io.wispforest.affinity.client.render.program.FizzleProgram;
 import io.wispforest.affinity.client.render.program.SolidFromFramebufferProgram;
-import io.wispforest.affinity.client.screen.AssemblyAugmentScreen;
-import io.wispforest.affinity.client.screen.ItemTransferNodeScreen;
-import io.wispforest.affinity.client.screen.OuijaBoardScreen;
-import io.wispforest.affinity.client.screen.RitualSocleComposerScreen;
+import io.wispforest.affinity.client.screen.*;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.item.CarbonCopyItem;
 import io.wispforest.affinity.item.EvadeRingItem;
+import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.misc.callback.PostItemRenderCallback;
 import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -41,6 +39,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
@@ -58,6 +57,7 @@ import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
@@ -71,12 +71,15 @@ public class AffinityClient implements ClientModInitializer {
     public static final FizzleProgram EMANCIPATE_ENTITY_PROGRAM = new FizzleProgram(Affinity.id("emancipate_entity"));
 
     public static final KeyBinding ACTIVATE_EVADE_RING = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.activate_evade_ring", GLFW.GLFW_KEY_LEFT_CONTROL, "key.categories.movement"));
+    public static final KeyBinding SELECT_STAFF_FROM_BUNDLE = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.select_staff_from_bundle", GLFW.GLFW_KEY_X, "key.categories.inventory"));
 
     @Override
     public void onInitializeClient() {
         this.registerBlockEntityRenderers();
         this.assignBlockRenderLayers();
         this.registerColorProviders();
+
+        ModelLoadingPlugin.register(ctx -> ctx.addModels(Affinity.id("item/staff_bundle")));
 
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.MANGROVE_BASKET, new MangroveBasketItemRenderer());
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.AFFINE_INFUSER, new AffineInfuserBlockEntityRenderer(null));
@@ -121,6 +124,12 @@ public class AffinityClient implements ClientModInitializer {
         });
 
         TooltipComponentCallback.EVENT.register(data -> {
+            return data instanceof StaffItem.BundleTooltipData tooltipData
+                    ? new StaffBundleTooltipComponent(tooltipData)
+                    : null;
+        });
+
+        TooltipComponentCallback.EVENT.register(data -> {
             return data instanceof CarbonCopyItem.TooltipData tooltipData
                     ? new CarbonCopyTooltipComponent(tooltipData)
                     : null;
@@ -147,6 +156,23 @@ public class AffinityClient implements ClientModInitializer {
                 if (direction != null && client.player.getComponent(AffinityComponents.PLAYER_AETHUM).tryConsumeAethum(EvadeRingItem.AETHUM_PER_USE)) {
                     AffinityNetwork.CHANNEL.clientHandle().send(new EvadeRingItem.EvadePacket(direction));
                     client.player.getComponent(AffinityComponents.EVADE).evade(direction);
+                }
+            }
+
+            while (SELECT_STAFF_FROM_BUNDLE.wasPressed()) {
+                for (var hand : Hand.values()) {
+                    var playerStack = client.player.getStackInHand(hand);
+                    if (!(playerStack.getItem() instanceof StaffItem)) continue;
+
+                    var bundle = playerStack.get(StaffItem.BUNDLED_STAFFS);
+                    if (bundle == null || bundle.isEmpty()) continue;
+
+                    if (bundle.size() == 1) {
+                        AffinityNetwork.CHANNEL.clientHandle().send(new StaffItem.SelectStaffFromBundlePacket(hand, 0));
+                    } else {
+                        client.setScreen(new SelectStaffFromBundleScreen(hand, playerStack));
+                    }
+                    break;
                 }
             }
         });

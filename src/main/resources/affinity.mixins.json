@@ -80,6 +80,7 @@
     "client.BlockEntityRenderDispatcherMixin",
     "client.BlockFallingDustParticleInvoker",
     "client.BufferBuilderStorageMixin",
+    "client.BuiltinModelItemRendererMixin",
     "client.CameraInvoker",
     "client.ClientPlayerEntityMixin",
     "client.ClientPlayerInteractionManagerMixin",

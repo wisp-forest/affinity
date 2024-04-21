@@ -1,24 +1,34 @@
 package io.wispforest.affinity.item;
 
+import com.google.common.collect.Lists;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
+import io.wispforest.affinity.network.AffinityNetwork;
+import io.wispforest.owo.serialization.endec.BuiltInEndecs;
+import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -26,9 +36,13 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class StaffItem extends Item implements SpecialTransformItem {
+
+    public static final KeyedEndec<List<ItemStack>> BUNDLED_STAFFS = BuiltInEndecs.ITEM_STACK.listOf().keyed("bundled_staffs", (List<ItemStack>) null);
 
     protected StaffItem(Settings settings) {
         super(settings);
@@ -75,6 +89,68 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
     // --------------
     // Implementation
     // --------------
+
+    @Override
+    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+        if (clickType != ClickType.RIGHT) return false;
+
+        if (otherStack.getItem() instanceof StaffItem) {
+            var bundle = new ArrayList<ItemStack>();
+            if (stack.has(BUNDLED_STAFFS)) bundle.addAll(stack.get(BUNDLED_STAFFS));
+
+            if (otherStack.has(BUNDLED_STAFFS)) {
+                var otherBundle = otherStack.get(BUNDLED_STAFFS);
+                otherStack.delete(BUNDLED_STAFFS);
+                bundle.add(otherStack);
+                bundle.addAll(otherBundle);
+            } else {
+                bundle.add(otherStack);
+            }
+
+            stack.put(BUNDLED_STAFFS, bundle);
+            cursorStackReference.set(ItemStack.EMPTY);
+            return true;
+        } else if (otherStack.isEmpty() && stack.has(BUNDLED_STAFFS)) {
+            var bundledStaffs = stack.get(BUNDLED_STAFFS);
+            if (bundledStaffs.isEmpty()) return false;
+
+            var removed = bundledStaffs.remove(bundledStaffs.size() - 1);
+            if (!bundledStaffs.isEmpty()) {
+                stack.put(BUNDLED_STAFFS, bundledStaffs);
+            } else {
+                stack.delete(BUNDLED_STAFFS);
+            }
+
+            cursorStackReference.set(removed);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
+        if (clickType != ClickType.RIGHT || !slot.getStack().isEmpty()) return false;
+
+        var bundledStaffs = stack.get(BUNDLED_STAFFS);
+        if (bundledStaffs == null || bundledStaffs.isEmpty()) return false;
+
+        var removed = bundledStaffs.remove(bundledStaffs.size() - 1);
+        if (!bundledStaffs.isEmpty()) {
+            stack.put(BUNDLED_STAFFS, bundledStaffs);
+        } else {
+            stack.delete(BUNDLED_STAFFS);
+        }
+
+        slot.setStack(removed);
+        return true;
+    }
+
+    @Override
+    public Optional<TooltipData> getTooltipData(ItemStack stack) {
+        if (!stack.has(BUNDLED_STAFFS)) return Optional.empty();
+        return Optional.of(new BundleTooltipData(Lists.reverse(stack.get(BUNDLED_STAFFS))));
+    }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
@@ -184,4 +260,33 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
         model.rightArm.yaw = -.1f + model.head.yaw;
         model.rightArm.pitch = -(float) Math.PI / 3.5f + model.head.pitch * .5f;
     }
+
+    public static ItemStack selectStaffFromBundle(ItemStack coreStack, int newCoreIdx) {
+        var bundle = coreStack.get(BUNDLED_STAFFS);
+        var newCoreStaff = bundle.get(newCoreIdx).copy();
+
+        coreStack = coreStack.copy();
+        coreStack.delete(BUNDLED_STAFFS);
+        bundle.set(newCoreIdx, coreStack);
+
+        newCoreStaff.put(BUNDLED_STAFFS, bundle);
+        return newCoreStaff;
+    }
+
+    public static void initNetwork() {
+        AffinityNetwork.CHANNEL.registerServerbound(SelectStaffFromBundlePacket.class, (message, access) -> {
+            var playerStack = access.player().getStackInHand(message.hand);
+            if (!(playerStack.getItem() instanceof StaffItem)) return;
+
+            var bundle = playerStack.get(BUNDLED_STAFFS);
+            if (bundle == null || bundle.isEmpty() || message.staffIdx >= bundle.size()) return;
+
+            access.player().setStackInHand(message.hand, selectStaffFromBundle(playerStack, message.staffIdx));
+            access.player().playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
+        });
+    }
+
+    public record BundleTooltipData(List<ItemStack> bundleStacks) implements TooltipData {}
+
+    public record SelectStaffFromBundlePacket(Hand hand, int staffIdx) {}
 }

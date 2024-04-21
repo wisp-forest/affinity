@@ -16,6 +16,7 @@
   "structure.affinity.rudimentary_aspen_infusion": "Rudimentary Aspen Infusion",
 
   "key.affinity.activate_evade_ring": "Activate Evade Ring",
+  "key.affinity.select_staff_from_bundle": "Select Staff from Bundle",
 
   "text.affinity.ethereal_aethum_flux_injector.node_location_tooltip": [
     {"index": 0},
