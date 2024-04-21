@@ -13,6 +13,7 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -87,6 +88,15 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     private void updateChildCache() {
         this.childCache = new ArrayList<>();
         this.parentRef = new ParentStorageReference(this, -1);
+
+        if (this.world.getBlockEntity(this.pos.up()) instanceof AethumFluxCacheBlockEntity cache && !cache.shard.isEmpty() && this.shard.isEmpty()) {
+            this.shard = cache.shard;
+            this.tier = cache.tier;
+            this.updateTransferRateForTier();
+
+            cache.shard = ItemStack.EMPTY;
+            cache.tier = AttunedShardTiers.NONE;
+        }
 
         for (var pos : BlockPos.iterate(this.pos.up(), this.pos.add(0, this.world.getHeight() - this.pos.getY(), 0))) {
             final var state = this.world.getBlockState(pos);
