@@ -191,5 +191,35 @@
                 </margins>
             </flow-layout>
         </template>
+
+        <template name="tag-spotlight">
+            <stack-layout>
+                <children>
+                    <texture texture="{{book-texture}}" texture-width="512" texture-height="256"
+                             u="386" v="109" region-width="96" region-height="24">
+                        <blend>true</blend>
+                        <margins>
+                            <top>5</top>
+                            <bottom>7</bottom>
+                        </margins>
+                    </texture>
+
+                    <lavender.item-list>
+                        <tag>{{tag}}</tag>
+                        <set-tooltip-from-stack>true</set-tooltip-from-stack>
+                        <margins>
+                            <bottom>5</bottom>
+                        </margins>
+                    </lavender.item-list>
+                </children>
+
+                <horizontal-alignment>center</horizontal-alignment>
+                <vertical-alignment>center</vertical-alignment>
+
+                <sizing>
+                    <horizontal method="fill">100</horizontal>
+                </sizing>
+            </stack-layout>
+        </template>
     </templates>
 </owo-ui>
