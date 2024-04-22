@@ -158,10 +158,12 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
 
     static {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            if (player.isSneaking() || !world.getBlockState(hitResult.getBlockPos()).isOf(Blocks.CRAFTING_TABLE))
+            if (player.isSneaking() || !world.getBlockState(hitResult.getBlockPos()).isOf(Blocks.CRAFTING_TABLE)) {
                 return ActionResult.PASS;
-            if (!(world.getBlockEntity(hitResult.getBlockPos().up()) instanceof AssemblyAugmentBlockEntity augment))
+            }
+            if (!(world.getBlockEntity(hitResult.getBlockPos().up()) instanceof AssemblyAugmentBlockEntity augment)) {
                 return ActionResult.PASS;
+            }
 
             if (!world.isClient) {
                 openScreen(player, augment);

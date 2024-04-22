@@ -8,7 +8,8 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEntities;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
@@ -38,7 +39,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
     private static final int ASTEROID_THROW_COST = 10;
 
     public static final TagKey<DimensionType> WHITELISTED_DIMENSIONS = TagKey.of(RegistryKeys.DIMENSION_TYPE, Affinity.id("astrokinesis_staff_whitelist"));
-    public static final NbtKey<Boolean> PERFORMING_ASTROKINESIS = new NbtKey<>("PerformingAstrokinesis", NbtKey.Type.BOOLEAN);
+    public static final KeyedEndec<Boolean> PERFORMING_ASTROKINESIS = Endec.BOOLEAN.keyed("PerformingAstrokinesis", false);
     public static final AffinityEntityAddon.DataKey<Float> ASTEROID_ORIGIN = AffinityEntityAddon.DataKey.withNullDefault();
 
     @Override
@@ -48,7 +49,9 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
         var superResult = super.executeSpell(world, player, stack, remainingTicks, clickedBlock);
         if (superResult.getResult().isAccepted()) return superResult;
 
-        if (player.getPitch() > 10 || !world.getDimensionEntry().isIn(WHITELISTED_DIMENSIONS)) return TypedActionResult.pass(stack);
+        if (player.getPitch() > 10 || !world.getDimensionEntry().isIn(WHITELISTED_DIMENSIONS)) {
+            return TypedActionResult.pass(stack);
+        }
 
         var raycast = player.raycast(512d, 0f, true);
         if (raycast.getType() != HitResult.Type.MISS && !world.getBlockState(((BlockHitResult) raycast).getBlockPos()).isOf(AffinityBlocks.THE_SKY)) {
@@ -148,7 +151,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
     @Override
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
         return stack.has(PERFORMING_ASTROKINESIS)
-                ? AffinityEntityAddon.hasData(player, ASTEROID_ORIGIN) && player.getComponent(AffinityComponents.PLAYER_AETHUM).getAethum() >= ASTEROID_THROW_COST
+                ? AffinityEntityAddon.hasData(player, ASTEROID_ORIGIN) && player.getComponent(AffinityComponents.PLAYER_AETHUM).hasAethum(ASTEROID_THROW_COST)
                 : super.canThrow(stack, player);
     }
 

@@ -17,7 +17,7 @@ public abstract class RitualCoreBlock extends AethumNetworkMemberBlock {
         super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
 
         if (world.isReceivingRedstonePower(pos) && world.getBlockEntity(pos) instanceof RitualCoreBlockEntity core) {
-             core.tryStartRitual();
+            core.tryStartRitual();
         }
     }
 }

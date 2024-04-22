@@ -110,7 +110,7 @@ public class PlayerAethumHud {
                         360 - progress * 360 + 90, 360 + 90.05,
                         (int) Math.round(50 * progress),
                         3, 8,
-                        color, Color.ofHsv(Math.min(colorHsv[0] + .065f, 1) , colorHsv[1] * 1.3f, colorHsv[2])
+                        color, Color.ofHsv(Math.min(colorHsv[0] + .065f, 1), colorHsv[1] * 1.3f, colorHsv[2])
                 );
             }
 

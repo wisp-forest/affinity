@@ -5,12 +5,15 @@ import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntit
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity.ImprintKind;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity.SectionData;
 import io.wispforest.affinity.client.render.CuboidRenderer;
-import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
+import io.wispforest.affinity.endec.BuiltInEndecs;
+import io.wispforest.affinity.endec.nbt.NbtEndec;
 import io.wispforest.affinity.misc.NbtQuery;
+import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.ui.core.Color;
@@ -46,9 +49,10 @@ import static io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlo
 
 public class HolographicStereopticonBlockItem extends BlockItem implements DirectInteractionHandler {
 
-    public static final NbtKey<ImprintKind<?>> IMPRINT_KIND_KEY = new NbtKey<>(IMPRINT_KIND_KEY_NAME, NbtKey.Type.STRING.then(ImprintKind::byId, kind -> kind.id));
-    public static final NbtKey<NbtCompound> BLOCK_ENTITY_TAG_KEY = new NbtKey<>("BlockEntityTag", NbtKey.Type.COMPOUND);
-    public static final NbtKey<BlockPos> START_POS_KEY = new NbtKey<>("SectionStartPos", NbtKey.Type.LONG.then(BlockPos::fromLong, BlockPos::asLong));
+    @SuppressWarnings("rawtypes")
+    public static final KeyedEndec<ImprintKind> IMPRINT_KIND_KEY = Endec.STRING.<ImprintKind>xmap(ImprintKind::byId, kind -> kind.id).keyed(IMPRINT_KIND_KEY_NAME, ImprintKind.BLOCK);
+    public static final KeyedEndec<NbtCompound> BLOCK_ENTITY_TAG_KEY = NbtEndec.COMPOUND.keyed("BlockEntityTag", new NbtCompound());
+    public static final KeyedEndec<BlockPos> START_POS_KEY = BuiltInEndecs.BLOCK_POS.keyed("SectionStartPos", (BlockPos) null);
 
     private static final NbtQuery<NbtCompound> RENDERER_DATA_QUERY = NbtQuery.begin().key("BlockEntityTag").key("RendererData").compound();
 
@@ -69,7 +73,9 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         var playerStack = user.getStackInHand(hand);
-        if (!user.isSneaking() || imprintKindOf(playerStack) != ImprintKind.SECTION) return TypedActionResult.pass(playerStack);
+        if (!user.isSneaking() || imprintKindOf(playerStack) != ImprintKind.SECTION) {
+            return TypedActionResult.pass(playerStack);
+        }
 
         this.doSectionClick(world, this.getSectionTarget(user), playerStack);
         return TypedActionResult.success(playerStack);
@@ -102,7 +108,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
     }
 
     private void doSectionClick(World world, BlockPos pos, ItemStack stack) {
-        var startPos = stack.getOr(START_POS_KEY, null);
+        var startPos = stack.get(START_POS_KEY);
         if (startPos == null) {
             stack.put(START_POS_KEY, pos);
         } else {
@@ -131,7 +137,11 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
         rendererData = new NbtCompound();
         rendererData.put(IMPRINT_KIND_KEY, nextImprintKind);
 
-        stack.get(BLOCK_ENTITY_TAG_KEY).put(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY, rendererData);
+        var iLoveJava = rendererData;
+        stack.mutate(BLOCK_ENTITY_TAG_KEY, data -> {
+            data.put(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY, iLoveJava);
+            return data;
+        });
         return true;
     }
 
@@ -165,13 +175,13 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
 
         NbtCompound rendererData;
         SectionData sectionData;
-        if (stack.getOr(START_POS_KEY, null) == null
+        if (stack.get(START_POS_KEY) == null
                 && (rendererData = RENDERER_DATA_QUERY.get(stack.getNbt())) != null
                 && (sectionData = ImprintKind.SECTION.readData(rendererData)) != null) {
             startPos = sectionData.start();
             offset = sectionData.end().subtract(sectionData.start());
         } else {
-            if ((startPos = stack.getOr(START_POS_KEY, null)) == null) return;
+            if ((startPos = stack.get(START_POS_KEY)) == null) return;
             offset = this.getSectionTarget(entity).subtract(startPos);
         }
 
@@ -208,7 +218,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
                 return ActionResult.PASS;
             }
 
-            var entity = InteractionUtil.raycastEntities(player, 7, 1f, $ -> true);
+            var entity = InteractionUtil.raycastEntities(player, 1f, 7, 1f, $ -> true);
             if (entity == null) return ActionResult.PASS;
 
             ClientParticles.setParticleCount(25);
@@ -228,7 +238,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
                 return;
             }
 
-            var entity = InteractionUtil.raycastEntities(access.player(), 7, 1f, $ -> true);
+            var entity = InteractionUtil.raycastEntities(access.player(), 1f, 7, 1f, $ -> true);
             if (entity == null) return;
 
             writeRendererData(playerStack, ImprintKind.ENTITY, entity.getEntity());

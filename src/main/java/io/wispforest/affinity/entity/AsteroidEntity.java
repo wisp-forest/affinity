@@ -2,7 +2,8 @@ package io.wispforest.affinity.entity;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.DamageTypeKey;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 public class AsteroidEntity extends ProjectileEntity {
 
     public static final DamageTypeKey ASTEROID_DAMAGE = new DamageTypeKey(Affinity.id("asteroid"));
-    protected static final NbtKey<Float> EXPLOSION_POWER = new NbtKey<>("ExplosionPower", NbtKey.Type.FLOAT);
+    protected static final KeyedEndec<Float> EXPLOSION_POWER = Endec.FLOAT.keyed("ExplosionPower", 0f);
 
     protected float explosionPower = 0f;
 
@@ -75,6 +76,5 @@ public class AsteroidEntity extends ProjectileEntity {
     }
 
     @Override
-    protected void initDataTracker() {
-    }
+    protected void initDataTracker() {}
 }

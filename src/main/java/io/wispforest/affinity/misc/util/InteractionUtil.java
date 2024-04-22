@@ -19,8 +19,8 @@ import java.util.function.Supplier;
 
 public class InteractionUtil {
 
-    public static EntityHitResult raycastEntities(Entity entity, double reach, double margin, Predicate<Entity> predicate) {
-        var maxReach = entity.getRotationVec(0).multiply(reach);
+    public static EntityHitResult raycastEntities(Entity entity, float tickDelta, double reach, double margin, Predicate<Entity> predicate) {
+        var maxReach = entity.getRotationVec(tickDelta).multiply(reach);
 
         MixinHooks.extraTargetingMargin = margin;
         var entityTarget = ProjectileUtil.raycast(

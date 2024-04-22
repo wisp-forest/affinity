@@ -2,17 +2,19 @@ package io.wispforest.affinity.particle;
 
 import com.mojang.brigadier.StringReader;
 import io.wispforest.affinity.object.AffinityParticleTypes;
-import io.wispforest.owo.network.serialization.RecordSerializer;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.RecordEndec;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 
-public record GenericEmitterParticleEffect(ParticleEffect effect, Vec3d emitVelocity, int emitInterval, float emitDeviation, boolean randomizeVelocity,
+public record GenericEmitterParticleEffect(ParticleEffect effect, Vec3d emitVelocity, int emitInterval,
+                                           float emitDeviation, boolean randomizeVelocity,
                                            int emitterLifetime) implements ParticleEffect {
 
-    private static final RecordSerializer<GenericEmitterParticleEffect> SERIALIZER = RecordSerializer.create(GenericEmitterParticleEffect.class);
+    private static final Endec<GenericEmitterParticleEffect> ENDEC = RecordEndec.create(GenericEmitterParticleEffect.class);
 
     public static final ParticleEffect.Factory<GenericEmitterParticleEffect> FACTORY = new Factory<>() {
         @Override
@@ -22,7 +24,7 @@ public record GenericEmitterParticleEffect(ParticleEffect effect, Vec3d emitVelo
 
         @Override
         public GenericEmitterParticleEffect read(ParticleType<GenericEmitterParticleEffect> type, PacketByteBuf buf) {
-            return SERIALIZER.read(buf);
+            return buf.read(ENDEC);
         }
     };
 
@@ -33,7 +35,7 @@ public record GenericEmitterParticleEffect(ParticleEffect effect, Vec3d emitVelo
 
     @Override
     public void write(PacketByteBuf buf) {
-        SERIALIZER.write(buf, this);
+        buf.write(ENDEC, this);
     }
 
     @Override

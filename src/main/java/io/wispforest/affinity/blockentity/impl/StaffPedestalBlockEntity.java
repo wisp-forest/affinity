@@ -1,15 +1,17 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.block.impl.StaffPedestalBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
+import io.wispforest.affinity.endec.BuiltInEndecs;
 import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
@@ -22,6 +24,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +33,7 @@ import java.util.List;
 
 public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, InquirableOutlineProvider {
 
-    private static final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
+    private static final KeyedEndec<ItemStack> ITEM_KEY = BuiltInEndecs.ITEM_STACK.keyed("Item", ItemStack.EMPTY);
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
     private final SingleStackStorageProvider storageProvider = new SingleStackStorageProvider(() -> this.item, stack -> this.item = stack, this::markDirty)
@@ -83,7 +86,7 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
     public @Nullable CuboidRenderer.Cuboid getActiveOutline() {
         if (!(this.item.getItem() instanceof StaffItem staff)) return null;
 
-        var aoe = staff.getAreaOfEffect();
+        var aoe = staff.getAreaOfEffect(this.world, this.pos, this);
         if (aoe == null) return null;
 
         return CuboidRenderer.Cuboid.of(
@@ -108,6 +111,18 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
 
     public void consumeFlux(long flux) {
         this.updateFlux(this.flux() - flux);
+    }
+
+    public Direction facing() {
+        return this.getCachedState().get(StaffPedestalBlock.FACING);
+    }
+
+    public int down() {
+        return this.facing() == Direction.UP ? -1 : 1;
+    }
+
+    public int up() {
+        return this.facing() == Direction.UP ? 1 : -1;
     }
 
     @Override

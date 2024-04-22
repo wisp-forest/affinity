@@ -4,13 +4,12 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.endec.BuiltInEndecs;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
-import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.affinity.object.AffinityPoiTypes;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.impl.KeyedEndec;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,15 +21,12 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.poi.PointOfInterest;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Comparator;
 
 @SuppressWarnings("UnusedReturnValue")
 public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
 
-    private static final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
+    private static final KeyedEndec<ItemStack> ITEM_KEY = BuiltInEndecs.ITEM_STACK.keyed("Item", ItemStack.EMPTY);
 
     public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, 1, .5);
 

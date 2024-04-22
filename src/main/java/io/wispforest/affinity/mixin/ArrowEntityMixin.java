@@ -26,7 +26,7 @@ public class ArrowEntityMixin {
 
     @Inject(method = "initFromStack", at = @At("RETURN"))
     private void addExtraData(ItemStack stack, CallbackInfo ci) {
-        this.affinity$extraPotionNbt = stack.getOr(PotionMixture.EXTRA_DATA, null);
+        this.affinity$extraPotionNbt = stack.get(PotionMixture.EXTRA_DATA);
     }
 
     @Inject(method = "onHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/potion/Potion;getEffects()Ljava/util/List;"))
@@ -38,7 +38,7 @@ public class ArrowEntityMixin {
     private int addDuration(int duration) {
         if (this.affinity$extraPotionNbt == null) return duration;
 
-        duration *= this.affinity$extraPotionNbt.getOr(PotionMixture.EXTEND_DURATION_BY, 1f);
+        duration *= this.affinity$extraPotionNbt.get(PotionMixture.EXTEND_DURATION_BY);
         return duration;
     }
 

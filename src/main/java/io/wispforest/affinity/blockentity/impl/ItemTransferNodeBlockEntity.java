@@ -4,12 +4,15 @@ import io.wispforest.affinity.block.impl.ItemTransferNodeBlock;
 import io.wispforest.affinity.blockentity.template.*;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
+import io.wispforest.affinity.endec.BuiltInEndecs;
 import io.wispforest.affinity.misc.callback.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.endec.impl.StructEndecBuilder;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.util.VectorRandomUtils;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
@@ -26,9 +29,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
@@ -55,16 +56,19 @@ import java.util.function.Predicate;
 @SuppressWarnings("UnstableApiUsage")
 public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, InWorldTooltipProvider, LinkableBlockEntity, InteractableBlockEntity, InquirableOutlineProvider, BeforeMangroveBasketCaptureCallback {
 
-    public static final NbtKey<Mode> MODE_KEY = new NbtKey<>("Mode", NbtKey.Type.STRING.then(Mode::byId, mode -> mode.id));
-    public static final NbtKey<Integer> STACK_SIZE_KEY = new NbtKey<>("StackSize", NbtKey.Type.INT);
-    public static final NbtKey<ItemStack> FILTER_STACK_KEY = new NbtKey<>("FilterStack", NbtKey.Type.ITEM_STACK);
+    public static final KeyedEndec<Set<BlockPos>> LINKS_KEY = BuiltInEndecs.BLOCK_POS.listOf().<Set<BlockPos>>xmap(HashSet::new, ArrayList::new).keyed("Links", HashSet::new);
+    public static final KeyedEndec<List<ItemEntry>> ENTRIES_KEY = ItemEntry.ENDEC.listOf().keyed("Entries", ArrayList::new);
 
-    public static final NbtKey<Boolean> IGNORE_DAMAGE_KEY = new NbtKey<>("IgnoreDamage", NbtKey.Type.BOOLEAN);
-    public static final NbtKey<Boolean> IGNORE_DATA_KEY = new NbtKey<>("IgnoreData", NbtKey.Type.BOOLEAN);
-    public static final NbtKey<Boolean> INVERT_FILTER_KEY = new NbtKey<>("InvertFilter", NbtKey.Type.BOOLEAN);
+    public static final KeyedEndec<Mode> MODE_KEY = Mode.ENDEC.keyed("Mode", Mode.IDLE);
+    public static final KeyedEndec<Integer> STACK_SIZE_KEY = Endec.INT.keyed("StackSize", 8);
+    public static final KeyedEndec<ItemStack> FILTER_STACK_KEY = BuiltInEndecs.ITEM_STACK.keyed("FilterStack", ItemStack.EMPTY);
 
-    private final Set<BlockPos> links = new HashSet<>();
-    private final List<ItemEntry> entries = new ArrayList<>();
+    public static final KeyedEndec<Boolean> IGNORE_DAMAGE_KEY = Endec.BOOLEAN.keyed("IgnoreDamage", true);
+    public static final KeyedEndec<Boolean> IGNORE_DATA_KEY = Endec.BOOLEAN.keyed("IgnoreData", true);
+    public static final KeyedEndec<Boolean> INVERT_FILTER_KEY = Endec.BOOLEAN.keyed("InvertFilter", false);
+
+    private Set<BlockPos> links = new HashSet<>();
+    private List<ItemEntry> entries = new ArrayList<>();
 
     private BlockApiCache<Storage<ItemVariant>, Direction> storageCache;
     private Direction facing;
@@ -282,7 +286,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         }
     }
 
-    private void insertItem(ItemTransferNodeBlockEntity origin,ItemStack item, int delay) {
+    private void insertItem(ItemTransferNodeBlockEntity origin, ItemStack item, int delay) {
         this.entries.add(new ItemEntry(origin.pos, item, -delay, true));
         this.markDirty();
     }
@@ -405,8 +409,8 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        NbtUtil.writeBlockPosCollection(nbt, "Links", this.links);
-        ItemEntry.writeEntries(nbt, "Entries", this.entries);
+        nbt.put(LINKS_KEY, this.links);
+        nbt.put(ENTRIES_KEY, this.entries);
 
         nbt.put(MODE_KEY, this.mode);
         nbt.put(STACK_SIZE_KEY, this.stackSize);
@@ -419,8 +423,11 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        NbtUtil.readBlockPosCollection(nbt, "Links", this.links);
-        ItemEntry.readEntries(nbt, "Entries", this.entries);
+        this.links = nbt.get(LINKS_KEY);
+        this.entries = nbt.get(ENTRIES_KEY);
+
+        this.entries.clear();
+        this.entries.addAll(nbt.get(ENTRIES_KEY));
 
         this.mode = nbt.get(MODE_KEY);
         this.stackSize = nbt.get(STACK_SIZE_KEY);
@@ -475,6 +482,15 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     }
 
     public static final class ItemEntry {
+
+        public static final Endec<ItemEntry> ENDEC = StructEndecBuilder.of(
+                BuiltInEndecs.BLOCK_POS.fieldOf("OriginNode", entry -> entry.originNode),
+                BuiltInEndecs.ITEM_STACK.fieldOf("Item", entry -> entry.item),
+                Endec.INT.fieldOf("Age", entry -> entry.age),
+                Endec.BOOLEAN.fieldOf("Insert", entry -> entry.insert),
+                ItemEntry::new
+        );
+
         private final BlockPos originNode;
         private final ItemStack item;
         private final boolean insert;
@@ -493,43 +509,13 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
             if (this.variant == null) this.variant = ItemVariant.of(this.item);
             return this.variant;
         }
-
-        public static void writeEntries(NbtCompound nbt, String key, List<ItemEntry> entries) {
-            var list = new NbtList();
-
-            for (var entry : entries) {
-                var entryNbt = new NbtCompound();
-                entryNbt.putLong("OriginNode", entry.originNode.asLong());
-                entryNbt.put("Item", entry.item.writeNbt(new NbtCompound()));
-                entryNbt.putInt("Age", entry.age);
-                entryNbt.putBoolean("Insert", entry.insert);
-
-                list.add(entryNbt);
-            }
-
-            nbt.put(key, list);
-        }
-
-        public static void readEntries(NbtCompound nbt, String key, List<ItemEntry> entries) {
-            entries.clear();
-            var list = nbt.getList(key, NbtElement.COMPOUND_TYPE);
-
-            for (var entryNbt : list) {
-                var entryData = (NbtCompound) entryNbt;
-                entries.add(new ItemEntry(
-                        BlockPos.fromLong(entryData.getLong("OriginNode")),
-                        ItemStack.fromNbt(entryData.getCompound("Item")),
-                        entryData.getInt("Age"),
-                        entryData.getBoolean("Insert")
-                ));
-            }
-
-            nbt.put(key, list);
-        }
     }
 
     public enum Mode {
-        SENDING, IDLE;
+        SENDING,
+        IDLE;
+
+        public static final Endec<Mode> ENDEC = Endec.STRING.xmap(id -> "sending".equals(id) ? SENDING : IDLE, mode -> mode.id);
 
         public final String id;
 
@@ -539,10 +525,6 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
         public Mode next() {
             return this == SENDING ? IDLE : SENDING;
-        }
-
-        public static Mode byId(String id) {
-            return "sending".equals(id) ? SENDING : IDLE;
         }
     }
 }

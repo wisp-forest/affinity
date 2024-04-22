@@ -1,8 +1,10 @@
 package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
+import io.wispforest.affinity.endec.nbt.NbtEndec;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.CodecUtils;
+import io.wispforest.endec.impl.KeyedEndec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.ChestType;
@@ -10,20 +12,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
-    public static final NbtKey<BlockState> CONTAINED_STATE_KEY = new NbtKey<>("ContainedState", NbtKey.Type.COMPOUND.then(
-            nbt -> NbtHelper.toBlockState(Registries.BLOCK.getReadOnlyWrapper(), nbt),
-            NbtHelper::fromBlockState
-    ));
-
-    public static final NbtKey<NbtCompound> CONTAINED_BLOCK_ENTITY_KEY = new NbtKey<>("ContainedBlockEntity", NbtKey.Type.COMPOUND);
+    public static final KeyedEndec<BlockState> CONTAINED_STATE_KEY = CodecUtils.ofCodec(BlockState.CODEC).keyed("ContainedState", (BlockState) null);
+    public static final KeyedEndec<NbtCompound> CONTAINED_BLOCK_ENTITY_KEY = NbtEndec.COMPOUND.keyed("ContainedBlockEntity", (NbtCompound) null);
 
     private BlockState containedState = null;
     private BlockEntity containedBlockEntity = null;

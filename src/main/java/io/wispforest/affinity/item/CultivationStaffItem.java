@@ -5,7 +5,8 @@ import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
@@ -28,10 +29,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldEvents;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -39,7 +40,7 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public class CultivationStaffItem extends StaffItem {
 
-    public static final NbtKey<Boolean> SUPER_FORAGING_MODE_KEY = new NbtKey<>("SuperForagingMode", NbtKey.Type.BOOLEAN);
+    public static final KeyedEndec<Boolean> SUPER_FORAGING_MODE_KEY = Endec.BOOLEAN.keyed("SuperForagingMode", false);
 
     private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 0, 4);
 
@@ -54,7 +55,7 @@ public class CultivationStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        var inventory = ItemStorage.SIDED.find(world, pos.down(), Direction.UP);
+        var inventory = ItemStorage.SIDED.find(world, pos.add(0, pedestal.down(), 0), pedestal.facing().getOpposite());
         if (inventory == null) return;
 
         if (pedestal.getItem().get(SUPER_FORAGING_MODE_KEY) && pedestal.hasFlux(150)) {
@@ -67,6 +68,7 @@ public class CultivationStaffItem extends StaffItem {
                 if (!(state.getBlock() instanceof CropBlock crop)) continue;
 
                 world.setBlockState(cropPos, crop.withAge(Math.min(crop.getAge(state) + 1, crop.getMaxAge())), Block.NOTIFY_LISTENERS);
+                world.syncWorldEvent(WorldEvents.BLOCK_BROKEN, cropPos, Block.getRawIdFromState(state));
             }
         }
 
@@ -121,7 +123,7 @@ public class CultivationStaffItem extends StaffItem {
     }
 
     @Override
-    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
+    public InquirableOutlineProvider.Outline getAreaOfEffect(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
         return AOE;
     }
 

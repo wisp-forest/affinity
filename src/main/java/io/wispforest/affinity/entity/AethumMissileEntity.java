@@ -3,7 +3,9 @@ package io.wispforest.affinity.entity;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.affinity.misc.util.MathUtil;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.affinity.object.AffinitySoundEvents;
+import io.wispforest.endec.impl.BuiltInEndecs;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -12,8 +14,9 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Uuids;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
@@ -25,7 +28,7 @@ import java.util.UUID;
 public class AethumMissileEntity extends ProjectileEntity {
 
     private static final DamageTypeKey DAMAGE_TYPE = new DamageTypeKey(Affinity.id("aethum_missile"));
-    private static final NbtKey<UUID> TARGET_KEY = new NbtKey<>("TargetEntity", NbtKey.Type.INT_ARRAY.then(Uuids::toUuid, Uuids::toIntArray));
+    private static final KeyedEndec<UUID> TARGET_KEY = BuiltInEndecs.UUID.keyed("TargetEntity", (UUID) null);
 
     private UUID targetEntity = null;
 
@@ -79,6 +82,10 @@ public class AethumMissileEntity extends ProjectileEntity {
             living.timeUntilRegen = 0;
             living.hurtTime = 0;
             living.damage(DAMAGE_TYPE.source(this, this.getOwner()), 1f);
+
+            if (this.getOwner() instanceof ServerPlayerEntity player) {
+                player.playSound(AffinitySoundEvents.ITEM_SALVO_STAFF_HIT, SoundCategory.PLAYERS, 1f, .85f + this.getWorld().random.nextFloat() * .3f);
+            }
         }
 
         this.discard();
@@ -93,7 +100,7 @@ public class AethumMissileEntity extends ProjectileEntity {
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.targetEntity = nbt.getOr(TARGET_KEY, null);
+        this.targetEntity = nbt.get(TARGET_KEY);
     }
 
     @Override

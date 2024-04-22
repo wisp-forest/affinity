@@ -20,7 +20,7 @@ public class FramebufferMixin implements AffinityFramebufferExtension {
 
     @ModifyVariable(method = "drawInternal", at = @At(value = "CONSTANT", args = "stringValue=DiffuseSampler", shift = At.Shift.BEFORE))
     private ShaderProgram iLikeShaders(ShaderProgram value) {
-        return this.blitProgram != null ? this.blitProgram.get(): value;
+        return this.blitProgram != null ? this.blitProgram.get() : value;
     }
 
     @Override

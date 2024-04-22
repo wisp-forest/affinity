@@ -9,7 +9,8 @@ import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
 import io.wispforest.affinity.object.AffinityItems;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -44,7 +45,7 @@ public class ArtifactBladeItem extends SwordItem {
     public static final DamageTypeKey DAMAGE_TYPE = new DamageTypeKey(Affinity.id("artifact_blade"));
     public static final AffinityEntityAddon.DataKey<Boolean> DID_CRIT = AffinityEntityAddon.DataKey.withDefaultConstant(false);
 
-    private static final NbtKey<Long> ABILITY_START_TIME = new NbtKey<>("AbilityStartTime", NbtKey.Type.LONG);
+    private static final KeyedEndec<Long> ABILITY_START_TIME = Endec.LONG.keyed("AbilityStartTime", -1L);
     private static final EntityAttributeModifier DAMAGE_MODIFIER = new EntityAttributeModifier(UUID.fromString("3fb1b365-3b7b-421e-9237-6d5c92d97625"), "Aethum Ability Damage Boost", 2, EntityAttributeModifier.Operation.ADDITION);
 
     public final Tier tier;
@@ -52,7 +53,7 @@ public class ArtifactBladeItem extends SwordItem {
     private final Multimap<EntityAttribute, EntityAttributeModifier> modifiersWithDamage;
 
     public ArtifactBladeItem(Tier tier) {
-        super(tier, 0, tier.data.attackSpeed, AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1).rarity(tier.data.rarity).trackUsageStat());
+        super(tier, 0, tier.data.attackSpeed, AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1).rarity(tier.data.rarity));
         this.tier = tier;
 
         var modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()

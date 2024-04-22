@@ -5,7 +5,6 @@ import io.wispforest.owo.ui.container.WrappingParentComponent;
 import io.wispforest.owo.ui.core.Component;
 import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.Sizing;
-import net.minecraft.client.util.math.MatrixStack;
 
 public class AlphaWrapper<C extends Component> extends WrappingParentComponent<C> {
 

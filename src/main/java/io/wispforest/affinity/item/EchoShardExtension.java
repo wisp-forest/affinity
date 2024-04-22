@@ -1,7 +1,9 @@
 package io.wispforest.affinity.item;
 
-import io.wispforest.owo.nbt.NbtCarrier;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.affinity.endec.BuiltInEndecs;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.endec.util.MapCarrier;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
@@ -24,17 +26,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class EchoShardExtension {
 
-    public static final NbtKey.Type<BlockPos> BLOCK_POS_TYPE = NbtKey.Type.LONG.then(BlockPos::fromLong, BlockPos::asLong);
-
-    public static final NbtKey<BlockPos> POS = new NbtKey<>("Pos", BLOCK_POS_TYPE);
-    public static final NbtKey<Identifier> WORLD = new NbtKey<>("World", NbtKey.Type.IDENTIFIER);
-    public static final NbtKey<Boolean> BOUND = new NbtKey<>("Bound", NbtKey.Type.BOOLEAN);
+    public static final KeyedEndec<BlockPos> POS = BuiltInEndecs.BLOCK_POS.keyed("Pos", BlockPos.ORIGIN);
+    public static final KeyedEndec<Identifier> WORLD = BuiltInEndecs.IDENTIFIER.keyed("World", DimensionTypes.OVERWORLD_ID);
+    public static final KeyedEndec<Boolean> BOUND = Endec.BOOLEAN.keyed("Bound", false);
 
     public static void apply() {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
@@ -80,8 +81,8 @@ public class EchoShardExtension {
         tooltip.add(Text.translatable("text.affinity.echo_shard_location", coordinateText, worldText).formatted(Formatting.DARK_GRAY));
     }
 
-    public static @Nullable BlockPos tryGetLocationInWorld(World world, NbtCarrier shard) {
-        if (!shard.getOr(BOUND, false)) return null;
+    public static @Nullable BlockPos tryGetLocationInWorld(World world, MapCarrier shard) {
+        if (!shard.get(BOUND)) return null;
         if (!shard.get(WORLD).equals(world.getRegistryKey().getValue())) return null;
         return shard.get(POS);
     }

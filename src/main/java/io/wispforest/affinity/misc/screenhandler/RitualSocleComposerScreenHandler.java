@@ -188,7 +188,9 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
 
     public static void initNetwork() {
         AffinityNetwork.CHANNEL.registerServerbound(ActionRequestPacket.class, (message, access) -> {
-            if (!(access.player().currentScreenHandler instanceof RitualSocleComposerScreenHandler composerHandler)) return;
+            if (!(access.player().currentScreenHandler instanceof RitualSocleComposerScreenHandler composerHandler)) {
+                return;
+            }
             switch (message.action()) {
                 case REQUEST_MERGE -> composerHandler.handleMergeRequest();
                 case REQUEST_SPLIT -> composerHandler.handleSplitRequest();

@@ -9,6 +9,7 @@ import io.wispforest.affinity.misc.AffinityDebugCommands;
 import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
 import io.wispforest.affinity.misc.InquiryQuestions;
 import io.wispforest.affinity.mixin.access.BlockEntityTypeAccessor;
+import io.wispforest.affinity.endec.ReflectiveMinecraftEndecs;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
@@ -52,6 +53,8 @@ public class Affinity implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ReflectiveMinecraftEndecs.init();
+
         AffinityItemGroup.register();
 
         FieldRegistrationHandler.register(AffinityBlocks.class, MOD_ID, true);

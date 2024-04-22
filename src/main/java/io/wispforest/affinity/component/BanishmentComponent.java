@@ -1,8 +1,8 @@
 package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
-import io.wispforest.affinity.item.EchoShardExtension;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.affinity.endec.BuiltInEndecs;
+import io.wispforest.endec.impl.KeyedEndec;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class BanishmentComponent implements Component {
 
-    public static final NbtKey<Identifier> DIMENSION = new NbtKey<>("Dimension", NbtKey.Type.IDENTIFIER);
-    public static final NbtKey<BlockPos> POSITION = new NbtKey<>("Pos", EchoShardExtension.BLOCK_POS_TYPE);
+    public static final KeyedEndec<Identifier> DIMENSION = BuiltInEndecs.IDENTIFIER.keyed("Dimension", World.OVERWORLD.getValue());
+    public static final KeyedEndec<BlockPos> POSITION = BuiltInEndecs.BLOCK_POS.keyed("Pos", BlockPos.ORIGIN);
 
     public Identifier dimension = World.OVERWORLD.getValue();
     public BlockPos pos = BlockPos.ORIGIN;

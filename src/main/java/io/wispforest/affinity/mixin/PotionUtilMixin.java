@@ -45,7 +45,9 @@ public class PotionUtilMixin {
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyArg(method = "buildTooltip(Ljava/util/List;Ljava/util/List;F)V", at = @At(value = "INVOKE", target = "net/minecraft/text/Text.translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;", ordinal = 1), index = 1)
     private static Object[] addLengthMultiplier(Object[] args) {
-        if (!(args[1] instanceof MutableText text && text.getContent() instanceof LiteralTextContent literal)) return args;
+        if (!(args[1] instanceof MutableText text && text.getContent() instanceof LiteralTextContent literal)) {
+            return args;
+        }
         String durationText = literal.string();
 
         var data = MixinHooks.POTION_UTIL_DATA.get();
@@ -73,7 +75,9 @@ public class PotionUtilMixin {
 
     @Inject(method = "buildTooltip(Ljava/util/List;Ljava/util/List;F)V", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void addFuniFlightText(List<StatusEffectInstance> effects, List<Text> tooltip, float durationMultiplier, CallbackInfo ci, List<Pair<EntityAttribute, EntityAttributeModifier>> attributeModifiers) {
-        if (effects.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffectType() == AffinityStatusEffects.FLIGHT)) return;
+        if (effects.stream().noneMatch(statusEffectInstance -> statusEffectInstance.getEffectType() == AffinityStatusEffects.FLIGHT)) {
+            return;
+        }
 
         if (attributeModifiers.isEmpty()) {
             tooltip.add(Text.empty());

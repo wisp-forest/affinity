@@ -5,6 +5,7 @@ import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
+import io.wispforest.affinity.endec.BuiltInEndecs;
 import io.wispforest.affinity.item.AttunedShardItem;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.InteractionUtil;
@@ -12,7 +13,7 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.api.EnvType;
@@ -40,7 +41,7 @@ import org.joml.Vector3f;
 @SuppressWarnings("UnstableApiUsage")
 public class GravitonTransducerBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity, InquirableOutlineProvider {
 
-    private static final NbtKey<ItemStack> SHARD_KEY = new NbtKey<>("Shard", NbtKey.Type.ITEM_STACK);
+    private static final KeyedEndec<ItemStack> SHARD_KEY = BuiltInEndecs.ITEM_STACK.keyed("Shard", ItemStack.EMPTY);
 
     @NotNull private ItemStack shard = ItemStack.EMPTY;
     private final SingleStackStorageProvider shardStorage = new SingleStackStorageProvider(() -> this.shard, stack -> this.shard = stack, this::markDirty)
@@ -80,7 +81,7 @@ public class GravitonTransducerBlockEntity extends AethumNetworkMemberBlockEntit
 
         this.updateFlux(this.flux() + generationFactor);
 
-        AttunedShardItem.damageShard(this.shard, (.25f + this.world.random.nextFloat() * .25f) / 100f);
+        AttunedShardItem.damageShard(this.shard, (.1f + this.world.random.nextFloat() * .1f) / 100f);
         if (AttunedShardItem.getShardHealth(this.shard) == 0) {
             this.shard = ItemStack.EMPTY;
             this.markDirty();

@@ -42,7 +42,9 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
 
     @Override
     public void tickClient() {
-        if (this.shouldBeDisabled() || this.flux() < REPAIR_COST_PER_ITEM || this.world.random.nextFloat() > .15f) return;
+        if (this.shouldBeDisabled() || this.flux() < REPAIR_COST_PER_ITEM || this.world.random.nextFloat() > .15f) {
+            return;
+        }
 
         ClientParticles.spawn(
                 new BezierPathEmitterParticleEffect(

@@ -33,8 +33,8 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
         generator.excludeFromSimpleItemModelGeneration(AFFINE_INFUSER);
         generator.excludeFromSimpleItemModelGeneration(FIELD_COHERENCE_MODULATOR);
         this.primitiveState(generator,
-                COPPER_PLATED_AETHUM_FLUX_NODE, STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ACCUMULATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE,
-                REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, SPIRIT_INTEGRATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT, STAFF_PEDESTAL,
+                COPPER_PLATED_AETHUM_FLUX_NODE, STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ANNIHILATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE,
+                REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, SPIRIT_INTEGRATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT,
                 CREATIVE_AETHUM_FLUX_CACHE, EMERALD_BLOCK, SUNDIAL, BREWING_CAULDRON, WORLD_PIN, CROP_REAPER, AFFINE_INFUSER, VOID_BEACON,
                 FIELD_COHERENCE_MODULATOR, GRAVITON_TRANSDUCER
         );
@@ -44,7 +44,7 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerator generator) {
         this.parentedItem(generator,
                 ITEM_TRANSFER_NODE, PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, THE_SKY, INVERSION_STONE, COPPER_PLATED_AETHUM_FLUX_NODE,
-                STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ACCUMULATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE, REFINED_RITUAL_SOCLE,
+                STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ANNIHILATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE, REFINED_RITUAL_SOCLE,
                 SOPHISTICATED_RITUAL_SOCLE, RITUAL_SOCLE_COMPOSER, SPIRIT_INTEGRATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT, STAFF_PEDESTAL,
                 CREATIVE_AETHUM_FLUX_CACHE, EMERALD_BLOCK, INFUSED_STONE, MATTER_HARVESTING_HEARTH, VOID_BEACON, HOLOGRAPHIC_STEREOPTICON
         );
@@ -55,7 +55,9 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
     }
 
     private void parentedItem(ItemModelGenerator generator, Block... blocks) {
-        for (var block : blocks) generator.writer.accept(ModelIds.getItemModelId(block.asItem()), new SimpleModelSupplier(ModelIds.getBlockModelId(block)));
+        for (var block : blocks) {
+            generator.writer.accept(ModelIds.getItemModelId(block.asItem()), new SimpleModelSupplier(ModelIds.getBlockModelId(block)));
+        }
     }
 
     private void generatedItem(ItemModelGenerator generator, ItemConvertible... items) {

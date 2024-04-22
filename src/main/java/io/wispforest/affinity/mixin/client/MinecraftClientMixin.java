@@ -2,8 +2,8 @@ package io.wispforest.affinity.mixin.client;
 
 import io.wispforest.affinity.block.template.AttackInteractionReceiver;
 import io.wispforest.affinity.item.KinesisStaffItem;
-import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.MixinHooks;
+import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -54,7 +54,9 @@ public class MinecraftClientMixin {
     private void sendYeetPacket(CallbackInfo ci) {
         if (this.options.attackKey.wasPressed()) {
             var activeStack = this.player.getActiveItem();
-            if (!(activeStack.getItem() instanceof KinesisStaffItem staff) || !staff.canThrow(activeStack, this.player)) return;
+            if (!(activeStack.getItem() instanceof KinesisStaffItem staff) || !staff.canThrow(activeStack, this.player)) {
+                return;
+            }
 
             var dataBuffer = PacketByteBufs.create();
             staff.writeExtraThrowData(activeStack, this.player, dataBuffer);

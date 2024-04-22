@@ -31,7 +31,9 @@ public class ItemFrameEntityRendererMixin<T extends ItemFrameEntity> {
             ordinal = 0
     )
     private OptionalInt weRenderAethumMaps(OptionalInt value, T entity) {
-        if (entity.getHeldItemStack().isOf(AffinityItems.REALIZED_AETHUM_MAP)) return OptionalInt.of(FilledMapItem.getMapId(entity.getHeldItemStack()));
+        if (entity.getHeldItemStack().isOf(AffinityItems.REALIZED_AETHUM_MAP)) {
+            return OptionalInt.of(FilledMapItem.getMapId(entity.getHeldItemStack()));
+        }
         return value;
     }
 

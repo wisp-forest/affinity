@@ -14,11 +14,13 @@ public class SocleComposingDisplay extends BasicDisplay {
 
     public SocleComposingDisplay(RitualSocleType type, Action action) {
         super(Util.make(() -> switch (action) {
-            case CRAFT -> List.of(EntryIngredients.of(AffinityBlocks.BLANK_RITUAL_SOCLE), EntryIngredients.of(type.ornamentItem()));
+            case CRAFT ->
+                    List.of(EntryIngredients.of(AffinityBlocks.BLANK_RITUAL_SOCLE), EntryIngredients.of(type.ornamentItem()));
             case UNCRAFT -> List.of(EntryIngredients.of(type.socleBlock()));
         }), Util.make(() -> switch (action) {
             case CRAFT -> List.of(EntryIngredients.of(type.socleBlock()));
-            case UNCRAFT -> List.of(EntryIngredients.of(AffinityBlocks.BLANK_RITUAL_SOCLE), EntryIngredients.of(type.ornamentItem()));
+            case UNCRAFT ->
+                    List.of(EntryIngredients.of(AffinityBlocks.BLANK_RITUAL_SOCLE), EntryIngredients.of(type.ornamentItem()));
         }));
     }
 

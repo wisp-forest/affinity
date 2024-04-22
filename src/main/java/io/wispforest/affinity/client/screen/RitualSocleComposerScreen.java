@@ -4,7 +4,6 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
-import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import net.minecraft.entity.player.PlayerInventory;

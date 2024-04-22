@@ -22,8 +22,8 @@
   },
   "requirements": [
     [
-      "has_azalea_flowers",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_azalea_flowers"
     ]
   ],
   "rewards": {

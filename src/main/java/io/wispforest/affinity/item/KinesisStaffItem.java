@@ -11,7 +11,8 @@ import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityCriteria;
 import io.wispforest.affinity.object.AffinityItems;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -31,6 +32,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,10 +42,12 @@ import java.util.function.BooleanSupplier;
 
 public class KinesisStaffItem extends StaffItem {
 
-    private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 4, 4);
+    private static final InquirableOutlineProvider.Outline UP_AOE = new InquirableOutlineProvider.Outline(-4, 0, -4, 4, 2, 4);
+    private static final InquirableOutlineProvider.Outline DOWN_AOE = new InquirableOutlineProvider.Outline(-4, -2, -4, 4, 0, 4);
+
     private static final float ENTITY_THROW_COST = 2.5f;
 
-    private static final NbtKey<Integer> ACTIVE_TARGET_ENTITY = new NbtKey<>("TargetEntity", NbtKey.Type.INT);
+    private static final KeyedEndec<Integer> ACTIVE_TARGET_ENTITY = Endec.INT.keyed("TargetEntity", -1);
     private static final TagKey<EntityType<?>> IMMUNE_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE, Affinity.id("kinesis_staff_immune"));
 
     private static final EntityAttributeModifier MODIFIER = new EntityAttributeModifier(UUID.fromString("bc21b17e-2832-4762-acef-361df22a96f1"), "", -0.65, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -62,7 +66,7 @@ public class KinesisStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        slowDownEntities(world, pos, () -> {
+        slowDownEntities(world, pos.add(0, pedestal.up(), 0), () -> {
             if (!pedestal.hasFlux(15)) return false;
 
             pedestal.consumeFlux(15);
@@ -72,11 +76,11 @@ public class KinesisStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        slowDownEntities(world, pos, () -> pedestal.hasFlux(15));
+        slowDownEntities(world, pos.add(0, pedestal.up(), 0), () -> pedestal.hasFlux(15));
     }
 
     protected static void slowDownEntities(World world, BlockPos pos, BooleanSupplier shouldContinue) {
-        for (var entity : world.getNonSpectatingEntities(Entity.class, new Box(pos).expand(4, 4, 4))) {
+        for (var entity : world.getNonSpectatingEntities(Entity.class, new Box(pos).expand(4, 1, 4))) {
             if (entity.isSneaking() || !(entity instanceof LivingEntity living)) continue;
             if (!shouldContinue.getAsBoolean()) return;
 
@@ -100,8 +104,8 @@ public class KinesisStaffItem extends StaffItem {
     }
 
     @Override
-    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
-        return AOE;
+    public InquirableOutlineProvider.Outline getAreaOfEffect(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        return pedestal.facing() == Direction.UP ? UP_AOE : DOWN_AOE;
     }
 
     @Override
@@ -112,7 +116,7 @@ public class KinesisStaffItem extends StaffItem {
         if (stack.has(ACTIVE_TARGET_ENTITY)) {
             entity = world.getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
         } else {
-            var entityTarget = InteractionUtil.raycastEntities(player, 25, 1.5, candidate -> !candidate.getType().isIn(IMMUNE_ENTITIES));
+            var entityTarget = InteractionUtil.raycastEntities(player, 1f, 25, 1.5, candidate -> !candidate.getType().isIn(IMMUNE_ENTITIES));
 
             if (entityTarget == null) return TypedActionResult.pass(stack);
             entity = entityTarget.getEntity();
@@ -169,7 +173,7 @@ public class KinesisStaffItem extends StaffItem {
     }
 
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
-        return stack.has(ACTIVE_TARGET_ENTITY) && player.getComponent(AffinityComponents.PLAYER_AETHUM).getAethum() >= ENTITY_THROW_COST;
+        return stack.has(ACTIVE_TARGET_ENTITY) && player.getComponent(AffinityComponents.PLAYER_AETHUM).hasAethum(ENTITY_THROW_COST);
     }
 
     public void writeExtraThrowData(ItemStack stack, PlayerEntity player, PacketByteBuf buffer) {}

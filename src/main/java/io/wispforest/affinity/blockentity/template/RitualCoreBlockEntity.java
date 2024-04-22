@@ -5,6 +5,7 @@ import io.wispforest.affinity.blockentity.impl.RitualSocleBlockEntity;
 import io.wispforest.affinity.client.particle.BezierPathEmitterParticle;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.endec.BuiltInEndecs;
 import io.wispforest.affinity.entity.WiseWispEntity;
 import io.wispforest.affinity.misc.ReadOnlyInventory;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
@@ -15,7 +16,7 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.impl.KeyedEndec;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -44,11 +45,10 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, InquirableOutlineProvider {
 
-    protected static final NbtKey<ItemStack> ITEM_KEY = new NbtKey<>("Item", NbtKey.Type.ITEM_STACK);
+    protected static final KeyedEndec<ItemStack> ITEM_KEY = BuiltInEndecs.ITEM_STACK.keyed("Item", ItemStack.EMPTY);
 
     @Nullable
     protected RitualSetup cachedSetup = null;
@@ -291,7 +291,9 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
                 .map(PointOfInterest::getPos)
                 .filter(modulatorPos -> {
                     if (modulatorPos.getY() - pos.getY() != 1) return false;
-                    if (!(world.getBlockEntity(modulatorPos) instanceof FieldCoherenceModulatorBlockEntity modulator)) return false;
+                    if (!(world.getBlockEntity(modulatorPos) instanceof FieldCoherenceModulatorBlockEntity modulator)) {
+                        return false;
+                    }
                     return modulator.flux() >= 32000;
                 }).toList();
 

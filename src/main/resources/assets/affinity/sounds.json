@@ -24,6 +24,13 @@
       "affinity:item/aethum_fire_extinguisher_spray"
     ]
   },
+  "item.salvo_staff.hit": {
+    "sounds": [
+      "affinity:item/salvo_staff_hit_1",
+      "affinity:item/salvo_staff_hit_2",
+      "affinity:item/salvo_staff_hit_3"
+    ]
+  },
   "block.spirit_integration_apparatus.ritual_start": {
     "sounds": [
       "affinity:block/spirit_assimilation_start"

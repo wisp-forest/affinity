@@ -13,7 +13,8 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.recipe.PotionMixingRecipe;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
 import net.minecraft.block.BlockState;
@@ -41,12 +42,9 @@ import java.util.stream.Stream;
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity {
 
-    public static final NbtKey<Integer> FILL_LEVEL_KEY = new NbtKey<>("FillLevel", NbtKey.Type.INT);
-    public static final NbtKey<Integer> PROCESS_TICK_KEY = new NbtKey<>("ProcessTick", NbtKey.Type.INT);
-    public static final NbtKey<PotionMixture> STORED_POTION_KEY = new NbtKey<>(
-            "PotionMixture",
-            NbtKey.Type.COMPOUND.then(PotionMixture::fromNbt, PotionMixture::toNbt)
-    );
+    public static final KeyedEndec<Integer> FILL_LEVEL_KEY = Endec.INT.keyed("FillLevel", 0);
+    public static final KeyedEndec<Integer> PROCESS_TICK_KEY = Endec.INT.keyed("ProcessTick", 0);
+    public static final KeyedEndec<PotionMixture> STORED_POTION_KEY = PotionMixture.ENDEC.keyed("PotionMixture", PotionMixture.EMPTY);
 
     @NotNull
     private PotionMixture storedPotion = PotionMixture.EMPTY;
@@ -119,7 +117,9 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     public void tickServer() {
         for (var item : world.getEntitiesByClass(ItemEntity.class, new Box(pos), itemEntity -> true)) {
             if (!this.canAddItem()) break;
-            if (item.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.SPAWNED_BY_BREWING_CAULDRON)) continue;
+            if (item.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.SPAWNED_BY_BREWING_CAULDRON)) {
+                continue;
+            }
 
             ListUtil.addItem(this.items, ItemOps.singleCopy(item.getStack()));
             this.markDirty();

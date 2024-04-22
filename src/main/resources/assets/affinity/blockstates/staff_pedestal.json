@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "vertical_direction=up": {
+      "model": "affinity:block/staff_pedestal"
+    },
+    "vertical_direction=down": {
+      "model": "affinity:block/staff_pedestal",
+      "x": 180
+    }
+  }
+}

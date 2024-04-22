@@ -34,7 +34,7 @@ public class AffinityItemGroup {
         }).build();
 
         ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, GROUP.id())).register(entries -> {
-            if (!GROUP.isTabSelected(0)) return;
+            if (GROUP.getSelectedTabIndex() != MAIN) return;
             entries.addBefore(AffinityItems.MILDLY_ATTUNED_AMETHYST_SHARD, Items.AMETHYST_SHARD);
         });
     }

@@ -4,9 +4,11 @@ import com.google.common.collect.ImmutableMap;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
+import io.wispforest.affinity.endec.BuiltInEndecs;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.CodecUtils;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.entity.Entity;
@@ -31,10 +33,12 @@ import java.util.function.BooleanSupplier;
 
 public class NimbleStaffItem extends StaffItem {
 
-    public static final NbtKey<Direction> DIRECTION = new NbtKey<>("Direction", NbtKey.Type.STRING.then(Direction::byName, Direction::asString));
-    public static final NbtKey<BlockPos> ECHO_SHARD_TARGET = new NbtKey<>("EchoShardTarget", NbtKey.Type.LONG.then(BlockPos::fromLong, BlockPos::asLong));
+    public static final KeyedEndec<Direction> DIRECTION = CodecUtils.ofCodec(Direction.CODEC).keyed("Direction", Direction.NORTH);
+    public static final KeyedEndec<BlockPos> ECHO_SHARD_TARGET = BuiltInEndecs.BLOCK_POS.keyed("EchoShardTarget", (BlockPos) null);
 
-    private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 2, 4);
+    private static final InquirableOutlineProvider.Outline UP_AOE = new InquirableOutlineProvider.Outline(-4, 0, -4, 4, 4, 4);
+    private static final InquirableOutlineProvider.Outline DOWN_AOE = new InquirableOutlineProvider.Outline(-4, -4, -4, 4, 0, 4);
+
     private static final Map<Direction, Text> ARROW_BY_DIRECTION = new ImmutableMap.Builder<Direction, Text>()
             .put(Direction.NORTH, TextOps.withColor("↑", 0xb0ffce))
             .put(Direction.SOUTH, TextOps.withColor("↓", 0xb0ffce))
@@ -43,7 +47,7 @@ public class NimbleStaffItem extends StaffItem {
             .build();
 
     public NimbleStaffItem() {
-        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1).trackUsageStat());
+        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
     }
 
     @Override
@@ -60,7 +64,7 @@ public class NimbleStaffItem extends StaffItem {
         if (echoShardTarget != null) {
             pushDelta = Vec3d.ofCenter(echoShardTarget).subtract(Vec3d.ofCenter(pos)).normalize();
 
-            if (!echoShardTarget.equals(pedestal.getItem().getOr(ECHO_SHARD_TARGET, null))) {
+            if (!echoShardTarget.equals(pedestal.getItem().get(ECHO_SHARD_TARGET))) {
                 pedestal.getItem().put(ECHO_SHARD_TARGET, echoShardTarget);
                 pedestal.markDirty();
             }
@@ -69,7 +73,7 @@ public class NimbleStaffItem extends StaffItem {
             pedestal.markDirty();
         }
 
-        moveEntities(world, pos, pushDelta, () -> {
+        moveEntities(world, pos.add(0, pedestal.up() * 2, 0), pushDelta, () -> {
             if (!pedestal.hasFlux(5)) return false;
 
             pedestal.consumeFlux(5);
@@ -79,12 +83,12 @@ public class NimbleStaffItem extends StaffItem {
 
     @Override
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        final var echoShardTarget = pedestal.getItem().getOr(ECHO_SHARD_TARGET, null);
+        final var echoShardTarget = pedestal.getItem().get(ECHO_SHARD_TARGET);
         var pushDelta = echoShardTarget != null
                 ? Vec3d.ofCenter(echoShardTarget).subtract(Vec3d.ofCenter(pos)).normalize()
                 : Vec3d.of(getDirection(pedestal.getItem()).getVector());
 
-        moveEntities(world, pos, pushDelta, () -> pedestal.hasFlux(5));
+        moveEntities(world, pos.add(0, pedestal.up() * 2, 0), pushDelta, () -> pedestal.hasFlux(5));
     }
 
     protected static void moveEntities(World world, BlockPos pos, Vec3d direction, BooleanSupplier shouldContinue) {
@@ -106,7 +110,7 @@ public class NimbleStaffItem extends StaffItem {
 
     @SuppressWarnings("UnstableApiUsage")
     private static @Nullable BlockPos tryFindBoundEchoShard(BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        var storageBelow = ItemStorage.SIDED.find(pedestal.getWorld(), pos.down(), Direction.UP);
+        var storageBelow = ItemStorage.SIDED.find(pedestal.getWorld(), pos.add(0, pedestal.down(), 0), pedestal.facing().getOpposite());
         if (storageBelow == null) return null;
 
         BlockPos targetPos = null;
@@ -141,13 +145,13 @@ public class NimbleStaffItem extends StaffItem {
     }
 
     @Override
-    public @Nullable InquirableOutlineProvider.Outline getAreaOfEffect() {
-        return AOE;
+    public InquirableOutlineProvider.Outline getAreaOfEffect(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
+        return pedestal.facing() == Direction.UP ? UP_AOE : DOWN_AOE;
     }
 
     @Override
     public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<InWorldTooltipProvider.Entry> entries) {
-        if (pedestal.getItem().getOr(ECHO_SHARD_TARGET, null) != null) {
+        if (pedestal.getItem().get(ECHO_SHARD_TARGET) != null) {
             var targetPos = pedestal.getItem().get(ECHO_SHARD_TARGET);
             entries.add(InWorldTooltipProvider.Entry.icon(
                     Text.literal(targetPos.getX() + " " + targetPos.getY() + " " + targetPos.getZ()),
@@ -163,12 +167,12 @@ public class NimbleStaffItem extends StaffItem {
     }
 
     private static Direction getDirection(ItemStack stack) {
-        return stack.getOr(DIRECTION, Direction.NORTH);
+        return stack.get(DIRECTION);
     }
 
     @Override
     protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {
-        var target = player.raycast(50, 0, false);
+        var target = player.raycast(50, 1f, false);
         if (!(target instanceof BlockHitResult blockHit) || world.isAir(blockHit.getBlockPos())) {
             return TypedActionResult.fail(stack);
         }

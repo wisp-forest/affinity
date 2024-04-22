@@ -45,7 +45,7 @@ public class AreaEffectCloudEntityMixin implements ExtendedAreaEffectCloudEntity
     @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/effect/StatusEffectInstance;<init>(Lnet/minecraft/entity/effect/StatusEffect;IIZZ)V"), index = 1)
     private int changeDuration(int duration) {
         if (this.affinity$extraPotionNbt == null) return duration;
-        duration *= this.affinity$extraPotionNbt.getOr(PotionMixture.EXTEND_DURATION_BY, 1f);
+        duration *= this.affinity$extraPotionNbt.get(PotionMixture.EXTEND_DURATION_BY);
         return duration;
     }
 }

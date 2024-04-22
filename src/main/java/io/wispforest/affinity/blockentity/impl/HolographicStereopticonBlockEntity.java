@@ -6,12 +6,15 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
+import io.wispforest.affinity.endec.nbt.NbtEndec;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.quack.AffinityClientWorldExtension;
 import io.wispforest.affinity.misc.util.MathUtil;
+import io.wispforest.affinity.mixin.client.WorldRendererAccessor;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ui.component.EntityComponent;
 import io.wispforest.worldmesher.WorldMesh;
@@ -54,12 +57,13 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     private static final Cleaner MESH_CLEANER = Cleaner.create();
 
     public static final String IMPRINT_KIND_KEY_NAME = "ImprintKind";
-    public static final NbtKey<NbtCompound> RENDERER_DATA_KEY = new NbtKey<>("RendererData", NbtKey.Type.COMPOUND);
-    public static final NbtKey<Float> RENDER_SCALE_KEY = new NbtKey<>("RenderScale", NbtKey.Type.FLOAT);
-    public static final NbtKey<Boolean> SPIN_KEY = new NbtKey<>("Spin", NbtKey.Type.BOOLEAN);
+    public static final KeyedEndec<NbtCompound> RENDERER_DATA_KEY = NbtEndec.COMPOUND.keyed("RendererData", (NbtCompound) null);
+    public static final KeyedEndec<Float> RENDER_SCALE_KEY = Endec.FLOAT.keyed("RenderScale", 1f);
+    public static final KeyedEndec<Boolean> SPIN_KEY = Endec.BOOLEAN.keyed("Spin", true);
 
     @Environment(EnvType.CLIENT) private Renderer currentRenderer;
-    @Environment(EnvType.CLIENT) private @Nullable Renderer nextRenderer;
+    @Environment(EnvType.CLIENT)
+    private @Nullable Renderer nextRenderer;
 
     @Environment(EnvType.CLIENT) private long updateTimestamp = 0;
     @Environment(EnvType.CLIENT) private long refreshIn = 0;
@@ -93,8 +97,8 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.renderScale = nbt.get(RENDER_SCALE_KEY);
-        this.spin = nbt.getOr(SPIN_KEY, true);
-        this.rendererData = nbt.getOr(RENDERER_DATA_KEY, null);
+        this.spin = nbt.get(SPIN_KEY);
+        this.rendererData = nbt.get(RENDERER_DATA_KEY);
 
         if (this.world != null && this.world.isClient) {
             this.refreshRenderer();
@@ -334,8 +338,16 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
                             if (Affinity.CONFIG.renderEntitiesInStereopticonSectionImprints()) {
                                 client.world.getOtherEntities(null, realMeshDimensions).forEach(entity -> {
+                                    var entityVisible = ((WorldRendererAccessor) client.worldRenderer).affinity$getFrustum() != null && client.getEntityRenderDispatcher().shouldRender(
+                                            entity,
+                                            ((WorldRendererAccessor) client.worldRenderer).affinity$getFrustum(),
+                                            client.getEntityRenderDispatcher().camera.getPos().x,
+                                            client.getEntityRenderDispatcher().camera.getPos().y,
+                                            client.getEntityRenderDispatcher().camera.getPos().z
+                                    );
+
                                     var pos = entity.getLerpedPos(tickDelta).subtract(mesh.startPos().getX(), mesh.startPos().getY(), mesh.startPos().getZ());
-                                    client.getEntityRenderDispatcher().render(entity, pos.x, pos.y, pos.z, entity.getYaw(tickDelta), tickDelta, matrices, vertexConsumers, light);
+                                    client.getEntityRenderDispatcher().render(entity, pos.x, pos.y, pos.z, entity.getYaw(tickDelta), entityVisible ? tickDelta : 0, matrices, vertexConsumers, light);
                                 });
                             }
 

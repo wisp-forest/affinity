@@ -4,11 +4,10 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.endec.BuiltInEndecs;
 import io.wispforest.affinity.misc.AethumAcquisitionCache;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.impl.KeyedEndec;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -18,6 +17,7 @@ import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,14 +28,18 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     public static final LatchingAethumEffect NO_NATURAL_REGEN = new LatchingAethumEffect(30, 45);
     public static final LatchingAethumEffect INCREASED_NATURAL_SPAWNING = new LatchingAethumEffect(90, 85);
 
-    private static final NbtKey<NbtList> ACTIVE_EFFECTS_KEY = new NbtKey.ListKey<>("ActiveEffects", NbtKey.Type.STRING);
     private static final BiMap<Identifier, LatchingAethumEffect> EFFECT_REGISTRY = HashBiMap.create();
+    private static final KeyedEndec<Set<LatchingAethumEffect>> ACTIVE_EFFECTS_KEY = BuiltInEndecs.IDENTIFIER
+            .xmap(EFFECT_REGISTRY::get, EFFECT_REGISTRY.inverse()::get)
+            .listOf()
+            .<Set<LatchingAethumEffect>>xmap(HashSet::new, ArrayList::new)
+            .keyed("ActiveEffects", HashSet::new);
 
     private final ChunkPos pos;
     private boolean neighborsCached = false;
     private final ChunkAethumComponent[] neighbors = new ChunkAethumComponent[4];
 
-    private final Set<LatchingAethumEffect> activeEffects = new HashSet<>();
+    private Set<LatchingAethumEffect> activeEffects = new HashSet<>();
 
     public ChunkAethumComponent(Chunk chunk) {
         super(AffinityComponents.CHUNK_AETHUM, chunk);
@@ -199,24 +203,13 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     @Override
     public void writeToNbt(@NotNull NbtCompound tag) {
         super.writeToNbt(tag);
-
-        var effectList = new NbtList();
-        for (var effect : this.activeEffects) {
-            effectList.add(NbtString.of(EFFECT_REGISTRY.inverse().get(effect).toString()));
-        }
-
-        tag.put(ACTIVE_EFFECTS_KEY, effectList);
+        tag.put(ACTIVE_EFFECTS_KEY, this.activeEffects);
     }
 
     @Override
     public void readFromNbt(@NotNull NbtCompound tag) {
         super.readFromNbt(tag);
-
-        this.activeEffects.clear();
-        var effectList = tag.get(ACTIVE_EFFECTS_KEY);
-        for (var effectId : effectList) {
-            this.activeEffects.add(EFFECT_REGISTRY.get(new Identifier(effectId.asString())));
-        }
+        this.activeEffects = tag.get(ACTIVE_EFFECTS_KEY);
     }
 
     public static void registerAethumEffect(Identifier id, LatchingAethumEffect effect) {

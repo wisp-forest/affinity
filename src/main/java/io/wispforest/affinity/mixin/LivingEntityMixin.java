@@ -7,8 +7,8 @@ import io.wispforest.affinity.enchantment.impl.BastionEnchantment;
 import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
 import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
 import io.wispforest.affinity.item.ArtifactBladeItem;
-import io.wispforest.affinity.misc.callback.LivingEntityTickCallback;
 import io.wispforest.affinity.misc.ServerTasks;
+import io.wispforest.affinity.misc.callback.LivingEntityTickCallback;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.object.*;
@@ -153,8 +153,9 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (AffinityEntityAddon.hasData(attacker, CriticalGambleEnchantment.ACTIVATED_AT)) {
             long critTick = AffinityEntityAddon.removeData(attacker, CriticalGambleEnchantment.ACTIVATED_AT);
-            if (critTick != this.getWorld().getTime() || this.getType().isIn(CriticalGambleEnchantment.BLACKLIST))
+            if (critTick != this.getWorld().getTime() || this.getType().isIn(CriticalGambleEnchantment.BLACKLIST)) {
                 return;
+            }
 
             affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
         }

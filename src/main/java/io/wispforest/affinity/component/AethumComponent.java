@@ -3,14 +3,15 @@ package io.wispforest.affinity.component;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import io.wispforest.owo.nbt.NbtKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AethumComponent<H> implements Component, AutoSyncedComponent {
 
-    public static final NbtKey<Double> AETHUM_KEY = new NbtKey<>("Aethum", NbtKey.Type.DOUBLE);
+    public static final KeyedEndec<Double> AETHUM_KEY = Endec.DOUBLE.keyed("Aethum", 0d);
 
     protected final ComponentKey<?> key;
 
@@ -29,7 +30,7 @@ public abstract class AethumComponent<H> implements Component, AutoSyncedCompone
 
     @Override
     public void readFromNbt(@NotNull NbtCompound tag) {
-        this.aethum = tag.getOr(AETHUM_KEY, this.aethum);
+        this.aethum = tag.get(AETHUM_KEY);
     }
 
     @Override

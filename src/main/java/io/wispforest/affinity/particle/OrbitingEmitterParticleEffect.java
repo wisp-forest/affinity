@@ -3,17 +3,19 @@ package io.wispforest.affinity.particle;
 import com.mojang.brigadier.StringReader;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityParticleTypes;
-import io.wispforest.owo.network.serialization.RecordSerializer;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.RecordEndec;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import org.joml.Vector3f;
 
-public record OrbitingEmitterParticleEffect(ParticleEffect outerEffect, ParticleEffect innerEffect, Vector3f speed, float radius, int emitInterval,
+public record OrbitingEmitterParticleEffect(ParticleEffect outerEffect, ParticleEffect innerEffect, Vector3f speed,
+                                            float radius, int emitInterval,
                                             int orbitSpeed, int lifetime) implements ParticleEffect {
 
-    private static final RecordSerializer<OrbitingEmitterParticleEffect> SERIALIZER = RecordSerializer.create(OrbitingEmitterParticleEffect.class);
+    private static final Endec<OrbitingEmitterParticleEffect> ENDEC = RecordEndec.create(OrbitingEmitterParticleEffect.class);
 
     public static final ParticleEffect.Factory<OrbitingEmitterParticleEffect> FACTORY = new Factory<>() {
         @Override
@@ -26,7 +28,7 @@ public record OrbitingEmitterParticleEffect(ParticleEffect outerEffect, Particle
 
         @Override
         public OrbitingEmitterParticleEffect read(ParticleType<OrbitingEmitterParticleEffect> type, PacketByteBuf buf) {
-            return SERIALIZER.read(buf);
+            return buf.read(ENDEC);
         }
     };
 
@@ -37,7 +39,7 @@ public record OrbitingEmitterParticleEffect(ParticleEffect outerEffect, Particle
 
     @Override
     public void write(PacketByteBuf buf) {
-        SERIALIZER.write(buf, this);
+        buf.write(ENDEC, this);
     }
 
     @Override

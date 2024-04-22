@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxContainer;
 import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.entity.EmancipatedBlockEntity;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -16,6 +17,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
@@ -34,6 +36,19 @@ public class AffinityDebugCommands {
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, access, environment) -> {
+            dispatcher.register(literal("emancipate").executes(context -> {
+                var player = context.getSource().getPlayer();
+                var targetPos = ((BlockHitResult) player.raycast(5, 0, false)).getBlockPos();
+
+                var targetState = player.getWorld().getBlockState(targetPos);
+                if (targetState.isAir()) return 0;
+
+                EmancipatedBlockEntity.spawn(player.getWorld(), targetPos, targetState, player.getWorld().getBlockEntity(targetPos), 20, 0f);
+                player.getWorld().removeBlock(targetPos, false);
+
+                return 1;
+            }));
+
             dispatcher.register(literal("aethum")
                     .then(literal("world")
                             .then(argument("position", BlockPosArgumentType.blockPos())

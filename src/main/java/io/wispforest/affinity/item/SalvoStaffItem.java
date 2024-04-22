@@ -28,9 +28,9 @@ public class SalvoStaffItem extends StaffItem {
     @Override
     protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {
         var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
-        if (aethum.getAethum() < MISSILE_COST) return TypedActionResult.pass(stack);
+        if (!aethum.hasAethum(MISSILE_COST)) return TypedActionResult.pass(stack);
 
-        var target = InteractionUtil.raycastEntities(player, 15, 2, entity -> entity.getType() != AffinityEntities.AETHUM_MISSILE && entity.isAlive() && entity instanceof LivingEntity);
+        var target = InteractionUtil.raycastEntities(player, 1f, 15, 2, entity -> entity.getType() != AffinityEntities.AETHUM_MISSILE && entity.isAlive() && entity instanceof LivingEntity);
         if (target == null) return TypedActionResult.pass(stack);
 
         if (remainingTicks % 2 != 0 || remainingTicks % 20 < 12) return TypedActionResult.success(stack);

@@ -2,8 +2,9 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.misc.AethumAcquisitionCache;
 import io.wispforest.affinity.mixin.access.MapStateAccessor;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
-import io.wispforest.owo.nbt.NbtKey;
 import net.minecraft.block.MapColor;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -26,7 +27,7 @@ import java.util.List;
 
 public class RealizedAethumMapItem extends FilledMapItem {
 
-    private static final NbtKey<Boolean> LOCKED = new NbtKey<>("Locked", NbtKey.Type.BOOLEAN);
+    private static final KeyedEndec<Boolean> LOCKED = Endec.BOOLEAN.keyed("Locked", false);
 
     private static final byte[] COLORS = {
             MapColor.BLACK.getRenderColorByte(MapColor.Brightness.LOWEST),

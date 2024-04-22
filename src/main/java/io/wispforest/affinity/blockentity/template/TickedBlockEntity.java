@@ -11,8 +11,7 @@ public interface TickedBlockEntity {
 
     static <T extends BlockEntity & TickedBlockEntity> BlockEntityTicker<T> ticker() {
         return (world, pos, state, blockEntity) -> {
-            if (world.isClient) blockEntity.tickClient();
-            else blockEntity.tickServer();
+            if (world.isClient) {blockEntity.tickClient();} else blockEntity.tickServer();
         };
     }
 

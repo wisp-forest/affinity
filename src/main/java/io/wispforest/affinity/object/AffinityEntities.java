@@ -27,6 +27,11 @@ public class AffinityEntities implements AutoRegistryContainer<EntityType<?>> {
             .dimensions(EntityDimensions.fixed(.15f, .15f))
             .build();
 
+    public static final EntityType<EmancipatedBlockEntity> EMANCIPATED_BLOCK = FabricEntityTypeBuilder.<EmancipatedBlockEntity>create()
+            .entityFactory(EmancipatedBlockEntity::new)
+            .dimensions(EntityDimensions.fixed(1f, 1f))
+            .build();
+
     private static <W extends WispEntity> EntityType<W> createWispType(EntityType.EntityFactory<W> factory) {
         return FabricEntityTypeBuilder.<WispEntity>createMob()
                 .spawnGroup(SpawnGroup.MONSTER)

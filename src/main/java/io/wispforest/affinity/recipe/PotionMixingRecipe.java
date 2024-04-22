@@ -59,7 +59,9 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
             final var effectInputs = Stream.concat(inputMixture.effects().stream(), inputMixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).toList();
             final var itemInputs = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
 
-            if (effectInputs.size() != recipe.effectInputs.size() || itemInputs.size() != recipe.itemInputs.size()) continue;
+            if (effectInputs.size() != recipe.effectInputs.size() || itemInputs.size() != recipe.itemInputs.size()) {
+                continue;
+            }
 
             int confirmedItemInputs = 0;
 

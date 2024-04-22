@@ -11,9 +11,9 @@
     "naschhorn",
     "Pois1x",
     "pvpTurtle",
-    "Aikoyori",
-    "BasiqueEvangelist",
     "chyzman",
+    "BasiqueEvangelist",
+    "Aikoyori",
     "Noaaan"
   ],
   "contact": {},
@@ -76,6 +76,17 @@
       "affinity:local_weather",
       "affinity:player_weather_tracker",
       "affinity:extra_arrow_damage"
-    ]
+    ],
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1799": [
+        "io/wispforest/endec/util/MapCarrier"
+      ],
+      "net/minecraft/class_2487": [
+        "io/wispforest/endec/util/MapCarrier"
+      ],
+      "net/minecraft/class_2540": [
+        "io/wispforest/endec/util/EndecBuffer"
+      ]
+    }
   }
 }

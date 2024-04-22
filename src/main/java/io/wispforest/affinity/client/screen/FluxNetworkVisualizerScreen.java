@@ -126,6 +126,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                 this.members.stream().mapToLong(AethumFluxContainer::flux).sum()
         ));
 
+//        this.renderBackground(context);
+
         if (this.mesh.canRender()) {
 
             // Begin model view / projection crimes
@@ -167,7 +169,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             var camera = MinecraftClient.getInstance().gameRenderer.getCamera();
             var prevCameraPos = camera.getPos();
 
-            ((CameraInvoker) camera).affinity$etPos(new Vec3d(prevCameraPos.x + near.x, prevCameraPos.y +near.y, prevCameraPos.z +near.z));
+            ((CameraInvoker) camera).affinity$etPos(new Vec3d(prevCameraPos.x + near.x, prevCameraPos.y + near.y, prevCameraPos.z + near.z));
 
             //noinspection deprecation
             RenderSystem.runAsFancy(() -> {

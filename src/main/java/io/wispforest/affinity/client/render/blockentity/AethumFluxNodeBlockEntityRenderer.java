@@ -93,7 +93,7 @@ public class AethumFluxNodeBlockEntityRenderer extends AffinityBlockEntityRender
 
                 matrices.translate(.0625, 0, .0625);
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotation(shardAngle));
-                matrices.translate(.35 - .0625, Math.sin(shardAngle + angle) * .05, -.0625);
+                matrices.translate(.35 + Math.max(0, node.renderShardCount / 20 - .25) - .0625, Math.sin(shardAngle + angle) * .05, -.0625);
 
                 FLOATING_SHARD.render(matrices, consumer, light, overlay);
 

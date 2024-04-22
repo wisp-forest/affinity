@@ -4,6 +4,7 @@ import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Direction;
 
 public class StaffPedestalBlockEntityRenderer extends AffinityBlockEntityRenderer<StaffPedestalBlockEntity> {
 
@@ -23,6 +24,15 @@ public class StaffPedestalBlockEntityRenderer extends AffinityBlockEntityRendere
 
     @Override
     protected void render(StaffPedestalBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        matrices.push();
+
+        if (entity.facing() == Direction.DOWN) {
+            matrices.translate(.5, .5, .5);
+            matrices.multiply(entity.facing().getRotationQuaternion());
+            matrices.translate(-.5, -.5, -.5);
+        }
+
         this.itemRenderer.renderFloatingItem(matrices, vertexConsumers, time, entity.getPos().asLong(), entity.getItem(), entity.getWorld(), light, overlay);
+        matrices.pop();
     }
 }

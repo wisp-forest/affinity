@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "io.wispforest.affinity.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "io.wispforest.affinity.mixin.AffinityMixinPlugin",
   "mixins": [
     "AbstractBlockMixin",
     "AbstractBlockMixin$AbstractBlockStateMixin",
@@ -32,6 +33,7 @@
     "MapStateMixin",
     "MinecraftServerMixin",
     "MobEntityMixin",
+    "MobSpawnerLogicAccessor",
     "MobSpawnerLogicMixin",
     "PersistentProjectileEntityMixin",
     "PlayerEntityMixin",
@@ -64,9 +66,17 @@
     "access.ShapelessRecipeAccessor",
     "access.StatusEffectInstanceAccessor",
     "access.StructureFeatureAccessor",
-    "access.WorldAccessor"
+    "access.WorldAccessor",
+    "client.MultiPhaseParametersAccessor",
+    "client.MultiPhaseRenderLayerAccessor",
+    "client.WorldRendererAccessor",
+    "client.sodium.AlphaMaskConsumerMixin",
+    "endec.ItemStackMixin",
+    "endec.NbtCompoundMixin", "endec.PacketByteBufMixin"
   ],
   "client": [
+    "BeaconBlockEntityMixin",
+    "MobSpawnerBlockEntityMixin",
     "access.ParticleManagerInvoker",
     "client.ArmorFeatureRendererMixin",
     "client.BeaconBlockEntityRendererMixin",
