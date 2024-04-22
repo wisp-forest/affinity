@@ -2,7 +2,7 @@
 {
   "title": "Mangrove Basket",
   "icon": "affinity:mangrove_basket",
-  "category": "affinity:basics",
+  "category": "affinity:magical_artifacts",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],
@@ -28,8 +28,6 @@ a convenient handle which can be {concept}placed onto any block entity{}. After 
 
 
 @next-page
-
-;;;;;
 
 ... the {concept}block can be safely broken{} and will {concept}retain all of its contents{} when doing so.
 

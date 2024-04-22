@@ -34,7 +34,7 @@ public class FieldCoherenceModulatorBlock extends AethumNetworkMemberBlock {
     private static final VoxelShape SHAPE = Block.createCuboidShape(4, 4, 4, 12, 12, 12);
 
     public FieldCoherenceModulatorBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES).nonOpaque());
+        super(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES).nonOpaque(), CONSUMER_TOOLTIP);
     }
 
     @Nullable

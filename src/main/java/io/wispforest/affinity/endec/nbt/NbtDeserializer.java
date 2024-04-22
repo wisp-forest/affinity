@@ -3,10 +3,7 @@ package io.wispforest.affinity.endec.nbt;
 
 /*import net.minecraft.nbt.*;*/
 
-import io.wispforest.endec.Deserializer;
-import io.wispforest.endec.Endec;
-import io.wispforest.endec.SelfDescribedDeserializer;
-import io.wispforest.endec.Serializer;
+import io.wispforest.endec.*;
 import io.wispforest.endec.util.RecursiveDeserializer;
 import net.minecraft.nbt.*;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +16,7 @@ public class NbtDeserializer extends RecursiveDeserializer<NbtElement> implement
 
     protected NbtDeserializer(NbtElement element) {
         super(element);
+        this.set(DataToken.SELF_DESCRIBING, null);
     }
 
     public static NbtDeserializer of(NbtElement element) {

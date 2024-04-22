@@ -20,7 +20,7 @@ public class AethumFluxNodeBlockEntityRenderer extends AffinityBlockEntityRender
     static {
         var floatingShardData = new ModelData();
         floatingShardData.getRoot().addChild(
-                "floatingShard",
+                "floating_shard",
                 ModelPartBuilder.create()
                         .cuboid(0, 0, 0, 2, 4, 2)
                         .uv(0, 0),

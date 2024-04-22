@@ -3,6 +3,9 @@
   "title": "Void Beacon",
   "icon": "affinity:void_beacon",
   "category": "affinity:advanced_machinery",
+  "required_advancements": [
+    "affinity:i_still_use_paint"
+  ],
   "associated_items": [
     "affinity:void_beacon"
   ]

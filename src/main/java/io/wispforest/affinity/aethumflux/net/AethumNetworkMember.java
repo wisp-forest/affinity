@@ -89,6 +89,8 @@ public interface AethumNetworkMember extends AethumFluxContainer {
             members.add(memberPos);
             if (peer instanceof MultiblockAethumNetworkMember multiblock) {
                 for (var multiblockMemberPos : multiblock.memberBlocks()) {
+                    if (multiblockMemberPos.equals(memberPos)) continue;
+
                     members.add(multiblockMemberPos);
 
                     var multiblockMember = Affinity.AETHUM_MEMBER.find(world, multiblockMemberPos, null);

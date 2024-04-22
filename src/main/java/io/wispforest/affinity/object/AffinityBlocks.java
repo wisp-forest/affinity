@@ -68,6 +68,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
     @Tab(AffinityItemGroup.MAIN) public static final Block EMERALD_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK));
     @Tab(AffinityItemGroup.MAIN) public static final Block VOID_BEACON = new VoidBeaconBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block GRAVITON_TRANSDUCER = new GravitonTransducerBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block ETHEREAL_AETHUM_FLUX_NODE = new EtherealAethumFluxNodeBlock();
+    @Tab(AffinityItemGroup.MAIN) public static final Block ETHEREAL_AETHUM_FLUX_INJECTOR = new EtherealAethumFluxInjectorBlock();
     @Tab(AffinityItemGroup.MAIN) public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
 
     @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
@@ -97,10 +99,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AZALEA_BUTTON = new ButtonBlock(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON), AZALEA_BLOCK_SET_TYPE, 30, true);
 
     @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_WOOD_TYPE);
+    @NoBlockItem public static final Block AZALEA_HANGING_SIGN = new HangingSignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_WOOD_TYPE);
+    @NoBlockItem public static final Block AZALEA_WALL_HANGING_SIGN = new WallHangingSignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_WOOD_TYPE);
     @NoBlockItem public static final Block AZALEA_WALL_SIGN = new WallSignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_WOOD_TYPE);
 
     @NoBlockItem public static final FluidBlock ARCANE_FADE = new ArcaneFadeBlock();
-    public static final Block THE_SKY = new Block(FabricBlockSettings.copyOf(Blocks.STONE));
+    public static final Block THE_SKY = new TheSkyBlock();
     public static final Block INVERSION_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE));
 
     public static final Block BUDDING_AZALEA_LEAVES = new BuddingAzaleaLeavesBlock();
@@ -133,6 +137,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
                         AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE,
                         AffinityBlocks.REFINED_RITUAL_SOCLE,
                         AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
+
+        public static final BlockEntityType<BlankRitualSocleBlockEntity> BLANK_RITUAL_SOCLE =
+                make(BlankRitualSocleBlockEntity::new, AffinityBlocks.BLANK_RITUAL_SOCLE);
 
         public static final BlockEntityType<AspRiteCoreBlockEntity> ASP_RITE_CORE =
                 make(AspRiteCoreBlockEntity::new, AffinityBlocks.ASP_RITE_CORE);
@@ -193,6 +200,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
         public static final BlockEntityType<GravitonTransducerBlockEntity> GRAVITON_TRANSDUCER =
                 make(GravitonTransducerBlockEntity::new, AffinityBlocks.GRAVITON_TRANSDUCER);
 
+        public static final BlockEntityType<EtherealAethumFluxNodeBlockEntity> ETHEREAL_AETHUM_FLUX_NODE =
+                make(EtherealAethumFluxNodeBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_NODE);
+
+        public static final BlockEntityType<EtherealAethumFluxInjectorBlockEntity> ETHEREAL_AETHUM_FLUX_INJECTOR =
+                make(EtherealAethumFluxInjectorBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_INJECTOR);
+
         @Override
         public void afterFieldProcessing() {
             Affinity.AETHUM_MEMBER.registerSelf(AETHUM_FLUX_NODE);
@@ -208,13 +221,13 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_INFUSER);
             Affinity.AETHUM_MEMBER.registerSelf(CROP_REAPER);
             Affinity.AETHUM_MEMBER.registerSelf(AFFINE_CANDLE);
-            Affinity.AETHUM_MEMBER.registerSelf(WORLD_PIN);
             Affinity.AETHUM_MEMBER.registerSelf(SUNSHINE_MONOLITH);
             Affinity.AETHUM_MEMBER.registerSelf(STAFF_PEDESTAL);
             Affinity.AETHUM_MEMBER.registerSelf(MATTER_HARVESTING_HEARTH);
             Affinity.AETHUM_MEMBER.registerSelf(VOID_BEACON);
             Affinity.AETHUM_MEMBER.registerSelf(FIELD_COHERENCE_MODULATOR);
             Affinity.AETHUM_MEMBER.registerSelf(GRAVITON_TRANSDUCER);
+            Affinity.AETHUM_MEMBER.registerSelf(ETHEREAL_AETHUM_FLUX_NODE);
         }
 
         @Override
@@ -270,3 +283,4 @@ public class AffinityBlocks implements BlockRegistryContainer {
         int value();
     }
 }
+

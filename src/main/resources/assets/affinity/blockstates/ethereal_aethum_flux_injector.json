@@ -1,0 +1,29 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "affinity:block/ethereal_aethum_flux_injector",
+      "x": -90
+    },
+    "facing=south": {
+      "model": "affinity:block/ethereal_aethum_flux_injector",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "affinity:block/ethereal_aethum_flux_injector",
+      "x": -90,
+      "y": 90
+    },
+    "facing=west": {
+      "model": "affinity:block/ethereal_aethum_flux_injector",
+      "x": 90,
+      "y": 90
+    },
+    "facing=down": {
+      "model": "affinity:block/ethereal_aethum_flux_injector"
+    },
+    "facing=up": {
+      "model": "affinity:block/ethereal_aethum_flux_injector",
+      "x": 180
+    }
+  }
+}

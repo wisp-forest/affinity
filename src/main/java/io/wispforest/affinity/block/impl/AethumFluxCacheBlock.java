@@ -1,16 +1,20 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
+import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.AethumFluxCacheBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.item.AethumFluxCacheItem;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
@@ -34,7 +38,7 @@ import java.util.stream.Stream;
 import static io.wispforest.affinity.object.AffinityBlocks.AETHUM_FLUX_CACHE;
 
 @SuppressWarnings("deprecation")
-public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
+public class AethumFluxCacheBlock extends AethumNetworkMemberBlock implements BlockItemProvider {
 
     public static final EnumProperty<Part> PART = EnumProperty.of("part", Part.class);
 
@@ -73,7 +77,7 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
     public static final VoxelShape STANDALONE_SHAPE = VoxelShapes.union(TOP_SHAPE, BOTTOM_SHAPE);
 
     public AethumFluxCacheBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10).sounds(BlockSoundGroup.COPPER));
+        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10).sounds(BlockSoundGroup.COPPER), STORAGE_TOOLTIP);
         this.setDefaultState(this.getDefaultState().with(PART, Part.STANDALONE));
     }
 
@@ -146,6 +150,11 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock {
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public Item createBlockItem(Block block, OwoItemSettings settings) {
+        return new AethumFluxCacheItem(block, settings);
     }
 
     public enum Part implements StringIdentifiable {

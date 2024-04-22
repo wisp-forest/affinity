@@ -43,7 +43,7 @@ public class SunshineMonolithBlock extends AethumNetworkMemberBlock {
     public static final VoxelShape UPPER_SHAPE = Block.createCuboidShape(2, 0, 2, 14, 16, 14);
 
     public SunshineMonolithBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
+        super(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE), CONSUMER_TOOLTIP);
         this.setDefaultState(this.getDefaultState().with(Properties.ENABLED, false).with(HALF, DoubleBlockHalf.LOWER));
     }
 

@@ -28,6 +28,7 @@ public class AffinityStatusEffects {
     public static final StatusEffect AFFINE = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x6137d6);
     public static final StatusEffect UNHOLY = new AffinityStatusEffect(StatusEffectCategory.HARMFUL, 0x000000);
     public static final StatusEffect RESONANT = new ResonantStatusEffect(StatusEffectCategory.HARMFUL, 0xffec4f);
+    public static final StatusEffect CAT_ANXIETY = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x00ff00);
 
     public static final StatusEffect STEADFAST = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x222222)
             .addAttributeModifier(
@@ -44,6 +45,7 @@ public class AffinityStatusEffects {
         registerEffectAndPotions(IMPENDING_DOOM, "impending_doom", 1200, false, false);
         registerEffectAndPotions(BANISHED, "banished", 6000, true, false);
         registerEffectAndPotions(UNHOLY, "unholy", 300, true, true);
+        registerEffectAndPotions(CAT_ANXIETY, "cat_anxiety", 6900, true, false);
 
         registerEffectAndPotions(FLIGHT, "flight", 2400, true, false);
 

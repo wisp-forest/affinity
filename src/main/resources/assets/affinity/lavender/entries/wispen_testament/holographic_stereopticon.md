@@ -2,7 +2,7 @@
 {
   "title": "Holographic Stereopticon",
   "icon": "affinity:holographic_stereopticon",
-  "category": "affinity:basics",
+  "category": "affinity:magical_artifacts",
   "required_advancements": [
     "affinity:i_still_use_paint"
   ],
@@ -27,8 +27,6 @@ device, you dub your invention the {item}Holographic Stereopticon{}.
 
 @next-page
 
-;;;;;
-
 At last, you figure out how to make it support {concept}4 different kinds of imprint:{}
 
  - Items
@@ -45,6 +43,6 @@ instructions in the resulting tooltip. It should further be noted that any impri
 
 
 Merely {concept}section imprints{} form an exception to this rule, as they constantly evolve to match
-the changes in the world around them
+the changes in the world around them.
 
 @entry-end

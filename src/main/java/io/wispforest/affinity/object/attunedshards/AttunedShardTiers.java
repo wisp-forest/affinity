@@ -29,7 +29,7 @@ public enum AttunedShardTiers implements AttunedShardTier {
         final var name = this.name().toLowerCase();
         this.translationKey = "shard_tier.affinity." + name;
 
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+        if (Affinity.onClient()) {
             this.sprite = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
                     Affinity.id("block/" + name + "_aethum_flux_node_shard"));
         }

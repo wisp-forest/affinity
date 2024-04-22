@@ -1,36 +1,19 @@
 package io.wispforest.affinity.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.object.AffinityItems;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.map.MapState;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MapState.class)
 public class MapStateMixin {
 
-    @Shadow
-    @Final
-    @Mutable
-    private boolean showIcons;
-
-    @Unique
-    private boolean affinity$iconStateCache;
-
-    @Inject(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isInFrame()Z", ordinal = 2))
-    private void disableFrameMarkers(PlayerEntity player, ItemStack stack, CallbackInfo ci) {
-        this.affinity$iconStateCache = this.showIcons;
-
-        if (!stack.isOf(AffinityItems.REALIZED_AETHUM_MAP)) return;
-        this.showIcons = false;
+    @ModifyExpressionValue(method = "update", at = @At(value = "FIELD", target = "Lnet/minecraft/item/map/MapState;showIcons:Z", ordinal = 1))
+    private boolean disableFrameMarkers(boolean original, @Local(argsOnly = true) ItemStack stack) {
+        if (!stack.isOf(AffinityItems.REALIZED_AETHUM_MAP)) return original;
+        return false;
     }
-
-    @Inject(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getNbt()Lnet/minecraft/nbt/NbtCompound;"))
-    private void resetIconState(PlayerEntity player, ItemStack stack, CallbackInfo ci) {
-        this.showIcons = this.affinity$iconStateCache;
-    }
-
 }

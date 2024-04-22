@@ -231,7 +231,11 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     @SuppressWarnings("ConstantConditions")
     public static RitualSetup examineSetup(ServerWorld world, BlockPos pos, boolean includeEmptySocles) {
         var soclePOIs = BlockFinder.findPoi(world, AffinityPoiTypes.RITUAL_SOCLE, pos, 8)
-                .filter(poi -> poi.getPos().getY() == pos.getY()).toList();
+                .filter(poi -> poi.getPos().getY() == pos.getY())
+                .filter(poi -> world.getBlockEntity(poi.getPos()) instanceof RitualSocleBlockEntity socle
+                        && !socle.ritualLock.isHeld()
+                        && (includeEmptySocles || !socle.getItem().isEmpty()))
+                .toList();
 
         double stability = world.getChunk(pos).getComponent(AffinityComponents.CHUNK_AETHUM).aethumAt(pos.getX(), pos.getZ());
 
@@ -239,13 +243,6 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         var socles = new ArrayList<RitualSocleEntry>();
         for (var soclePOI : soclePOIs) {
-
-            if (!(world.getBlockEntity(soclePOI.getPos()) instanceof RitualSocleBlockEntity socle)) continue;
-            if (socle.ritualLock.isActive()) continue;
-
-            if (!includeEmptySocles) {
-                if (socle.getItem().isEmpty()) continue;
-            }
 
             double meanDistance = 0;
             double minDistance = Double.MAX_VALUE;

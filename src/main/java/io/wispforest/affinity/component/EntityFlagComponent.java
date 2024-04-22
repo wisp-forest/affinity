@@ -19,6 +19,10 @@ public class EntityFlagComponent implements Component, AutoSyncedComponent {
         flags |= flag;
     }
 
+    public void unsetFlag(int flag) {
+        flags &= ~flag;
+    }
+
     public void clearFlags() {
         flags = 0;
     }

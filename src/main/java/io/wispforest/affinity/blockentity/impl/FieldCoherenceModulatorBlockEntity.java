@@ -1,5 +1,6 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
@@ -22,14 +23,18 @@ import net.minecraft.util.math.Vec3d;
 
 public class FieldCoherenceModulatorBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity {
 
-    @Environment(EnvType.CLIENT) public double spinSpeed = 1d;
-    @Environment(EnvType.CLIENT) public double spin = 0d;
+    @Environment(EnvType.CLIENT) public double spinSpeed;
+    @Environment(EnvType.CLIENT) public double spin;
 
     public FieldCoherenceModulatorBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.FIELD_COHERENCE_MODULATOR, pos, state);
 
         this.fluxStorage.setMaxInsert(1024);
         this.fluxStorage.setFluxCapacity(128000);
+
+        if (Affinity.onClient()) {
+            this.spinSpeed = 1d;
+        }
     }
 
     @Override

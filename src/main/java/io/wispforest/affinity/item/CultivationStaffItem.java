@@ -37,7 +37,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@SuppressWarnings("UnstableApiUsage")
 public class CultivationStaffItem extends StaffItem {
 
     public static final KeyedEndec<Boolean> SUPER_FORAGING_MODE_KEY = Endec.BOOLEAN.keyed("SuperForagingMode", false);
@@ -112,7 +111,7 @@ public class CultivationStaffItem extends StaffItem {
     public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<InWorldTooltipProvider.Entry> entries) {
         entries.add(InWorldTooltipProvider.Entry.text(
                 pedestal.getItem().get(SUPER_FORAGING_MODE_KEY) ? TextOps.withColor("✔", 0x28FFBF) : TextOps.withColor("❌ ", 0xEB1D36),
-                Text.literal("Super Foraging Mode™")
+                Text.translatable("item.affinity.cultivation_staff.super_foraging_mode")
         ));
     }
 

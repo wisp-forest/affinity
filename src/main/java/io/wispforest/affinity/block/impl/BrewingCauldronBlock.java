@@ -42,7 +42,7 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
             createCuboidShape(2.0D, 4.0D, 2.0D, 14.0D, 16.0D, 14.0D)), BooleanBiFunction.ONLY_FIRST);
 
     public BrewingCauldronBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.CAULDRON));
+        super(FabricBlockSettings.copyOf(Blocks.CAULDRON), CONSUMER_TOOLTIP);
     }
 
     @Nullable

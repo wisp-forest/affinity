@@ -2,7 +2,7 @@
 {
   "title": "The Sky",
   "icon": "affinity:the_sky",
-  "category": "affinity:basics",
+  "category": "affinity:magical_artifacts",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],

@@ -1,15 +1,20 @@
 package io.wispforest.affinity.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.misc.ArcaneFadeFluid;
 import io.wispforest.affinity.misc.EntityReference;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -31,6 +36,7 @@ public abstract class EntityMixin implements AffinityEntityAddon {
     @Shadow
     protected boolean touchingWater;
 
+    @Unique
     private static final TagKey<Fluid> ARCANE_FADE = TagKey.of(RegistryKeys.FLUID, Affinity.id("arcane_fade"));
 
     @Unique
@@ -103,5 +109,13 @@ public abstract class EntityMixin implements AffinityEntityAddon {
     protected void invokeFadeTickEvent(CallbackInfo ci) {
         if (!this.affinity$touchingBleach) return;
         ArcaneFadeFluid.ENTITY_TICK_IN_FADE_EVENT.invoker().onTouch((Entity) (Object) this);
+    }
+
+    @Inject(method = "move", at = @At("HEAD"))
+    protected void injectEvadeVelocity(MovementType movementType, Vec3d movement, CallbackInfo ci, @Local(argsOnly = true) LocalRef<Vec3d> movementRef) {
+        var evadeComponent = AffinityComponents.EVADE.getNullable(this);
+        if (evadeComponent == null || !evadeComponent.isActive()) return;
+
+        movementRef.set(evadeComponent.velocity());
     }
 }

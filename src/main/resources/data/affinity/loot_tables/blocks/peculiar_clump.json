@@ -58,23 +58,6 @@
           "condition": "affinity:clump_direction"
         }
       ]
-    },
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:cobblestone"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:inverted",
-          "term": {
-            "condition": "affinity:clump_direction"
-          }
-        }
-      ]
     }
   ]
 }

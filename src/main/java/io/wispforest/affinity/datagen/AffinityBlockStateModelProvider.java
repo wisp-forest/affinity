@@ -23,11 +23,12 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
         generator.registerCubeAllModelTexturePool(AZALEA_PLANKS).family(AffinityBlockFamilies.AZALEA);
         generator.registerLog(AZALEA_LOG).log(AZALEA_LOG).wood(AZALEA_WOOD);
         generator.registerLog(STRIPPED_AZALEA_LOG).log(STRIPPED_AZALEA_LOG).wood(STRIPPED_AZALEA_WOOD);
+        generator.registerHangingSign(STRIPPED_AZALEA_LOG, AZALEA_HANGING_SIGN, AZALEA_WALL_HANGING_SIGN);
 
         // Everything else
 
         this.primitiveCubeAllState(generator,
-                PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, THE_SKY, INVERSION_STONE, INFUSED_STONE
+                PECULIAR_CLUMP, UNFLOWERING_AZALEA_LEAVES, INVERSION_STONE, INFUSED_STONE
         );
 
         generator.excludeFromSimpleItemModelGeneration(AFFINE_INFUSER);
@@ -36,7 +37,7 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
                 COPPER_PLATED_AETHUM_FLUX_NODE, STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ANNIHILATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE,
                 REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, SPIRIT_INTEGRATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT,
                 CREATIVE_AETHUM_FLUX_CACHE, EMERALD_BLOCK, SUNDIAL, BREWING_CAULDRON, WORLD_PIN, CROP_REAPER, AFFINE_INFUSER, VOID_BEACON,
-                FIELD_COHERENCE_MODULATOR, GRAVITON_TRANSDUCER
+                FIELD_COHERENCE_MODULATOR, GRAVITON_TRANSDUCER, ETHEREAL_AETHUM_FLUX_NODE
         );
     }
 

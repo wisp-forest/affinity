@@ -1,6 +1,7 @@
 package io.wispforest.affinity.block.impl;
 
 import com.google.common.collect.ImmutableList;
+import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
 import io.wispforest.affinity.blockentity.impl.AffineCandleBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
@@ -17,14 +18,18 @@ import net.minecraft.block.CandleBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -103,5 +108,10 @@ public class AffineCandleBlock extends CandleBlock implements BlockEntityProvide
     @Override
     public Iterable<Vec3d> getParticleOffsets(BlockState state) {
         return CANDLES_TO_PARTICLE_OFFSETS.get((int) state.get(CANDLES));
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        tooltip.add(AethumNetworkMemberBlock.CONSUMER_TOOLTIP);
     }
 }

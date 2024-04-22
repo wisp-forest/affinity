@@ -58,7 +58,7 @@ public class SalvoStaffItem extends StaffItem {
         int cooldown = remainingUseTicks % 20;
         if (cooldown < 1) return;
 
-        player.getItemCooldownManager().set(this, cooldown);
+        player.getItemCooldownManager().set(this, cooldown * 2);
     }
 
     @Override

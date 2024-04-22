@@ -52,7 +52,7 @@ public class GravitonTransducerBlock extends AethumNetworkMemberBlock {
     ).reduce(VoxelShapes::union).get();
 
     public GravitonTransducerBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
+        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS), GENERATOR_TOOLTIP);
     }
 
     @Override

@@ -2,7 +2,7 @@
 {
   "title": "Resounding Chime",
   "icon": "affinity:resounding_chime",
-  "category": "affinity:basics",
+  "category": "affinity:equipment",
   "required_advancements": [
     "affinity:some_assembly_required"
   ],
@@ -31,4 +31,4 @@ foes with strong armor.
 
 
 Additionally, the intensity of damage taken {concept}increases with successive strikes{} in a
-sufficiently short timeframe
+sufficiently short timeframe.

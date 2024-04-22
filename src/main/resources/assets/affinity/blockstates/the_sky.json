@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "enabled=false": {
+      "model": "minecraft:block/glass"
+    },
+    "enabled=true": {
+      "model": "affinity:block/the_sky"
+    }
+  }
+}

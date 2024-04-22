@@ -1,9 +1,6 @@
 package io.wispforest.affinity.blockentity.impl;
 
-import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
-import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
-import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
-import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
+import io.wispforest.affinity.blockentity.template.*;
 import io.wispforest.affinity.endec.BuiltInEndecs;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.InteractionUtil;
@@ -24,7 +21,7 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("UnusedReturnValue")
-public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity {
+public class RitualSocleBlockEntity extends SyncedBlockEntity implements InteractableBlockEntity, TickedBlockEntity, ItemSocleBlockEntity {
 
     private static final KeyedEndec<ItemStack> ITEM_KEY = BuiltInEndecs.ITEM_STACK.keyed("Item", ItemStack.EMPTY);
 
@@ -44,7 +41,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
 
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (this.world.isClient) return ActionResult.SUCCESS;
-        if (this.ritualLock.isActive()) return ActionResult.PASS;
+        if (this.ritualLock.isHeld()) return ActionResult.PASS;
 
         return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand,
                 () -> this.item, stack -> this.item = stack, this::markDirty);
@@ -88,7 +85,7 @@ public class RitualSocleBlockEntity extends SyncedBlockEntity implements Interac
     }
 
     public void onBroken() {
-        if (this.ritualLock.isActive()) {
+        if (this.ritualLock.isHeld()) {
             this.ritualLock.holder().onSocleDestroyed(this.pos);
         }
 

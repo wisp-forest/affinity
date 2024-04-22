@@ -1,0 +1,52 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 800,
+  "flux_cost_per_tick": 80,
+  "core_inputs": [
+    {
+      "item": "affinity:archetypal_iron_ring"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "affinity:blackstone_prism"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "fabric:type": "affinity:potion",
+      "potion": "minecraft:strong_swiftness"
+    },
+    {
+      "item": "affinity:crystalline_wisp_matter_composite"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "affinity:crystalline_wisp_matter_composite"
+    }
+  ],
+  "output": {
+    "item": "affinity:evade_ring"
+  },
+  "entity": {
+    "id": "minecraft:cat"
+  }
+}

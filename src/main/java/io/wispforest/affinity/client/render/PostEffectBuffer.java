@@ -7,15 +7,19 @@ import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.event.WindowResizeCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.SimpleFramebuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL30C;
 
+import java.util.function.Supplier;
+
 public class PostEffectBuffer {
 
     private Framebuffer framebuffer = null;
     private int prevBuffer = 0;
+    private int textureFilter = -1;
 
     public void clear() {
         this.ensureInitialized();
@@ -67,6 +71,14 @@ public class PostEffectBuffer {
         ((AffinityFramebufferExtension) this.buffer()).affinity$setRenderColor(Color.WHITE);
     }
 
+    public void setBlitProgram(Supplier<ShaderProgram> program) {
+        ((AffinityFramebufferExtension)this.buffer()).affinity$setBlitProgram(program);
+    }
+
+    public void setTextureFilter(int textureFilter) {
+        this.textureFilter = textureFilter;
+    }
+
     public Framebuffer buffer() {
         this.ensureInitialized();
         return this.framebuffer;
@@ -78,7 +90,12 @@ public class PostEffectBuffer {
         this.framebuffer = new SimpleFramebuffer(MinecraftClient.getInstance().getFramebuffer().textureWidth, MinecraftClient.getInstance().getFramebuffer().textureHeight, true, MinecraftClient.IS_SYSTEM_MAC);
         this.framebuffer.setClearColor(0, 0, 0, 0);
 
-        WindowResizeCallback.EVENT.register((client, window) -> this.framebuffer.resize(window.getFramebufferWidth(), window.getFramebufferHeight(), MinecraftClient.IS_SYSTEM_MAC));
+        WindowResizeCallback.EVENT.register((client, window) -> {
+            this.framebuffer.resize(window.getFramebufferWidth(), window.getFramebufferHeight(), MinecraftClient.IS_SYSTEM_MAC);
+            if (this.textureFilter != -1) {
+                this.framebuffer.setTexFilter(this.textureFilter);
+            }
+        });
     }
 
 }

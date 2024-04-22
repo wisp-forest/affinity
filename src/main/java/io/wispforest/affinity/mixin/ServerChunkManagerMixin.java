@@ -32,9 +32,9 @@ public class ServerChunkManagerMixin {
 
     @Shadow private boolean spawnMonsters;
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
+//    @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(method = "tickChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SpawnHelper;spawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/SpawnHelper$Info;ZZZ)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void theMobsDoInFactSeemToBeSpawningSomewhatSwiftlyToday(CallbackInfo ci, long l, long m, WorldProperties worldProperties, Profiler profiler, int i, boolean bl2, int j, SpawnHelper.Info info, List<?> list, boolean bl3, Iterator<?> var14, @Coerce Object bruh, WorldChunk worldChunk2, ChunkPos chunkPos) {
+    private void theMobsDoInFactSeemToBeSpawningSomewhatSwiftlyToday(CallbackInfo ci, long l, long m, boolean bl, WorldProperties worldProperties, Profiler profiler, int i, boolean bl2, int j, SpawnHelper.Info info, List list, boolean bl3, Iterator var14, @Coerce Object chunkWithHolder, WorldChunk worldChunk2, ChunkPos chunkPos) {
         if (!worldChunk2.getComponent(AffinityComponents.CHUNK_AETHUM).isEffectActive(ChunkAethumComponent.INCREASED_NATURAL_SPAWNING)) {
             return;
         }

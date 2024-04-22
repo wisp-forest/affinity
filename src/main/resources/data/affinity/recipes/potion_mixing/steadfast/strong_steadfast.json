@@ -1,0 +1,16 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:strong_steadfast",
+  "effect_inputs": [
+    "minecraft:resistance",
+    "minecraft:slow_falling"
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    }
+  ]
+}

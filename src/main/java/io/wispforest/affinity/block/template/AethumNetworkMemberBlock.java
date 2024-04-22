@@ -4,13 +4,28 @@ import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntit
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public abstract class AethumNetworkMemberBlock extends BlockWithEntity {
 
-    protected AethumNetworkMemberBlock(Settings settings) {
+    public static final Text CONSUMER_TOOLTIP = Text.translatable("text.affinity.aethum_flux_consumer");
+    public static final Text GENERATOR_TOOLTIP = Text.translatable("text.affinity.aethum_flux_generator");
+    public static final Text NODE_TOOLTIP = Text.translatable("text.affinity.aethum_flux_node");
+    public static final Text STORAGE_TOOLTIP = Text.translatable("text.affinity.aethum_flux_storage");
+
+    private final Text tooltipText;
+
+    protected AethumNetworkMemberBlock(Settings settings, Text tooltipText) {
         super(settings);
+        this.tooltipText = tooltipText;
     }
 
     @Override
@@ -24,5 +39,10 @@ public abstract class AethumNetworkMemberBlock extends BlockWithEntity {
             if (world.getBlockEntity(pos) instanceof AethumNetworkMemberBlockEntity member) member.onBroken();
             super.onStateReplaced(state, world, pos, newState, moved);
         }
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+        tooltip.add(this.tooltipText);
     }
 }

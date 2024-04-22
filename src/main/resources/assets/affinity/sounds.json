@@ -14,6 +14,11 @@
       "affinity:item/nimble_staff_fling"
     ]
   },
+  "item.evade_ring.evade": {
+    "sounds": [
+      "affinity:item/evade_ring_evade"
+    ]
+  },
   "item.satiating_potion.start_drinking": {
     "sounds": [
       "affinity:item/satiating_potion_start_drinking"

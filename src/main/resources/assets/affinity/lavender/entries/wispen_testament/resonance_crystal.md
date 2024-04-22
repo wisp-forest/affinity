@@ -2,7 +2,7 @@
 {
   "title": "Resonance Crystal",
   "icon": "affinity:resonance_crystal",
-  "category": "affinity:basics",
+  "category": "affinity:magical_artifacts",
   "required_advancements": [
     "affinity:i_still_use_paint"
   ],
@@ -28,4 +28,4 @@ dealt - making them unsuited for this procedure.
 
 
 Instead, the killer must wield an [Artifact Blade](^affinity:artifact_blades). Built with magical rigor
-and imbued with surgical precision, they enable a successful extraction procedure
+and imbued with surgical precision, they enable a successful extraction procedure.

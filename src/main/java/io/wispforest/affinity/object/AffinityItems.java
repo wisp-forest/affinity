@@ -32,6 +32,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item MILDLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.MILDLY_ATTUNED);
     public static final Item FAIRLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.FAIRLY_ATTUNED);
     public static final Item GREATLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.GREATLY_ATTUNED);
+    public static final Item SCULK_RESONANT_ETHEREAL_AMETHYST_SHARD = new Item(settings(AffinityItemGroup.MAIN));
 
     public static final Item EMERALD_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
     public static final Item SAPPHIRE_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
@@ -65,12 +66,14 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item SCINTILLANT_ANTHRACITE_BLEND = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item RANTHRACITE_DUST = new AliasedBlockItem(AffinityBlocks.RANTHRACITE_WIRE, settings(AffinityItemGroup.MAIN));
     public static final Item CRYSTALLINE_WISP_MATTER_COMPOSITE = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
+    public static final Item BLACKSTONE_PRISM = new Item(settings(AffinityItemGroup.MAIN).maxCount(8));
     public static final Item AETHUM_MAP_PROTOTYPE = new AethumMapPrototypeItem();
     public static final Item REALIZED_AETHUM_MAP = new RealizedAethumMapItem();
     public static final Item UNCANNY_ROD = new Item(settings(AffinityItemGroup.MAIN).maxCount(16));
     public static final Item STAFF_PROTOTYPE = new Item(settings(AffinityItemGroup.MAIN).maxCount(7));
 
     public static final Item AZALEA_SIGN = new SignItem(settings(AffinityItemGroup.NATURE).maxCount(16), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
+    public static final Item AZALEA_HANGING_SIGN = new HangingSignItem(AffinityBlocks.AZALEA_HANGING_SIGN, AffinityBlocks.AZALEA_WALL_HANGING_SIGN, settings(AffinityItemGroup.NATURE).maxCount(16));
     public static final Item AZALEA_BOAT = new BoatItem(false, AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
     public static final Item AZALEA_CHEST_BOAT = new BoatItem(true, AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
 
@@ -85,6 +88,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item AETHUM_OVERCHARGER = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.RARE).maxCount(1));
     public static final Item ARCHETYPAL_IRON_RING = new Item(settings(AffinityItemGroup.MAIN));
     public static final Item FEATHERWEIGHT_RING = new FeatherweightRingItem();
+    public static final Item EVADE_RING = new EvadeRingItem();
     public static final Item LAVALIERE_OF_SAFE_KEEPING = new LavaliereOfSafeKeepingItem();
     public static final Item ASSASSINS_QUIVER = new AssassinsQuiverItem();
     public static final Item AETHUM_FIRE_EXTINGUISHER = new AethumFireExtinguisherItem();

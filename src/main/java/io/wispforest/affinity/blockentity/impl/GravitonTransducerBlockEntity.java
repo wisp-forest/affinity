@@ -38,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-@SuppressWarnings("UnstableApiUsage")
 public class GravitonTransducerBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity, InquirableOutlineProvider {
 
     private static final KeyedEndec<ItemStack> SHARD_KEY = BuiltInEndecs.ITEM_STACK.keyed("Shard", ItemStack.EMPTY);

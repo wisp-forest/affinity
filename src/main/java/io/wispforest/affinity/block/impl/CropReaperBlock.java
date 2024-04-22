@@ -33,7 +33,7 @@ public class CropReaperBlock extends AethumNetworkMemberBlock {
     ).reduce(VoxelShapes::union).get();
 
     public CropReaperBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque());
+        super(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque(), GENERATOR_TOOLTIP);
     }
 
     @Override

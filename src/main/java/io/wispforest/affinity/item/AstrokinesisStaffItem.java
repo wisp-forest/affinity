@@ -33,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@SuppressWarnings("UnstableApiUsage")
 public class AstrokinesisStaffItem extends KinesisStaffItem {
 
     private static final int ASTEROID_THROW_COST = 10;
@@ -49,7 +48,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
         var superResult = super.executeSpell(world, player, stack, remainingTicks, clickedBlock);
         if (superResult.getResult().isAccepted()) return superResult;
 
-        if (player.getPitch() > 10 || !world.getDimensionEntry().isIn(WHITELISTED_DIMENSIONS)) {
+        if (player.getPitch() > 10 || !world.getDimensionEntry().isIn(WHITELISTED_DIMENSIONS) || !world.isNight()) {
             return TypedActionResult.pass(stack);
         }
 

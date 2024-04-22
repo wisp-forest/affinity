@@ -45,9 +45,9 @@ import java.util.concurrent.ThreadLocalRandom;
 @SuppressWarnings("UnstableApiUsage")
 public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBlockEntity implements AethumNetworkNode, TickedBlockEntity, InteractableBlockEntity, InquirableOutlineProvider {
 
-    @Environment(EnvType.CLIENT) public float renderShardCount = 1f;
-    @Environment(EnvType.CLIENT) public float shardActivity = 1f;
-    @Environment(EnvType.CLIENT) public double time = ThreadLocalRandom.current().nextLong(0, 2000);
+    @Environment(EnvType.CLIENT) public float renderShardCount;
+    @Environment(EnvType.CLIENT) public float shardActivity;
+    @Environment(EnvType.CLIENT) public double time;
 
     private long lastTick = 0;
     private Collection<AethumNetworkMember> cachedMembers = null;
@@ -74,6 +74,12 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         }
 
         this.fluxStorage.setFluxCapacity(16000);
+
+        if (Affinity.onClient()) {
+            this.renderShardCount = 1f;
+            this.shardActivity = 1f;
+            this.time = ThreadLocalRandom.current().nextLong(0, 2000);
+        }
     }
 
     // ------------------
@@ -98,7 +104,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         var thisPoint = Vec3d.ofCenter(this.pos).add(this.linkAttachmentPoint);
         var otherPoint = Vec3d.ofCenter(otherPos).add(otherMember.linkAttachmentPointOffset());
 
-        var offset = otherPoint.subtract(thisPoint).multiply(this.world.random.nextFloat());
+        var offset = otherPoint.subtract(thisPoint).multiply(.01f + this.world.random.nextFloat() * .99f);
         var startPos = thisPoint.add(offset);
         var endPos = thisPoint.add(offset.normalize().multiply(.25f + this.world.random.nextFloat() * .5f));
 

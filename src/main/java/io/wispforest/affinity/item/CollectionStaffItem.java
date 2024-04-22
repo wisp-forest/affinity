@@ -54,7 +54,6 @@ public class CollectionStaffItem extends StaffItem {
     }
 
     @Override
-    @SuppressWarnings("UnstableApiUsage")
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
         if (pedestal.time() % 20 != 0) return;
 
@@ -92,7 +91,6 @@ public class CollectionStaffItem extends StaffItem {
     }
 
     @Override
-    @SuppressWarnings("UnstableApiUsage")
     public void pedestalTickClient(World world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
         if (pedestal.flux() < 8) return;
         if (ItemStorage.SIDED.find(world, pos.add(0, pedestal.down(), 0), pedestal.facing().getOpposite()) == null) {

@@ -1,11 +1,12 @@
 <owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20.3/owo-ui.xsd">
     <components>
         <flow-layout direction="vertical">
             <children>
                 <flow-layout direction="vertical">
                     <children>
-                        <texture texture="affinity:textures/gui/item_transfer_node.png" region-width="176" region-height="192"/>
+                        <texture texture="affinity:textures/gui/item_transfer_node.png" region-width="176"
+                                 region-height="192"/>
 
                         <flow-layout direction="horizontal" id="content-container">
                             <children>
@@ -18,16 +19,28 @@
                                     </padding>
                                 </flow-layout>
 
-                                <flow-layout direction="vertical" id="node-click-area">
-                                    <children/>
+                                <stack-layout>
+                                    <!--
+                                        We wrap the node click area in a stack here since it overlaps with the
+                                        preview anchor, causing its tooltip not to show since the algorithm cannot
+                                        clearly determine whether it or the preview anchor is hovered. By creating a
+                                        new parent context we remove this ambiguity, making its tooltip render again
+
+                                        glisco, 5.4.2024
+                                    -->
+                                    <children>
+                                        <flow-layout direction="vertical" id="node-click-area">
+                                            <children/>
+
+                                            <sizing>
+                                                <horizontal method="fixed">75</horizontal>
+                                                <vertical method="fixed">75</vertical>
+                                            </sizing>
+                                        </flow-layout>
+                                    </children>
 
                                     <positioning type="absolute">2,14</positioning>
-
-                                    <sizing>
-                                        <horizontal method="fixed">75</horizontal>
-                                        <vertical method="fixed">75</vertical>
-                                    </sizing>
-                                </flow-layout>
+                                </stack-layout>
 
                                 <flow-layout direction="vertical">
                                     <children>

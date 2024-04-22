@@ -1,6 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
-import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.blockentity.impl.WorldPinBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.misc.util.MathUtil;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class WorldPinBlock extends AethumNetworkMemberBlock {
+public class WorldPinBlock extends BlockWithEntity {
 
     public static final BooleanProperty ENABLED = Properties.ENABLED;
     private static final VoxelShape SHAPE = Stream.of(
@@ -45,6 +45,11 @@ public class WorldPinBlock extends AethumNetworkMemberBlock {
     public WorldPinBlock() {
         super(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES).mapColor(MapColor.CYAN).sounds(BlockSoundGroup.METAL).luminance(10));
         this.setDefaultState(this.getDefaultState().with(ENABLED, false));
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -68,6 +73,14 @@ public class WorldPinBlock extends AethumNetworkMemberBlock {
                         25, 10, true
                 ), world, Vec3d.ofCenter(pos, .85), .3
         );
+    }
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getBlock() != newState.getBlock()) {
+            if (world.getBlockEntity(pos) instanceof WorldPinBlockEntity pin) pin.onBroken();
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
     }
 
     @Nullable

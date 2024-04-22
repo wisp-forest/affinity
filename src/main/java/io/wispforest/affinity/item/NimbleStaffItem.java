@@ -10,11 +10,13 @@ import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.endec.CodecUtils;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
+import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -89,6 +91,12 @@ public class NimbleStaffItem extends StaffItem {
                 : Vec3d.of(getDirection(pedestal.getItem()).getVector());
 
         moveEntities(world, pos.add(0, pedestal.up() * 2, 0), pushDelta, () -> pedestal.hasFlux(5));
+
+        if (!pedestal.hasFlux(5)) return;
+
+        ClientParticles.setVelocity(pushDelta.multiply(.35));
+        ClientParticles.setParticleCount(2);
+        ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, Vec3d.ofCenter(pos, 1.5 * pedestal.up()), 9, 5, 9);
     }
 
     protected static void moveEntities(World world, BlockPos pos, Vec3d direction, BooleanSupplier shouldContinue) {
@@ -108,7 +116,6 @@ public class NimbleStaffItem extends StaffItem {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     private static @Nullable BlockPos tryFindBoundEchoShard(BlockPos pos, StaffPedestalBlockEntity pedestal) {
         var storageBelow = ItemStorage.SIDED.find(pedestal.getWorld(), pos.add(0, pedestal.down(), 0), pedestal.facing().getOpposite());
         if (storageBelow == null) return null;
@@ -170,17 +177,26 @@ public class NimbleStaffItem extends StaffItem {
         return stack.get(DIRECTION);
     }
 
+    public static @Nullable BlockHitResult findFlingTarget(PlayerEntity player) {
+        if (!player.isHolding(AffinityItems.NIMBLE_STAFF)) return null;
+
+        var target = player.raycast(50, 1f, false);
+        return target instanceof BlockHitResult blockHit && !player.getWorld().isAir(blockHit.getBlockPos())
+                ? blockHit
+                : null;
+    }
+
     @Override
     protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {
-        var target = player.raycast(50, 1f, false);
-        if (!(target instanceof BlockHitResult blockHit) || world.isAir(blockHit.getBlockPos())) {
+        var target = findFlingTarget(player);
+        if (target == null) {
             return TypedActionResult.fail(stack);
         }
 
         player.getItemCooldownManager().set(this, 15);
         if (world.isClient) return TypedActionResult.success(stack);
 
-        var targetCenter = Vec3d.ofCenter(blockHit.getBlockPos());
+        var targetCenter = Vec3d.ofCenter(target.getBlockPos());
         final var velocity = targetCenter.subtract(player.getPos()).multiply(
                 player.isOnGround()
                         ? 0.15

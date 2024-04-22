@@ -2,6 +2,7 @@ package io.wispforest.affinity.datagen;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.block.Blocks;
@@ -53,12 +54,14 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
                 .offerTo(exporter);
 
         offerStonecuttingRecipe(exporter, RecipeCategory.MISC, AffinityBlocks.BLANK_RITUAL_SOCLE, AffinityBlocks.INFUSED_STONE);
+        offerStonecuttingRecipe(exporter, RecipeCategory.MISC, BLACKSTONE_PRISM, Blocks.BLACKSTONE);
 
         offerBoatRecipe(exporter, AZALEA_BOAT, AffinityBlocks.AZALEA_PLANKS);
         offerChestBoatRecipe(exporter, AZALEA_CHEST_BOAT, AZALEA_BOAT);
         offerPlanksRecipe(exporter, AffinityBlocks.AZALEA_PLANKS, TagKey.of(RegistryKeys.ITEM, Affinity.id("azalea_logs")), 4);
         offerBarkBlockRecipe(exporter, AffinityBlocks.AZALEA_WOOD, AffinityBlocks.AZALEA_LOG);
         offerBarkBlockRecipe(exporter, AffinityBlocks.STRIPPED_AZALEA_WOOD, AffinityBlocks.STRIPPED_AZALEA_LOG);
+        offerHangingSignRecipe(exporter, AffinityBlocks.AZALEA_HANGING_SIGN, AffinityBlocks.AZALEA_PLANKS);
         generateFamily(exporter, AffinityBlockFamilies.AZALEA);
     }
 

@@ -3,10 +3,15 @@ package io.wispforest.affinity.network;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.template.AttackInteractionReceiver;
 import io.wispforest.affinity.block.template.ScrollInteractionReceiver;
+import io.wispforest.affinity.blockentity.impl.EtherealAethumFluxInjectorBlockEntity;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
+import io.wispforest.affinity.misc.util.EndecUtil;
+import io.wispforest.endec.impl.ReflectiveEndecBuilder;
 import io.wispforest.owo.network.OwoNetChannel;
+import io.wispforest.owo.network.serialization.PacketBufSerializer;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -14,6 +19,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 
 import java.util.Collection;
 
@@ -42,6 +48,8 @@ public class AffinityNetwork {
     }
 
     public static void initialize() {
+        PacketBufSerializer.register(GlobalPos.class, (buf, globalPos) -> buf.write(EndecUtil.GLOBAL_POS_ENDEC, globalPos), buf -> buf.read(EndecUtil.GLOBAL_POS_ENDEC));
+
         CHANNEL.registerClientbound(FluxSyncHandler.FluxSyncPacket.class, (message, access) -> {
             final var chunk = access.runtime().world.getChunk(message.chunk().x, message.chunk().z);
             message.updates().forEach((pos, flux) -> {
@@ -78,6 +86,8 @@ public class AffinityNetwork {
 
         HolographicStereopticonBlockEntity.initNetwork();
         RitualSocleComposerScreenHandler.initNetwork();
+        EtherealAethumFluxInjectorBlockEntity.initNetwork();
+        StaffItem.initNetwork();
     }
 
 }

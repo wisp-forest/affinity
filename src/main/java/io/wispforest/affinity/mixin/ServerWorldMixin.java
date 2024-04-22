@@ -1,7 +1,7 @@
 package io.wispforest.affinity.mixin;
 
-import com.google.common.collect.ImmutableMap;
-import com.mojang.serialization.MapCodec;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.ChunkAethumComponent;
@@ -9,7 +9,6 @@ import io.wispforest.affinity.component.WorldPinsComponent;
 import io.wispforest.affinity.mixin.access.ServerChunkManagerAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -29,6 +28,7 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -41,21 +41,20 @@ public abstract class ServerWorldMixin extends World {
     @Final
     private ServerChunkManager chunkManager;
 
-    private static final BlockState AFFINITY$MOCK_STATE = new BlockState(Blocks.AIR, ImmutableMap.of(), MapCodec.unit(null));
-    private static final TagKey<Block> AFFINITY$NO_RANDOM_TICKS = TagKey.of(RegistryKeys.BLOCK, Affinity.id("no_random_ticks_in_dying_chunks"));
+    @Unique private static final TagKey<Block> NO_RANDOM_TICKS = TagKey.of(RegistryKeys.BLOCK, Affinity.id("no_random_ticks_in_dying_chunks"));
 
     protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
         super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
     }
 
-    @ModifyVariable(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;hasRandomTicks()Z", shift = At.Shift.BEFORE))
-    private BlockState cancelRandomTicksInDeadChunks(BlockState state, WorldChunk chunk, int randomTickSpeed) {
-        if (!state.isIn(AFFINITY$NO_RANDOM_TICKS)) return state;
+    @ModifyExpressionValue(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;hasRandomTicks()Z"))
+    private boolean cancelRandomTicksInDeadChunks(boolean original, @Local(argsOnly = true) WorldChunk chunk, @Local BlockState state) {
+        if (!state.isIn(NO_RANDOM_TICKS)) return original;
 
         var component = chunk.getComponent(AffinityComponents.CHUNK_AETHUM);
-        if (!component.isEffectActive(ChunkAethumComponent.INFERTILITY)) return state;
+        if (!component.isEffectActive(ChunkAethumComponent.INFERTILITY)) return original;
 
-        return AFFINITY$MOCK_STATE;
+        return false;
     }
 
     @Inject(method = "shouldTick(Lnet/minecraft/util/math/ChunkPos;)Z", at = @At("HEAD"), cancellable = true)

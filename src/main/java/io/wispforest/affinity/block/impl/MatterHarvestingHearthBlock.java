@@ -61,7 +61,7 @@ public class MatterHarvestingHearthBlock extends AethumNetworkMemberBlock {
     ).reduce(VoxelShapes::union).get();
 
     public MatterHarvestingHearthBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.CAMPFIRE));
+        super(FabricBlockSettings.copyOf(Blocks.CAMPFIRE), GENERATOR_TOOLTIP);
         this.setDefaultState(this.getDefaultState().with(LIT, false).with(AXIS, Direction.Axis.X));
     }
 

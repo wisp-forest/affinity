@@ -1,0 +1,26 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:long_freezing",
+  "strong": true,
+  "effect_inputs": [
+    "minecraft:slowness",
+    "minecraft:weakness"
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:blue_ice"
+    },
+    {
+      "item": "minecraft:blue_ice"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "minecraft:snowball"
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import org.lwjgl.opengl.GL11;
@@ -30,8 +31,20 @@ public class SkyCaptureBuffer extends RenderLayer {
                     .build(true)
     );
 
+    public static final RenderLayer SKY_IMMEDIATE_LAYER = RenderLayer.of("affinity:sky_immediate",
+            VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL,
+            VertexFormat.DrawMode.QUADS,
+            0x200000,
+            MultiPhaseParameters.builder()
+                    .program(new ShaderProgram(AffinityClient.SOLID_FROM_FRAMEBUFFER::program))
+                    .target(RenderPhase.MAIN_TARGET)
+                    .texture(new TextureBase(() -> RenderSystem.setShaderTexture(0, SkyCaptureBuffer.skyCapture.getColorAttachment()), () -> {}))
+                    .build(true)
+    );
+
     private static Framebuffer skyCapture = null;
     private static StencilFramebuffer skyStencil = null;
+    private static int lastFramebuffer = 0;
 
     private SkyCaptureBuffer(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
         super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
@@ -80,9 +93,14 @@ public class SkyCaptureBuffer extends RenderLayer {
         AffinityClient.DEPTH_MERGE_BLIT_PROGRAM.setupSamplers(skyStencil.getDepthAttachment());
         skyStencil.draw(skyStencil.textureWidth, skyStencil.textureHeight, false);
         RenderSystem.disableBlend();
+
+        skyStencil.clear(MinecraftClient.IS_SYSTEM_MAC);
+        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
     }
 
     private static void beginStencilWrite() {
+        lastFramebuffer = GlStateManager.getBoundFramebuffer();
+
         skyStencil.beginWrite(false);
         GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, MinecraftClient.getInstance().getFramebuffer().fbo);
 
@@ -94,7 +112,7 @@ public class SkyCaptureBuffer extends RenderLayer {
 
     private static void endStencilWrite() {
         GL11.glDisable(GL11.GL_STENCIL_TEST);
-        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, lastFramebuffer);
     }
 
     static {

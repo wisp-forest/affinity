@@ -35,7 +35,7 @@ import java.util.List;
 
 public class SpiritAssimilationCategory implements DisplayCategory<SpiritAssimilationDisplay> {
 
-    public static final TagKey<Item> RECIPE_RITUAL_SOCLE_PREVIEW = TagKey.of(RegistryKeys.ITEM, Affinity.id("recipe_ritual_socle_preview"));
+    public static final TagKey<Item> RECIPE_RITUAL_SOCLE_PREVIEW = TagKey.of(RegistryKeys.ITEM, Affinity.id("ritual_socles"));
 
     @Override
     public List<Widget> setupDisplay(SpiritAssimilationDisplay display, Rectangle bounds) {

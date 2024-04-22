@@ -1,19 +1,35 @@
 package io.wispforest.affinity.client.render.blockentity;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.HolographicStereopticonBlock;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
 import io.wispforest.affinity.client.AffinityClient;
 import io.wispforest.affinity.client.render.BasicVertexConsumerProvider;
 import io.wispforest.affinity.client.render.PostEffectBuffer;
+import io.wispforest.affinity.misc.MixinHooks;
+import io.wispforest.affinity.misc.quack.AffinityClientWorldExtension;
 import io.wispforest.affinity.misc.quack.AffinityFramebufferExtension;
+import io.wispforest.affinity.mixin.client.WorldRendererAccessor;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.util.Delta;
+import io.wispforest.worldmesher.WorldMesh;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.RotationAxis;
+import org.jetbrains.annotations.Nullable;
+
+import java.lang.ref.Cleaner;
 
 public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEntityRenderer<HolographicStereopticonBlockEntity> {
+
+    private static final Cleaner MESH_CLEANER = Cleaner.create();
 
     private static final PostEffectBuffer BUFFER = new PostEffectBuffer();
     private static final BasicVertexConsumerProvider VERTEX_CONSUMERS = new BasicVertexConsumerProvider(4096);
@@ -29,7 +45,7 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
         var rotationOffset = entity.getCachedState().get(HolographicStereopticonBlock.FACING).asRotation();
 
         var delegate = entity.renderer();
-        if (delegate != HolographicStereopticonBlockEntity.Renderer.EMPTY && delegate.ready()) {
+        if (delegate != Renderer.EMPTY && delegate.ready()) {
             entity.visualRenderScale += Delta.compute(entity.visualRenderScale, entity.renderScale(), frameDelta);
 
             entity.currentRotation = entity.spin()
@@ -62,12 +78,176 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
     }
 
     static {
-        ((AffinityFramebufferExtension) BUFFER.buffer()).affinity$setBlitProgram(AffinityClient.DEPTH_MERGE_BLIT_PROGRAM::program);
+        BUFFER.setBlitProgram(AffinityClient.DEPTH_MERGE_BLIT_PROGRAM::program);
 
         WorldRenderEvents.START.register(context -> BUFFER.clear());
         WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
             AffinityClient.DEPTH_MERGE_BLIT_PROGRAM.setupSamplers(BUFFER.buffer().getDepthAttachment());
             BUFFER.draw(new Color(1f, 1f, 1f, .75f));
         });
+    }
+
+    public interface Renderer {
+        Renderer EMPTY = (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {};
+
+        void render(float scale, float rotation, MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta, int light, int overlay);
+
+        default boolean ready() {
+            return true;
+        }
+
+        default int updateDelay() {
+            return 0;
+        }
+
+        static Renderer read(HolographicStereopticonBlockEntity stereopticon, @Nullable NbtCompound nbt) {
+            if (nbt == null) return EMPTY;
+            return switch (nbt.getString(HolographicStereopticonBlockEntity.IMPRINT_KIND_KEY_NAME)) {
+                case "item" -> {
+                    var client = MinecraftClient.getInstance();
+                    var item = HolographicStereopticonBlockEntity.ImprintKind.ITEM.readData(nbt);
+                    if (item == null) yield EMPTY;
+
+                    yield (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {
+                        matrices.translate(.5f, .75f, .5f);
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
+                        matrices.scale(scale, scale, scale);
+
+                        matrices.translate(0, client.getItemRenderer().getModel(item, client.world, null, 0).hasDepth() ? -.05 : .125, 0);
+
+                        client.getItemRenderer().renderItem(item, ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, client.world, 0);
+                    };
+                }
+                case "block" -> {
+                    var client = MinecraftClient.getInstance();
+                    var data = HolographicStereopticonBlockEntity.ImprintKind.BLOCK.readData(nbt);
+                    if (data == null) yield EMPTY;
+
+                    BlockEntity entity;
+                    if (data.nbt() != null) {
+                        entity = BlockEntity.createFromNbt(stereopticon.getPos(), data.state(), data.nbt());
+                        entity.setWorld(client.world);
+                    } else {
+                        entity = null;
+                    }
+
+                    yield (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {
+                        matrices.translate(.5f, .75f, .5f);
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
+                        matrices.scale(.5f * scale, .5f * scale, .5f * scale);
+                        matrices.translate(-.5f, 0, -.5f);
+
+                        client.getBlockRenderManager().renderBlockAsEntity(data.state(), matrices, vertexConsumers, light, overlay);
+                        if (entity != null) {
+                            client.getBlockEntityRenderDispatcher().renderEntity(entity, matrices, vertexConsumers, light, overlay);
+                        }
+                    };
+                }
+                case "entity" -> {
+                    var client = MinecraftClient.getInstance();
+                    var entity = HolographicStereopticonBlockEntity.ImprintKind.ENTITY.readData(nbt);
+                    if (entity == null) yield EMPTY;
+
+                    entity.updatePosition(stereopticon.getPos().getX(), stereopticon.getPos().getY(), stereopticon.getPos().getZ());
+
+                    yield (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {
+                        matrices.translate(.5f, .75f, .5f);
+                        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
+                        matrices.scale(.35f * scale, .35f * scale, .35f * scale);
+
+                        client.getEntityRenderDispatcher().setRenderShadows(false);
+                        client.getEntityRenderDispatcher().render(entity, 0, 0, 0, 0, 0, matrices, vertexConsumers, light);
+                        client.getEntityRenderDispatcher().setRenderShadows(true);
+                    };
+                }
+                case "section" -> {
+                    var client = MinecraftClient.getInstance();
+
+                    var data = HolographicStereopticonBlockEntity.ImprintKind.SECTION.readData(nbt);
+                    if (data == null) yield EMPTY;
+
+                    var mesh = new WorldMesh.Builder(client.world, data.start(), data.end()).build();
+                    var updateDelay = (int) (mesh.dimensions().getXLength() * mesh.dimensions().getYLength() * mesh.dimensions().getZLength()) / 20000;
+
+                    var realMeshDimensions = new Box(mesh.startPos(), mesh.endPos().add(1, 1, 1));
+                    AffinityClientWorldExtension.BlockUpdateListener listener = (pos, from, to) -> {
+                        if (!realMeshDimensions.contains(pos.getX(), pos.getY(), pos.getZ())) return true;
+                        if (!client.getBakedModelManager().shouldRerender(from, to)) return true;
+
+                        stereopticon.refreshRenderer();
+                        return false;
+                    };
+                    client.send(() -> ((AffinityClientWorldExtension) client.world).affinity$addBlockUpdateListener(listener));
+
+                    var renderer = new Renderer() {
+
+                        private static int recursionDepth = 0;
+                        private final AffinityClientWorldExtension.BlockUpdateListener noGcPlease = listener;
+
+                        @Override
+                        public void render(float scale, float rotation, MatrixStack matrices, VertexConsumerProvider vertexConsumers, float tickDelta, int light, int overlay) {
+                            if (!mesh.canRender()) return;
+
+                            matrices.translate(.5f, .75f, .5f);
+                            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
+
+                            float meshScale = Math.min(.75f, 3f / (int) Math.max(mesh.dimensions().getXLength(), Math.max(mesh.dimensions().getYLength(), mesh.dimensions().getZLength())));
+                            matrices.scale(meshScale * scale, meshScale * scale, meshScale * scale);
+                            matrices.translate(-mesh.dimensions().getXLength() / 2, 0, -mesh.dimensions().getZLength() / 2);
+
+                            if (Affinity.CONFIG.renderBlockEntitiesInStereopticonSectionImprints()) {
+                                MixinHooks.forceBlockEntityRendering = true;
+                                mesh.renderInfo().blockEntities().forEach((blockPos, entity) -> {
+                                    if (entity instanceof HolographicStereopticonBlockEntity && recursionDepth > Affinity.CONFIG.stereopticonSectionImprintRecursionLimit() - 1) {
+                                        return;
+                                    }
+
+                                    matrices.push();
+                                    matrices.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+
+                                    recursionDepth++;
+                                    client.getBlockEntityRenderDispatcher().render(entity, tickDelta, matrices, vertexConsumers);
+                                    recursionDepth--;
+
+                                    matrices.pop();
+                                });
+                                MixinHooks.forceBlockEntityRendering = false;
+                            }
+
+                            if (Affinity.CONFIG.renderEntitiesInStereopticonSectionImprints()) {
+                                client.world.getOtherEntities(null, realMeshDimensions).forEach(entity -> {
+                                    var entityVisible = ((WorldRendererAccessor) client.worldRenderer).affinity$getFrustum() != null && client.getEntityRenderDispatcher().shouldRender(
+                                            entity,
+                                            ((WorldRendererAccessor) client.worldRenderer).affinity$getFrustum(),
+                                            client.getEntityRenderDispatcher().camera.getPos().x,
+                                            client.getEntityRenderDispatcher().camera.getPos().y,
+                                            client.getEntityRenderDispatcher().camera.getPos().z
+                                    );
+
+                                    var pos = entity.getLerpedPos(tickDelta).subtract(mesh.startPos().getX(), mesh.startPos().getY(), mesh.startPos().getZ());
+                                    client.getEntityRenderDispatcher().render(entity, pos.x, pos.y, pos.z, entity.getYaw(tickDelta), entityVisible ? tickDelta : 0, matrices, vertexConsumers, light);
+                                });
+                            }
+
+                            mesh.render(matrices);
+                        }
+
+                        @Override
+                        public boolean ready() {
+                            return mesh.canRender();
+                        }
+
+                        @Override
+                        public int updateDelay() {
+                            return updateDelay;
+                        }
+                    };
+
+                    MESH_CLEANER.register(renderer, () -> MinecraftClient.getInstance().execute(mesh::reset));
+                    yield renderer;
+                }
+                default -> EMPTY;
+            };
+        }
     }
 }

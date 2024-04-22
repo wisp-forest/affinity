@@ -2,7 +2,7 @@
 {
   "title": "Aethum Overcharger",
   "icon": "affinity:aethum_overcharger",
-  "category": "affinity:basics",
+  "category": "affinity:equipment",
   "required_advancements": [
     "affinity:resistance_is_futile"
   ],
@@ -12,7 +12,7 @@
 }
 ```
 
-It appears a rather logical idea to try infusing the {item}Totem of Undying{} with some {concept}Aethum Flux{}, seeing
+It appears a rather logical idea to try infusing the {item}Totem of Undying{} with some [Aethum Flux](^affinity:aethum_flux), seeing
 how they both deal with the very essence of life and death.
 
 
@@ -24,8 +24,6 @@ Indeed, combined with some other common (and less common) items of magical merit
 <recipe;affinity:spirit_assimilation/aethum_overcharger>
 
 @next-page
-
-;;;;;
 
 When equipped during an otherwise fatal event, it will activate and {concept}temporarily bring the user back from the
 brink of death{} in a somewhat incorporeal manner.

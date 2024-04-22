@@ -15,11 +15,14 @@ import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.Owo;
+import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import io.wispforest.owo.ui.core.Color;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
@@ -57,14 +60,14 @@ public class Affinity implements ModInitializer {
 
         AffinityItemGroup.register();
 
-        FieldRegistrationHandler.register(AffinityBlocks.class, MOD_ID, true);
-        FieldRegistrationHandler.register(AffinityItems.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityEnchantments.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityEntities.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityEntityAttributes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityParticleTypes.class, MOD_ID, false);
-        FieldRegistrationHandler.register(AffinityRecipeTypes.class, MOD_ID, true);
-        FieldRegistrationHandler.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityBlocks.class, MOD_ID, true);
+        AutoRegistryContainer.register(AffinityItems.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityEnchantments.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityEntities.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityEntityAttributes.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityParticleTypes.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityRecipeTypes.class, MOD_ID, true);
+        AutoRegistryContainer.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
 
         FieldRegistrationHandler.processSimple(AffinitySoundEvents.class, false);
         FieldRegistrationHandler.processSimple(AffinityCriteria.class, false);
@@ -87,6 +90,10 @@ public class Affinity implements ModInitializer {
         var signBlocks = ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$getBlocks();
         signBlocks = ImmutableSet.<Block>builder().addAll(signBlocks).add(AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN).build();
         ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$setBlocks(signBlocks);
+
+        var hangingSignBlocks = ((BlockEntityTypeAccessor) BlockEntityType.HANGING_SIGN).affinity$getBlocks();
+        hangingSignBlocks = ImmutableSet.<Block>builder().addAll(hangingSignBlocks).add(AffinityBlocks.AZALEA_HANGING_SIGN, AffinityBlocks.AZALEA_WALL_HANGING_SIGN).build();
+        ((BlockEntityTypeAccessor) BlockEntityType.HANGING_SIGN).affinity$setBlocks(hangingSignBlocks);
 
         AffinityItemGroup.group().initialize();
 
@@ -116,4 +123,7 @@ public class Affinity implements ModInitializer {
         return id(path).toString();
     }
 
+    public static boolean onClient() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+    }
 }

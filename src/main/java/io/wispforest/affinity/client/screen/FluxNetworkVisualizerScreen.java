@@ -100,9 +100,9 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         this.world = new RenderView(members);
         this.mesh = new WorldMesh.Builder(this.world, new BlockPos(minX, minY, minZ), new BlockPos(maxX, maxY, maxZ)).build();
 
-        this.xSize = this.mesh.dimensions().getXLength() + 1;
-        this.ySize = this.mesh.dimensions().getYLength() + 1;
-        this.zSize = this.mesh.dimensions().getZLength() + 1;
+        this.xSize = this.mesh.dimensions().getXLength();
+        this.ySize = this.mesh.dimensions().getYLength();
+        this.zSize = this.mesh.dimensions().getZLength();
 
         this.scale = new Interpolator(Math.min(15 / (Math.max(xSize, Math.max(ySize, zSize))), 5));
     }

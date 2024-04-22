@@ -165,7 +165,7 @@ public class ArtifactBladeItem extends SwordItem {
                 ImmutableMultimap.of()
         )),
         STABILIZED(new TierData(
-                1000, 3, 25, 6.5f, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f,
+                1000, 3, 25, 8f, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f,
                 ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
                         .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes season 4: remade", .15, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
                         .build()

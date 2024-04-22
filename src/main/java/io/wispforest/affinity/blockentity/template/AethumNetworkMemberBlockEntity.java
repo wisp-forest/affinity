@@ -34,7 +34,7 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     public static final KeyedEndec<AethumLink.Element> LINK_ELEMENT_KEY = Endec.forEnum(AethumLink.Element.class).keyed("Element", (AethumLink.Element) null);
     public static final KeyedEndec<AethumLink.Type> LINK_TYPE_KEY = Endec.forEnum(AethumLink.Type.class).keyed("Type", AethumLink.Type.NORMAL);
 
-    @Environment(EnvType.CLIENT) private long tooltipFlux = 0;
+    @Environment(EnvType.CLIENT) private long tooltipFlux;
 
     protected final Map<BlockPos, AethumLink.Type> links = new HashMap<>();
     protected final AethumFluxStorage fluxStorage = new AethumFluxStorage(this);

@@ -22,8 +22,8 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_unfired_clay_cup"
+      "has_unfired_clay_cup",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

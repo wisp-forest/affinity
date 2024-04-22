@@ -56,7 +56,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
         for (var recipe : manager.listAllOfType(AffinityRecipeTypes.POTION_MIXING)) {
 
-            final var effectInputs = Stream.concat(inputMixture.effects().stream(), inputMixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).toList();
+            final var effectInputs = Stream.concat(inputMixture.effects().stream(), inputMixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).distinct().toList();
             final var itemInputs = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
 
             if (effectInputs.size() != recipe.effectInputs.size() || itemInputs.size() != recipe.itemInputs.size()) {

@@ -20,7 +20,7 @@ public class SundialBlock extends AethumNetworkMemberBlock {
     private static final VoxelShape SHAPE = Block.createCuboidShape(2, 0, 2, 14, 2, 14);
 
     public SundialBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.COPPER_BLOCK).nonOpaque());
+        super(FabricBlockSettings.copyOf(Blocks.COPPER_BLOCK).nonOpaque(), GENERATOR_TOOLTIP);
     }
 
     @Override

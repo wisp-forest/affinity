@@ -1,6 +1,7 @@
 package io.wispforest.affinity.endec.nbt;
 
 
+import io.wispforest.endec.DataToken;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.Serializer;
 import io.wispforest.endec.util.RecursiveSerializer;
@@ -16,6 +17,8 @@ public class NbtSerializer extends RecursiveSerializer<NbtElement> {
     protected NbtSerializer(NbtElement prefix) {
         super(NbtEnd.INSTANCE);
         this.prefix = prefix;
+
+        this.set(DataToken.SELF_DESCRIBING, null);
     }
 
     public static NbtSerializer of(NbtElement prefix) {
