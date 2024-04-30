@@ -43,7 +43,7 @@ public class EmancipatedBlockEntity extends Entity {
 
     @Nullable
     @Environment(EnvType.CLIENT)
-    public BlockEntity renderBlockEntity = null;
+    public BlockEntity renderBlockEntity;
 
     private static final TrackedData<Integer> MAX_AGE = DataTracker.registerData(EmancipatedBlockEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Float> ANIMATION_SCALE = DataTracker.registerData(EmancipatedBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
