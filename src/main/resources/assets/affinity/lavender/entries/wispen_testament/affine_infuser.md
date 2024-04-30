@@ -36,7 +36,7 @@ is readily visualized using the [Wand of Inquiry](^affinity:inquiry).
 
 ---
 
-Now, additionally to healing item damage the {item}Affine Infuser{} is also capable of healing entities which have
+Now, additionally to restoring item durability the {item}Affine Infuser{} is also capable of healing entities which have
 
 ;;;;;
 
