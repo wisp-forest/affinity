@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client.hud;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.client.AffinityClient;
@@ -101,7 +102,10 @@ public class PlayerAethumHud {
                 buffer.vertex(transform, 0f, 1f * client.getWindow().getScaledHeight(), 0f).next();
                 buffer.vertex(transform, 1f * client.getWindow().getScaledWidth(), 1f * client.getWindow().getScaledHeight(), 0f).next();
                 buffer.vertex(transform, 1f * client.getWindow().getScaledWidth(), 0f, 0f).next();
+
+                GlStateManager._depthMask(false);
                 Tessellator.getInstance().draw();
+                GlStateManager._depthMask(true);
             }
 
             private void drawAethumRing(OwoUIDrawContext context, double progress, Color color) {
