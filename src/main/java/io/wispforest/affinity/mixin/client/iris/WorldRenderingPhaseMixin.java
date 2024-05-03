@@ -2,7 +2,7 @@ package io.wispforest.affinity.mixin.client.iris;
 
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.misc.CompatMixin;
-import net.coderbot.iris.pipeline.WorldRenderingPhase;
+import net.irisshaders.iris.pipeline.WorldRenderingPhase;
 import net.minecraft.client.render.RenderLayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
