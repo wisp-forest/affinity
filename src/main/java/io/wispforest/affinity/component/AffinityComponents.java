@@ -45,7 +45,7 @@ public class AffinityComponents implements EntityComponentInitializer, ChunkComp
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.registerForPlayers(PLAYER_AETHUM, PlayerAethumComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
+        registry.registerForPlayers(PLAYER_AETHUM, PlayerAethumComponent::new, RespawnCopyStrategy.LOSSLESS_ONLY);
         registry.registerForPlayers(PLAYER_WEATHER_TRACKER, PlayerWeatherTrackerComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
         registry.registerForPlayers(EVADE, EvadeComponent::new, RespawnCopyStrategy.NEVER_COPY);
 
