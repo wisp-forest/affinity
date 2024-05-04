@@ -1,14 +1,14 @@
 {
-  "parent": "affinity:resistance_is_futile",
+  "parent": "affinity:unbreakable",
   "display": {
     "icon": {
-      "item": "affinity:dragon_drop"
+      "item": "affinity:strengthened_artifact_blade"
     },
     "title": {
-      "translate": "advancement.affinity.drag_and_drop.title"
+      "translate": "advancement.affinity.slayer_of_titans.title"
     },
     "description": {
-      "translate": "advancement.affinity.drag_and_drop.description"
+      "translate": "advancement.affinity.slayer_of_titans.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,13 +16,13 @@
     "hidden": false
   },
   "criteria": {
-    "dragon_drop": {
+    "strengthened_artifact_blade": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items":[
-              "affinity:dragon_drop"
+              "affinity:strengthened_artifact_blade"
             ]
           }
         ]
@@ -31,7 +31,7 @@
   },
   "requirements": [
     [
-      "dragon_drop"
+      "strengthened_artifact_blade"
     ]
   ]
 }
