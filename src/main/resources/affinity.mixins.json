@@ -43,6 +43,7 @@
     "ProjectileEntityMixin",
     "ProjectileUtilMixin",
     "ServerChunkManagerMixin",
+    "ServerPlayerInteractionManagerMixin",
     "ServerWorldMixin",
     "StatusEffectUtilMixin",
     "ThreadedAnvilChunkStorageMixin",
