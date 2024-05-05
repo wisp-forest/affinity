@@ -28,18 +28,6 @@ public class WispMatterItem extends Item {
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        final var world = context.getWorld();
-
-        if (this == AffinityItems.INERT_WISP_MATTER) {
-            AffinityParticleSystems.LAVA_ERUPTION.spawn(world, Vec3d.ofCenter(context.getBlockPos().up()));
-            return ActionResult.SUCCESS;
-        }
-
-        return ActionResult.PASS;
-    }
-
-    @Override
     public Text getName() {
         return TRANSLATED_NAME;
     }
