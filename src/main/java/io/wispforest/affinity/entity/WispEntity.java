@@ -156,6 +156,8 @@ public abstract class WispEntity extends PathAwareEntity implements Vibrations {
                 }
             }
 
+            this.setEquipmentDropChance(EquipmentSlot.HEAD, 2f);
+            this.setPersistent();
             return ActionResult.SUCCESS;
         } else {
             return ActionResult.SUCCESS;
