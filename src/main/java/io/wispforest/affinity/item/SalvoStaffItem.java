@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +31,12 @@ public class SalvoStaffItem extends StaffItem {
         var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
         if (!aethum.hasAethum(MISSILE_COST)) return TypedActionResult.pass(stack);
 
-        var target = InteractionUtil.raycastEntities(player, 1f, 15, 2, entity -> entity.getType() != AffinityEntities.AETHUM_MISSILE && entity.isAlive() && entity instanceof LivingEntity);
+        EntityHitResult target = null;
+        for (int i = 0; i < 5; i++) {
+            target = InteractionUtil.raycastEntities(player, 1f, 15, .5 * i, entity -> entity.getType() != AffinityEntities.AETHUM_MISSILE && entity.isAlive() && entity instanceof LivingEntity);
+            if (target != null) break;
+        }
+
         if (target == null) return TypedActionResult.pass(stack);
 
         if (remainingTicks % 2 != 0 || remainingTicks % 20 < 12) return TypedActionResult.success(stack);
