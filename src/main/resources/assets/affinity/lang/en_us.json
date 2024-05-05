@@ -429,8 +429,8 @@
 
   "death.attack.asteroid": "%s was expunged by an Asteroid",
   "death.attack.asteroid.player": "%s was expunged by %s's Asteroid",
-  "death.attack.artifact_blade": "%s was slain by %s",
-  "death.attack.artifact_blade.item": "%s was slain by %s using %s",
+  "death.attack.artifact_blade.player": "%s was pierced by %s's Artifact Blade",
+  "death.attack.artifact_blade.item": "%s was pierced by %s's %s",
   "death.attack.sawblade": "%s was slice'n'diced",
   "death.attack.sawblade.player": "%s was slice'n'diced whilst trying to escape %s",
 

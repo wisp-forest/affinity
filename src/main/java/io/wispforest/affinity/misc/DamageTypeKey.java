@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -59,7 +60,13 @@ public class DamageTypeKey {
             };
 
             if (killer != null) {
-                return Text.translatable(key + ".player", killed.getDisplayName(), killer.getDisplayName());
+                var killerStack = killer instanceof LivingEntity livingKiller
+                        ? livingKiller.getMainHandStack()
+                        : ItemStack.EMPTY;
+
+                return !killerStack.isEmpty() && killerStack.hasCustomName()
+                        ? Text.translatable(key + ".item", killed.getDisplayName(), killer.getDisplayName(), killerStack.toHoverableText())
+                        : Text.translatable(key + ".player", killed.getDisplayName(), killer.getDisplayName());
             } else {
                 return Text.translatable(key, killed.getDisplayName());
             }
