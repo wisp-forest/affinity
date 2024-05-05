@@ -72,6 +72,7 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected boolean onRitualInterrupted() {
+        AffinityParticleSystems.ASPEN_INFUSION_FAILS.spawn(this.world, Vec3d.ofCenter(this.pos, .85), this.item);
         return false;
     }
 

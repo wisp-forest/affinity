@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity {
 
@@ -199,6 +200,15 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
             }
 
             this.ritualLock.release();
+
+            var items = Arrays.stream(this.cachedNeighbors).map(SpiritIntegrationApparatusBlockEntity::getItem).collect(Collectors.toList());
+            items.add(this.item);
+
+            AffinityParticleSystems.SPIRIT_ASSIMILATION_FAILS.spawn(
+                    this.world,
+                    Vec3d.ofCenter(this.ritualCenterPos().up(2)),
+                    new AffinityParticleSystems.SpiritAssimilationStacksData(items)
+            );
         }
 
         return false;
