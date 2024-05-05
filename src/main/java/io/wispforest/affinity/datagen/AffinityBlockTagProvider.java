@@ -43,6 +43,10 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
                 MATTER_HARVESTING_HEARTH, CROP_REAPER
         );
 
+        this.getOrCreateTagBuilder(BlockTags.HOE_MINEABLE).add(
+                BUDDING_AZALEA_LEAVES, UNFLOWERING_AZALEA_LEAVES
+        );
+
         // Azalea wood set
 
         this.getOrCreateTagBuilder(BlockTags.AXE_MINEABLE).add(AffinityBlockFamilies.AZALEA.getVariants().values().stream()
