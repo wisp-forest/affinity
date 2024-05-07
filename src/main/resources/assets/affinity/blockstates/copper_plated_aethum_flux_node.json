@@ -1,0 +1,29 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "affinity:block/copper_plated_aethum_flux_node",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "affinity:block/copper_plated_aethum_flux_node"
+    },
+    "facing=north": {
+      "model": "affinity:block/copper_plated_aethum_flux_node",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "affinity:block/copper_plated_aethum_flux_node",
+      "x": -90
+    },
+    "facing=east": {
+      "model": "affinity:block/copper_plated_aethum_flux_node",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west": {
+      "model": "affinity:block/copper_plated_aethum_flux_node",
+      "x": -90,
+      "y": 90
+    }
+  }
+}
