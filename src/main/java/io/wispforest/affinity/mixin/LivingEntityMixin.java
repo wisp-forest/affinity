@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.blockentity.impl.VoidBeaconBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
@@ -19,8 +20,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffect;
@@ -43,13 +46,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.UUID;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
+
+    @Unique
+    private static final EntityAttributeModifier AETHUM_OVERCHARGED_MODIFIER = new EntityAttributeModifier(
+            UUID.fromString("6acefb00-b5f8-4dd3-b616-e8bc9d0c6891"),
+            "aethum_overcharged", 2, EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+    );
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -91,6 +100,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Shadow
     protected float lastDamageTaken;
 
+    @Shadow public abstract AttributeContainer getAttributes();
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTickEnd(CallbackInfo ci) {
         LivingEntityTickCallback.EVENT.invoker().onTick((LivingEntity) (Object) this);
@@ -213,6 +223,11 @@ public abstract class LivingEntityMixin extends Entity {
         if ((Object) this instanceof ServerPlayerEntity serverPlayer) {
             serverPlayer.incrementStat(Stats.USED.getOrCreateStat(AffinityItems.AETHUM_OVERCHARGER));
             AffinityCriteria.USED_OVERCHARGER.trigger(serverPlayer);
+
+            this.getAttributes().addTemporaryModifiers(ImmutableMultimap.of(AffinityEntityAttributes.MAX_AETHUM, AETHUM_OVERCHARGED_MODIFIER));
+
+            var aethum = this.getComponent(AffinityComponents.PLAYER_AETHUM);
+            aethum.setAethum(aethum.maxAethum());
         }
 
         cir.setReturnValue(true);
