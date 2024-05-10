@@ -13,6 +13,7 @@ import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityCriteria;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
 import io.wispforest.owo.serialization.endec.BuiltInEndecs;
@@ -24,6 +25,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -97,6 +99,15 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
      */
     protected abstract boolean onRitualInterrupted();
 
+    protected boolean interruptRitual() {
+        var players = world.getNonSpectatingEntities(ServerPlayerEntity.class, new Box(this.pos).expand(7, 3, 7));
+        for (var player : players) {
+            AffinityCriteria.FAIL_RITUAL.trigger(player);
+        }
+
+        return this.onRitualInterrupted();
+    }
+
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (player.isSneaking()) {
@@ -113,7 +124,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     @Override
     public void onBroken() {
         super.onBroken();
-        this.endRitual(this::onRitualInterrupted, false);
+        this.endRitual(this::interruptRitual, false);
         ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.getItem());
     }
 
@@ -162,7 +173,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         if (++this.ritualTick >= this.cachedSetup.duration()) {
             this.endRitual(this::onRitualCompleted, true);
         } else if (this.ritualTick == this.ritualFailureTick) {
-            this.endRitual(this::onRitualInterrupted, false);
+            this.endRitual(this::interruptRitual, false);
         }
     }
 
@@ -172,7 +183,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         this.onRitualInterrupted();
 
-        this.endRitual(this::onRitualInterrupted, false);
+        this.endRitual(this::interruptRitual, false);
     }
 
     protected void endRitual(Supplier<Boolean> handlerImpl, boolean clearItems) {
