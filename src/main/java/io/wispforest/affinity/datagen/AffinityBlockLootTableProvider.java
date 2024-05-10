@@ -3,6 +3,7 @@ package io.wispforest.affinity.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.entry.ItemEntry;
@@ -11,6 +12,7 @@ import net.minecraft.loot.provider.nbt.ContextLootNbtProvider;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 
 import static io.wispforest.affinity.object.AffinityBlocks.*;
+import static io.wispforest.affinity.object.AffinityItems.AZALEA_FLOWERS;
 
 public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider {
 
@@ -28,9 +30,16 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
                 INFUSED_STONE, MATTER_HARVESTING_HEARTH, ASP_RITE_CORE, FIELD_COHERENCE_MODULATOR, GRAVITON_TRANSDUCER, ETHEREAL_AETHUM_FLUX_INJECTOR
         );
 
-        this.addDrop(BUDDING_AZALEA_LEAVES, block -> dropsWithShears(BUDDING_AZALEA_LEAVES));
-        this.addDrop(UNFLOWERING_AZALEA_LEAVES, block -> dropsWithShears(UNFLOWERING_AZALEA_LEAVES));
         this.addDrop(AFFINE_CANDLE, candleDrops(AFFINE_CANDLE));
+
+        this.addDrop(BUDDING_AZALEA_LEAVES, block -> this.leavesDrops(block, Blocks.AZALEA, SAPLING_DROP_CHANCE));
+        this.addDrop(UNFLOWERING_AZALEA_LEAVES, block -> this.leavesDrops(block, Blocks.AZALEA, SAPLING_DROP_CHANCE));
+        this.addDrop(Blocks.FLOWERING_AZALEA_LEAVES, block -> this.leavesDrops(block, Blocks.FLOWERING_AZALEA, SAPLING_DROP_CHANCE).pool(
+                LootPool.builder()
+                        .rolls(ConstantLootNumberProvider.create(1.0F))
+                        .conditionally(WITHOUT_SILK_TOUCH_NOR_SHEARS)
+                        .with(this.addSurvivesExplosionCondition(block, ItemEntry.builder(AZALEA_FLOWERS)))
+        ));
 
         this.selfDrop(AZALEA_LOG, AZALEA_WOOD, STRIPPED_AZALEA_LOG, STRIPPED_AZALEA_WOOD, AZALEA_PLANKS);
         for (var block : AffinityBlockFamilies.AZALEA.getVariants().values()) {

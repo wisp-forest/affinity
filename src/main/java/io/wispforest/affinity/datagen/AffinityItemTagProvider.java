@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.item.AethumFireExtinguisherItem;
 import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.item.WispMatterItem;
+import io.wispforest.affinity.item.WispMistItem;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -27,6 +28,7 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public static final TagKey<Item> AZALEA_LOGS = TagKey.of(RegistryKeys.ITEM, Affinity.id("azalea_logs"));
     public static final TagKey<Item> STAFFS = TagKey.of(RegistryKeys.ITEM, Affinity.id("staffs"));
     public static final TagKey<Item> WISP_MATTER = TagKey.of(RegistryKeys.ITEM, Affinity.id("wisp_matter"));
+    public static final TagKey<Item> WISP_MIST = TagKey.of(RegistryKeys.ITEM, Affinity.id("wisp_mist"));
 
     public AffinityItemTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture, @Nullable BlockTagProvider blockTagProvider) {
         super(output, completableFuture, blockTagProvider);
@@ -75,6 +77,10 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
             if (item instanceof WispMatterItem) {
                 this.getOrCreateTagBuilder(WISP_MATTER).add(item);
+            }
+
+            if (item instanceof WispMistItem) {
+                this.getOrCreateTagBuilder(WISP_MIST).add(item);
             }
         }, false);
     }

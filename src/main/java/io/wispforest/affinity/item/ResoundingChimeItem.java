@@ -13,6 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 
@@ -31,7 +33,7 @@ public class ResoundingChimeItem extends SwordItem {
             target.addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.RESONANT, 100, Math.min(amplifier + 1, 5)));
         }
 
-        target.playSound(SoundEvents.BLOCK_BELL_USE, 2f, 1.5f);
+        target.getWorld().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.BLOCK_BELL_USE, SoundCategory.PLAYERS, 2f, 1.5f);
 
         return super.postHit(stack, target, attacker);
     }

@@ -1,14 +1,14 @@
 {
-  "parent": "affinity:resistance_is_futile",
+  "parent": "affinity:i_still_use_paint",
   "display": {
     "icon": {
-      "item": "affinity:dragon_drop"
+      "item": "affinity:forgotten_artifact_blade"
     },
     "title": {
-      "translate": "advancement.affinity.drag_and_drop.title"
+      "translate": "advancement.affinity.isnt_it_iron_sword.title"
     },
     "description": {
-      "translate": "advancement.affinity.drag_and_drop.description"
+      "translate": "advancement.affinity.isnt_it_iron_sword.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,13 +16,13 @@
     "hidden": false
   },
   "criteria": {
-    "dragon_drop": {
+    "forgotten_artifact_blade": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items":[
-              "affinity:dragon_drop"
+              "affinity:forgotten_artifact_blade"
             ]
           }
         ]
@@ -31,7 +31,7 @@
   },
   "requirements": [
     [
-      "dragon_drop"
+      "forgotten_artifact_blade"
     ]
   ]
 }

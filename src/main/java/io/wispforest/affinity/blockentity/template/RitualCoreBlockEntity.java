@@ -130,7 +130,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
         if (!this.onRitualStart(setup)) return ActionResult.PASS;
         if (setup.duration() < 0) {
-            throw new IllegalStateException("No ritual length was configured. If you're a player, report this issue");
+            throw new IllegalStateException("No ritual length was configured. If you're not a developer, report this issue");
         }
 
         this.cachedSetup = setup;

@@ -168,7 +168,7 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
 
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!player.isSneaking()) return ActionResult.PASS;
+        if (!player.isSneaking() || !player.getUuid().equals(this.owner)) return ActionResult.PASS;
 
         this.global = !this.global;
         this.markDirty();

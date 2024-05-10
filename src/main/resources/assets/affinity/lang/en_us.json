@@ -15,8 +15,14 @@
   "structure.affinity.void_beacon": "Void Beacon",
   "structure.affinity.rudimentary_aspen_infusion": "Rudimentary Aspen Infusion",
 
-  "key.affinity.activate_evade_ring": "Activate Evade Ring",
-  "key.affinity.select_staff_from_bundle": "Select Staff from Bundle",
+  "key.affinity.activate_evade_ring": [
+    {"translate": "text.affinity.prefix"},
+    " Activate Evade Ring"
+  ],
+  "key.affinity.select_staff_from_bundle": [
+    {"translate": "text.affinity.prefix"},
+    " Select Staff from Bundle"
+  ],
 
   "text.affinity.ethereal_aethum_flux_injector.node_location_tooltip": [
     {"index": 0},
@@ -429,8 +435,8 @@
 
   "death.attack.asteroid": "%s was expunged by an Asteroid",
   "death.attack.asteroid.player": "%s was expunged by %s's Asteroid",
-  "death.attack.artifact_blade": "%s was slain by %s",
-  "death.attack.artifact_blade.item": "%s was slain by %s using %s",
+  "death.attack.artifact_blade.player": "%s was pierced by %s's Artifact Blade",
+  "death.attack.artifact_blade.item": "%s was pierced by %s's %s",
   "death.attack.sawblade": "%s was slice'n'diced",
   "death.attack.sawblade.player": "%s was slice'n'diced whilst trying to escape %s",
 
@@ -462,6 +468,14 @@
   "advancement.affinity.rock_and_stone.description": "You successfully mined your first Peculiar Clump. Let's bring it home, team.",
   "advancement.affinity.i_still_use_paint.title": "I Still use Paint",
   "advancement.affinity.i_still_use_paint.description": "Craft an Asp Rite Core",
+  "advancement.affinity.isnt_it_iron_sword.title": "Isn't It Iron... Sword?",
+  "advancement.affinity.isnt_it_iron_sword.description": "Construct your Artifact Blade",
+  "advancement.affinity.unbreakable.title": "Unbreakable",
+  "advancement.affinity.unbreakable.description": "Stabilize your Artifact Blade",
+  "advancement.affinity.slayer_of_titans.title": "Slayer Of Titans",
+  "advancement.affinity.slayer_of_titans.description": "Strengthen your Artifact Blade using energies from Hell",
+  "advancement.affinity.everything_is_yours.title": "Everything Is Yours",
+  "advancement.affinity.everything_is_yours.description": "Fuse your Artifact Blade with the heart of a dragon. Artemis would have liked this",
   "advancement.affinity.sup_b.title": "sup(B)",
   "advancement.affinity.sup_b.description": "The supremum (abbreviated sup; plural suprema) of a subset S of a partially ordered set P is the least element in P that is greater than or equal to each element of S, if such an element exists",
   "advancement.affinity.big_girl_decisions.title": "Big Girl Decisions",
@@ -496,7 +510,7 @@
   "advancement.affinity.pure_shot_of_poison_to_my_heart.description": "Sacrifice a tamed animal to a ritual",
   "advancement.affinity.the_sky_suit.title": "The Sky Suit!",
 
-  "text.config.affinity.title": [
+  "text.affinity.prefix": [
     "",
     {"text": "[", "color": "gray"},
     {"text":"A","color":"#0096ff"},
@@ -507,7 +521,10 @@
     {"text":"i","color":"#00c4ff"},
     {"text":"t","color":"#00cdff"},
     {"text":"y","color":"#00d7ff"},
-    {"text": "]", "color": "gray"},
+    {"text": "]", "color": "gray"}
+  ],
+  "text.config.affinity.title": [
+    {"translate": "text.affinity.prefix"},
     " Configuration"
   ],
   "text.config.affinity.option.renderEntitiesInStereopticonSectionImprints": "Show entities",

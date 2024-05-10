@@ -33,7 +33,7 @@ repositories {
     // cca, pal
     maven { url "https://maven.ladysnake.org/releases" }
 
-    // owo, the one probe
+    // owo
     maven { url "https://maven.wispforest.io" }
 
     // rei
@@ -43,9 +43,9 @@ repositories {
     maven { url "https://maven.minecraftforge.net/" }
 
     // canvas
-    maven { url "https://maven.vram.io/" }
+    // maven { url "https://maven.vram.io/" }
 
-    // emoji-type and lazydfu
+    // iris, sodium
     maven {
         url "https://api.modrinth.com/maven"
         content {

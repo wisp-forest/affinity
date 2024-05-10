@@ -6,7 +6,9 @@
     "@next-page": "{gray}*⟳ %{text.affinity.wispen_testament.next_page}%*{}\n\n;;;;;",
     "@entry-end": "<|entry-end-marker@affinity:wispen_testament|>",
     "@staff-pedestal": "<|staff-pedestal-header@affinity:wispen_testament|>",
-    "{item}": "{#FA00FA}",
-    "{concept}": "{#179FA6}"
+    "{i}": "{#FA00FA}",
+    "{c}": "{#179FA6}",
+    "{item}": "{i}",
+    "{concept}": "{c}"
   }
 }

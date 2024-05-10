@@ -13,7 +13,7 @@
     "show_toast": false,
     "announce_to_chat": false,
     "hidden": false,
-    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+    "background": "affinity:textures/gui/advancement_background.png"
   },
   "criteria": {
     "tick": {

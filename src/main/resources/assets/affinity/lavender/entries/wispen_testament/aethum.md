@@ -52,7 +52,7 @@ non-negligible amount of {concept}Environmental Aethum{} which varies from area 
 importance for [rituals](^affinity:conducting_rituals) and a range of other processes.
 
 To study the strength of {concept}Environmental Aethum{} at a given place, the {item}Aethum Map{} (enveloped with 
-[Anthracite](^affinity:anthracite_extration), a material strongly receptive to changes in {concept}Aethum{} density)
+[Anthracite](^affinity:anthracite_extraction), a material strongly receptive to changes in {concept}Aethum{} density)
 should be used.
 
 

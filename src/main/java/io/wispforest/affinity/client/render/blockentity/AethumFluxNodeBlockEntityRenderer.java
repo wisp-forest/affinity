@@ -10,6 +10,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
@@ -55,12 +56,16 @@ public class AethumFluxNodeBlockEntityRenderer extends AffinityBlockEntityRender
             LinkRenderer.addLink(nodeLinkPos, Vec3d.ofCenter(link).add(member.linkAttachmentPointOffset()), linkColor);
         }
 
+        matrices.push();
+        if (node.getCachedState().getProperties().contains(Properties.FACING)) {
+            matrices.translate(.5, .5, .5);
+            matrices.multiply(node.getCachedState().get(Properties.FACING).getRotationQuaternion());
+            matrices.translate(-.5, -.5, -.5);
+        }
 
         // -------------
         // Central shard
         // -------------
-
-        matrices.push();
 
         double shardHeight = Math.sin(node.time / 1000d) * .015;
         matrices.translate(0.4375, node.shardHeight() + shardHeight, 0.4375);

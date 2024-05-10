@@ -17,8 +17,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,11 +25,6 @@ public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlo
 
     protected AbstractAethumFluxNodeBlock() {
         super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10), NODE_TOOLTIP);
-    }
-
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.getShape();
     }
 
     @Nullable
@@ -56,8 +49,6 @@ public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlo
         if (!(world.getBlockEntity(pos) instanceof AethumFluxNodeBlockEntity node)) return ActionResult.PASS;
         return node.onAttack(player);
     }
-
-    protected abstract VoxelShape getShape();
 
     public abstract boolean isUpgradeable();
 

@@ -10,6 +10,7 @@ import io.wispforest.affinity.particle.OrbitingEmitterParticleEffect;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.particles.systems.ParticleSystem;
 import io.wispforest.owo.particles.systems.ParticleSystemController;
+import io.wispforest.owo.util.VectorRandomUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.*;
@@ -126,6 +127,31 @@ public class AffinityParticleSystems {
         ClientParticles.reset();
     });
 
+    public static final ParticleSystem<SpiritAssimilationStacksData> SPIRIT_ASSIMILATION_FAILS = CONTROLLER.register(SpiritAssimilationStacksData.class, (world, pos, data) -> {
+        for (int i = 0; i < 8; i++) {
+            ClientParticles.spawn(new GenericEmitterParticleEffect(
+                    new ItemStackParticleEffect(ParticleTypes.ITEM, data.stacks.get(i % 4)), new Vec3d(.25, .25, .25), 1, .5f, true, 10
+            ), world, pos, 0d);
+        }
+
+        var dispersionEffect = new DustColorTransitionParticleEffect(new Vector3f(1, 0, 0), new Vector3f(1, .25f, .75f), 1);
+        for (int i = 0; i < 10; i++) {
+            ClientParticles.spawn(new BezierPathEmitterParticleEffect(
+                    dispersionEffect,
+                    VectorRandomUtils.getRandomOffsetSpecific(world, pos.add(0, .5, 0), 8, .25, 8),
+                    15, 10, true
+            ), world, pos, 0);
+        }
+
+        ClientParticles.setParticleCount(10);
+        ClientParticles.spawnPrecise(ParticleTypes.EXPLOSION, world, pos, 3, 3, 3);
+
+        ClientParticles.setParticleCount(25);
+        ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, pos.subtract(0, 2, 0), 3, 1, 3);
+
+        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, .75f, .75f, false);
+    });
+
     public static final ParticleSystem<Void> LAVA_ERUPTION = CONTROLLER.register(Void.class, (world, pos, data) -> {
         ClientParticles.spawn(new GenericEmitterParticleEffect(
                 ParticleTypes.LARGE_SMOKE, new Vec3d(0, .25, 0), 1, .5f, false, 8
@@ -135,6 +161,29 @@ public class AffinityParticleSystems {
         ClientParticles.spawn(ParticleTypes.LAVA, world, pos, .25);
     });
 
+    public static final ParticleSystem<ItemStack> ASPEN_INFUSION_FAILS = CONTROLLER.register(ItemStack.class, (world, pos, coreStack) -> {
+        ClientParticles.setParticleCount(8);
+        ClientParticles.spawn(new GenericEmitterParticleEffect(
+                new ItemStackParticleEffect(ParticleTypes.ITEM, coreStack), new Vec3d(.25, .25, .25), 1, .5f, true, 10
+        ), world, pos, 0d);
+
+        for (int i = 0; i < 10; i++) {
+            ClientParticles.spawn(new BezierPathEmitterParticleEffect(
+                    new DustParticleEffect(MathUtil.rgbToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb()), 1f),
+                    VectorRandomUtils.getRandomOffsetSpecific(world, pos.add(0, .5, 0), 8, .25, 8),
+                    15, 10, true
+            ), world, pos, 0);
+        }
+
+        ClientParticles.setParticleCount(10);
+        ClientParticles.spawnPrecise(ParticleTypes.EXPLOSION, world, pos.subtract(0, 1, 0), 2, .25, 2);
+
+        ClientParticles.setParticleCount(25);
+        ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, pos, 3, 1, 3);
+
+        MinecraftClient.getInstance().getSoundManager().stopSounds(AffinitySoundEvents.BLOCK_ASP_RITE_CORE_ACTIVE.getId(), SoundCategory.BLOCKS);
+        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, .75f, 1.25f, false);
+    });
 
     public static final ParticleSystem<BezierVortexData> BEZIER_VORTEX = CONTROLLER.register(BezierVortexData.class, (world, pos, data) -> {
         for (var candle : data.originPositions) {
@@ -279,6 +328,8 @@ public class AffinityParticleSystems {
                                    int travelDuration, boolean randomPath) {}
 
     public record ArtifactBladeAreaAttackData(Vec3d targetPos, List<Vec3d> entityPositions) {}
+
+    public record SpiritAssimilationStacksData(List<ItemStack> stacks) {}
 
     // ------------------
 

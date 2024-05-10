@@ -22,12 +22,17 @@ import net.minecraft.util.Hand;
 import org.lwjgl.glfw.GLFW;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class SelectStaffFromBundleScreen extends BaseUIModelScreen<FlowLayout> {
 
     private final Hand hand;
     private final ItemStack stack;
+
+    private final List<StackLayout> selectionItems = new ArrayList<>();
+    private int currentStaffIdx = -1;
 
     public SelectStaffFromBundleScreen(Hand hand, ItemStack stack) {
         super(FlowLayout.class, Affinity.id("select_staff_from_bundle"));
@@ -37,7 +42,7 @@ public class SelectStaffFromBundleScreen extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        var bundlePreview = rootComponent.childById(ItemComponent.class, "bundle-preview").stack(this.stack);
+        rootComponent.childById(ItemComponent.class, "bundle-preview").stack(this.stack);
 
         var bundle = this.stack.get(StaffItem.BUNDLED_STAFFS);
         var row = rootComponent.childById(FlowLayout.class, "bundled-staffs-row");
@@ -48,26 +53,71 @@ public class SelectStaffFromBundleScreen extends BaseUIModelScreen<FlowLayout> {
             var button = this.model.expandTemplate(StackLayout.class, "bundled-staff", Map.of());
             button.childById(ItemComponent.class, "stack").stack(staffStack);
 
-            button.childById(ItemComponent.class, "stack").mouseEnter().subscribe(() -> {
-                bundlePreview.stack(StaffItem.selectStaffFromBundle(this.stack, staffIdx));
-                button.child(Components.texture(Affinity.id("textures/gui/sprites/staff_bundle_selection.png"), 0, 0, 26, 26, 26, 26).cursorStyle(CursorStyle.HAND));
-            });
-            button.childById(ItemComponent.class, "stack").mouseLeave().subscribe(() -> {
-                bundlePreview.stack(this.stack);
-                button.children().get(button.children().size() - 1).remove();
-            });
+            button.childById(ItemComponent.class, "stack").mouseEnter().subscribe(() -> this.select(staffIdx));
+            button.childById(ItemComponent.class, "stack").mouseLeave().subscribe(() -> this.select(-1));
             button.childById(ItemComponent.class, "stack").mouseDown().subscribe((mouseX, mouseY, mouseButton) -> {
                 if (mouseButton != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
-                UISounds.playInteractionSound();
-
-                AffinityNetwork.CHANNEL.clientHandle().send(new StaffItem.SelectStaffFromBundlePacket(this.hand, staffIdx));
-                this.close();
+                submitSelection(staffIdx);
 
                 return true;
             });
 
             row.child(button);
+            this.selectionItems.add(button);
         }
+    }
+
+    private void submitSelection(int staffIdx) {
+        UISounds.playInteractionSound();
+
+        AffinityNetwork.CHANNEL.clientHandle().send(new StaffItem.SelectStaffFromBundlePacket(this.hand, staffIdx));
+        this.invalid = true;
+    }
+
+    private void select(int idx) {
+        if (this.currentStaffIdx != -1) {
+            var button = this.selectionItems.get(this.currentStaffIdx);
+            button.children().get(button.children().size() - 1).remove();
+        }
+
+        this.currentStaffIdx = idx;
+        var bundlePreview = this.component(ItemComponent.class, "bundle-preview").stack(this.stack);
+
+        if (this.currentStaffIdx != -1) {
+            bundlePreview.stack(StaffItem.selectStaffFromBundle(this.stack, this.currentStaffIdx));
+            this.selectionItems.get(this.currentStaffIdx).child(Components.texture(Affinity.id("textures/gui/sprites/staff_bundle_selection.png"), 0, 0, 26, 26, 26, 26).cursorStyle(CursorStyle.HAND));
+        } else {
+            bundlePreview.stack(this.stack);
+        }
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if (super.mouseScrolled(mouseX, mouseY, amount)) return true;
+
+        if (amount == 0) return false;
+
+        var newIdx = this.wrap(this.currentStaffIdx + (int) amount);
+        this.select(this.currentStaffIdx == -1 && amount < 0 ? newIdx + 1 : newIdx);
+
+        return true;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (super.keyPressed(keyCode, scanCode, modifiers)) return true;
+
+        if (this.currentStaffIdx == -1 || !(keyCode == GLFW.GLFW_KEY_SPACE || keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER)) return false;
+        this.submitSelection(this.currentStaffIdx);
+
+        return true;
+    }
+
+    private int wrap(int idx) {
+        while (idx < 0) idx += this.selectionItems.size();
+        while (idx >= this.selectionItems.size()) idx -= this.selectionItems.size();
+
+        return idx;
     }
 
     @Override

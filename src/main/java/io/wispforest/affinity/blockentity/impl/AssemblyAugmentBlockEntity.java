@@ -120,6 +120,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
                     if (ingredients.get(slot).test(resource.toStack())) candidateSlots.add(inventoryStorage.getSlot(slot));
                 }
 
+                if (candidateSlots.isEmpty()) return 0;
                 candidateSlots.sort(Comparator.comparingLong(StorageView::getAmount));
 
                 long remaining = maxAmount;
