@@ -361,7 +361,7 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
         } else if (state.isOf(Blocks.OBSERVER)) {
             return dir == state.get(ObserverBlock.FACING);
         } else {
-            return state.emitsRedstonePower() && dir != null;
+            return !state.isOf(Blocks.REDSTONE_WIRE) && state.emitsRedstonePower() && dir != null;
         }
     }
 }

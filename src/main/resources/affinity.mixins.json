@@ -42,6 +42,7 @@
     "PotionUtilMixin",
     "ProjectileEntityMixin",
     "ProjectileUtilMixin",
+    "RedstoneWireBlockMixin",
     "ServerChunkManagerMixin",
     "ServerPlayerInteractionManagerMixin",
     "ServerWorldMixin",
