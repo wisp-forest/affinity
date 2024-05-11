@@ -14,7 +14,6 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 
@@ -26,14 +25,13 @@ public class ResoundingChimeItem extends SwordItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (!target.hasStatusEffect(AffinityStatusEffects.RESONANT)) {
-            target.addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.RESONANT, 100, 0));
-        } else {
-            var amplifier = target.getStatusEffect(AffinityStatusEffects.RESONANT).getAmplifier();
-            target.addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.RESONANT, 100, Math.min(amplifier + 1, 5)));
+        var amplifier = 0;
+        if (target.hasStatusEffect(AffinityStatusEffects.RESONANT)) {
+            amplifier = Math.min(target.getStatusEffect(AffinityStatusEffects.RESONANT).getAmplifier() + 1, 5);
         }
 
-        target.getWorld().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.BLOCK_BELL_USE, SoundCategory.PLAYERS, 2f, 1.5f);
+        target.addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.RESONANT, 100, amplifier));
+        target.getWorld().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.BLOCK_BELL_USE, SoundCategory.PLAYERS, 2f, 1 + amplifier * .2f);
 
         return super.postHit(stack, target, attacker);
     }
