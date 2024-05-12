@@ -5,6 +5,7 @@ import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntit
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEnchantments;
@@ -63,9 +64,12 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
         for (var entity : this.world.getNonSpectatingEntities(Entity.class, searchArea)) {
             if (currentRepairCost.getValue() > this.flux() - repairCostPerItem()) break;
 
-            if (entity instanceof LivingEntity living && living.hasStatusEffect(AffinityStatusEffects.AFFINE) && living.getMaxHealth() > living.getHealth()) {
-                ((LivingEntity) entity).heal(1);
-                currentRepairCost.add(repairCostPerItem());
+            if (entity instanceof LivingEntity living && living.hasStatusEffect(AffinityStatusEffects.AFFINE)) {
+                var aethum = entity.getComponent(AffinityComponents.PLAYER_AETHUM);
+                if (aethum.getAethum() < aethum.maxAethum()) {
+                    aethum.addAethum(1);
+                    currentRepairCost.add(repairCostPerItem());
+                }
             }
 
             if (entity instanceof PlayerEntity) {

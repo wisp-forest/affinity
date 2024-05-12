@@ -29,7 +29,7 @@ When equipped during an otherwise fatal event, it will activate and {concept}tem
 brink of death{} in a somewhat incorporeal manner.
 
 
-To be precise, the user will be {concept}completely invulnerable for 15 seconds{}. After this time passes, however,
-death will catch up and the user's timely demise is inevitable.
+To be precise, the user will be {concept}completely invulnerable for 15 seconds{} and have their {c}Aethum capacity{}
+raised to {c}300%{}. After this time passes, however, death will catch up and the user's timely demise is inevitable.
 
 @entry-end

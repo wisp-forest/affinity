@@ -56,7 +56,7 @@ import java.util.List;
 public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implements InWorldTooltipProvider, TickedBlockEntity, InteractableBlockEntity {
 
     public static final String IMPRINT_KIND_KEY_NAME = "ImprintKind";
-    public static final KeyedEndec<NbtCompound> RENDERER_DATA_KEY = NbtEndec.COMPOUND.keyed("RendererData", (NbtCompound) null);
+    public static final String RENDERER_DATA_KEY = "RendererData";
     public static final KeyedEndec<Float> RENDER_SCALE_KEY = Endec.FLOAT.keyed("RenderScale", 1f);
     public static final KeyedEndec<Boolean> SPIN_KEY = Endec.BOOLEAN.keyed("Spin", true);
 
@@ -97,7 +97,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
         super.readNbt(nbt);
         this.renderScale = nbt.get(RENDER_SCALE_KEY);
         this.spin = nbt.get(SPIN_KEY);
-        this.rendererData = nbt.get(RENDERER_DATA_KEY);
+        this.rendererData = nbt.contains(RENDERER_DATA_KEY, NbtElement.COMPOUND_TYPE) ? nbt.getCompound(RENDERER_DATA_KEY) : null;
 
         if (this.world != null && this.world.isClient) {
             this.refreshRenderer();
@@ -107,7 +107,8 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     @Override
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        nbt.putIfNotNull(RENDERER_DATA_KEY, this.rendererData);
+
+        if (this.rendererData != null) nbt.put(RENDERER_DATA_KEY, this.rendererData);
         nbt.put(RENDER_SCALE_KEY, this.renderScale);
         nbt.put(SPIN_KEY, this.spin);
     }
@@ -245,8 +246,8 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
             }
 
             @Override
-            public void writeDataInner(NbtCompound nbt, ItemStack data) {
-                nbt.put("Stack", data.writeNbt(new NbtCompound()));
+            public void writeDataInner(NbtCompound nbt, ItemStack stack) {
+                nbt.put("Stack", stack.writeNbt(new NbtCompound()));
             }
 
             @Override
@@ -278,16 +279,16 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
             }
 
             @Override
-            public void writeDataInner(NbtCompound nbt, Entity data) {
-                if (data instanceof EnderDragonPart dragonPart) data = dragonPart.owner;
+            public void writeDataInner(NbtCompound nbt, Entity entity) {
+                if (entity instanceof EnderDragonPart dragonPart) entity = dragonPart.owner;
 
                 var entityNbt = new NbtCompound();
-                if (data instanceof PlayerEntity player) {
+                if (entity instanceof PlayerEntity player) {
                     entityNbt.putString("affinity:player_name", player.getEntityName());
                     entityNbt.putString("id", Registries.ENTITY_TYPE.getId(EntityType.PLAYER).toString());
-                    data.writeNbt(entityNbt);
+                    entity.writeNbt(entityNbt);
                 } else {
-                    data.saveSelfNbt(entityNbt);
+                    entity.saveSelfNbt(entityNbt);
                 }
 
                 nbt.put("Entity", entityNbt);

@@ -1,5 +1,5 @@
 {
-  "parent": "affinity:some_assembly_required",
+  "parent": "affinity:from_two_hundred_cycles_to_one",
   "display": {
     "icon": {
       "item": "affinity:aethum_flux_cache"

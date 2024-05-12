@@ -9,6 +9,7 @@ import io.wispforest.affinity.client.hud.NimbleStaffHud;
 import io.wispforest.affinity.client.hud.PlayerAethumHud;
 import io.wispforest.affinity.client.particle.*;
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
+import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.client.render.LightLeakRenderer;
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.client.render.blockentity.*;
@@ -23,6 +24,7 @@ import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.item.CarbonCopyItem;
 import io.wispforest.affinity.item.EvadeRingItem;
+import io.wispforest.affinity.item.IridescenceWandItem;
 import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.misc.callback.PostItemRenderCallback;
 import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
@@ -58,6 +60,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
@@ -175,6 +178,16 @@ public class AffinityClient implements ClientModInitializer {
                     break;
                 }
             }
+        });
+
+        WorldRenderEvents.AFTER_SETUP.register(context -> {
+            var player = MinecraftClient.getInstance().player;
+            if (!(player.getMainHandStack().getItem() instanceof IridescenceWandItem wandItem)) return;
+
+            var linkOrigin = wandItem.getStoredPos(player.getMainHandStack());
+            if (linkOrigin == null) return;
+
+            CuboidRenderer.add(linkOrigin, CuboidRenderer.Cuboid.of(BlockPos.ORIGIN, new BlockPos(1, 1, 1)));
         });
 
         AethumNetworkLinkingHud.initialize();

@@ -508,6 +508,12 @@
   "advancement.affinity.gamedesign.description": "64 nuggets in a block",
   "advancement.affinity.pure_shot_of_poison_to_my_heart.title": "Pure Shot Of Poison To My Heart",
   "advancement.affinity.pure_shot_of_poison_to_my_heart.description": "Sacrifice a tamed animal to a ritual",
+  "advancement.affinity.verfluxt_und_zugenaeht.title": "Verfluxt und Zugenäht",
+  "advancement.affinity.verfluxt_und_zugenaeht.description": "Witness a ritual failure",
+  "advancement.affinity.from_two_hundred_cycles_to_one.title": "From 200 Cycles to 1",
+  "advancement.affinity.from_two_hundred_cycles_to_one.description": "Add a Cache to your Aethum Flux network",
+  "advancement.affinity.opening_the_fluxgates.title": "Opening The Fluxgates",
+  "advancement.affinity.opening_the_fluxgates.description": "Place your first Aethum Flux generator",
   "advancement.affinity.the_sky_suit.title": "The Sky Suit!",
 
   "text.affinity.prefix": [
@@ -605,6 +611,7 @@
   "item.minecraft.potion.effect.dubious": "Dubious Potion",
   "item.minecraft.splash_potion.effect.dubious": "Twhicc Splashy Potion",
   "item.minecraft.lingering_potion.effect.dubious": "Twhicc Goes-Everyhwere Potion",
+  "item.minecraft.tipped_arrow.effect.dubious": "Dubious Arrow",
 
   "item.minecraft.potion.effect.resistance": "Potion of Resilience",
   "item.minecraft.splash_potion.effect.resistance": "Splash Potion of Resilience",

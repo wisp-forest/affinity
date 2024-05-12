@@ -36,11 +36,11 @@ is readily visualized using the [Wand of Inquiry](^affinity:inquiry).
 
 ---
 
-Now, additionally to restoring item durability the {item}Affine Infuser{} is also capable of healing entities which have
+Now, additionally to restoring item durability the {item}Affine Infuser{} is also capable of restoring the Aethum of
 
 ;;;;;
 
-been made {concept}Affine{} by virtue of consuming a cup of {item}Affinitea{}.
+entities which have been made {concept}Affine{} by virtue of consuming a cup of {item}Affinitea{}.
 
 <recipe;affinity:aspen_infusion/affinitea>
 
