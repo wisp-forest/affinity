@@ -1,5 +1,6 @@
 package io.wispforest.affinity.misc.screenhandler;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.client.screen.OuijaBoardScreen;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -7,16 +8,22 @@ import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
 import io.wispforest.owo.client.screens.ScreenUtils;
 import io.wispforest.owo.client.screens.SlotGenerator;
 import io.wispforest.owo.client.screens.SyncedProperty;
+import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
@@ -26,6 +33,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class OuijaBoardScreenHandler extends ScreenHandler {
+
+    private static final TagKey<Enchantment> NOT_AVAILABLE_IN_OUIJA_BOARD = TagKey.of(RegistryKeys.ENCHANTMENT, Affinity.id("not_available_in_ouija_board"));
 
     private final SimpleInventory inventory = new SimpleInventory(1);
     private final ScreenHandlerContext context;
@@ -41,7 +50,12 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
         super(AffinityScreenHandlerTypes.OUIJA_BOARD, syncId);
         this.context = context;
 
-        this.addSlot(new Slot(this.inventory, 0, 23, 36));
+        this.addSlot(new Slot(this.inventory, 0, 23, 36) {
+            @Override
+            public int getMaxItemCount() {
+                return 1;
+            }
+        });
         SlotGenerator.begin(this::addSlot, 8, 86).playerInventory(playerInventory);
 
         this.addServerboundMessage(CurseMessage.class, this::executeCurse);
@@ -62,7 +76,16 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
         this.player().applyEnchantmentCosts(this.inventory.getStack(0), cost);
 
         if (this.context != ScreenHandlerContext.EMPTY) {
-            this.inventory.getStack(0).addEnchantment(selectedCurse, 1);
+            var stack = this.inventory.getStack(0);
+            if (stack.isOf(Items.BOOK)) {
+                var enchantedBook = Items.ENCHANTED_BOOK.getDefaultStack();
+                EnchantedBookItem.addEnchantment(enchantedBook, new EnchantmentLevelEntry(selectedCurse, 1));
+
+                this.inventory.setStack(0, enchantedBook);
+            } else {
+                stack.addEnchantment(selectedCurse, 1);
+            }
+
             this.seed.set(this.player().getEnchantmentTableSeed());
 
             this.context.run((world, blockPos) -> {
@@ -93,8 +116,8 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
 
         var curses = Registries.ENCHANTMENT.stream()
                 .filter(Enchantment::isCursed)
-                .filter(Enchantment::isAvailableForRandomSelection)
-                .filter(enchantment -> enchantment.isAcceptableItem(stack))
+                .filter(enchantment -> !enchantment.getRegistryEntry().isIn(NOT_AVAILABLE_IN_OUIJA_BOARD))
+                .filter(enchantment -> enchantment.isAcceptableItem(stack) || stack.isOf(Items.BOOK))
                 .filter(enchantment -> EnchantmentHelper.getLevel(enchantment, stack) < 1)
                 .collect(Collectors.toList());
 
@@ -131,7 +154,25 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
 
     @Override
     public ItemStack quickMove(PlayerEntity player, int slot) {
-        return ScreenUtils.handleSlotTransfer(this, slot, this.inventory.size());
+        if (slot > 0) {
+            var clickedSlot = this.slots.get(slot);
+            if (!clickedSlot.hasStack()) return ItemStack.EMPTY;
+
+            var clickedStack = clickedSlot.getStack();
+            if (this.slots.get(0).hasStack()) return ItemStack.EMPTY;
+
+            this.slots.get(0).setStack(ItemOps.singleCopy(clickedSlot.getStack()));
+
+            if (!ItemOps.emptyAwareDecrement(clickedStack)) {
+                clickedSlot.setStack(ItemStack.EMPTY);
+            } else {
+                clickedSlot.markDirty();
+            }
+
+            return clickedStack;
+        } else {
+            return ScreenUtils.handleSlotTransfer(this, slot, this.inventory.size());
+        }
     }
 
     @Override
