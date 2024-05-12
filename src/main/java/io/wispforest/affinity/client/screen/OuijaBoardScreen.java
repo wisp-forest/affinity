@@ -86,7 +86,7 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
             BRINGER_OF_WISDOM.setSeed(curse.hashCode() + i * 37);
             var wisdom = Util.getRandom(Wisdom.ALL_THE_WISDOM, BRINGER_OF_WISDOM).replaceAll("(?![a-zA-Z0-9 ]).", "");
             wisdom = StringUtils.abbreviate(wisdom, "", 20);
-            wisdom = wisdom.substring(0, wisdom.lastIndexOf(' '));
+            if (wisdom.contains(" ")) wisdom = wisdom.substring(0, wisdom.lastIndexOf(' '));
 
             this.curseLabels[i]
                     .text(Text.literal(wisdom).styled(style -> Style.EMPTY.withFont(ILLAGER_FONT)))
