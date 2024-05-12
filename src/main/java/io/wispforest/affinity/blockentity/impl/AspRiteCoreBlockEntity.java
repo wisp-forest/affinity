@@ -76,6 +76,11 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
         return false;
     }
 
+    @Override
+    protected Vec3d modulatorStreamTargetPos() {
+        return Vec3d.ofCenter(this.pos, .85);
+    }
+
     public static class AspenInfusionInventory extends SocleInventory {
 
         private final ItemStack primaryInput;

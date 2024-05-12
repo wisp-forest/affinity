@@ -36,7 +36,7 @@ public class FieldCoherenceModulatorBlockEntityRenderer extends AffinityBlockEnt
 
     @Override
     protected void render(FieldCoherenceModulatorBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        entity.spinSpeed += Delta.compute(entity.spinSpeed, 1f, frameDelta * .05f);
+        entity.spinSpeed += Delta.compute(entity.spinSpeed, entity.streamTargetPos() != null ? 20f : 1f, frameDelta * .05f);
         entity.spin += frameDelta * entity.spinSpeed;
 
         var spin = entity.spin + entity.timeOffset();

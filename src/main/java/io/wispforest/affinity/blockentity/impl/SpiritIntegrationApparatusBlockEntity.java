@@ -215,6 +215,11 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     }
 
     @Override
+    protected Vec3d modulatorStreamTargetPos() {
+        return Vec3d.ofCenter(this.ritualCenterPos(), 2.5);
+    }
+
+    @Override
     protected void endRitual(Supplier<Boolean> handlerImpl, boolean clearItems) {
         if (this.ritualTick > 0) {
             final var positions = new ArrayList<>(Arrays.asList(this.neighborPositions.apparatuses()));

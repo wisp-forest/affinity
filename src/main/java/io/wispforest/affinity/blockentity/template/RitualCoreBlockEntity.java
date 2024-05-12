@@ -99,6 +99,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
      */
     protected abstract boolean onRitualInterrupted();
 
+    /**
+     * @return An offset from the center of this block which the
+     * particle streams from field coherence modulators should target
+     */
+    protected abstract Vec3d modulatorStreamTargetPos();
+
     protected boolean interruptRitual() {
         var players = world.getNonSpectatingEntities(ServerPlayerEntity.class, new Box(this.pos).expand(7, 3, 7));
         for (var player : players) {
@@ -148,7 +154,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         Collections.shuffle(this.cachedSetup.socles, ThreadLocalRandom.current());
 
         this.cachedSetup.forEachSocle(world, socle -> socle.ritualLock.acquire(this));
-        this.cachedSetup.forEachModulator(world, modulator -> modulator.updateFlux(modulator.flux() - 32000));
+        this.cachedSetup.forEachModulator(world, modulator -> {
+            modulator.ritualLock.acquire(this);
+            modulator.setStreamTargetPos(this.modulatorStreamTargetPos());
+
+            modulator.updateFlux(modulator.flux() - 32000);
+        });
 
         if (this.cachedSetup.stability / 100d < this.world.random.nextDouble()) {
             this.ritualFailureTick = 20 + this.world.random.nextInt(this.cachedSetup.duration() - 20);
@@ -198,6 +209,12 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
                     this.cachedSetup.socles.stream().map(RitualSocleEntry::position).toList(),
                     RitualSocleBlockEntity.PARTICLE_OFFSET
             ));
+
+            this.cachedSetup.forEachModulator(this.world, modulator -> {
+                modulator.ritualLock.release();
+                modulator.setStreamTargetPos(null);;
+            });
+
             this.cachedSetup.forEachSocle(this.world, socle -> {
                 socle.ritualLock.release();
                 socle.stopExtraction(clearItems);
@@ -302,7 +319,7 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
                     if (!(world.getBlockEntity(modulatorPos) instanceof FieldCoherenceModulatorBlockEntity modulator)) {
                         return false;
                     }
-                    return modulator.flux() >= 32000;
+                    return modulator.flux() >= 32000 && !modulator.ritualLock.isHeld();
                 }).toList();
 
         stability = Math.min(100, stability + 5 * modulators.size());
