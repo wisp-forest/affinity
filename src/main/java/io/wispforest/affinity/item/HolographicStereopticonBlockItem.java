@@ -54,7 +54,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
     public static final KeyedEndec<NbtCompound> BLOCK_ENTITY_TAG_KEY = NbtEndec.COMPOUND.keyed("BlockEntityTag", new NbtCompound());
     public static final KeyedEndec<BlockPos> START_POS_KEY = BuiltInEndecs.BLOCK_POS.keyed("SectionStartPos", (BlockPos) null);
 
-    private static final NbtQuery<NbtCompound> RENDERER_DATA_QUERY = NbtQuery.begin().key("BlockEntityTag").key("RendererData").compound();
+    private static final NbtQuery<NbtCompound> RENDERER_DATA_QUERY = NbtQuery.begin().key("BlockEntityTag").key(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY).compound();
 
     public HolographicStereopticonBlockItem(Block block, Settings settings) {
         super(block, settings);
