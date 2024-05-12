@@ -91,6 +91,8 @@
     "client.CrackParticleMixin",
     "client.DimensionTypeMixin",
     "client.DrawContextMixin",
+    "client.EnchantingPhrasesMixin",
+    "client.EnchantmentScreenMixin",
     "client.EntityMixin",
     "client.FramebufferMixin",
     "client.HeadFeatureRendererMixin",

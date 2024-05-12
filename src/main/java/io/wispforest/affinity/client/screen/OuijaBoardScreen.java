@@ -1,6 +1,7 @@
 package io.wispforest.affinity.client.screen;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.screenhandler.OuijaBoardScreenHandler;
 import io.wispforest.owo.ui.base.BaseComponent;
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
@@ -13,6 +14,7 @@ import io.wispforest.owo.ui.core.Size;
 import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.parsing.UIModel;
 import io.wispforest.owo.ui.parsing.UIParsing;
+import io.wispforest.owo.util.Wisdom;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,13 +23,17 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.random.Random;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
 import java.util.Map;
 
 public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, OuijaBoardScreenHandler> {
 
-    private static final Identifier SGA_FONT = new Identifier("minecraft", "alt");
+    private static final Identifier ILLAGER_FONT = new Identifier("minecraft", "illageralt");
+    private static final Random BRINGER_OF_WISDOM = Random.create();
 
     private final TrimmedLabelComponent[] curseLabels = new TrimmedLabelComponent[3];
     private final LabelComponent[] costLabels = new LabelComponent[3];
@@ -77,8 +83,13 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
             var curseName = curse.getName(1);
             this.curseButtons[i].tooltip(curseName);
 
+            BRINGER_OF_WISDOM.setSeed(curse.hashCode() + i * 37);
+            var wisdom = Util.getRandom(Wisdom.ALL_THE_WISDOM, BRINGER_OF_WISDOM).replaceAll("(?![a-zA-Z0-9 ]).", "");
+            wisdom = StringUtils.abbreviate(wisdom, "", 20);
+            wisdom = wisdom.substring(0, wisdom.lastIndexOf(' '));
+
             this.curseLabels[i]
-                    .text(curseName.copy().styled(style -> Style.EMPTY.withFont(SGA_FONT)))
+                    .text(Text.literal(wisdom).styled(style -> Style.EMPTY.withFont(ILLAGER_FONT)))
                     .color(canAfford ? Color.ofRgb(0x663333) : Color.ofRgb(0x331a1a));
 
             this.costLabels[i]
@@ -98,7 +109,16 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
 
         @Override
         public void draw(OwoUIDrawContext context, int mouseX, int mouseY, float partialTicks, float delta) {
-            context.drawText(this.renderer, this.renderText, this.x, this.y, this.textColor.argb(), false);
+            if (MixinHooks.textObfuscation) {
+                MixinHooks.textObfuscation = false;
+                var oldText = this.text;
+                this.text(this.text.copy().styled(style -> style.withFont(null)));
+                context.drawText(this.renderer, this.renderText, this.x, this.y, this.textColor.argb(), false);
+                this.text(oldText);
+                MixinHooks.textObfuscation = true;
+            } else {
+                context.drawText(this.renderer, this.renderText, this.x, this.y, this.textColor.argb(), false);
+            }
         }
 
         @Override
