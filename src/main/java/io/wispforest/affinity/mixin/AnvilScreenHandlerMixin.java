@@ -1,15 +1,20 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.item.ResplendentGemItem;
+import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityItems;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.*;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -36,4 +41,14 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
         this.levelCost.set(30);
     }
 
+    @ModifyArg(method = {"updateResult", "setNewItemName"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setCustomName(Lnet/minecraft/text/Text;)Lnet/minecraft/item/ItemStack;"))
+    private @Nullable Text applyIlliteracy(@Nullable Text name) {
+        if (!this.isIlliterate()) return name;
+        return name.copy().styled(style -> style.withObfuscated(true));
+    }
+
+    @Unique
+    private boolean isIlliterate() {
+        return EnchantmentHelper.getEquipmentLevel(AffinityEnchantments.CURSE_OF_ILLITERACY, this.player) > 0;
+    }
 }
