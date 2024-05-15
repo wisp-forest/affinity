@@ -25,7 +25,7 @@ public class AffiniteaItem extends Item {
     private static final Supplier<StatusEffectInstance> EFFECT = () -> new StatusEffectInstance(AffinityStatusEffects.AFFINE, 5 * 60 * 20);
 
     public AffiniteaItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(8));
+        super(AffinityItems.settings().maxCount(8));
     }
 
     @Override

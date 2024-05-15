@@ -16,7 +16,7 @@ public class AzaleaBowItem extends BowItem {
     public static final float AETHUM_COST_PER_SHOT = 1f;
 
     public AzaleaBowItem() {
-        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1).maxDamage(500));
+        super(AffinityItems.settings().maxCount(1).maxDamage(500));
     }
 
     @Override

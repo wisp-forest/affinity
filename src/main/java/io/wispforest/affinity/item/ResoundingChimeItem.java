@@ -20,7 +20,7 @@ import net.minecraft.util.Formatting;
 public class ResoundingChimeItem extends SwordItem {
 
     public ResoundingChimeItem() {
-        super(Material.INSTANCE, 0, -2.4f, AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
+        super(Material.INSTANCE, 0, -2.4f, AffinityItems.settings().maxCount(1));
     }
 
     @Override

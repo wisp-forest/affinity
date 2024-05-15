@@ -22,7 +22,7 @@ public class EvadeRingItem extends TrinketItem {
     public static final int COOLDOWN_AFTER_USE = 5;
 
     public EvadeRingItem() {
-        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
+        super(AffinityItems.settings().maxCount(1));
     }
 
     @Override

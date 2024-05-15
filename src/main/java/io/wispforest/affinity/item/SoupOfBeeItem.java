@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class SoupOfBeeItem extends Item {
 
     public SoupOfBeeItem() {
-        super(AffinityItems.settings(AffinityItemGroup.NATURE).food(
+        super(AffinityItems.settings().food(
                 new FoodComponent.Builder()
                         .hunger(-4)
                         .saturationModifier(2)

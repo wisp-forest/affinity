@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class AethumMapPrototypeItem extends Item {
 
     public AethumMapPrototypeItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).trackUsageStat());
+        super(AffinityItems.settings().trackUsageStat());
     }
 
     @Override

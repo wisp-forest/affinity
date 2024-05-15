@@ -23,16 +23,16 @@ import java.util.stream.Stream;
 public class AffinityItems implements ItemRegistryContainer {
 
     @IterationIgnored
-    public static final Item WISPEN_TESTAMENT = LavenderBookItem.registerForBook(Affinity.id("wispen_testament"), settings(AffinityItemGroup.MAIN).maxCount(1));
+    public static final Item WISPEN_TESTAMENT = LavenderBookItem.registerForBook(Affinity.id("wispen_testament"), settings().maxCount(1));
 
     public static final Item AETHUM_FLUX_BOTTLE = new AethumFluxBottleItem();
-    public static final Item BARE_RESPLENDENT_GEM = new Item(settings(AffinityItemGroup.ENCHANTMENTS).maxCount(4));
+    public static final Item BARE_RESPLENDENT_GEM = new Item(settings().maxCount(4));
     public static final Item RESPLENDENT_GEM = new ResplendentGemItem();
 
     public static final Item MILDLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.MILDLY_ATTUNED);
     public static final Item FAIRLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.FAIRLY_ATTUNED);
     public static final Item GREATLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.GREATLY_ATTUNED);
-    public static final Item SCULK_RESONANT_ETHEREAL_AMETHYST_SHARD = new Item(settings(AffinityItemGroup.MAIN));
+    public static final Item SCULK_RESONANT_ETHEREAL_AMETHYST_SHARD = new Item(settings());
 
     public static final Item EMERALD_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
     public static final Item SAPPHIRE_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
@@ -46,7 +46,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item CULTIVATION_STAFF = new CultivationStaffItem();
     public static final Item SALVO_STAFF = new SalvoStaffItem();
 
-    public static final Item AZALEA_FLOWERS = new Item(settings(AffinityItemGroup.NATURE).food(new FoodComponent.Builder().hunger(2).saturationModifier(.5f)
+    public static final Item AZALEA_FLOWERS = new Item(settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(.5f)
             .statusEffect(new StatusEffectInstance(AffinityStatusEffects.DRIPPING, 1200, 0, false, false, true), 1).build()));
     public static final Item SOUP_OF_BEE = new SoupOfBeeItem();
 
@@ -63,30 +63,30 @@ public class AffinityItems implements ItemRegistryContainer {
 
     public static final Item ANTHRACITE_POWDER = new AnthracitePowderItem();
     public static final Item CARBON_COPY = new CarbonCopyItem();
-    public static final Item SCINTILLANT_ANTHRACITE_BLEND = new Item(settings(AffinityItemGroup.MAIN));
-    public static final Item RANTHRACITE_DUST = new AliasedBlockItem(AffinityBlocks.RANTHRACITE_WIRE, settings(AffinityItemGroup.MAIN));
-    public static final Item CRYSTALLINE_WISP_MATTER_COMPOSITE = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
-    public static final Item BLACKSTONE_PRISM = new Item(settings(AffinityItemGroup.MAIN).maxCount(8));
+    public static final Item SCINTILLANT_ANTHRACITE_BLEND = new Item(settings());
+    public static final Item RANTHRACITE_DUST = new AliasedBlockItem(AffinityBlocks.RANTHRACITE_WIRE, settings());
+    public static final Item CRYSTALLINE_WISP_MATTER_COMPOSITE = new GlintItem(settings().rarity(Rarity.UNCOMMON));
+    public static final Item BLACKSTONE_PRISM = new Item(settings().maxCount(8));
     public static final Item AETHUM_MAP_PROTOTYPE = new AethumMapPrototypeItem();
     public static final Item REALIZED_AETHUM_MAP = new RealizedAethumMapItem();
-    public static final Item UNCANNY_ROD = new Item(settings(AffinityItemGroup.MAIN).maxCount(16));
-    public static final Item STAFF_PROTOTYPE = new Item(settings(AffinityItemGroup.MAIN).maxCount(7));
+    public static final Item UNCANNY_ROD = new Item(settings().maxCount(16));
+    public static final Item STAFF_PROTOTYPE = new Item(settings().maxCount(7));
 
-    public static final Item AZALEA_SIGN = new SignItem(settings(AffinityItemGroup.NATURE).maxCount(16), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
-    public static final Item AZALEA_HANGING_SIGN = new HangingSignItem(AffinityBlocks.AZALEA_HANGING_SIGN, AffinityBlocks.AZALEA_WALL_HANGING_SIGN, settings(AffinityItemGroup.NATURE).maxCount(16));
-    public static final Item AZALEA_BOAT = new BoatItem(false, AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
-    public static final Item AZALEA_CHEST_BOAT = new BoatItem(true, AffinityBlocks.AZALEA_BOAT_TYPE, settings(AffinityItemGroup.NATURE).maxCount(1));
+    public static final Item AZALEA_SIGN = new SignItem(settings().maxCount(16), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
+    public static final Item AZALEA_HANGING_SIGN = new HangingSignItem(AffinityBlocks.AZALEA_HANGING_SIGN, AffinityBlocks.AZALEA_WALL_HANGING_SIGN, settings().maxCount(16));
+    public static final Item AZALEA_BOAT = new BoatItem(false, AffinityBlocks.AZALEA_BOAT_TYPE, settings().maxCount(1));
+    public static final Item AZALEA_CHEST_BOAT = new BoatItem(true, AffinityBlocks.AZALEA_BOAT_TYPE, settings().maxCount(1));
 
-    public static final Item UNFIRED_CLAY_CUP = new Item(settings(AffinityItemGroup.MAIN));
-    public static final Item CLAY_CUP = new Item(settings(AffinityItemGroup.MAIN));
+    public static final Item UNFIRED_CLAY_CUP = new Item(settings());
+    public static final Item CLAY_CUP = new Item(settings());
     public static final Item AFFINITEA = new AffiniteaItem();
     public static final Item MILK_CUP = new MilkCupItem();
     public static final Item SATIATING_POTION = new SatiatingPotionItem();
-    public static final Item DRAGON_DROP = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
-    public static final Item RESONANCE_CRYSTAL = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
-    public static final Item SYNTHETIC_DRAGON_HEART = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.RARE));
-    public static final Item AETHUM_OVERCHARGER = new GlintItem(settings(AffinityItemGroup.MAIN).rarity(Rarity.RARE).maxCount(1));
-    public static final Item ARCHETYPAL_IRON_RING = new Item(settings(AffinityItemGroup.MAIN));
+    public static final Item DRAGON_DROP = new GlintItem(settings().rarity(Rarity.UNCOMMON));
+    public static final Item RESONANCE_CRYSTAL = new GlintItem(settings().rarity(Rarity.UNCOMMON));
+    public static final Item SYNTHETIC_DRAGON_HEART = new GlintItem(settings().rarity(Rarity.RARE));
+    public static final Item AETHUM_OVERCHARGER = new GlintItem(settings().rarity(Rarity.RARE).maxCount(1));
+    public static final Item ARCHETYPAL_IRON_RING = new Item(settings());
     public static final Item FEATHERWEIGHT_RING = new FeatherweightRingItem();
     public static final Item EVADE_RING = new EvadeRingItem();
     public static final Item LAVALIERE_OF_SAFE_KEEPING = new LavaliereOfSafeKeepingItem();
@@ -95,7 +95,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item BUDDING_EXPERIENCE_CRYSTAL = new BuddingExperienceCrystalItem();
     public static final Item CRYSTALLIZED_EXPERIENCE = new CrystallizedExperienceItem();
 
-    public static final Item ARCANE_FADE_BUCKET = new BucketItem(AffinityBlocks.Fluids.ARCANE_FADE, settings(AffinityItemGroup.MAIN).maxCount(1).recipeRemainder(Items.BUCKET));
+    public static final Item ARCANE_FADE_BUCKET = new BucketItem(AffinityBlocks.Fluids.ARCANE_FADE, settings().maxCount(1).recipeRemainder(Items.BUCKET));
 
     public static final Item FORGOTTEN_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.FORGOTTEN);
     public static final Item STABILIZED_ARTIFACT_BLADE = new ArtifactBladeItem(ArtifactBladeItem.Tier.STABILIZED);
@@ -110,15 +110,15 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item EMERALD_LEGGINGS = new EmeraldArmorItem(ArmorItem.Type.LEGGINGS);
     public static final Item EMERALD_BOOTS = new EmeraldArmorItem(ArmorItem.Type.BOOTS);
 
-    public static final Item EMERALD_INGOT = new Item(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
-    public static final Item EMERALD_NUGGET = new Item(settings(AffinityItemGroup.MAIN).rarity(Rarity.UNCOMMON));
+    public static final Item EMERALD_INGOT = new Item(settings().rarity(Rarity.UNCOMMON));
+    public static final Item EMERALD_NUGGET = new Item(settings().rarity(Rarity.UNCOMMON));
 
     public static final Item INERT_WISP_SPAWN_EGG = new WispSpawnEggItem(AffinityEntities.INERT_WISP, AffinityWispTypes.INERT);
     public static final Item WISE_WISP_SPAWN_EGG = new WispSpawnEggItem(AffinityEntities.WISE_WISP, AffinityWispTypes.WISE);
     public static final Item VICIOUS_WISP_SPAWN_EGG = new WispSpawnEggItem(AffinityEntities.VICIOUS_WISP, AffinityWispTypes.VICIOUS);
 
-    public static OwoItemSettings settings(int tab) {
-        return new OwoItemSettings().tab(tab).group(AffinityItemGroup.group());
+    public static OwoItemSettings settings() {
+        return new OwoItemSettings();
     }
 
     public static ItemStack makePotionOfInfiniteProwess() {

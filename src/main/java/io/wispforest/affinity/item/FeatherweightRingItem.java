@@ -21,7 +21,7 @@ public class FeatherweightRingItem extends TrinketItem {
     private final Multimap<EntityAttribute, EntityAttributeModifier> modifiers;
 
     public FeatherweightRingItem() {
-        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
+        super(AffinityItems.settings().maxCount(1));
 
         this.modifiers = ImmutableMultimap.of(
                 AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY, new EntityAttributeModifier(KNOCKBACK_MODIFIER_ID, "i still hate attributes, season 3", .75, EntityAttributeModifier.Operation.ADDITION),
