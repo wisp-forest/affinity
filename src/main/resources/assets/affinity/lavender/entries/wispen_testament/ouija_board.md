@@ -13,7 +13,7 @@
 ```
 
 While {c}Cursed Enchantments{} are in most cases of detriment for personal equipment, it cannot be said that they do not
-otherwise exhibit potential applications.
+exhibit potential in other applications.
 
 
 Thus, the {i}Ouija Board{} calls upon cursed spirits to apply {c}Cursed Enchantments of your choice{} to whichever item

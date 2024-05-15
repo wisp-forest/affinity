@@ -23,4 +23,4 @@ As is easily inferred given its name, when used, the {i}Aethum Fire Extinguisher
 particles which {c}extinguish any and all flames{} they come in contact with - be they on the ground or on a being.
 
 
-This, of course, is only possible by channelling the user's [Aethum](^affinity:aethum), a non-free process.
+This, of course, is only possible by channelling the user's [Aethum](^affinity:aethum).
