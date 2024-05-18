@@ -17,7 +17,7 @@ public class HealthCurseEnchantment extends CurseEnchantment implements Enchantm
             "Curse of Health - Boost", 4, EntityAttributeModifier.Operation.ADDITION);
 
     public HealthCurseEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentTarget.ARMOR, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET);
+        super(Rarity.VERY_RARE, EnchantmentTarget.ARMOR_CHEST, EquipmentSlot.CHEST);
     }
 
     @Override
