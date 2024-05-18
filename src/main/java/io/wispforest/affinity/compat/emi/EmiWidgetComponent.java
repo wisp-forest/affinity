@@ -2,14 +2,20 @@ package io.wispforest.affinity.compat.emi;
 
 import dev.emi.emi.api.widget.Widget;
 import io.wispforest.owo.ui.base.BaseComponent;
+import io.wispforest.owo.ui.core.Component;
 import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.ParentComponent;
 import io.wispforest.owo.ui.core.Sizing;
+import net.minecraft.client.gui.tooltip.TooltipComponent;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 public class EmiWidgetComponent extends BaseComponent {
 
     private final WidgetMaker widgetMaker;
     private Widget widget;
+    private List<TooltipComponent> owoUiTooltip = List.of();
 
     public EmiWidgetComponent(WidgetMaker widgetMaker) {
         this.widgetMaker = widgetMaker;
@@ -26,7 +32,7 @@ public class EmiWidgetComponent extends BaseComponent {
 
     @Override
     public void draw(OwoUIDrawContext context, int mouseX, int mouseY, float partialTicks, float delta) {
-        this.tooltip(this.widget.getTooltip(mouseX, mouseY));
+        this.tooltip = Stream.concat(this.owoUiTooltip.stream(), this.widget.getTooltip(mouseX, mouseY).stream()).toList();
         this.widget.render(context, mouseX, mouseY, delta);
     }
 
@@ -63,6 +69,12 @@ public class EmiWidgetComponent extends BaseComponent {
     public void updateY(int y) {
         super.updateY(y);
         this.refreshWidget();
+    }
+
+    @Override
+    public Component tooltip(List<TooltipComponent> tooltip) {
+        this.owoUiTooltip = tooltip;
+        return this;
     }
 
     @Override

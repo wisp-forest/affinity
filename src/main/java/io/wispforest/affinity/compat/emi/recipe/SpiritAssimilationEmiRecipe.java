@@ -1,7 +1,6 @@
 package io.wispforest.affinity.compat.emi.recipe;
 
-import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
@@ -22,49 +21,23 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-public class SpiritAssimilationEmiRecipe implements EmiRecipe {
+public class SpiritAssimilationEmiRecipe extends BasicEmiRecipe {
 
-    private final Identifier id;
     private final SpiritAssimilationRecipe recipe;
 
     public SpiritAssimilationEmiRecipe(Identifier id, SpiritAssimilationRecipe recipe) {
-        this.id = id;
+        super(AffinityEmiPlugin.SPIRIT_ASSIMILATION, id, 180, 106);
         this.recipe = recipe;
-    }
 
-    @Override
-    public EmiRecipeCategory getCategory() {
-        return AffinityEmiPlugin.SPIRIT_ASSIMILATION;
-    }
-
-    @Override
-    public @Nullable Identifier getId() {
-        return this.id;
-    }
-
-    @Override
-    public List<EmiIngredient> getInputs() {
-        return Stream.concat(this.recipe.coreInputs.stream(), this.recipe.getIngredients().stream()).map(AffinityEmiPlugin::veryCoolFeatureYouGotThereEmi).toList();
-    }
-
-    @Override
-    public List<EmiStack> getOutputs() {
-        return List.of(EmiStack.of(this.recipe.getResult(null)));
-    }
-
-    @Override
-    public int getDisplayWidth() {
-        return 180;
-    }
-
-    @Override
-    public int getDisplayHeight() {
-        return 106;
+        this.inputs = Stream.concat(
+                this.recipe.coreInputs.stream(),
+                this.recipe.getIngredients().stream()
+        ).map(AffinityEmiPlugin::veryCoolFeatureYouGotThereEmi).toList();
+        this.outputs = List.of(EmiStack.of(this.recipe.getResult(null)));
     }
 
     @Override
@@ -89,7 +62,7 @@ public class SpiritAssimilationEmiRecipe implements EmiRecipe {
             double angle = angleStep * (index - 4) - Math.PI / 2;
 
             inputContainer.child(adapter.wrap((x, y) -> {
-                return new SlotWidget(this.getInputs().get(index), x, y).drawBack(false);
+                return AffinityEmiPlugin.slot(this.getInputs().get(index), x, y).drawBack(false);
             }).positioning(Positioning.absolute((int) (center.x + Math.cos(angle) * 40), (int) (center.y + Math.sin(angle) * 40))));
         }
 
@@ -97,7 +70,7 @@ public class SpiritAssimilationEmiRecipe implements EmiRecipe {
         for (int i = 0; i < 4; i++) {
             final int index = i;
             inputGrid.child(adapter.wrap((x, y) -> {
-                return new SlotWidget(this.getInputs().get(index), x, y);
+                return AffinityEmiPlugin.slot(this.getInputs().get(index), x, y);
             }), i / 2, i % 2);
         }
         inputContainer.child(inputGrid);
@@ -130,7 +103,7 @@ public class SpiritAssimilationEmiRecipe implements EmiRecipe {
         outputContainer.verticalAlignment(VerticalAlignment.CENTER).margins(Insets.left(5));
         root.child(outputContainer);
 
-        outputContainer.child(adapter.wrap((x, y) -> new SlotWidget(this.getOutputs().get(0), x, y).large(true)));
+        outputContainer.child(adapter.wrap((x, y) -> AffinityEmiPlugin.slot(this.getOutputs().get(0), x, y).large(true).recipeContext(this)));
 
         var soclePreviewFlow = Containers.horizontalFlow(Sizing.content(), Sizing.content());
         soclePreviewFlow.margins(Insets.bottom(8)).positioning(Positioning.relative(50, 100));
@@ -138,7 +111,7 @@ public class SpiritAssimilationEmiRecipe implements EmiRecipe {
         outputContainer.child(soclePreviewFlow);
 
         soclePreviewFlow.child(adapter.wrap((x, y) -> {
-            return new SlotWidget(EmiIngredient.of(AspenInfusionEmiRecipe.RECIPE_RITUAL_SOCLE_PREVIEW, this.getInputs().size() - 1), x, y);
+            return AffinityEmiPlugin.slot(EmiIngredient.of(AspenInfusionEmiRecipe.RECIPE_RITUAL_SOCLE_PREVIEW, this.getInputs().size() - 1), x, y);
         }));
 
         adapter.prepare();

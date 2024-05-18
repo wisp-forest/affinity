@@ -1,9 +1,12 @@
 package io.wispforest.affinity.mixin.client;
 
 import io.wispforest.affinity.item.ArtifactBladeItem;
+import io.wispforest.affinity.misc.MixinHooks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.client.gui.tooltip.TooltipPositioner;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.ItemStack;
 import org.objectweb.asm.Opcodes;
@@ -13,6 +16,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(DrawContext.class)
 public abstract class DrawContextMixin {
@@ -54,4 +59,11 @@ public abstract class DrawContextMixin {
         this.fill(RenderLayer.getGuiOverlay(), x, y, x + progress, y + 1, color);
     }
 
+    @Inject(method = "drawTooltip(Lnet/minecraft/client/font/TextRenderer;Ljava/util/List;IILnet/minecraft/client/gui/tooltip/TooltipPositioner;)V", at = @At("HEAD"), cancellable = true)
+    private void captureTooltips(TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, CallbackInfo ci) {
+        if (MixinHooks.tooltipConsumer == null) return;
+
+        MixinHooks.tooltipConsumer.accept(components);
+        ci.cancel();
+    }
 }

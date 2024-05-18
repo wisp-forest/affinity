@@ -3,14 +3,20 @@ package io.wispforest.affinity.compat.emi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.ListEmiIngredient;
+import dev.emi.emi.api.widget.SlotWidget;
+import dev.emi.emi.api.widget.TextureWidget;
+import dev.emi.emi.api.widget.Widget;
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.block.impl.ArcaneFadeBlock;
 import io.wispforest.affinity.compat.emi.recipe.*;
 import io.wispforest.affinity.compat.rei.display.SocleComposingDisplay;
 import io.wispforest.affinity.item.SocleOrnamentItem;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
 import io.wispforest.affinity.recipe.ShapedAssemblyRecipe;
@@ -34,17 +40,18 @@ import java.util.List;
 
 public class AffinityEmiPlugin implements EmiPlugin {
 
-    public static final EmiRecipeCategory ASPEN_INFUSION = new EmiRecipeCategory(Affinity.id("aspen_infusion"), EmiStack.of(AffinityBlocks.ASP_RITE_CORE));
-    public static final EmiRecipeCategory POTION_MIXING = new EmiRecipeCategory(Affinity.id("potion_mixing"), EmiStack.of(AffinityBlocks.BREWING_CAULDRON));
-    public static final EmiRecipeCategory CONTAINING_POTIONS = new EmiRecipeCategory(Affinity.id("containing_potions"), Util.make(() -> {
+    public static final EmiRecipeCategory ASPEN_INFUSION = new AffinityEmiRecipeCategory(Affinity.id("aspen_infusion"), EmiStack.of(AffinityBlocks.ASP_RITE_CORE));
+    public static final EmiRecipeCategory POTION_MIXING = new AffinityEmiRecipeCategory(Affinity.id("potion_mixing"), EmiStack.of(AffinityBlocks.BREWING_CAULDRON));
+    public static final EmiRecipeCategory CONTAINING_POTIONS = new AffinityEmiRecipeCategory(Affinity.id("containing_potions"), Util.make(() -> {
         ItemStack stack = new ItemStack(Items.POTION);
         PotionUtil.setPotion(stack, Potions.STRENGTH);
         return EmiStack.of(stack);
     }));
-    public static final EmiRecipeCategory SPIRIT_ASSIMILATION = new EmiRecipeCategory(Affinity.id("spirit_assimilation"), EmiStack.of(AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS));
-    public static final EmiRecipeCategory ASSEMBLY = new EmiRecipeCategory(Affinity.id("assembly"), EmiStack.of(AffinityBlocks.ASSEMBLY_AUGMENT));
-    public static final EmiRecipeCategory ORNAMENT_CARVING = new EmiRecipeCategory(Affinity.id("ornament_carving"), EmiStack.of(AffinityBlocks.RITUAL_SOCLE_COMPOSER));
-    public static final EmiRecipeCategory SOCLE_COMPOSING = new EmiRecipeCategory(Affinity.id("socle_composing"), EmiStack.of(AffinityBlocks.RITUAL_SOCLE_COMPOSER));
+    public static final EmiRecipeCategory SPIRIT_ASSIMILATION = new AffinityEmiRecipeCategory(Affinity.id("spirit_assimilation"), EmiStack.of(AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS));
+    public static final EmiRecipeCategory ASSEMBLY = new AffinityEmiRecipeCategory(Affinity.id("assembly"), EmiStack.of(AffinityBlocks.ASSEMBLY_AUGMENT));
+    public static final EmiRecipeCategory ORNAMENT_CARVING = new AffinityEmiRecipeCategory(Affinity.id("ornament_carving"), EmiStack.of(AffinityBlocks.RITUAL_SOCLE_COMPOSER));
+    public static final EmiRecipeCategory SOCLE_COMPOSING = new AffinityEmiRecipeCategory(Affinity.id("socle_composing"), EmiStack.of(AffinityBlocks.RITUAL_SOCLE_COMPOSER));
+    public static final EmiRecipeCategory ARCANE_FADING = new AffinityEmiRecipeCategory(Affinity.id("arcane_fading"), EmiStack.of(AffinityItems.ARCANE_FADE_BUCKET));
 
     @Override
     public void register(EmiRegistry registry) {
@@ -80,7 +87,9 @@ public class AffinityEmiPlugin implements EmiPlugin {
             }
         }
 
-        effectToPotion.forEach((effect, potions) -> registry.addRecipe(new ContainingPotionsEmiRecipe(effect, potions)));
+        effectToPotion.forEach((effect, potions) -> {
+            potions.forEach(potion -> registry.addRecipe(new ContainingPotionsEmiRecipe(effect, potion)));
+        });
 
         // ---
 
@@ -99,7 +108,7 @@ public class AffinityEmiPlugin implements EmiPlugin {
         for (var recipe : registry.getRecipeManager().listAllOfType(AffinityRecipeTypes.ASSEMBLY)) {
             if (recipe.value() instanceof ShapedAssemblyRecipe shaped) {
                 registry.addRecipe(new AssemblyEmiRecipe(
-                        shaped.getIngredients().stream().map(AffinityEmiPlugin::veryCoolFeatureYouGotThereEmi).toList(),
+                        AssemblyEmiRecipe.padShapedIngredients(shaped),
                         EmiStack.of(shaped.getResult(MinecraftClient.getInstance().world.getRegistryManager())),
                         recipe.id(),
                         false
@@ -137,6 +146,15 @@ public class AffinityEmiPlugin implements EmiPlugin {
                     registry.addRecipe(new SocleComposingEmiRecipe(type, SocleComposingDisplay.Action.CRAFT));
                     registry.addRecipe(new SocleComposingEmiRecipe(type, SocleComposingDisplay.Action.UNCRAFT));
                 });
+
+        // ---
+
+        registry.addCategory(ARCANE_FADING);
+        registry.addWorkstation(ARCANE_FADING, EmiStack.of(AffinityItems.ARCANE_FADE_BUCKET));
+
+        ArcaneFadeBlock.forEachGroup((id, item, items) -> {
+            registry.addRecipe(new ArcaneFadingEmiRecipe(items, item, id));
+        });
     }
 
     public static EmiIngredient veryCoolFeatureYouGotThereEmi(Ingredient ingredient) {
@@ -146,4 +164,16 @@ public class AffinityEmiPlugin implements EmiPlugin {
 
         return EmiIngredient.of(ingredient);
     }
+
+    public static SlotWidget slot(EmiIngredient stack, int x, int y) {
+        return new AffinitySlotWidget(stack, x, y);
+    }
+
+    public static Widget arrow(int x, int y) {
+        return new TextureWidget(
+                EmiTexture.EMPTY_ARROW.texture, x, y,
+                EmiTexture.EMPTY_ARROW.width, EmiTexture.EMPTY_ARROW.height, EmiTexture.EMPTY_ARROW.u, EmiTexture.EMPTY_ARROW.v
+        );
+    }
 }
+

@@ -1,7 +1,6 @@
 package io.wispforest.affinity.compat.emi.recipe;
 
-import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
@@ -23,51 +22,23 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-public class AspenInfusionEmiRecipe implements EmiRecipe {
+public class AspenInfusionEmiRecipe extends BasicEmiRecipe {
 
     public static final TagKey<Item> RECIPE_RITUAL_SOCLE_PREVIEW = TagKey.of(RegistryKeys.ITEM, Affinity.id("ritual_socles"));
 
-    private final Identifier id;
     private final AspenInfusionRecipe recipe;
 
     public AspenInfusionEmiRecipe(Identifier id, AspenInfusionRecipe recipe) {
+        super(AffinityEmiPlugin.ASPEN_INFUSION, id, 150, 86);
         this.id = id;
         this.recipe = recipe;
-    }
 
-    @Override
-    public EmiRecipeCategory getCategory() {
-        return AffinityEmiPlugin.ASPEN_INFUSION;
-    }
-
-    @Override
-    public @Nullable Identifier getId() {
-        return this.id;
-    }
-
-    @Override
-    public List<EmiIngredient> getInputs() {
-        return Stream.concat(Stream.of(this.recipe.primaryInput), this.recipe.getIngredients().stream()).map(AffinityEmiPlugin::veryCoolFeatureYouGotThereEmi).toList();
-    }
-
-    @Override
-    public List<EmiStack> getOutputs() {
-        return List.of(EmiStack.of(this.recipe.getResult(null)));
-    }
-
-    @Override
-    public int getDisplayWidth() {
-        return 150;
-    }
-
-    @Override
-    public int getDisplayHeight() {
-        return 86;
+        this.inputs = Stream.concat(Stream.of(this.recipe.primaryInput), this.recipe.getIngredients().stream()).map(AffinityEmiPlugin::veryCoolFeatureYouGotThereEmi).toList();
+        this.outputs = List.of(EmiStack.of(this.recipe.getResult(null)));
     }
 
     @Override
@@ -92,11 +63,11 @@ public class AspenInfusionEmiRecipe implements EmiRecipe {
             double angle = angleStep * (index - 1) - Math.PI / 2;
 
             inputContainer.child(adapter.wrap((x, y) -> {
-                return new SlotWidget(this.getInputs().get(index), x, y).drawBack(false);
+                return AffinityEmiPlugin.slot(this.getInputs().get(index), x, y).drawBack(false);
             }).positioning(Positioning.absolute((int) (center.x + Math.cos(angle) * 30), (int) (center.y + Math.sin(angle) * 30))));
         }
 
-        inputContainer.child(adapter.wrap((x, y) -> new SlotWidget(this.getInputs().get(0), x, y)));
+        inputContainer.child(adapter.wrap((x, y) -> AffinityEmiPlugin.slot(this.getInputs().get(0), x, y)));
 
         // Arrow
 
@@ -120,7 +91,7 @@ public class AspenInfusionEmiRecipe implements EmiRecipe {
         outputContainer.verticalAlignment(VerticalAlignment.CENTER).margins(Insets.left(5));
         root.child(outputContainer);
 
-        outputContainer.child(adapter.wrap((x, y) -> new SlotWidget(EmiStack.of(this.recipe.getResult(null)), x, y).large(true)));
+        outputContainer.child(adapter.wrap((x, y) -> AffinityEmiPlugin.slot(EmiStack.of(this.recipe.getResult(null)), x, y).large(true).recipeContext(this)));
 
         var soclePreviewFlow = Containers.horizontalFlow(Sizing.content(), Sizing.content());
         soclePreviewFlow.margins(Insets.bottom(8)).positioning(Positioning.relative(50, 100));
@@ -128,7 +99,7 @@ public class AspenInfusionEmiRecipe implements EmiRecipe {
         outputContainer.child(soclePreviewFlow);
 
         soclePreviewFlow.child(adapter.wrap((x, y) -> {
-            return new SlotWidget(EmiIngredient.of(RECIPE_RITUAL_SOCLE_PREVIEW, this.getInputs().size() - 1), x, y);
+            return AffinityEmiPlugin.slot(EmiIngredient.of(RECIPE_RITUAL_SOCLE_PREVIEW, this.getInputs().size() - 1), x, y);
         }));
 
         adapter.prepare();

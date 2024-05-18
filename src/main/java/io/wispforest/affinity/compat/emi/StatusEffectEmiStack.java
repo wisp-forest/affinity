@@ -59,14 +59,18 @@ public class StatusEffectEmiStack extends EmiStack {
 
     @Override
     public List<TooltipComponent> getTooltip() {
-        List<TooltipComponent> list = getTooltipText().stream().map(EmiTooltipComponents::of).collect(Collectors.toList());
-        if (amount > 1) {
-            list.add(EmiTooltipComponents.getAmount(this));
+        var tooltip = getTooltipText().stream().map(EmiTooltipComponents::of).collect(Collectors.toList());
+        if (this.amount > 1) {
+            tooltip.add(EmiTooltipComponents.getAmount(this));
         }
-        String namespace = Registries.STATUS_EFFECT.getId(this.effect).getNamespace();
-        EmiTooltipComponents.appendModName(list, namespace);
-        list.addAll(super.getTooltip());
-        return list;
+
+        EmiTooltipComponents.appendModName(
+                tooltip,
+                Registries.STATUS_EFFECT.getId(this.effect).getNamespace()
+        );
+
+        tooltip.addAll(super.getTooltip());
+        return tooltip;
     }
 
     @Override

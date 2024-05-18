@@ -1,7 +1,6 @@
 package io.wispforest.affinity.compat.emi.recipe;
 
-import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
@@ -26,54 +25,24 @@ import net.minecraft.potion.PotionUtil;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-public class PotionMixingEmiRecipe implements EmiRecipe {
+public class PotionMixingEmiRecipe extends BasicEmiRecipe {
 
-    private final Identifier id;
     private final PotionMixingRecipe recipe;
 
     public PotionMixingEmiRecipe(Identifier id, PotionMixingRecipe recipe) {
+        super(AffinityEmiPlugin.POTION_MIXING, id, 165, 93);
         this.id = id;
         this.recipe = recipe;
-    }
 
-    @Override
-    public EmiRecipeCategory getCategory() {
-        return AffinityEmiPlugin.POTION_MIXING;
-    }
-
-    @Override
-    public @Nullable Identifier getId() {
-        return this.id;
-    }
-
-    @Override
-    public List<EmiIngredient> getInputs() {
-        return Stream.concat(
+        this.inputs = Stream.concat(
                 this.recipe.itemInputs.stream().map(AffinityEmiPlugin::veryCoolFeatureYouGotThereEmi),
                 this.recipe.effectInputs.stream().map(StatusEffectEmiStack::new)
         ).toList();
-    }
-
-    @Override
-    public List<EmiStack> getOutputs() {
-        var stack = Items.POTION.getDefaultStack();
-        PotionUtil.setPotion(stack, this.recipe.potionOutput());
-        return List.of(EmiStack.of(stack));
-    }
-
-    @Override
-    public int getDisplayWidth() {
-        return 165;
-    }
-
-    @Override
-    public int getDisplayHeight() {
-        return 105;
+        this.outputs = List.of(EmiStack.of(PotionUtil.setPotion(Items.POTION.getDefaultStack(), recipe.potionOutput())));
     }
 
     @Override
@@ -118,7 +87,7 @@ public class PotionMixingEmiRecipe implements EmiRecipe {
                 if (idx >= inputs.size()) break inputs;
 
                 rowContainer.child(adapter.wrap(
-                        (x, y) -> new SlotWidget(EmiIngredient.of(inputs.get(idx)), x, y)
+                        (x, y) -> AffinityEmiPlugin.slot(EmiIngredient.of(inputs.get(idx)), x, y)
                 ).margins(Insets.of(1)));
             }
         }
@@ -146,7 +115,7 @@ public class PotionMixingEmiRecipe implements EmiRecipe {
                                 .margins(Insets.bottom(-10))
                         )
                         .child(adapter.wrap(
-                                (x, y) -> new SlotWidget(this.getOutputs().get(0), x, y).drawBack(false)
+                                (x, y) -> AffinityEmiPlugin.slot(this.getOutputs().get(0), x, y).drawBack(false).recipeContext(this)
                         ).margins(Insets.of(0, 5, 0, 1)))
                         .child(Components.block(AffinityBlocks.BREWING_CAULDRON.getDefaultState(), potionNbt)
                                 .sizing(Sizing.fixed(40))

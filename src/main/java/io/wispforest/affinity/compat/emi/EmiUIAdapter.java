@@ -2,6 +2,7 @@ package io.wispforest.affinity.compat.emi;
 
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.api.widget.Widget;
+import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.owo.ui.core.OwoUIAdapter;
 import io.wispforest.owo.ui.core.ParentComponent;
 import io.wispforest.owo.ui.core.Sizing;
@@ -9,13 +10,16 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
 
+import java.util.List;
 import java.util.function.BiFunction;
 
 public class EmiUIAdapter<T extends ParentComponent> extends Widget {
 
     public final OwoUIAdapter<T> adapter;
+    private List<TooltipComponent> currentTooltip = null;
 
     public EmiUIAdapter(Bounds bounds, BiFunction<Sizing, Sizing, T> rootComponentMaker) {
         this.adapter = OwoUIAdapter.createWithoutScreen(bounds.x(), bounds.y(), bounds.width(), bounds.height(), rootComponentMaker);
@@ -45,10 +49,22 @@ public class EmiUIAdapter<T extends ParentComponent> extends Widget {
 
     @Override
     public void render(DrawContext draw, int mouseX, int mouseY, float delta) {
-        this.adapter.render(draw, mouseX, mouseY, delta);
-        draw.draw();
+        try {
+            this.currentTooltip = null;
+            MixinHooks.tooltipConsumer = tooltipComponents -> this.currentTooltip = tooltipComponents;
 
-        Screen.getTooltipFromItem(MinecraftClient.getInstance(), ItemStack.EMPTY);
+            draw.draw();
+            this.adapter.render(draw, mouseX, mouseY, delta);
+            draw.draw();
+        } finally {
+            MixinHooks.tooltipConsumer = null;
+            Screen.getTooltipFromItem(MinecraftClient.getInstance(), ItemStack.EMPTY);
+        }
+    }
+
+    @Override
+    public List<TooltipComponent> getTooltip(int mouseX, int mouseY) {
+        return this.currentTooltip != null ? this.currentTooltip : List.of();
     }
 
     @Override
