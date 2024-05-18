@@ -15,7 +15,7 @@ import java.util.List;
 public class AnthracitePowderItem extends Item implements DirectInteractionHandler {
 
     public AnthracitePowderItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN));
+        super(AffinityItems.settings());
     }
 
     @Override

@@ -1,10 +1,12 @@
 {
   "itemGroup.affinity.affinity": "Affinity",
   "itemGroup.affinity.affinity.button.github": "GitHub",
+  "itemGroup.affinity.affinity.button.modrinth": "Modrinth",
+  "itemGroup.affinity.affinity.button.curseforge": "CurseForge",
   "itemGroup.affinity.affinity.tab.main": "Affinity",
+  "itemGroup.affinity.affinity.tab.machinery": "Machinery",
   "itemGroup.affinity.affinity.tab.nature": "Nature",
   "itemGroup.affinity.affinity.tab.equipment": "Equipment",
-  "itemGroup.affinity.affinity.tab.enchantments": "Enchantments",
 
   "biome.affinity.wisp_forest": "Wisp Forest",
 
@@ -372,7 +374,7 @@
 
   "enchantment.affinity.curse_of_illiteracy": "Curse of Illiteracy",
   "enchantment.affinity.curse_of_illiteracy.desc": [
-    {"text": "it turns out dashloader is cringe", "obfuscated": true}
+    {"text": "honestly strange that this is now readable", "obfuscated": true}
   ],
   "enchantment.affinity.curse_of_health": "Curse of Health",
   "enchantment.affinity.curse_of_health.desc": "Increases your health when put on. Taking off is not recommended",

@@ -25,7 +25,7 @@ public class MilkCupItem extends Item {
     private static final int MAX_USE_TIME = 32;
 
     public MilkCupItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(8));
+        super(AffinityItems.settings().maxCount(8));
     }
 
     @Override

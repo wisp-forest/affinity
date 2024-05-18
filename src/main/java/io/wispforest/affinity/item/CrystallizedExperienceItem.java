@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class CrystallizedExperienceItem extends Item {
 
     public CrystallizedExperienceItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN));
+        super(AffinityItems.settings());
     }
 
     @Override

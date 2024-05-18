@@ -4,7 +4,6 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.*;
 import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.*;
-import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.misc.ArcaneFadeFluid;
 import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
@@ -37,45 +36,45 @@ import java.util.function.BiFunction;
 @SuppressWarnings("unused")
 public class AffinityBlocks implements BlockRegistryContainer {
 
-    @Tab(AffinityItemGroup.MAIN) public static final Block BREWING_CAULDRON = new BrewingCauldronBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block COPPER_PLATED_AETHUM_FLUX_NODE = new CopperPlatedAethumFluxNodeBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block AETHUM_FLUX_CACHE = new AethumFluxCacheBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block CREATIVE_AETHUM_FLUX_CACHE = new CreativeAethumFluxCacheBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block SUNDIAL = new SundialBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block ARBOREAL_ANNIHILATION_APPARATUS = new ArborealAnnihilationApparatusBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block MATTER_HARVESTING_HEARTH = new MatterHarvestingHearthBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block BLANK_RITUAL_SOCLE = new BlankRitualSocleBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block RUDIMENTARY_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.RUDIMENTARY);
-    @Tab(AffinityItemGroup.MAIN) public static final Block REFINED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.REFINED);
-    @Tab(AffinityItemGroup.MAIN) public static final Block SOPHISTICATED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.SOPHISTICATED);
-    @Tab(AffinityItemGroup.MAIN) public static final Block ASP_RITE_CORE = new AspRiteCoreBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block SPIRIT_INTEGRATION_APPARATUS = new SpiritIntegrationApparatusBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block RITUAL_SOCLE_COMPOSER = new RitualSocleComposerBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block AFFINE_INFUSER = new AffineInfuserBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block CROP_REAPER = new CropReaperBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block WORLD_PIN = new WorldPinBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block SUNSHINE_MONOLITH = new SunshineMonolithBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block ARCANE_TREETAP = new ArcaneTreetapBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block ASSEMBLY_AUGMENT = new AssemblyAugmentBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block MANGROVE_BASKET = new MangroveBasketBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block STAFF_PEDESTAL = new StaffPedestalBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block OUIJA_BOARD = new OuijaBoardBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block ITEM_TRANSFER_NODE = new ItemTransferNodeBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block AETHUM_PROBE = new AethumProbeBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block FIELD_COHERENCE_MODULATOR = new FieldCoherenceModulatorBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block HOLOGRAPHIC_STEREOPTICON = new HolographicStereopticonBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block EMERALD_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK));
-    @Tab(AffinityItemGroup.MAIN) public static final Block VOID_BEACON = new VoidBeaconBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block GRAVITON_TRANSDUCER = new GravitonTransducerBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block ETHEREAL_AETHUM_FLUX_NODE = new EtherealAethumFluxNodeBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block ETHEREAL_AETHUM_FLUX_INJECTOR = new EtherealAethumFluxInjectorBlock();
-    @Tab(AffinityItemGroup.MAIN) public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
+    public static final Block BREWING_CAULDRON = new BrewingCauldronBlock();
+    public static final Block COPPER_PLATED_AETHUM_FLUX_NODE = new CopperPlatedAethumFluxNodeBlock();
+    public static final Block AETHUM_FLUX_CACHE = new AethumFluxCacheBlock();
+    public static final Block CREATIVE_AETHUM_FLUX_CACHE = new CreativeAethumFluxCacheBlock();
+    public static final Block STONE_BANDED_AETHUM_FLUX_NODE = new StoneBandedAethumFluxNodeBlock();
+    public static final Block SUNDIAL = new SundialBlock();
+    public static final Block ARBOREAL_ANNIHILATION_APPARATUS = new ArborealAnnihilationApparatusBlock();
+    public static final Block MATTER_HARVESTING_HEARTH = new MatterHarvestingHearthBlock();
+    public static final Block BLANK_RITUAL_SOCLE = new BlankRitualSocleBlock();
+    public static final Block RUDIMENTARY_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.RUDIMENTARY);
+    public static final Block REFINED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.REFINED);
+    public static final Block SOPHISTICATED_RITUAL_SOCLE = new RitualSocleBlock(AffinityRitualSocleTypes.SOPHISTICATED);
+    public static final Block ASP_RITE_CORE = new AspRiteCoreBlock();
+    public static final Block SPIRIT_INTEGRATION_APPARATUS = new SpiritIntegrationApparatusBlock();
+    public static final Block RITUAL_SOCLE_COMPOSER = new RitualSocleComposerBlock();
+    public static final Block AFFINE_INFUSER = new AffineInfuserBlock();
+    public static final Block CROP_REAPER = new CropReaperBlock();
+    public static final Block WORLD_PIN = new WorldPinBlock();
+    public static final Block SUNSHINE_MONOLITH = new SunshineMonolithBlock();
+    public static final Block ARCANE_TREETAP = new ArcaneTreetapBlock();
+    public static final Block ASSEMBLY_AUGMENT = new AssemblyAugmentBlock();
+    public static final Block MANGROVE_BASKET = new MangroveBasketBlock();
+    public static final Block STAFF_PEDESTAL = new StaffPedestalBlock();
+    public static final Block OUIJA_BOARD = new OuijaBoardBlock();
+    public static final Block ITEM_TRANSFER_NODE = new ItemTransferNodeBlock();
+    public static final Block AETHUM_PROBE = new AethumProbeBlock();
+    public static final Block FIELD_COHERENCE_MODULATOR = new FieldCoherenceModulatorBlock();
+    public static final Block HOLOGRAPHIC_STEREOPTICON = new HolographicStereopticonBlock();
+    public static final Block EMERALD_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK));
+    public static final Block VOID_BEACON = new VoidBeaconBlock();
+    public static final Block GRAVITON_TRANSDUCER = new GravitonTransducerBlock();
+    public static final Block ETHEREAL_AETHUM_FLUX_NODE = new EtherealAethumFluxNodeBlock();
+    public static final Block ETHEREAL_AETHUM_FLUX_INJECTOR = new EtherealAethumFluxInjectorBlock();
+    public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
 
-    @Tab(AffinityItemGroup.MAIN) public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
+    public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 
     @NoBlockItem
-    @Tab(AffinityItemGroup.MAIN)
+
     public static final Block RANTHRACITE_WIRE = new RanthraciteWireBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
@@ -266,15 +265,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public void postProcessField(String namespace, Block value, String identifier, Field field) {
         if (field.isAnnotationPresent(NoBlockItem.class)) return;
 
-        int tab = AffinityItemGroup.NATURE;
-        if (field.isAnnotationPresent(Tab.class)) tab = field.getAnnotation(Tab.class).value();
-
         BiFunction<Block, OwoItemSettings, Item> factory = value instanceof BlockItemProvider provider
                 ? provider::createBlockItem
                 : BlockItem::new;
 
         Registry.register(Registries.ITEM, new Identifier(namespace, identifier),
-                factory.apply(value, new OwoItemSettings().tab(tab).group(AffinityItemGroup.group())));
+                factory.apply(value, new OwoItemSettings()));
     }
 
     @Retention(RetentionPolicy.RUNTIME)

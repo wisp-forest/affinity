@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class BuddingExperienceCrystalItem extends Item {
 
     public BuddingExperienceCrystalItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN));
+        super(AffinityItems.settings());
     }
 
     @Override

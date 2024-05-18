@@ -13,7 +13,7 @@ import net.minecraft.util.ActionResult;
 public class GeologicalResonatorItem extends Item {
 
     public GeologicalResonatorItem() {
-        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
+        super(AffinityItems.settings().maxCount(1));
     }
 
     @Override

@@ -36,7 +36,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     private static final String WAND_OF_IRIDESCENCE_PREFIX = "item.affinity.wand_of_iridescence";
 
     public IridescenceWandItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+        super(AffinityItems.settings().maxCount(1));
     }
 
     @Override

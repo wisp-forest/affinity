@@ -34,7 +34,7 @@ public class SatiatingPotionItem extends Item {
     private static final Supplier<StatusEffectInstance> EFFECT = () -> new StatusEffectInstance(StatusEffects.SATURATION, 5, 0);
 
     public SatiatingPotionItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+        super(AffinityItems.settings().maxCount(1));
     }
 
     @Override

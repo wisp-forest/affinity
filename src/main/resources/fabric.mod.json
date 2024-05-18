@@ -38,6 +38,9 @@
     "rei_common": [
       "io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin"
     ],
+    "emi": [
+      "io.wispforest.affinity.compat.emi.AffinityEmiPlugin"
+    ],
     "owo-whats-this-plugin": [
       "io.wispforest.affinity.compat.owowhatsthis.AffinityOwoWhatsThisPlugin"
     ],

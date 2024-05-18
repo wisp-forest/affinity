@@ -40,7 +40,7 @@ public class CollectionStaffItem extends StaffItem {
     private static final InquirableOutlineProvider.Outline DOWN_AOE = new InquirableOutlineProvider.Outline(-5, -4, -5, 5, 0, 5);
 
     public CollectionStaffItem() {
-        super(AffinityItems.settings(AffinityItemGroup.EQUIPMENT).maxCount(1));
+        super(AffinityItems.settings().maxCount(1));
     }
 
     @Override

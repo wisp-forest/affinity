@@ -45,6 +45,7 @@
     "PotionUtilMixin",
     "ProjectileEntityMixin",
     "ProjectileUtilMixin",
+    "access.RecipeManagerAccessor",
     "RedstoneWireBlockMixin",
     "ServerChunkManagerMixin",
     "ServerPlayerInteractionManagerMixin",
@@ -72,14 +73,14 @@
     "access.StatusEffectInstanceAccessor",
     "access.StructureFeatureAccessor",
     "access.WorldAccessor",
+    "client.LivingEntityRendererMixin",
     "client.MultiPhaseParametersAccessor",
     "client.MultiPhaseRenderLayerAccessor",
     "client.WorldRendererAccessor",
     "client.sodium.AlphaMaskConsumerMixin",
     "endec.ItemStackMixin",
-    "endec.NbtCompoundMixin", "endec.PacketByteBufMixin",
-    "access.WorldAccessor",
-    "client.LivingEntityRendererMixin"
+    "endec.NbtCompoundMixin",
+    "endec.PacketByteBufMixin"
   ],
   "client": [
     "BeaconBlockEntityMixin",

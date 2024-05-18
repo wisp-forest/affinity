@@ -1,5 +1,6 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.ArcaneTreetapBlock;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity.ImprintKind;
@@ -14,7 +15,6 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.KeyedEndec;
-import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.EnvType;
@@ -99,7 +99,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
                     )
             );
 
-            spawnBlockImprintEffects(context.getWorld(), context.getBlockPos());
+            if (Affinity.onClient()) spawnBlockImprintEffects(context.getWorld(), context.getBlockPos());
         } else {
             this.doSectionClick(context.getWorld(), context.getBlockPos(), context.getStack());
         }
@@ -116,7 +116,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
             writeRendererData(stack, ImprintKind.SECTION, new SectionData(startPos, pos));
         }
 
-        spawnBlockImprintEffects(world, pos);
+        if (Affinity.onClient()) spawnBlockImprintEffects(world, pos);
     }
 
     private BlockPos getSectionTarget(Entity holder) {
@@ -191,8 +191,9 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
         CuboidRenderer.add(startPos, CuboidRenderer.Cuboid.of(origin, offset, Color.ofRgb(0x00FFAB), Color.WHITE));
     }
 
+    @Environment(EnvType.CLIENT)
     private static void spawnBlockImprintEffects(World world, BlockPos pos) {
-        WorldOps.playSound(world, pos, world.getBlockState(pos).getSoundGroup().getPlaceSound(), SoundCategory.PLAYERS);
+        world.playSound(pos.getX(), pos.getY(), pos.getZ(), world.getBlockState(pos).getSoundGroup().getPlaceSound(), SoundCategory.PLAYERS, 1f, 1f, false);
 
         ClientParticles.randomizeVelocity(.05f);
         ClientParticles.setParticleCount(10);

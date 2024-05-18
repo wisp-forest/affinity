@@ -9,6 +9,7 @@ import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -25,6 +26,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import org.jetbrains.annotations.Nullable;
 
+import javax.tools.Tool;
+import java.util.List;
+import java.util.function.Consumer;
+
 public class MixinHooks {
 
     private static final Identifier IMPENDING_DOOM_ID = Affinity.id("impending_doom");
@@ -35,6 +40,7 @@ public class MixinHooks {
     public static double extraTargetingMargin = 0;
     public static @Nullable BlockEntity queuedBlockEntity = null;
     public static @Nullable EntityReference<ItemEntity> renderItem = null;
+    public static @Nullable Consumer<List<TooltipComponent>> tooltipConsumer = null;
 
     public static final DamageTypeKey THREW_DOOM_POTION_DAMAGE = new DamageTypeKey(Affinity.id("threw_doom_potion"), DamageTypeKey.Attribution.NEVER_ATTRIBUTE);
 

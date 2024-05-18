@@ -53,7 +53,7 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
     private static final Set<BlockPos> ACTIVE_OUTLINE_PROVIDERS = new HashSet<>();
 
     public WandOfInquiryItem() {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(1));
+        super(AffinityItems.settings().maxCount(1));
     }
 
     @Override

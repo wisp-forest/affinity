@@ -2,16 +2,12 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityItems;
-import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.wisps.WispType;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +19,7 @@ public class WispMatterItem extends Item {
     private final WispType type;
 
     public WispMatterItem(WispType type) {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN));
+        super(AffinityItems.settings());
         this.type = type;
     }
 

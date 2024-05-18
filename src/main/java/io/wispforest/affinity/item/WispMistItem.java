@@ -19,7 +19,7 @@ public class WispMistItem extends Item {
     private final WispType type;
 
     public WispMistItem(WispType type) {
-        super(AffinityItems.settings(AffinityItemGroup.MAIN).maxCount(16));
+        super(AffinityItems.settings().maxCount(16));
         this.type = type;
     }
 
