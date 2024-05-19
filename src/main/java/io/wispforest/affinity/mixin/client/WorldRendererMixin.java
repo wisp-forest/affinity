@@ -2,6 +2,7 @@ package io.wispforest.affinity.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.client.render.LightLeakRenderer;
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.item.AstrokinesisStaffItem;
@@ -172,7 +173,7 @@ public abstract class WorldRendererMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", shift = At.Shift.AFTER))
     private void captureSky(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f positionMatrix, CallbackInfo ci) {
-        SkyCaptureBuffer.captureSky();
+        if (!SkyCaptureBuffer.isIrisWorldRendering() || !Affinity.CONFIG.theSkyIrisIntegration()) SkyCaptureBuffer.captureSky(MinecraftClient.getInstance().getFramebuffer().fbo);
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/DimensionEffects;isDarkened()Z", shift = At.Shift.AFTER))
@@ -182,7 +183,13 @@ public abstract class WorldRendererMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void drawSkyAfter(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f positionMatrix, CallbackInfo ci) {
+        if (Affinity.CONFIG.theSkyIrisIntegration()) return;
         SkyCaptureBuffer.draw();
     }
 
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BackgroundRenderer;clearFog()V"))
+    private void drawSkyAfter_iris(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f positionMatrix, CallbackInfo ci) {
+        if (!Affinity.CONFIG.theSkyIrisIntegration()) return;
+        SkyCaptureBuffer.draw();
+    }
 }

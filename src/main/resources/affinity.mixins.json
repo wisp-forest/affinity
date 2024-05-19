@@ -111,6 +111,7 @@
     "client.StyleMixin",
     "client.WorldRendererAccessor",
     "client.WorldRendererMixin",
+    "client.iris.HorizonRendererMixin",
     "client.iris.WorldRenderingPhaseMixin",
     "client.sodium.AlphaMaskConsumerMixin",
     "client.sodium.DefaultMaterialsMixin",
