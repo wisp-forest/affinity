@@ -64,11 +64,11 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     @Environment(EnvType.CLIENT)
     private @Nullable Renderer nextRenderer;
 
-    @Environment(EnvType.CLIENT) private long updateTimestamp = 0;
-    @Environment(EnvType.CLIENT) private long refreshIn = 0;
+    @Environment(EnvType.CLIENT) private long updateTimestamp;
+    @Environment(EnvType.CLIENT) private long refreshIn;
 
-    @Environment(EnvType.CLIENT) public float visualRenderScale = 0f;
-    @Environment(EnvType.CLIENT) public float currentRotation = 0;
+    @Environment(EnvType.CLIENT) public float visualRenderScale;
+    @Environment(EnvType.CLIENT) public float currentRotation;
 
     private NbtCompound rendererData = null;
     private float renderScale = 1f;
