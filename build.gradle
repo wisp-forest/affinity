@@ -76,7 +76,7 @@ dependencies {
     modCompileOnly "dev.architectury:architectury-fabric:11.0.9"
 
     modCompileOnly "dev.emi:emi-fabric:${project.emi_version}"
-    modLocalRuntime "dev.emi:emi-fabric:${project.emi_version}"
+    // modLocalRuntime "dev.emi:emi-fabric:${project.emi_version}"
 
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 

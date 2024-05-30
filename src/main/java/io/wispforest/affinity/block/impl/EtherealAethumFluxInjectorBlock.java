@@ -79,7 +79,7 @@ public class EtherealAethumFluxInjectorBlock extends BlockWithEntity {
     public static final EnumProperty<Direction> FACING = Properties.FACING;
 
     public EtherealAethumFluxInjectorBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10));
+        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10).solid());
     }
 
     @Override

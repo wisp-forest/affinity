@@ -24,7 +24,7 @@ public class BlankRitualSocleBlock extends BlockWithEntity {
             Block.createCuboidShape(5, 2, 5, 11, 13, 11));
 
     public BlankRitualSocleBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE).nonOpaque());
+        super(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE).nonOpaque().solid());
     }
 
     @Override

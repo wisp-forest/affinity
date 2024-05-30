@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractAethumFluxNodeBlock extends AethumNetworkMemberBlock implements AttackInteractionReceiver {
 
     protected AbstractAethumFluxNodeBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10), NODE_TOOLTIP);
+        super(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(10).solid(), NODE_TOOLTIP);
     }
 
     @Nullable
