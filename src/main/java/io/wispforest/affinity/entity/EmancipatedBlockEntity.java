@@ -31,11 +31,7 @@ import java.util.Optional;
 
 public class EmancipatedBlockEntity extends Entity {
 
-    private static final TrackedDataHandler<Optional<NbtCompound>> OPTIONAL_NBT = TrackedDataHandler.ofOptional(PacketByteBuf::writeNbt, PacketByteBuf::readNbt);
-
-    static {
-        TrackedDataHandlerRegistry.register(OPTIONAL_NBT);
-    }
+    public static final TrackedDataHandler<Optional<NbtCompound>> OPTIONAL_NBT = TrackedDataHandler.ofOptional(PacketByteBuf::writeNbt, PacketByteBuf::readNbt);
 
     private static final KeyedEndec<Integer> MAX_AGE_KEY = Endec.INT.keyed("max_age", 15);
     private static final KeyedEndec<Float> ANIMATION_SCALE_KEY = Endec.FLOAT.keyed("animation_scale", 1f);

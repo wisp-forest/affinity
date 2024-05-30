@@ -81,7 +81,7 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
         BUFFER.setBlitProgram(AffinityClient.DEPTH_MERGE_BLIT_PROGRAM::program);
 
         WorldRenderEvents.START.register(context -> BUFFER.clear());
-        WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
+        WorldRenderEvents.END.register(context -> {
             AffinityClient.DEPTH_MERGE_BLIT_PROGRAM.setupSamplers(BUFFER.buffer().getDepthAttachment());
             BUFFER.draw(new Color(1f, 1f, 1f, .75f));
         });

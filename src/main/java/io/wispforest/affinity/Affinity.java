@@ -3,6 +3,7 @@ package io.wispforest.affinity;
 import com.google.common.collect.ImmutableSet;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
+import io.wispforest.affinity.entity.EmancipatedBlockEntity;
 import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.item.EchoShardExtension;
 import io.wispforest.affinity.misc.AffinityDebugCommands;
@@ -26,6 +27,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.condition.EntityPropertiesLootCondition;
 import net.minecraft.loot.context.LootContext;
@@ -83,6 +85,7 @@ public class Affinity implements ModInitializer {
         AffinityWorldgen.initialize();
 
         Registry.register(Registries.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
+        TrackedDataHandlerRegistry.register(EmancipatedBlockEntity.OPTIONAL_NBT);
 
         AffinityStructures.register();
 

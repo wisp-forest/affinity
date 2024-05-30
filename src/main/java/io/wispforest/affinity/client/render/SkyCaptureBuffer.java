@@ -7,18 +7,22 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.client.AffinityClient;
 import io.wispforest.affinity.misc.quack.AffinityFramebufferExtension;
 import io.wispforest.owo.ui.event.WindowResizeCallback;
+import net.fabricmc.loader.api.FabricLoader;
+import net.irisshaders.iris.Iris;
+import net.irisshaders.iris.pipeline.ShaderRenderingPipeline;
+import net.irisshaders.iris.pipeline.WorldRenderingPhase;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.SimpleFramebuffer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL30C;
+import org.lwjgl.opengl.GL32;
 
 public class SkyCaptureBuffer extends RenderLayer {
+
+    private static final boolean IRIS_LOADED = FabricLoader.getInstance().isModLoaded("iris");
 
     public static final RenderLayer SKY_STENCIL_LAYER = RenderLayer.of("affinity:sky_stencil",
             VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL,
@@ -28,6 +32,21 @@ public class SkyCaptureBuffer extends RenderLayer {
                     .program(SOLID_PROGRAM)
                     .target(new Target("affinity:sky_stencil", SkyCaptureBuffer::beginStencilWrite, SkyCaptureBuffer::endStencilWrite))
                     .texture(BLOCK_ATLAS_TEXTURE)
+                    .build(true)
+    );
+
+    public static final RenderLayer SKY_STENCIL_ENTITY_LAYER = RenderLayer.of("affinity:sky_stencil_entity",
+            VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL,
+            VertexFormat.DrawMode.QUADS,
+            0x200000,
+            MultiPhaseParameters.builder()
+                    .program(new ShaderProgram(AffinityClient.SOLID_FROM_FRAMEBUFFER::program))
+                    .texture(new TextureBase(
+                            () -> {
+                                RenderSystem.setShaderTexture(0, SkyCaptureBuffer.skyCapture.getColorAttachment());
+                                beginStencilWrite();
+                            }, SkyCaptureBuffer::endStencilWrite
+                    ))
                     .build(true)
     );
 
@@ -57,26 +76,27 @@ public class SkyCaptureBuffer extends RenderLayer {
         skyStencil = new StencilFramebuffer(window.getFramebufferWidth(), window.getFramebufferHeight());
     }
 
-    public static void captureSky() {
-        var mainBuffer = MinecraftClient.getInstance().getFramebuffer();
-
+    public static void captureSky(int blockTarget) {
         skyCapture.clear(MinecraftClient.IS_SYSTEM_MAC);
         skyStencil.clear(MinecraftClient.IS_SYSTEM_MAC);
 
         skyCapture.beginWrite(false);
-        GL30C.glBindFramebuffer(GL30C.GL_READ_FRAMEBUFFER, mainBuffer.fbo);
+        GL30C.glBindFramebuffer(GL30C.GL_READ_FRAMEBUFFER, blockTarget);
 
         GL30C.glBlitFramebuffer(
-                0, 0, mainBuffer.textureWidth, mainBuffer.textureHeight,
+                0, 0, MinecraftClient.getInstance().getWindow().getFramebufferWidth(), MinecraftClient.getInstance().getWindow().getFramebufferHeight(),
                 0, 0, skyCapture.textureWidth, skyCapture.textureHeight,
                 GL11.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST
         );
 
-        mainBuffer.endRead();
-        mainBuffer.beginWrite(true);
+        GL30C.glBindFramebuffer(GL30C.GL_FRAMEBUFFER, blockTarget);
     }
 
     public static void draw() {
+        GameRenderer.getPositionTexColorNormalProgram().bind();
+        var blockTarget = GlStateManager.getBoundFramebuffer();
+        GameRenderer.getPositionTexColorNormalProgram().unbind();
+
         skyStencil.beginWrite(true);
 
         GL11.glEnable(GL11.GL_STENCIL_TEST);
@@ -87,7 +107,7 @@ public class SkyCaptureBuffer extends RenderLayer {
 
         GL11.glDisable(GL11.GL_STENCIL_TEST);
 
-        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+        GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, blockTarget);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
         AffinityClient.DEPTH_MERGE_BLIT_PROGRAM.setupSamplers(skyStencil.getDepthAttachment());
@@ -95,7 +115,7 @@ public class SkyCaptureBuffer extends RenderLayer {
         RenderSystem.disableBlend();
 
         skyStencil.clear(MinecraftClient.IS_SYSTEM_MAC);
-        MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+        GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, blockTarget);
     }
 
     private static void beginStencilWrite() {
@@ -112,14 +132,31 @@ public class SkyCaptureBuffer extends RenderLayer {
 
     private static void endStencilWrite() {
         GL11.glDisable(GL11.GL_STENCIL_TEST);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, lastFramebuffer);
+        if (lastFramebuffer == MinecraftClient.getInstance().getFramebuffer().fbo) {
+            MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+        } else {
+            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, lastFramebuffer);
+        }
     }
 
     static {
         WindowResizeCallback.EVENT.register((client, window) -> {
             skyCapture.resize(window.getFramebufferWidth(), window.getFramebufferHeight(), MinecraftClient.IS_SYSTEM_MAC);
+            GlStateManager._bindTexture(skyCapture.getColorAttachment());
+            GlStateManager._texImage2D(
+                    GlConst.GL_TEXTURE_2D, 0, GL32.GL_R11F_G11F_B10F, skyCapture.textureWidth, skyCapture.textureHeight, 0, GlConst.GL_RGBA, GlConst.GL_UNSIGNED_BYTE, null
+            );
+
             skyStencil.resize(window.getFramebufferWidth(), window.getFramebufferHeight(), MinecraftClient.IS_SYSTEM_MAC);
         });
+    }
+
+    public static boolean isIrisWorldRendering() {
+        if (!IRIS_LOADED) return false;
+        return Iris.getPipelineManager()
+                .getPipeline()
+                .map(pipeline -> pipeline.getPhase() != WorldRenderingPhase.NONE || (pipeline instanceof ShaderRenderingPipeline shaderPipeline && shaderPipeline.shouldOverrideShaders()))
+                .orElse(false);
     }
 
     public static class StencilFramebuffer extends SimpleFramebuffer {
@@ -157,7 +194,7 @@ public class SkyCaptureBuffer extends RenderLayer {
             GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_S, GlConst.GL_CLAMP_TO_EDGE);
             GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_T, GlConst.GL_CLAMP_TO_EDGE);
             GlStateManager._texImage2D(
-                    GlConst.GL_TEXTURE_2D, 0, GlConst.GL_RGBA8, this.textureWidth, this.textureHeight, 0, GlConst.GL_RGBA, GlConst.GL_UNSIGNED_BYTE, null
+                    GlConst.GL_TEXTURE_2D, 0, GL30.GL_R11F_G11F_B10F, this.textureWidth, this.textureHeight, 0, GlConst.GL_RGBA, GlConst.GL_UNSIGNED_BYTE, null
             );
             GlStateManager._glBindFramebuffer(GlConst.GL_FRAMEBUFFER, this.fbo);
             GlStateManager._glFramebufferTexture2D(GlConst.GL_FRAMEBUFFER, GlConst.GL_COLOR_ATTACHMENT0, GlConst.GL_TEXTURE_2D, this.colorAttachment, 0);

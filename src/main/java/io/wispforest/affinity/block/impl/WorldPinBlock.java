@@ -43,7 +43,7 @@ public class WorldPinBlock extends BlockWithEntity {
     ).reduce(VoxelShapes::union).get();
 
     public WorldPinBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES).mapColor(MapColor.CYAN).sounds(BlockSoundGroup.METAL).luminance(10));
+        super(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES).mapColor(MapColor.CYAN).sounds(BlockSoundGroup.METAL).luminance(10).solid());
         this.setDefaultState(this.getDefaultState().with(ENABLED, false));
     }
 

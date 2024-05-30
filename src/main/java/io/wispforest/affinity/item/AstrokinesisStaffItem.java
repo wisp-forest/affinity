@@ -8,6 +8,7 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEntities;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
+import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.KeyedEndec;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -48,7 +49,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
         var superResult = super.executeSpell(world, player, stack, remainingTicks, clickedBlock);
         if (superResult.getResult().isAccepted()) return superResult;
 
-        if (player.getPitch() > 10 || !world.getDimensionEntry().isIn(WHITELISTED_DIMENSIONS) || !world.isNight()) {
+        if (player.getPitch() > 10 || !world.getDimensionEntry().isIn(WHITELISTED_DIMENSIONS) || !(world.isNight() || world.getBiome(player.getBlockPos()).matchesKey(AffinityWorldgen.WISP_FOREST_KEY))) {
             return TypedActionResult.pass(stack);
         }
 

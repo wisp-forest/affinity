@@ -61,7 +61,7 @@ public abstract class ItemRendererMixin {
     )
     private void punchAHoleIntoYourInventory(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci, @Local(argsOnly = true) LocalRef<VertexConsumerProvider> consumers) {
         if (!stack.isOf(AffinityBlocks.THE_SKY.asItem())) return;
-        consumers.set(layer -> vertexConsumers.getBuffer(SkyCaptureBuffer.SKY_IMMEDIATE_LAYER));
+        consumers.set(layer -> vertexConsumers.getBuffer(SkyCaptureBuffer.isIrisWorldRendering() ? SkyCaptureBuffer.SKY_STENCIL_ENTITY_LAYER : SkyCaptureBuffer.SKY_IMMEDIATE_LAYER));
     }
 
     @ModifyReturnValue(method = "getModel", at = @At("TAIL"))

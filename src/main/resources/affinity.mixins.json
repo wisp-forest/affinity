@@ -117,6 +117,7 @@
     "client.RenderLayersMixin",
     "client.StyleMixin",
     "client.WorldRendererMixin",
+    "client.iris.HorizonRendererMixin",
     "client.iris.WorldRenderingPhaseMixin",
     "client.sodium.DefaultMaterialsMixin",
     "client.sodium.DefaultTerrainRenderPassesMixin",

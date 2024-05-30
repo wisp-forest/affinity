@@ -36,7 +36,7 @@ public class RitualSocleBlock extends BlockWithEntity {
     private final RitualSocleType type;
 
     public RitualSocleBlock(RitualSocleType type) {
-        super(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE).nonOpaque());
+        super(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE).nonOpaque().solid());
         this.type = type;
     }
 
