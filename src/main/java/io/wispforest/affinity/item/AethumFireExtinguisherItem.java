@@ -65,6 +65,7 @@ public class AethumFireExtinguisherItem extends StaffItem {
                 entity.extinguish();
                 entity.addVelocity(lookDirection.multiply(.075f));
                 entity.velocityDirty = true;
+                entity.velocityModified = true;
             });
 
             var targetPos = player.raycast(10, 0f, false);
