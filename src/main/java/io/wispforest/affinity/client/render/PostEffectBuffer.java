@@ -51,7 +51,11 @@ public class PostEffectBuffer {
     }
 
     public void endWrite() {
-        GlStateManager._glBindFramebuffer(GL30C.GL_FRAMEBUFFER, this.prevBuffer);
+        if (prevBuffer == MinecraftClient.getInstance().getFramebuffer().fbo) {
+            MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+        } else {
+            GlStateManager._glBindFramebuffer(GL30C.GL_FRAMEBUFFER, this.prevBuffer);
+        }
     }
 
     public void draw(boolean blend) {

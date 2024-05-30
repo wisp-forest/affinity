@@ -132,7 +132,11 @@ public class SkyCaptureBuffer extends RenderLayer {
 
     private static void endStencilWrite() {
         GL11.glDisable(GL11.GL_STENCIL_TEST);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, lastFramebuffer);
+        if (lastFramebuffer == MinecraftClient.getInstance().getFramebuffer().fbo) {
+            MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+        } else {
+            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, lastFramebuffer);
+        }
     }
 
     static {
