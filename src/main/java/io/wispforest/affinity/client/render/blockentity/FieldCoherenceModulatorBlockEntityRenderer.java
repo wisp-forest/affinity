@@ -3,16 +3,19 @@ package io.wispforest.affinity.client.render.blockentity;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.FieldCoherenceModulatorBlockEntity;
 import io.wispforest.owo.ui.util.Delta;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.math.RotationAxis;
 
-public class FieldCoherenceModulatorBlockEntityRenderer extends AffinityBlockEntityRenderer<FieldCoherenceModulatorBlockEntity> {
+public class FieldCoherenceModulatorBlockEntityRenderer extends AffinityBlockEntityRenderer<FieldCoherenceModulatorBlockEntity> implements BuiltinItemRendererRegistry.DynamicItemRenderer {
 
     private static final SpriteIdentifier TEXTURE_ID = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, Affinity.id("block/field_coherence_modulator"));
     private static final ModelPart MAIN_BODY;
@@ -40,6 +43,15 @@ public class FieldCoherenceModulatorBlockEntityRenderer extends AffinityBlockEnt
         entity.spin += frameDelta * entity.spinSpeed;
 
         var spin = entity.spin + entity.timeOffset();
+        renderSpinny(spin, matrices, vertexConsumers, light, overlay);
+    }
+
+    @Override
+    public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        renderSpinny(System.currentTimeMillis() / 20d, matrices, vertexConsumers, light, overlay);
+    }
+
+    private static void renderSpinny(double spin, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         var consumer = TEXTURE_ID.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
 
         matrices.push();
