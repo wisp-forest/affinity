@@ -8,7 +8,6 @@ import io.wispforest.affinity.client.render.BasicVertexConsumerProvider;
 import io.wispforest.affinity.client.render.PostEffectBuffer;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.quack.AffinityClientWorldExtension;
-import io.wispforest.affinity.misc.quack.AffinityFramebufferExtension;
 import io.wispforest.affinity.mixin.client.WorldRendererAccessor;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.util.Delta;
