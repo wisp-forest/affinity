@@ -93,6 +93,8 @@ public class SkyCaptureBuffer extends RenderLayer {
     }
 
     public static void draw() {
+        RenderSystem.backupProjectionMatrix();
+
         GameRenderer.getPositionTexColorNormalProgram().bind();
         var blockTarget = GlStateManager.getBoundFramebuffer();
         GameRenderer.getPositionTexColorNormalProgram().unbind();
@@ -116,6 +118,8 @@ public class SkyCaptureBuffer extends RenderLayer {
 
         skyStencil.clear(MinecraftClient.IS_SYSTEM_MAC);
         GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, blockTarget);
+
+        RenderSystem.restoreProjectionMatrix();
     }
 
     private static void beginStencilWrite() {
