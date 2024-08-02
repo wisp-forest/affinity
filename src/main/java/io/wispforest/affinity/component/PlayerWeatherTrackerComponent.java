@@ -1,12 +1,13 @@
 package io.wispforest.affinity.component;
 
-import dev.onyxstudios.cca.api.v3.component.CopyableComponent;
-import dev.onyxstudios.cca.api.v3.component.TransientComponent;
-import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.CopyableComponent;
+import org.ladysnake.cca.api.v3.component.TransientComponent;
+import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 
 public class PlayerWeatherTrackerComponent implements TransientComponent, ServerTickingComponent, CopyableComponent<PlayerWeatherTrackerComponent> {
     @NotNull
@@ -59,7 +60,7 @@ public class PlayerWeatherTrackerComponent implements TransientComponent, Server
     }
 
     @Override
-    public void copyFrom(PlayerWeatherTrackerComponent other) {
+    public void copyFrom(PlayerWeatherTrackerComponent other, RegistryWrapper.WrapperLookup registryLookup) {
         this.rainGradient = other.rainGradient;
         this.thunderGradient = other.thunderGradient;
     }

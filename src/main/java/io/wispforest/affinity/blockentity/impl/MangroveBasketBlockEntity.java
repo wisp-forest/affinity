@@ -2,23 +2,28 @@ package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.owo.serialization.CodecUtils;
 import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.enums.ChestType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
-    public static final KeyedEndec<BlockState> CONTAINED_STATE_KEY = Endec.ofCodec(BlockState.CODEC).keyed("ContainedState", (BlockState) null);
+    public static final KeyedEndec<BlockState> CONTAINED_STATE_KEY = CodecUtils.toEndec(BlockState.CODEC).keyed("ContainedState", (BlockState) null);
     public static final KeyedEndec<NbtCompound> CONTAINED_BLOCK_ENTITY_KEY = NbtEndec.COMPOUND.keyed("ContainedBlockEntity", (NbtCompound) null);
 
     private BlockState containedState = null;
@@ -47,7 +52,7 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
         return this.containedBlockEntity;
     }
 
-    public ItemStack toItem() {
+    public ItemStack toItem(RegistryWrapper.WrapperLookup registries) {
         var stack = new ItemStack(AffinityBlocks.MANGROVE_BASKET);
         var nbt = new NbtCompound();
 
@@ -66,28 +71,29 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
         }
 
         if (this.containedBlockEntity != null) {
-            nbt.put(CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId());
+            nbt.put(CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId(registries));
         }
 
-        BlockItem.setBlockEntityNbt(stack, this.getType(), nbt);
+        nbt.putString("id", BlockEntityType.getId(this.getType()).toString());
+        stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbt));
 
         return stack;
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         this.containedState = nbt.get(CONTAINED_STATE_KEY);
 
-        this.containedBlockEntity = BlockEntity.createFromNbt(this.pos, this.containedState, nbt.get(CONTAINED_BLOCK_ENTITY_KEY));
+        this.containedBlockEntity = BlockEntity.createFromNbt(this.pos, this.containedState, nbt.get(CONTAINED_BLOCK_ENTITY_KEY), registries);
         this.containedBlockEntity.setWorld(world);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        nbt.putIfNotNull(CONTAINED_STATE_KEY, this.containedState);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        nbt.putIfNotNull(SerializationContext.empty(), CONTAINED_STATE_KEY, this.containedState);
 
         if (this.containedBlockEntity != null) {
-            nbt.put(CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId());
+            nbt.put(CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId(registries));
         }
     }
 

@@ -116,14 +116,14 @@ public class AffinityClient implements ClientModInitializer {
         PostItemRenderCallback.EVENT.register((stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
             if (!stack.isOf(AffinityItems.CARBON_COPY) || renderMode != ModelTransformationMode.GUI) return;
 
-            var resultStack = stack.get(CarbonCopyItem.RESULT_KEY);
-            if (resultStack == null) return;
+            var recipeComponent = stack.get(CarbonCopyItem.RECIPE);
+            if (recipeComponent == null) return;
 
             matrices.translate(.75, .25, 1);
             matrices.scale(.5f, .5f, .5f);
 
             MinecraftClient.getInstance().getItemRenderer().renderItem(
-                    resultStack, renderMode, light, overlay, matrices, vertexConsumers, null, 0
+                    recipeComponent.result(), renderMode, light, overlay, matrices, vertexConsumers, null, 0
             );
         });
 
@@ -226,7 +226,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putFluid(AffinityBlocks.Fluids.ARCANE_FADE_FLOWING, RenderLayer.getTranslucent());
         FluidRenderHandlerRegistry.INSTANCE.register(AffinityBlocks.Fluids.ARCANE_FADE, AffinityBlocks.Fluids.ARCANE_FADE_FLOWING, SimpleFluidRenderHandler.coloredWater(0xA86464));
 
-        ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
+        ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
             final var tier = AttunedShardTier.forItem(stack.getItem());
             if (tier.isNone()) return;
 
@@ -234,7 +234,7 @@ public class AffinityClient implements ClientModInitializer {
             lines.add(Text.translatable("text.affinity.attuned_shard_range", tier.maxDistance()));
         });
 
-        ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
+        ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
             for (int i = 0; i < lines.size(); i++) {
                 var line = lines.get(i);
                 if (!(line.getContent() instanceof PlainTextContent.Literal) || line.getSiblings().isEmpty()) continue;
@@ -250,7 +250,7 @@ public class AffinityClient implements ClientModInitializer {
                 var replacement = ReplaceAttackDamageTextCallback.EVENT.invoker().replaceDamageText(stack);
                 if (replacement == null) return;
 
-                lines.set(i, replacement.append(Text.translatable(EntityAttributes.GENERIC_ATTACK_DAMAGE.getTranslationKey()).formatted(Formatting.DARK_GREEN)));
+                lines.set(i, replacement.append(Text.translatable(EntityAttributes.GENERIC_ATTACK_DAMAGE.value().getTranslationKey()).formatted(Formatting.DARK_GREEN)));
                 return;
             }
         });

@@ -1,45 +1,22 @@
 package io.wispforest.affinity.particle;
 
-import com.mojang.brigadier.StringReader;
 import io.wispforest.affinity.object.AffinityParticleTypes;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.RecordEndec;
-import net.minecraft.network.PacketByteBuf;
+import io.wispforest.endec.StructEndec;
+import io.wispforest.endec.impl.RecordEndec;
+import io.wispforest.endec.impl.ReflectiveEndecBuilder;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 
 public record GenericEmitterParticleEffect(ParticleEffect effect, Vec3d emitVelocity, int emitInterval,
                                            float emitDeviation, boolean randomizeVelocity,
                                            int emitterLifetime) implements ParticleEffect {
 
-    private static final Endec<GenericEmitterParticleEffect> ENDEC = RecordEndec.create(GenericEmitterParticleEffect.class);
-
-    public static final ParticleEffect.Factory<GenericEmitterParticleEffect> FACTORY = new Factory<>() {
-        @Override
-        public GenericEmitterParticleEffect read(ParticleType<GenericEmitterParticleEffect> type, StringReader reader) {
-            return new GenericEmitterParticleEffect(ParticleTypes.SMOKE, Vec3d.ZERO, 2, .15f, false, 20);
-        }
-
-        @Override
-        public GenericEmitterParticleEffect read(ParticleType<GenericEmitterParticleEffect> type, PacketByteBuf buf) {
-            return buf.read(ENDEC);
-        }
-    };
+    public static final StructEndec<GenericEmitterParticleEffect> ENDEC = RecordEndec.create(new ReflectiveEndecBuilder(MinecraftEndecs::addDefaults), GenericEmitterParticleEffect.class);
 
     @Override
     public ParticleType<?> getType() {
         return AffinityParticleTypes.GENERIC_EMITTER;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.write(ENDEC, this);
-    }
-
-    @Override
-    public String asString() {
-        return "generic emitter for {" + this.effect.asString() + "}";
     }
 }

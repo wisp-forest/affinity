@@ -7,7 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.dynamic.Codecs;
 
 import java.util.Optional;
 
@@ -27,8 +26,8 @@ public class SacrificePetCriterion extends AbstractCriterion<SacrificePetCriteri
                              Optional<LootContextPredicate> pet) implements AbstractCriterion.Conditions {
 
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codecs.createStrictOptionalFieldCodec(EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, "player").forGetter(Conditions::player),
-                Codecs.createStrictOptionalFieldCodec(EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, "pet").forGetter(Conditions::pet)
+                Codec.optionalField("player", EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, false).forGetter(Conditions::player),
+                Codec.optionalField("pet", EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, false).forGetter(Conditions::pet)
         ).apply(instance, Conditions::new));
     }
 }

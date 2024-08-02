@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityIngredients;
+import io.wispforest.endec.Endec;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -27,7 +28,7 @@ public class EnchantedBookIngredient implements CustomIngredient {
                     Codecs.createStrictOptionalFieldCodec(Codec.INT, "level", 1).forGetter(entry -> entry.level)
             ).apply(instance, EnchantmentLevelEntry::new));
 
-    public static final Codec<EnchantedBookIngredient> CODEC = RecordCodecBuilder.create(instance -> instance
+    public static final Endec<EnchantedBookIngredient> ENDEC = RecordCodecBuilder.create(instance -> instance
             .group(ENTRY_CODEC.listOf().fieldOf("enchantments").forGetter(o -> o.requiredEnchantments))
             .apply(instance, EnchantedBookIngredient::new));
 

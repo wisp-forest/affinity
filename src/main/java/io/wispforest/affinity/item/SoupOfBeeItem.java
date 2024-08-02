@@ -2,12 +2,12 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.object.AffinityItems;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.BeeEntity;
-import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
@@ -19,7 +19,7 @@ public class SoupOfBeeItem extends Item {
     public SoupOfBeeItem() {
         super(AffinityItems.settings().food(
                 new FoodComponent.Builder()
-                        .hunger(-4)
+                        .nutrition(-4)
                         .saturationModifier(2)
                         .statusEffect(new StatusEffectInstance(StatusEffects.POISON, 200), 1f)
                         .alwaysEdible()

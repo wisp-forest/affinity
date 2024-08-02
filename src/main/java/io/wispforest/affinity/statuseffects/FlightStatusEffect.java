@@ -7,6 +7,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 
@@ -28,9 +29,11 @@ public class FlightStatusEffect extends AffinityStatusEffect {
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        if (!entity.getWorld().isClient()) return;
-        entity.playSound(SoundEvents.UI_TOAST_IN, 1, entity.getStatusEffect(AffinityStatusEffects.FLIGHT).getDuration() == 200 ? .75f : .25f);
+    public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
+        if (!entity.getWorld().isClient()) return true;
+        entity.playSound(SoundEvents.UI_TOAST_IN, 1, entity.getStatusEffect(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.FLIGHT)).getDuration() == 200 ? .75f : .25f);
+
+        return true;
     }
 
     @Override

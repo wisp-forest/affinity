@@ -4,6 +4,8 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.client.render.entity.ItemFrameEntityRenderer;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
@@ -20,9 +22,9 @@ public class ItemFrameEntityRendererMixin<T extends ItemFrameEntity> {
             method = "render(Lnet/minecraft/entity/decoration/ItemFrameEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
             at = @At(value = "STORE", ordinal = 0)
     )
-    private OptionalInt weRenderAethumMaps(OptionalInt value, T entity) {
+    private MapIdComponent weRenderAethumMaps(MapIdComponent value, T entity) {
         if (entity.getHeldItemStack().isOf(AffinityItems.REALIZED_AETHUM_MAP)) {
-            return OptionalInt.of(FilledMapItem.getMapId(entity.getHeldItemStack()));
+            return entity.getHeldItemStack().get(DataComponentTypes.MAP_ID);
         }
         return value;
     }

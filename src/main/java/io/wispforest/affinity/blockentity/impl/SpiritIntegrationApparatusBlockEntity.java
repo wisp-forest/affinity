@@ -87,7 +87,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
         }
 
         final var sacrifice = sacrifices.get(0);
-        final var inventory = new SpiritAssimilationInventory(setup.resolveSocles(this.world), coreItems, sacrifice);
+        final var inventory = new SpiritAssimilationRecipeInput(setup.resolveSocles(this.world), coreItems, sacrifice);
         final var recipeOptional = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.SPIRIT_ASSIMILATION, inventory, this.world);
 
         if (recipeOptional.isEmpty()) return false;
@@ -305,12 +305,12 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
                 new AffinityParticleSystems.DissolveData(item, Vec3d.ofCenter(this.ritualCenterPos().up(2)), duration - 10, 16));
     }
 
-    public static class SpiritAssimilationInventory extends SocleInventory {
+    public static class SpiritAssimilationRecipeInput extends SocleRecipeInput {
 
         private final ItemStack[] coreInputs;
         private final Entity sacrifice;
 
-        public SpiritAssimilationInventory(List<RitualSocleBlockEntity> socles, ItemStack[] coreInputs, Entity sacrifice) {
+        public SpiritAssimilationRecipeInput(List<RitualSocleBlockEntity> socles, ItemStack[] coreInputs, Entity sacrifice) {
             super(socles);
 
             this.coreInputs = new ItemStack[4];

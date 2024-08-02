@@ -2,17 +2,19 @@ package io.wispforest.affinity.component;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import dev.onyxstudios.cca.api.v3.component.Component;
 import io.wispforest.affinity.misc.util.EndecUtil;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
-import io.wispforest.owo.serialization.endec.StructEndecBuilder;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.BuiltInEndecs;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.GlobalPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ladysnake.cca.api.v3.component.Component;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -20,7 +22,7 @@ import java.util.stream.Stream;
 public class EtherealNodeStorageComponent implements Component {
 
     private static final KeyedEndec<Map<GlobalPos, NodeState>> NODES_ENDEC = Endec.map(EndecUtil.GLOBAL_POS_ENDEC, NodeState.ENDEC).keyed("nodes", LinkedHashMap::new);
-    private static final KeyedEndec<Map<GlobalPos, Text>> NODE_TO_NAME_ENDEC = Endec.map(EndecUtil.GLOBAL_POS_ENDEC, BuiltInEndecs.TEXT).keyed("node_to_name", HashMap::new);
+    private static final KeyedEndec<Map<GlobalPos, Text>> NODE_TO_NAME_ENDEC = Endec.map(EndecUtil.GLOBAL_POS_ENDEC, MinecraftEndecs.TEXT).keyed("node_to_name", HashMap::new);
     private static final KeyedEndec<Multimap<GlobalPos, GlobalPos>> NODE_TO_INJECTOR_ENDEC =
             Endec.map(EndecUtil.GLOBAL_POS_ENDEC, EndecUtil.GLOBAL_POS_ENDEC.listOf()).xmap(
                     blockPosListMap -> {
@@ -95,14 +97,14 @@ public class EtherealNodeStorageComponent implements Component {
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
         this.nodes = new LinkedHashMap<>(tag.get(NODES_ENDEC));
         this.nodeToName = new HashMap<>(tag.get(NODE_TO_NAME_ENDEC));
         this.nodeToInjectors = tag.get(NODE_TO_INJECTOR_ENDEC);
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
         tag.put(NODES_ENDEC, this.nodes);
         tag.put(NODE_TO_NAME_ENDEC, this.nodeToName);
         tag.put(NODE_TO_INJECTOR_ENDEC, this.nodeToInjectors);

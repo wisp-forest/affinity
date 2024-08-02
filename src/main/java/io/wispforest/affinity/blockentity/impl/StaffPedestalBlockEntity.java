@@ -10,8 +10,8 @@ import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
@@ -33,7 +33,7 @@ import java.util.List;
 
 public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, InquirableOutlineProvider {
 
-    private static final KeyedEndec<ItemStack> ITEM_KEY = BuiltInEndecs.ITEM_STACK.keyed("Item", ItemStack.EMPTY);
+    private static final KeyedEndec<ItemStack> ITEM_KEY = MinecraftEndecs.ITEM_STACK.keyed("Item", ItemStack.EMPTY);
 
     @NotNull private ItemStack item = ItemStack.EMPTY;
     private final SingleStackStorageProvider storageProvider = new SingleStackStorageProvider(() -> this.item, stack -> this.item = stack, this::markDirty)

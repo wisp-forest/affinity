@@ -4,14 +4,17 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.entity.goal.FlyRandomlyGoal;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.wisps.WispType;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.control.FlightMoveControl;
 import net.minecraft.entity.ai.pathing.BirdNavigation;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
@@ -29,6 +32,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -78,7 +82,7 @@ public abstract class WispEntity extends PathAwareEntity implements Vibrations {
     public abstract WispType type();
 
     @Override
-    public boolean canBeLeashedBy(PlayerEntity player) {
+    public boolean canBeLeashed() {
         return !this.isLeashed();
     }
 
@@ -98,10 +102,10 @@ public abstract class WispEntity extends PathAwareEntity implements Vibrations {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(MISTY, true);
-        this.dataTracker.startTracking(LAST_RAVE_TIMESTAMP, 0L);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(MISTY, true);
+        builder.add(LAST_RAVE_TIMESTAMP, 0L);
     }
 
     @Override
@@ -140,7 +144,7 @@ public abstract class WispEntity extends PathAwareEntity implements Vibrations {
             }
 
             return ActionResult.SUCCESS;
-        } else if (LivingEntity.getPreferredEquipmentSlot(playerStack) == EquipmentSlot.HEAD
+        } else if (this.getPreferredEquipmentSlot(playerStack) == EquipmentSlot.HEAD
                 || playerStack.isEmpty()
                 || FabricLoader.getInstance().isModLoaded("wearthat")) {
             var existingHelmet = this.getEquippedStack(EquipmentSlot.HEAD);
@@ -264,12 +268,12 @@ public abstract class WispEntity extends PathAwareEntity implements Vibrations {
         }
 
         @Override
-        public boolean accepts(ServerWorld world, BlockPos pos, GameEvent event, GameEvent.Emitter emitter) {
+        public boolean accepts(ServerWorld world, BlockPos pos, RegistryEntry<GameEvent> event, GameEvent.Emitter emitter) {
             return true;
         }
 
         @Override
-        public void accept(ServerWorld world, BlockPos pos, GameEvent event, @Nullable Entity sourceEntity, @Nullable Entity entity, float distance) {
+        public void accept(ServerWorld world, BlockPos pos, RegistryEntry<GameEvent> event, @Nullable Entity sourceEntity, @Nullable Entity entity, float distance) {
             WispEntity.this.dataTracker.set(LAST_RAVE_TIMESTAMP, world.getTime());
         }
     }

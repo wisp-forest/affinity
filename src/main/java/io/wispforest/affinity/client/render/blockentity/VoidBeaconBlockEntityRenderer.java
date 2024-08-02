@@ -28,7 +28,7 @@ public class VoidBeaconBlockEntityRenderer implements BlockEntityRenderer<VoidBe
                 entity.getWorld().getTime(),
                 -1,
                 300,
-                new float[]{1f, 1f, 1f},
+                0xFFFFFF,
                 .15f,
                 .175f
         );

@@ -177,7 +177,7 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
         WorldRenderEvents.BLOCK_OUTLINE.register((worldContext, outlineContext) -> {
             var client = worldContext.gameRenderer().getClient();
             var pos = outlineContext.blockPos();
-            var delta = client.getLastFrameDuration() * .25f;
+            var delta = client.getRenderTickCounter().getLastFrameDuration() * .25f;
 
             if (!pos.equals(lastOutlineBlock.getValue())) {
                 thickness.setValue(0f);

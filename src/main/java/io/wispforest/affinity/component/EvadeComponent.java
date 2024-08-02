@@ -1,14 +1,12 @@
 package io.wispforest.affinity.component;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ladysnake.cca.api.v3.component.TransientComponent;
+import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
 
-public class EvadeComponent implements Component, CommonTickingComponent {
+public class EvadeComponent implements TransientComponent, CommonTickingComponent {
 
     private final PlayerEntity holder;
 
@@ -46,10 +44,4 @@ public class EvadeComponent implements Component, CommonTickingComponent {
     public Vec3d velocity() {
         return this.velocity;
     }
-
-    @Override
-    public void readFromNbt(@NotNull NbtCompound tag) {}
-
-    @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {}
 }

@@ -10,6 +10,7 @@ import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +24,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -43,7 +45,7 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity blockEntity) {
             if (!world.isClient && player.isCreative()) {
-                ItemEntity itemEntity = new ItemEntity(world, (double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5, blockEntity.toItem());
+                ItemEntity itemEntity = new ItemEntity(world, (double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5, blockEntity.toItem(world.getRegistryManager()));
                 itemEntity.setToDefaultPickupDelay();
                 world.spawnEntity(itemEntity);
             }
@@ -53,29 +55,27 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var stack = player.getStackInHand(hand);
-
-        if (!stack.isOf(Items.FLINT_AND_STEEL)) return ActionResult.PASS;
-        if (!(world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity basket)) return ActionResult.PASS;
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!stack.isOf(Items.FLINT_AND_STEEL)) return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (!(world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity basket)) return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
         var newState = basket.containedState();
-        if (newState == null) return ActionResult.FAIL;
+        if (newState == null) return ItemActionResult.FAIL;
 
         MixinHooks.queuedBlockEntity = basket.containedBlockEntity();
         world.setBlockState(pos, newState, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
 
         world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.4F + 0.8F);
         AffinityParticleSystems.LIGHT_BLOCK.spawn(world, Vec3d.ofCenter(pos));
-        stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
+        stack.damage(1, player, LivingEntity.getSlotForHand(hand));
 
-        return ActionResult.success(world.isClient);
+        return ItemActionResult.success(world.isClient);
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (world.isClient) return;
-        if (BlockItem.getBlockEntityNbt(itemStack) == null) return;
+        if (itemStack.get(DataComponentTypes.BLOCK_ENTITY_DATA) == null) return;
 
         if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity basket) {
             basket.onPlaced(placer);
@@ -92,7 +92,7 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
         var list = super.getDroppedStacks(state, builder);
 
         if (builder.getOptional(LootContextParameters.BLOCK_ENTITY) instanceof MangroveBasketBlockEntity blockEntity) {
-            list.add(blockEntity.toItem());
+            list.add(blockEntity.toItem(builder.getWorld().getRegistryManager()));
         }
 
         return list;
@@ -106,7 +106,7 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
     @Override
     public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
         return world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity basket
-                ? basket.toItem()
+                ? basket.toItem(world.getRegistryManager())
                 : super.getPickStack(world, pos, state);
     }
 

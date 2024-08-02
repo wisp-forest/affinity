@@ -32,34 +32,34 @@ public class InWorldTooltipRenderer {
                     targetViewTime = 0;
                 }
 
-                targetViewTime += client.getLastFrameDuration();
+                targetViewTime += client.getRenderTickCounter().getLastFrameDuration();
                 if (targetViewTime < 5) return;
 
                 final var blockEntity = client.world.getBlockEntity(target);
                 if (!(blockEntity instanceof InWorldTooltipProvider provider)) return;
 
-                provider.updateTooltipEntries(Math.floor(targetViewTime) == 5f, client.getLastFrameDuration());
+                provider.updateTooltipEntries(Math.floor(targetViewTime) == 5f, client.getRenderTickCounter().getLastFrameDuration());
 
                 var entries = new ArrayList<InWorldTooltipProvider.Entry>();
                 provider.appendTooltipEntries(entries);
 
                 var modelViewStack = RenderSystem.getModelViewStack();
-                modelViewStack.push();
-                modelViewStack.multiplyPositionMatrix(context.matrixStack().peek().getPositionMatrix());
+                modelViewStack.pushMatrix();
+                modelViewStack.mul(context.matrixStack().peek().getPositionMatrix());
 
                 var targetShape = blockEntity.getCachedState().getOutlineShape(client.world, target).getBoundingBox();
                 var pos = provider.applyTooltipOffset(Vec3d.of(target)
                         .subtract(context.camera().getPos())
                         .add(targetShape.minX + (targetShape.maxX - targetShape.minX) / 2, targetShape.maxY + .15, targetShape.minZ + (targetShape.maxZ - targetShape.minZ) / 2));
 
-                modelViewStack.translate(pos.x, pos.y, pos.z);
+                modelViewStack.translate((float) pos.x, (float) pos.y, (float) pos.z);
                 modelViewStack.scale(.01f, -.01f, .01f);
 
                 var offset = pos.multiply(-1);
                 double horizontalAngle = Math.atan2(offset.z, offset.x);
                 double verticalAngle = Math.atan2(offset.y, Math.sqrt(offset.x * offset.x + offset.z * offset.z));
 
-                modelViewStack.multiply(RotationAxis.POSITIVE_Y.rotation((float) (-horizontalAngle + Math.PI / 2)));
+                modelViewStack.rotate(RotationAxis.POSITIVE_Y.rotation((float) (-horizontalAngle + Math.PI / 2)));
                 RenderSystem.applyModelViewMatrix();
 
                 var drawContext = new DrawContext(MinecraftClient.getInstance(), MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers());
@@ -90,7 +90,7 @@ public class InWorldTooltipRenderer {
 
                 RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
-                modelViewStack.pop();
+                modelViewStack.popMatrix();
                 RenderSystem.applyModelViewMatrix();
             } else {
                 lastTargetPos = null;

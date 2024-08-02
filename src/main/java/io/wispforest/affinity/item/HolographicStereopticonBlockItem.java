@@ -6,30 +6,31 @@ import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntit
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity.ImprintKind;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity.SectionData;
 import io.wispforest.affinity.client.render.CuboidRenderer;
-import io.wispforest.affinity.misc.NbtQuery;
 import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
-import io.wispforest.owo.serialization.format.nbt.NbtEndec;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -44,30 +45,33 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity.IMPRINT_KIND_KEY_NAME;
 
 public class HolographicStereopticonBlockItem extends BlockItem implements DirectInteractionHandler {
 
     @SuppressWarnings("rawtypes")
-    public static final KeyedEndec<ImprintKind> IMPRINT_KIND_KEY = Endec.STRING.<ImprintKind>xmap(ImprintKind::byId, kind -> kind.id).keyed(IMPRINT_KIND_KEY_NAME, ImprintKind.BLOCK);
-    public static final KeyedEndec<NbtCompound> BLOCK_ENTITY_TAG_KEY = NbtEndec.COMPOUND.keyed("BlockEntityTag", new NbtCompound());
-    public static final KeyedEndec<BlockPos> START_POS_KEY = BuiltInEndecs.BLOCK_POS.keyed("SectionStartPos", (BlockPos) null);
-
-    private static final NbtQuery<NbtCompound> RENDERER_DATA_QUERY = NbtQuery.begin().key("BlockEntityTag").key(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY).compound();
+    public static final ComponentType<ImprintKind> IMPRINT_KIND = Affinity.component("holographic_stereopticon_imprint_kind", ImprintKind.ENDEC);
+    public static final ComponentType<BlockPos> START_POS = Affinity.component("holographic_stereopticon_section_start_pos", MinecraftEndecs.BLOCK_POS);
 
     public HolographicStereopticonBlockItem(Block block, Settings settings) {
         super(block, settings);
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
         tooltip.add(Text.empty());
 
         tooltip.add(Text.translatable(this.getTranslationKey() + ".cycle_imprint_kind_hint"));
-        imprintKindOf(stack).appendTooltip(tooltip, RENDERER_DATA_QUERY.get(stack.getNbt()));
+        imprintKindOf(stack).appendTooltip(
+                tooltip,
+                Optional.ofNullable(stack.get(DataComponentTypes.BLOCK_ENTITY_DATA))
+                        .map(component -> component.getNbt().getCompound(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY))
+                        .orElse(null),
+                context.getRegistryLookup()
+        );
     }
 
     @Override
@@ -95,8 +99,9 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
                     ImprintKind.BLOCK,
                     new HolographicStereopticonBlockEntity.BlockData(
                             context.getWorld().getBlockState(context.getBlockPos()),
-                            be != null ? be.createNbtWithId() : null
-                    )
+                            be != null ? be.createNbtWithId(context.getWorld().getRegistryManager()) : null
+                    ),
+                    context.getWorld().getRegistryManager()
             );
 
             if (Affinity.onClient()) spawnBlockImprintEffects(context.getWorld(), context.getBlockPos());
@@ -108,12 +113,12 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
     }
 
     private void doSectionClick(World world, BlockPos pos, ItemStack stack) {
-        var startPos = stack.get(START_POS_KEY);
+        var startPos = stack.get(START_POS);
         if (startPos == null) {
-            stack.put(START_POS_KEY, pos);
+            stack.set(START_POS, pos);
         } else {
-            stack.delete(START_POS_KEY);
-            writeRendererData(stack, ImprintKind.SECTION, new SectionData(startPos, pos));
+            stack.remove(START_POS);
+            writeRendererData(stack, ImprintKind.SECTION, new SectionData(startPos, pos), world.getRegistryManager());
         }
 
         if (Affinity.onClient()) spawnBlockImprintEffects(world, pos);
@@ -127,20 +132,17 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType != ClickType.RIGHT || !otherStack.isEmpty()) return false;
 
-        if (!stack.has(BLOCK_ENTITY_TAG_KEY)) {
-            stack.put(BLOCK_ENTITY_TAG_KEY, new NbtCompound());
+        if (!stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
+            stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT);
         }
 
-        var rendererData = RENDERER_DATA_QUERY.get(stack.getNbt());
-        var nextImprintKind = (rendererData != null ? rendererData.get(IMPRINT_KIND_KEY) : ImprintKind.BLOCK).next();
+        var nextImprintKind = imprintKindOf(stack).next();
 
-        rendererData = new NbtCompound();
-        rendererData.put(IMPRINT_KIND_KEY, nextImprintKind);
+        var rendererData = new NbtCompound();
+        rendererData.put(ImprintKind.ENDEC.keyed(IMPRINT_KIND_KEY_NAME, ImprintKind.BLOCK), nextImprintKind);
 
-        var iLoveJava = rendererData;
-        stack.mutate(BLOCK_ENTITY_TAG_KEY, data -> {
-            data.put(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY, iLoveJava);
-            return data;
+        stack.apply(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT, data -> {
+            return data.apply(nbt -> nbt.put(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY, rendererData));
         });
         return true;
     }
@@ -151,7 +153,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
             return false;
         }
 
-        writeRendererData(stack, ImprintKind.ITEM, slot.getStack());
+        writeRendererData(stack, ImprintKind.ITEM, slot.getStack(), player.getRegistryManager());
         return true;
     }
 
@@ -162,8 +164,18 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
     }
 
     private static ImprintKind<?> imprintKindOf(ItemStack stack) {
-        var data = RENDERER_DATA_QUERY.get(stack.getNbt());
-        return data != null ? data.get(IMPRINT_KIND_KEY) : ImprintKind.BLOCK;
+        var data = getRendererData(stack);
+        return data != null ? data.get(ImprintKind.ENDEC.keyed(IMPRINT_KIND_KEY_NAME, ImprintKind.BLOCK)) : ImprintKind.BLOCK;
+    }
+
+    private static @Nullable NbtCompound getRendererData(ItemStack stack) {
+        var component = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA);
+        if (component == null) return null;
+
+        var nbt = component.getNbt();
+        if (!nbt.contains(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY, NbtElement.COMPOUND_TYPE)) return null;
+
+        return nbt.getCompound(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY);
     }
 
     @Override
@@ -175,13 +187,13 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
 
         NbtCompound rendererData;
         SectionData sectionData;
-        if (stack.get(START_POS_KEY) == null
-                && (rendererData = RENDERER_DATA_QUERY.get(stack.getNbt())) != null
-                && (sectionData = ImprintKind.SECTION.readData(rendererData)) != null) {
+        if (stack.get(START_POS) == null
+                && (rendererData = getRendererData(stack)) != null
+                && (sectionData = ImprintKind.SECTION.readData(rendererData, world.getRegistryManager())) != null) {
             startPos = sectionData.start();
             offset = sectionData.end().subtract(sectionData.start());
         } else {
-            if ((startPos = stack.get(START_POS_KEY)) == null) return;
+            if ((startPos = stack.get(START_POS)) == null) return;
             offset = this.getSectionTarget(entity).subtract(startPos);
         }
 
@@ -200,14 +212,14 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
         ClientParticles.spawnCubeOutline(ParticleTypes.FIREWORK, world, Vec3d.of(pos).subtract(.05, .05, .05), 1.1f, .01f);
     }
 
-    private static <T> void writeRendererData(ItemStack stack, ImprintKind<T> imprintKind, T data) {
+    private static <T> void writeRendererData(ItemStack stack, ImprintKind<T> imprintKind, T data, RegistryWrapper.WrapperLookup registries) {
         var rendererData = new NbtCompound();
         var beTag = new NbtCompound();
 
-        imprintKind.writeData(rendererData, data);
+        imprintKind.writeData(rendererData, data, registries);
         beTag.put(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY, rendererData);
 
-        stack.getOrCreateNbt().put("BlockEntityTag", beTag);
+        stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(beTag));
     }
 
     static {
@@ -242,7 +254,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
             var entity = InteractionUtil.raycastEntities(access.player(), 1f, 7, 1f, $ -> true);
             if (entity == null) return;
 
-            writeRendererData(playerStack, ImprintKind.ENTITY, entity.getEntity());
+            writeRendererData(playerStack, ImprintKind.ENTITY, entity.getEntity(), access.runtime().getRegistryManager());
         });
     }
 

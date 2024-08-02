@@ -1,7 +1,6 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
-import io.wispforest.affinity.enchantment.template.AbsoluteEnchantment;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityItems;
@@ -12,15 +11,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Blocks;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
-import net.minecraft.item.*;
+import net.minecraft.item.EnchantedBookItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -166,9 +167,8 @@ public class AffinityItemGroup {
             context.lookup().getOptionalWrapper(RegistryKeys.ENCHANTMENT).ifPresent(wrapper -> {
                 wrapper.streamEntries()
                         .filter(entry -> entry.registryKey().getValue().getNamespace().equals(Affinity.MOD_ID))
-                        .map(RegistryEntry::value)
-                        .filter(enchantment -> !(enchantment instanceof AbsoluteEnchantment))
-                        .map(enchantment -> new EnchantmentLevelEntry(enchantment, enchantment.getMaxLevel()))
+//                        .filter(enchantment -> !(enchantment instanceof AbsoluteEnchantment))
+                        .map(enchantment -> new EnchantmentLevelEntry(enchantment, enchantment.value().getMaxLevel()))
                         .map(EnchantedBookItem::forEnchantment)
                         .forEach(entries::add);
             });
@@ -220,8 +220,8 @@ public class AffinityItemGroup {
     private static void addPotions(ItemGroup.Entries entries, RegistryWrapper<Potion> registryWrapper, Item containerItem) {
         registryWrapper.streamEntries()
                 .filter(entry -> entry.registryKey().getValue().getNamespace().equals(Affinity.MOD_ID))
-                .filter(entry -> !entry.matchesKey(Potions.EMPTY_KEY))
-                .map(entry -> PotionUtil.setPotion(new ItemStack(containerItem), entry.value()))
+                .filter(entry -> !entry.matches(Potions.WATER))
+                .map(entry -> PotionContentsComponent.createStack(containerItem, entry))
                 .forEach(entries::add);
     }
 

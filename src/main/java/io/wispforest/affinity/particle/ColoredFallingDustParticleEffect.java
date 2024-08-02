@@ -1,17 +1,16 @@
 package io.wispforest.affinity.particle;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.wispforest.affinity.mixin.client.BlockFallingDustParticleInvoker;
 import io.wispforest.affinity.object.AffinityParticleTypes;
-import io.wispforest.owo.util.VectorSerializer;
+import io.wispforest.endec.StructEndec;
+import io.wispforest.endec.impl.RecordEndec;
+import io.wispforest.endec.impl.ReflectiveEndecBuilder;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.AbstractDustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import org.jetbrains.annotations.NotNull;
@@ -19,32 +18,14 @@ import org.joml.Vector3f;
 
 public record ColoredFallingDustParticleEffect(Vector3f color) implements ParticleEffect {
 
-    public static final Factory<ColoredFallingDustParticleEffect> FACTORY =
-            new Factory<>() {
-                @Override
-                public ColoredFallingDustParticleEffect read(ParticleType<ColoredFallingDustParticleEffect> type, StringReader reader) throws CommandSyntaxException {
-                    return new ColoredFallingDustParticleEffect(AbstractDustParticleEffect.readColor(reader));
-                }
-
-                @Override
-                public ColoredFallingDustParticleEffect read(ParticleType<ColoredFallingDustParticleEffect> type, PacketByteBuf buf) {
-                    return new ColoredFallingDustParticleEffect(VectorSerializer.readf(buf));
-                }
-            };
+    public static final StructEndec<ColoredFallingDustParticleEffect> ENDEC = RecordEndec.create(
+            new ReflectiveEndecBuilder(MinecraftEndecs::addDefaults),
+            ColoredFallingDustParticleEffect.class
+    );
 
     @Override
     public ParticleType<?> getType() {
         return AffinityParticleTypes.COLORED_FALLING_DUST;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        VectorSerializer.writef(buf, this.color);
-    }
-
-    @Override
-    public String asString() {
-        return "Colored Falling Dust";
     }
 
     @Environment(EnvType.CLIENT)

@@ -10,8 +10,9 @@ public class FreezingStatusEffect extends AffinityStatusEffect {
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
+    public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
         entity.setInPowderSnow(true);
+        return true;
     }
 
     @Override

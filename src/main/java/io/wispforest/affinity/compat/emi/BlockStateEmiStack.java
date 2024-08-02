@@ -10,6 +10,7 @@ import io.wispforest.owo.ui.core.Sizing;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.component.ComponentChanges;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
@@ -58,8 +59,8 @@ public class BlockStateEmiStack extends EmiStack {
     }
 
     @Override
-    public NbtCompound getNbt() {
-        return null;
+    public ComponentChanges getComponentChanges() {
+        return ComponentChanges.EMPTY;
     }
 
     @Override

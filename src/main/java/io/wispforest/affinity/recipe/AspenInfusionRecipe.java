@@ -1,33 +1,31 @@
 package io.wispforest.affinity.recipe;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.blockentity.impl.AspRiteCoreBlockEntity;
 import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
-import io.wispforest.owo.serialization.SerializationAttribute;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.StructEndec;
+import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.owo.serialization.EndecRecipeSerializer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.AspenInfusionInventory> {
+public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.AspenInfusionRecipeInput> {
 
-    private static final Codec<AspenInfusionRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(
-                    Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("primary_input").forGetter(recipe -> recipe.primaryInput),
-                    Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("inputs").forGetter(recipe -> recipe.socleInputs),
-                    EndecUtil.RECIPE_RESULT_ENDEC.codec(SerializationAttribute.HUMAN_READABLE).fieldOf("output").forGetter(recipe -> recipe.output),
-                    Codec.INT.optionalFieldOf("duration", 100).forGetter(recipe -> recipe.duration),
-                    Codec.INT.optionalFieldOf("flux_cost_per_tick", 0).forGetter(recipe -> recipe.fluxCostPerTick)
-            )
-            .apply(instance, AspenInfusionRecipe::new));
+    private static final StructEndec<AspenInfusionRecipe> ENDEC = StructEndecBuilder.of(
+            EndecUtil.INGREDIENT_ENDEC.fieldOf("primary_input", recipe -> recipe.primaryInput),
+            EndecUtil.INGREDIENT_ENDEC.listOf().fieldOf("inputs", recipe -> recipe.socleInputs),
+            EndecUtil.RECIPE_RESULT_ENDEC.fieldOf("output", recipe -> recipe.output),
+            Endec.INT.optionalFieldOf("duration", recipe -> recipe.duration, 100),
+            Endec.INT.optionalFieldOf("flux_field_per_tick", recipe -> recipe.fluxCostPerTick, 0),
+            AspenInfusionRecipe::new
+    );
 
     public final Ingredient primaryInput;
     private final ItemStack output;
@@ -39,17 +37,17 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
     }
 
     @Override
-    public boolean matches(AspRiteCoreBlockEntity.AspenInfusionInventory inventory, World world) {
+    public boolean matches(AspRiteCoreBlockEntity.AspenInfusionRecipeInput inventory, World world) {
         return this.primaryInput.test(inventory.primaryInput()) && this.doShapelessMatch(this.socleInputs, inventory.delegate());
     }
 
     @Override
-    public ItemStack craft(AspRiteCoreBlockEntity.AspenInfusionInventory inventory, DynamicRegistryManager drm) {
+    public ItemStack craft(AspRiteCoreBlockEntity.AspenInfusionRecipeInput inventory, RegistryWrapper.WrapperLookup registries) {
         return this.output.copy();
     }
 
     @Override
-    public ItemStack getResult(DynamicRegistryManager drm) {
+    public ItemStack getResult(RegistryWrapper.WrapperLookup registries) {
         return this.output.copy();
     }
 
@@ -63,31 +61,9 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
         return AffinityRecipeTypes.ASPEN_INFUSION;
     }
 
-    public static final class Serializer implements RecipeSerializer<AspenInfusionRecipe> {
-
-        @Override
-        public Codec<AspenInfusionRecipe> codec() {
-            return AspenInfusionRecipe.CODEC;
-        }
-
-        @Override
-        public AspenInfusionRecipe read(PacketByteBuf buf) {
-            return new AspenInfusionRecipe(
-                    Ingredient.fromPacket(buf),
-                    buf.readCollection(ArrayList::new, Ingredient::fromPacket),
-                    buf.readItemStack(),
-                    buf.readVarInt(),
-                    buf.readVarInt()
-            );
-        }
-
-        @Override
-        public void write(PacketByteBuf buf, AspenInfusionRecipe recipe) {
-            recipe.primaryInput.write(buf);
-            buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
-            buf.writeItemStack(recipe.output);
-            buf.writeVarInt(recipe.duration);
-            buf.writeVarInt(recipe.fluxCostPerTick);
+    public static final class Serializer extends EndecRecipeSerializer<AspenInfusionRecipe> {
+        public Serializer() {
+            super(AspenInfusionRecipe.ENDEC);
         }
     }
 }

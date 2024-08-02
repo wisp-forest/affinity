@@ -1,14 +1,15 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.template.LinkableBlockEntity;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinitySoundEvents;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
 import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
@@ -29,7 +30,7 @@ import java.util.Objects;
 
 public class IridescenceWandItem extends Item implements DirectInteractionHandler {
 
-    public static final KeyedEndec<Mode> MODE_KEY = Mode.ENDEC.keyed("Mode", Mode.BIND);
+    public static final ComponentType<Mode> MODE = Affinity.component("iridescence_wand_mode", Mode.ENDEC);
     public static final KeyedEndec<NbtCompound> LINK_DATA_KEY = NbtEndec.COMPOUND.keyed("LinkData", (NbtCompound) null);
     public static final KeyedEndec<Boolean> RETAIN_MODE_KEY = Endec.BOOLEAN.keyed("RetainMode", false);
 
@@ -48,7 +49,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         if (this.getStoredPos(playerStack) != null) {
             playerStack.delete(LINK_DATA_KEY);
         } else {
-            playerStack.mutate(MODE_KEY, Mode::next);
+            playerStack.mutate(MODE, Mode::next);
         }
 
         return TypedActionResult.success(playerStack);
@@ -69,7 +70,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public Text getName(ItemStack stack) {
-        final var mode = stack.get(MODE_KEY);
+        final var mode = stack.get(MODE);
 
         return Text.translatable(this.getTranslationKey()).append(Text.translatable(
                 WAND_OF_IRIDESCENCE_PREFIX + ".mode_suffix",
@@ -79,7 +80,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        final var mode = stack.get(MODE_KEY);
+        final var mode = stack.get(MODE);
 
         tooltip.add(Text.empty());
 
@@ -99,7 +100,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         final var stack = context.getStack();
         final var world = context.getWorld();
         final var pos = context.getBlockPos();
-        final var mode = stack.get(MODE_KEY);
+        final var mode = stack.get(MODE);
 
         if (!(world.getBlockEntity(pos) instanceof LinkableBlockEntity linkable)) return ActionResult.PASS;
         var blockName = world.getBlockState(pos).getBlock().getName();

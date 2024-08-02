@@ -39,23 +39,19 @@ public class LinkRenderer {
 
             linkBuffer.vertex(matrices.peek().getPositionMatrix(), .035f, 0, 0)
                     .color(link.color).texture(0, 1).light(light)
-                    .normal(matrices.peek().getNormalMatrix(), 0, 1, 0)
-                    .next();
+                    .normal(matrices.peek(), 0, 1, 0);
 
             linkBuffer.vertex(matrices.peek().getPositionMatrix(), .035f, 1, 0)
                     .color(link.color).texture(1, 1).light(light)
-                    .normal(matrices.peek().getNormalMatrix(), 0, 1, 0)
-                    .next();
+                    .normal(matrices.peek(), 0, 1, 0);
 
             linkBuffer.vertex(matrices.peek().getPositionMatrix(), -.035f, 1, 0)
                     .color(link.color).texture(1, 0).light(light)
-                    .normal(matrices.peek().getNormalMatrix(), 0, 1, 0)
-                    .next();
+                    .normal(matrices.peek(), 0, 1, 0);
 
             linkBuffer.vertex(matrices.peek().getPositionMatrix(), -.035f, 0, 0)
                     .color(link.color).texture(0, 0).light(light)
-                    .normal(matrices.peek().getNormalMatrix(), 0, 1, 0)
-                    .next();
+                    .normal(matrices.peek(), 0, 1, 0);
 
             matrices.pop();
         }

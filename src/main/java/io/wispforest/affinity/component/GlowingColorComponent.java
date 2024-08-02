@@ -1,11 +1,13 @@
 package io.wispforest.affinity.component;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
+import io.wispforest.endec.SerializationContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.DyeColor;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 public class GlowingColorComponent implements Component, AutoSyncedComponent {
 
@@ -17,13 +19,13 @@ public class GlowingColorComponent implements Component, AutoSyncedComponent {
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
         this.color = tag.get(GlowingPotion.COLOR_KEY);
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
-        tag.putIfNotNull(GlowingPotion.COLOR_KEY, this.color);
+    public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
+        tag.putIfNotNull(SerializationContext.empty(), GlowingPotion.COLOR_KEY, this.color);
     }
 
     public DyeColor color() {

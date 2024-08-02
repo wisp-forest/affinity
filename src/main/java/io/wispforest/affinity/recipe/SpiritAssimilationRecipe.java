@@ -1,52 +1,46 @@
 package io.wispforest.affinity.recipe;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.google.gson.JsonParseException;
 import io.wispforest.affinity.blockentity.impl.SpiritIntegrationApparatusBlockEntity;
 import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
-import io.wispforest.owo.serialization.SerializationAttribute;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.StructEndec;
+import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.owo.serialization.EndecRecipeSerializer;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
+import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
-import net.minecraft.util.dynamic.Codecs;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory> {
+public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationApparatusBlockEntity.SpiritAssimilationRecipeInput> {
 
-    private static final Codec<SpiritAssimilationRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(
-                    Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("core_inputs").forGetter(recipe -> recipe.coreInputs),
-                    Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("socle_inputs").forGetter(recipe -> recipe.socleInputs),
-                    EntityData.CODEC.fieldOf("entity").forGetter(recipe -> new EntityData(recipe.entityType, Optional.ofNullable(recipe.entityNbt))),
-                    EndecUtil.RECIPE_RESULT_ENDEC.codec(SerializationAttribute.HUMAN_READABLE).fieldOf("output").forGetter(recipe -> recipe.output),
-                    Codec.INT.optionalFieldOf("duration", 100).forGetter(recipe -> recipe.duration),
-                    Codecs.validate(Codec.INT, duration -> {
-                        if (duration % 4 != 0) {
-                            return DataResult.error(() -> "Spirit assimilation flux cost must be divisible by 4");
-                        } else {
-                            return DataResult.success(duration);
-                        }
-                    }).optionalFieldOf("flux_cost_per_tick", 0).forGetter(recipe -> recipe.fluxCostPerTick)
-            )
-            .apply(instance, (coreInputs, socleInputs, entityData, result, duration, fluxCost) -> {
-                return new SpiritAssimilationRecipe(coreInputs, socleInputs, entityData.type, entityData.nbt.orElse(null), duration, fluxCost, result);
-            }));
+    private static final StructEndec<SpiritAssimilationRecipe> ENDEC = StructEndecBuilder.of(
+            EndecUtil.INGREDIENT_ENDEC.listOf().fieldOf("core_inputs", recipe -> recipe.coreInputs),
+            EndecUtil.INGREDIENT_ENDEC.listOf().fieldOf("socle_inputs", recipe -> recipe.socleInputs),
+            EntityData.ENDEC.fieldOf("entity", recipe -> new EntityData(recipe.entityType, recipe.entityNbt)),
+            EndecUtil.RECIPE_RESULT_ENDEC.fieldOf("output", recipe -> recipe.output),
+            Endec.INT.optionalFieldOf("duration", recipe -> recipe.duration, 100),
+            Endec.INT.validate(duration -> {
+                if (duration % 4 != 0) throw new JsonParseException("Spirit assimilation flux cost must be divisible by 4");
+            }).optionalFieldOf("flux_cost_per_tick", recipe -> recipe.fluxCostPerTick, 0),
+            (coreInputs, socleInputs, entityData, result, duration, fluxCost) -> {
+                return new SpiritAssimilationRecipe(coreInputs, socleInputs, entityData.type, entityData.nbt, duration, fluxCost, result);
+            }
+    );
 
     public final List<Ingredient> coreInputs;
     public final EntityType<?> entityType;
@@ -69,7 +63,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
     }
 
     @Override
-    public boolean matches(SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory inventory, World world) {
+    public boolean matches(SpiritIntegrationApparatusBlockEntity.SpiritAssimilationRecipeInput inventory, World world) {
         return this.doShapelessMatch(this.coreInputs, Arrays.asList(inventory.coreInputs()))
                 && this.doShapelessMatch(this.socleInputs, inventory.delegate())
                 && this.entityType == inventory.sacrifice().getType()
@@ -77,12 +71,12 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
     }
 
     @Override
-    public ItemStack craft(SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory inventory, DynamicRegistryManager drm) {
+    public ItemStack craft(SpiritIntegrationApparatusBlockEntity.SpiritAssimilationRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack getResult(DynamicRegistryManager drm) {
+    public ItemStack getResult(RegistryWrapper.WrapperLookup lookup) {
         return this.output.copy();
     }
 
@@ -102,48 +96,17 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
         return AffinityRecipeTypes.SPIRIT_ASSIMILATION;
     }
 
-    private record EntityData(EntityType<?> type, Optional<NbtCompound> nbt) {
-        public static final Codec<EntityData> CODEC = RecordCodecBuilder.create(instance -> instance
-                .group(
-                        Registries.ENTITY_TYPE.getCodec().fieldOf("id").forGetter(EntityData::type),
-                        NbtCompound.CODEC.optionalFieldOf("data").forGetter(EntityData::nbt)
-                ).apply(instance, EntityData::new));
+    private record EntityData(EntityType<?> type, @Nullable NbtCompound nbt) {
+        public static final Endec<EntityData> ENDEC = StructEndecBuilder.of(
+                MinecraftEndecs.ofRegistry(Registries.ENTITY_TYPE).fieldOf("id", EntityData::type),
+                NbtEndec.COMPOUND.optionalFieldOf("data", EntityData::nbt, (NbtCompound) null),
+                EntityData::new
+        );
     }
 
-    public static final class Serializer implements RecipeSerializer<SpiritAssimilationRecipe> {
-
-        public Serializer() {}
-
-        @Override
-        public Codec<SpiritAssimilationRecipe> codec() {
-            return SpiritAssimilationRecipe.CODEC;
-        }
-
-        @Override
-        public SpiritAssimilationRecipe read(PacketByteBuf buf) {
-            return new SpiritAssimilationRecipe(
-                    buf.readCollection(ArrayList::new, Ingredient::fromPacket),
-                    buf.readCollection(ArrayList::new, Ingredient::fromPacket),
-                    Registries.ENTITY_TYPE.get(buf.readVarInt()),
-                    buf.readOptional(PacketByteBuf::readNbt).orElse(null),
-                    buf.readVarInt(),
-                    buf.readVarInt(),
-                    buf.readItemStack()
-            );
-        }
-
-        @Override
-        public void write(PacketByteBuf buf, SpiritAssimilationRecipe recipe) {
-            buf.writeCollection(recipe.coreInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
-            buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
-
-            buf.writeVarInt(Registries.ENTITY_TYPE.getRawId(recipe.entityType));
-            buf.writeOptional(Optional.ofNullable(recipe.entityNbt), PacketByteBuf::writeNbt);
-
-            buf.writeVarInt(recipe.duration);
-            buf.writeVarInt(recipe.fluxCostPerTick);
-
-            buf.writeItemStack(recipe.output);
+    public static class Serializer extends EndecRecipeSerializer<SpiritAssimilationRecipe> {
+        public Serializer() {
+            super(SpiritAssimilationRecipe.ENDEC);
         }
     }
 }

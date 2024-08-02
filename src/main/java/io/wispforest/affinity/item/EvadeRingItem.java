@@ -7,8 +7,8 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -26,7 +26,7 @@ public class EvadeRingItem extends TrinketItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("item.affinity.evade_ring.tooltip.take_control", MathUtil.rounded(AETHUM_PER_USE, 1)));
         tooltip.add(Text.translatable("item.affinity.evade_ring.tooltip.consumption_per_use", MathUtil.rounded(AETHUM_PER_USE, 1)));
     }

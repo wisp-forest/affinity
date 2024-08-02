@@ -7,6 +7,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -45,16 +46,16 @@ public abstract class ShardBearingAethumNetworkMemberBlockEntity extends AethumN
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.put("Shard", this.shard.writeNbt(new NbtCompound()));
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
+        nbt.put("Shard", this.shard.encode(registries));
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
 
-        this.shard = ItemStack.fromNbt(nbt.getCompound("Shard"));
+        this.shard = ItemStack.fromNbt(registries, nbt.getCompound("Shard")).orElse(ItemStack.EMPTY);
         this.setTierFromNbt(AttunedShardTier.forItem(this.shard.getItem()));
         this.updateTransferRateForTier();
     }

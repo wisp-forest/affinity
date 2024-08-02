@@ -1,27 +1,29 @@
 package io.wispforest.affinity.item;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.tooltip.TooltipData;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -42,7 +44,12 @@ import java.util.Optional;
 
 public abstract class StaffItem extends Item implements SpecialTransformItem {
 
-    public static final KeyedEndec<List<ItemStack>> BUNDLED_STAFFS = BuiltInEndecs.ITEM_STACK.listOf().keyed("bundled_staffs", (List<ItemStack>) null);
+    public static final ComponentType<ImmutableList<ItemStack>> BUNDLED_STAFFS = Affinity.component(
+            "bundled_staffs",
+            MinecraftEndecs.ITEM_STACK.listOf().xmap(ImmutableList::copyOf, list -> list)
+    );
+
+//    public static final KeyedEndec<List<ItemStack>> BUNDLED_STAFFS = BuiltInEndecs.ITEM_STACK.listOf().keyed("bundled_staffs", (List<ItemStack>) null);
 
     protected StaffItem(Settings settings) {
         super(settings);
@@ -96,29 +103,29 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
 
         if (otherStack.getItem() instanceof StaffItem) {
             var bundle = new ArrayList<ItemStack>();
-            if (stack.has(BUNDLED_STAFFS)) bundle.addAll(stack.get(BUNDLED_STAFFS));
+            if (stack.contains(BUNDLED_STAFFS)) bundle.addAll(stack.get(BUNDLED_STAFFS));
 
-            if (otherStack.has(BUNDLED_STAFFS)) {
+            if (otherStack.contains(BUNDLED_STAFFS)) {
                 var otherBundle = otherStack.get(BUNDLED_STAFFS);
-                otherStack.delete(BUNDLED_STAFFS);
+                otherStack.remove(BUNDLED_STAFFS);
                 bundle.add(otherStack);
                 bundle.addAll(otherBundle);
             } else {
                 bundle.add(otherStack);
             }
 
-            stack.put(BUNDLED_STAFFS, bundle);
+            stack.set(BUNDLED_STAFFS, ImmutableList.copyOf(bundle));
             cursorStackReference.set(ItemStack.EMPTY);
             return true;
-        } else if (otherStack.isEmpty() && stack.has(BUNDLED_STAFFS)) {
-            var bundledStaffs = stack.get(BUNDLED_STAFFS);
+        } else if (otherStack.isEmpty() && stack.contains(BUNDLED_STAFFS)) {
+            var bundledStaffs = new ArrayList<>(stack.get(BUNDLED_STAFFS));
             if (bundledStaffs.isEmpty()) return false;
 
-            var removed = bundledStaffs.remove(bundledStaffs.size() - 1);
+            var removed = bundledStaffs.removeLast();
             if (!bundledStaffs.isEmpty()) {
-                stack.put(BUNDLED_STAFFS, bundledStaffs);
+                stack.set(BUNDLED_STAFFS, ImmutableList.copyOf(bundledStaffs));
             } else {
-                stack.delete(BUNDLED_STAFFS);
+                stack.remove(BUNDLED_STAFFS);
             }
 
             cursorStackReference.set(removed);
@@ -132,14 +139,15 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
     public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
         if (clickType != ClickType.RIGHT || !slot.getStack().isEmpty()) return false;
 
-        var bundledStaffs = stack.get(BUNDLED_STAFFS);
+        List<ItemStack> bundledStaffs = stack.get(BUNDLED_STAFFS);
         if (bundledStaffs == null || bundledStaffs.isEmpty()) return false;
+        bundledStaffs = new ArrayList<>(bundledStaffs);
 
-        var removed = bundledStaffs.remove(bundledStaffs.size() - 1);
+        var removed = bundledStaffs.removeLast();
         if (!bundledStaffs.isEmpty()) {
-            stack.put(BUNDLED_STAFFS, bundledStaffs);
+            stack.set(BUNDLED_STAFFS, ImmutableList.copyOf(bundledStaffs));
         } else {
-            stack.delete(BUNDLED_STAFFS);
+            stack.remove(BUNDLED_STAFFS);
         }
 
         slot.setStack(removed);
@@ -148,7 +156,7 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
 
     @Override
     public Optional<TooltipData> getTooltipData(ItemStack stack) {
-        if (!stack.has(BUNDLED_STAFFS)) return Optional.empty();
+        if (!stack.contains(BUNDLED_STAFFS)) return Optional.empty();
         return Optional.of(new BundleTooltipData(Lists.reverse(stack.get(BUNDLED_STAFFS))));
     }
 
@@ -171,7 +179,7 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
         if (this.isContinuous(stack)) {
             if (!aethum.hasAethum(consumption * 20)) return TypedActionResult.pass(stack);
 
-            if (this.executeSpell(world, user, stack, this.getMaxUseTime(stack), clickedBlock).getResult().isAccepted()) {
+            if (this.executeSpell(world, user, stack, this.getMaxUseTime(stack, user), clickedBlock).getResult().isAccepted()) {
                 user.setCurrentHand(hand);
                 return TypedActionResult.consume(stack);
             } else {
@@ -214,7 +222,7 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         if (this.isContinuous(stack)) {
             tooltip.add(Text.translatable(
                     "item.affinity.staff.tooltip.consumption_per_second",
@@ -234,7 +242,7 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
     }
 
     @Override
-    public int getMaxUseTime(ItemStack stack) {
+    public int getMaxUseTime(ItemStack stack, LivingEntity user) {
         return this.isContinuous(stack)
                 ? 72000
                 : 0;
@@ -262,14 +270,14 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
     }
 
     public static ItemStack selectStaffFromBundle(ItemStack coreStack, int newCoreIdx) {
-        var bundle = coreStack.get(BUNDLED_STAFFS);
+        var bundle = new ArrayList<>(coreStack.getOrDefault(BUNDLED_STAFFS, ImmutableList.of()));
         var newCoreStaff = bundle.get(newCoreIdx).copy();
 
         coreStack = coreStack.copy();
-        coreStack.delete(BUNDLED_STAFFS);
+        coreStack.remove(BUNDLED_STAFFS);
         bundle.set(newCoreIdx, coreStack);
 
-        newCoreStaff.put(BUNDLED_STAFFS, bundle);
+        newCoreStaff.set(BUNDLED_STAFFS, ImmutableList.copyOf(bundle));
         return newCoreStaff;
     }
 
@@ -282,7 +290,7 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
             if (bundle == null || bundle.isEmpty() || message.staffIdx >= bundle.size()) return;
 
             access.player().setStackInHand(message.hand, selectStaffFromBundle(playerStack, message.staffIdx));
-            access.player().playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
+            access.player().playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(), 1f, 1f);
         });
     }
 

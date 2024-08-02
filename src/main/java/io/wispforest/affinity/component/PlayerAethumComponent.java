@@ -1,12 +1,13 @@
 package io.wispforest.affinity.component;
 
-import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
 
 public class PlayerAethumComponent extends AethumComponent<PlayerEntity> implements CommonTickingComponent {
 
@@ -44,13 +45,13 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
     public double maxAethum() {
         return this.holder.getWorld().isClient
                 ? this.maxAethum
-                : this.holder.getAttributeValue(AffinityEntityAttributes.MAX_AETHUM);
+                : this.holder.getAttributeValue(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.MAX_AETHUM));
     }
 
     public double naturalRegenSpeed() {
         return this.holder.getWorld().isClient
                 ? this.naturalRegenSpeed
-                : this.holder.getAttributeValue(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED);
+                : this.holder.getAttributeValue(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED));
     }
 
     public boolean hasAethum(double amount) {
@@ -74,14 +75,14 @@ public class PlayerAethumComponent extends AethumComponent<PlayerEntity> impleme
     }
 
     @Override
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(RegistryByteBuf buf, ServerPlayerEntity recipient) {
         super.writeSyncPacket(buf, recipient);
         buf.writeDouble(this.maxAethum);
         buf.writeDouble(this.naturalRegenSpeed);
     }
 
     @Override
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(RegistryByteBuf buf) {
         super.applySyncPacket(buf);
         this.maxAethum = buf.readDouble();
         this.naturalRegenSpeed = buf.readDouble();

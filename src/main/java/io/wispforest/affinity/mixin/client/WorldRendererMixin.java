@@ -47,9 +47,7 @@ public abstract class WorldRendererMixin {
     @Final
     private MinecraftClient client;
 
-    @Shadow
-    protected abstract void renderLayer(RenderLayer renderLayer, MatrixStack matrices, double cameraX, double cameraY, double cameraZ, Matrix4f positionMatrix);
-
+    @Shadow protected abstract void renderLayer(RenderLayer renderLayer, double x, double y, double z, Matrix4f matrix4f, Matrix4f positionMatrix);
     @Unique
     private final Random affinity$random = new Random();
 
@@ -60,12 +58,12 @@ public abstract class WorldRendererMixin {
     @Unique
     private float affinity$asteroidOriginYaw = 0f, affinity$asteroidOriginPitch = 0f, affinity$asteroidOriginAge = 0f;
 
-    @Inject(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Ljava/lang/Runnable;run()V", ordinal = 1))
-    private void renderStuffInTheSky(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci) {
+    @Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Ljava/lang/Runnable;run()V", ordinal = 1))
+    private void renderStuffInTheSky(Matrix4f matrix4f, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, CallbackInfo ci, @Local MatrixStack matrices) {
         if (!this.world.getDimensionEntry().isIn(AstrokinesisStaffItem.WHITELISTED_DIMENSIONS)) return;
 
         var player = this.client.player;
-        var delta = this.client.getLastFrameDuration() * .05f;
+        var delta = this.client.getRenderTickCounter().getLastFrameDuration() * .05f;
         this.affinity$random.setSeed(6969);
 
         var potentiallyFrozenStars = new ArrayList<AstrokinesisStar>();
@@ -113,8 +111,7 @@ public abstract class WorldRendererMixin {
         float baseAlpha = RenderSystem.getShaderColor()[3];
         RenderSystem.getShaderColor()[3] = this.affinity$starAlpha;
 
-        var buffer = Tessellator.getInstance().getBuffer();
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+        var buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
         matrices.push();
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(this.world.getSkyAngle(tickDelta) * -360f));
@@ -134,17 +131,13 @@ public abstract class WorldRendererMixin {
             if (star.frozen) alpha *= Math.pow(1f - this.affinity$asteroidOriginAge, 3);
 
             buffer.vertex(matrices.peek().getPositionMatrix(), point.x + rightOffset.x, point.y + rightOffset.y, point.z + rightOffset.z)
-                    .color(1, 1, 1, alpha)
-                    .next();
+                    .color(1, 1, 1, alpha);
             buffer.vertex(matrices.peek().getPositionMatrix(), point.x + upOffset.x + rightOffset.x, point.y + upOffset.y + rightOffset.y, point.z + upOffset.z + rightOffset.z)
-                    .color(1, 1, 1, alpha)
-                    .next();
+                    .color(1, 1, 1, alpha);
             buffer.vertex(matrices.peek().getPositionMatrix(), point.x + upOffset.x, point.y + upOffset.y, point.z + upOffset.z)
-                    .color(1, 1, 1, alpha)
-                    .next();
+                    .color(1, 1, 1, alpha);
             buffer.vertex(matrices.peek().getPositionMatrix(), point.x, point.y, point.z)
-                    .color(1, 1, 1, alpha)
-                    .next();
+                    .color(1, 1, 1, alpha);
         }
 
 
@@ -171,24 +164,24 @@ public abstract class WorldRendererMixin {
         SkyCaptureBuffer.init();
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", shift = At.Shift.AFTER))
-    private void captureSky(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f positionMatrix, CallbackInfo ci) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", shift = At.Shift.AFTER))
+    private void captureSky(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci) {
         if (!SkyCaptureBuffer.isIrisWorldRendering() || !Affinity.CONFIG.theSkyIrisIntegration()) SkyCaptureBuffer.captureSky(MinecraftClient.getInstance().getFramebuffer().fbo);
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/DimensionEffects;isDarkened()Z", shift = At.Shift.AFTER))
-    private void renderSkyStencilLayer(MatrixStack matrices, float tickDelta, long arg2, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f positionMatrix, CallbackInfo ci, @Local(ordinal = 0) double x, @Local(ordinal = 1) double y, @Local(ordinal = 2) double z) {
-        this.renderLayer(SkyCaptureBuffer.SKY_STENCIL_LAYER, matrices, x, y, z, positionMatrix);
+    private void renderSkyStencilLayer(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci, @Local(ordinal = 0) double x, @Local(ordinal = 1) double y, @Local(ordinal = 2) double z) {
+        this.renderLayer(SkyCaptureBuffer.SKY_STENCIL_LAYER, x, y, z, matrix4f, matrix4f2);
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void drawSkyAfter(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f positionMatrix, CallbackInfo ci) {
+    private void drawSkyAfter(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci) {
         if (Affinity.CONFIG.theSkyIrisIntegration()) return;
         SkyCaptureBuffer.draw();
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BackgroundRenderer;clearFog()V"))
-    private void drawSkyAfter_iris(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f positionMatrix, CallbackInfo ci) {
+    private void drawSkyAfter_iris(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci) {
         if (!Affinity.CONFIG.theSkyIrisIntegration()) return;
         SkyCaptureBuffer.draw();
     }

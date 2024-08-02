@@ -10,10 +10,11 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.particle.BezierPathParticleEffect;
 import io.wispforest.affinity.particle.ColoredFallingDustParticleEffect;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,6 +22,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -31,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FieldCoherenceModulatorBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity {
 
-    private static final KeyedEndec<Vec3d> STREAM_TARGET_POS_KEY = BuiltInEndecs.VEC3D.keyed("stream_target_pos", (Vec3d) null);
+    private static final KeyedEndec<Vec3d> STREAM_TARGET_POS_KEY = MinecraftEndecs.VEC3D.keyed("stream_target_pos", (Vec3d) null);
 
     @Environment(EnvType.CLIENT) public double spinSpeed;
     @Environment(EnvType.CLIENT) public double spin;
@@ -103,15 +105,15 @@ public class FieldCoherenceModulatorBlockEntity extends AethumNetworkMemberBlock
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        var nbt = super.toInitialChunkDataNbt();
-        nbt.putIfNotNull(STREAM_TARGET_POS_KEY, this.streamTargetPos);
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registries) {
+        var nbt = super.toInitialChunkDataNbt(registries);
+        nbt.putIfNotNull(SerializationContext.empty(), STREAM_TARGET_POS_KEY, this.streamTargetPos);
         return nbt;
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
         this.streamTargetPos = nbt.get(STREAM_TARGET_POS_KEY);
     }
 

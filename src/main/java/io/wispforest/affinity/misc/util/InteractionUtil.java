@@ -94,7 +94,7 @@ public class InteractionUtil {
 
                 changeHandler.run();
             } else {
-                if (ItemStack.canCombine(playerStack, item)) {
+                if (ItemOps.canStack(playerStack, item)) {
                     int incrementCount = Math.min(playerStack.getMaxCount() - playerStack.getCount(), item.getCount());
 
                     playerStack.increment(incrementCount);

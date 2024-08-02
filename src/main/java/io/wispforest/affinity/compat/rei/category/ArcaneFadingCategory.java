@@ -29,8 +29,10 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.minecraft.block.Block;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -98,7 +100,7 @@ public class ArcaneFadingCategory implements DisplayCategory<ArcaneFadingDisplay
 
     private BlockComponent makeBlockEntry(ItemConvertible block) {
         return Components.block(((Block) block).getDefaultState()).configure(component -> {
-            var tooltip = EntryStacks.of(block).getTooltip(TooltipContext.ofMouse()).entries().stream().map(entry -> {
+            var tooltip = EntryStacks.of(block).getTooltip(TooltipContext.ofMouse(Item.TooltipContext.create(MinecraftClient.getInstance().world))).entries().stream().map(entry -> {
                 if (entry.isText()) {
                     return TooltipComponent.of(entry.getAsText().asOrderedText());
                 } else {

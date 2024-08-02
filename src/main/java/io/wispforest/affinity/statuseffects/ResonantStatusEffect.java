@@ -20,8 +20,10 @@ public class ResonantStatusEffect extends AffinityStatusEffect {
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        if (entity.getWorld().getBlockState(entity.getBlockPos().down()).isIn(BlockTags.DAMPENS_VIBRATIONS)) return;
+    public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
+        if (entity.getWorld().getBlockState(entity.getBlockPos().down()).isIn(BlockTags.DAMPENS_VIBRATIONS)) return true;
         entity.damage(DAMAGE_TYPE.source(entity.getWorld()), amplifier + 1);
+
+        return true;
     }
 }

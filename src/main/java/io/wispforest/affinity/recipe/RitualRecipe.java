@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleInventory> implements Recipe<I> {
+public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleRecipeInput> implements Recipe<I> {
 
     protected final List<Ingredient> socleInputs;
 

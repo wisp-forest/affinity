@@ -1,5 +1,6 @@
 package io.wispforest.affinity.item;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
@@ -8,8 +9,6 @@ import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -17,6 +16,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.Block;
 import net.minecraft.block.CropBlock;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -28,6 +28,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -39,7 +40,7 @@ import java.util.List;
 
 public class CultivationStaffItem extends StaffItem {
 
-    public static final KeyedEndec<Boolean> SUPER_FORAGING_MODE_KEY = Endec.BOOLEAN.keyed("SuperForagingMode", false);
+    public static final ComponentType<Unit> SUPER_FORAGING_MODE = Affinity.unitComponent("cultivation_staff_super_foraging_mode");
 
     private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 0, 4);
 
@@ -57,7 +58,7 @@ public class CultivationStaffItem extends StaffItem {
         var inventory = ItemStorage.SIDED.find(world, pos.add(0, pedestal.down(), 0), pedestal.facing().getOpposite());
         if (inventory == null) return;
 
-        if (pedestal.getItem().get(SUPER_FORAGING_MODE_KEY) && pedestal.hasFlux(150)) {
+        if (pedestal.getItem().contains(SUPER_FORAGING_MODE) && pedestal.hasFlux(150)) {
             pedestal.consumeFlux(150);
 
             for (var cropPos : BlockPos.iterate(pos.add(-4, 0, -4), pos.add(4, 0, 4))) {
@@ -110,14 +111,19 @@ public class CultivationStaffItem extends StaffItem {
     @Override
     public void appendTooltipEntries(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, List<InWorldTooltipProvider.Entry> entries) {
         entries.add(InWorldTooltipProvider.Entry.text(
-                pedestal.getItem().get(SUPER_FORAGING_MODE_KEY) ? TextOps.withColor("✔", 0x28FFBF) : TextOps.withColor("❌ ", 0xEB1D36),
+                pedestal.getItem().contains(SUPER_FORAGING_MODE) ? TextOps.withColor("✔", 0x28FFBF) : TextOps.withColor("❌ ", 0xEB1D36),
                 Text.translatable("item.affinity.cultivation_staff.super_foraging_mode")
         ));
     }
 
     @Override
     public ActionResult onPedestalScrolled(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, boolean direction) {
-        pedestal.getItem().mutate(SUPER_FORAGING_MODE_KEY, enabled -> direction);
+        if (pedestal.getItem().contains(SUPER_FORAGING_MODE)) {
+            pedestal.getItem().remove(SUPER_FORAGING_MODE);
+        } else {
+            pedestal.getItem().set(SUPER_FORAGING_MODE, Unit.INSTANCE);
+        }
+
         return ActionResult.SUCCESS;
     }
 

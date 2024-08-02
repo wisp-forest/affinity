@@ -9,11 +9,12 @@ import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.annotations.NullableComponent;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.network.ClientAccess;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.annotations.NullableComponent;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -21,6 +22,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -102,13 +104,13 @@ public class EtherealAethumFluxInjectorBlockEntity extends BlockEntity implement
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        nbt.putIfNotNull(LAST_KNOWN_SOURCE_NODE_KEY, this.lastKnownSourceNode);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        nbt.putIfNotNull(SerializationContext.empty(), LAST_KNOWN_SOURCE_NODE_KEY, this.lastKnownSourceNode);
         nbt.put(LAST_INSERTION_TIMESTAMP_KEY, this.lastInsertionTimestamp);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         this.lastKnownSourceNode = nbt.get(LAST_KNOWN_SOURCE_NODE_KEY);
         this.lastInsertionTimestamp = nbt.get(LAST_INSERTION_TIMESTAMP_KEY);
     }

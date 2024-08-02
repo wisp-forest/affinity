@@ -14,7 +14,7 @@ public class DimensionTypeMixin {
     @ModifyArg(method = "getSkyAngle", at = @At(value = "INVOKE", target = "Ljava/util/OptionalLong;orElse(J)J"))
     private long weSmoothen(long original) {
         if (!CelestialZoomer.isZooming() || MinecraftClient.getInstance().isPaused()) return original;
-        return (long) MathHelper.lerp(MinecraftClient.getInstance().getTickDelta(), CelestialZoomer.lastWorldTime, original);
+        return (long) MathHelper.lerp(MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(false), CelestialZoomer.lastWorldTime, original);
     }
 
 }

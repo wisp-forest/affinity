@@ -1,12 +1,13 @@
 package io.wispforest.affinity.component;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import io.wispforest.affinity.mixin.access.ChunkTicketManagerAccessor;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationAttributes;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ChunkTicket;
 import net.minecraft.server.world.ChunkTicketManager;
 import net.minecraft.server.world.ChunkTicketType;
@@ -14,12 +15,17 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 public class WorldPinsComponent implements Component, ServerTickingComponent {
+
+    private static final KeyedEndec<Map<BlockPos, Integer>> PINS = Endec.map(MinecraftEndecs.BLOCK_POS, Endec.INT).keyed("pins", HashMap::new);
+
     public static final ChunkTicketType<BlockPos> TICKET_TYPE = ChunkTicketType.create("affinity:world_pin", Comparator.comparingLong(BlockPos::asLong));
 
     private final World world;
@@ -70,32 +76,14 @@ public class WorldPinsComponent implements Component, ServerTickingComponent {
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
-        NbtList pinsTag = tag.getList("Pins", NbtElement.COMPOUND_TYPE);
-
+    public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
         this.pins.clear();
-        for (int i = 0; i < pinsTag.size(); i++) {
-            NbtCompound pinTag = pinsTag.getCompound(i);
-
-            var pos = NbtHelper.toBlockPos(pinTag.getCompound("PinPos"));
-            var radius = pinTag.getInt("Radius");
-
-            this.pins.put(pos, radius);
-        }
+        this.pins.putAll(tag.get(SerializationContext.suppressed(SerializationAttributes.HUMAN_READABLE), PINS));
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
-        NbtList pinsTag = new NbtList();
-        tag.put("Pins", pinsTag);
-
-        for (Map.Entry<BlockPos, Integer> entry : this.pins.entrySet()) {
-            NbtCompound pinTag = new NbtCompound();
-            pinsTag.add(pinTag);
-
-            pinTag.put("PinPos", NbtHelper.fromBlockPos(entry.getKey()));
-            pinTag.putInt("Radius", entry.getValue());
-        }
+    public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
+        tag.put(SerializationContext.suppressed(SerializationAttributes.HUMAN_READABLE), PINS, this.pins);
     }
 
     @Override

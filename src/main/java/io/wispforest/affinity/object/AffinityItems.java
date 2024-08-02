@@ -9,14 +9,19 @@ import io.wispforest.lavender.book.LavenderBookItem;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.annotations.IterationIgnored;
 import io.wispforest.owo.registration.reflect.ItemRegistryContainer;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FoodComponent;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
-import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Rarity;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
@@ -46,8 +51,8 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item CULTIVATION_STAFF = new CultivationStaffItem();
     public static final Item SALVO_STAFF = new SalvoStaffItem();
 
-    public static final Item AZALEA_FLOWERS = new Item(settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(.5f)
-            .statusEffect(new StatusEffectInstance(AffinityStatusEffects.DRIPPING, 1200, 0, false, false, true), 1).build()));
+    public static final Item AZALEA_FLOWERS = new Item(settings().food(new FoodComponent.Builder().nutrition(2).saturationModifier(.5f)
+            .statusEffect(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.DRIPPING), 1200, 0, false, false, true), 1).build()));
     public static final Item SOUP_OF_BEE = new SoupOfBeeItem();
 
     public static final Item INERT_WISP_MATTER = new WispMatterItem(AffinityWispTypes.INERT);
@@ -123,10 +128,13 @@ public class AffinityItems implements ItemRegistryContainer {
 
     public static ItemStack makePotionOfInfiniteProwess() {
         var potion = new ItemStack(Items.POTION);
-        PotionUtil.setPotion(potion, Potions.LONG_STRENGTH);
-        PotionUtil.setCustomPotionEffects(potion, Stream.generate(() -> new StatusEffectInstance(StatusEffects.STRENGTH, 9600)).limit(24).toList());
+        var component = new PotionContentsComponent(
+                Optional.of(Potions.LONG_STRENGTH),
+                Optional.empty(),
+                Stream.generate(() -> new StatusEffectInstance(StatusEffects.STRENGTH, 9600)).limit(24).toList()
+        );
 
-        potion.setCustomName(Text.translatable("item.affinity.potion_of_infinite_prowess"));
+        potion.set(DataComponentTypes.ITEM_NAME, Text.translatable("item.affinity.potion_of_infinite_prowess"));
         return potion;
     }
 

@@ -4,10 +4,10 @@ import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityEntities;
 import io.wispforest.affinity.object.AffinityItems;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
@@ -68,7 +68,7 @@ public class SalvoStaffItem extends StaffItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable(
                 this.getTranslationKey() + ".tooltip.consumption_per_missile",
                 MISSILE_COST

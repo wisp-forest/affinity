@@ -18,8 +18,9 @@ import net.minecraft.block.CandleBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -78,7 +79,7 @@ public class AffineCandleBlock extends CandleBlock implements BlockEntityProvide
             double y = pos.getY() + offset.y;
             double z = pos.getZ() + offset.z;
 
-            world.addParticle(new SmallColoredFlameParticleEffect(DyeColor.PURPLE), x, y, z, 0.0, 0.0, 0.0);
+            world.addParticle(new SmallColoredFlameParticleEffect(DyeColor.PURPLE.getId()), x, y, z, 0.0, 0.0, 0.0);
 
             float chance = random.nextFloat();
             if (chance < .3f && world.getBlockEntity(pos) instanceof AffineCandleBlockEntity candle && candle.flux() >= 100) {
@@ -110,8 +111,9 @@ public class AffineCandleBlock extends CandleBlock implements BlockEntityProvide
         return CANDLES_TO_PARTICLE_OFFSETS.get((int) state.get(CANDLES));
     }
 
+
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
         tooltip.add(AethumNetworkMemberBlock.CONSUMER_TOOLTIP);
     }
 }

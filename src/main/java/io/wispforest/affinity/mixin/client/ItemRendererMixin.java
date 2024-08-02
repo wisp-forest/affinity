@@ -66,7 +66,7 @@ public abstract class ItemRendererMixin {
 
     @ModifyReturnValue(method = "getModel", at = @At("TAIL"))
     private BakedModel triggerStaffRevolverRendering(BakedModel original, ItemStack stack) {
-        if (!(stack.getItem() instanceof StaffItem) || !stack.has(StaffItem.BUNDLED_STAFFS)) return original;
+        if (!(stack.getItem() instanceof StaffItem) || !stack.contains(StaffItem.BUNDLED_STAFFS)) return original;
         return this.models.getModelManager().getModel(Affinity.id("item/staff_bundle"));
     }
 }

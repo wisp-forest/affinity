@@ -13,9 +13,9 @@ import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.ItemOps;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
@@ -36,6 +36,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -53,7 +54,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
 
     public static final int OUTPUT_SLOT = 9;
 
-    private static final KeyedEndec<ItemStack> TEMPLATE_KEY = BuiltInEndecs.ITEM_STACK.keyed("Template", ItemStack.EMPTY);
+    private static final KeyedEndec<ItemStack> TEMPLATE_KEY = MinecraftEndecs.ITEM_STACK.keyed("Template", ItemStack.EMPTY);
 
     private static final Map<World, Map<BlockPos, BlockPos>> BLOCKED_TREETAPS_PER_WORLD = new WeakHashMap<>();
     private Map<BlockPos, BlockPos> blockedTreetaps;
@@ -247,20 +248,20 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
 
         this.inventory.clear();
-        Inventories.readNbt(nbt, this.inventory.heldStacks);
+        Inventories.readNbt(nbt, this.inventory.heldStacks, registries);
 
         this.templateInventory.setStack(0, nbt.get(TEMPLATE_KEY));
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
 
-        Inventories.writeNbt(nbt, this.inventory.heldStacks);
+        Inventories.writeNbt(nbt, this.inventory.heldStacks, registries);
         nbt.put(TEMPLATE_KEY, this.templateInventory.getStack(0));
     }
 

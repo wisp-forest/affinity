@@ -2,10 +2,11 @@ package io.wispforest.affinity.entity;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.DamageTypeKey;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
@@ -76,5 +77,5 @@ public class AsteroidEntity extends ProjectileEntity {
     }
 
     @Override
-    protected void initDataTracker() {}
+    protected void initDataTracker(DataTracker.Builder builder) {}
 }

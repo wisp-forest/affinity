@@ -9,20 +9,23 @@ import io.wispforest.affinity.object.AffinityEntities;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.owo.serialization.CodecUtils;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.Unit;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -39,12 +42,12 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
     private static final int ASTEROID_THROW_COST = 10;
 
     public static final TagKey<DimensionType> WHITELISTED_DIMENSIONS = TagKey.of(RegistryKeys.DIMENSION_TYPE, Affinity.id("astrokinesis_staff_whitelist"));
-    public static final KeyedEndec<Boolean> PERFORMING_ASTROKINESIS = Endec.BOOLEAN.keyed("PerformingAstrokinesis", false);
+    public static final ComponentType<Unit> PERFORMING_ASTROKINESIS = Affinity.unitComponent("astrokinesis_staff_is_performing_astrokinesis");
     public static final AffinityEntityAddon.DataKey<Float> ASTEROID_ORIGIN = AffinityEntityAddon.DataKey.withNullDefault();
 
     @Override
     protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {
-        if (stack.has(PERFORMING_ASTROKINESIS)) return TypedActionResult.success(stack);
+        if (stack.contains(PERFORMING_ASTROKINESIS)) return TypedActionResult.success(stack);
 
         var superResult = super.executeSpell(world, player, stack, remainingTicks, clickedBlock);
         if (superResult.getResult().isAccepted()) return superResult;
@@ -58,7 +61,7 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
             return TypedActionResult.pass(stack);
         }
 
-        stack.put(PERFORMING_ASTROKINESIS, true);
+        stack.set(PERFORMING_ASTROKINESIS, Unit.INSTANCE);
         return TypedActionResult.success(stack);
     }
 
@@ -91,14 +94,14 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
 
     @Override
     protected float getAethumConsumption(ItemStack stack) {
-        return stack.has(PERFORMING_ASTROKINESIS)
+        return stack.contains(PERFORMING_ASTROKINESIS)
                 ? 0
                 : super.getAethumConsumption(stack);
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
         tooltip.add(Text.translatable(
                 AffinityItems.ASTROKINESIS_STAFF.getTranslationKey() + ".tooltip.consumption_per_throw",
                 ASTEROID_THROW_COST
@@ -108,12 +111,12 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
-        stack.delete(PERFORMING_ASTROKINESIS);
+        stack.remove(PERFORMING_ASTROKINESIS);
     }
 
     @Override
     public void performThrow(PlayerEntity player, ItemStack stack, PacketByteBuf extraData) {
-        if (stack.has(PERFORMING_ASTROKINESIS)) {
+        if (stack.contains(PERFORMING_ASTROKINESIS)) {
             var target = player.raycast(100, 0, false);
             if (!(target instanceof BlockHitResult blockHit)) return;
 
@@ -150,14 +153,14 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
 
     @Override
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
-        return stack.has(PERFORMING_ASTROKINESIS)
+        return stack.contains(PERFORMING_ASTROKINESIS)
                 ? AffinityEntityAddon.hasData(player, ASTEROID_ORIGIN) && player.getComponent(AffinityComponents.PLAYER_AETHUM).hasAethum(ASTEROID_THROW_COST)
                 : super.canThrow(stack, player);
     }
 
     @Override
     public void writeExtraThrowData(ItemStack stack, PlayerEntity player, PacketByteBuf buffer) {
-        if (!stack.has(PERFORMING_ASTROKINESIS)) return;
+        if (!stack.contains(PERFORMING_ASTROKINESIS)) return;
         buffer.writeFloat(AffinityEntityAddon.getData(player, ASTEROID_ORIGIN));
     }
 }

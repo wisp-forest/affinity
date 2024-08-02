@@ -10,7 +10,6 @@ import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.owo.network.OwoNetChannel;
-import io.wispforest.owo.serialization.endec.ReflectiveEndecBuilder;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -47,7 +46,7 @@ public class AffinityNetwork {
     }
 
     public static void initialize() {
-        ReflectiveEndecBuilder.register(EndecUtil.GLOBAL_POS_ENDEC, GlobalPos.class);
+        CHANNEL.builder().register(EndecUtil.GLOBAL_POS_ENDEC, GlobalPos.class);
 
         CHANNEL.registerClientbound(FluxSyncHandler.FluxSyncPacket.class, (message, access) -> {
             final var chunk = access.runtime().world.getChunk(message.chunk().x, message.chunk().z);

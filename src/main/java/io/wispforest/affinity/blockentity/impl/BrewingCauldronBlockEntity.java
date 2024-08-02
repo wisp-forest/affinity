@@ -1,5 +1,6 @@
 package io.wispforest.affinity.blockentity.impl;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.AffineCandleBlock;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
@@ -13,10 +14,10 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.recipe.PotionMixingRecipe;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CandleBlock;
@@ -25,8 +26,10 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Util;
@@ -64,25 +67,25 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
 
         this.storedPotion = nbt.get(STORED_POTION_KEY);
         this.fillLevel = nbt.get(FILL_LEVEL_KEY);
         this.processTick = nbt.get(PROCESS_TICK_KEY);
 
         this.items.clear();
-        Inventories.readNbt(nbt, this.items);
+        Inventories.readNbt(nbt, this.items, registries);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
 
         nbt.put(STORED_POTION_KEY, this.storedPotion);
         nbt.put(FILL_LEVEL_KEY, this.fillLevel);
         nbt.put(PROCESS_TICK_KEY, this.processTick);
-        Inventories.writeNbt(nbt, this.items);
+        Inventories.writeNbt(nbt, this.items, registries);
     }
 
     @Override
@@ -94,7 +97,11 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
         if (this.processTick < 100) {
             ClientParticles.setVelocity(MathUtil.rgbToVec3d(storedPotion.color()));
             ClientParticles.setParticleCount(2);
-            ClientParticles.spawnPrecise(ParticleTypes.ENTITY_EFFECT, world, Vec3d.of(pos).add(0.5, 0.8, 0.5), 0.6, 0.2, 0.6);
+            ClientParticles.spawnPrecise(
+                    EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, Affinity.AETHUM_FLUX_COLOR.rgb()),
+                    world, Vec3d.of(pos).add(0.5, 0.8, 0.5),
+                    0.6, 0.2, 0.6
+            );
 
             ParticleEffect dust = new DustParticleEffect(new Vector3f(233 / 255f, 100 / 255f, 178 / 255f), 1);
             final var sporeBlossomOffset = sporeBlossomPos.subtract(pos).getY() + 1;

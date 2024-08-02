@@ -1,21 +1,23 @@
 package io.wispforest.affinity.component;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class LocalWeatherComponent implements Component, ServerTickingComponent {
+
+    private static final KeyedEndec<Set<BlockPos>> MONOLITHS = MinecraftEndecs.BLOCK_POS.setOf().keyed("monoliths", HashSet::new);
 
     private final @NotNull WorldChunk chunk;
     private float rainGradient;
@@ -63,25 +65,14 @@ public class LocalWeatherComponent implements Component, ServerTickingComponent 
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
         this.monoliths.clear();
-
-        NbtList monolithsTag = tag.getList("Monoliths", NbtElement.COMPOUND_TYPE);
-        for (int i = 0; i < monolithsTag.size(); i++) {
-            NbtCompound monolithTag = monolithsTag.getCompound(i);
-
-            this.monoliths.add(NbtHelper.toBlockPos(monolithTag));
-        }
+        this.monoliths.addAll(tag.get(MONOLITHS));
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
-        NbtList monolithsTag = new NbtList();
-        tag.put("Monoliths", monolithsTag);
-
-        for (BlockPos monolithPos : this.monoliths) {
-            monolithsTag.add(NbtHelper.fromBlockPos(monolithPos));
-        }
+    public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
+        tag.put(MONOLITHS, this.monoliths);
     }
 
     public void addMonolith(BlockPos monolithPos) {

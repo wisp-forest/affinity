@@ -7,12 +7,12 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.endec.Endec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKeys;
@@ -34,7 +34,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
 
     private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(2, 1, 2);
 
-    public static final KeyedEndec<Mode> MODE = Mode.ENDEC.keyed("Mode", Mode.NORMAL);
+    public static final ComponentType<Mode> MODE = Affinity.component("time_staff_mode", Mode.ENDEC);
 
     public static final TagKey<Block> IMMUNE_BLOCKS = TagKey.of(RegistryKeys.BLOCK, Affinity.id("time_staff_immune"));
 
@@ -65,7 +65,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     @Override
     public ActionResult onPedestalScrolled(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, boolean direction) {
         if (!world.isClient) {
-            pedestal.getItem().mutate(MODE, mode -> mode.cycle(direction));
+            pedestal.getItem().apply(MODE, Mode.NORMAL, mode -> mode.cycle(direction));
             pedestal.markDirty();
         }
 
@@ -99,7 +99,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (user.isSneaking()) {
             var stack = user.getStackInHand(hand);
-            if (!world.isClient) stack.mutate(MODE, Mode::next);
+            if (!world.isClient) stack.apply(MODE, Mode.NORMAL, Mode::next);
             return TypedActionResult.success(stack, world.isClient);
         }
 

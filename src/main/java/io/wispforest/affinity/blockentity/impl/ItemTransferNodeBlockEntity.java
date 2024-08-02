@@ -9,11 +9,13 @@ import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.endec.impl.StructEndecBuilder;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
-import io.wispforest.owo.serialization.endec.StructEndecBuilder;
+import io.wispforest.owo.serialization.RegistriesAttribute;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import io.wispforest.owo.util.VectorRandomUtils;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -24,6 +26,8 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -32,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
@@ -56,12 +61,12 @@ import java.util.function.Predicate;
 
 public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements TickedBlockEntity, InWorldTooltipProvider, LinkableBlockEntity, InteractableBlockEntity, InquirableOutlineProvider, BeforeMangroveBasketCaptureCallback {
 
-    public static final KeyedEndec<Set<BlockPos>> LINKS_KEY = BuiltInEndecs.BLOCK_POS.listOf().<Set<BlockPos>>xmap(HashSet::new, ArrayList::new).keyed("Links", HashSet::new);
+    public static final KeyedEndec<Set<BlockPos>> LINKS_KEY = MinecraftEndecs.BLOCK_POS.listOf().<Set<BlockPos>>xmap(HashSet::new, ArrayList::new).keyed("Links", HashSet::new);
     public static final KeyedEndec<List<ItemEntry>> ENTRIES_KEY = ItemEntry.ENDEC.listOf().keyed("Entries", ArrayList::new);
 
     public static final KeyedEndec<Mode> MODE_KEY = Mode.ENDEC.keyed("Mode", Mode.IDLE);
     public static final KeyedEndec<Integer> STACK_SIZE_KEY = Endec.INT.keyed("StackSize", 8);
-    public static final KeyedEndec<ItemStack> FILTER_STACK_KEY = BuiltInEndecs.ITEM_STACK.keyed("FilterStack", ItemStack.EMPTY);
+    public static final KeyedEndec<ItemStack> FILTER_STACK_KEY = MinecraftEndecs.ITEM_STACK.keyed("FilterStack", ItemStack.EMPTY);
 
     public static final KeyedEndec<Boolean> IGNORE_DAMAGE_KEY = Endec.BOOLEAN.keyed("IgnoreDamage", true);
     public static final KeyedEndec<Boolean> IGNORE_DATA_KEY = Endec.BOOLEAN.keyed("IgnoreData", true);
@@ -343,17 +348,17 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     private boolean acceptsItem(ItemVariant variant) {
         if (this.filterStack.isEmpty()) return true;
-        return this.invertFilter != this.testFilter(variant.getItem(), variant.getNbt());
+        return this.invertFilter != this.testFilter(variant);
     }
 
-    private boolean testFilter(Item item, @Nullable NbtCompound nbt) {
-        if (this.filterStack.getItem() != item) return false;
-        if (this.ignoreData || !this.filterStack.hasNbt()) return true;
+    private boolean testFilter(ItemVariant variant) {
+        if (this.filterStack.getItem() != variant.getItem()) return false;
+        if (this.ignoreData) return true;
 
-        var standard = this.filterStack.getNbt();
-        if (this.ignoreDamage) standard.remove("Damage");
+        var standard = this.filterStack.getComponentChanges();
+        if (this.ignoreDamage) standard.withRemovedIf(type -> type == DataComponentTypes.DAMAGE);
 
-        return NbtHelper.matches(standard, nbt, true);
+        return variant.componentsMatch(standard);
     }
 
     private List<ItemTransferNodeBlockEntity> linkedNodes(Predicate<Mode> modePredicate) {
@@ -410,38 +415,43 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        nbt.put(LINKS_KEY, this.links);
-        nbt.put(ENTRIES_KEY, this.entries);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager()));
 
-        nbt.put(MODE_KEY, this.mode);
-        nbt.put(STACK_SIZE_KEY, this.stackSize);
-        nbt.put(FILTER_STACK_KEY, this.filterStack);
+        nbt.put(ctx, LINKS_KEY, this.links);
+        nbt.put(ctx, ENTRIES_KEY, this.entries);
 
-        nbt.put(IGNORE_DAMAGE_KEY, this.ignoreDamage);
-        nbt.put(IGNORE_DATA_KEY, this.ignoreData);
-        nbt.put(INVERT_FILTER_KEY, this.invertFilter);
+        nbt.put(ctx, MODE_KEY, this.mode);
+        nbt.put(ctx, STACK_SIZE_KEY, this.stackSize);
+        nbt.put(ctx, FILTER_STACK_KEY, this.filterStack);
+
+        nbt.put(ctx, IGNORE_DAMAGE_KEY, this.ignoreDamage);
+        nbt.put(ctx, IGNORE_DATA_KEY, this.ignoreData);
+        nbt.put(ctx, INVERT_FILTER_KEY, this.invertFilter);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        this.links = nbt.get(LINKS_KEY);
-        this.entries = nbt.get(ENTRIES_KEY);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager()));
+
+        this.links = nbt.get(ctx, LINKS_KEY);
+        this.entries = nbt.get(ctx, ENTRIES_KEY);
 
         this.entries.clear();
-        this.entries.addAll(nbt.get(ENTRIES_KEY));
+        this.entries.addAll(nbt.get(ctx, ENTRIES_KEY));
 
-        this.mode = nbt.get(MODE_KEY);
-        this.stackSize = nbt.get(STACK_SIZE_KEY);
-        this.filterStack = nbt.get(FILTER_STACK_KEY);
+        this.mode = nbt.get(ctx, MODE_KEY);
+        this.stackSize = nbt.get(ctx, STACK_SIZE_KEY);
+        this.filterStack = nbt.get(ctx, FILTER_STACK_KEY);
 
-        this.ignoreDamage = nbt.get(IGNORE_DAMAGE_KEY);
-        this.ignoreData = nbt.get(IGNORE_DATA_KEY);
-        this.invertFilter = nbt.get(INVERT_FILTER_KEY);
+        this.ignoreDamage = nbt.get(ctx, IGNORE_DAMAGE_KEY);
+        this.ignoreData = nbt.get(ctx, IGNORE_DATA_KEY);
+        this.invertFilter = nbt.get(ctx, INVERT_FILTER_KEY);
     }
 
     @Override
-    public void setStackNbt(ItemStack stack) {
+    public void setStackNbt(ItemStack stack, RegistryWrapper.WrapperLookup registries) {
+        super.setStackNbt(stack, registries);
         NbtUtil.processBlockEntityNbt(stack, this, nbt -> nbt.remove("Links"));
     }
 
@@ -486,8 +496,8 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     public static final class ItemEntry {
 
         public static final Endec<ItemEntry> ENDEC = StructEndecBuilder.of(
-                BuiltInEndecs.BLOCK_POS.fieldOf("OriginNode", entry -> entry.originNode),
-                BuiltInEndecs.ITEM_STACK.fieldOf("Item", entry -> entry.item),
+                MinecraftEndecs.BLOCK_POS.fieldOf("OriginNode", entry -> entry.originNode),
+                MinecraftEndecs.ITEM_STACK.fieldOf("Item", entry -> entry.item),
                 Endec.INT.fieldOf("Age", entry -> entry.age),
                 Endec.BOOLEAN.fieldOf("Insert", entry -> entry.insert),
                 ItemEntry::new

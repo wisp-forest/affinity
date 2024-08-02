@@ -8,10 +8,12 @@ import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.BuiltInEndecs;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.CodecUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -20,6 +22,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
@@ -39,7 +42,7 @@ import java.util.UUID;
 
 public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, Nameable {
 
-    private static final KeyedEndec<Text> CUSTOM_NAME_KEY = Endec.ofCodec(TextCodecs.STRINGIFIED_CODEC).keyed("custom_name", (Text) null);
+    private static final KeyedEndec<Text> CUSTOM_NAME_KEY = CodecUtils.toEndec(TextCodecs.STRINGIFIED_CODEC).keyed("custom_name", (Text) null);
     private static final KeyedEndec<UUID> OWNER_KEY = BuiltInEndecs.UUID.keyed("owner", (UUID) null);
     private static final KeyedEndec<Boolean> GLOBAL_KEY = Endec.BOOLEAN.keyed("global", false);
 
@@ -77,17 +80,17 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
         if (injectors == null) return;
 
         for (var injectorPos : injectors) {
-            var world = ((ServerWorld) this.world).getServer().getWorld(injectorPos.getDimension());
+            var world = ((ServerWorld) this.world).getServer().getWorld(injectorPos.dimension());
             if (world == null) continue;
 
-            if (!world.isChunkLoaded(ChunkSectionPos.getSectionCoord(injectorPos.getPos().getX()), ChunkSectionPos.getSectionCoord(injectorPos.getPos().getZ()))) {
+            if (!world.isChunkLoaded(ChunkSectionPos.getSectionCoord(injectorPos.pos().getX()), ChunkSectionPos.getSectionCoord(injectorPos.pos().getZ()))) {
                 continue;
             }
 
-            var be = world.getBlockEntity(injectorPos.getPos());
+            var be = world.getBlockEntity(injectorPos.pos());
             if (!(be instanceof EtherealAethumFluxInjectorBlockEntity injector) || !injector.canInsert()) continue;
 
-            var attachedMember = Affinity.AETHUM_MEMBER.find(world, injectorPos.getPos().offset(injector.getCachedState().get(EtherealAethumFluxInjectorBlock.FACING)), null);
+            var attachedMember = Affinity.AETHUM_MEMBER.find(world, injectorPos.pos().offset(injector.getCachedState().get(EtherealAethumFluxInjectorBlock.FACING)), null);
             if (attachedMember == null) continue;
 
             try (var transaction = Transaction.openOuter()) {
@@ -154,14 +157,14 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        nbt.putIfNotNull(CUSTOM_NAME_KEY, this.customName);
-        nbt.putIfNotNull(OWNER_KEY, this.owner);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        nbt.putIfNotNull(SerializationContext.empty(), CUSTOM_NAME_KEY, this.customName);
+        nbt.putIfNotNull(SerializationContext.empty(), OWNER_KEY, this.owner);
         nbt.put(GLOBAL_KEY, this.global);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         this.customName = nbt.get(CUSTOM_NAME_KEY);
         this.owner = nbt.get(OWNER_KEY);
         this.global = nbt.get(GLOBAL_KEY);

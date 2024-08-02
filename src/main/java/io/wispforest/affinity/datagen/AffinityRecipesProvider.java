@@ -15,16 +15,19 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.util.Identifier;
+
+import java.util.concurrent.CompletableFuture;
 
 import static io.wispforest.affinity.object.AffinityItems.*;
 
 public class AffinityRecipesProvider extends FabricRecipeProvider {
 
-    public AffinityRecipesProvider(FabricDataOutput output) {
-        super(output);
+    public AffinityRecipesProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
@@ -66,6 +69,6 @@ public class AffinityRecipesProvider extends FabricRecipeProvider {
 
     private static Identifier craftingRecipe(ItemConvertible item) {
         final var itemId = Registries.ITEM.getId(item.asItem());
-        return new Identifier(Affinity.MOD_ID, "crafting/" + itemId.getPath());
+        return Identifier.of(Affinity.MOD_ID, "crafting/" + itemId.getPath());
     }
 }

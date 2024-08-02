@@ -1,6 +1,7 @@
 package io.wispforest.affinity.misc;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.block.impl.PeculiarClumpBlock;
 import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.condition.LootConditionType;
@@ -10,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class ClumpDirectionLootCondition implements LootCondition {
 
-    public static final LootConditionType TYPE = new LootConditionType(Codec.unit(new ClumpDirectionLootCondition()));
+    public static final LootConditionType TYPE = new LootConditionType(MapCodec.unit(new ClumpDirectionLootCondition()));
 
     @Override
     public LootConditionType getType() {

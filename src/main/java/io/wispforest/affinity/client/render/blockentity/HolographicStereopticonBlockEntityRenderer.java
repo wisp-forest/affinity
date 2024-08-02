@@ -104,7 +104,7 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
             return switch (nbt.getString(HolographicStereopticonBlockEntity.IMPRINT_KIND_KEY_NAME)) {
                 case "item" -> {
                     var client = MinecraftClient.getInstance();
-                    var item = HolographicStereopticonBlockEntity.ImprintKind.ITEM.readData(nbt);
+                    var item = HolographicStereopticonBlockEntity.ImprintKind.ITEM.readData(nbt, stereopticon.getWorld().getRegistryManager());
                     if (item == null) yield EMPTY;
 
                     yield (scale, rotation, matrices, vertexConsumers, tickDelta, light, overlay) -> {
@@ -119,12 +119,12 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
                 }
                 case "block" -> {
                     var client = MinecraftClient.getInstance();
-                    var data = HolographicStereopticonBlockEntity.ImprintKind.BLOCK.readData(nbt);
+                    var data = HolographicStereopticonBlockEntity.ImprintKind.BLOCK.readData(nbt, stereopticon.getWorld().getRegistryManager());
                     if (data == null) yield EMPTY;
 
                     BlockEntity entity;
                     if (data.nbt() != null) {
-                        entity = BlockEntity.createFromNbt(stereopticon.getPos(), data.state(), data.nbt());
+                        entity = BlockEntity.createFromNbt(stereopticon.getPos(), data.state(), data.nbt(), stereopticon.getWorld().getRegistryManager());
                         entity.setWorld(client.world);
                     } else {
                         entity = null;
@@ -144,7 +144,7 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
                 }
                 case "entity" -> {
                     var client = MinecraftClient.getInstance();
-                    var entity = HolographicStereopticonBlockEntity.ImprintKind.ENTITY.readData(nbt);
+                    var entity = HolographicStereopticonBlockEntity.ImprintKind.ENTITY.readData(nbt, stereopticon.getWorld().getRegistryManager());
                     if (entity == null) yield EMPTY;
 
                     entity.updatePosition(stereopticon.getPos().getX(), stereopticon.getPos().getY(), stereopticon.getPos().getZ());
@@ -162,7 +162,7 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
                 case "section" -> {
                     var client = MinecraftClient.getInstance();
 
-                    var data = HolographicStereopticonBlockEntity.ImprintKind.SECTION.readData(nbt);
+                    var data = HolographicStereopticonBlockEntity.ImprintKind.SECTION.readData(nbt, stereopticon.getWorld().getRegistryManager());
                     if (data == null) yield EMPTY;
 
                     var mesh = new WorldMesh.Builder(client.world, data.start(), data.end()).build();

@@ -6,7 +6,6 @@ import io.wispforest.affinity.client.particle.BezierPathEmitterParticle;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.entity.WiseWispEntity;
-import io.wispforest.affinity.misc.ReadOnlyInventory;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.InteractionUtil;
@@ -16,8 +15,10 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityCriteria;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.rituals.RitualSocleType;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.owo.serialization.RegistriesAttribute;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -25,6 +26,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
@@ -50,7 +53,7 @@ import java.util.function.Supplier;
 
 public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, InquirableOutlineProvider {
 
-    protected static final KeyedEndec<ItemStack> ITEM_KEY = BuiltInEndecs.ITEM_STACK.keyed("Item", ItemStack.EMPTY);
+    protected static final KeyedEndec<ItemStack> ITEM_KEY = MinecraftEndecs.ITEM_STACK.keyed("Item", ItemStack.EMPTY);
 
     @Nullable
     protected RitualSetup cachedSetup = null;
@@ -212,7 +215,8 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
             this.cachedSetup.forEachModulator(this.world, modulator -> {
                 modulator.ritualLock.release();
-                modulator.setStreamTargetPos(null);;
+                modulator.setStreamTargetPos(null);
+                ;
             });
 
             this.cachedSetup.forEachSocle(this.world, socle -> {
@@ -228,15 +232,15 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.item = nbt.get(ITEM_KEY);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
+        this.item = nbt.get(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), ITEM_KEY);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.put(ITEM_KEY, this.item);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
+        nbt.put(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), ITEM_KEY, this.item);
     }
 
     public @NotNull ItemStack getItem() {
@@ -422,11 +426,11 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
 
     public record RemoveBezierEmitterParticlesPacket(List<BlockPos> soclePositions, Vec3d offset) {}
 
-    public static class SocleInventory implements ReadOnlyInventory.ListBacked {
+    public static class SocleRecipeInput implements RecipeInput {
 
         protected final DefaultedList<ItemStack> items;
 
-        public SocleInventory(List<RitualSocleBlockEntity> socles) {
+        public SocleRecipeInput(List<RitualSocleBlockEntity> socles) {
             this.items = DefaultedList.ofSize(socles.size(), ItemStack.EMPTY);
 
             for (int i = 0; i < socles.size(); i++) {
@@ -435,7 +439,16 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
         }
 
         @Override
-        public List<ItemStack> delegate() {
+        public ItemStack getStackInSlot(int slot) {
+            return this.items.get(slot);
+        }
+
+        @Override
+        public int getSize() {
+            return this.items.size();
+        }
+
+        public DefaultedList<ItemStack> delegate() {
             return this.items;
         }
     }

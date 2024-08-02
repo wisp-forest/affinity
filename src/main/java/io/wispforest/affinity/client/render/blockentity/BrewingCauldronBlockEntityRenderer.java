@@ -16,7 +16,7 @@ import net.minecraft.util.math.RotationAxis;
 
 public class BrewingCauldronBlockEntityRenderer extends AffinityBlockEntityRenderer<BrewingCauldronBlockEntity> {
 
-    private static final SpriteIdentifier WATER_TEXTURE = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier("block/water_still"));
+    private static final SpriteIdentifier WATER_TEXTURE = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, Identifier.of("block/water_still"));
     private static final ModelPart POTION_MODEL;
 
     static {
@@ -69,9 +69,8 @@ public class BrewingCauldronBlockEntityRenderer extends AffinityBlockEntityRende
             matrices.translate(0.125, entity.fluidHeight(), 0.125);
 
             var consumer = WATER_TEXTURE.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getTranslucent());
-            var color = MathUtil.rgbToFloats(entity.storedPotion().color());
 
-            POTION_MODEL.render(matrices, consumer, light, overlay, color[0], color[1], color[2], 1);
+            POTION_MODEL.render(matrices, consumer, light, overlay, 0xFF000000 | entity.storedPotion().color());
 
             matrices.pop();
         }

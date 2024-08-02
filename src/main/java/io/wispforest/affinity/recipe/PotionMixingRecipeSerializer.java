@@ -35,7 +35,7 @@ public class PotionMixingRecipeSerializer implements RecipeSerializer<PotionMixi
 
         buf.writeCollection(recipe.effectInputs, ($, effect) -> $.writeVarInt(Registries.STATUS_EFFECT.getRawId(effect)));
         buf.writeCollection(recipe.itemInputs, ($, ingredient) -> ingredient.write($));
-        buf.writeVarInt(recipe.copyNbtIndex);
+        buf.writeVarInt(recipe.copyComponentsIndex);
         buf.writeBoolean(recipe.strong);
     }
 }

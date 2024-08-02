@@ -17,7 +17,7 @@ public class BuiltinModelItemRendererMixin {
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void invokeStaffRevolverRenderer(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo ci) {
-        if (!(stack.getItem() instanceof StaffItem) || !stack.has(StaffItem.BUNDLED_STAFFS)) return;
+        if (!(stack.getItem() instanceof StaffItem) || !stack.contains(StaffItem.BUNDLED_STAFFS)) return;
 
         StaffRevolverRenderer.INSTANCE.render(stack, mode, matrices, vertexConsumers, light, overlay);
         ci.cancel();

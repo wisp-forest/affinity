@@ -1,5 +1,6 @@
 package io.wispforest.affinity.misc;
 
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -64,7 +65,7 @@ public class DamageTypeKey {
                         ? livingKiller.getMainHandStack()
                         : ItemStack.EMPTY;
 
-                return !killerStack.isEmpty() && killerStack.hasCustomName()
+                return !killerStack.isEmpty() && killerStack.contains(DataComponentTypes.CUSTOM_NAME)
                         ? Text.translatable(key + ".item", killed.getDisplayName(), killer.getDisplayName(), killerStack.toHoverableText())
                         : Text.translatable(key + ".player", killed.getDisplayName(), killer.getDisplayName());
             } else {

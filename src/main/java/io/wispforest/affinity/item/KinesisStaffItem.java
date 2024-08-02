@@ -11,9 +11,10 @@ import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityCriteria;
 import io.wispforest.affinity.object.AffinityItems;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
-import net.minecraft.client.item.TooltipContext;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -23,6 +24,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -49,10 +51,10 @@ public class KinesisStaffItem extends StaffItem {
 
     private static final float ENTITY_THROW_COST = 2.5f;
 
-    private static final KeyedEndec<Integer> ACTIVE_TARGET_ENTITY = Endec.INT.keyed("TargetEntity", -1);
+    private static final ComponentType<Integer> ACTIVE_TARGET_ENTITY = Affinity.transientComponent("kinesis_staff_target_entity", Endec.INT);
     private static final TagKey<EntityType<?>> IMMUNE_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE, Affinity.id("kinesis_staff_immune"));
 
-    private static final EntityAttributeModifier MODIFIER = new EntityAttributeModifier(UUID.fromString("bc21b17e-2832-4762-acef-361df22a96f1"), "", -0.65, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+    private static final EntityAttributeModifier MODIFIER = new EntityAttributeModifier(Affinity.id("kinesis_staff_slowness"), -0.65, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     private static final AffinityEntityAddon.DataKey<Long> MODIFIER_APPLIED_TICK = AffinityEntityAddon.DataKey.withNullDefault();
 
     public static final AffinityEntityAddon.DataKey<UUID> PROJECTILE_THROWER = AffinityEntityAddon.DataKey.withNullDefault();
@@ -87,7 +89,7 @@ public class KinesisStaffItem extends StaffItem {
             if (!shouldContinue.getAsBoolean()) return;
 
             var attributes = living.getAttributes();
-            if (!attributes.hasModifierForAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED, MODIFIER.getId())) {
+            if (!attributes.hasModifierForAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED, MODIFIER.id())) {
                 attributes.addTemporaryModifiers(ImmutableMultimap.of(EntityAttributes.GENERIC_MOVEMENT_SPEED, MODIFIER));
             }
 
@@ -115,7 +117,7 @@ public class KinesisStaffItem extends StaffItem {
         var playerFacing = player.getRotationVec(0);
         Entity entity;
 
-        if (stack.has(ACTIVE_TARGET_ENTITY)) {
+        if (stack.contains(ACTIVE_TARGET_ENTITY)) {
             entity = world.getEntityById(stack.get(ACTIVE_TARGET_ENTITY));
         } else {
             EntityHitResult entityTarget = null;
@@ -128,13 +130,13 @@ public class KinesisStaffItem extends StaffItem {
             entity = entityTarget.getEntity();
 
             if (!world.isClient) {
-                stack.put(ACTIVE_TARGET_ENTITY, entity.getId());
+                stack.set(ACTIVE_TARGET_ENTITY, entity.getId());
                 AffinityCriteria.KINESIS.trigger((ServerPlayerEntity) player, entity);
             }
         }
 
         if (entity == null || (entity instanceof PlayerEntity && entity.isSneaking())) {
-            stack.delete(ACTIVE_TARGET_ENTITY);
+            stack.remove(ACTIVE_TARGET_ENTITY);
             return TypedActionResult.pass(stack);
         }
 
@@ -151,8 +153,8 @@ public class KinesisStaffItem extends StaffItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
         tooltip.add(Text.translatable(
                 AffinityItems.KINESIS_STAFF.getTranslationKey() + ".tooltip.consumption_per_throw",
                 ENTITY_THROW_COST
@@ -166,7 +168,7 @@ public class KinesisStaffItem extends StaffItem {
         var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
         if (!aethum.tryConsumeAethum(ENTITY_THROW_COST)) return;
 
-        stack.delete(ACTIVE_TARGET_ENTITY);
+        stack.remove(ACTIVE_TARGET_ENTITY);
         player.stopUsingItem();
         player.getItemCooldownManager().set(stack.getItem(), 10);
         player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
@@ -181,7 +183,7 @@ public class KinesisStaffItem extends StaffItem {
     }
 
     public boolean canThrow(ItemStack stack, PlayerEntity player) {
-        return stack.has(ACTIVE_TARGET_ENTITY) && player.getComponent(AffinityComponents.PLAYER_AETHUM).hasAethum(ENTITY_THROW_COST);
+        return stack.contains(ACTIVE_TARGET_ENTITY) && player.getComponent(AffinityComponents.PLAYER_AETHUM).hasAethum(ENTITY_THROW_COST);
     }
 
     public void writeExtraThrowData(ItemStack stack, PlayerEntity player, PacketByteBuf buffer) {}
@@ -189,7 +191,7 @@ public class KinesisStaffItem extends StaffItem {
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
-        stack.delete(ACTIVE_TARGET_ENTITY);
+        stack.remove(ACTIVE_TARGET_ENTITY);
     }
 
     @Override

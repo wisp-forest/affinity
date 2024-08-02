@@ -27,4 +27,4 @@ accessible field net/minecraft/data/client/ItemModelGenerator writer Ljava/util/
 
 accessible field net/minecraft/block/CandleBlock CANDLES_TO_PARTICLE_OFFSETS Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 
-accessible class net/minecraft/server/world/ThreadedAnvilChunkStorage$TicketManager
+#accessible class net/minecraft/server/world/ThreadedAnvilChunkStorage$TicketManager

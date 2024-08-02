@@ -10,14 +10,17 @@ import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.CopyNbtLootFunction;
 import net.minecraft.loot.provider.nbt.ContextLootNbtProvider;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
+import net.minecraft.registry.RegistryWrapper;
+
+import java.util.concurrent.CompletableFuture;
 
 import static io.wispforest.affinity.object.AffinityBlocks.*;
 import static io.wispforest.affinity.object.AffinityItems.AZALEA_FLOWERS;
 
 public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider {
 
-    public AffinityBlockLootTableProvider(FabricDataOutput dataOutput) {
-        super(dataOutput);
+    public AffinityBlockLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(dataOutput, registriesFuture);
     }
 
     @Override
@@ -37,7 +40,7 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
         this.addDrop(Blocks.FLOWERING_AZALEA_LEAVES, block -> this.leavesDrops(block, Blocks.FLOWERING_AZALEA, SAPLING_DROP_CHANCE).pool(
                 LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1.0F))
-                        .conditionally(WITHOUT_SILK_TOUCH_NOR_SHEARS)
+                        .conditionally(createWithoutShearsOrSilkTouchCondition())
                         .with(this.addSurvivesExplosionCondition(block, ItemEntry.builder(AZALEA_FLOWERS)))
         ));
 

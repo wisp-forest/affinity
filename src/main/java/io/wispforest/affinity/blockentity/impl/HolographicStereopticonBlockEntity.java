@@ -9,10 +9,9 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
-import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import io.wispforest.owo.ui.component.EntityComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,6 +26,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -80,8 +80,8 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
         this.renderScale = nbt.get(RENDER_SCALE_KEY);
         this.spin = nbt.get(SPIN_KEY);
         this.rendererData = nbt.contains(RENDERER_DATA_KEY, NbtElement.COMPOUND_TYPE) ? nbt.getCompound(RENDERER_DATA_KEY) : null;
@@ -92,8 +92,8 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
 
         if (this.rendererData != null) nbt.put(RENDERER_DATA_KEY, this.rendererData);
         nbt.put(RENDER_SCALE_KEY, this.renderScale);
@@ -197,11 +197,14 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
     public static abstract class ImprintKind<T> {
 
+        @SuppressWarnings("rawtypes")
+        public static final Endec<ImprintKind> ENDEC = Endec.STRING.xmap(ImprintKind::byId, kind -> kind.id);
+
         private static final String STEREOPTICON_TRANSLATION_KEY = AffinityBlocks.HOLOGRAPHIC_STEREOPTICON.getTranslationKey();
 
         public static final ImprintKind<BlockData> BLOCK = new ImprintKind<>("block") {
             @Override
-            public @Nullable BlockData readData(NbtCompound nbt) {
+            public @Nullable BlockData readData(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
                 if (!nbt.contains("State", NbtElement.COMPOUND_TYPE)) return null;
                 return new BlockData(
                         BlockState.CODEC.decode(NbtOps.INSTANCE, nbt.getCompound("State")).result().get().getFirst(),
@@ -210,7 +213,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
             }
 
             @Override
-            public void writeDataInner(NbtCompound nbt, BlockData data) {
+            public void writeDataInner(NbtCompound nbt, BlockData data, RegistryWrapper.WrapperLookup registries) {
                 nbt.put("State", BlockState.CODEC.encodeStart(NbtOps.INSTANCE, data.state).result().get());
                 if (data.nbt != null) nbt.put("BlockEntityData", data.nbt);
             }
@@ -227,14 +230,14 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
         public static final ImprintKind<ItemStack> ITEM = new ImprintKind<>("item") {
             @Override
-            public @Nullable ItemStack readData(NbtCompound nbt) {
+            public @Nullable ItemStack readData(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
                 if (!nbt.contains("Stack", NbtElement.COMPOUND_TYPE)) return null;
-                return ItemStack.fromNbt(nbt.getCompound("Stack"));
+                return ItemStack.fromNbt(registries, nbt.getCompound("Stack")).orElse(ItemStack.EMPTY);
             }
 
             @Override
-            public void writeDataInner(NbtCompound nbt, ItemStack stack) {
-                nbt.put("Stack", stack.writeNbt(new NbtCompound()));
+            public void writeDataInner(NbtCompound nbt, ItemStack stack, RegistryWrapper.WrapperLookup registries) {
+                nbt.put("Stack", stack.encode(registries));
             }
 
             @Override
@@ -250,7 +253,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
         public static final ImprintKind<Entity> ENTITY = new ImprintKind<>("entity") {
             @Override
             @Environment(EnvType.CLIENT)
-            public @Nullable Entity readData(NbtCompound nbt) {
+            public @Nullable Entity readData(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
                 if (!nbt.contains("Entity", NbtElement.COMPOUND_TYPE)) return null;
                 var entityData = nbt.getCompound("Entity");
 
@@ -266,7 +269,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
             }
 
             @Override
-            public void writeDataInner(NbtCompound nbt, Entity entity) {
+            public void writeDataInner(NbtCompound nbt, Entity entity, RegistryWrapper.WrapperLookup registries) {
                 if (entity instanceof EnderDragonPart dragonPart) entity = dragonPart.owner;
 
                 var entityNbt = new NbtCompound();
@@ -293,7 +296,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
 
         public static final ImprintKind<SectionData> SECTION = new ImprintKind<>("section") {
             @Override
-            public @Nullable SectionData readData(NbtCompound nbt) {
+            public @Nullable SectionData readData(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
                 if (!nbt.contains("StartPos", NbtElement.LONG_TYPE) || !nbt.contains("EndPos", NbtElement.LONG_TYPE)) {
                     return null;
                 }
@@ -305,7 +308,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
             }
 
             @Override
-            public void writeDataInner(NbtCompound nbt, SectionData data) {
+            public void writeDataInner(NbtCompound nbt, SectionData data, RegistryWrapper.WrapperLookup registries) {
                 nbt.putLong("StartPos", data.start.asLong());
                 nbt.putLong("EndPos", data.end.asLong());
             }
@@ -331,17 +334,17 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
             this.id = id;
         }
 
-        public abstract @Nullable T readData(NbtCompound nbt);
+        public abstract @Nullable T readData(NbtCompound nbt, RegistryWrapper.WrapperLookup registries);
 
-        protected abstract void writeDataInner(NbtCompound nbt, T data);
-        public void writeData(NbtCompound nbt, T data) {
+        protected abstract void writeDataInner(NbtCompound nbt, T data, RegistryWrapper.WrapperLookup registries);
+        public void writeData(NbtCompound nbt, T data, RegistryWrapper.WrapperLookup registries) {
             nbt.putString(IMPRINT_KIND_KEY_NAME, this.id);
-            this.writeDataInner(nbt, data);
+            this.writeDataInner(nbt, data, registries);
         }
 
         protected abstract void appendTooltipInner(List<Text> tooltip, @Nullable T data);
-        public void appendTooltip(List<Text> tooltip, @Nullable NbtCompound nbt) {
-            this.appendTooltipInner(tooltip, nbt != null ? this.readData(nbt) : null);
+        public void appendTooltip(List<Text> tooltip, @Nullable NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+            this.appendTooltipInner(tooltip, nbt != null ? this.readData(nbt, registries) : null);
         }
 
         public ImprintKind<?> next() {

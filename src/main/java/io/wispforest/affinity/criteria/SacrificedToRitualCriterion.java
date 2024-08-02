@@ -24,7 +24,7 @@ public class SacrificedToRitualCriterion extends AbstractCriterion<SacrificedToR
     public record Conditions(Optional<LootContextPredicate> player) implements AbstractCriterion.Conditions {
 
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codecs.createStrictOptionalFieldCodec(EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, "player").forGetter(Conditions::player)
+                Codec.optionalField("player", EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, false).forGetter(Conditions::player)
         ).apply(instance, Conditions::new));
     }
 }

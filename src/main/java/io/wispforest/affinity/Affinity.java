@@ -14,9 +14,11 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
+import io.wispforest.endec.Endec;
 import io.wispforest.owo.Owo;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
+import io.wispforest.owo.serialization.CodecUtils;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
@@ -25,6 +27,7 @@ import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.loot.LootPool;
@@ -33,6 +36,7 @@ import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.LootingEnchantLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.predicate.entity.EntityEquipmentPredicate;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.item.ItemPredicate;
@@ -41,6 +45,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Unit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,6 +64,9 @@ public class Affinity implements ModInitializer {
     public void onInitialize() {
         AffinityItemGroup.register();
 
+        // TODO moving this here might cause headaches
+        AffinityStatusEffects.register();
+
         AutoRegistryContainer.register(AffinityBlocks.class, MOD_ID, true);
         AutoRegistryContainer.register(AffinityItems.class, MOD_ID, false);
         AutoRegistryContainer.register(AffinityEnchantments.class, MOD_ID, false);
@@ -72,7 +80,6 @@ public class Affinity implements ModInitializer {
         FieldRegistrationHandler.processSimple(AffinityCriteria.class, false);
         FieldRegistrationHandler.processSimple(AffinityIngredients.class, false);
 
-        AffinityStatusEffects.register();
         AffinityNetwork.initialize();
         AffinityParticleSystems.initialize();
         AffinityPoiTypes.initialize();
@@ -123,5 +130,37 @@ public class Affinity implements ModInitializer {
 
     public static boolean onClient() {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+    }
+
+    public static <T> ComponentType<T> component(String name, Endec<T> endec) {
+        return Registry.register(
+                Registries.DATA_COMPONENT_TYPE,
+                id(name),
+                ComponentType.<T>builder()
+                        .codec(CodecUtils.toCodec(endec))
+                        .packetCodec(CodecUtils.toPacketCodec(endec))
+                        .build()
+        );
+    }
+
+    public static ComponentType<Unit> unitComponent(String name) {
+        return Registry.register(
+                Registries.DATA_COMPONENT_TYPE,
+                id(name),
+                ComponentType.<Unit>builder()
+                        .codec(Unit.CODEC)
+                        .packetCodec(PacketCodec.unit(Unit.INSTANCE))
+                        .build()
+        );
+    }
+
+    public static <T> ComponentType<T> transientComponent(String name, Endec<T> endec) {
+        return Registry.register(
+                Registries.DATA_COMPONENT_TYPE,
+                id(name),
+                ComponentType.<T>builder()
+                        .packetCodec(CodecUtils.toPacketCodec(endec))
+                        .build()
+        );
     }
 }

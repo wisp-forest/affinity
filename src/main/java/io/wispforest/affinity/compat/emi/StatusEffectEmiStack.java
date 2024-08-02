@@ -5,6 +5,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.component.ComponentChanges;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
@@ -38,8 +39,8 @@ public class StatusEffectEmiStack extends EmiStack {
     }
 
     @Override
-    public NbtCompound getNbt() {
-        return null;
+    public ComponentChanges getComponentChanges() {
+        return ComponentChanges.EMPTY;
     }
 
     @Override

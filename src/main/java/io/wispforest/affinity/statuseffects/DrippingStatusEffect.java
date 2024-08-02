@@ -11,9 +11,11 @@ public class DrippingStatusEffect extends AffinityStatusEffect {
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        if (entity.getWorld().random.nextDouble() > .05) return;
+    public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
+        if (entity.getWorld().random.nextDouble() > .05) return false;
         AffinityParticleSystems.DRIPPING_AZALEA.spawn(entity.getWorld(), entity.getPos().add(0, 1, 0));
+
+        return true;
     }
 
     @Override

@@ -1,13 +1,15 @@
 package io.wispforest.affinity.component;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 public abstract class AethumComponent<H> implements Component, AutoSyncedComponent {
 
@@ -29,12 +31,12 @@ public abstract class AethumComponent<H> implements Component, AutoSyncedCompone
     protected abstract double maxAethum();
 
     @Override
-    public void readFromNbt(@NotNull NbtCompound tag) {
+    public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
         this.aethum = tag.get(AETHUM_KEY);
     }
 
     @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {
+    public void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
         tag.put(AETHUM_KEY, this.aethum);
     }
 

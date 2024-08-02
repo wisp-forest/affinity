@@ -1,8 +1,10 @@
 package io.wispforest.affinity.entity;
 
 import io.wispforest.affinity.object.AffinityEntities;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.owo.serialization.CodecUtils;
 import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,10 +19,13 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -30,12 +35,12 @@ import java.util.Optional;
 
 public class EmancipatedBlockEntity extends Entity {
 
-    public static final TrackedDataHandler<Optional<NbtCompound>> OPTIONAL_NBT = TrackedDataHandler.ofOptional(PacketByteBuf::writeNbt, PacketByteBuf::readNbt);
+    public static final TrackedDataHandler<Optional<NbtCompound>> OPTIONAL_NBT = TrackedDataHandler.create(PacketCodecs.optional(PacketCodecs.codec(NbtCompound.CODEC)));
 
     private static final KeyedEndec<Integer> MAX_AGE_KEY = Endec.INT.keyed("max_age", 15);
     private static final KeyedEndec<Float> ANIMATION_SCALE_KEY = Endec.FLOAT.keyed("animation_scale", 1f);
     private static final KeyedEndec<NbtCompound> EMANCIPATED_BLOCK_ENTITY_DATA_KEY = NbtEndec.COMPOUND.keyed("emancipated_block_entity", (NbtCompound) null);
-    private static final KeyedEndec<BlockState> EMANCIPATED_STATE_KEY = Endec.ofCodec(BlockState.CODEC).keyed("emancipated_state", Blocks.AIR.getDefaultState());
+    private static final KeyedEndec<BlockState> EMANCIPATED_STATE_KEY = CodecUtils.toEndec(BlockState.CODEC).keyed("emancipated_state", Blocks.AIR.getDefaultState());
 
     @Nullable
     @Environment(EnvType.CLIENT)
@@ -58,7 +63,7 @@ public class EmancipatedBlockEntity extends Entity {
         emancipated.setAnimationScale(animationScale);
 
         if (emancipatedBlockEntity != null) {
-            emancipated.setEmancipatedBlockEntityData(emancipatedBlockEntity.createNbtWithId());
+            emancipated.setEmancipatedBlockEntityData(emancipatedBlockEntity.createNbtWithId(world.getRegistryManager()));
         }
 
         world.spawnEntity(emancipated);
@@ -66,10 +71,10 @@ public class EmancipatedBlockEntity extends Entity {
     }
 
     @Override
-    protected void initDataTracker() {
-        this.dataTracker.startTracking(MAX_AGE, 15);
-        this.dataTracker.startTracking(ANIMATION_SCALE, 1f);
-        this.dataTracker.startTracking(EMANCIPATED_BLOCK_ENTITY_DATA, Optional.empty());
+    protected void initDataTracker(DataTracker.Builder builder) {
+        builder.add(MAX_AGE, 15);
+        builder.add(ANIMATION_SCALE, 1f);
+        builder.add(EMANCIPATED_BLOCK_ENTITY_DATA, Optional.empty());
     }
 
     @Override
@@ -121,7 +126,7 @@ public class EmancipatedBlockEntity extends Entity {
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
         nbt.put(EMANCIPATED_STATE_KEY, this.emancipatedState);
-        nbt.putIfNotNull(EMANCIPATED_BLOCK_ENTITY_DATA_KEY, this.emancipatedBlockEntityData());
+        nbt.putIfNotNull(SerializationContext.empty(), EMANCIPATED_BLOCK_ENTITY_DATA_KEY, this.emancipatedBlockEntityData());
         nbt.put(MAX_AGE_KEY, this.maxAge());
         nbt.put(ANIMATION_SCALE_KEY, this.animationScale());
     }
@@ -135,8 +140,8 @@ public class EmancipatedBlockEntity extends Entity {
     }
 
     @Override
-    public Packet<ClientPlayPacketListener> createSpawnPacket() {
-        return new EntitySpawnS2CPacket(this, Block.getRawIdFromState(this.emancipatedState));
+    public Packet<ClientPlayPacketListener> createSpawnPacket(EntityTrackerEntry entityTrackerEntry) {
+        return new EntitySpawnS2CPacket(this, entityTrackerEntry, Block.getRawIdFromState(this.emancipatedState));
     }
 
     @Override

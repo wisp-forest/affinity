@@ -1,17 +1,16 @@
 package io.wispforest.affinity.component;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
 import io.wispforest.affinity.misc.quack.AffinityWorldExtension;
 import io.wispforest.affinity.mixin.access.LivingEntityAccessor;
 import io.wispforest.affinity.object.AffinityStatusEffects;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
@@ -20,6 +19,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
 
 public class InnerCreeperComponent implements Component, CommonTickingComponent, AutoSyncedComponent {
 
@@ -66,8 +68,8 @@ public class InnerCreeperComponent implements Component, CommonTickingComponent,
         if (!this.holder.isAlive()) return;
 
         this.lastFuseTime = this.fuseTime;
-        if (!this.holder.getWorld().isClient && this.active != this.holder.hasStatusEffect(AffinityStatusEffects.CAT_ANXIETY)) {
-            this.active = this.holder.hasStatusEffect(AffinityStatusEffects.CAT_ANXIETY);
+        if (!this.holder.getWorld().isClient && this.active != this.holder.hasStatusEffect(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.CAT_ANXIETY))) {
+            this.active = this.holder.hasStatusEffect(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.CAT_ANXIETY));
             AffinityComponents.INNER_CREEPER.sync(this.holder);
         }
 
@@ -115,7 +117,7 @@ public class InnerCreeperComponent implements Component, CommonTickingComponent,
     }
 
     @Override
-    public void readFromNbt(@NotNull NbtCompound tag) {
+    public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
         this.ignited = tag.get(IGNITED);
         this.active = tag.get(ACTIVE);
         this.fuseDirection = tag.get(FUSE_DIRECTION);
@@ -127,7 +129,7 @@ public class InnerCreeperComponent implements Component, CommonTickingComponent,
     }
 
     @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {
+    public void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
         tag.put(IGNITED, this.ignited);
         tag.put(ACTIVE, this.active);
         tag.put(FUSE_DIRECTION, this.fuseDirection);
@@ -151,7 +153,7 @@ public class InnerCreeperComponent implements Component, CommonTickingComponent,
                 if (!playerStack.isDamageable()) {
                     playerStack.decrement(1);
                 } else {
-                    playerStack.damage(1, player, $ -> $.sendToolBreakStatus(hand));
+                    playerStack.damage(1, player, LivingEntity.getSlotForHand(hand));
                 }
             }
 

@@ -8,11 +8,13 @@ import io.wispforest.affinity.item.WispMatterItem;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.RegistriesAttribute;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -22,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -37,7 +40,7 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
 
     private static final Vec3d LINK_ATTACHMENT_POINT = new Vec3d(0, -.35f, 0);
 
-    private static final KeyedEndec<ItemStack> CURRENTLY_HARVESTING_KEY = BuiltInEndecs.ITEM_STACK.keyed("CurrentlyHarvesting", ItemStack.EMPTY);
+    private static final KeyedEndec<ItemStack> CURRENTLY_HARVESTING_KEY = MinecraftEndecs.ITEM_STACK.keyed("CurrentlyHarvesting", ItemStack.EMPTY);
     private static final KeyedEndec<Integer> HARVEST_TICKS_KEY = Endec.INT.keyed("HarvestTicks", 0);
 
     @NotNull
@@ -120,18 +123,18 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
 
-        this.currentlyHarvesting = nbt.get(CURRENTLY_HARVESTING_KEY);
+        this.currentlyHarvesting = nbt.get(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), CURRENTLY_HARVESTING_KEY);
         this.harvestTicks = nbt.get(HARVEST_TICKS_KEY);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
 
-        nbt.put(CURRENTLY_HARVESTING_KEY, this.currentlyHarvesting);
+        nbt.put(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), CURRENTLY_HARVESTING_KEY, this.currentlyHarvesting);
         nbt.put(HARVEST_TICKS_KEY, this.harvestTicks);
     }
 

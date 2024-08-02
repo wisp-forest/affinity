@@ -30,9 +30,9 @@ public class BreakAethumFluxCacheCriterion extends AbstractCriterion<BreakAethum
                              NumberRange.DoubleRange aethumPercentage) implements AbstractCriterion.Conditions {
 
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codecs.createStrictOptionalFieldCodec(EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, "player").forGetter(Conditions::player),
-                Codecs.createStrictOptionalFieldCodec(NumberRange.IntRange.CODEC, "aethum", NumberRange.IntRange.ANY).forGetter(Conditions::aethum),
-                Codecs.createStrictOptionalFieldCodec(NumberRange.DoubleRange.CODEC, "aethum_percentage", NumberRange.DoubleRange.ANY).forGetter(Conditions::aethumPercentage)
+                Codec.optionalField("player", EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, false).forGetter(Conditions::player),
+                Codec.optionalField("aethum", NumberRange.IntRange.CODEC, false).xmap($ -> $.orElse(NumberRange.IntRange.ANY), Optional::of).forGetter(Conditions::aethum),
+                Codec.optionalField("aethum_percentage", NumberRange.DoubleRange.CODEC, false).xmap($ -> $.orElse(NumberRange.DoubleRange.ANY), Optional::of).forGetter(Conditions::aethumPercentage)
         ).apply(instance, Conditions::new));
     }
 

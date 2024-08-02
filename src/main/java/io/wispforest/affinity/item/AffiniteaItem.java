@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
@@ -22,7 +23,7 @@ import java.util.function.Supplier;
 public class AffiniteaItem extends Item {
 
     private static final int MAX_USE_TIME = 32;
-    private static final Supplier<StatusEffectInstance> EFFECT = () -> new StatusEffectInstance(AffinityStatusEffects.AFFINE, 5 * 60 * 20);
+    private static final Supplier<StatusEffectInstance> EFFECT = () -> new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.AFFINE), 5 * 60 * 20);
 
     public AffiniteaItem() {
         super(AffinityItems.settings().maxCount(8));
@@ -54,7 +55,7 @@ public class AffiniteaItem extends Item {
     }
 
     @Override
-    public int getMaxUseTime(ItemStack stack) {
+    public int getMaxUseTime(ItemStack stack, LivingEntity user) {
         return MAX_USE_TIME;
     }
 

@@ -14,11 +14,13 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
@@ -47,7 +49,7 @@ public class EtherealAethumFluxNodeBlock extends AethumNetworkMemberBlock {
         }
 
         node.setOwner(placer.getUuid());
-        if (itemStack.hasCustomName()) node.setCustomName(itemStack.getName());
+        if (itemStack.contains(DataComponentTypes.CUSTOM_NAME)) node.setCustomName(itemStack.getName());
     }
 
     @Override
@@ -66,8 +68,13 @@ public class EtherealAethumFluxNodeBlock extends AethumNetworkMemberBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        return InteractableBlockEntity.tryHandle(world, pos, player, hand, hit);
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        return InteractableBlockEntity.tryHandle(world, pos, player, Hand.MAIN_HAND, hit);
+    }
+
+    @Override
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        return InteractableBlockEntity.tryHandleWithItem(world, pos, player, hand, hit);
     }
 
     @Nullable

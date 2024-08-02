@@ -243,4 +243,16 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
         REQUEST_MERGE,
         REQUEST_SPLIT
     }
+
+    public record RecipeInput(ItemStack stack) implements net.minecraft.recipe.input.RecipeInput {
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            return slot == 0 ? this.stack : ItemStack.EMPTY;
+        }
+
+        @Override
+        public int getSize() {
+            return 1;
+        }
+    }
 }

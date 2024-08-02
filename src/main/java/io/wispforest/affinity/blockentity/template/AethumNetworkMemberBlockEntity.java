@@ -9,8 +9,8 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.misc.callback.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.network.FluxSyncHandler;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ui.util.Delta;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,6 +21,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -122,19 +123,20 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
     // -------------
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         NbtUtil.readLinks(nbt, "LinkedMembers", links);
         this.fluxStorage.readNbt(nbt);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         NbtUtil.writeLinks(nbt, "LinkedMembers", links);
         this.fluxStorage.writeNbt(nbt);
     }
 
     @Override
-    public void setStackNbt(ItemStack stack) {
+    public void setStackNbt(ItemStack stack, RegistryWrapper.WrapperLookup registries) {
+        super.setStackNbt(stack, registries);
         NbtUtil.processBlockEntityNbt(stack, this, nbt -> nbt.remove("LinkedMembers"));
     }
 

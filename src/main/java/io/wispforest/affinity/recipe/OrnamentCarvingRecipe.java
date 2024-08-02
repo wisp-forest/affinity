@@ -1,29 +1,26 @@
 package io.wispforest.affinity.recipe;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
+import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
+import io.wispforest.endec.StructEndec;
+import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.owo.serialization.EndecRecipeSerializer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
 
-public class OrnamentCarvingRecipe implements Recipe<Inventory> {
+public class OrnamentCarvingRecipe implements Recipe<RitualSocleComposerScreenHandler.RecipeInput> {
 
-    public static final Codec<OrnamentCarvingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(
-                    Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("input").forGetter(recipe -> recipe.input),
-                    Registries.ITEM.getCodec().xmap(Item::getDefaultStack, ItemStack::getItem).fieldOf("output").forGetter(recipe -> recipe.output)
-            )
-            .apply(instance, OrnamentCarvingRecipe::new));
+    public static final StructEndec<OrnamentCarvingRecipe> ENDEC = StructEndecBuilder.of(
+            EndecUtil.INGREDIENT_ENDEC.fieldOf("input", recipe -> recipe.input),
+            EndecUtil.RECIPE_RESULT_ENDEC.fieldOf("output", recipe -> recipe.output),
+            OrnamentCarvingRecipe::new
+    );
 
     public final Ingredient input;
     private final ItemStack output;
@@ -34,12 +31,12 @@ public class OrnamentCarvingRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public boolean matches(Inventory inventory, World world) {
-        return input.test(inventory.getStack(RitualSocleComposerScreenHandler.ORNAMENT_INGREDIENT_SLOT));
+    public boolean matches(RitualSocleComposerScreenHandler.RecipeInput input, World world) {
+        return this.input.test(input.getStackInSlot(RitualSocleComposerScreenHandler.ORNAMENT_INGREDIENT_SLOT));
     }
 
     @Override
-    public ItemStack craft(Inventory inventory, DynamicRegistryManager drm) {
+    public ItemStack craft(RitualSocleComposerScreenHandler.RecipeInput input, RegistryWrapper.WrapperLookup registries) {
         return this.output.copy();
     }
 
@@ -49,7 +46,7 @@ public class OrnamentCarvingRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public ItemStack getResult(DynamicRegistryManager drm) {
+    public ItemStack getResult(RegistryWrapper.WrapperLookup registries) {
         return this.output.copy();
     }
 
@@ -68,24 +65,9 @@ public class OrnamentCarvingRecipe implements Recipe<Inventory> {
         return true;
     }
 
-    public static final class Serializer implements RecipeSerializer<OrnamentCarvingRecipe> {
-
-        public Serializer() {}
-
-        @Override
-        public Codec<OrnamentCarvingRecipe> codec() {
-            return OrnamentCarvingRecipe.CODEC;
-        }
-
-        @Override
-        public OrnamentCarvingRecipe read(PacketByteBuf buf) {
-            return new OrnamentCarvingRecipe(Ingredient.fromPacket(buf), buf.readItemStack());
-        }
-
-        @Override
-        public void write(PacketByteBuf buf, OrnamentCarvingRecipe recipe) {
-            recipe.input.write(buf);
-            buf.writeItemStack(recipe.output);
+    public static class Serializer extends EndecRecipeSerializer<OrnamentCarvingRecipe> {
+        public Serializer() {
+            super(OrnamentCarvingRecipe.ENDEC);
         }
     }
 }

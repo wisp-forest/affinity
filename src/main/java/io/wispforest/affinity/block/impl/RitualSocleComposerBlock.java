@@ -55,7 +55,7 @@ public class RitualSocleComposerBlock extends Block {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         player.openHandledScreen(new ScreenHandlerFactory(world, pos));
         return ActionResult.SUCCESS;
     }

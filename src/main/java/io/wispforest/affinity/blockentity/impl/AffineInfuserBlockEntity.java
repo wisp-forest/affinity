@@ -22,6 +22,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -64,7 +65,7 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
         for (var entity : this.world.getNonSpectatingEntities(Entity.class, searchArea)) {
             if (currentRepairCost.getValue() > this.flux() - repairCostPerItem()) break;
 
-            if (entity instanceof LivingEntity living && living.hasStatusEffect(AffinityStatusEffects.AFFINE)) {
+            if (entity instanceof LivingEntity living && living.hasStatusEffect(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.AFFINE))) {
                 var aethum = entity.getComponent(AffinityComponents.PLAYER_AETHUM);
                 if (aethum.getAethum() < aethum.maxAethum()) {
                     aethum.addAethum(1);
@@ -72,8 +73,8 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
                 }
             }
 
-            if (entity instanceof PlayerEntity) {
-                entity.getItemsEquipped().forEach(AffineInfuserBlockEntity::repairIfEnchanted);
+            if (entity instanceof PlayerEntity player) {
+                player.getEquippedItems().forEach(AffineInfuserBlockEntity::repairIfEnchanted);
             } else if (entity instanceof ItemFrameEntity frame) {
                 repairIfEnchanted(frame.getHeldItemStack());
             } else if (entity instanceof ItemEntity item) {

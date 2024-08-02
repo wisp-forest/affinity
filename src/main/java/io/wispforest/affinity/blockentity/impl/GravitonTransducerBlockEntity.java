@@ -12,10 +12,12 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.RegistriesAttribute;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -25,6 +27,7 @@ import net.minecraft.entity.projectile.ShulkerBulletEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -40,7 +43,7 @@ import org.joml.Vector3f;
 
 public class GravitonTransducerBlockEntity extends AethumNetworkMemberBlockEntity implements TickedBlockEntity, InteractableBlockEntity, InquirableOutlineProvider {
 
-    private static final KeyedEndec<ItemStack> SHARD_KEY = BuiltInEndecs.ITEM_STACK.keyed("Shard", ItemStack.EMPTY);
+    private static final KeyedEndec<ItemStack> SHARD_KEY = MinecraftEndecs.ITEM_STACK.keyed("Shard", ItemStack.EMPTY);
 
     @NotNull private ItemStack shard = ItemStack.EMPTY;
     private final SingleStackStorageProvider shardStorage = new SingleStackStorageProvider(() -> this.shard, stack -> this.shard = stack, this::markDirty)
@@ -102,15 +105,15 @@ public class GravitonTransducerBlockEntity extends AethumNetworkMemberBlockEntit
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.shard = nbt.get(SHARD_KEY);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
+        this.shard = nbt.get(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), SHARD_KEY);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.put(SHARD_KEY, this.shard);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
+        nbt.put(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), SHARD_KEY, this.shard);
     }
 
     @Override

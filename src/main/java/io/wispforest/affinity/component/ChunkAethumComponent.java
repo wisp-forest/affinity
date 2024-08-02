@@ -2,12 +2,12 @@ package io.wispforest.affinity.component;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.AethumAcquisitionCache;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -16,6 +16,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
 import org.jetbrains.annotations.NotNull;
+import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,7 +30,7 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     public static final LatchingAethumEffect INCREASED_NATURAL_SPAWNING = new LatchingAethumEffect(90, 85);
 
     private static final BiMap<Identifier, LatchingAethumEffect> EFFECT_REGISTRY = HashBiMap.create();
-    private static final KeyedEndec<Set<LatchingAethumEffect>> ACTIVE_EFFECTS_KEY = BuiltInEndecs.IDENTIFIER
+    private static final KeyedEndec<Set<LatchingAethumEffect>> ACTIVE_EFFECTS_KEY = MinecraftEndecs.IDENTIFIER
             .xmap(EFFECT_REGISTRY::get, EFFECT_REGISTRY.inverse()::get)
             .listOf()
             .<Set<LatchingAethumEffect>>xmap(HashSet::new, ArrayList::new)
@@ -201,14 +202,14 @@ public class ChunkAethumComponent extends AethumComponent<Chunk> implements Serv
     }
 
     @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {
-        super.writeToNbt(tag);
+    public void writeToNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
+        super.writeToNbt(tag, registries);
         tag.put(ACTIVE_EFFECTS_KEY, this.activeEffects);
     }
 
     @Override
-    public void readFromNbt(@NotNull NbtCompound tag) {
-        super.readFromNbt(tag);
+    public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
+        super.readFromNbt(tag, registries);
         this.activeEffects = tag.get(ACTIVE_EFFECTS_KEY);
     }
 

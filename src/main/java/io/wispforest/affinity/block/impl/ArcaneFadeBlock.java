@@ -9,9 +9,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.registry.Registries;
@@ -109,7 +109,7 @@ public class ArcaneFadeBlock extends FluidBlock {
         registry.streamTags().forEach(tag -> {
             if (!tag.id().getPath().startsWith("arcane_fade_groups/")) return;
 
-            registry.getOrEmpty(new Identifier(tag.id().getNamespace(), tag.id().getPath().replaceFirst("arcane_fade_groups/", "")))
+            registry.getOrEmpty(Identifier.of(tag.id().getNamespace(), tag.id().getPath().replaceFirst("arcane_fade_groups/", "")))
                     .ifPresent(block -> storage.put(block, tag));
         });
     }
@@ -126,12 +126,12 @@ public class ArcaneFadeBlock extends FluidBlock {
             if (mappedItem != null) {
                 var newStack = mappedItem.getDefaultStack();
                 newStack.setCount(item.getStack().getCount());
-                newStack.setNbt(item.getStack().getNbt());
+                newStack.applyComponentsFrom(item.getStack().getComponents());
 
                 item.setStack(newStack);
-            } else if (item.getStack().getItem() instanceof DyeableItem dyeable) {
+            } else if (item.getStack().contains(DataComponentTypes.DYED_COLOR)) {
                 var newStack = item.getStack().copy();
-                dyeable.removeColor(newStack);
+                newStack.remove(DataComponentTypes.DYED_COLOR);
 
                 item.setStack(newStack);
             } else {

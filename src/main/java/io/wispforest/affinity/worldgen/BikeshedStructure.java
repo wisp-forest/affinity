@@ -1,12 +1,15 @@
 package io.wispforest.affinity.worldgen;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.owo.util.RegistryAccess;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.structure.StructureLiquidSettings;
 import net.minecraft.structure.pool.StructurePoolBasedGenerator;
 import net.minecraft.structure.pool.alias.StructurePoolAliasLookup;
 import net.minecraft.world.Heightmap;
+import net.minecraft.world.gen.structure.DimensionPadding;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureType;
 
@@ -15,7 +18,7 @@ import java.util.Optional;
 // TODO possibly replace with json
 public class BikeshedStructure extends Structure {
 
-    public static final Codec<BikeshedStructure> CODEC = createCodec(BikeshedStructure::new);
+    public static final MapCodec<BikeshedStructure> CODEC = createCodec(BikeshedStructure::new);
 
     protected BikeshedStructure(Config config) {
         super(config);
@@ -47,7 +50,9 @@ public class BikeshedStructure extends Structure {
                 false,
                 Optional.of(Heightmap.Type.WORLD_SURFACE_WG),
                 16,
-                StructurePoolAliasLookup.EMPTY
+                StructurePoolAliasLookup.EMPTY,
+                DimensionPadding.NONE,
+                StructureLiquidSettings.IGNORE_WATERLOGGING
         );
     }
 

@@ -34,7 +34,7 @@ public class OuijaBoardBlock extends BlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient) {
             player.openHandledScreen(new NamedScreenHandlerFactory() {
                 @Override
@@ -54,7 +54,7 @@ public class OuijaBoardBlock extends BlockWithEntity {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return Blocks.ENCHANTING_TABLE.getOutlineShape(state, world, pos, context);
+        return Blocks.ENCHANTING_TABLE.getDefaultState().getOutlineShape(world, pos, context);
     }
 
     @Override

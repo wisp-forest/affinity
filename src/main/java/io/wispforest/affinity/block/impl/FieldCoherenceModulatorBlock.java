@@ -15,12 +15,14 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -55,9 +57,15 @@ public class FieldCoherenceModulatorBlock extends AethumNetworkMemberBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         player.incrementStat(INTERACT_WITH_FIELD_COHERENCE_MODULATOR);
-        return InteractableBlockEntity.tryHandle(world, pos, player, hand, hit);
+        return InteractableBlockEntity.tryHandle(world, pos, player, Hand.MAIN_HAND, hit);
+    }
+
+    @Override
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        player.incrementStat(INTERACT_WITH_FIELD_COHERENCE_MODULATOR);
+        return InteractableBlockEntity.tryHandleWithItem(world, pos, player, hand, hit);
     }
 
     static {

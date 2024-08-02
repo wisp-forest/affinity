@@ -114,7 +114,7 @@ public class StatusEffectEntryDefinition implements EntryDefinition<StatusEffect
 
     @Override
     public StatusEffect read(NbtCompound tag) {
-        return Registries.STATUS_EFFECT.get(new Identifier(tag.getString("id")));
+        return Registries.STATUS_EFFECT.get(Identifier.of(tag.getString("id")));
     }
 
     @Environment(EnvType.CLIENT)
@@ -123,7 +123,7 @@ public class StatusEffectEntryDefinition implements EntryDefinition<StatusEffect
 
         @Override
         public void render(EntryStack<StatusEffect> entry, DrawContext context, Rectangle bounds, int mouseX, int mouseY, float delta) {
-            var sprite = MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(entry.getValue());
+            var sprite = MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(Registries.STATUS_EFFECT.getEntry(entry.getValue()));
             context.drawSprite(bounds.x - 1, bounds.y - 1, 0, bounds.width + 2, bounds.height + 2, sprite);
         }
 

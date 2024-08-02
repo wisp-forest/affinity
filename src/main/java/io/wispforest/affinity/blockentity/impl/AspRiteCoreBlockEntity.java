@@ -29,7 +29,7 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected boolean onRitualStart(RitualSetup setup) {
-        final var inventory = new AspenInfusionInventory(setup.resolveSocles(this.world), this.item);
+        final var inventory = new AspenInfusionRecipeInput(setup.resolveSocles(this.world), this.item);
         final var recipeOptional = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASPEN_INFUSION, inventory, this.world);
 
         if (recipeOptional.isEmpty()) return false;
@@ -81,11 +81,11 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
         return Vec3d.ofCenter(this.pos, .85);
     }
 
-    public static class AspenInfusionInventory extends SocleInventory {
+    public static class AspenInfusionRecipeInput extends SocleRecipeInput {
 
         private final ItemStack primaryInput;
 
-        public AspenInfusionInventory(List<RitualSocleBlockEntity> socles, ItemStack primaryInput) {
+        public AspenInfusionRecipeInput(List<RitualSocleBlockEntity> socles, ItemStack primaryInput) {
             super(socles);
             this.primaryInput = primaryInput.copy();
         }

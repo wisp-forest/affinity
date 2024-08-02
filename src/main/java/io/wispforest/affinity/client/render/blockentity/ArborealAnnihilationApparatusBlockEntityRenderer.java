@@ -59,7 +59,7 @@ public class ArborealAnnihilationApparatusBlockEntityRenderer extends AffinityBl
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(time / 50f + 100));
         matrices.scale(1.15f, 1.15f, 1.15f);
 
-        FLOATING_WISP.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(WispEntityRenderer.TEXTURE)), light, overlay, wispColor.red(), wispColor.green(), wispColor.blue(), 1f);
+        FLOATING_WISP.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(WispEntityRenderer.TEXTURE)), light, overlay, wispColor.argb());
 
         matrices.pop();
 

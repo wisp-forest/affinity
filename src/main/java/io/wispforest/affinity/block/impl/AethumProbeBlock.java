@@ -19,6 +19,7 @@ import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -44,27 +45,27 @@ public class AethumProbeBlock extends BlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var playerStack = player.getStackInHand(hand);
+    protected ItemActionResult onUseWithItem(ItemStack playerStack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         int crystals = state.get(CRYSTALS);
+        if (!playerStack.isOf(Items.AMETHYST_SHARD) || crystals >= 4) return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
-        if (playerStack.isEmpty()) {
-            if (crystals == 0) return ActionResult.PASS;
+        crystals++;
+        world.setBlockState(pos, state.with(CRYSTALS, crystals));
 
-            crystals--;
-            world.setBlockState(pos, state.with(CRYSTALS, crystals));
+        if (!ItemOps.emptyAwareDecrement(playerStack)) player.setStackInHand(hand, ItemStack.EMPTY);
+        return ItemActionResult.SUCCESS;
+    }
 
-            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), Items.AMETHYST_SHARD.getDefaultStack());
-            return ActionResult.SUCCESS;
-        } else if (playerStack.isOf(Items.AMETHYST_SHARD) && crystals < 4) {
-            crystals++;
-            world.setBlockState(pos, state.with(CRYSTALS, crystals));
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        int crystals = state.get(CRYSTALS);
+        if (crystals == 0) return ActionResult.PASS;
 
-            if (!ItemOps.emptyAwareDecrement(playerStack)) player.setStackInHand(hand, ItemStack.EMPTY);
-            return ActionResult.SUCCESS;
-        }
+        crystals--;
+        world.setBlockState(pos, state.with(CRYSTALS, crystals));
 
-        return ActionResult.PASS;
+        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), Items.AMETHYST_SHARD.getDefaultStack());
+        return ActionResult.SUCCESS;
     }
 
     @Override

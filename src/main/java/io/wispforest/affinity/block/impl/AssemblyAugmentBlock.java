@@ -68,7 +68,7 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient && world.getBlockEntity(pos) instanceof AssemblyAugmentBlockEntity augment) {
             openScreen(player, augment);
         }

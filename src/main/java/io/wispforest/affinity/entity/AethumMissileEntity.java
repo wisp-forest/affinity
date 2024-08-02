@@ -4,12 +4,14 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinitySoundEvents;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.BuiltInEndecs;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.nbt.NbtCompound;
@@ -84,7 +86,7 @@ public class AethumMissileEntity extends ProjectileEntity {
             living.damage(DAMAGE_TYPE.source(this, this.getOwner()), 1f);
 
             if (this.getOwner() instanceof ServerPlayerEntity player) {
-                player.playSound(AffinitySoundEvents.ITEM_SALVO_STAFF_HIT, SoundCategory.PLAYERS, 1f, .85f + this.getWorld().random.nextFloat() * .3f);
+                player.playSound(AffinitySoundEvents.ITEM_SALVO_STAFF_HIT, 1f, .85f + this.getWorld().random.nextFloat() * .3f);
             }
         }
 
@@ -94,7 +96,7 @@ public class AethumMissileEntity extends ProjectileEntity {
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putIfNotNull(TARGET_KEY, this.targetEntity);
+        nbt.putIfNotNull(SerializationContext.empty(), TARGET_KEY, this.targetEntity);
     }
 
     @Override
@@ -104,5 +106,5 @@ public class AethumMissileEntity extends ProjectileEntity {
     }
 
     @Override
-    protected void initDataTracker() {}
+    protected void initDataTracker(DataTracker.Builder builder) {}
 }

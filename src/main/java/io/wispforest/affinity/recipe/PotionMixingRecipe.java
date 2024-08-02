@@ -6,28 +6,27 @@ import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.recipe.*;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Stream;
 
-public class PotionMixingRecipe implements Recipe<Inventory> {
+public class PotionMixingRecipe implements Recipe<PotionMixingRecipe.Input> {
 
     public static final Codec<PotionMixingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(
                     Registries.STATUS_EFFECT.getCodec().listOf().fieldOf("effect_inputs").forGetter(recipe -> recipe.effectInputs),
                     Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("item_inputs").forGetter(recipe -> recipe.itemInputs),
-                    Codec.INT.optionalFieldOf("copy_nbt_index", -1).forGetter(recipe -> recipe.copyNbtIndex),
+                    Codec.INT.optionalFieldOf("copy_nbt_index", -1).forGetter(recipe -> recipe.copyComponentsIndex),
                     Registries.POTION.getCodec().fieldOf("output").forGetter(recipe -> recipe.output),
                     Codec.BOOL.optionalFieldOf("strong", false).forGetter(recipe -> recipe.strong)
             )
@@ -35,14 +34,14 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
     public final List<StatusEffect> effectInputs;
     public final List<Ingredient> itemInputs;
-    public final int copyNbtIndex;
+    public final int copyComponentsIndex;
     private final Potion output;
     public final boolean strong;
 
-    public PotionMixingRecipe(List<StatusEffect> effectInputs, List<Ingredient> itemInputs, int copyNbtIndex, Potion output, boolean strong) {
+    public PotionMixingRecipe(List<StatusEffect> effectInputs, List<Ingredient> itemInputs, int copyComponentsIndex, Potion output, boolean strong) {
         this.effectInputs = effectInputs;
         this.itemInputs = itemInputs;
-        this.copyNbtIndex = copyNbtIndex;
+        this.copyComponentsIndex = copyComponentsIndex;
         this.output = output;
         this.strong = strong;
     }
@@ -54,49 +53,38 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
     @Override
     @Deprecated
-    public boolean matches(Inventory inventory, World world) {
-        return false;
-    }
+    public boolean matches(Input input, World world) {
+        if (input.mixture.isEmpty()) return false;
 
-    public static Optional<PotionMixingRecipe> getMatching(RecipeManager manager, PotionMixture inputMixture, List<ItemStack> inputStacks) {
-        if (inputMixture.isEmpty()) return Optional.empty();
+        var effectInputs = Stream.concat(input.mixture.effects().stream(), input.mixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).distinct().toList();
+        var itemInputs = new ConcurrentLinkedQueue<>(input.items.stream().filter(stack -> !stack.isEmpty()).toList());
 
-        for (var recipeEntry : manager.listAllOfType(AffinityRecipeTypes.POTION_MIXING)) {
-            var recipe = recipeEntry.value();
-
-            var effectInputs = Stream.concat(inputMixture.effects().stream(), inputMixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).distinct().toList();
-            var itemInputs = new ConcurrentLinkedQueue<>(inputStacks.stream().filter(stack -> !stack.isEmpty()).toList());
-
-            if (effectInputs.size() != recipe.effectInputs.size() || itemInputs.size() != recipe.itemInputs.size()) {
-                continue;
-            }
-
-            int confirmedItemInputs = 0;
-
-            for (var input : recipe.itemInputs) {
-                for (var stack : itemInputs) {
-                    if (!input.test(stack)) continue;
-
-                    itemInputs.remove(stack);
-                    confirmedItemInputs++;
-                    break;
-                }
-            }
-
-            //Test for awkward potion input if no effects have been declared
-            boolean effectsConfirmed = recipe.effectInputs.isEmpty() ? inputMixture.basePotion() == Potions.AWKWARD : effectInputs.containsAll(recipe.effectInputs);
-
-            if (!effectsConfirmed || confirmedItemInputs != recipe.itemInputs.size()) continue;
-
-            return Optional.of(recipe);
+        if (effectInputs.size() != this.effectInputs.size() || itemInputs.size() != this.itemInputs.size()) {
+            return false;
         }
 
-        return Optional.empty();
+        int confirmedItemInputs = 0;
+
+        for (var inputStack : this.itemInputs) {
+            for (var stack : itemInputs) {
+                if (!inputStack.test(stack)) continue;
+
+                itemInputs.remove(stack);
+                confirmedItemInputs++;
+                break;
+            }
+        }
+
+        //Test for awkward potion input if no effects have been declared
+        boolean effectsConfirmed = this.effectInputs.isEmpty() ? input.mixture.basePotion() == Potions.AWKWARD : effectInputs.containsAll(this.effectInputs);
+
+        return effectsConfirmed && confirmedItemInputs == this.itemInputs.size();
     }
 
+    // TODO this might be bad
     @Override
     @Deprecated
-    public ItemStack craft(Inventory inventory, DynamicRegistryManager drm) {
+    public ItemStack craft(Input input, RegistryWrapper.WrapperLookup registries) {
         return ItemStack.EMPTY;
     }
 
@@ -108,7 +96,7 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
 
     @Override
     @Deprecated
-    public ItemStack getResult(DynamicRegistryManager drm) {
+    public ItemStack getResult(RegistryWrapper.WrapperLookup registries) {
         return ItemStack.EMPTY;
     }
 
@@ -119,8 +107,8 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
     public PotionMixture craftPotion(List<ItemStack> inputStacks) {
         var extraNbt = new NbtCompound();
 
-        if (this.copyNbtIndex != -1) {
-            var copyNbtIngredient = this.itemInputs.get(this.copyNbtIndex);
+        if (this.copyComponentsIndex != -1) {
+            var copyNbtIngredient = this.itemInputs.get(this.copyComponentsIndex);
             for (var stack : inputStacks) {
                 if (!copyNbtIngredient.test(stack)) continue;
 
@@ -143,5 +131,17 @@ public class PotionMixingRecipe implements Recipe<Inventory> {
     @Override
     public RecipeType<?> getType() {
         return AffinityRecipeTypes.POTION_MIXING;
+    }
+
+    public record Input(List<ItemStack> items, PotionMixture mixture) implements RecipeInput {
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            return this.items.get(slot);
+        }
+
+        @Override
+        public int getSize() {
+            return this.items.size();
+        }
     }
 }
