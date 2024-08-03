@@ -8,6 +8,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
+// TODO: migrate to RegistryEntry
 public class AffinityEntityAttributes implements AutoRegistryContainer<EntityAttribute> {
 
     @AssignedName("player.max_aethum")

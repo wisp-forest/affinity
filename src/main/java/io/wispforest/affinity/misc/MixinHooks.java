@@ -6,10 +6,14 @@ import io.wispforest.affinity.enchantment.impl.BerserkerEnchantment;
 import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
 import io.wispforest.affinity.item.WispMistItem;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -17,8 +21,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
@@ -26,8 +28,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import org.jetbrains.annotations.Nullable;
 
-import javax.tools.Tool;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class MixinHooks {
@@ -44,8 +46,9 @@ public class MixinHooks {
 
     public static final DamageTypeKey THREW_DOOM_POTION_DAMAGE = new DamageTypeKey(Affinity.id("threw_doom_potion"), DamageTypeKey.Attribution.NEVER_ATTRIBUTE);
 
-    public static final ThreadLocal<ItemStack> POTION_UTIL_STACK = new ThreadLocal<>();
-    public static final ThreadLocal<PotionUtilData> POTION_UTIL_DATA = new ThreadLocal<>();
+    public static final ThreadLocal<ItemStack> POTION_CONTENTS_COMPONENT_STACK = new ThreadLocal<>();
+
+    public static final ThreadLocal<ItemStack> POTION_ITEM_STACK = new ThreadLocal<>();
 
     public static float getExtraAttackDamage(LivingEntity attacker, Entity entity, float baseAmount) {
         if (!(entity instanceof LivingEntity target)) return baseAmount;
@@ -73,9 +76,9 @@ public class MixinHooks {
         return PotionUtil.getPotion(stack) == Registries.POTION.get(IMPENDING_DOOM_ID);
     }
 
-    public static void potionApplied(StatusEffectInstance effect, LivingEntity target, @Nullable NbtCompound data) {
-        if (effect.getEffectType() == StatusEffects.GLOWING && data != null && data.has(GlowingPotion.COLOR_KEY)) {
-            target.getComponent(AffinityComponents.GLOWING_COLOR).setColor(data.get(GlowingPotion.COLOR_KEY));
+    public static void potionApplied(StatusEffectInstance effect, LivingEntity target, @Nullable ComponentMap data) {
+        if (effect.getEffectType() == StatusEffects.GLOWING && data != null && data.contains(GlowingPotion.COLOR)) {
+            target.getComponent(AffinityComponents.GLOWING_COLOR).setColor(data.get(GlowingPotion.COLOR));
         }
 
         if (effect.getEffectType() instanceof AffinityStatusEffect affinityEffect) {
@@ -97,10 +100,15 @@ public class MixinHooks {
         var result = potionInput.copy();
         var effects = PotionUtil.getPotionEffects(result);
 
-        result.setCustomName(Text.translatable("item.affinity.misty_potion").formatted(Rarity.UNCOMMON.formatting));
-        result.getOrCreateNbt().putInt(PotionUtil.CUSTOM_POTION_COLOR_KEY, ((WispMistItem) ingredient.getItem()).type().color());
+        result.set(DataComponentTypes.CUSTOM_NAME, Text.translatable("item.affinity.misty_potion").formatted(Rarity.UNCOMMON.getFormatting()));
+        result.apply(
+            DataComponentTypes.POTION_CONTENTS,
+            PotionContentsComponent.DEFAULT,
+            ((WispMistItem) ingredient.getItem()).type().color(),
+            (contents, color) -> new PotionContentsComponent(contents.potion(), Optional.of(color), contents.customEffects())
+        );
 
-        PotionUtil.setPotion(result, Potions.WATER);
+        PotionUtil.setPotion(result, Potions.WATER.value());
         PotionUtil.setCustomPotionEffects(result, effects.stream().map(instance -> new StatusEffectInstance(
                 instance.getEffectType(),
                 instance.getDuration(),

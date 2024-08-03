@@ -13,6 +13,7 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
+import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.recipe.PotionMixingRecipe;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.KeyedEndec;
@@ -29,6 +30,7 @@ import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -155,8 +157,8 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
         int affineCandleCount = this.countCandles();
         if (affineCandleCount > 0) {
-            var extraNbt = this.storedPotion.getOrCreateExtraNbt();
-            extraNbt.put(PotionMixture.EXTEND_DURATION_BY, 1 + Math.min(affineCandleCount * 0.05F, 0.45F));
+            var extraNbt = this.storedPotion.extraComponents();
+            extraNbt.set(PotionMixture.EXTEND_DURATION_BY, 1 + Math.min(affineCandleCount * 0.05F, 0.45F));
         }
 
         for (var ingredient : this.cachedRecipe.itemInputs) {
@@ -174,7 +176,8 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     }
 
     private boolean updateAndTestCraftingPreconditions() {
-        this.cachedRecipe = PotionMixingRecipe.getMatching(this.world.getRecipeManager(), this.storedPotion, this.items).orElse(null);
+        var input = new PotionMixingRecipe.Input(this.items, this.storedPotion);
+        this.cachedRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.POTION_MIXING, input, this.world).map(RecipeEntry::value).orElse(null);
         if (this.cachedRecipe == null) return false;
 
         if (this.sporeBlossomPos == null || !this.world.getBlockState(this.sporeBlossomPos).isOf(Blocks.SPORE_BLOSSOM)) {

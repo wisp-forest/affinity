@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BowItem.class)
 public class BowItemMixin {
 
-    @ModifyArg(method = "onStoppedUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;setVelocity(Lnet/minecraft/entity/Entity;FFFFF)V"), index = 4)
+    @ModifyArg(method = "shoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/ProjectileEntity;setVelocity(Lnet/minecraft/entity/Entity;FFFFF)V"), index = 4)
     private float azaleaBowHigherProjectileSpeed(float arrowSpeed) {
         if ((Object) this != AffinityItems.AZALEA_BOW) return arrowSpeed;
         return arrowSpeed * 1.5f;

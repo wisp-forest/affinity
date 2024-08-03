@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class AbstractBlockMixin {
 
     @Inject(method = "onUse", at = @At("HEAD"), cancellable = true)
-    private void dropAzaleaFlowers(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
+    private void dropAzaleaFlowers(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
         if (!state.isOf(Blocks.FLOWERING_AZALEA_LEAVES)) return;
 
         if (!world.isClient) {
@@ -42,15 +43,15 @@ public class AbstractBlockMixin {
     @Mixin(AbstractBlock.AbstractBlockState.class)
     public static class AbstractBlockStateMixin {
 
-        @Inject(method = "onUse", at = @At("HEAD"), cancellable = true)
-        private void cancelInteractionIfAppropriate(World world, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
+        @Inject(method = "onUseWithItem", at = @At("HEAD"), cancellable = true)
+        private void cancelInteractionIfAppropriate(ItemStack stack, World world, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ItemActionResult> cir) {
             final var playerStack = player.getStackInHand(hand);
             if (!(playerStack.getItem() instanceof DirectInteractionHandler handler)) return;
 
             if (!handler.shouldHandleInteraction(playerStack, world, hit.getBlockPos(), ((BlockState) (Object) this))) {
                 return;
             }
-            cir.setReturnValue(ActionResult.PASS);
+            cir.setReturnValue(ItemActionResult.FAIL); // this was PASS. should this be FAIL?
         }
 
         @Inject(method = "onBlockBreakStart", at = @At("HEAD"), cancellable = true)

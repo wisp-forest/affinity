@@ -22,7 +22,7 @@ import static io.wispforest.affinity.client.render.blockentity.AethumFluxNodeBlo
 
 public class AethumFluxCacheBlockEntityRenderer extends AffinityBlockEntityRenderer<AethumFluxCacheBlockEntity> {
 
-    private static final SpriteIdentifier WATER_TEXTURE = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier("block/water_still"));
+    private static final SpriteIdentifier WATER_TEXTURE = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, Identifier.of("block/water_still"));
 
     public AethumFluxCacheBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
         super(ctx);
@@ -91,6 +91,7 @@ public class AethumFluxCacheBlockEntityRenderer extends AffinityBlockEntityRende
                 Affinity.AETHUM_FLUX_COLOR.red(),
                 Affinity.AETHUM_FLUX_COLOR.green(),
                 Affinity.AETHUM_FLUX_COLOR.blue(),
+                Affinity.AETHUM_FLUX_COLOR.alpha(),
                 light, overlay
         );
     }

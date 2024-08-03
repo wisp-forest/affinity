@@ -154,10 +154,13 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     public void tickServer() {
         this.autocraftingRecipe = CarbonCopyItem.getRecipe(this.templateInventory.getStack(0), this.world);
 
+        // TODO: investigate whether it makes sense to not use CraftingInventory here
+        var input = this.craftingView.createRecipeInput();
+
         RecipeEntry<CraftingRecipe> currentRecipe = null;
         if (this.autocraftingRecipe == null) {
-            currentRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world).orElse(null);
-        } else if (this.autocraftingRecipe.value().matches(this.craftingView, this.world)) {
+            currentRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, input, this.world).orElse(null);
+        } else if (this.autocraftingRecipe.value().matches(input, this.world)) {
             currentRecipe = this.autocraftingRecipe;
         }
 
@@ -175,7 +178,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
             }
         }
 
-        var currentRecipeResult = this.activeTreetaps > 0 ? currentRecipe.value().craft(this.craftingView, this.world.getRegistryManager()) : null;
+        var currentRecipeResult = this.activeTreetaps > 0 ? currentRecipe.value().craft(input, this.world.getRegistryManager()) : null;
         if (this.activeTreetaps > 0 && ItemOps.canStack(outputStack, currentRecipeResult)) {
             if (this.craftingTick % 20 == 0) {
                 AffinityParticleSystems.BEZIER_VORTEX.spawn(this.world, Vec3d.ofCenter(this.pos, .2), new AffinityParticleSystems.BezierVortexData(
@@ -237,7 +240,8 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     }
 
     public Optional<RecipeEntry<CraftingRecipe>> fetchActiveRecipe() {
-        return this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingView, this.world).or(() -> this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView, this.world));
+        // TODO: investigate whether it makes sense to not use CraftingInventory here
+        return this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingView.createRecipeInput(), this.world).or(() -> this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.ASSEMBLY, this.craftingView.createRecipeInput(), this.world));
     }
 
     @Override

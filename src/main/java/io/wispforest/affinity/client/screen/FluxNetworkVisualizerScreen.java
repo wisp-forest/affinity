@@ -26,6 +26,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -136,8 +137,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(-aspectRatio, aspectRatio, -1, 1, -1000, 3000), VertexSorter.BY_Z);
 
             var modelViewStack = RenderSystem.getModelViewStack();
-            modelViewStack.push();
-            modelViewStack.loadIdentity();
+            modelViewStack.pushMatrix();
+            modelViewStack.identity();
 
             float ageScalar = Math.min(1, this.age / 20f);
             float visualizerScale = .75f + Easing.EXPO.apply(ageScalar) * .25f;
@@ -145,10 +146,10 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             float scale = (this.scale.get() / 10f) * visualizerScale;
             modelViewStack.scale(scale, scale, scale);
 
-            modelViewStack.translate(this.xOffset.get() / 2600d, this.yOffset.get() / -2600d, 0);
+            modelViewStack.translate(this.xOffset.get() / 2600f, this.yOffset.get() / -2600f, 0);
 
-            modelViewStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(this.slant.get()));
-            modelViewStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(this.rotation.get()));
+            modelViewStack.rotate(RotationAxis.POSITIVE_X.rotationDegrees(this.slant.get()));
+            modelViewStack.rotate(RotationAxis.POSITIVE_Y.rotationDegrees(this.rotation.get()));
 
             RenderSystem.applyModelViewMatrix();
 
@@ -158,7 +159,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             matrices.loadIdentity();
             matrices.translate(-this.xSize / 2f, -this.ySize / 2f, -this.zSize / 2f);
 
-            var viewMatrix = new Matrix4f(modelViewStack.peek().getPositionMatrix()).mul(matrices.peek().getPositionMatrix());
+            var viewMatrix = new Matrix4f(modelViewStack).mul(matrices.peek().getPositionMatrix());
 
             var invProj = new Matrix4f(RenderSystem.getProjectionMatrix()).invert();
             var invView = new Matrix4f(viewMatrix).invert();
@@ -173,6 +174,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             RenderSystem.runAsFancy(() -> {
                 visualizerBuffer.beginWrite(true, GL30.GL_COLOR_BUFFER_BIT);
 
+                // TODO: fix this?
                 modelViewStack.translate(-this.xSize / 2f, -this.ySize / 2f, -this.zSize / 2f);
                 this.mesh.render(modelViewStack);
                 modelViewStack.translate(this.xSize / 2f, this.ySize / 2f, this.zSize / 2f);
@@ -202,13 +204,13 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             // before all transformations are reset
             var raycastResult = this.raycast(
                     RenderSystem.getProjectionMatrix(),
-                    modelViewStack.peek().getPositionMatrix().mul(matrices.peek().getPositionMatrix()),
+                    modelViewStack.mul(matrices.peek().getPositionMatrix()),
                     mouseX, mouseY
             );
 
             matrices.pop();
 
-            modelViewStack.pop();
+            modelViewStack.popMatrix();
             RenderSystem.applyModelViewMatrix();
 
             RenderSystem.restoreProjectionMatrix();
@@ -231,7 +233,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
                 }
 
                 if (blockEntity instanceof InWorldTooltipProvider statProvider) {
-                    statProvider.updateTooltipEntries(this.focusViewTime == 0, client.getLastFrameDuration());
+                    statProvider.updateTooltipEntries(this.focusViewTime == 0, client.getRenderTickCounter().getLastFrameDuration());
 
                     var entries = new ArrayList<InWorldTooltipProvider.Entry>();
                     statProvider.appendTooltipEntries(entries);

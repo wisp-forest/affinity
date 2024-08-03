@@ -1,10 +1,10 @@
 package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinitySoundEvents;
 import net.minecraft.advancement.criterion.Criteria;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -12,7 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
-import net.minecraft.potion.PotionUtil;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
@@ -23,7 +23,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -43,7 +42,7 @@ public class SatiatingPotionItem extends Item {
     }
 
     @Override
-    public int getMaxUseTime(ItemStack stack) {
+    public int getMaxUseTime(ItemStack stack, LivingEntity user) {
         return MAX_USE_TIME;
     }
 
@@ -75,8 +74,8 @@ public class SatiatingPotionItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        PotionUtil.buildTooltip(List.of(EFFECT.get()), tooltip, 1f, world != null ? world.getTickManager().getTickRate() : 20f);
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        PotionUtil.buildTooltip(List.of(EFFECT.get()), tooltip, 1f, context.getUpdateTickRate());
     }
 
     @Override

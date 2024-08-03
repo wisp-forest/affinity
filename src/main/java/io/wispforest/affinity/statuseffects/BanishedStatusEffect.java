@@ -4,19 +4,22 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.item.EchoShardExtension;
 import io.wispforest.affinity.misc.EntityTeleporter;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.potion.PotionUtil;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,13 +31,16 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
 
     static {
         if (Affinity.onClient()) {
-            ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
+            ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
                 if (PotionUtil.getPotionEffects(stack).stream().noneMatch(x -> x.getEffectType() == AffinityStatusEffects.BANISHED)) {
                     return;
                 }
-                if (!stack.has(PotionMixture.EXTRA_DATA)) return;
 
-                EchoShardExtension.formatLocationTooltip(stack.get(PotionMixture.EXTRA_DATA), lines);
+                var location = stack.get(EchoShardExtension.COMPONENT);
+
+                if (location == null) return;
+
+                EchoShardExtension.formatLocationTooltip(location, lines);
             });
         }
     }
@@ -62,20 +68,23 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
     }
 
     @Override
-    public void onPotionApplied(LivingEntity target, @Nullable NbtCompound extraData) {
+    public void onPotionApplied(LivingEntity target, @Nullable ComponentMap extraData) {
         if (extraData == null) return;
         if (target.getWorld().isClient) return;
 
-        if (target.hasStatusEffect(AffinityStatusEffects.BANISHED)) {
-            target.removeStatusEffectInternal(AffinityStatusEffects.BANISHED);
+        // TODO: migrate AffinityStatusEffects to registry entries
+        RegistryEntry<StatusEffect> banishedEntry = Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.BANISHED);
+        if (target.hasStatusEffect(banishedEntry)) {
+            target.removeStatusEffectInternal(banishedEntry);
         }
 
         var component = target.getComponent(AffinityComponents.BANISHMENT);
         component.pos = target.getBlockPos();
         component.dimension = target.getWorld().getRegistryKey().getValue();
 
-        var pos = extraData.get(EchoShardExtension.POS);
-        var targetWorldId = extraData.get(EchoShardExtension.WORLD);
+        var location = extraData.get(EchoShardExtension.COMPONENT);
+        var pos = location.pos();
+        var targetWorldId = location.world();
         var targetWorld = target.getServer().getWorld(RegistryKey.of(RegistryKeys.WORLD, targetWorldId));
 
         if (targetWorld == null) return;

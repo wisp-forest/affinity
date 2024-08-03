@@ -28,6 +28,7 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
     }
 
     public static void createLayers() {
+        // this needs to be moved to some place after dynamic registry init
         Registries.ENCHANTMENT.stream()
                 .filter(enchantment -> enchantment instanceof AbsoluteEnchantment)
                 .map(AbsoluteEnchantment.class::cast)

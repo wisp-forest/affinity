@@ -95,9 +95,10 @@ public class SkyCaptureBuffer extends RenderLayer {
     public static void draw() {
         RenderSystem.backupProjectionMatrix();
 
-        GameRenderer.getPositionTexColorNormalProgram().bind();
+        // TODO: what does this mean
+//        GameRenderer.getPositionTexColorNormalProgram().bind();
         var blockTarget = GlStateManager.getBoundFramebuffer();
-        GameRenderer.getPositionTexColorNormalProgram().unbind();
+//        GameRenderer.getPositionTexColorNormalProgram().unbind();
 
         skyStencil.beginWrite(true);
 

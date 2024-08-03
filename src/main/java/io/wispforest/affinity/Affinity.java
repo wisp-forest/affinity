@@ -23,7 +23,7 @@ import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
@@ -34,7 +34,7 @@ import net.minecraft.loot.LootPool;
 import net.minecraft.loot.condition.EntityPropertiesLootCondition;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.LootingEnchantLootFunction;
+import net.minecraft.loot.function.EnchantedCountIncreaseLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.predicate.entity.EntityEquipmentPredicate;
@@ -104,12 +104,13 @@ public class Affinity implements ModInitializer {
 
         AffinityItemGroup.group().initialize();
 
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, builder, source) -> {
-            if (!EntityType.WARDEN.getLootTableId().equals(id)) return;
+        LootTableEvents.MODIFY.register((key, builder, source, registries) -> {
+            if (!EntityType.WARDEN.getLootTableId().equals(key)) return;
+
             builder.pool(LootPool.builder()
-                    .with(ItemEntry.builder(AffinityItems.RESONANCE_CRYSTAL).apply(LootingEnchantLootFunction.builder(UniformLootNumberProvider.create(0, .75f))))
+                    .with(ItemEntry.builder(AffinityItems.RESONANCE_CRYSTAL).apply(EnchantedCountIncreaseLootFunction.builder(registries, UniformLootNumberProvider.create(0, .75f))))
                     .conditionally(EntityPropertiesLootCondition.builder(
-                            LootContext.EntityTarget.KILLER_PLAYER, EntityPredicate.Builder.create()
+                            LootContext.EntityTarget.ATTACKING_PLAYER, EntityPredicate.Builder.create()
                                     .equipment(EntityEquipmentPredicate.Builder.create()
                                             .mainhand(ItemPredicate.Builder.create().tag(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades"))))
                                             .build()))
@@ -121,7 +122,7 @@ public class Affinity implements ModInitializer {
     }
 
     public static Identifier id(String path) {
-        return new Identifier(MOD_ID, path);
+        return Identifier.of(MOD_ID, path);
     }
 
     public static String idPlain(String path) {

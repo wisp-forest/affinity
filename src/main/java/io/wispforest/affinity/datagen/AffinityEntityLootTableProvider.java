@@ -10,22 +10,27 @@ import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.LootingEnchantLootFunction;
+import net.minecraft.loot.function.EnchantedCountIncreaseLootFunction;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-import net.minecraft.util.Identifier;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryWrapper;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 public class AffinityEntityLootTableProvider extends SimpleFabricLootTableProvider {
 
-    public AffinityEntityLootTableProvider(FabricDataOutput dataOutput) {
-        super(dataOutput, LootContextTypes.ENTITY);
+    private final CompletableFuture<RegistryWrapper.WrapperLookup> registryLookupFuture;
+
+    public AffinityEntityLootTableProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+        super(output, registryLookup, LootContextTypes.ENTITY);
+        this.registryLookupFuture = registryLookup;
     }
 
     @Override
-    public void accept(BiConsumer<Identifier, LootTable.Builder> consumer) {
+    public void accept(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> consumer) {
         forEntity(consumer, AffinityEntities.INERT_WISP, itemWithLooting(AffinityItems.INERT_WISP_MATTER, 3));
         forEntity(consumer, AffinityEntities.VICIOUS_WISP, itemWithLooting(AffinityItems.VICIOUS_WISP_MATTER, 1));
         forEntity(consumer, AffinityEntities.WISE_WISP, itemWithLooting(AffinityItems.WISE_WISP_MATTER, 2));
@@ -36,12 +41,12 @@ public class AffinityEntityLootTableProvider extends SimpleFabricLootTableProvid
                 .rolls(ConstantLootNumberProvider.create(1))
                 .with(ItemEntry.builder(item)
                         .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1, maxCount)))
-                        .apply(LootingEnchantLootFunction.builder(UniformLootNumberProvider.create(0.0F, 1.0F)))
+                        .apply(EnchantedCountIncreaseLootFunction.builder(registryLookupFuture.resultNow(), UniformLootNumberProvider.create(0.0F, 1.0F)))
                 )
         );
     }
 
-    private void forEntity(BiConsumer<Identifier, LootTable.Builder> consumer, EntityType<?> type, LootTable.Builder table) {
+    private void forEntity(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> consumer, EntityType<?> type, LootTable.Builder table) {
         consumer.accept(type.getLootTableId(), table);
     }
 }

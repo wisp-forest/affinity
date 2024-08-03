@@ -16,6 +16,7 @@ import net.minecraft.registry.Registry;
 
 import java.util.function.BiFunction;
 
+// TODO: migrate to RegistryEntry
 public class AffinityStatusEffects {
 
     public static final StatusEffect LIFE_LEECH = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0xFF0000);

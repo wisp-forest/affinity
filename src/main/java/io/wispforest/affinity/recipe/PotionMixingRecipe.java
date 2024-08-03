@@ -2,8 +2,11 @@ package io.wispforest.affinity.recipe;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.wispforest.affinity.misc.potion.ExtraPotionData;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
@@ -105,22 +108,20 @@ public class PotionMixingRecipe implements Recipe<PotionMixingRecipe.Input> {
     }
 
     public PotionMixture craftPotion(List<ItemStack> inputStacks) {
-        var extraNbt = new NbtCompound();
+        var extraData = new ComponentMapImpl(ComponentMap.EMPTY);
 
         if (this.copyComponentsIndex != -1) {
             var copyNbtIngredient = this.itemInputs.get(this.copyComponentsIndex);
             for (var stack : inputStacks) {
                 if (!copyNbtIngredient.test(stack)) continue;
 
-                if (stack.hasNbt()) {
-                    extraNbt.copyFrom(stack.getNbt());
-                }
+                ExtraPotionData.copyExtraData(stack, extraData);
 
                 break;
             }
         }
 
-        return new PotionMixture(this.potionOutput(), extraNbt.isEmpty() ? null : extraNbt);
+        return new PotionMixture(this.potionOutput(), extraData);
     }
 
     @Override

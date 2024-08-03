@@ -23,6 +23,7 @@ import net.minecraft.util.math.Direction;
 
 public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
+    // TODO: move these to data components
     public static final KeyedEndec<BlockState> CONTAINED_STATE_KEY = CodecUtils.toEndec(BlockState.CODEC).keyed("ContainedState", (BlockState) null);
     public static final KeyedEndec<NbtCompound> CONTAINED_BLOCK_ENTITY_KEY = NbtEndec.COMPOUND.keyed("ContainedBlockEntity", (NbtCompound) null);
 

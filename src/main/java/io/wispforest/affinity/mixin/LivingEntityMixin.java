@@ -2,6 +2,7 @@ package io.wispforest.affinity.mixin;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.llamalad7.mixinextras.sugar.Local;
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.VoidBeaconBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
@@ -56,8 +57,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Unique
     private static final EntityAttributeModifier AETHUM_OVERCHARGED_MODIFIER = new EntityAttributeModifier(
-            UUID.fromString("6acefb00-b5f8-4dd3-b616-e8bc9d0c6891"),
-            "aethum_overcharged", 2, EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+            Affinity.id("aethum_overcharge"), 2, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
     );
 
     public LivingEntityMixin(EntityType<?> type, World world) {

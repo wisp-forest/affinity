@@ -9,8 +9,6 @@ import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.type.BlockSetTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.type.WoodTypeBuilder;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
@@ -64,12 +62,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AETHUM_PROBE = new AethumProbeBlock();
     public static final Block FIELD_COHERENCE_MODULATOR = new FieldCoherenceModulatorBlock();
     public static final Block HOLOGRAPHIC_STEREOPTICON = new HolographicStereopticonBlock();
-    public static final Block EMERALD_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.EMERALD_BLOCK));
+    public static final Block EMERALD_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.EMERALD_BLOCK));
     public static final Block VOID_BEACON = new VoidBeaconBlock();
     public static final Block GRAVITON_TRANSDUCER = new GravitonTransducerBlock();
     public static final Block ETHEREAL_AETHUM_FLUX_NODE = new EtherealAethumFluxNodeBlock();
     public static final Block ETHEREAL_AETHUM_FLUX_INJECTOR = new EtherealAethumFluxInjectorBlock();
-    public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
+    public static final Block INFUSED_STONE = new Block(AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
 
     public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 
@@ -83,28 +81,28 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final BlockSetType AZALEA_BLOCK_SET_TYPE = BlockSetTypeBuilder.copyOf(BlockSetType.OAK).register(Affinity.id("azalea"));
     public static final WoodType AZALEA_WOOD_TYPE = WoodTypeBuilder.copyOf(WoodType.OAK).register(Affinity.id("azalea"), AZALEA_BLOCK_SET_TYPE);
 
-    public static final Block AZALEA_LOG = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG));
-    public static final Block AZALEA_WOOD = new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD));
-    public static final Block STRIPPED_AZALEA_LOG = new PillarBlock(FabricBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG));
-    public static final Block STRIPPED_AZALEA_WOOD = new PillarBlock(FabricBlockSettings.copyOf(Blocks.STRIPPED_OAK_WOOD));
-    public static final Block AZALEA_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS));
-    public static final Block AZALEA_STAIRS = new StairsBlock(AZALEA_PLANKS.getDefaultState(), FabricBlockSettings.copyOf(Blocks.OAK_STAIRS));
-    public static final Block AZALEA_SLAB = new SlabBlock(FabricBlockSettings.copyOf(Blocks.OAK_SLAB));
-    public static final Block AZALEA_FENCE = new FenceBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE));
-    public static final Block AZALEA_FENCE_GATE = new FenceGateBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE));
-    public static final Block AZALEA_DOOR = new DoorBlock(AZALEA_BLOCK_SET_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_DOOR));
-    public static final Block AZALEA_TRAPDOOR = new TrapdoorBlock(AZALEA_BLOCK_SET_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR));
-    public static final Block AZALEA_PRESSURE_PLATE = new PressurePlateBlock(AZALEA_BLOCK_SET_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE));
-    public static final Block AZALEA_BUTTON = new ButtonBlock(AZALEA_BLOCK_SET_TYPE, 30, FabricBlockSettings.copyOf(Blocks.OAK_BUTTON));
+    public static final Block AZALEA_LOG = new PillarBlock(AbstractBlock.Settings.copy(Blocks.OAK_LOG));
+    public static final Block AZALEA_WOOD = new PillarBlock(AbstractBlock.Settings.copy(Blocks.OAK_WOOD));
+    public static final Block STRIPPED_AZALEA_LOG = new PillarBlock(AbstractBlock.Settings.copy(Blocks.STRIPPED_OAK_LOG));
+    public static final Block STRIPPED_AZALEA_WOOD = new PillarBlock(AbstractBlock.Settings.copy(Blocks.STRIPPED_OAK_WOOD));
+    public static final Block AZALEA_PLANKS = new Block(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS));
+    public static final Block AZALEA_STAIRS = new StairsBlock(AZALEA_PLANKS.getDefaultState(), AbstractBlock.Settings.copy(Blocks.OAK_STAIRS));
+    public static final Block AZALEA_SLAB = new SlabBlock(AbstractBlock.Settings.copy(Blocks.OAK_SLAB));
+    public static final Block AZALEA_FENCE = new FenceBlock(AbstractBlock.Settings.copy(Blocks.OAK_FENCE));
+    public static final Block AZALEA_FENCE_GATE = new FenceGateBlock(AZALEA_WOOD_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_FENCE_GATE));
+    public static final Block AZALEA_DOOR = new DoorBlock(AZALEA_BLOCK_SET_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_DOOR));
+    public static final Block AZALEA_TRAPDOOR = new TrapdoorBlock(AZALEA_BLOCK_SET_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_TRAPDOOR));
+    public static final Block AZALEA_PRESSURE_PLATE = new PressurePlateBlock(AZALEA_BLOCK_SET_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_PRESSURE_PLATE));
+    public static final Block AZALEA_BUTTON = new ButtonBlock(AZALEA_BLOCK_SET_TYPE, 30, AbstractBlock.Settings.copy(Blocks.OAK_BUTTON));
 
-    @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
-    @NoBlockItem public static final Block AZALEA_HANGING_SIGN = new HangingSignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
-    @NoBlockItem public static final Block AZALEA_WALL_HANGING_SIGN = new WallHangingSignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
-    @NoBlockItem public static final Block AZALEA_WALL_SIGN = new WallSignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
+    @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(AZALEA_WOOD_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_SIGN));
+    @NoBlockItem public static final Block AZALEA_HANGING_SIGN = new HangingSignBlock(AZALEA_WOOD_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_SIGN));
+    @NoBlockItem public static final Block AZALEA_WALL_HANGING_SIGN = new WallHangingSignBlock(AZALEA_WOOD_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_SIGN));
+    @NoBlockItem public static final Block AZALEA_WALL_SIGN = new WallSignBlock(AZALEA_WOOD_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_SIGN));
 
     @NoBlockItem public static final FluidBlock ARCANE_FADE = new ArcaneFadeBlock();
     public static final Block THE_SKY = new TheSkyBlock();
-    public static final Block INVERSION_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE));
+    public static final Block INVERSION_STONE = new Block(AbstractBlock.Settings.copy(Blocks.STONE));
 
     public static final Block BUDDING_AZALEA_LEAVES = new BuddingAzaleaLeavesBlock();
     public static final Block UNFLOWERING_AZALEA_LEAVES = new UnfloweringAzaleaLeavesBlock();
@@ -240,8 +238,8 @@ public class AffinityBlocks implements BlockRegistryContainer {
             return (Class<BlockEntityType<?>>) (Object) BlockEntityType.class;
         }
 
-        private static <T extends BlockEntity> BlockEntityType<T> make(FabricBlockEntityTypeBuilder.Factory<T> factory, Block... blocks) {
-            return FabricBlockEntityTypeBuilder.create(factory, blocks).build();
+        private static <T extends BlockEntity> BlockEntityType<T> make(BlockEntityType.BlockEntityFactory<T> factory, Block... blocks) {
+            return BlockEntityType.Builder.create(factory, blocks).build();
         }
     }
 
@@ -269,7 +267,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
                 ? provider::createBlockItem
                 : BlockItem::new;
 
-        Registry.register(Registries.ITEM, new Identifier(namespace, identifier),
+        Registry.register(Registries.ITEM, Identifier.of(namespace, identifier),
                 factory.apply(value, new OwoItemSettings()));
     }
 

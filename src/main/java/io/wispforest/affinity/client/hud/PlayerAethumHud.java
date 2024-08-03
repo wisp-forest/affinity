@@ -11,6 +11,7 @@ import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.hud.Hud;
 import io.wispforest.owo.ui.util.Delta;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
@@ -95,16 +96,15 @@ public class PlayerAethumHud {
                 AffinityClient.DOWNSAMPLE_PROGRAM.use();
 
                 var transform = context.getMatrices().peek().getPositionMatrix();
-                var buffer = Tessellator.getInstance().getBuffer();
+                var buffer = Tessellator.getInstance().begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
 
-                buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-                buffer.vertex(transform, 0f, 0f, 0f).next();
-                buffer.vertex(transform, 0f, 1f * client.getWindow().getScaledHeight(), 0f).next();
-                buffer.vertex(transform, 1f * client.getWindow().getScaledWidth(), 1f * client.getWindow().getScaledHeight(), 0f).next();
-                buffer.vertex(transform, 1f * client.getWindow().getScaledWidth(), 0f, 0f).next();
+                buffer.vertex(transform, 0f, 0f, 0f);
+                buffer.vertex(transform, 0f, 1f * client.getWindow().getScaledHeight(), 0f);
+                buffer.vertex(transform, 1f * client.getWindow().getScaledWidth(), 1f * client.getWindow().getScaledHeight(), 0f);
+                buffer.vertex(transform, 1f * client.getWindow().getScaledWidth(), 0f, 0f);
 
                 GlStateManager._depthMask(false);
-                Tessellator.getInstance().draw();
+                BufferRenderer.drawWithGlobalProgram(buffer.end());
                 GlStateManager._depthMask(true);
             }
 

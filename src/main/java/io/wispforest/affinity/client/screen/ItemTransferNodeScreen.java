@@ -15,6 +15,7 @@ import io.wispforest.owo.ui.util.UISounds;
 import io.wispforest.owo.util.Observable;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.OrderedText;
@@ -88,7 +89,7 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
         });
 
         if (!stack.isEmpty()) {
-            var tooltip = ItemComponent.tooltipFromItem(stack, this.client.player, null);
+            var tooltip = ItemComponent.tooltipFromItem(stack, Item.TooltipContext.create(this.client.world), this.client.player, null);
             tooltip.add(TooltipComponent.of(OrderedText.empty()));
             tooltip.add(TooltipComponent.of(Text.translatable("block.affinity.item_transfer_node.clear_filter_hint").formatted(Formatting.GRAY).asOrderedText()));
 

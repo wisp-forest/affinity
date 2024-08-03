@@ -3,6 +3,8 @@ package io.wispforest.affinity.mixin;
 import io.wispforest.affinity.item.ResplendentGemItem;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityItems;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.*;
@@ -41,10 +43,12 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
         this.levelCost.set(30);
     }
 
-    @ModifyArg(method = {"updateResult", "setNewItemName"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setCustomName(Lnet/minecraft/text/Text;)Lnet/minecraft/item/ItemStack;"))
-    private @Nullable Text applyIlliteracy(@Nullable Text name) {
+    @ModifyArg(method = {"updateResult", "setNewItemName"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;"))
+    private @Nullable Object applyIlliteracy(ComponentType<?> type, @Nullable Object name) {
+        if (type != DataComponentTypes.CUSTOM_NAME) return name;
         if (!this.isIlliterate()) return name;
-        return name.copy().styled(style -> style.withObfuscated(true));
+
+        return ((Text) name).copy().styled(style -> style.withObfuscated(true));
     }
 
     @Unique

@@ -6,17 +6,14 @@ import io.wispforest.affinity.misc.callback.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.item.*;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.world.World;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +28,7 @@ public class MangroveBasketItem extends BlockItem {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        if (BlockItem.getBlockEntityNbt(context.getStack()) != null) {
+        if (context.getStack().get(DataComponentTypes.BLOCK_ENTITY_DATA) != null) {
             return this.place(new ItemPlacementContext(context));
         } else {
             return this.place(new BasketPlacementContext(context));
@@ -41,7 +38,7 @@ public class MangroveBasketItem extends BlockItem {
     @Nullable
     @Override
     protected BlockState getPlacementState(ItemPlacementContext context) {
-        if (BlockItem.getBlockEntityNbt(context.getStack()) == null) {
+        if (context.getStack().get(DataComponentTypes.BLOCK_ENTITY_DATA) == null) {
             var currentState = context.getWorld().getBlockState(context.getBlockPos());
 
             if (currentState.isIn(MANGROVE_BASKET_BLACKLIST)) return null;
@@ -52,16 +49,16 @@ public class MangroveBasketItem extends BlockItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        var nbt = BlockItem.getBlockEntityNbt(stack);
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
+        var nbt = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA);
         if (nbt == null) return;
 
-        tooltip.add(nbt.get(MangroveBasketBlockEntity.CONTAINED_STATE_KEY).getBlock().getName().formatted(Formatting.GRAY));
+        tooltip.add(nbt.getNbt().get(MangroveBasketBlockEntity.CONTAINED_STATE_KEY).getBlock().getName().formatted(Formatting.GRAY));
     }
 
     @Override
     protected boolean place(ItemPlacementContext context, BlockState state) {
-        var nbt = BlockItem.getBlockEntityNbt(context.getStack());
+        var nbt = context.getStack().get(DataComponentTypes.BLOCK_ENTITY_DATA);
 
         if (nbt != null) {
             return super.place(context, state);

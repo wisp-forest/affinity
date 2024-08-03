@@ -18,6 +18,7 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.block.Blocks;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -92,7 +93,7 @@ public class PotionMixingCategory implements DisplayCategory<PotionMixingDisplay
         potionNbt.put(BrewingCauldronBlockEntity.FILL_LEVEL_KEY, 3);
         potionNbt.put(
                 BrewingCauldronBlockEntity.STORED_POTION_KEY,
-                new PotionMixture(display.recipe.potionOutput(), null)
+                new PotionMixture(display.recipe.potionOutput(), ComponentMap.EMPTY)
         );
 
         root.child(

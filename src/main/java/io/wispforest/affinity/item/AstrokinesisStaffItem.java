@@ -13,6 +13,7 @@ import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.serialization.CodecUtils;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -75,9 +76,12 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
         BlockPos targetPos = null;
         for (var view : storageBelow) {
             if (!view.getResource().isOf(Items.ECHO_SHARD)) continue;
-            if (!view.getResource().hasNbt()) continue;
 
-            targetPos = EchoShardExtension.tryGetLocationInWorld(world, view.getResource().getNbt());
+            // TODO: fabric transfer api is dumb. this shouldn't allocate every tick
+            var components = new ComponentMapImpl(view.getResource().getItem().getComponents());
+            components.applyChanges(view.getResource().getComponents());
+
+            targetPos = EchoShardExtension.tryGetLocationInWorld(world, () -> components);
             if (targetPos != null) break;
         }
 

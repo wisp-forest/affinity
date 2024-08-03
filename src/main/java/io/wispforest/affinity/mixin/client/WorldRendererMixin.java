@@ -87,7 +87,7 @@ public abstract class WorldRendererMixin {
 
         this.affinity$asteroidOriginAge += Delta.compute(this.affinity$asteroidOriginAge, canFreezeStars ? 1f : 0f, delta);
 
-        boolean performingAstrokinesis = player.getActiveItem().has(AstrokinesisStaffItem.PERFORMING_ASTROKINESIS);
+        boolean performingAstrokinesis = player.getActiveItem().contains(AstrokinesisStaffItem.PERFORMING_ASTROKINESIS);
         if (!canFreezeStars || !performingAstrokinesis) {
             for (var star : this.affinity$stars) {
                 if (performingAstrokinesis) {
