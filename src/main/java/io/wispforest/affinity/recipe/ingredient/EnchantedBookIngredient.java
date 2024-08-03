@@ -1,18 +1,24 @@
 package io.wispforest.affinity.recipe.ingredient;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityIngredients;
 import io.wispforest.endec.Endec;
+import io.wispforest.owo.serialization.CodecUtils;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.Codecs;
@@ -24,11 +30,11 @@ public class EnchantedBookIngredient implements CustomIngredient {
 
     public static final Codec<EnchantmentLevelEntry> ENTRY_CODEC = RecordCodecBuilder.create(instance -> instance
             .group(
-                    Registries.ENCHANTMENT.getCodec().fieldOf("id").forGetter(entry -> entry.enchantment),
-                    Codecs.createStrictOptionalFieldCodec(Codec.INT, "level", 1).forGetter(entry -> entry.level)
+                    Enchantment.ENTRY_CODEC.fieldOf("id").forGetter(entry -> entry.enchantment),
+                    Codec.INT.optionalFieldOf("level", 1).forGetter(entry -> entry.level)
             ).apply(instance, EnchantmentLevelEntry::new));
 
-    public static final Endec<EnchantedBookIngredient> ENDEC = RecordCodecBuilder.create(instance -> instance
+    public static final MapCodec<EnchantedBookIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(ENTRY_CODEC.listOf().fieldOf("enchantments").forGetter(o -> o.requiredEnchantments))
             .apply(instance, EnchantedBookIngredient::new));
 
@@ -42,21 +48,21 @@ public class EnchantedBookIngredient implements CustomIngredient {
     public boolean test(ItemStack stack) {
         if (!stack.isOf(Items.ENCHANTED_BOOK)) return false;
 
-        var presentEnchantments = EnchantmentHelper.get(stack);
+        var presentEnchantments = EnchantmentHelper.getEnchantments(stack);
         for (var entry : this.requiredEnchantments) {
-            if (!Objects.equals(presentEnchantments.get(entry.enchantment), entry.level)) {
+            if (!Objects.equals(presentEnchantments.getLevel(entry.enchantment), entry.level)) {
                 return false;
             }
         }
 
-        return presentEnchantments.size() == this.requiredEnchantments.size();
+        return presentEnchantments.getSize() == this.requiredEnchantments.size();
     }
 
     @Override
     public List<ItemStack> getMatchingStacks() {
         var stack = Items.ENCHANTED_BOOK.getDefaultStack();
         for (var entry : this.requiredEnchantments) {
-            EnchantedBookItem.addEnchantment(stack, entry);
+            stack.addEnchantment(entry.enchantment, entry.level);
         }
 
         return List.of(stack);
@@ -80,21 +86,14 @@ public class EnchantedBookIngredient implements CustomIngredient {
         }
 
         @Override
-        public Codec<EnchantedBookIngredient> getCodec(boolean allowEmpty) {
+        public MapCodec<EnchantedBookIngredient> getCodec(boolean allowEmpty) {
             return EnchantedBookIngredient.CODEC;
         }
 
         @Override
-        public EnchantedBookIngredient read(PacketByteBuf buf) {
-            return new EnchantedBookIngredient(buf.readList($ -> new EnchantmentLevelEntry(buf.readRegistryValue(Registries.ENCHANTMENT), buf.readShort())));
-        }
-
-        @Override
-        public void write(PacketByteBuf buf, EnchantedBookIngredient ingredient) {
-            buf.writeCollection(ingredient.requiredEnchantments, (packetByteBuf, entry) -> {
-                buf.writeRegistryValue(Registries.ENCHANTMENT, entry.enchantment);
-                buf.writeShort(entry.level);
-            });
+        public PacketCodec<RegistryByteBuf, EnchantedBookIngredient> getPacketCodec() {
+            // TODO: move this to endecs.
+            return PacketCodecs.unlimitedRegistryCodec(EnchantedBookIngredient.CODEC.codec());
         }
     }
 }

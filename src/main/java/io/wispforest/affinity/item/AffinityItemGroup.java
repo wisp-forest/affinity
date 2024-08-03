@@ -160,9 +160,10 @@ public class AffinityItemGroup {
             entries.add(EMERALD_CHESTPLATE);
             entries.add(EMERALD_LEGGINGS);
             entries.add(EMERALD_BOOTS);
-            entries.add(ResplendentGemItem.make(AffinityEnchantments.BERSERKER));
-            entries.add(ResplendentGemItem.make(AffinityEnchantments.GRAVECALLER));
-            entries.add(ResplendentGemItem.make(AffinityEnchantments.BASTION));
+            // TODO: re-enable when these enchantments are added
+//            entries.add(ResplendentGemItem.make(AffinityEnchantments.BERSERKER, context.lookup()));
+//            entries.add(ResplendentGemItem.make(AffinityEnchantments.GRAVECALLER, context.lookup()));
+//            entries.add(ResplendentGemItem.make(AffinityEnchantments.BASTION, context.lookup()));
 
             context.lookup().getOptionalWrapper(RegistryKeys.ENCHANTMENT).ifPresent(wrapper -> {
                 wrapper.streamEntries()

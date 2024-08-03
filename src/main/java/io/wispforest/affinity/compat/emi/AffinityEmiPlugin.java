@@ -44,7 +44,7 @@ public class AffinityEmiPlugin implements EmiPlugin {
     public static final EmiRecipeCategory POTION_MIXING = new AffinityEmiRecipeCategory(Affinity.id("potion_mixing"), EmiStack.of(AffinityBlocks.BREWING_CAULDRON));
     public static final EmiRecipeCategory CONTAINING_POTIONS = new AffinityEmiRecipeCategory(Affinity.id("containing_potions"), Util.make(() -> {
         ItemStack stack = new ItemStack(Items.POTION);
-        PotionUtil.setPotion(stack, Potions.STRENGTH);
+        PotionUtil.setPotion(stack, Potions.STRENGTH.value());
         return EmiStack.of(stack);
     }));
     public static final EmiRecipeCategory SPIRIT_ASSIMILATION = new AffinityEmiRecipeCategory(Affinity.id("spirit_assimilation"), EmiStack.of(AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS));
@@ -83,7 +83,7 @@ public class AffinityEmiPlugin implements EmiPlugin {
         var effectToPotion = new HashMap<StatusEffect, List<Potion>>();
         for (var potion : Registries.POTION) {
             for (var effectInst : potion.getEffects()) {
-                effectToPotion.computeIfAbsent(effectInst.getEffectType(), unused -> new ArrayList<>()).add(potion);
+                effectToPotion.computeIfAbsent(effectInst.getEffectType().value(), unused -> new ArrayList<>()).add(potion);
             }
         }
 

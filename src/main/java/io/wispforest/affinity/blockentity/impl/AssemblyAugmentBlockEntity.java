@@ -13,8 +13,10 @@ import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.ItemOps;
+import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,6 +38,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -266,7 +269,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
         super.writeNbt(nbt, registries);
 
         Inventories.writeNbt(nbt, this.inventory.heldStacks, registries);
-        nbt.put(TEMPLATE_KEY, this.templateInventory.getStack(0));
+        nbt.put(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), TEMPLATE_KEY, this.templateInventory.getStack(0));
     }
 
     public int displayTreetaps() {

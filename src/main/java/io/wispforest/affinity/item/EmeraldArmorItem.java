@@ -13,6 +13,8 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.Util;
@@ -23,25 +25,27 @@ import java.util.UUID;
 
 public class EmeraldArmorItem extends ArmorItem {
 
-    private final Multimap<EntityAttribute, EntityAttributeModifier> modifiers;
+//    private final Multimap<EntityAttribute, EntityAttributeModifier> modifiers;
 
     public EmeraldArmorItem(Type type) {
-        super(Material.INSTANCE, type, AffinityItems.settings().maxCount(1).rarity(Rarity.UNCOMMON));
+        super(MATERIAL, type, AffinityItems.settings().maxCount(1).rarity(Rarity.UNCOMMON));
 
-        this.modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder().putAll(super.getAttributeModifiers(this.getSlotType()))
-                .put(AffinityEntityAttributes.DAMAGE_TAKEN, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes, season 2", 1, EntityAttributeModifier.Operation.ADDITION))
-                .put(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes, season 2, part two", 1, EntityAttributeModifier.Operation.ADDITION))
-                .build();
+        // TODO: update this to how attribute modifiers work now.
+
+//        this.modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder().putAll(super.getAttributeModifiers(this.getSlotType()))
+//                .put(AffinityEntityAttributes.DAMAGE_TAKEN, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes, season 2", 1, EntityAttributeModifier.Operation.ADDITION))
+//                .put(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes, season 2, part two", 1, EntityAttributeModifier.Operation.ADDITION))
+//                .build();
     }
 
-    @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        return slot == this.getSlotType() ? this.modifiers : super.getAttributeModifiers(slot);
-    }
+//    @Override
+//    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
+//        return slot == this.getSlotType() ? this.modifiers : super.getAttributeModifiers(slot);
+//    }
 
-    public static final ArmorMaterial MATERIAL = new ArmorMaterial(
+    public static final RegistryEntry<ArmorMaterial> MATERIAL = Registry.registerReference(Registries.ARMOR_MATERIAL, Affinity.id("emerald"), new ArmorMaterial(
         Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
-            // ??? adapt this to how the emerald material works
+            // TODO: ??? adapt this to how the emerald material works
             map.put(ArmorItem.Type.BOOTS, 1);
             map.put(ArmorItem.Type.LEGGINGS, 2);
             map.put(ArmorItem.Type.CHESTPLATE, 3);
@@ -54,7 +58,7 @@ public class EmeraldArmorItem extends ArmorItem {
         List.of(new ArmorMaterial.Layer(Affinity.id("emerald"))),
         -2,
         -5
-    );
+    ));
 
 //    public enum Material implements ArmorMaterial {
 //        INSTANCE;

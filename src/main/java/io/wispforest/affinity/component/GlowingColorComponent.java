@@ -2,6 +2,8 @@ package io.wispforest.affinity.component;
 
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.owo.serialization.CodecUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
@@ -10,6 +12,7 @@ import org.ladysnake.cca.api.v3.component.Component;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 public class GlowingColorComponent implements Component, AutoSyncedComponent {
+    private static final KeyedEndec<DyeColor> COLOR_KEY = CodecUtils.toEndec(DyeColor.CODEC).keyed("Color", (DyeColor) null);
 
     private final Entity provider;
     private DyeColor color = null;
@@ -20,12 +23,12 @@ public class GlowingColorComponent implements Component, AutoSyncedComponent {
 
     @Override
     public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
-        this.color = tag.get(GlowingPotion.COLOR_KEY);
+        this.color = tag.get(COLOR_KEY);
     }
 
     @Override
     public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries) {
-        tag.putIfNotNull(SerializationContext.empty(), GlowingPotion.COLOR_KEY, this.color);
+        tag.putIfNotNull(SerializationContext.empty(), COLOR_KEY, this.color);
     }
 
     public DyeColor color() {

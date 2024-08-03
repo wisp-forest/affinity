@@ -4,6 +4,8 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.ItemTransferNodeBlockEntity;
 import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
 import io.wispforest.owo.ui.component.CheckboxComponent;
 import io.wispforest.owo.ui.component.Components;
@@ -81,7 +83,8 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
 
     private void updateNodePreview(ItemStack stack) {
         var nodeNbt = new NbtCompound();
-        nodeNbt.put(ItemTransferNodeBlockEntity.FILTER_STACK_KEY, stack);
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of(client.world.getRegistryManager()));
+        nodeNbt.put(ctx, ItemTransferNodeBlockEntity.FILTER_STACK_KEY, stack);
 
         this.component(FlowLayout.class, "node-preview-anchor").<FlowLayout>configure(anchor -> {
             anchor.clearChildren();

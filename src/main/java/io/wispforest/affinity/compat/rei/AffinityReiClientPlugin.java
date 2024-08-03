@@ -30,6 +30,7 @@ import me.shedaniel.rei.plugin.common.displays.brewing.DefaultBrewingDisplay;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
@@ -98,7 +99,9 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
             var testStack = item.getDefaultStack();
             if (!MixinHooks.isMistInfusion(testStack, null)) continue;
 
-            BrewingRecipeRegistryAccessor.affinity$getPotionTypes()
+            var brewing = (BrewingRecipeRegistryAccessor) MinecraftClient.getInstance().world.getBrewingRecipeRegistry();
+
+            brewing.affinity$getPotionTypes()
                     .stream()
                     .flatMap(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStack::copy))
                     .forEach(potionStack -> {
@@ -132,7 +135,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
 
         for (Potion potion : Registries.POTION) {
             for (StatusEffectInstance effectInst : potion.getEffects()) {
-                effectToPotion.computeIfAbsent(effectInst.getEffectType(), unused -> new ArrayList<>()).add(potion);
+                effectToPotion.computeIfAbsent(effectInst.getEffectType().value(), unused -> new ArrayList<>()).add(potion);
             }
         }
 

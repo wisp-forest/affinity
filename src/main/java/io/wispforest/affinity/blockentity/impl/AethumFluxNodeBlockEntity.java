@@ -52,7 +52,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     private long lastTick = 0;
     private Collection<AethumNetworkMember> cachedMembers = null;
 
-    private final DefaultedList<ItemStack> outerShards = DefaultedList.ofSize(Affinity.CONFIG.maxFluxNodeShards(), ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> outerShards = DefaultedList.ofSize(Affinity.config().maxFluxNodeShards(), ItemStack.EMPTY);
     private int outerShardCount = 0;
     private boolean allLinksValid = false;
 
@@ -334,7 +334,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
 
-        NbtUtil.readItemStackList(nbt, "OuterShards", this.outerShards);
+        NbtUtil.readItemStackList(nbt, "OuterShards", this.outerShards, registries);
 
         updatePropertyCache();
         this.cachedMembers = null;
@@ -343,7 +343,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
-        NbtUtil.writeItemStackList(nbt, "OuterShards", this.outerShards);
+        NbtUtil.writeItemStackList(nbt, "OuterShards", this.outerShards, registries);
     }
 
     // -----------

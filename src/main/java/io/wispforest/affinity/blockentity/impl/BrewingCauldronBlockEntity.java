@@ -16,9 +16,11 @@ import io.wispforest.affinity.object.AffinityPoiTypes;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.recipe.PotionMixingRecipe;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.serialization.RegistriesAttribute;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CandleBlock;
@@ -31,6 +33,7 @@ import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -84,9 +87,10 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
 
-        nbt.put(STORED_POTION_KEY, this.storedPotion);
-        nbt.put(FILL_LEVEL_KEY, this.fillLevel);
-        nbt.put(PROCESS_TICK_KEY, this.processTick);
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries));
+        nbt.put(ctx, STORED_POTION_KEY, this.storedPotion);
+        nbt.put(ctx, FILL_LEVEL_KEY, this.fillLevel);
+        nbt.put(ctx, PROCESS_TICK_KEY, this.processTick);
         Inventories.writeNbt(nbt, this.items, registries);
     }
 

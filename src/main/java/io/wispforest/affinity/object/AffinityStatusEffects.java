@@ -13,6 +13,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
 
 import java.util.function.BiFunction;
 
@@ -34,9 +35,9 @@ public class AffinityStatusEffects {
     public static final StatusEffect STEADFAST = new AffinityStatusEffect(StatusEffectCategory.BENEFICIAL, 0x222222)
             .addAttributeModifier(
                     EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,
-                    "ea838142-499a-4460-b92c-a12d1e329b77",
+                    Affinity.id("steadfast_knockback_resistance"),
                     1,
-                    EntityAttributeModifier.Operation.ADDITION
+                    EntityAttributeModifier.Operation.ADD_VALUE
             );
 
     public static void register() {
@@ -50,12 +51,12 @@ public class AffinityStatusEffects {
 
         registerEffectAndPotions(FLIGHT, "flight", 2400, true, false);
 
-        registerPotions(StatusEffects.RESISTANCE, "resistance", 4800, true, true);
-        registerPotions(StatusEffects.GLOWING, "glowing", 9600, true, false, GlowingPotion::new);
-        registerPotions(StatusEffects.WITHER, "wither", 400, true, true);
-        registerPotions(StatusEffects.HUNGER, "hunger", 1200, true, true);
-        registerPotions(StatusEffects.LEVITATION, "levitation", 600, true, true);
-        registerPotions(StatusEffects.BLINDNESS, "blindness", 300, true, false);
+        registerPotions(StatusEffects.RESISTANCE.value(), "resistance", 4800, true, true);
+        registerPotions(StatusEffects.GLOWING.value(), "glowing", 9600, true, false, GlowingPotion::new);
+        registerPotions(StatusEffects.WITHER.value(), "wither", 400, true, true);
+        registerPotions(StatusEffects.HUNGER.value(), "hunger", 1200, true, true);
+        registerPotions(StatusEffects.LEVITATION.value(), "levitation", 600, true, true);
+        registerPotions(StatusEffects.BLINDNESS.value(), "blindness", 300, true, false);
 
         Registry.register(Registries.STATUS_EFFECT, Affinity.id("dripping"), DRIPPING);
         Registry.register(Registries.STATUS_EFFECT, Affinity.id("bastion_regeneration"), BASTION_REGENERATION);
@@ -80,13 +81,15 @@ public class AffinityStatusEffects {
     }
 
     private static void registerPotions(StatusEffect effect, String baseName, int baseDuration, boolean registerLong, boolean registerStrong, BiFunction<String, StatusEffectInstance, Potion> potionFactory) {
-        Registry.register(Registries.POTION, Affinity.id(baseName), potionFactory.apply(baseName, new StatusEffectInstance(effect, baseDuration)));
+        RegistryEntry<StatusEffect> effectEntry = Registries.STATUS_EFFECT.getEntry(effect);
+
+        Registry.register(Registries.POTION, Affinity.id(baseName), potionFactory.apply(baseName, new StatusEffectInstance(effectEntry, baseDuration)));
 
         if (registerLong) {
-            Registry.register(Registries.POTION, Affinity.id("long_" + baseName), potionFactory.apply(baseName, new StatusEffectInstance(effect, baseDuration * 2)));
+            Registry.register(Registries.POTION, Affinity.id("long_" + baseName), potionFactory.apply(baseName, new StatusEffectInstance(effectEntry, baseDuration * 2)));
         }
         if (registerStrong) {
-            Registry.register(Registries.POTION, Affinity.id("strong_" + baseName), potionFactory.apply(baseName, new StatusEffectInstance(effect, (int) (baseDuration * 0.5), 1)));
+            Registry.register(Registries.POTION, Affinity.id("strong_" + baseName), potionFactory.apply(baseName, new StatusEffectInstance(effectEntry, (int) (baseDuration * 0.5), 1)));
         }
     }
 

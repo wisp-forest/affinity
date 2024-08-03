@@ -95,14 +95,16 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
     }
 
     private static void repairIfEnchanted(ItemStack stack) {
-        if (EnchantmentHelper.getLevel(AffinityEnchantments.AFFINE, stack) < 1) return;
-        if (stack.getDamage() < 1) return;
+        // TODO: reenable when affine is ported.
 
-        stack.setDamage(stack.getDamage() - 1);
-        currentRepairCost.add(repairCostPerItem());
+//        if (EnchantmentHelper.getLevel(AffinityEnchantments.AFFINE, stack) < 1) return;
+//        if (stack.getDamage() < 1) return;
+//
+//        stack.setDamage(stack.getDamage() - 1);
+//        currentRepairCost.add(repairCostPerItem());
     }
 
     private static int repairCostPerItem() {
-        return Affinity.CONFIG.affineInfuserCostPerDurabilityPoint();
+        return Affinity.config().affineInfuserCostPerDurabilityPoint();
     }
 }

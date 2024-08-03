@@ -2,7 +2,6 @@ package io.wispforest.affinity.misc;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
-import io.wispforest.affinity.enchantment.impl.BerserkerEnchantment;
 import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
 import io.wispforest.affinity.item.WispMistItem;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
@@ -55,19 +54,20 @@ public class MixinHooks {
 
         float extraDamage = 0;
 
-        final var enchantments = EnchantmentHelper.get(attacker.getMainHandStack());
-        for (var enchantment : enchantments.keySet()) {
-            if (!(enchantment instanceof AffinityDamageEnchantment damageEnchantment)) continue;
-
-            final int level = enchantments.get(enchantment);
-            if (!damageEnchantment.shouldApplyDamage(level, attacker, target, baseAmount)) continue;
-
-            extraDamage += damageEnchantment.getExtraDamage(level, attacker, target, baseAmount);
-        }
-
-        if (AffinityEntityAddon.getData(attacker, BerserkerEnchantment.BERSERK_KEY)) {
-            extraDamage += (1 - (attacker.getHealth() / attacker.getMaxHealth())) * (1 - (attacker.getHealth() / attacker.getMaxHealth())) * 15;
-        }
+        // TODO: fix this when berserk is ported or when affinity damage enchantments are ported.
+//        final var enchantments = EnchantmentHelper.get(attacker.getMainHandStack());
+//        for (var enchantment : enchantments.keySet()) {
+//            if (!(enchantment instanceof AffinityDamageEnchantment damageEnchantment)) continue;
+//
+//            final int level = enchantments.get(enchantment);
+//            if (!damageEnchantment.shouldApplyDamage(level, attacker, target, baseAmount)) continue;
+//
+//            extraDamage += damageEnchantment.getExtraDamage(level, attacker, target, baseAmount);
+//        }
+//
+//        if (AffinityEntityAddon.getData(attacker, BerserkerEnchantment.BERSERK_KEY)) {
+//            extraDamage += (1 - (attacker.getHealth() / attacker.getMaxHealth())) * (1 - (attacker.getHealth() / attacker.getMaxHealth())) * 15;
+//        }
 
         return baseAmount + extraDamage;
     }

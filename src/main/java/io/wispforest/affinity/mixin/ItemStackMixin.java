@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin;
 
+import com.google.common.base.Suppliers;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.ChunkAethumComponent;

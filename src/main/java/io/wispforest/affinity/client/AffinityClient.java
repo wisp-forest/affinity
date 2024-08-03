@@ -15,10 +15,7 @@ import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.*;
 import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
-import io.wispforest.affinity.client.render.program.DepthMergeBlitProgram;
-import io.wispforest.affinity.client.render.program.DownsampleProgram;
-import io.wispforest.affinity.client.render.program.FizzleProgram;
-import io.wispforest.affinity.client.render.program.SolidFromFramebufferProgram;
+import io.wispforest.affinity.client.render.program.*;
 import io.wispforest.affinity.client.screen.*;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
@@ -68,10 +65,15 @@ import org.lwjgl.glfw.GLFW;
 public class AffinityClient implements ClientModInitializer {
 
     public static final DepthMergeBlitProgram DEPTH_MERGE_BLIT_PROGRAM = new DepthMergeBlitProgram();
-    public static final SolidFromFramebufferProgram SOLID_FROM_FRAMEBUFFER = new SolidFromFramebufferProgram();
+//    public static final SolidFromFramebufferProgram SOLID_FROM_FRAMEBUFFER = new SolidFromFramebufferProgram();
     public static final DownsampleProgram DOWNSAMPLE_PROGRAM = new DownsampleProgram();
-    public static final FizzleProgram EMANCIPATE_BLOCK_PROGRAM = new FizzleProgram(Affinity.id("emancipate_block"));
-    public static final FizzleProgram EMANCIPATE_ENTITY_PROGRAM = new FizzleProgram(Affinity.id("emancipate_entity"));
+//    public static final FizzleProgram EMANCIPATE_BLOCK_PROGRAM = new FizzleProgram(Affinity.id("emancipate_block"));
+//    public static final FizzleProgram EMANCIPATE_ENTITY_PROGRAM = new FizzleProgram(Affinity.id("emancipate_entity"));
+
+    // TODO: remove this when the shaders are fixed.
+    public static final MaldingProgram SOLID_FROM_FRAMEBUFFER = MaldingProgram.create();
+    public static final MaldingProgram EMANCIPATE_BLOCK_PROGRAM = MaldingProgram.create();
+    public static final MaldingProgram EMANCIPATE_ENTITY_PROGRAM = MaldingProgram.create();
 
     public static final KeyBinding ACTIVATE_EVADE_RING = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.activate_evade_ring", GLFW.GLFW_KEY_LEFT_CONTROL, "key.categories.movement"));
     public static final KeyBinding SELECT_STAFF_FROM_BUNDLE = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.select_staff_from_bundle", GLFW.GLFW_KEY_X, "key.categories.inventory"));

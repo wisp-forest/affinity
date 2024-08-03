@@ -1,6 +1,7 @@
 package io.wispforest.affinity.recipe;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.affinity.misc.potion.ExtraPotionData;
 import io.wispforest.affinity.misc.potion.PotionMixture;
@@ -25,7 +26,7 @@ import java.util.stream.Stream;
 
 public class PotionMixingRecipe implements Recipe<PotionMixingRecipe.Input> {
 
-    public static final Codec<PotionMixingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
+    public static final MapCodec<PotionMixingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(
                     Registries.STATUS_EFFECT.getCodec().listOf().fieldOf("effect_inputs").forGetter(recipe -> recipe.effectInputs),
                     Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("item_inputs").forGetter(recipe -> recipe.itemInputs),

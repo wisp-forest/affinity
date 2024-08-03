@@ -1,0 +1,24 @@
+// 1.21	2024-08-03T22:25:55.135515811	Affinity/Tags for minecraft:block
+e40a3cbdb91b900c1a1d50465383e8de9f032884 data/minecraft/tags/block/wooden_buttons.json
+2999b2825dda9bbcf76c58822e5a2325a7d40999 data/minecraft/tags/block/overworld_natural_logs.json
+b9e623e9f8d9aca1655ca1a5c769e6384ab64fe1 data/minecraft/tags/block/needs_iron_tool.json
+d01531f52695261ffa34a952ec7fe64fbc03e77b data/minecraft/tags/block/mineable/axe.json
+4da59915a9049d810294498a073c2141d0573bd0 data/minecraft/tags/block/mineable/hoe.json
+2f86c748232889ccddb7220e5935ec0d87d056b9 data/minecraft/tags/block/wall_signs.json
+99c01f403272487091f27a4b05ad8bb60f4f50c7 data/minecraft/tags/block/wooden_doors.json
+ce4e592845bbc34ad53b5659744e4a3f6fa75b4b data/minecraft/tags/block/wooden_trapdoors.json
+5ada948b5b230dcea54c7eb1686f2a778ad95019 data/minecraft/tags/block/mineable/pickaxe.json
+bb4d6d78cd379dc479263e60a62655f97ad9eeee data/minecraft/tags/block/wall_hanging_signs.json
+76197ee030a01126c8ded094b0691902fc18f7c8 data/minecraft/tags/block/candles.json
+c05be89031fb7ccb9a2a280082522191e96db418 data/minecraft/tags/block/wooden_stairs.json
+cdee1b6f642ee7faab68837963de2cd8041586fa data/c/tags/block/ores.json
+29a93c6f3097481f7286ca34cfacaf997f577880 data/minecraft/tags/block/wooden_slabs.json
+ae373608de04874faac8b79fa27ef11e98693a70 data/minecraft/tags/block/wooden_fences.json
+0542a793c1155c7add2c0abfb05b3f47adc6b349 data/minecraft/tags/block/wooden_pressure_plates.json
+ec523a9125fd54d47b074b8cab6aeca0cb9afcf5 data/minecraft/tags/block/standing_signs.json
+a7b940c9ac2f17fe0066f14fef383cf075e7a57d data/minecraft/tags/block/planks.json
+956197aa2acf01a674f80bd977f5ad7fe84e6241 data/minecraft/tags/block/ceiling_hanging_signs.json
+4da59915a9049d810294498a073c2141d0573bd0 data/minecraft/tags/block/leaves.json
+ee85972188f5bd17ee3b677858bacc1b27548d68 data/minecraft/tags/block/beacon_base_blocks.json
+30b3918a4d5e62156f99c75404aa921ac98ef242 data/affinity/tags/block/azalea_logs.json
+8c9ace4e5b8a2606e055d687b99b9a7e513f4605 data/minecraft/tags/block/logs_that_burn.json

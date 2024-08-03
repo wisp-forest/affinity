@@ -2,7 +2,6 @@ package io.wispforest.affinity.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.component.AffinityComponents;
-import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.item.LavaliereOfSafeKeepingItem;
 import io.wispforest.affinity.misc.MixinHooks;
@@ -18,6 +17,8 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -71,15 +72,19 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"))
     private static void injectAethumAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
-        cir.getReturnValue().add(AffinityEntityAttributes.MAX_AETHUM, 15).add(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, 0.025);
+        cir.getReturnValue()
+            .add(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.MAX_AETHUM), 15)
+            .add(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED), 0.025);
     }
 
     @Inject(method = "damage", at = @At("RETURN"))
     private void removeFlightWhenDamaged(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.getWorld().isClient) return;
 
-        if (!this.hasStatusEffect(AffinityStatusEffects.FLIGHT)) return;
-        this.removeStatusEffect(AffinityStatusEffects.FLIGHT);
+        var flightEntry = Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.FLIGHT);
+
+        if (!this.hasStatusEffect(flightEntry)) return;
+        this.removeStatusEffect(flightEntry);
 
         AffinityParticleSystems.FLIGHT_REMOVED.spawn(this.getWorld(), getPos());
         WorldOps.playSound(this.getWorld(), getPos(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.PLAYERS, .5f, 0f);
@@ -99,16 +104,20 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private float applyWoundingMultiplier(float damage, Entity entity) {
         final var weapon = this.getMainHandStack();
 
-        final int criticalGambleLevel = EnchantmentHelper.getLevel(AffinityEnchantments.CRITICAL_GAMBLE, weapon);
-        if (criticalGambleLevel > 0 && this.random.nextFloat() < criticalGambleLevel * .01f) {
-            AffinityEntityAddon.setData(this, CriticalGambleEnchantment.ACTIVATED_AT, this.getWorld().getTime());
-            return (damage / 3) * 2;
-        }
+        // TODO: fix this when critical gamble is ported
+//        final int criticalGambleLevel = EnchantmentHelper.getLevel(AffinityEnchantments.CRITICAL_GAMBLE, weapon);
+//        if (criticalGambleLevel > 0 && this.random.nextFloat() < criticalGambleLevel * .01f) {
+//            AffinityEntityAddon.setData(this, CriticalGambleEnchantment.ACTIVATED_AT, this.getWorld().getTime());
+//            return (damage / 3) * 2;
+//        }
 
-        final int woundingLevel = EnchantmentHelper.getLevel(AffinityEnchantments.WOUNDING, weapon);
-        if (woundingLevel < 1) return damage;
+        // TODO: fix this when wounding is ported
+//        final int woundingLevel = EnchantmentHelper.getLevel(AffinityEnchantments.WOUNDING, weapon);
+//        if (woundingLevel < 1) return damage;
+//
+//        return damage * ((1.5f + .1f * woundingLevel) / 1.5f);
 
-        return damage * ((1.5f + .1f * woundingLevel) / 1.5f);
+        return damage;
     }
 
     @Inject(method = "attack", at = @At(value = "CONSTANT", args = "floatValue=1.5", shift = At.Shift.BY, by = 4))

@@ -21,7 +21,6 @@
     "ChestBoatEntityMixin",
     "ComponentHolderMixin",
     "CraftingScreenHandlerMixin",
-    "DamageEnchantmentMixin",
     "EnchantmentHelperMixin",
     "EnderDragonEntityMixin",
     "EntityMixin",

@@ -3,10 +3,7 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.entity.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.entity.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.world.Heightmap;
@@ -37,7 +34,7 @@ public class AffinityEntities implements AutoRegistryContainer<EntityType<?>> {
                 .spawnGroup(SpawnGroup.MONSTER)
                 .entityFactory(factory)
                 .dimensions(EntityDimensions.fixed(.25f, .25f))
-                .spawnRestriction(SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.WORLD_SURFACE, WispEntity::isValidSpawn)
+                .spawnRestriction(SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.WORLD_SURFACE, WispEntity::isValidSpawn)
                 .defaultAttributes(WispEntity::createWispAttributes).build();
     }
 

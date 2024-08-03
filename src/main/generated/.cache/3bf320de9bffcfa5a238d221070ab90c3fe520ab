@@ -1,0 +1,23 @@
+// 1.21	2024-08-03T22:25:55.13909103	Affinity/Tags for minecraft:item
+4da59915a9049d810294498a073c2141d0573bd0 data/minecraft/tags/item/leaves.json
+ec523a9125fd54d47b074b8cab6aeca0cb9afcf5 data/minecraft/tags/item/signs.json
+76197ee030a01126c8ded094b0691902fc18f7c8 data/minecraft/tags/item/candles.json
+fd796958d6860b764afe2eae88acf27b9d39080c data/affinity/tags/item/artifact_blades.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/minecraft/tags/item/logs.json
+afc20f715d37d59510d5d873527d0b9185cc438e data/minecraft/tags/item/chest_boats.json
+ce4e592845bbc34ad53b5659744e4a3f6fa75b4b data/minecraft/tags/item/wooden_trapdoors.json
+29a93c6f3097481f7286ca34cfacaf997f577880 data/minecraft/tags/item/wooden_slabs.json
+eb9654af5237a1c8eeeff175743a6c7985d313ca data/affinity/tags/item/staffs.json
+8c9ace4e5b8a2606e055d687b99b9a7e513f4605 data/minecraft/tags/item/logs_that_burn.json
+a7b940c9ac2f17fe0066f14fef383cf075e7a57d data/minecraft/tags/item/planks.json
+99c01f403272487091f27a4b05ad8bb60f4f50c7 data/minecraft/tags/item/wooden_doors.json
+52ea1cf3505b6c2ea6484f75d304a14b00d9e43a data/minecraft/tags/item/beacon_payment_items.json
+e40a3cbdb91b900c1a1d50465383e8de9f032884 data/minecraft/tags/item/wooden_buttons.json
+cdee1b6f642ee7faab68837963de2cd8041586fa data/c/tags/item/ores.json
+ae373608de04874faac8b79fa27ef11e98693a70 data/minecraft/tags/item/wooden_fences.json
+ec3c8a3eccb7b544a154f1a5f92b844dc1cc19bb data/minecraft/tags/item/boats.json
+d57da0ce8abfd81984b79cc5b593b0efebbf361c data/affinity/tags/item/wisp_matter.json
+30b3918a4d5e62156f99c75404aa921ac98ef242 data/affinity/tags/item/azalea_logs.json
+0542a793c1155c7add2c0abfb05b3f47adc6b349 data/minecraft/tags/item/wooden_pressure_plates.json
+7ff4581b59ab20acb88f0c472c4e427cc39dc279 data/affinity/tags/item/wisp_mist.json
+c05be89031fb7ccb9a2a280082522191e96db418 data/minecraft/tags/item/wooden_stairs.json

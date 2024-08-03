@@ -10,7 +10,9 @@ import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -18,6 +20,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
@@ -143,7 +146,8 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
-        nbt.put(ITEM_KEY, this.item);
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries));
+        nbt.put(ctx, ITEM_KEY, this.item);
     }
 
     @Override

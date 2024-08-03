@@ -1,13 +1,16 @@
 package io.wispforest.affinity.client.render;
 
-import io.wispforest.affinity.enchantment.template.AbsoluteEnchantment;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
@@ -18,9 +21,9 @@ import java.util.function.Consumer;
 
 public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
 
-    private static final Map<AbsoluteEnchantment, List<RenderLayer>> LAYERS = new HashMap<>();
+    private static final Map<RegistryEntry<Enchantment>, List<RenderLayer>> LAYERS = new HashMap<>();
 
-    private static AbsoluteEnchantment currentRenderEnchantment = null;
+    private static RegistryEntry<Enchantment> currentRenderEnchantment = null;
 
     private AbsoluteEnchantmentGlintHandler(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
         super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
@@ -28,14 +31,15 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
     }
 
     public static void createLayers() {
-        // this needs to be moved to some place after dynamic registry init
-        Registries.ENCHANTMENT.stream()
-                .filter(enchantment -> enchantment instanceof AbsoluteEnchantment)
-                .map(AbsoluteEnchantment.class::cast)
-                .forEach(enchantment -> {
-                    final var id = Registries.ENCHANTMENT.getId(enchantment).getPath();
-                    LAYERS.put(enchantment, makeGlintLayers(id.toLowerCase(Locale.ROOT), enchantment.nameHue()));
-                });
+        // TODO: this needs to be moved to some place after dynamic registry init
+
+//        Registries.ENCHANTMENT.stream()
+//                .filter(enchantment -> enchantment instanceof AbsoluteEnchantment)
+//                .map(AbsoluteEnchantment.class::cast)
+//                .forEach(enchantment -> {
+//                    final var id = Registries.ENCHANTMENT.getId(enchantment).getPath();
+//                    LAYERS.put(enchantment, makeGlintLayers(id.toLowerCase(Locale.ROOT), enchantment.nameHue()));
+//                });
     }
 
     public static void assignBuffers(Consumer<RenderLayer> bufferMaker) {
@@ -47,10 +51,10 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
     }
 
     public static void prepareGlintColor(ItemStack targetStack) {
-        final var enchantments = EnchantmentHelper.get(targetStack);
+        final var enchantments = targetStack.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT);
 
         for (var enchantment : LAYERS.keySet()) {
-            if (!enchantments.containsKey(enchantment)) continue;
+            if (!enchantments.getEnchantments().contains(enchantment)) continue;
             currentRenderEnchantment = enchantment;
             return;
         }
@@ -64,12 +68,14 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
     }
 
     private static List<RenderLayer> makeGlintLayers(String name, int hue) {
+        // TODO: investigate where these programs actually went
+
         return List.of(
-                makeGlintLayer(ARMOR_GLINT_PROGRAM, GLINT_TEXTURING, "armor_" + name, false, true, hue),
+//                makeGlintLayer(ARMOR_GLINT_PROGRAM, GLINT_TEXTURING, "armor_" + name, false, true, hue),
                 makeGlintLayer(ARMOR_ENTITY_GLINT_PROGRAM, ENTITY_GLINT_TEXTURING, "armor_entity_" + name, false, true, hue),
                 makeGlintLayer(TRANSLUCENT_GLINT_PROGRAM, GLINT_TEXTURING, "translucent" + name, true, false, hue),
                 makeGlintLayer(GLINT_PROGRAM, GLINT_TEXTURING, "normal" + name, false, false, hue),
-                makeGlintLayer(DIRECT_GLINT_PROGRAM, GLINT_TEXTURING, "direct" + name, false, false, hue),
+//                makeGlintLayer(DIRECT_GLINT_PROGRAM, GLINT_TEXTURING, "direct" + name, false, false, hue),
                 makeGlintLayer(ENTITY_GLINT_PROGRAM, ENTITY_GLINT_TEXTURING, "entity" + name, true, false, hue),
                 makeGlintLayer(DIRECT_ENTITY_GLINT_PROGRAM, ENTITY_GLINT_TEXTURING, "direct_entity" + name, false, false, hue)
         );

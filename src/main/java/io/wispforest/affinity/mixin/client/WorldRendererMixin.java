@@ -166,7 +166,7 @@ public abstract class WorldRendererMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", shift = At.Shift.AFTER))
     private void captureSky(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci) {
-        if (!SkyCaptureBuffer.isIrisWorldRendering() || !Affinity.CONFIG.theSkyIrisIntegration()) SkyCaptureBuffer.captureSky(MinecraftClient.getInstance().getFramebuffer().fbo);
+        if (!SkyCaptureBuffer.isIrisWorldRendering() || !Affinity.config().theSkyIrisIntegration()) SkyCaptureBuffer.captureSky(MinecraftClient.getInstance().getFramebuffer().fbo);
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/DimensionEffects;isDarkened()Z", shift = At.Shift.AFTER))
@@ -176,13 +176,13 @@ public abstract class WorldRendererMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void drawSkyAfter(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci) {
-        if (Affinity.CONFIG.theSkyIrisIntegration()) return;
+        if (Affinity.config().theSkyIrisIntegration()) return;
         SkyCaptureBuffer.draw();
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BackgroundRenderer;clearFog()V"))
     private void drawSkyAfter_iris(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci) {
-        if (!Affinity.CONFIG.theSkyIrisIntegration()) return;
+        if (!Affinity.config().theSkyIrisIntegration()) return;
         SkyCaptureBuffer.draw();
     }
 }

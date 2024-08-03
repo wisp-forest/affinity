@@ -56,7 +56,7 @@ public class AethumNetworkLinkingHud {
                             case BIND -> {
                                 linkActionLabel = Text.literal("+").styled(style -> style.withColor(0x28FFBF));
 
-                                var linkData = stack.get(IridescenceWandItem.LINK_DATA_KEY);
+                                var linkData = stack.get(IridescenceWandItem.LINK_DATA);
                                 if (!linkData.has(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY)) break;
                                 if (linkData.get(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY) != AethumLink.Type.PUSH) {
                                     break;

@@ -1,8 +1,10 @@
 package io.wispforest.affinity;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
+import io.wispforest.affinity.enchantment.AffinityEnchantmentEffectLogic;
 import io.wispforest.affinity.entity.EmancipatedBlockEntity;
 import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.item.EchoShardExtension;
@@ -49,11 +51,15 @@ import net.minecraft.util.Unit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.function.Supplier;
+
 public class Affinity implements ModInitializer {
 
     public static final String MOD_ID = "affinity";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final io.wispforest.affinity.AffinityConfig CONFIG = io.wispforest.affinity.AffinityConfig.createAndLoad();
+
+    // TODO: ConfigWrapper shouldn't clinit Screen.
+    private static final Supplier<io.wispforest.affinity.AffinityConfig> CONFIG = Suppliers.memoize(io.wispforest.affinity.AffinityConfig::createAndLoad);
 
     public static final Color AETHUM_FLUX_COLOR = Color.ofRgb(0x6A67CE);
 
@@ -69,12 +75,13 @@ public class Affinity implements ModInitializer {
 
         AutoRegistryContainer.register(AffinityBlocks.class, MOD_ID, true);
         AutoRegistryContainer.register(AffinityItems.class, MOD_ID, false);
-        AutoRegistryContainer.register(AffinityEnchantments.class, MOD_ID, false);
         AutoRegistryContainer.register(AffinityEntities.class, MOD_ID, false);
-        AutoRegistryContainer.register(AffinityEntityAttributes.class, MOD_ID, false);
+        AffinityEntityAttributes.initialize();
         AutoRegistryContainer.register(AffinityParticleTypes.class, MOD_ID, false);
         AutoRegistryContainer.register(AffinityRecipeTypes.class, MOD_ID, true);
         AutoRegistryContainer.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
+        AutoRegistryContainer.register(AffinityEnchantmentEffectComponents.class, MOD_ID, false);
+        AffinityEnchantmentEffectLogic.initialize();
 
         FieldRegistrationHandler.processSimple(AffinitySoundEvents.class, false);
         FieldRegistrationHandler.processSimple(AffinityCriteria.class, false);
@@ -127,6 +134,10 @@ public class Affinity implements ModInitializer {
 
     public static String idPlain(String path) {
         return id(path).toString();
+    }
+
+    public static io.wispforest.affinity.AffinityConfig config() {
+        return CONFIG.get();
     }
 
     public static boolean onClient() {

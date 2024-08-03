@@ -174,10 +174,12 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
             RenderSystem.runAsFancy(() -> {
                 visualizerBuffer.beginWrite(true, GL30.GL_COLOR_BUFFER_BIT);
 
-                // TODO: fix this?
-                modelViewStack.translate(-this.xSize / 2f, -this.ySize / 2f, -this.zSize / 2f);
-                this.mesh.render(modelViewStack);
-                modelViewStack.translate(this.xSize / 2f, this.ySize / 2f, this.zSize / 2f);
+                // TODO: fix this, like, properly
+                modelViewStack.translate((float) (-this.xSize / 2f), (float) (-this.ySize / 2f), (float) (-this.zSize / 2f));
+                var mfwStack = new MatrixStack();
+                mfwStack.peek().getPositionMatrix().set(modelViewStack);
+                this.mesh.render(mfwStack);
+                modelViewStack.translate((float) (this.xSize / 2f), (float) (this.ySize / 2f), (float) (this.zSize / 2f));
 
                 LinkRenderer.reset();
 

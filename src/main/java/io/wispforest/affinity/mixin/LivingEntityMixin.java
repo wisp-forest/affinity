@@ -6,11 +6,9 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.VoidBeaconBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
-import io.wispforest.affinity.enchantment.impl.BastionEnchantment;
-import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
-import io.wispforest.affinity.enchantment.template.EnchantmentEquipEventReceiver;
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.misc.ServerTasks;
+import io.wispforest.affinity.misc.callback.ItemEquipEvents;
 import io.wispforest.affinity.misc.callback.LivingEntityTickCallback;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.misc.util.BlockFinder;
@@ -32,6 +30,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
@@ -65,9 +65,6 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Shadow
-    public abstract boolean hasStatusEffect(StatusEffect effect);
-
-    @Shadow
     public abstract void kill();
 
     @Shadow
@@ -95,12 +92,14 @@ public abstract class LivingEntityMixin extends Entity {
     public abstract Iterable<ItemStack> getArmorItems();
 
     @Shadow
-    public abstract double getAttributeValue(EntityAttribute attribute);
-
-    @Shadow
     protected float lastDamageTaken;
 
     @Shadow public abstract AttributeContainer getAttributes();
+
+    @Shadow public abstract boolean hasStatusEffect(RegistryEntry<StatusEffect> effect);
+
+    @Shadow public abstract double getAttributeValue(RegistryEntry<EntityAttribute> attribute);
+
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTickEnd(CallbackInfo ci) {
         LivingEntityTickCallback.EVENT.invoker().onTick((LivingEntity) (Object) this);
@@ -110,8 +109,9 @@ public abstract class LivingEntityMixin extends Entity {
     private void applyLifeLeech(DamageSource source, float amount, CallbackInfo ci) {
         if (!(source.getAttacker() instanceof PlayerEntity player)) return;
 
-        if (player.hasStatusEffect(AffinityStatusEffects.LIFE_LEECH)) {
-            player.heal(amount * 0.1f * (player.getStatusEffect(AffinityStatusEffects.LIFE_LEECH).getAmplifier() + 1));
+        RegistryEntry<StatusEffect> lifeLeech = Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.LIFE_LEECH);
+        if (player.hasStatusEffect(lifeLeech)) {
+            player.heal(amount * 0.1f * (player.getStatusEffect(lifeLeech).getAmplifier() + 1));
         }
 
         if (!AffinityEntityAddon.getData(player, ArtifactBladeItem.DID_CRIT)) return;
@@ -124,62 +124,73 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "canFreeze", at = @At("HEAD"), cancellable = true)
     private void doNotWearLeatherHats(CallbackInfoReturnable<Boolean> cir) {
-        if (!this.hasStatusEffect(AffinityStatusEffects.FREEZING)) return;
+        if (!this.hasStatusEffect(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.FREEZING))) return;
         cir.setReturnValue(true);
     }
 
     @Inject(method = "getEquipmentChanges", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/entity/attribute/AttributeContainer;addTemporaryModifiers(Lcom/google/common/collect/Multimap;)V"))
-    private void onItemEquip(CallbackInfoReturnable<@Nullable Map<EquipmentSlot, ItemStack>> cir, @Local EquipmentSlot equipmentSlot, @Local(ordinal = 1) ItemStack equippedStack) {
-        for (var enchantment : EnchantmentHelper.get(equippedStack).keySet()) {
-            if (!(enchantment instanceof EnchantmentEquipEventReceiver receiver)) continue;
-            receiver.onEquip((LivingEntity) (Object) this, equipmentSlot, equippedStack);
-        }
+            target = "Lnet/minecraft/item/ItemStack;applyAttributeModifiers(Lnet/minecraft/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V", ordinal = 1))
+    private void onItemEquip(CallbackInfoReturnable<@Nullable Map<EquipmentSlot, ItemStack>> cir, @Local EquipmentSlot equipmentSlot, @Local ItemStack equippedStack) {
+        ItemEquipEvents.EQUIP.invoker().onItemEquip((LivingEntity) (Object) this, equipmentSlot, equippedStack);
+
+//        for (var enchantment : EnchantmentHelper.get(equippedStack).keySet()) {
+//            if (!(enchantment instanceof EnchantmentEquipEventReceiver receiver)) continue;
+//            receiver.onEquip((LivingEntity) (Object) this, equipmentSlot, equippedStack);
+//        }
     }
 
     @Inject(method = "getEquipmentChanges", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/entity/attribute/AttributeContainer;removeModifiers(Lcom/google/common/collect/Multimap;)V"))
+            target = "Lnet/minecraft/item/ItemStack;applyAttributeModifiers(Lnet/minecraft/entity/EquipmentSlot;Ljava/util/function/BiConsumer;)V", ordinal = 0))
     private void onItemUnequip(CallbackInfoReturnable<@Nullable Map<EquipmentSlot, ItemStack>> cir, @Local EquipmentSlot equipmentSlot, @Local(ordinal = 0) ItemStack unequippedStack) {
-        for (var enchantment : EnchantmentHelper.get(unequippedStack).keySet()) {
-            if (!(enchantment instanceof EnchantmentEquipEventReceiver receiver)) continue;
-            receiver.onUnequip((LivingEntity) (Object) this, equipmentSlot, unequippedStack);
-        }
+        ItemEquipEvents.UNEQUIP.invoker().onItemUnequip((LivingEntity) (Object) this, equipmentSlot, unequippedStack);
+
+//        for (var enchantment : EnchantmentHelper.get(unequippedStack).keySet()) {
+//            if (!(enchantment instanceof EnchantmentEquipEventReceiver receiver)) continue;
+//            receiver.onUnequip((LivingEntity) (Object) this, equipmentSlot, unequippedStack);
+//        }
     }
 
     @ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
     private float bastionDamagePenalty(float damage, DamageSource source) {
         if (!(source.getAttacker() instanceof LivingEntity attacker)) return damage;
 
-        if (AffinityEntityAddon.hasData(attacker, BastionEnchantment.BASTION)) {
-            return damage * 0.5f;
-        } else {
-            return damage;
-        }
+        // TODO: uncomment when bastion is ported.
+//        if (AffinityEntityAddon.hasData(attacker, BastionEnchantment.BASTION)) {
+//            return damage * 0.5f;
+//        } else {
+//            return damage;
+//        }
+
+        return damage;
     }
 
     @Inject(method = "damage", at = @At("TAIL"))
     private void criticalGambleDeath(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (!(source.getAttacker() instanceof LivingEntity attacker)) return;
 
-        if (AffinityEntityAddon.hasData(attacker, CriticalGambleEnchantment.ACTIVATED_AT)) {
-            long critTick = AffinityEntityAddon.removeData(attacker, CriticalGambleEnchantment.ACTIVATED_AT);
-            if (critTick != this.getWorld().getTime() || this.getType().isIn(CriticalGambleEnchantment.BLACKLIST)) {
-                return;
-            }
+        // TODO: uncomment when critical gamble is ported.
 
-            affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
-        }
+//        if (AffinityEntityAddon.hasData(attacker, CriticalGambleEnchantment.ACTIVATED_AT)) {
+//            long critTick = AffinityEntityAddon.removeData(attacker, CriticalGambleEnchantment.ACTIVATED_AT);
+//            if (critTick != this.getWorld().getTime() || this.getType().isIn(CriticalGambleEnchantment.BLACKLIST)) {
+//                return;
+//            }
+//
+//            affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
+//        }
     }
 
     @Inject(method = "damage", at = @At("TAIL"))
     private void executeDeath(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (!(source.getAttacker() instanceof LivingEntity attacker)) return;
 
-        if (EnchantmentHelper.getLevel(AffinityEnchantments.EXECUTE, attacker.getMainHandStack()) > 0) {
-            if (this.getHealth() >= this.getMaxHealth() * .1) return;
+        // TODO: uncomment when execute is ported.
 
-            affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
-        }
+//        if (EnchantmentHelper.getLevel(AffinityEnchantments.EXECUTE, attacker.getMainHandStack()) > 0) {
+//            if (this.getHealth() >= this.getMaxHealth() * .1) return;
+//
+//            affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
+//        }
     }
 
     @Inject(method = "dropLoot", at = @At("HEAD"), cancellable = true)
@@ -216,7 +227,7 @@ public abstract class LivingEntityMixin extends Entity {
         this.setHealth(1f);
         this.clearStatusEffects();
         this.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 300, 4));
-        this.addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.IMPENDING_DOOM, 300));
+        this.addStatusEffect(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.IMPENDING_DOOM), 300));
 
         AffinityParticleSystems.AETHUM_OVERCHARGE.spawn(this.getWorld(), this.getPos(), this.getId());
 
@@ -224,7 +235,7 @@ public abstract class LivingEntityMixin extends Entity {
             serverPlayer.incrementStat(Stats.USED.getOrCreateStat(AffinityItems.AETHUM_OVERCHARGER));
             AffinityCriteria.USED_OVERCHARGER.trigger(serverPlayer);
 
-            this.getAttributes().addTemporaryModifiers(ImmutableMultimap.of(AffinityEntityAttributes.MAX_AETHUM, AETHUM_OVERCHARGED_MODIFIER));
+            this.getAttributes().addTemporaryModifiers(ImmutableMultimap.of(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.MAX_AETHUM), AETHUM_OVERCHARGED_MODIFIER));
 
             var aethum = this.getComponent(AffinityComponents.PLAYER_AETHUM);
             aethum.setAethum(aethum.maxAethum());
@@ -283,25 +294,25 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "createLivingAttributes", at = @At("RETURN"))
     private static void injectAffinityAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.getReturnValue()
-                .add(AffinityEntityAttributes.DAMAGE_TAKEN, 0)
-                .add(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY, 0)
-                .add(AffinityEntityAttributes.FALL_RESISTANCE, 0)
-                .add(AffinityEntityAttributes.EXTRA_ARROW_DAMAGE, 0);
+                .add(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.DAMAGE_TAKEN), 0)
+                .add(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY), 0)
+                .add(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.FALL_RESISTANCE), 0)
+                .add(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.EXTRA_ARROW_DAMAGE), 0);
     }
 
     @ModifyVariable(method = "applyArmorToDamage", at = @At(value = "LOAD", ordinal = 1), argsOnly = true)
     private float applyEmeraldArmorToDamage(float amount) {
-        return amount + (float) this.getAttributeValue(AffinityEntityAttributes.DAMAGE_TAKEN);
+        return amount + (float) this.getAttributeValue(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.DAMAGE_TAKEN));
     }
 
     @ModifyVariable(method = "takeKnockback", at = @At(value = "STORE", ordinal = 0), ordinal = 0, argsOnly = true)
     private double applyEmeraldArmorToKnockback(double strength) {
-        return strength + this.getAttributeValue(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY);
+        return strength + this.getAttributeValue(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY));
     }
 
     @ModifyVariable(method = "handleFallDamage", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private float applyFallResistance(float fallDistance) {
-        return fallDistance - (float) this.getAttributeValue(AffinityEntityAttributes.FALL_RESISTANCE);
+        return fallDistance - (float) this.getAttributeValue(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.FALL_RESISTANCE));
     }
 
     @Unique
