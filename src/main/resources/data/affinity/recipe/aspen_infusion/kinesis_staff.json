@@ -38,6 +38,6 @@
     }
   ],
   "output": {
-    "item": "affinity:kinesis_staff"
+    "id": "affinity:kinesis_staff"
   }
 }

@@ -43,7 +43,7 @@
     }
   ],
   "output": {
-    "item": "affinity:astrokinesis_staff"
+    "id": "affinity:astrokinesis_staff"
   },
   "entity": {
     "id": "minecraft:allay"

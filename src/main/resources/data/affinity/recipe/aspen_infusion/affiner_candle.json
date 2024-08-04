@@ -22,7 +22,7 @@
     }
   ],
   "output": {
-    "item": "affinity:affine_candle",
+    "id": "affinity:affine_candle",
     "data": {
       "display": {
         "Name": "{\"text\": \"Affiner Candle\", \"italic\": false}"

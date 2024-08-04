@@ -1,4 +1,4 @@
-// 1.21	2024-08-03T22:25:55.137109035	Affinity/Recipes
+// 1.21	2024-08-04T15:23:27.589096287	Affinity/Recipes
 eaee62d7b5fa8c58490445336baebdf1d5fecfc5 data/affinity/advancement/recipes/decorations/crafting/flowering_azalea.json
 7b5f71dd229e96cf146ef689b5c4f83d33522d52 data/affinity/advancement/recipes/building_blocks/azalea_slab.json
 1185db014bbe3dbb901d953e17905b99ba7b528a data/affinity/recipe/azalea_boat.json
@@ -28,8 +28,8 @@ e4190fc39a5f828befcf1e313234292747de13bd data/affinity/advancement/recipes/trans
 6bd8f96bdc0fa601d372a540684a03a25b091ed2 data/affinity/advancement/recipes/misc/blackstone_prism_from_blackstone_stonecutting.json
 65804e6b1cf755a16bc2902b206f13337d216cdb data/affinity/recipe/azalea_hanging_sign.json
 e32d71d70f14b1263efdfd77dc49c35e533ca678 data/affinity/recipe/clay_cup.json
-6624f4306f65c1a7a6e21fa23f3e2309ae151b92 data/affinity/recipe/azalea_stairs.json
 95c71b2eee92e8cb2c8239f8dbfe5dcb5e2909e4 data/affinity/advancement/recipes/redstone/azalea_pressure_plate.json
+6624f4306f65c1a7a6e21fa23f3e2309ae151b92 data/affinity/recipe/azalea_stairs.json
 6a3028fea1f992be1554357acdb7c3b406afe714 data/affinity/recipe/azalea_trapdoor.json
 654343ad18091d4b2ffff6a1c13982e36cabc659 data/affinity/recipe/azalea_planks.json
 d82278a49bf5ad336f04de0d57c3ce2d3145890d data/affinity/recipe/azalea_pressure_plate.json

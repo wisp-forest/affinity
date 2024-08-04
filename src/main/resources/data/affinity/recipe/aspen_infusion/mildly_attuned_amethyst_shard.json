@@ -22,6 +22,6 @@
     }
   ],
   "output": {
-    "item": "affinity:mildly_attuned_amethyst_shard"
+    "id": "affinity:mildly_attuned_amethyst_shard"
   }
 }

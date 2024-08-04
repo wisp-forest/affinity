@@ -25,6 +25,6 @@
     }
   ],
   "output": {
-    "item": "affinity:nimble_staff"
+    "id": "affinity:nimble_staff"
   }
 }

@@ -20,6 +20,6 @@
     }
   ],
   "output": {
-    "item": "affinity:archetypal_iron_ring"
+    "id": "affinity:archetypal_iron_ring"
   }
 }

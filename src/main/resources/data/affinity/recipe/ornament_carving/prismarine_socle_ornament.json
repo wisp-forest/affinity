@@ -3,5 +3,7 @@
   "input": {
     "item": "minecraft:dark_prismarine"
   },
-  "output": "affinity:prismarine_socle_ornament"
+  "output": {
+    "id": "affinity:prismarine_socle_ornament"
+  }
 }

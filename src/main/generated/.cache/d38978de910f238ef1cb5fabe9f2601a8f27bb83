@@ -1,4 +1,4 @@
-// 1.21	2024-08-03T22:25:55.140038103	Affinity/Block States / Models
+// 1.21	2024-08-04T15:23:27.592385165	Affinity/Block States / Models
 1dc4c853a0c3218f9a57bd48d577dfb3663856f5 assets/affinity/models/item/azalea_planks.json
 9947b59d3f7180f45e0db169d0004afd3d4020a6 assets/affinity/models/block/azalea_door_bottom_right_open.json
 c3525e5653e296d563f11eb59cc7dede0331f01d assets/affinity/models/block/azalea_fence_side.json
@@ -52,8 +52,8 @@ a9b3778b813a1b5ae7fb4637110da9c790311df6 assets/affinity/models/item/sundial.jso
 7d653e2b28229847affa641d02b94251a75b75e6 assets/affinity/blockstates/stone_banded_aethum_flux_node.json
 36f45f92cfff62e9f08d518e1a078ada140a7001 assets/affinity/models/block/azalea_stairs_inner.json
 e7aebcaa60c65b04ea70c24ab5cabef762173399 assets/affinity/blockstates/azalea_fence_gate.json
-9bdfbd446ff7cddfe01a4ad5567887d7c4a4f59d assets/affinity/models/block/azalea_fence_gate.json
 7018e80b5d84a9f22af7ae247de917aa36bd0b8c assets/affinity/models/block/azalea_planks.json
+9bdfbd446ff7cddfe01a4ad5567887d7c4a4f59d assets/affinity/models/block/azalea_fence_gate.json
 d6276c10c554b77e5e41bdcee4ea093182f6d7b7 assets/affinity/models/block/azalea_fence_gate_wall_open.json
 38f16544a89351b34a079792a1a0f22fa941e792 assets/affinity/blockstates/refined_ritual_socle.json
 75892910390c600fe33778132a08c4f6fde6f862 assets/affinity/models/block/azalea_hanging_sign.json
@@ -110,11 +110,11 @@ a8df1d4417434f6bd30f662e77fcdcaf9b76de35 assets/affinity/models/item/asp_rite_co
 5f7a0434a6bebdd208ff24a7b267f5037b677dfa assets/affinity/models/block/infused_stone.json
 a3bead2f47be7199bc8b2580e8f81f794a66ffb6 assets/affinity/models/item/brewing_cauldron.json
 1ba02ed8f32437bd8ad3beb427cfcbfae81f10b5 assets/affinity/blockstates/asp_rite_core.json
-451c599cd7f77f89f4ec742a78a4fe1037cb0e0b assets/affinity/blockstates/infused_stone.json
 3b6bec6a37634e6d9ebde402bbd0dadfdcff6271 assets/affinity/blockstates/affine_infuser.json
+451c599cd7f77f89f4ec742a78a4fe1037cb0e0b assets/affinity/blockstates/infused_stone.json
 ecb6c19720b5389e9b8d188f1f3e02ac302ff6f9 assets/affinity/models/block/azalea_door_top_left.json
-1eef121e1ecbd292a4d4638e4c4e4b3d71730e86 assets/affinity/blockstates/azalea_stairs.json
 ac8efb353d4351e457fec3ccc309db1fabaddbfb assets/affinity/blockstates/azalea_door.json
+1eef121e1ecbd292a4d4638e4c4e4b3d71730e86 assets/affinity/blockstates/azalea_stairs.json
 0701617a0fa3b4c4b8f339c0920ccb22af073b03 assets/affinity/models/item/azalea_wood.json
 7103836b8d52254b48cae27a44f0599dfd642f31 assets/affinity/blockstates/unflowering_azalea_leaves.json
 e61156f2032404fc0dcbfb540718888f99fcac8f assets/affinity/models/item/graviton_transducer.json

@@ -1,5 +1,6 @@
 package io.wispforest.affinity.object;
 
+import io.wispforest.affinity.Affinity;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
@@ -40,7 +41,7 @@ public class AffinityEnchantments {
     }
 
     private static RegistryKey<Enchantment> of(String id) {
-        return RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.ofVanilla(id));
+        return RegistryKey.of(RegistryKeys.ENCHANTMENT, Affinity.id(id));
     }
 }
 

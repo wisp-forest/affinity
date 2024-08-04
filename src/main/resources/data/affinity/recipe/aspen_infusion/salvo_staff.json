@@ -38,6 +38,6 @@
     }
   ],
   "output": {
-    "item": "affinity:salvo_staff"
+    "id": "affinity:salvo_staff"
   }
 }

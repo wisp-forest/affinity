@@ -44,7 +44,7 @@
     }
   ],
   "output": {
-    "item": "affinity:aethum_overcharger"
+    "id": "affinity:aethum_overcharger"
   },
   "entity": {
     "id": "minecraft:player"

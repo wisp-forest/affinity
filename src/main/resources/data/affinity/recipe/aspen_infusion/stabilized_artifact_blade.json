@@ -38,6 +38,6 @@
     }
   ],
   "output": {
-    "item": "affinity:stabilized_artifact_blade"
+    "id": "affinity:stabilized_artifact_blade"
   }
 }

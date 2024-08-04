@@ -15,6 +15,6 @@
     }
   ],
   "output": {
-    "item": "affinity:wand_of_inquiry"
+    "id": "affinity:wand_of_inquiry"
   }
 }

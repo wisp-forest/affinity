@@ -3,7 +3,7 @@
   "duration": 400,
   "flux_cost_per_tick": 40,
   "output": {
-    "item": "affinity:azalea_bow"
+    "id": "affinity:azalea_bow"
   },
   "primary_input": {
     "item": "minecraft:bow"

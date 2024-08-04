@@ -32,7 +32,7 @@
     }
   ],
   "output": {
-    "item": "affinity:spirit_integration_apparatus",
+    "id": "affinity:spirit_integration_apparatus",
     "count": 2
   }
 }

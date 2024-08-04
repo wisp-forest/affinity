@@ -39,7 +39,7 @@
 
   ],
   "output": {
-    "item": "affinity:arcane_fade_bucket"
+    "id": "affinity:arcane_fade_bucket"
   },
   "entity": {
     "id": "minecraft:goat"

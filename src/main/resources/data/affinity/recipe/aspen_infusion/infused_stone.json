@@ -25,7 +25,7 @@
     }
   ],
   "output": {
-    "item": "affinity:infused_stone",
+    "id": "affinity:infused_stone",
     "count": 6
   }
 }

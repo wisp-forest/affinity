@@ -31,7 +31,7 @@
     }
   ],
   "output": {
-    "item": "affinity:ranthracite_dust",
+    "id": "affinity:ranthracite_dust",
     "count": 9
   }
 }

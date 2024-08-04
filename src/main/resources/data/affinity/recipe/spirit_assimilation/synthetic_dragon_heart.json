@@ -49,7 +49,7 @@
     }
   ],
   "output": {
-    "item": "affinity:synthetic_dragon_heart"
+    "id": "affinity:synthetic_dragon_heart"
   },
   "entity": {
     "id": "minecraft:shulker"

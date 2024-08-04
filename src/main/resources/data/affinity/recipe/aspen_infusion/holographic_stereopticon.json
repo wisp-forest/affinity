@@ -32,6 +32,6 @@
     }
   ],
   "output": {
-    "item": "affinity:holographic_stereopticon"
+    "id": "affinity:holographic_stereopticon"
   }
 }

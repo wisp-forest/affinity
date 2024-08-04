@@ -46,7 +46,7 @@
     }
   ],
   "output": {
-    "item": "affinity:graviton_transducer"
+    "id": "affinity:graviton_transducer"
   },
   "entity": {
     "id": "minecraft:endermite"

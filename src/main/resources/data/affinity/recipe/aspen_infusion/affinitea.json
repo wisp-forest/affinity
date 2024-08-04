@@ -2,7 +2,7 @@
   "type": "affinity:aspen_infusion",
   "duration": 300,
   "output": {
-    "item": "affinity:affinitea"
+    "id": "affinity:affinitea"
   },
   "primary_input": {
     "item": "affinity:clay_cup"

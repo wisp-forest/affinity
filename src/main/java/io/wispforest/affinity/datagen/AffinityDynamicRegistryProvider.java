@@ -1,5 +1,6 @@
 package io.wispforest.affinity.datagen;
 
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
@@ -29,6 +30,14 @@ public class AffinityDynamicRegistryProvider extends FabricDynamicRegistryProvid
         entries.add(AffinityWorldgen.CONFIGURED_ORE_PECULIAR_CLUMP, registries.getWrapperOrThrow(RegistryKeys.CONFIGURED_FEATURE).getOrThrow(AffinityWorldgen.CONFIGURED_ORE_PECULIAR_CLUMP).value());
 
         entries.add(AffinityWorldgen.WISP_FOREST_KEY, registries.getWrapperOrThrow(RegistryKeys.BIOME).getOrThrow(AffinityWorldgen.WISP_FOREST_KEY).value());
+
+        // The fact that we need to list all enchantments manually is incredibly dumb.
+        registries.getWrapperOrThrow(RegistryKeys.ENCHANTMENT).streamEntries()
+            .forEach(entry -> {
+                if (!entry.registryKey().getValue().getNamespace().equals(Affinity.MOD_ID)) return;
+
+                entries.add(entry.registryKey(), entry.value());
+            });
     }
 
     @Override

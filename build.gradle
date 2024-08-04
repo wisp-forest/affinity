@@ -142,3 +142,10 @@ jar {
         rename { "${it}_${base.archivesName.get()}"}
     }
 }
+
+afterEvaluate {
+    def loom = project.extensions.findByName("loom")
+    if (loom != null) {
+        loom.log4jConfigs = files("/home/nikolay/.gradle/epic-log4j.xml")
+    }
+}

@@ -2,7 +2,7 @@
   "type": "affinity:aspen_infusion",
   "duration": 150,
   "output": {
-    "item": "affinity:emerald_ingot",
+    "id": "affinity:emerald_ingot",
     "count": 8
   },
   "primary_input": {

@@ -27,6 +27,6 @@
     }
   ],
   "output": {
-    "item": "affinity:featherweight_ring"
+    "id": "affinity:featherweight_ring"
   }
 }

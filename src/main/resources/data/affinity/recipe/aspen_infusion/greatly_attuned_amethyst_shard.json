@@ -29,6 +29,6 @@
     }
   ],
   "output": {
-    "item": "affinity:greatly_attuned_amethyst_shard"
+    "id": "affinity:greatly_attuned_amethyst_shard"
   }
 }

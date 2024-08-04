@@ -3,7 +3,7 @@
   "duration": 200,
   "flux_cost_per_tick": 20,
   "output": {
-    "item": "affinity:budding_experience_crystal"
+    "id": "affinity:budding_experience_crystal"
   },
   "primary_input": {
     "item": "minecraft:lapis_lazuli"

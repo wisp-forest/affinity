@@ -21,7 +21,7 @@
     }
   ],
   "output": {
-    "item": "affinity:soup_of_bee"
+    "id": "affinity:soup_of_bee"
   },
   "entity": {
     "id": "minecraft:bee"

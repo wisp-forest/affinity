@@ -85,7 +85,7 @@
     }
   ],
   "output": {
-    "item": "affinity:superior_artifact_blade"
+    "id": "affinity:superior_artifact_blade"
   },
   "entity": {
     "id": "minecraft:enderman"

@@ -32,7 +32,7 @@
     }
   ],
   "output": {
-    "item": "affinity:sculk_resonant_ethereal_amethyst_shard",
+    "id": "affinity:sculk_resonant_ethereal_amethyst_shard",
     "count": 4
   }
 }

@@ -49,7 +49,7 @@
     }
   ],
   "output": {
-    "item": "affinity:sunshine_monolith"
+    "id": "affinity:sunshine_monolith"
   },
   "entity": {
     "id": "minecraft:magma_cube"

@@ -32,6 +32,6 @@
     }
   ],
   "output": {
-    "item": "affinity:void_beacon"
+    "id": "affinity:void_beacon"
   }
 }

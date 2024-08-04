@@ -29,6 +29,6 @@
     }
   ],
   "output": {
-    "item": "affinity:brewing_cauldron"
+    "id": "affinity:brewing_cauldron"
   }
 }

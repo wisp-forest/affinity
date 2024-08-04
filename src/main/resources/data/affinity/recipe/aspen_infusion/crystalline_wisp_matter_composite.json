@@ -26,6 +26,6 @@
     }
   ],
   "output": {
-    "item": "affinity:crystalline_wisp_matter_composite"
+    "id": "affinity:crystalline_wisp_matter_composite"
   }
 }

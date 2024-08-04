@@ -43,6 +43,6 @@
     }
   ],
   "output": {
-    "item": "affinity:affine_infuser"
+    "id": "affinity:affine_infuser"
   }
 }

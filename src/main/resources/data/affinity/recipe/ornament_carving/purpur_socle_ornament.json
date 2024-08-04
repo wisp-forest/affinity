@@ -3,5 +3,7 @@
   "input": {
     "item": "minecraft:purpur_block"
   },
-  "output": "affinity:purpur_socle_ornament"
+  "output": {
+    "id": "affinity:purpur_socle_ornament"
+  }
 }

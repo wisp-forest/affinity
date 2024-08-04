@@ -44,7 +44,7 @@
     }
   ],
   "output": {
-    "item": "affinity:evade_ring"
+    "id": "affinity:evade_ring"
   },
   "entity": {
     "id": "minecraft:cat"

@@ -25,7 +25,7 @@
     }
   ],
   "output": {
-    "item": "affinity:item_transfer_node",
+    "id": "affinity:item_transfer_node",
     "count": 2
   }
 }

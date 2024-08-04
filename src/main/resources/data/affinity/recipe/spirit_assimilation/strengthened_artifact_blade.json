@@ -49,7 +49,7 @@
     }
   ],
   "output": {
-    "item": "affinity:strengthened_artifact_blade"
+    "id": "affinity:strengthened_artifact_blade"
   },
   "entity": {
     "id": "minecraft:blaze"

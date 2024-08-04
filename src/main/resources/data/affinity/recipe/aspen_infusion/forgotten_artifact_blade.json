@@ -32,6 +32,6 @@
     }
   ],
   "output": {
-    "item": "affinity:forgotten_artifact_blade"
+    "id": "affinity:forgotten_artifact_blade"
   }
 }

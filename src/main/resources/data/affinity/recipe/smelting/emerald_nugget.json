@@ -17,5 +17,7 @@
       "item": "affinity:emerald_boots"
     }
   ],
-  "result": "affinity:emerald_nugget"
+  "result": {
+    "id": "affinity:emerald_nugget"
+  }
 }

@@ -18,7 +18,7 @@
     }
   ],
   "output": {
-    "item": "affinity:scintillant_anthracite_blend",
+    "id": "affinity:scintillant_anthracite_blend",
     "count": 4
   }
 }
