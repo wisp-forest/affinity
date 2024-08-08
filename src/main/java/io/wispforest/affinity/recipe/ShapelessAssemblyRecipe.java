@@ -1,11 +1,11 @@
 package io.wispforest.affinity.recipe;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.mixin.access.ShapelessRecipeAccessor;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
@@ -32,17 +32,19 @@ public class ShapelessAssemblyRecipe extends ShapelessRecipe {
     public static class Serializer extends ShapelessRecipe.Serializer {
 
         @Override
-        public Codec<ShapelessRecipe> codec() {
-            return ((MapCodec.MapCodecCodec<ShapelessRecipe>) super.codec()).codec().<ShapelessRecipe>xmap(
+        public MapCodec<ShapelessRecipe> codec() {
+            return super.codec().xmap(
                     recipe -> new ShapelessAssemblyRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getResult(), recipe.getIngredients()),
                     recipe -> new ShapelessRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getResult(), recipe.getIngredients())
-            ).codec();
+            );
         }
 
         @Override
-        public ShapelessRecipe read(PacketByteBuf packetByteBuf) {
-            var recipe = super.read(packetByteBuf);
-            return new ShapelessAssemblyRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getResult(), recipe.getIngredients());
+        public PacketCodec<RegistryByteBuf, ShapelessRecipe> packetCodec() {
+            return super.packetCodec().xmap(
+                recipe -> new ShapelessAssemblyRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getResult(), recipe.getIngredients()),
+                recipe -> new ShapelessRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapelessRecipeAccessor) recipe).affinity$getResult(), recipe.getIngredients())
+            );
         }
     }
 

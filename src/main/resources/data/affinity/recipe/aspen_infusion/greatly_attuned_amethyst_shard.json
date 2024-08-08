@@ -1,0 +1,34 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 500,
+  "flux_cost_per_tick": 20,
+  "primary_input": {
+    "item": "affinity:fairly_attuned_amethyst_shard"
+  },
+  "inputs": [
+    {
+      "item": "affinity:affinitea"
+    },
+    {
+      "item": "minecraft:dragon_breath"
+    },
+    {
+      "item": "minecraft:experience_bottle"
+    },
+    {
+      "item": "minecraft:glow_ink_sac"
+    },
+    {
+      "item": "minecraft:glow_ink_sac"
+    },
+    {
+      "item": "minecraft:experience_bottle"
+    },
+    {
+      "item": "minecraft:dragon_breath"
+    }
+  ],
+  "output": {
+    "id": "affinity:greatly_attuned_amethyst_shard"
+  }
+}

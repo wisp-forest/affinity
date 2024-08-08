@@ -1,6 +1,7 @@
 package io.wispforest.affinity.compat.rei.display;
 
 import io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -9,7 +10,6 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
 
 import java.util.List;
 

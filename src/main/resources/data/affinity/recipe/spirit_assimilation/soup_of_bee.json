@@ -1,0 +1,29 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 50,
+  "core_inputs": [
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "item": "minecraft:bowl"
+    }
+  ],
+  "output": {
+    "id": "affinity:soup_of_bee"
+  },
+  "entity": {
+    "id": "minecraft:bee"
+  }
+}

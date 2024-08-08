@@ -23,8 +23,8 @@ public class SodiumWorldRendererMixin {
 
     @Shadow private RenderSectionManager renderSectionManager;
 
-    @Inject(method = "drawChunkLayer", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void injectSkyStencil(RenderLayer renderLayer, MatrixStack matrixStack, double x, double y, double z, CallbackInfo ci, ChunkRenderMatrices matrices) {
+    @Inject(method = "drawChunkLayer", at = @At("TAIL"))
+    private void injectSkyStencil(RenderLayer renderLayer, ChunkRenderMatrices matrices, double x, double y, double z, CallbackInfo ci) {
         if (renderLayer != SkyCaptureBuffer.SKY_STENCIL_LAYER) return;
         this.renderSectionManager.renderLayer(matrices, DefaultMaterials.forRenderLayer(SkyCaptureBuffer.SKY_STENCIL_LAYER).pass, x, y, z);
     }

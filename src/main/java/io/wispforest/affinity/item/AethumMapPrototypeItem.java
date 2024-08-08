@@ -4,6 +4,7 @@ import io.wispforest.affinity.mixin.access.FilledMapItemInvoker;
 import io.wispforest.affinity.mixin.access.MapStateAccessor;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.ops.ItemOps;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.Item;
@@ -24,8 +25,9 @@ public class AethumMapPrototypeItem extends Item {
             ItemOps.decrementPlayerHandItem(user, hand);
 
             var mapStack = AffinityItems.REALIZED_AETHUM_MAP.getDefaultStack();
-            FilledMapItemInvoker.affinity$createMapState(mapStack, world, user.getBlockX(), user.getBlockZ(), 0,
+            var component = FilledMapItemInvoker.affinity$AllocateMapId(world, user.getBlockX(), user.getBlockZ(), 0,
                     true, false, world.getRegistryKey());
+            mapStack.set(DataComponentTypes.MAP_ID, component);
             var stateAccess = (MapStateAccessor) FilledMapItem.getMapState(mapStack, world);
             stateAccess.affinity$setCenterX(RealizedAethumMapItem.makeCenter((int) user.getX()));
             stateAccess.affinity$setCenterZ(RealizedAethumMapItem.makeCenter((int) user.getZ()));

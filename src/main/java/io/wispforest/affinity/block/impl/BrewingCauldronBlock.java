@@ -68,7 +68,8 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        var hand = Hand.MAIN_HAND; // TODO: probably move this to onUseWithItem?
 
         if (!(world.getBlockEntity(pos) instanceof BrewingCauldronBlockEntity cauldron)) return ActionResult.PASS;
         final var playerStack = player.getStackInHand(hand);

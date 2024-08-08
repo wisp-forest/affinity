@@ -34,7 +34,7 @@ public class AsteroidEntityRenderer extends EntityRenderer<AsteroidEntity> {
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) ((System.currentTimeMillis() / 5) % 360d)));
         matrices.translate(0, -1.25, 0);
 
-        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntitySolid(this.getTexture(entity))), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, 1f, 1f, 1f, 1f);
+        this.model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntitySolid(this.getTexture(entity))), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
         matrices.pop();
     }
 

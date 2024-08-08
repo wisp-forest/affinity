@@ -32,7 +32,7 @@ public class AsteroidEntityModel extends EntityModel<AsteroidEntity> {
     public void setAngles(AsteroidEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {}
 
     @Override
-    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha) {
-        this.main.render(matrices, vertices, light, overlay, red, green, blue, alpha);
+    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
+        this.main.render(matrices, vertices, light, overlay, color);
     }
 }

@@ -1,0 +1,22 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "s": {
+      "item": "minecraft:stone_bricks"
+    },
+    "a": {
+      "item": "affinity:azalea_log"
+    },
+    "p": {
+      "item": "affinity:azalea_planks"
+    }
+  },
+  "pattern": [
+    "sps",
+    "aaa"
+  ],
+  "result": {
+    "id": "affinity:stone_banded_aethum_flux_node"
+  }
+}

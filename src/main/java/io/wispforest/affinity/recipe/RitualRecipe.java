@@ -4,7 +4,9 @@ import io.wispforest.affinity.blockentity.template.RitualCoreBlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
@@ -60,7 +62,7 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleRecipeIn
         return true;
     }
 
-    private record MatchingRecipe(DefaultedList<Ingredient> ingredients) implements Recipe<Inventory> {
+    private record MatchingRecipe(DefaultedList<Ingredient> ingredients) implements Recipe<RecipeInput> {
 
         @Override
         public DefaultedList<Ingredient> getIngredients() {
@@ -68,12 +70,12 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleRecipeIn
         }
 
         @Override
-        public boolean matches(Inventory inventory, World world) {
+        public boolean matches(RecipeInput inventory, World world) {
             return false;
         }
 
         @Override
-        public ItemStack craft(Inventory inventory, DynamicRegistryManager drm) {
+        public ItemStack craft(RecipeInput inventory, RegistryWrapper.WrapperLookup lookup) {
             return null;
         }
 
@@ -83,7 +85,7 @@ public abstract class RitualRecipe<I extends RitualCoreBlockEntity.SocleRecipeIn
         }
 
         @Override
-        public ItemStack getResult(DynamicRegistryManager drm) {
+        public ItemStack getResult(RegistryWrapper.WrapperLookup lookup) {
             return null;
         }
 

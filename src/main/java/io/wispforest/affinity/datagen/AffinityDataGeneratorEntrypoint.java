@@ -1,5 +1,6 @@
 package io.wispforest.affinity.datagen;
 
+import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
@@ -27,5 +28,6 @@ public class AffinityDataGeneratorEntrypoint implements DataGeneratorEntrypoint 
         registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, AffinityWorldgen::bootstrapConfiguredFeatures);
         registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, AffinityWorldgen::bootstrapPlacedFeatures);
         registryBuilder.addRegistry(RegistryKeys.BIOME, AffinityWorldgen::bootstrapBiomes);
+        registryBuilder.addRegistry(RegistryKeys.ENCHANTMENT, AffinityEnchantments::bootstrap);
     }
 }

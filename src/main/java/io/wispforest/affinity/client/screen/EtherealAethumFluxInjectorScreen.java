@@ -134,8 +134,8 @@ public class EtherealAethumFluxInjectorScreen extends BaseUIModelScreen<FlowLayo
                     var tooltip = new ArrayList<Text>();
                     tooltip.add(Text.translatable(
                             "text.affinity.ethereal_aethum_flux_injector.node_location_tooltip",
-                            nodePos.getPos().getX() + " " + nodePos.getPos().getY() + " " + nodePos.getPos().getZ(),
-                            Text.translatable(Util.createTranslationKey("dimension", nodePos.getDimension().getValue()))
+                            nodePos.pos().getX() + " " + nodePos.pos().getY() + " " + nodePos.pos().getZ(),
+                            Text.translatable(Util.createTranslationKey("dimension", nodePos.dimension().getValue()))
                     ));
 
                     if (nodePos.equals(this.currentSource)) {

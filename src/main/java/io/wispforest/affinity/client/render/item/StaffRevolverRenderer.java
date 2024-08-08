@@ -24,7 +24,7 @@ public class StaffRevolverRenderer implements BuiltinItemRendererRegistry.Dynami
         matrices.push();
 
         var stackWithoutBundle = stack.copy();
-        stackWithoutBundle.delete(StaffItem.BUNDLED_STAFFS);
+        stackWithoutBundle.remove(StaffItem.BUNDLED_STAFFS);
 
         var using = MinecraftClient.getInstance().player.getActiveItem() == stack;
         if (using) {

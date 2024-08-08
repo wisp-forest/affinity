@@ -1,7 +1,0 @@
-{
-  "type": "affinity:ornament_carving",
-  "input": {
-    "item": "minecraft:purpur_block"
-  },
-  "output": "affinity:purpur_socle_ornament"
-}

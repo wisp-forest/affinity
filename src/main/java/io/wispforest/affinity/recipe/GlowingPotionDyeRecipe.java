@@ -70,9 +70,7 @@ public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
             }
         }
 
-        var data = new NbtCompound();
-        data.put(GlowingPotion.COLOR_KEY, ((DyeItem) dye.getItem()).getColor());
-        potion.put(PotionMixture.EXTRA_DATA, data);
+        potion.set(GlowingPotion.COLOR, ((DyeItem) dye.getItem()).getColor());
 
         return potion;
     }

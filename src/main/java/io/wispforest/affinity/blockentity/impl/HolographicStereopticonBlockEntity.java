@@ -232,7 +232,7 @@ public class HolographicStereopticonBlockEntity extends SyncedBlockEntity implem
             @Override
             public @Nullable ItemStack readData(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
                 if (!nbt.contains("Stack", NbtElement.COMPOUND_TYPE)) return null;
-                return ItemStack.fromNbt(registries, nbt.getCompound("Stack")).orElse(ItemStack.EMPTY);
+                return ItemStack.fromNbtOrEmpty(registries, nbt.getCompound("Stack"));
             }
 
             @Override

@@ -1,0 +1,20 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "item": "minecraft:bell"
+    },
+    "r": {
+      "item": "affinity:uncanny_rod"
+    }
+  },
+  "pattern": [
+    "b",
+    "b",
+    "r"
+  ],
+  "result": {
+    "id": "affinity:resounding_chime"
+  }
+}

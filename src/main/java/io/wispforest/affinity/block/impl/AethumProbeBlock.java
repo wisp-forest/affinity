@@ -47,7 +47,7 @@ public class AethumProbeBlock extends BlockWithEntity {
     @Override
     protected ItemActionResult onUseWithItem(ItemStack playerStack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         int crystals = state.get(CRYSTALS);
-        if (!playerStack.isOf(Items.AMETHYST_SHARD) || crystals >= 4) return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        if (!playerStack.isOf(Items.AMETHYST_SHARD) || crystals >= 4) return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
         crystals++;
         world.setBlockState(pos, state.with(CRYSTALS, crystals));

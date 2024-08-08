@@ -1,6 +1,5 @@
 package io.wispforest.affinity.mixin;
 
-import io.wispforest.affinity.enchantment.impl.GravecallerEnchantment;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -29,10 +28,12 @@ public abstract class TrackTargetGoalMixin extends Goal {
     private void cancelIfUndeadAndHasMaster(CallbackInfoReturnable<Boolean> cir) {
         if (this.target == null) return;
 
-        if (GravecallerEnchantment.isMaster(this.mob, this.target) ||
-                AffinityEntityAddon.haveEqualData(this.mob, this.target, GravecallerEnchantment.MASTER_KEY)) {
-            cir.setReturnValue(false);
-        }
+        // TODO: fix this when gravecaller is ported.
+
+//        if (GravecallerEnchantment.isMaster(this.mob, this.target) ||
+//                AffinityEntityAddon.haveEqualData(this.mob, this.target, GravecallerEnchantment.MASTER_KEY)) {
+//            cir.setReturnValue(false);
+//        }
     }
 
 }

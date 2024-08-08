@@ -29,7 +29,8 @@ public class StatusEffectEmiStack extends EmiStack {
 
     @Override
     public void render(DrawContext draw, int x, int y, float delta, int flags) {
-        var sprite = MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(this.effect);
+        // TODO: the EmiStack and REI stack type should probably store the registry entry.
+        var sprite = MinecraftClient.getInstance().getStatusEffectSpriteManager().getSprite(Registries.STATUS_EFFECT.getEntry(this.effect));
         draw.drawSprite(x - 1, y - 1, 0, 18, 18, sprite);
     }
 

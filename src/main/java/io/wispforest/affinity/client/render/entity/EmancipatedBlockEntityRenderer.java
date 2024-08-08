@@ -64,7 +64,7 @@ public class EmancipatedBlockEntityRenderer extends EntityRenderer<EmancipatedBl
 
         if (entity.emancipatedBlockEntityData() != null) {
             if (entity.renderBlockEntity == null) {
-                entity.renderBlockEntity = BlockEntity.createFromNbt(entity.getBlockPos(), entity.emancipatedState(), entity.emancipatedBlockEntityData());
+                entity.renderBlockEntity = BlockEntity.createFromNbt(entity.getBlockPos(), entity.emancipatedState(), entity.emancipatedBlockEntityData(), MinecraftClient.getInstance().world.getRegistryManager());
                 entity.renderBlockEntity.setWorld(MinecraftClient.getInstance().world);
             }
 

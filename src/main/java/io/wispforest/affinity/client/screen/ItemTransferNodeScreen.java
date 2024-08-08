@@ -4,6 +4,8 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.ItemTransferNodeBlockEntity;
 import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.endec.SerializationContext;
+import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen;
 import io.wispforest.owo.ui.component.CheckboxComponent;
 import io.wispforest.owo.ui.component.Components;
@@ -15,6 +17,7 @@ import io.wispforest.owo.ui.util.UISounds;
 import io.wispforest.owo.util.Observable;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.OrderedText;
@@ -80,7 +83,8 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
 
     private void updateNodePreview(ItemStack stack) {
         var nodeNbt = new NbtCompound();
-        nodeNbt.put(ItemTransferNodeBlockEntity.FILTER_STACK_KEY, stack);
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of(client.world.getRegistryManager()));
+        nodeNbt.put(ctx, ItemTransferNodeBlockEntity.FILTER_STACK_KEY, stack);
 
         this.component(FlowLayout.class, "node-preview-anchor").<FlowLayout>configure(anchor -> {
             anchor.clearChildren();
@@ -88,7 +92,7 @@ public class ItemTransferNodeScreen extends BaseUIModelHandledScreen<FlowLayout,
         });
 
         if (!stack.isEmpty()) {
-            var tooltip = ItemComponent.tooltipFromItem(stack, this.client.player, null);
+            var tooltip = ItemComponent.tooltipFromItem(stack, Item.TooltipContext.create(this.client.world), this.client.player, null);
             tooltip.add(TooltipComponent.of(OrderedText.empty()));
             tooltip.add(TooltipComponent.of(Text.translatable("block.affinity.item_transfer_node.clear_filter_hint").formatted(Formatting.GRAY).asOrderedText()));
 

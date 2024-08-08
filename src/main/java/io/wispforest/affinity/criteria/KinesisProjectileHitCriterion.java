@@ -30,9 +30,9 @@ public class KinesisProjectileHitCriterion extends AbstractCriterion<KinesisProj
                              Optional<LootContextPredicate> projectilePredicate) implements AbstractCriterion.Conditions {
 
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codecs.createStrictOptionalFieldCodec(EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, "player").forGetter(Conditions::player),
-                Codecs.createStrictOptionalFieldCodec(EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, "target").forGetter(Conditions::targetPredicate),
-                Codecs.createStrictOptionalFieldCodec(EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, "projectile").forGetter(Conditions::projectilePredicate)
+                EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(Conditions::player),
+                EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("target").forGetter(Conditions::targetPredicate),
+                EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("projectile").forGetter(Conditions::projectilePredicate)
         ).apply(instance, Conditions::new));
     }
 }

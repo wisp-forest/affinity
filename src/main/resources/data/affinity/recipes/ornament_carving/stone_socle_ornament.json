@@ -1,7 +1,0 @@
-{
-  "type": "affinity:ornament_carving",
-  "input": {
-    "item": "minecraft:stone"
-  },
-  "output": "affinity:stone_socle_ornament"
-}

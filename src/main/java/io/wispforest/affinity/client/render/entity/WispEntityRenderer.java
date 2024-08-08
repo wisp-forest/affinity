@@ -43,7 +43,7 @@ public class WispEntityRenderer extends MobEntityRenderer<WispEntity, WispEntity
 
             @Override
             public Identifier getTexture(Entity entity) {
-                return new Identifier("textures/entity/zombie/zombie.png");
+                return Identifier.of("textures/entity/zombie/zombie.png");
             }
         }, this.innerArmorModel, this.outerArmorModel, ctx.getModelManager()));
     }

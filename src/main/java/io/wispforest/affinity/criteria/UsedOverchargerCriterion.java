@@ -24,7 +24,7 @@ public class UsedOverchargerCriterion extends AbstractCriterion<UsedOverchargerC
     public record Conditions(Optional<LootContextPredicate> player) implements AbstractCriterion.Conditions {
 
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codec.optionalField("player", EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC).forGetter(Conditions::player)
+                EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(Conditions::player)
         ).apply(instance, Conditions::new));
     }
 }

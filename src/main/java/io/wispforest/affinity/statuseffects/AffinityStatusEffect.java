@@ -1,5 +1,6 @@
 package io.wispforest.affinity.statuseffects;
 
+import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -12,6 +13,6 @@ public class AffinityStatusEffect extends StatusEffect {
         super(type, color);
     }
 
-    public void onPotionApplied(LivingEntity target, @Nullable NbtCompound extraData) {}
+    public void onPotionApplied(LivingEntity target, @Nullable ComponentMap extraData) {}
     public void onRemovedFromEntity(LivingEntity entity) {}
 }

@@ -26,7 +26,7 @@ public class ArtifactBladeSmashCriterion extends AbstractCriterion<ArtifactBlade
                              NumberRange.IntRange fallDistance) implements AbstractCriterion.Conditions {
 
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codecs.createStrictOptionalFieldCodec(EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, "player").forGetter(Conditions::player),
+                EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC.optionalFieldOf("player").forGetter(Conditions::player),
                 NumberRange.IntRange.CODEC.fieldOf("fall_distance").forGetter(Conditions::fallDistance)
         ).apply(instance, Conditions::new));
     }

@@ -58,9 +58,9 @@ public class AffinityDebugCommands {
                         .getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE);
 
                 var tag = new NbtCompound();
-                storage.writeToNbt(tag);
+                storage.writeToNbt(tag, access);
 
-                context.getSource().sendFeedback(() -> new NbtTextFormatter(" ", 0).apply(tag), false);
+                context.getSource().sendFeedback(() -> new NbtTextFormatter(" ").apply(tag), false);
                 return 1;
             }));
 

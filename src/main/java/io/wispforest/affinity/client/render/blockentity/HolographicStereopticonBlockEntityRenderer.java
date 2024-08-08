@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client.render.blockentity;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.HolographicStereopticonBlock;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
@@ -194,10 +195,10 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
                             matrices.scale(meshScale * scale, meshScale * scale, meshScale * scale);
                             matrices.translate(-mesh.dimensions().getLengthX() / 2, 0, -mesh.dimensions().getLengthZ() / 2);
 
-                            if (Affinity.CONFIG.renderBlockEntitiesInStereopticonSectionImprints()) {
+                            if (Affinity.config().renderBlockEntitiesInStereopticonSectionImprints()) {
                                 MixinHooks.forceBlockEntityRendering = true;
                                 mesh.renderInfo().blockEntities().forEach((blockPos, entity) -> {
-                                    if (entity instanceof HolographicStereopticonBlockEntity && recursionDepth > Affinity.CONFIG.stereopticonSectionImprintRecursionLimit() - 1) {
+                                    if (entity instanceof HolographicStereopticonBlockEntity && recursionDepth > Affinity.config().stereopticonSectionImprintRecursionLimit() - 1) {
                                         return;
                                     }
 
@@ -213,7 +214,7 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
                                 MixinHooks.forceBlockEntityRendering = false;
                             }
 
-                            if (Affinity.CONFIG.renderEntitiesInStereopticonSectionImprints()) {
+                            if (Affinity.config().renderEntitiesInStereopticonSectionImprints()) {
                                 client.world.getOtherEntities(null, realMeshDimensions).forEach(entity -> {
                                     var entityVisible = ((WorldRendererAccessor) client.worldRenderer).affinity$getFrustum() != null && client.getEntityRenderDispatcher().shouldRender(
                                             entity,
@@ -228,7 +229,11 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
                                 });
                             }
 
-                            mesh.render(matrices);
+                            var meshViewStack = new MatrixStack();
+                            meshViewStack.peek().getPositionMatrix().set(RenderSystem.getModelViewMatrix());
+                            meshViewStack.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
+
+                            mesh.render(meshViewStack);
                         }
 
                         @Override

@@ -15,6 +15,7 @@ import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Style;
@@ -31,8 +32,8 @@ import java.util.Objects;
 public class IridescenceWandItem extends Item implements DirectInteractionHandler {
 
     public static final ComponentType<Mode> MODE = Affinity.component("iridescence_wand_mode", Mode.ENDEC);
-    public static final KeyedEndec<NbtCompound> LINK_DATA_KEY = NbtEndec.COMPOUND.keyed("LinkData", (NbtCompound) null);
-    public static final KeyedEndec<Boolean> RETAIN_MODE_KEY = Endec.BOOLEAN.keyed("RetainMode", false);
+    public static final ComponentType<NbtCompound> LINK_DATA = Affinity.component("iridescence_wand_link_data", NbtEndec.COMPOUND);
+    public static final ComponentType<Unit> RETAIN_MODE = Affinity.unitComponent("iridescence_wand_retain_mode");
 
     private static final String WAND_OF_IRIDESCENCE_PREFIX = "item.affinity.wand_of_iridescence";
 
@@ -47,9 +48,9 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
         if (world.isClient) return TypedActionResult.success(playerStack);
         if (this.getStoredPos(playerStack) != null) {
-            playerStack.delete(LINK_DATA_KEY);
+            playerStack.remove(LINK_DATA);
         } else {
-            playerStack.mutate(MODE, Mode::next);
+            playerStack.apply(MODE, Mode.BIND, Mode::next);
         }
 
         return TypedActionResult.success(playerStack);
@@ -59,7 +60,12 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType != ClickType.RIGHT) return false;
 
-        stack.mutate(RETAIN_MODE_KEY, enabled -> !enabled);
+        if (stack.contains(RETAIN_MODE)) {
+            stack.remove(RETAIN_MODE);
+        } else {
+            stack.set(RETAIN_MODE, Unit.INSTANCE);
+        }
+
         return true;
     }
 
@@ -70,7 +76,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
 
     @Override
     public Text getName(ItemStack stack) {
-        final var mode = stack.get(MODE);
+        final var mode = stack.getOrDefault(MODE, Mode.BIND);
 
         return Text.translatable(this.getTranslationKey()).append(Text.translatable(
                 WAND_OF_IRIDESCENCE_PREFIX + ".mode_suffix",
@@ -79,8 +85,8 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        final var mode = stack.get(MODE);
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
+        final var mode = stack.getOrDefault(MODE, Mode.BIND);
 
         tooltip.add(Text.empty());
 
@@ -92,7 +98,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
                 Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".help")).setStyle(Style.EMPTY.withColor(mode.color)));
 
         tooltip.add(Text.empty());
-        tooltip.add(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".retain_mode." + (stack.get(RETAIN_MODE_KEY) ? "enabled" : "disabled")).styled(style -> style.withColor(mode.color)));
+        tooltip.add(Text.translatable(WAND_OF_IRIDESCENCE_PREFIX + ".retain_mode." + (stack.contains(RETAIN_MODE) ? "enabled" : "disabled")).styled(style -> style.withColor(mode.color)));
     }
 
     @Override
@@ -100,7 +106,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         final var stack = context.getStack();
         final var world = context.getWorld();
         final var pos = context.getBlockPos();
-        final var mode = stack.get(MODE);
+        final var mode = stack.getOrDefault(MODE, Mode.BIND);
 
         if (!(world.getBlockEntity(pos) instanceof LinkableBlockEntity linkable)) return ActionResult.PASS;
         var blockName = world.getBlockState(pos).getBlock().getName();
@@ -117,15 +123,15 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
             }
 
             data.putLong("Position", pos.asLong());
-            stack.put(LINK_DATA_KEY, data);
+            stack.set(LINK_DATA, data);
 
             return ActionResult.SUCCESS;
         } else {
             var result = mode == Mode.BIND
-                    ? linkable.finishLink(context.getPlayer(), storedPos, stack.get(LINK_DATA_KEY))
-                    : linkable.destroyLink(context.getPlayer(), storedPos, stack.get(LINK_DATA_KEY));
+                    ? linkable.finishLink(context.getPlayer(), storedPos, stack.get(LINK_DATA))
+                    : linkable.destroyLink(context.getPlayer(), storedPos, stack.get(LINK_DATA));
 
-            if (!stack.get(RETAIN_MODE_KEY)) stack.delete(LINK_DATA_KEY);
+            if (!stack.contains(RETAIN_MODE)) stack.remove(LINK_DATA);
 
             if (result.isPresent()) {
                 result.map(LinkableBlockEntity.LinkResult::messageTranslationKey).ifPresentOrElse(translationKey -> {
@@ -142,14 +148,14 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     }
 
     public BlockPos getStoredPos(ItemStack stack) {
-        return stack.has(LINK_DATA_KEY) ?
-                BlockPos.fromLong(stack.get(LINK_DATA_KEY).getLong("Position"))
+        return stack.contains(LINK_DATA) ?
+                BlockPos.fromLong(stack.get(LINK_DATA).getLong("Position"))
                 : null;
     }
 
     @Override
     public boolean hasGlint(ItemStack stack) {
-        return stack.has(LINK_DATA_KEY);
+        return stack.contains(LINK_DATA);
     }
 
     public enum Mode {

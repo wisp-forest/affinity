@@ -1,5 +1,6 @@
 package io.wispforest.affinity.particle;
 
+import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityParticleTypes;
 import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.impl.RecordEndec;
@@ -16,7 +17,12 @@ public record BezierPathEmitterParticleEffect(ParticleEffect effect, Vec3d splin
                                               int emitterDuration,
                                               boolean randomPath) implements ParticleEffect {
 
-    public static final StructEndec<BezierPathEmitterParticleEffect> ENDEC = RecordEndec.create(new ReflectiveEndecBuilder(MinecraftEndecs::addDefaults), BezierPathEmitterParticleEffect.class);
+    public static final StructEndec<BezierPathEmitterParticleEffect> ENDEC = RecordEndec.create(new ReflectiveEndecBuilder(BezierPathEmitterParticleEffect::addEndecs), BezierPathEmitterParticleEffect.class);
+
+    private static void addEndecs(ReflectiveEndecBuilder builder) {
+        MinecraftEndecs.addDefaults(builder);
+        AffinityNetwork.addEndecs(builder);
+    }
 
     public static BezierPathEmitterParticleEffect item(ItemStack stack, Vec3d splineEndpoint, int travelDuration, int emitterDuration, boolean randomPath) {
         return new BezierPathEmitterParticleEffect(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), splineEndpoint, travelDuration, emitterDuration, randomPath);

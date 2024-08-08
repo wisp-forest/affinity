@@ -16,7 +16,7 @@ void main() {
         discard;
     }
 
-    vec4 color = texture(DiffuseSampler, texCoord) * vertexColor;
+    vec4 color = texture(DiffuseSampler, texCoord);
 
     // blit final output of compositor into displayed back buffer
     fragColor = color * ColorModulator;

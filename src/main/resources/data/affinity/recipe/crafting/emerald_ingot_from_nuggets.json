@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "emerald_ingot",
+  "key": {
+    "#": {
+      "item": "affinity:emerald_nugget"
+    }
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "id": "affinity:emerald_ingot"
+  }
+}

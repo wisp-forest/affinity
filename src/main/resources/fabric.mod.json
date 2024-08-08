@@ -62,7 +62,7 @@
     "fabric-api": "*",
     "minecraft": ">=1.20.4",
     "trinkets": "*",
-    "owo": ">=0.12.3+1.20.3",
+    "owo": ">=0.12.11+1.21",
     "terrablender": "*",
     "cardinal-components-entity": "*",
     "cardinal-components-chunk": "*",

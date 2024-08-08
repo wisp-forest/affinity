@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(MapState.class)
 public class MapStateMixin {
 
-    @ModifyExpressionValue(method = "update", at = @At(value = "FIELD", target = "Lnet/minecraft/item/map/MapState;showIcons:Z", ordinal = 1))
+    @ModifyExpressionValue(method = "update", at = @At(value = "FIELD", target = "Lnet/minecraft/item/map/MapState;showDecorations:Z", ordinal = 1))
     private boolean disableFrameMarkers(boolean original, @Local(argsOnly = true) ItemStack stack) {
         if (!stack.isOf(AffinityItems.REALIZED_AETHUM_MAP)) return original;
         return false;

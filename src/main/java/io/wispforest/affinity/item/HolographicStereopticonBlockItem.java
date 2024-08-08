@@ -10,7 +10,9 @@ import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.api.EnvType;
@@ -30,6 +32,7 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
@@ -138,8 +141,9 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
 
         var nextImprintKind = imprintKindOf(stack).next();
 
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of(player.getRegistryManager()));
         var rendererData = new NbtCompound();
-        rendererData.put(ImprintKind.ENDEC.keyed(IMPRINT_KIND_KEY_NAME, ImprintKind.BLOCK), nextImprintKind);
+        rendererData.put(ctx, ImprintKind.ENDEC.keyed(IMPRINT_KIND_KEY_NAME, ImprintKind.BLOCK), nextImprintKind);
 
         stack.apply(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT, data -> {
             return data.apply(nbt -> nbt.put(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY, rendererData));

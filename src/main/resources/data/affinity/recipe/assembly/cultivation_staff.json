@@ -1,0 +1,41 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "c": {
+      "item": "minecraft:cornflower"
+    },
+    "a": {
+      "item": "affinity:azalea_flowers"
+    },
+    "l": {
+      "item": "minecraft:allium"
+    },
+    "b": {
+      "item": "minecraft:blue_orchid"
+    },
+    "o": {
+      "item": "affinity:staff_prototype"
+    },
+    "v": {
+      "item": "minecraft:lily_of_the_valley"
+    },
+    "p": {
+      "item": "minecraft:poppy"
+    },
+    "u": {
+      "item": "minecraft:pink_tulip"
+    },
+    "d": {
+      "item": "minecraft:dandelion"
+    }
+  },
+  "pattern": [
+    "cal",
+    "bov",
+    "pud"
+  ],
+  "result": {
+    "id": "affinity:cultivation_staff"
+  }
+}

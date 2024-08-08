@@ -449,10 +449,10 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
         this.invertFilter = nbt.get(ctx, INVERT_FILTER_KEY);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void setStackNbt(ItemStack stack, RegistryWrapper.WrapperLookup registries) {
-        super.setStackNbt(stack, registries);
-        NbtUtil.processBlockEntityNbt(stack, this, nbt -> nbt.remove("Links"));
+    public void removeFromCopiedStackNbt(NbtCompound nbt) {
+        nbt.remove("Links");
     }
 
     @Override

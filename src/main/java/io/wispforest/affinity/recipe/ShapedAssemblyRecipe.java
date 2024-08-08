@@ -1,11 +1,11 @@
 package io.wispforest.affinity.recipe;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.mixin.access.ShapedRecipeAccessor;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.RawShapedRecipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
@@ -31,17 +31,19 @@ public class ShapedAssemblyRecipe extends ShapedRecipe {
     public static class Serializer extends ShapedRecipe.Serializer {
 
         @Override
-        public Codec<ShapedRecipe> codec() {
-            return ((MapCodec.MapCodecCodec<ShapedRecipe>) super.codec()).codec().<ShapedRecipe>xmap(
+        public MapCodec<ShapedRecipe> codec() {
+            return super.codec().xmap(
                     recipe -> new ShapedAssemblyRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapedRecipeAccessor) recipe).affinity$getRaw(), ((ShapedRecipeAccessor) recipe).affinity$getResult(), recipe.showNotification()),
                     recipe -> new ShapedRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapedRecipeAccessor) recipe).affinity$getRaw(), ((ShapedRecipeAccessor) recipe).affinity$getResult(), recipe.showNotification())
-            ).codec();
+            );
         }
 
         @Override
-        public ShapedAssemblyRecipe read(PacketByteBuf packetByteBuf) {
-            final var recipe = super.read(packetByteBuf);
-            return new ShapedAssemblyRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapedRecipeAccessor) recipe).affinity$getRaw(), ((ShapedRecipeAccessor) recipe).affinity$getResult(), recipe.showNotification());
+        public PacketCodec<RegistryByteBuf, ShapedRecipe> packetCodec() {
+            return super.packetCodec().xmap(
+                recipe -> new ShapedAssemblyRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapedRecipeAccessor) recipe).affinity$getRaw(), ((ShapedRecipeAccessor) recipe).affinity$getResult(), recipe.showNotification()),
+                recipe -> new ShapedRecipe(recipe.getGroup(), recipe.getCategory(), ((ShapedRecipeAccessor) recipe).affinity$getRaw(), ((ShapedRecipeAccessor) recipe).affinity$getResult(), recipe.showNotification())
+            );
         }
     }
 

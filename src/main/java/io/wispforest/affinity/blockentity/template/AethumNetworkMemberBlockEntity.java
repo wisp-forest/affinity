@@ -134,10 +134,10 @@ public abstract class AethumNetworkMemberBlockEntity extends SyncedBlockEntity i
         this.fluxStorage.writeNbt(nbt);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void setStackNbt(ItemStack stack, RegistryWrapper.WrapperLookup registries) {
-        super.setStackNbt(stack, registries);
-        NbtUtil.processBlockEntityNbt(stack, this, nbt -> nbt.remove("LinkedMembers"));
+    public void removeFromCopiedStackNbt(NbtCompound nbt) {
+        nbt.remove("LinkedMembers");
     }
 
     protected void sendFluxUpdate() {

@@ -5,13 +5,13 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.api.widget.FillingArrowWidget;
-import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.wispforest.affinity.blockentity.impl.BrewingCauldronBlockEntity;
 import io.wispforest.affinity.compat.emi.AffinityEmiPlugin;
 import io.wispforest.affinity.compat.emi.EmiUIAdapter;
 import io.wispforest.affinity.compat.emi.StatusEffectEmiStack;
 import io.wispforest.affinity.compat.emi.StatusEffectSlotWidget;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.recipe.PotionMixingRecipe;
@@ -19,9 +19,9 @@ import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.block.Blocks;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -105,7 +105,7 @@ public class PotionMixingEmiRecipe extends BasicEmiRecipe {
         potionNbt.put(BrewingCauldronBlockEntity.FILL_LEVEL_KEY, 3);
         potionNbt.put(
                 BrewingCauldronBlockEntity.STORED_POTION_KEY,
-                new PotionMixture(this.recipe.potionOutput(), null)
+                new PotionMixture(this.recipe.potionOutput(), ComponentMap.EMPTY)
         );
 
         root.child(

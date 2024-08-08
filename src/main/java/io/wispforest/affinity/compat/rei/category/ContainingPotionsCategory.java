@@ -2,6 +2,7 @@ package io.wispforest.affinity.compat.rei.category;
 
 import io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin;
 import io.wispforest.affinity.compat.rei.display.ContainingPotionsDisplay;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.owo.compat.rei.ReiUIAdapter;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.core.*;
@@ -14,7 +15,6 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -79,7 +79,7 @@ public class ContainingPotionsCategory implements DisplayCategory<ContainingPoti
     @Override
     public Renderer getIcon() {
         ItemStack stack = new ItemStack(Items.POTION);
-        PotionUtil.setPotion(stack, Potions.STRENGTH);
+        PotionUtil.setPotion(stack, Potions.STRENGTH.value());
         return EntryStacks.of(stack);
     }
 }

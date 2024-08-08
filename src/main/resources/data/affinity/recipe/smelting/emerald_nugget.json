@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": [
+    {
+      "item": "affinity:emerald_helmet"
+    },
+    {
+      "item": "affinity:emerald_chestplate"
+    },
+    {
+      "item": "affinity:emerald_leggings"
+    },
+    {
+      "item": "affinity:emerald_boots"
+    }
+  ],
+  "result": {
+    "id": "affinity:emerald_nugget"
+  }
+}

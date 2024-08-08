@@ -5,6 +5,7 @@ import io.wispforest.endec.Endec;
 import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.serialization.CodecUtils;
+import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -125,10 +126,11 @@ public class EmancipatedBlockEntity extends Entity {
 
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
-        nbt.put(EMANCIPATED_STATE_KEY, this.emancipatedState);
-        nbt.putIfNotNull(SerializationContext.empty(), EMANCIPATED_BLOCK_ENTITY_DATA_KEY, this.emancipatedBlockEntityData());
-        nbt.put(MAX_AGE_KEY, this.maxAge());
-        nbt.put(ANIMATION_SCALE_KEY, this.animationScale());
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of(getRegistryManager()));
+        nbt.put(ctx, EMANCIPATED_STATE_KEY, this.emancipatedState);
+        nbt.putIfNotNull(ctx, EMANCIPATED_BLOCK_ENTITY_DATA_KEY, this.emancipatedBlockEntityData());
+        nbt.put(ctx, MAX_AGE_KEY, this.maxAge());
+        nbt.put(ctx, ANIMATION_SCALE_KEY, this.animationScale());
     }
 
     @Override

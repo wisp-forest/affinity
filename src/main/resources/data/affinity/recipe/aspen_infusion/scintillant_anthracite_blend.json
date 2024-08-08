@@ -1,0 +1,24 @@
+{
+  "type": "affinity:aspen_infusion",
+  "primary_input": {
+    "item": "minecraft:glowstone_dust"
+  },
+  "inputs": [
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    }
+  ],
+  "output": {
+    "id": "affinity:scintillant_anthracite_blend",
+    "count": 4
+  }
+}

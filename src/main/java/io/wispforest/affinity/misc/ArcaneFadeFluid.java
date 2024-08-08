@@ -1,18 +1,18 @@
 package io.wispforest.affinity.misc;
 
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.owo.ops.ItemOps;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -24,7 +24,6 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
@@ -41,8 +40,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public abstract class ArcaneFadeFluid extends FlowableFluid {
-
-    public static final KeyedEndec<Boolean> REMOVE_ENCHANTMENT_GLINT_KEY = Endec.BOOLEAN.keyed("affinity:remove_enchantment_glint", false);
 
     public static final Event<OnTouch> ENTITY_TOUCH_EVENT = EventFactory.createArrayBacked(OnTouch.class, listeners -> entity -> {
         for (var listener : listeners) {
@@ -69,19 +66,19 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
                 if (!ItemOps.emptyAwareDecrement(catalyst.getStack())) catalyst.discard();
 
                 var output = input.getStack().copy();
-                output.put(REMOVE_ENCHANTMENT_GLINT_KEY, true);
+                output.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, false);
 
                 input.setStack(output);
             })) {return;}
 
-            if (tryCraft(items, input -> input.getStack().getRepairCost() != 0, catalyst -> catalyst.getStack().isOf(Items.POTION) && PotionUtil.getPotion(catalyst.getStack()) == Potions.HEALING, (input, catalyst) -> {
+            if (tryCraft(items, input -> input.getStack().getOrDefault(DataComponentTypes.REPAIR_COST, 0) != 0, catalyst -> catalyst.getStack().isOf(Items.POTION) && PotionUtil.getPotion(catalyst.getStack()) == Potions.HEALING, (input, catalyst) -> {
                 if (ItemOps.emptyAwareDecrement(catalyst.getStack())) {
                     catalyst.getWorld().spawnEntity(new ItemEntity(catalyst.getWorld(), catalyst.getX(), catalyst.getY(), catalyst.getZ(), Items.GLASS_BOTTLE.getDefaultStack()));
                 } else {
                     catalyst.setStack(Items.GLASS_BOTTLE.getDefaultStack());
                 }
 
-                input.getStack().setRepairCost(0);
+                input.getStack().set(DataComponentTypes.REPAIR_COST, 0);
             })) {return;}
         });
 
@@ -151,7 +148,7 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
     }
 
     @Override
-    protected int getFlowSpeed(WorldView world) {
+    protected int getMaxFlowDistance(WorldView world) {
         return 4;
     }
 

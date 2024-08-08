@@ -1,0 +1,57 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 500,
+  "flux_cost_per_tick": 80,
+  "core_inputs": [
+    {
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "item": "affinity:crystalline_wisp_matter_composite"
+    },
+    {
+      "item": "affinity:crystalline_wisp_matter_composite"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "item": "affinity:greatly_attuned_amethyst_shard"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "affinity:infused_stone"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "minecraft:deepslate_bricks"
+    },
+    {
+      "item": "minecraft:obsidian"
+    },
+    {
+      "item": "minecraft:deepslate_bricks"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "affinity:infused_stone"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    }
+  ],
+  "output": {
+    "id": "affinity:sunshine_monolith"
+  },
+  "entity": {
+    "id": "minecraft:magma_cube"
+  }
+}

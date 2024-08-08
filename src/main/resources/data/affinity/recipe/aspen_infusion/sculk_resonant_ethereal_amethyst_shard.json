@@ -1,0 +1,38 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 500,
+  "flux_cost_per_tick": 40,
+  "primary_input": {
+    "item": "minecraft:amethyst_shard"
+  },
+  "inputs": [
+    {
+      "item": "minecraft:sculk_shrieker"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "minecraft:sculk_sensor"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "minecraft:ender_eye"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    }
+  ],
+  "output": {
+    "id": "affinity:sculk_resonant_ethereal_amethyst_shard",
+    "count": 4
+  }
+}

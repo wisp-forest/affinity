@@ -17,6 +17,7 @@ import io.wispforest.owo.ui.parsing.UIParsing;
 import io.wispforest.owo.util.Wisdom;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
@@ -32,7 +33,7 @@ import java.util.Map;
 
 public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, OuijaBoardScreenHandler> {
 
-    private static final Identifier ILLAGER_FONT = new Identifier("minecraft", "illageralt");
+    private static final Identifier ILLAGER_FONT = Identifier.of("minecraft", "illageralt");
     private static final Random BRINGER_OF_WISDOM = Random.create();
 
     private final TrimmedLabelComponent[] curseLabels = new TrimmedLabelComponent[3];
@@ -80,7 +81,7 @@ public class OuijaBoardScreen extends BaseUIModelHandledScreen<FlowLayout, Ouija
 
             this.curseButtons[i].active = canAfford;
 
-            var curseName = curse.getName(1);
+            var curseName = Enchantment.getName(curse, 1);
             this.curseButtons[i].tooltip(curseName);
 
             BRINGER_OF_WISDOM.setSeed(curse.hashCode() + i * 37);

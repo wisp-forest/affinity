@@ -1,0 +1,22 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "d": {
+      "item": "minecraft:deepslate_tiles"
+    },
+    "a": {
+      "item": "affinity:azalea_log"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "aia",
+    "ddd"
+  ],
+  "result": {
+    "id": "affinity:ritual_socle_composer"
+  }
+}

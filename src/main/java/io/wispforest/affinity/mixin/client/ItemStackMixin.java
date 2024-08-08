@@ -42,7 +42,7 @@ public abstract class ItemStackMixin {
     }
 
     private boolean affinity$isDamagedShard() {
-        return !AttunedShardTier.forItem(this.getItem()).isNone() && ((ItemStack) (Object) this).has(AttunedShardItem.HEALTH_KEY);
+        return !AttunedShardTier.forItem(this.getItem()).isNone() && ((ItemStack) (Object) this).contains(AttunedShardItem.HEALTH);
     }
 
 }

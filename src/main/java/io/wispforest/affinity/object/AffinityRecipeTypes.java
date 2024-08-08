@@ -16,7 +16,7 @@ public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>>
 
     public static class Serializers implements AutoRegistryContainer<RecipeSerializer<?>> {
 
-        public static final RecipeSerializer<PotionMixingRecipe> POTION_MIXING = new PotionMixingRecipeSerializer();
+        public static final RecipeSerializer<PotionMixingRecipe> POTION_MIXING = new PotionMixingRecipe.Serializer();
         public static final RecipeSerializer<AspenInfusionRecipe> ASPEN_INFUSION = new AspenInfusionRecipe.Serializer();
         public static final RecipeSerializer<SpiritAssimilationRecipe> SPIRIT_ASSIMILATION = new SpiritAssimilationRecipe.Serializer();
         public static final RecipeSerializer<OrnamentCarvingRecipe> ORNAMENT_CARVING = new OrnamentCarvingRecipe.Serializer();

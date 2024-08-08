@@ -34,7 +34,7 @@ public class EmancipationVertexConsumerProvider implements VertexConsumerProvide
                     .overlay(new RenderPhase.Overlay(false) {
                         @Override
                         public void startDrawing() {
-                            RenderSystem.setupOverlayColor(() -> MinecraftClient.getInstance().getTextureManager().getTexture(Affinity.id("textures/fizzle_alpha.png")).getGlId(), 16);
+                            RenderSystem.setupOverlayColor(MinecraftClient.getInstance().getTextureManager().getTexture(Affinity.id("textures/fizzle_alpha.png")).getGlId(), 16);
                         }
                     })
                     .cull(RenderPhase.DISABLE_CULLING)
@@ -66,7 +66,7 @@ public class EmancipationVertexConsumerProvider implements VertexConsumerProvide
         return this.delegate.getBuffer(layer);
     }
 
-    private static class AlphaMaskConsumer extends FixedColorVertexConsumer {
+    private static class AlphaMaskConsumer implements VertexConsumer {
 
         private final VertexConsumer delegate;
         private final Matrix4f inverseViewMatrix;
@@ -79,6 +79,8 @@ public class EmancipationVertexConsumerProvider implements VertexConsumerProvide
         private final Vector2f texture = new Vector2f();
 
         private int light;
+
+        private boolean writtenVertex = false;
 
         public AlphaMaskConsumer(VertexConsumer delegate, Matrix4f viewMatrix, Matrix3f normalMatrix, float alphaCutoff) {
             this.delegate = delegate;
@@ -97,8 +99,7 @@ public class EmancipationVertexConsumerProvider implements VertexConsumerProvide
             this.light = LightmapTextureManager.MAX_LIGHT_COORDINATE;
         }
 
-        @Override
-        public void next() {
+        private void next() {
             var blockSpaceNormal = this.inverseNormalMatrix.transform(new Vector3f(this.normal));
             var facing = Direction.getFacing(blockSpaceNormal.x(), blockSpaceNormal.y(), blockSpaceNormal.z());
 
@@ -116,14 +117,19 @@ public class EmancipationVertexConsumerProvider implements VertexConsumerProvide
                     .texture(this.texture.x, this.texture.y)
                     .overlay(Math.round(overlayU * 16), Math.round(overlayV * 16))
                     .light(this.light)
-                    .normal(this.normal.x, this.normal.y, this.normal.z)
-                    .next();
+                    .normal(this.normal.x, this.normal.y, this.normal.z);
 
             this.reset();
         }
 
         @Override
-        public VertexConsumer vertex(double x, double y, double z) {
+        public VertexConsumer vertex(float x, float y, float z) {
+            if (writtenVertex) {
+                next();
+            } else {
+                writtenVertex = true;
+            }
+
             this.pos.set(x, y, z);
             return this;
         }

@@ -13,11 +13,14 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.affinity.object.AffinityPoiTypes;
+import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.recipe.PotionMixingRecipe;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
+import io.wispforest.owo.serialization.RegistriesAttribute;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CandleBlock;
@@ -29,6 +32,8 @@ import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -82,9 +87,10 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
 
-        nbt.put(STORED_POTION_KEY, this.storedPotion);
-        nbt.put(FILL_LEVEL_KEY, this.fillLevel);
-        nbt.put(PROCESS_TICK_KEY, this.processTick);
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries));
+        nbt.put(ctx, STORED_POTION_KEY, this.storedPotion);
+        nbt.put(ctx, FILL_LEVEL_KEY, this.fillLevel);
+        nbt.put(ctx, PROCESS_TICK_KEY, this.processTick);
         Inventories.writeNbt(nbt, this.items, registries);
     }
 
@@ -155,8 +161,8 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
         int affineCandleCount = this.countCandles();
         if (affineCandleCount > 0) {
-            var extraNbt = this.storedPotion.getOrCreateExtraNbt();
-            extraNbt.put(PotionMixture.EXTEND_DURATION_BY, 1 + Math.min(affineCandleCount * 0.05F, 0.45F));
+            var extraNbt = this.storedPotion.extraComponents();
+            extraNbt.set(PotionMixture.EXTEND_DURATION_BY, 1 + Math.min(affineCandleCount * 0.05F, 0.45F));
         }
 
         for (var ingredient : this.cachedRecipe.itemInputs) {
@@ -174,7 +180,8 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
     }
 
     private boolean updateAndTestCraftingPreconditions() {
-        this.cachedRecipe = PotionMixingRecipe.getMatching(this.world.getRecipeManager(), this.storedPotion, this.items).orElse(null);
+        var input = new PotionMixingRecipe.Input(this.items, this.storedPotion);
+        this.cachedRecipe = this.world.getRecipeManager().getFirstMatch(AffinityRecipeTypes.POTION_MIXING, input, this.world).map(RecipeEntry::value).orElse(null);
         if (this.cachedRecipe == null) return false;
 
         if (this.sporeBlossomPos == null || !this.world.getBlockState(this.sporeBlossomPos).isOf(Blocks.SPORE_BLOSSOM)) {

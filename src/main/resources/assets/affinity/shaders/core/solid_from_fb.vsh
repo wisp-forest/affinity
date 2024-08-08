@@ -1,6 +1,5 @@
 #version 150
 
-#moj_import <light.glsl>
 #moj_import <fog.glsl>
 
 in vec3 Position;
@@ -22,7 +21,7 @@ void main() {
     vec3 pos = Position + ChunkOffset;
     gl_Position = ProjMat * ModelViewMat * vec4(pos, 1.0);
 
-    vertexDistance = fog_distance(ModelViewMat, pos, FogShape);
+    vertexDistance = fog_distance(pos, FogShape);
     vertexColor = Color;
     normal = ProjMat * ModelViewMat * vec4(Normal, 0.0);
 }

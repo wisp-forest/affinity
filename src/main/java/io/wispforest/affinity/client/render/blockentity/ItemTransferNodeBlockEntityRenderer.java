@@ -90,7 +90,7 @@ public class ItemTransferNodeBlockEntityRenderer extends AffinityBlockEntityRend
             linkAlpha += Delta.compute(
                     linkAlpha,
                     client.player.isHolding(stack -> stack.getItem() instanceof IridescenceWandItem) ? 1f : 0f,
-                    client.getLastFrameDuration() * .25f
+                    client.getRenderTickCounter().getLastFrameDuration() * .25f
             );
         });
     }

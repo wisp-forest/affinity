@@ -44,7 +44,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
 
     @Override
     protected float getAethumConsumption(ItemStack stack) {
-        return stack.get(MODE).aethumDrain;
+        return stack.getOrDefault(MODE, Mode.NORMAL).aethumDrain;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
 
     @Override
     public void pedestalTickServer(ServerWorld world, BlockPos pos, StaffPedestalBlockEntity pedestal) {
-        var mode = pedestal.getItem().get(MODE);
+        var mode = pedestal.getItem().getOrDefault(MODE, Mode.NORMAL);
         var costPerBlock = (long) (mode.aethumDrain * 100);
 
         for (var targetPos : BlockPos.iterate(pos.add(-2, -1, -2), pos.add(2, 1, 2))) {
@@ -116,7 +116,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
             AffinityParticleSystems.TIME_STAFF_ACCELERATE.spawn(world, player.getPos().add(0, 1.25, 0), res.getBlockPos());
         }
 
-        var mode = stack.get(MODE);
+        var mode = stack.getOrDefault(MODE, Mode.NORMAL);
         this.accelerate(world, res.getBlockPos(), mode.repeatTicks);
 
         return TypedActionResult.consume(stack);
@@ -158,7 +158,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
 
     @Override
     protected @Nullable Text getModeName(ItemStack stack) {
-        var mode = stack.get(MODE);
+        var mode = stack.getOrDefault(MODE, Mode.NORMAL);
         return Text.translatable(this.getTranslationKey() + ".mode." + mode.id, mode.repeatTicks + 1);
     }
 

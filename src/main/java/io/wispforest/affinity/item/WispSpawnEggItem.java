@@ -5,7 +5,6 @@ import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.wisps.WispType;
 import io.wispforest.owo.ui.core.Color;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
@@ -15,8 +14,6 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 

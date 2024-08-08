@@ -1,5 +1,6 @@
 package io.wispforest.affinity.mixin.access;
 
+import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
@@ -10,8 +11,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(FilledMapItem.class)
 public interface FilledMapItemInvoker {
 
-    @Invoker("createMapState")
-    static void affinity$createMapState(ItemStack stack, World world, int x, int z, int scale, boolean showIcons, boolean unlimitedTracking, RegistryKey<World> dimension) {
+    @Invoker("allocateMapId")
+    static MapIdComponent affinity$AllocateMapId(World world, int x, int z, int scale, boolean showIcons, boolean unlimitedTracking, RegistryKey<World> dimension) {
         throw new AssertionError("what");
     }
 

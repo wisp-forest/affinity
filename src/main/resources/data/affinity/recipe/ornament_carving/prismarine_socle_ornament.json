@@ -1,0 +1,9 @@
+{
+  "type": "affinity:ornament_carving",
+  "input": {
+    "item": "minecraft:dark_prismarine"
+  },
+  "output": {
+    "id": "affinity:prismarine_socle_ornament"
+  }
+}

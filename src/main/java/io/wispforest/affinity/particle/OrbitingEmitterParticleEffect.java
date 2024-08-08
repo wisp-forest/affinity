@@ -1,5 +1,6 @@
 package io.wispforest.affinity.particle;
 
+import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityParticleTypes;
 import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.impl.RecordEndec;
@@ -13,7 +14,12 @@ public record OrbitingEmitterParticleEffect(ParticleEffect outerEffect, Particle
                                             float radius, int emitInterval,
                                             int orbitSpeed, int lifetime) implements ParticleEffect {
 
-    public static final StructEndec<OrbitingEmitterParticleEffect> ENDEC = RecordEndec.create(new ReflectiveEndecBuilder(MinecraftEndecs::addDefaults), OrbitingEmitterParticleEffect.class);
+    public static final StructEndec<OrbitingEmitterParticleEffect> ENDEC = RecordEndec.create(new ReflectiveEndecBuilder(OrbitingEmitterParticleEffect::addEndecs), OrbitingEmitterParticleEffect.class);
+
+    private static void addEndecs(ReflectiveEndecBuilder builder) {
+        MinecraftEndecs.addDefaults(builder);
+        AffinityNetwork.addEndecs(builder);
+    }
 
     @Override
     public ParticleType<?> getType() {

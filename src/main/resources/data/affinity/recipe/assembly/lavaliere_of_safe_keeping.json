@@ -1,0 +1,26 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    "n": {
+      "item": "minecraft:iron_nugget"
+    },
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "e": {
+      "item": "affinity:crystallized_experience"
+    }
+  },
+  "pattern": [
+    "dna",
+    "n n",
+    "end"
+  ],
+  "result": {
+    "id": "affinity:lavaliere_of_safe_keeping"
+  }
+}

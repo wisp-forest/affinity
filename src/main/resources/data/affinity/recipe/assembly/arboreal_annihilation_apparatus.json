@@ -1,0 +1,29 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "p": {
+      "item": "affinity:staff_prototype"
+    },
+    "w": {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    "m": {
+      "item": "affinity:vicious_wisp_mist"
+    },
+    "a": {
+      "item": "affinity:mildly_attuned_amethyst_shard"
+    },
+    "i": {
+      "item": "affinity:infused_stone"
+    }
+  },
+  "pattern": [
+    "pmp",
+    "pwp",
+    "aia"
+  ],
+  "result": {
+    "id": "affinity:arboreal_annihilation_apparatus"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "p": {
+      "item": "affinity:staff_prototype"
+    },
+    "e": {
+      "item": "minecraft:ender_pearl"
+    },
+    "s": {
+      "item": "affinity:scintillant_anthracite_blend"
+    }
+  },
+  "pattern": [
+    "s",
+    "e",
+    "p"
+  ],
+  "result": {
+    "id": "affinity:collection_staff"
+  }
+}

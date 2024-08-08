@@ -9,9 +9,13 @@ import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntit
 import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.affinity.misc.util.EndecUtil;
+import io.wispforest.endec.impl.ReflectiveEndecBuilder;
 import io.wispforest.owo.network.OwoNetChannel;
+import io.wispforest.owo.serialization.CodecUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -23,7 +27,8 @@ import java.util.Collection;
 
 public class AffinityNetwork {
 
-    public static final OwoNetChannel CHANNEL = OwoNetChannel.create(Affinity.id("main"));
+    public static final OwoNetChannel CHANNEL = OwoNetChannel.create(Affinity.id("main"))
+        .addEndecs(AffinityNetwork::addEndecs);
 
     public static OwoNetChannel.ServerHandle server(BlockEntity entity) {
         return CHANNEL.serverHandle(entity);
@@ -86,6 +91,10 @@ public class AffinityNetwork {
         RitualSocleComposerScreenHandler.initNetwork();
         EtherealAethumFluxInjectorBlockEntity.initNetwork();
         StaffItem.initNetwork();
+    }
+
+    public static void addEndecs(ReflectiveEndecBuilder builder) {
+        builder.register(CodecUtils.toEndecWithRegistries(ParticleTypes.TYPE_CODEC, ParticleTypes.PACKET_CODEC), ParticleEffect.class);
     }
 
 }

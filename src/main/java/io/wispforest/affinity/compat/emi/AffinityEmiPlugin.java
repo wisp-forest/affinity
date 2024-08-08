@@ -15,20 +15,19 @@ import io.wispforest.affinity.block.impl.ArcaneFadeBlock;
 import io.wispforest.affinity.compat.emi.recipe.*;
 import io.wispforest.affinity.compat.rei.display.SocleComposingDisplay;
 import io.wispforest.affinity.item.SocleOrnamentItem;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
 import io.wispforest.affinity.recipe.ShapedAssemblyRecipe;
 import io.wispforest.affinity.recipe.ShapelessAssemblyRecipe;
-import io.wispforest.affinity.recipe.ingredient.PotionIngredient;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
@@ -44,7 +43,7 @@ public class AffinityEmiPlugin implements EmiPlugin {
     public static final EmiRecipeCategory POTION_MIXING = new AffinityEmiRecipeCategory(Affinity.id("potion_mixing"), EmiStack.of(AffinityBlocks.BREWING_CAULDRON));
     public static final EmiRecipeCategory CONTAINING_POTIONS = new AffinityEmiRecipeCategory(Affinity.id("containing_potions"), Util.make(() -> {
         ItemStack stack = new ItemStack(Items.POTION);
-        PotionUtil.setPotion(stack, Potions.STRENGTH);
+        PotionUtil.setPotion(stack, Potions.STRENGTH.value());
         return EmiStack.of(stack);
     }));
     public static final EmiRecipeCategory SPIRIT_ASSIMILATION = new AffinityEmiRecipeCategory(Affinity.id("spirit_assimilation"), EmiStack.of(AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS));
@@ -83,7 +82,7 @@ public class AffinityEmiPlugin implements EmiPlugin {
         var effectToPotion = new HashMap<StatusEffect, List<Potion>>();
         for (var potion : Registries.POTION) {
             for (var effectInst : potion.getEffects()) {
-                effectToPotion.computeIfAbsent(effectInst.getEffectType(), unused -> new ArrayList<>()).add(potion);
+                effectToPotion.computeIfAbsent(effectInst.getEffectType().value(), unused -> new ArrayList<>()).add(potion);
             }
         }
 
@@ -158,9 +157,10 @@ public class AffinityEmiPlugin implements EmiPlugin {
     }
 
     public static EmiIngredient veryCoolFeatureYouGotThereEmi(Ingredient ingredient) {
-        if (ingredient.getCustomIngredient() instanceof PotionIngredient) {
-            return new ListEmiIngredient(ingredient.getCustomIngredient().getMatchingStacks().stream().map(EmiStack::of).toList(), 1);
-        }
+        // TODO i hate this recipe viewer
+//        if (ingredient.getCustomIngredient() instanceof PotionIngredient) {
+//            return new ListEmiIngredient(ingredient.getCustomIngredient().getMatchingStacks().stream().map(EmiStack::of).toList(), 1);
+//        }
 
         return EmiIngredient.of(ingredient);
     }

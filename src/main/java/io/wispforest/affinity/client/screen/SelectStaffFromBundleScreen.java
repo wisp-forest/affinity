@@ -170,7 +170,7 @@ public class SelectStaffFromBundleScreen extends BaseUIModelScreen<FlowLayout> {
             var atlas = UIParsing.parseIdentifier(element.getAttributeNode("atlas"));
             var sprite = UIParsing.parseIdentifier(element.getAttributeNode("sprite"));
 
-            if (atlas.equals(new Identifier("textures/atlas/gui.png"))) {
+            if (atlas.equals(Identifier.of("textures/atlas/gui.png"))) {
                 return new AffinitySpriteComponent(MinecraftClient.getInstance().getGuiAtlasManager().getSprite(sprite));
             } else {
                 return new AffinitySpriteComponent(new SpriteIdentifier(atlas, sprite).getSprite());
