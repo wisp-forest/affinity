@@ -106,6 +106,10 @@ public class PlayerAethumHud {
                 GlStateManager._depthMask(false);
                 BufferRenderer.drawWithGlobalProgram(buffer.end());
                 GlStateManager._depthMask(true);
+
+                // wtf minecraft, why does your blur shader break when
+                // blending is left enabled after hud rendering
+                RenderSystem.disableBlend();
             }
 
             private void drawAethumRing(OwoUIDrawContext context, double progress, Color color) {

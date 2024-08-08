@@ -85,7 +85,6 @@ public class Affinity implements ModInitializer {
 
         FieldRegistrationHandler.processSimple(AffinitySoundEvents.class, false);
         FieldRegistrationHandler.processSimple(AffinityCriteria.class, false);
-        FieldRegistrationHandler.processSimple(AffinityIngredients.class, false);
 
         AffinityNetwork.initialize();
         AffinityParticleSystems.initialize();

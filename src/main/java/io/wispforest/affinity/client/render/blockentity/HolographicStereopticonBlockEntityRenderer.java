@@ -1,5 +1,6 @@
 package io.wispforest.affinity.client.render.blockentity;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.HolographicStereopticonBlock;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
@@ -228,7 +229,11 @@ public class HolographicStereopticonBlockEntityRenderer extends AffinityBlockEnt
                                 });
                             }
 
-                            mesh.render(matrices);
+                            var meshViewStack = new MatrixStack();
+                            meshViewStack.peek().getPositionMatrix().set(RenderSystem.getModelViewMatrix());
+                            meshViewStack.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
+
+                            mesh.render(meshViewStack);
                         }
 
                         @Override

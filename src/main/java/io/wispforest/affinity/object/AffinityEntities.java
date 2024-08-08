@@ -2,8 +2,10 @@ package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.entity.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.*;
+import net.minecraft.entity.attribute.DefaultAttributeRegistry;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.world.Heightmap;
@@ -30,12 +32,11 @@ public class AffinityEntities implements AutoRegistryContainer<EntityType<?>> {
             .build();
 
     private static <W extends WispEntity> EntityType<W> createWispType(EntityType.EntityFactory<W> factory) {
-        return FabricEntityTypeBuilder.<WispEntity>createMob()
-                .spawnGroup(SpawnGroup.MONSTER)
-                .entityFactory(factory)
-                .dimensions(EntityDimensions.fixed(.25f, .25f))
-                .spawnRestriction(SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.WORLD_SURFACE, WispEntity::isValidSpawn)
-                .defaultAttributes(WispEntity::createWispAttributes).build();
+        var type = EntityType.Builder.create(factory, SpawnGroup.MONSTER).dimensions(.25f, .25f).build();
+        SpawnRestriction.register(type, SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.WORLD_SURFACE, WispEntity::isValidSpawn);
+        FabricDefaultAttributeRegistry.register(type, WispEntity.createWispAttributes());
+
+        return type;
     }
 
     @Override

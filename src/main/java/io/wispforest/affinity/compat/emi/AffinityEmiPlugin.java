@@ -22,7 +22,6 @@ import io.wispforest.affinity.object.AffinityRecipeTypes;
 import io.wispforest.affinity.object.AffinityScreenHandlerTypes;
 import io.wispforest.affinity.recipe.ShapedAssemblyRecipe;
 import io.wispforest.affinity.recipe.ShapelessAssemblyRecipe;
-import io.wispforest.affinity.recipe.ingredient.PotionIngredient;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffect;
@@ -158,9 +157,10 @@ public class AffinityEmiPlugin implements EmiPlugin {
     }
 
     public static EmiIngredient veryCoolFeatureYouGotThereEmi(Ingredient ingredient) {
-        if (ingredient.getCustomIngredient() instanceof PotionIngredient) {
-            return new ListEmiIngredient(ingredient.getCustomIngredient().getMatchingStacks().stream().map(EmiStack::of).toList(), 1);
-        }
+        // TODO i hate this recipe viewer
+//        if (ingredient.getCustomIngredient() instanceof PotionIngredient) {
+//            return new ListEmiIngredient(ingredient.getCustomIngredient().getMatchingStacks().stream().map(EmiStack::of).toList(), 1);
+//        }
 
         return EmiIngredient.of(ingredient);
     }

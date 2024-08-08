@@ -7,11 +7,10 @@ import net.minecraft.item.ItemStack;
 import java.util.Set;
 
 public final class ExtraPotionData {
+
     private static final Set<ComponentType<?>> MARKED_COMPONENTS = new ReferenceOpenHashSet<>();
 
-    private ExtraPotionData() {
-
-    }
+    private ExtraPotionData() {}
 
     public static void mark(ComponentType<?> type) {
         MARKED_COMPONENTS.add(type);
