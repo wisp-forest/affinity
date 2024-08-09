@@ -18,5 +18,8 @@ public class AffinityEnchantmentTagProvider extends FabricTagProvider.Enchantmen
         getOrCreateTagBuilder(EnchantmentTags.CURSE)
             .add(AffinityEnchantments.CURSE_OF_ILLITERACY)
             .add(AffinityEnchantments.CURSE_OF_HEALTH);
+
+        getOrCreateTagBuilder(EnchantmentTags.DAMAGE_EXCLUSIVE_SET)
+            .add(AffinityEnchantments.ENDER_SCOURGE);
     }
 }

@@ -1,13 +1,24 @@
 package io.wispforest.affinity.object;
 
 import io.wispforest.affinity.Affinity;
+import net.minecraft.component.EnchantmentEffectComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentLevelBasedValue;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.enchantment.effect.value.AddEnchantmentEffect;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
+import net.minecraft.loot.condition.EntityPropertiesLootCondition;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.EntityTypePredicate;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntryList;
+import net.minecraft.registry.tag.EnchantmentTags;
+import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
@@ -130,6 +141,28 @@ public class AffinityEnchantments {
                 ))
                 .exclusiveSet(RegistryEntryList.of()) // TODO: add wounding here
                 .build(CRITICAL_GAMBLE.getValue()));
+
+        // TODO: put this field where necessary
+        TagKey<EntityType<?>> END_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE, Affinity.id("end_entities"));
+
+        registerable.register(ENDER_SCOURGE,
+            Enchantment.builder(Enchantment.definition(
+                    items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                    items.getOrThrow(ItemTags.SWORD_ENCHANTABLE),
+                    2,
+                    5,
+                    Enchantment.leveledCost(-3, 8),
+                    Enchantment.leveledCost(17, 8),
+                    4,
+                    AttributeModifierSlot.MAINHAND
+                ))
+                .exclusiveSet(registerable.getRegistryLookup(RegistryKeys.ENCHANTMENT).getOrThrow(EnchantmentTags.DAMAGE_EXCLUSIVE_SET))
+                .addEffect(EnchantmentEffectComponentTypes.DAMAGE,
+                    new AddEnchantmentEffect(EnchantmentLevelBasedValue.linear(2.5F)),
+                    EntityPropertiesLootCondition.builder(
+                        LootContext.EntityTarget.THIS, EntityPredicate.Builder.create().type(EntityTypePredicate.create(END_ENTITIES))
+                    ))
+                .build(ENDER_SCOURGE.getValue()));
     }
 
     private static RegistryKey<Enchantment> of(String id) {
