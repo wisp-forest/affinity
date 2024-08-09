@@ -79,6 +79,19 @@ public class AffinityEnchantments {
             ))
             .addNonListEffect(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE, 160)
             .build(BASTION.getValue()));
+
+        registerable.register(BERSERKER,
+            Enchantment.builder(Enchantment.definition(
+                    items.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
+                    1,
+                    1,
+                    Enchantment.leveledCost(1, 10),
+                    Enchantment.leveledCost(6, 10),
+                    8,
+                    AttributeModifierSlot.ARMOR
+                ))
+                .addNonListEffect(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE, 343)
+                .build(BERSERKER.getValue()));
     }
 
     private static RegistryKey<Enchantment> of(String id) {

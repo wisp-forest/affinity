@@ -6,6 +6,7 @@ import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.enchantment.AffinityEnchantmentEffectLogic;
 import io.wispforest.affinity.enchantment.BastionEnchantmentLogic;
+import io.wispforest.affinity.enchantment.BerserkerEnchantmentLogic;
 import io.wispforest.affinity.enchantment.GravecallerEnchantmentLogic;
 import io.wispforest.affinity.entity.EmancipatedBlockEntity;
 import io.wispforest.affinity.item.AffinityItemGroup;
@@ -86,6 +87,7 @@ public class Affinity implements ModInitializer {
         AffinityEnchantmentEffectLogic.initialize();
         GravecallerEnchantmentLogic.initialize();
         BastionEnchantmentLogic.initialize();
+        BerserkerEnchantmentLogic.initialize();
 
         FieldRegistrationHandler.processSimple(AffinitySoundEvents.class, false);
         FieldRegistrationHandler.processSimple(AffinityCriteria.class, false);

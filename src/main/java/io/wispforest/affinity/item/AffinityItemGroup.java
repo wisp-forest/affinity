@@ -2,6 +2,7 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityEnchantmentEffectComponents;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.itemgroup.Icon;
@@ -160,15 +161,14 @@ public class AffinityItemGroup {
             entries.add(EMERALD_CHESTPLATE);
             entries.add(EMERALD_LEGGINGS);
             entries.add(EMERALD_BOOTS);
-            // TODO: re-enable when these enchantments are added
-//            entries.add(ResplendentGemItem.make(AffinityEnchantments.BERSERKER, context.lookup()));
-//            entries.add(ResplendentGemItem.make(AffinityEnchantments.GRAVECALLER, context.lookup()));
-//            entries.add(ResplendentGemItem.make(AffinityEnchantments.BASTION, context.lookup()));
+            entries.add(ResplendentGemItem.make(AffinityEnchantments.BERSERKER, context.lookup()));
+            entries.add(ResplendentGemItem.make(AffinityEnchantments.GRAVECALLER, context.lookup()));
+            entries.add(ResplendentGemItem.make(AffinityEnchantments.BASTION, context.lookup()));
 
             context.lookup().getOptionalWrapper(RegistryKeys.ENCHANTMENT).ifPresent(wrapper -> {
                 wrapper.streamEntries()
                         .filter(entry -> entry.registryKey().getValue().getNamespace().equals(Affinity.MOD_ID))
-//                        .filter(enchantment -> !(enchantment instanceof AbsoluteEnchantment))
+                        .filter(enchantment -> !enchantment.value().effects().contains(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE))
                         .map(enchantment -> new EnchantmentLevelEntry(enchantment, enchantment.value().getMaxLevel()))
                         .map(EnchantedBookItem::forEnchantment)
                         .forEach(entries::add);
