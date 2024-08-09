@@ -23,6 +23,7 @@ import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -74,7 +75,7 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
             }
 
             if (entity instanceof PlayerEntity player) {
-                player.getEquippedItems().forEach(AffineInfuserBlockEntity::repairIfEnchanted);
+                player.getEquippedItems().forEach(this::repairIfEnchanted);
             } else if (entity instanceof ItemFrameEntity frame) {
                 repairIfEnchanted(frame.getHeldItemStack());
             } else if (entity instanceof ItemEntity item) {
@@ -94,14 +95,14 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
         return CuboidRenderer.Cuboid.symmetrical(32, 32, 32);
     }
 
-    private static void repairIfEnchanted(ItemStack stack) {
-        // TODO: reenable when affine is ported.
+    private void repairIfEnchanted(ItemStack stack) {
+        var ench = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.AFFINE).orElseThrow();
 
-//        if (EnchantmentHelper.getLevel(AffinityEnchantments.AFFINE, stack) < 1) return;
-//        if (stack.getDamage() < 1) return;
-//
-//        stack.setDamage(stack.getDamage() - 1);
-//        currentRepairCost.add(repairCostPerItem());
+        if (EnchantmentHelper.getLevel(ench, stack) < 1) return;
+        if (stack.getDamage() < 1) return;
+
+        stack.setDamage(stack.getDamage() - 1);
+        currentRepairCost.add(repairCostPerItem());
     }
 
     private static int repairCostPerItem() {

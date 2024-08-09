@@ -3,8 +3,10 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.Affinity;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.registry.*;
+import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
@@ -47,13 +49,23 @@ public class AffinityEnchantments {
                 Enchantment.leveledCost(1, 10),
                 Enchantment.leveledCost(6, 10),
                 8,
-                AttributeModifierSlot.HEAD,
-                AttributeModifierSlot.CHEST,
-                AttributeModifierSlot.LEGS,
-                AttributeModifierSlot.FEET
+                AttributeModifierSlot.ARMOR
             ))
             .addNonListEffect(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE, 205)
             .build(GRAVECALLER.getValue()));
+
+        registerable.register(AFFINE,
+            Enchantment.builder(Enchantment.definition(
+                items.getOrThrow(ItemTags.DURABILITY_ENCHANTABLE),
+                2,
+                1,
+                Enchantment.leveledCost(1, 10),
+                Enchantment.leveledCost(6, 10),
+                4,
+                AttributeModifierSlot.ANY
+            ))
+            .exclusiveSet(RegistryEntryList.of(registerable.getRegistryLookup(RegistryKeys.ENCHANTMENT).getOrThrow(Enchantments.MENDING)))
+            .build(AFFINE.getValue()));
     }
 
     private static RegistryKey<Enchantment> of(String id) {
