@@ -163,6 +163,19 @@ public class AffinityEnchantments {
                         LootContext.EntityTarget.THIS, EntityPredicate.Builder.create().type(EntityTypePredicate.create(END_ENTITIES))
                     ))
                 .build(ENDER_SCOURGE.getValue()));
+
+        registerable.register(EXECUTE,
+            Enchantment.builder(Enchantment.definition(
+                    items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                    2,
+                    5,
+                    Enchantment.leveledCost(1, 10),
+                    Enchantment.leveledCost(6, 10),
+                    4,
+                    AttributeModifierSlot.MAINHAND
+                ))
+                .exclusiveSet(RegistryEntryList.of()) // TODO: add prosecute here
+                .build(EXECUTE.getValue()));
     }
 
     private static RegistryKey<Enchantment> of(String id) {

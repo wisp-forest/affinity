@@ -33,6 +33,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -181,13 +182,12 @@ public abstract class LivingEntityMixin extends Entity {
     private void executeDeath(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (!(source.getAttacker() instanceof LivingEntity attacker)) return;
 
-        // TODO: uncomment when execute is ported.
+        var executeEntry = getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.EXECUTE).orElseThrow();
+        if (EnchantmentHelper.getLevel(executeEntry, attacker.getMainHandStack()) > 0) {
+            if (this.getHealth() >= this.getMaxHealth() * .1) return;
 
-//        if (EnchantmentHelper.getLevel(AffinityEnchantments.EXECUTE, attacker.getMainHandStack()) > 0) {
-//            if (this.getHealth() >= this.getMaxHealth() * .1) return;
-//
-//            affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
-//        }
+            affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
+        }
     }
 
     @Inject(method = "dropLoot", at = @At("HEAD"), cancellable = true)

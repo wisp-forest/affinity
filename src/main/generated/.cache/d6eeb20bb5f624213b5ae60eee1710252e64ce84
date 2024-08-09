@@ -1,4 +1,4 @@
-// 1.21	2024-08-10T01:16:31.276803804	Affinity/Recipes
+// 1.21	2024-08-10T01:23:02.45509637	Affinity/Recipes
 eaee62d7b5fa8c58490445336baebdf1d5fecfc5 data/affinity/advancement/recipes/decorations/crafting/flowering_azalea.json
 7b5f71dd229e96cf146ef689b5c4f83d33522d52 data/affinity/advancement/recipes/building_blocks/azalea_slab.json
 1185db014bbe3dbb901d953e17905b99ba7b528a data/affinity/recipe/azalea_boat.json
@@ -14,8 +14,8 @@ b04bdcb3e90e8f920cf38e0a81b54480795f6df1 data/affinity/advancement/recipes/misc/
 dd13cd7e4bcf564446cb1aa6a2e830378c27a026 data/affinity/recipe/crafting/flowering_azalea.json
 a3b0d884e6119757033923c104361d656d312de9 data/affinity/advancement/recipes/redstone/azalea_trapdoor.json
 c530ea91a0f8e7e4af37fa665dd987c2b2f37c63 data/affinity/recipe/azalea_chest_boat.json
-06fc39b5f98d2a5b338f69efaa17b06fc3dc2740 data/affinity/advancement/recipes/redstone/azalea_button.json
 6ecfbdb7d88faf9211c2f0b6e83937a2c163a932 data/affinity/recipe/azalea_slab.json
+06fc39b5f98d2a5b338f69efaa17b06fc3dc2740 data/affinity/advancement/recipes/redstone/azalea_button.json
 001308617f4f0d77e055082fb05ae47d82dc6245 data/affinity/recipe/blackstone_prism_from_blackstone_stonecutting.json
 af0441cc5a2e37ee27abfa3c48fae9ab9098c781 data/affinity/advancement/recipes/decorations/azalea_fence.json
 338da2760457952bc0bdd362d2f9a520a947d81a data/affinity/advancement/recipes/redstone/azalea_door.json

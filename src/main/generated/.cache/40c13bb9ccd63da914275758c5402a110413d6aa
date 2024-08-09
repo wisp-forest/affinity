@@ -1,9 +1,9 @@
-// 1.21	2024-08-10T01:16:31.275963422	Affinity/Tags for minecraft:block
+// 1.21	2024-08-10T01:23:02.454161912	Affinity/Tags for minecraft:block
 e40a3cbdb91b900c1a1d50465383e8de9f032884 data/minecraft/tags/block/wooden_buttons.json
 2999b2825dda9bbcf76c58822e5a2325a7d40999 data/minecraft/tags/block/overworld_natural_logs.json
 b9e623e9f8d9aca1655ca1a5c769e6384ab64fe1 data/minecraft/tags/block/needs_iron_tool.json
-d01531f52695261ffa34a952ec7fe64fbc03e77b data/minecraft/tags/block/mineable/axe.json
 4da59915a9049d810294498a073c2141d0573bd0 data/minecraft/tags/block/mineable/hoe.json
+d01531f52695261ffa34a952ec7fe64fbc03e77b data/minecraft/tags/block/mineable/axe.json
 2f86c748232889ccddb7220e5935ec0d87d056b9 data/minecraft/tags/block/wall_signs.json
 99c01f403272487091f27a4b05ad8bb60f4f50c7 data/minecraft/tags/block/wooden_doors.json
 ce4e592845bbc34ad53b5659744e4a3f6fa75b4b data/minecraft/tags/block/wooden_trapdoors.json

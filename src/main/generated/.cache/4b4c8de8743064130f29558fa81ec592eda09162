@@ -1,4 +1,4 @@
-// 1.21	2024-08-10T01:16:31.274709143	Affinity/Block Loot Tables
+// 1.21	2024-08-10T01:23:02.452399845	Affinity/Block Loot Tables
 ceb62e75e6d9d50461581fd3c35490fee9650ed3 data/affinity/loot_table/blocks/blank_ritual_socle.json
 4a4c8d7b7e6e31c3db3e984705f81fb6d47245aa data/affinity/loot_table/blocks/item_transfer_node.json
 b42c8c0fa05b1a175b2428a1b78891fffb88e847 data/affinity/loot_table/blocks/ranthracite_wire.json
@@ -43,8 +43,8 @@ a760d5d101d0ca272712d3d0af61697d59173c1c data/affinity/loot_table/blocks/brewing
 1e2f0651106ee7881f9659e30af4b7518f544dc1 data/minecraft/loot_table/blocks/flowering_azalea_leaves.json
 fa0c8cbfe2b872c167247680581d0850b58d397c data/affinity/loot_table/blocks/azalea_sign.json
 be3b66744333545a78299cf9aa3858df8e2e7720 data/affinity/loot_table/blocks/field_coherence_modulator.json
-28e75a9cb477b5372a1dbfbb23ae0509b3858091 data/affinity/loot_table/blocks/copper_plated_aethum_flux_node.json
 b1a06393f8140202706809422813700ac5eef3d8 data/affinity/loot_table/blocks/matter_harvesting_hearth.json
+28e75a9cb477b5372a1dbfbb23ae0509b3858091 data/affinity/loot_table/blocks/copper_plated_aethum_flux_node.json
 f6fb97014a50edc5ccafff5249181b196e2a7cfd data/affinity/loot_table/blocks/affine_infuser.json
 8e867ef4f8c057a59a401e1b180475e4bb40a524 data/affinity/loot_table/blocks/azalea_fence.json
 be8f1c02a822cea762ed236e62ab3d51a9d7c01f data/affinity/loot_table/blocks/refined_ritual_socle.json
