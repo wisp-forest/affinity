@@ -1,0 +1,27 @@
+{
+  "parent": "affinity:when_the_world_is_calling_you",
+  "display": {
+    "icon": {
+      "id": "affinity:aethum_overcharger"
+    },
+    "title": {
+      "translate": "advancement.affinity.you_re_doomed.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.you_re_doomed.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "use_overcharger": {
+      "trigger": "affinity:used_overcharger"
+    }
+  },
+  "requirements": [
+    [
+      "use_overcharger"
+    ]
+  ]
+}

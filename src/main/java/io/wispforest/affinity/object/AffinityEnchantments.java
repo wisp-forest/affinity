@@ -38,6 +38,22 @@ public class AffinityEnchantments {
             ))
             .addEffect(AffinityEnchantmentEffectComponents.CAUSES_ILLITERACY)
             .build(CURSE_OF_ILLITERACY.getValue()));
+
+        registerable.register(GRAVECALLER,
+            Enchantment.builder(Enchantment.definition(
+                items.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
+                1,
+                1,
+                Enchantment.leveledCost(1, 10),
+                Enchantment.leveledCost(6, 10),
+                8,
+                AttributeModifierSlot.HEAD,
+                AttributeModifierSlot.CHEST,
+                AttributeModifierSlot.LEGS,
+                AttributeModifierSlot.FEET
+            ))
+            .addNonListEffect(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE, 205)
+            .build(GRAVECALLER.getValue()));
     }
 
     private static RegistryKey<Enchantment> of(String id) {

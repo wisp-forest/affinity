@@ -1,0 +1,37 @@
+{
+  "parent": "affinity:resistance_is_futile",
+  "display": {
+    "icon": {
+      "id": "affinity:dragon_drop"
+    },
+    "title": {
+      "translate": "advancement.affinity.drag_and_drop.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.drag_and_drop.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "dragon_drop": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items":[
+              "affinity:dragon_drop"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "dragon_drop"
+    ]
+  ]
+}

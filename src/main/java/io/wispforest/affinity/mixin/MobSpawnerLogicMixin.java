@@ -3,6 +3,7 @@ package io.wispforest.affinity.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
+import io.wispforest.affinity.enchantment.GravecallerEnchantmentLogic;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import net.minecraft.block.spawner.MobSpawnerLogic;
 import net.minecraft.entity.Entity;
@@ -24,18 +25,16 @@ public class MobSpawnerLogicMixin {
 
     @Inject(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;playSpawnEffects()V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onEntitySpawn(ServerWorld world, BlockPos pos, CallbackInfo ci, @Local Entity entity) {
-        // TODO: fix this when gravecaller is ported.
+        if (!((Object) this instanceof GravecallerEnchantmentLogic.SpawnerLogic)) return;
 
-//        if (!((Object) this instanceof GravecallerEnchantment.SpawnerLogic)) return;
-//
-//        ((MobEntity) entity).addStatusEffect(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.IMPENDING_DOOM), 3000));
-//        ((LivingEntity) entity).getEquippedItems().forEach(stack -> stack.setCount(0));
-//
-//        if (entity instanceof ZombieEntity zombie) {
-//            zombie.setCanPickUpLoot(true);
-//        }
-//
-//        entity.getComponent(AffinityComponents.ENTITY_FLAGS).setFlag(EntityFlagComponent.NO_DROPS);
+        ((MobEntity) entity).addStatusEffect(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.IMPENDING_DOOM), 3000));
+        ((LivingEntity) entity).getEquippedItems().forEach(stack -> stack.setCount(0));
+
+        if (entity instanceof ZombieEntity zombie) {
+            zombie.setCanPickUpLoot(true);
+        }
+
+        entity.getComponent(AffinityComponents.ENTITY_FLAGS).setFlag(EntityFlagComponent.NO_DROPS);
     }
 
 }

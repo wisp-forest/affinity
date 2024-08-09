@@ -1,0 +1,48 @@
+{
+  "parent": "affinity:some_assembly_required",
+  "display": {
+    "icon": {
+      "id": "minecraft:enchanted_book"
+    },
+    "title": {
+      "translate": "advancement.affinity.so_tell_me_whats_your_intention.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.so_tell_me_whats_your_intention.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "a_mistake": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:player",
+              "equipment": {
+                "head": {
+                  "enchantments": [
+                    {
+                      "enchantment": "affinity:curse_of_illiteracy"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "a_mistake"
+    ]
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "affinity:inert_wisp_matter"
+    },
+    "title": {
+      "translate": "advancement.affinity.root.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.root.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "affinity:textures/gui/advancement_background.png"
+  },
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "tick"
+    ]
+  ],
+  "rewards": {
+    "loot": [
+      "affinity:rewards/wispen_testament"
+    ]
+  }
+}

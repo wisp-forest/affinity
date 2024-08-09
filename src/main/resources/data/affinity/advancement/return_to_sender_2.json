@@ -1,0 +1,48 @@
+{
+  "parent": "affinity:big_girl_decisions",
+  "display": {
+    "icon": {
+      "id": "affinity:kinesis_staff"
+    },
+    "title": {
+      "translate": "advancement.affinity.return_to_sender_2.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.return_to_sender_2.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "hit_shulker": {
+      "trigger": "affinity:kinesis_projectile_hit",
+      "conditions": {
+        "projectile": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:shulker_bullet"
+            }
+          }
+        ],
+        "target": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:shulker"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "hit_shulker"
+    ]
+  ]
+}

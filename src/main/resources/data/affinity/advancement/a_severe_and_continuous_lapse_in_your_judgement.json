@@ -1,0 +1,51 @@
+{
+  "parent": "affinity:so_tell_me_whats_your_intention",
+  "display": {
+    "icon": {
+      "id": "minecraft:diamond_helmet"
+    },
+    "title": {
+      "translate": "advancement.affinity.a_severe_and_continuous_lapse_in_your_judgement.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.a_severe_and_continuous_lapse_in_your_judgement.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "a_mistake": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:player",
+              "equipment": {
+                "head": {
+                  "enchantments": [
+                    {
+                      "enchantment": "affinity:curse_of_illiteracy"
+                    },
+                    {
+                      "enchantment": "minecraft:binding_curse"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "a_mistake"
+    ]
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "parent": "affinity:from_two_hundred_cycles_to_one",
+  "display": {
+    "icon": {
+      "id": "affinity:aethum_flux_cache"
+    },
+    "title": {
+      "translate": "advancement.affinity.cache_invalidation.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.cache_invalidation.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "break_cache": {
+      "trigger": "affinity:break_aethum_flux_cache",
+      "conditions": {
+        "aethum_percentage": {
+          "min": 0.5,
+          "max": 1.0
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "break_cache"
+    ]
+  ]
+}

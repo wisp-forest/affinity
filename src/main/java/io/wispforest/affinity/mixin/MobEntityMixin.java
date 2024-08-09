@@ -1,6 +1,7 @@
 package io.wispforest.affinity.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import io.wispforest.affinity.enchantment.GravecallerEnchantmentLogic;
 import io.wispforest.affinity.entity.goal.AttackWithMasterGoal;
 import io.wispforest.affinity.entity.goal.TrackMasterAttackerGoal;
 import io.wispforest.affinity.misc.MixinHooks;
@@ -51,11 +52,10 @@ public abstract class MobEntityMixin extends LivingEntity {
     private void afterTick(CallbackInfo ci) {
         if (this.target == null) return;
 
-        // TODO: port this when gravecaller is ported
-//        if (GravecallerEnchantment.isMaster(this, this.target) ||
-//                AffinityEntityAddon.haveEqualData(this, this.target, GravecallerEnchantment.MASTER_KEY)) {
-//            this.setTarget(null);
-//        }
+        if (GravecallerEnchantmentLogic.isMaster(this, this.target) ||
+                AffinityEntityAddon.haveEqualData(this, this.target, GravecallerEnchantmentLogic.MASTER_KEY)) {
+            this.setTarget(null);
+        }
     }
 
     @ModifyArg(method = "tryAttack",

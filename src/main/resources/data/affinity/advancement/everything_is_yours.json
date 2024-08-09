@@ -1,0 +1,37 @@
+{
+  "parent": "affinity:slayer_of_titans",
+  "display": {
+    "icon": {
+      "id": "affinity:superior_artifact_blade"
+    },
+    "title": {
+      "translate": "advancement.affinity.everything_is_yours.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.everything_is_yours.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "superior_artifact_blade": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items":[
+              "affinity:superior_artifact_blade"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "superior_artifact_blade"
+    ]
+  ]
+}

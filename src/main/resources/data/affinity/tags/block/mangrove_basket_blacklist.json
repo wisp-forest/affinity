@@ -2,7 +2,7 @@
     "replace": false,
     "values": [
         "#minecraft:beds",
-        "#c:movement_restricted",
+        "#c:relocation_not_supported",
         "affinity:mangrove_basket"
     ]
 }
