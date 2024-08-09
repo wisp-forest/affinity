@@ -8,8 +8,8 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public final class AffinityEnchantmentEffectLogic {
-    private AffinityEnchantmentEffectLogic() { }
+public final class IlliteracyEffectLogic {
+    private IlliteracyEffectLogic() { }
 
     public static void initialize() {
         AffinityNetwork.CHANNEL.registerClientbound(IlliteracyPacket.class, (message, access) -> {

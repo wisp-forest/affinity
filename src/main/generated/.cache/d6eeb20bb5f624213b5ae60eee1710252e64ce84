@@ -1,4 +1,4 @@
-// 1.21	2024-08-10T00:48:35.745602196	Affinity/Recipes
+// 1.21	2024-08-10T01:02:03.283540648	Affinity/Recipes
 eaee62d7b5fa8c58490445336baebdf1d5fecfc5 data/affinity/advancement/recipes/decorations/crafting/flowering_azalea.json
 7b5f71dd229e96cf146ef689b5c4f83d33522d52 data/affinity/advancement/recipes/building_blocks/azalea_slab.json
 1185db014bbe3dbb901d953e17905b99ba7b528a data/affinity/recipe/azalea_boat.json
@@ -36,8 +36,8 @@ d82278a49bf5ad336f04de0d57c3ce2d3145890d data/affinity/recipe/azalea_pressure_pl
 c68d9b5f0730b7fc3b0129f2f74212b6e632f3e0 data/affinity/recipe/azalea_button.json
 87c244f6abf35ee393146a045c2261b133e1f085 data/affinity/recipe/stripped_azalea_wood.json
 727a20fd6ad8e641de8b3f50883a989d507ae222 data/affinity/recipe/blank_ritual_socle_from_infused_stone_stonecutting.json
-5f68b408762770e5ee1f99dddaeadab2720ebe59 data/affinity/recipe/azalea_door.json
 808e1a09797d71e157dd5e58ed8170cac309bb41 data/affinity/recipe/azalea_fence_gate.json
+5f68b408762770e5ee1f99dddaeadab2720ebe59 data/affinity/recipe/azalea_door.json
 dabbed2673c0d4d81eaa88c538078373dce9fdef data/affinity/advancement/recipes/decorations/azalea_hanging_sign.json
 7e32fc47656bf88cab798db354e2d768884b028c data/affinity/advancement/recipes/building_blocks/azalea_planks.json
 3bec1d592acf4b1118d28cbf5b0491122d6f6964 data/affinity/recipe/azalea_sign.json

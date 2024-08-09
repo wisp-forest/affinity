@@ -4,10 +4,7 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
-import io.wispforest.affinity.enchantment.AffinityEnchantmentEffectLogic;
-import io.wispforest.affinity.enchantment.BastionEnchantmentLogic;
-import io.wispforest.affinity.enchantment.BerserkerEnchantmentLogic;
-import io.wispforest.affinity.enchantment.GravecallerEnchantmentLogic;
+import io.wispforest.affinity.enchantment.*;
 import io.wispforest.affinity.entity.EmancipatedBlockEntity;
 import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.item.EchoShardExtension;
@@ -84,10 +81,11 @@ public class Affinity implements ModInitializer {
         AutoRegistryContainer.register(AffinityRecipeTypes.class, MOD_ID, true);
         AutoRegistryContainer.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
         AutoRegistryContainer.register(AffinityEnchantmentEffectComponents.class, MOD_ID, false);
-        AffinityEnchantmentEffectLogic.initialize();
+        IlliteracyEffectLogic.initialize();
         GravecallerEnchantmentLogic.initialize();
         BastionEnchantmentLogic.initialize();
         BerserkerEnchantmentLogic.initialize();
+        HealthCurseEnchantmentLogic.initialize();
 
         FieldRegistrationHandler.processSimple(AffinitySoundEvents.class, false);
         FieldRegistrationHandler.processSimple(AffinityCriteria.class, false);

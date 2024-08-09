@@ -41,6 +41,18 @@ public class AffinityEnchantments {
             .addEffect(AffinityEnchantmentEffectComponents.CAUSES_ILLITERACY)
             .build(CURSE_OF_ILLITERACY.getValue()));
 
+        registerable.register(CURSE_OF_HEALTH,
+            Enchantment.builder(Enchantment.definition(
+                    items.getOrThrow(ItemTags.CHEST_ARMOR_ENCHANTABLE),
+                    1,
+                    1,
+                    Enchantment.leveledCost(1, 10),
+                    Enchantment.leveledCost(6, 10),
+                    8,
+                    AttributeModifierSlot.CHEST
+                ))
+                .build(CURSE_OF_HEALTH.getValue()));
+
         registerable.register(GRAVECALLER,
             Enchantment.builder(Enchantment.definition(
                 items.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
