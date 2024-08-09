@@ -1,4 +1,4 @@
-// 1.21	2024-08-10T00:00:28.258149366	Affinity/Item Models
+// 1.21	2024-08-10T00:20:39.420433972	Affinity/Item Models
 dbe3c5ffc83bb47e9e6c93708da090dda0b35756 assets/affinity/models/item/satiating_potion.json
 abe55319814e2d57e700c630a7ad96c8d395aeec assets/affinity/models/item/uncanny_rod.json
 ede644a23e9f8d20298b61543f3817d302026bdb assets/affinity/models/item/scintillant_anthracite_blend.json
@@ -21,13 +21,13 @@ c96231a5996df25b984d83e0de398b45df2eb682 assets/affinity/models/item/aethum_over
 7fcf69bd072f9a3270950f15bfa91e8449fd7225 assets/affinity/models/item/stone_socle_ornament.json
 31b06af03833b7063e1154c087c1349cc37293e4 assets/affinity/models/item/salvo_staff.json
 f9140021f3fab410d9b5e529950bfa13143b7f9e assets/affinity/models/item/greatly_attuned_amethyst_shard.json
-f21c0dd06080c2c34a8c2ecc6df52247a7600273 assets/affinity/models/item/staff_prototype.json
 c34940cc4374c9d66f3e3c302f9d5a03e71950f5 assets/affinity/models/item/synthetic_dragon_heart.json
+f21c0dd06080c2c34a8c2ecc6df52247a7600273 assets/affinity/models/item/staff_prototype.json
 09bf7b117bcb08f9fa2f270c49284e6316d3d5ae assets/affinity/models/item/soup_of_bee.json
 9d6df76ad86295a6750d0220a9a3476c4b44e4e5 assets/affinity/models/item/cultivation_staff.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/affinity/models/item/wise_wisp_spawn_egg.json
-1358c698bd819a0844b7e3ba59c0998368246db4 assets/affinity/models/item/milk_cup.json
 c6ab070c7af595f2fd5a91d34851ef82a7e7cfe4 assets/affinity/models/item/nimble_staff.json
+1358c698bd819a0844b7e3ba59c0998368246db4 assets/affinity/models/item/milk_cup.json
 6a35f5628097fa2d144b3c069ce152bf2a6c4073 assets/affinity/models/item/emerald_ingot.json
 f97bcfb127370418f900b8e13a7b3c0299c36798 assets/affinity/models/item/evade_ring.json
 a84cca7ab22be3a6ef2471acfddb3194bedd4bf0 assets/affinity/models/item/inert_wisp_mist.json
@@ -52,11 +52,11 @@ e7a7f3dd2fab2dc6819dbd25705bc18415396a32 assets/affinity/models/item/wise_wisp_m
 ca6c42f9216b84e26702ea8eb5ced588323515d5 assets/affinity/models/item/dragon_drop.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/affinity/models/item/inert_wisp_spawn_egg.json
 a62ebe704eb00c167b9610a846b764130d15caf7 assets/affinity/models/item/unfired_clay_cup.json
-d86ddbf39e78dbf86e5a7099d082e6d24529b9d0 assets/affinity/models/item/blackstone_prism.json
 15e2dd93b128ccbb4d3af32c29b2cfd448b71ed4 assets/affinity/models/item/emerald_nugget.json
+d86ddbf39e78dbf86e5a7099d082e6d24529b9d0 assets/affinity/models/item/blackstone_prism.json
 8a314ed691b20ec81756fa67906d7ebfd9473db6 assets/affinity/models/item/budding_experience_crystal.json
-7fed829cd3f796ca315e048ba52bf536978e52ed assets/affinity/models/item/emerald_leggings.json
 c7c0815c3069a81a5490d3c09d6db5ea89651577 assets/affinity/models/item/purpur_socle_ornament.json
+7fed829cd3f796ca315e048ba52bf536978e52ed assets/affinity/models/item/emerald_leggings.json
 8e7bfe1a914dfd61c16fbdab5c65c697a5971501 assets/affinity/models/item/emerald_chestplate.json
 2b2914b192416f99a089d006018de6794e9bb6b3 assets/affinity/models/item/resonance_crystal.json
 da006ac758cd46692da329bd857a51491ea4f056 assets/affinity/models/item/mildly_attuned_amethyst_shard.json

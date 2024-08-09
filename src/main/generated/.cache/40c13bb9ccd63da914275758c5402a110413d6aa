@@ -1,4 +1,4 @@
-// 1.21	2024-08-10T00:00:28.262027509	Affinity/Tags for minecraft:block
+// 1.21	2024-08-10T00:20:39.424476265	Affinity/Tags for minecraft:block
 e40a3cbdb91b900c1a1d50465383e8de9f032884 data/minecraft/tags/block/wooden_buttons.json
 2999b2825dda9bbcf76c58822e5a2325a7d40999 data/minecraft/tags/block/overworld_natural_logs.json
 b9e623e9f8d9aca1655ca1a5c769e6384ab64fe1 data/minecraft/tags/block/needs_iron_tool.json
@@ -20,5 +20,5 @@ a7b940c9ac2f17fe0066f14fef383cf075e7a57d data/minecraft/tags/block/planks.json
 956197aa2acf01a674f80bd977f5ad7fe84e6241 data/minecraft/tags/block/ceiling_hanging_signs.json
 4da59915a9049d810294498a073c2141d0573bd0 data/minecraft/tags/block/leaves.json
 ee85972188f5bd17ee3b677858bacc1b27548d68 data/minecraft/tags/block/beacon_base_blocks.json
-8c9ace4e5b8a2606e055d687b99b9a7e513f4605 data/minecraft/tags/block/logs_that_burn.json
 30b3918a4d5e62156f99c75404aa921ac98ef242 data/affinity/tags/block/azalea_logs.json
+8c9ace4e5b8a2606e055d687b99b9a7e513f4605 data/minecraft/tags/block/logs_that_burn.json

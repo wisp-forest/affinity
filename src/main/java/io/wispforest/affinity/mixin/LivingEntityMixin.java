@@ -6,6 +6,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.VoidBeaconBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
+import io.wispforest.affinity.enchantment.BastionEnchantmentLogic;
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.callback.ItemEquipEvents;
@@ -154,14 +155,11 @@ public abstract class LivingEntityMixin extends Entity {
     private float bastionDamagePenalty(float damage, DamageSource source) {
         if (!(source.getAttacker() instanceof LivingEntity attacker)) return damage;
 
-        // TODO: uncomment when bastion is ported.
-//        if (AffinityEntityAddon.hasData(attacker, BastionEnchantment.BASTION)) {
-//            return damage * 0.5f;
-//        } else {
-//            return damage;
-//        }
-
-        return damage;
+        if (AffinityEntityAddon.hasData(attacker, BastionEnchantmentLogic.BASTION)) {
+            return damage * 0.5f;
+        } else {
+            return damage;
+        }
     }
 
     @Inject(method = "damage", at = @At("TAIL"))

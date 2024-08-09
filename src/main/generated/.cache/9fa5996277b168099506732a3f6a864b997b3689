@@ -1,10 +1,11 @@
-// 1.21	2024-08-10T00:00:28.263970766	Affinity/Affinity dynamic registries
+// 1.21	2024-08-10T00:20:39.426627949	Affinity/Affinity dynamic registries
 473d28ea863ae16a343149bf4918431ab4b9b166 data/affinity/worldgen/placed_feature/azalea_tree.json
 99b168559eaf4f5cb027b225b2070f649bfaea48 data/affinity/worldgen/placed_feature/wisp_forest_grass.json
 2685c275bb38ba3c41f8f0ccd648ba70fb68a9ae data/affinity/worldgen/placed_feature/wisp_forest_flowers.json
 3377751b357967e0ad5f5059141b8cebbe29f18c data/affinity/worldgen/placed_feature/cultivation_staff_grass_patch.json
 f62e976fda2ab4b49b4c3280e481bf58a4e90b15 data/affinity/worldgen/configured_feature/cultivation_staff_grass_patch.json
 119392df138229a90672585b8e83fcbe30f56d22 data/affinity/enchantment/gravecaller.json
+a865d99ae048ac20c066bbd5a3f1a3180fadcd66 data/affinity/enchantment/bastion.json
 4355d019f430fa96dfa0d847be5b8df9b0712a7a data/affinity/worldgen/configured_feature/cultivation_staff_flower_patch.json
 2a694d1af24cfc75431defd527b2fb80bf63137c data/affinity/worldgen/biome/wisp_forest.json
 9a89daf5988e20722605333bed63144c3ee94498 data/affinity/worldgen/placed_feature/oak_and_azalea_tree.json
