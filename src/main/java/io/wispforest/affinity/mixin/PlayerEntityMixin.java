@@ -2,6 +2,7 @@ package io.wispforest.affinity.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.component.AffinityComponents;
+import io.wispforest.affinity.enchantment.CriticalGambleEnchantmentLogic;
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.item.LavaliereOfSafeKeepingItem;
 import io.wispforest.affinity.misc.MixinHooks;
@@ -18,6 +19,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -104,20 +106,18 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private float applyWoundingMultiplier(float damage, Entity entity) {
         final var weapon = this.getMainHandStack();
 
-        // TODO: fix this when critical gamble is ported
-//        final int criticalGambleLevel = EnchantmentHelper.getLevel(AffinityEnchantments.CRITICAL_GAMBLE, weapon);
-//        if (criticalGambleLevel > 0 && this.random.nextFloat() < criticalGambleLevel * .01f) {
-//            AffinityEntityAddon.setData(this, CriticalGambleEnchantment.ACTIVATED_AT, this.getWorld().getTime());
-//            return (damage / 3) * 2;
-//        }
+        var criticalGambleEntry = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.CRITICAL_GAMBLE).orElseThrow();
+        final int criticalGambleLevel = EnchantmentHelper.getLevel(criticalGambleEntry, weapon);
+        if (criticalGambleLevel > 0 && this.random.nextFloat() < criticalGambleLevel * .01f) {
+            AffinityEntityAddon.setData(this, CriticalGambleEnchantmentLogic.ACTIVATED_AT, this.getWorld().getTime());
+            return (damage / 3) * 2;
+        }
 
-        // TODO: fix this when wounding is ported
-//        final int woundingLevel = EnchantmentHelper.getLevel(AffinityEnchantments.WOUNDING, weapon);
-//        if (woundingLevel < 1) return damage;
-//
-//        return damage * ((1.5f + .1f * woundingLevel) / 1.5f);
+        var woundingEntry = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.WOUNDING).orElseThrow();
+        final int woundingLevel = EnchantmentHelper.getLevel(woundingEntry, weapon);
+        if (woundingLevel < 1) return damage;
 
-        return damage;
+        return damage * ((1.5f + .1f * woundingLevel) / 1.5f);
     }
 
     @Inject(method = "attack", at = @At(value = "CONSTANT", args = "floatValue=1.5", shift = At.Shift.BY, by = 4))

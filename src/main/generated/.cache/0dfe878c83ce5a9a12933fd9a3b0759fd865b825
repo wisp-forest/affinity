@@ -1,4 +1,4 @@
-// 1.21	2024-08-10T00:31:41.497910513	Affinity/Item Models
+// 1.21	2024-08-10T00:48:35.736682558	Affinity/Item Models
 dbe3c5ffc83bb47e9e6c93708da090dda0b35756 assets/affinity/models/item/satiating_potion.json
 abe55319814e2d57e700c630a7ad96c8d395aeec assets/affinity/models/item/uncanny_rod.json
 ede644a23e9f8d20298b61543f3817d302026bdb assets/affinity/models/item/scintillant_anthracite_blend.json
@@ -8,8 +8,8 @@ c6271553d577acfe9cbbd59ac7043182f2456970 assets/affinity/models/item/vicious_wis
 2bc43655226baea3b49b5d68890ceb2e5d8fc23d assets/affinity/models/item/crystalline_wisp_matter_composite.json
 fc0b2c718e75a1c88f91ad08d24177e551f57445 assets/affinity/models/item/archetypal_iron_ring.json
 a6cd40e0119df97aa1331d016882331e4ecc717d assets/affinity/models/item/collection_staff.json
-59065f8f31e11121d7425cf16fbd7d0ad4ed556c assets/affinity/models/item/resounding_chime.json
 861f4363bcba683e9897dfe9daf259febf38291d assets/affinity/models/item/assassins_quiver.json
+59065f8f31e11121d7425cf16fbd7d0ad4ed556c assets/affinity/models/item/resounding_chime.json
 011df0405627d3d6268eafc0a98448be75016f9c assets/affinity/models/item/resplendent_gem.json
 7e40e94538021545de853288232437ad831c4e45 assets/affinity/models/item/azalea_flowers.json
 628239edc28170a35454a61e853ec5362b128320 assets/affinity/models/item/aethum_flux_bottle.json
@@ -55,8 +55,8 @@ a62ebe704eb00c167b9610a846b764130d15caf7 assets/affinity/models/item/unfired_cla
 d86ddbf39e78dbf86e5a7099d082e6d24529b9d0 assets/affinity/models/item/blackstone_prism.json
 15e2dd93b128ccbb4d3af32c29b2cfd448b71ed4 assets/affinity/models/item/emerald_nugget.json
 8a314ed691b20ec81756fa67906d7ebfd9473db6 assets/affinity/models/item/budding_experience_crystal.json
-c7c0815c3069a81a5490d3c09d6db5ea89651577 assets/affinity/models/item/purpur_socle_ornament.json
 7fed829cd3f796ca315e048ba52bf536978e52ed assets/affinity/models/item/emerald_leggings.json
+c7c0815c3069a81a5490d3c09d6db5ea89651577 assets/affinity/models/item/purpur_socle_ornament.json
 8e7bfe1a914dfd61c16fbdab5c65c697a5971501 assets/affinity/models/item/emerald_chestplate.json
 2b2914b192416f99a089d006018de6794e9bb6b3 assets/affinity/models/item/resonance_crystal.json
 da006ac758cd46692da329bd857a51491ea4f056 assets/affinity/models/item/mildly_attuned_amethyst_shard.json

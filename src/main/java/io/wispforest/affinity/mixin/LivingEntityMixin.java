@@ -7,6 +7,7 @@ import io.wispforest.affinity.blockentity.impl.VoidBeaconBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.enchantment.BastionEnchantmentLogic;
+import io.wispforest.affinity.enchantment.CriticalGambleEnchantmentLogic;
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.callback.ItemEquipEvents;
@@ -166,16 +167,14 @@ public abstract class LivingEntityMixin extends Entity {
     private void criticalGambleDeath(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (!(source.getAttacker() instanceof LivingEntity attacker)) return;
 
-        // TODO: uncomment when critical gamble is ported.
+        if (AffinityEntityAddon.hasData(attacker, CriticalGambleEnchantmentLogic.ACTIVATED_AT)) {
+            long critTick = AffinityEntityAddon.removeData(attacker, CriticalGambleEnchantmentLogic.ACTIVATED_AT);
+            if (critTick != this.getWorld().getTime() || this.getType().isIn(CriticalGambleEnchantmentLogic.BLACKLIST)) {
+                return;
+            }
 
-//        if (AffinityEntityAddon.hasData(attacker, CriticalGambleEnchantment.ACTIVATED_AT)) {
-//            long critTick = AffinityEntityAddon.removeData(attacker, CriticalGambleEnchantment.ACTIVATED_AT);
-//            if (critTick != this.getWorld().getTime() || this.getType().isIn(CriticalGambleEnchantment.BLACKLIST)) {
-//                return;
-//            }
-//
-//            affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
-//        }
+            affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
+        }
     }
 
     @Inject(method = "damage", at = @At("TAIL"))

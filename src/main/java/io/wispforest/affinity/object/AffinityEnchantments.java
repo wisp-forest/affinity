@@ -92,6 +92,32 @@ public class AffinityEnchantments {
                 ))
                 .addNonListEffect(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE, 343)
                 .build(BERSERKER.getValue()));
+
+        registerable.register(WOUNDING,
+            Enchantment.builder(Enchantment.definition(
+                    items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                    2,
+                    5,
+                    Enchantment.leveledCost(1, 10),
+                    Enchantment.leveledCost(6, 10),
+                    4,
+                    AttributeModifierSlot.MAINHAND
+                ))
+                .exclusiveSet(RegistryEntryList.of()) // TODO: add critical gamble here
+                .build(WOUNDING.getValue()));
+
+        registerable.register(CRITICAL_GAMBLE,
+            Enchantment.builder(Enchantment.definition(
+                    items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                    2,
+                    5,
+                    Enchantment.leveledCost(1, 10),
+                    Enchantment.leveledCost(6, 10),
+                    4,
+                    AttributeModifierSlot.MAINHAND
+                ))
+                .exclusiveSet(RegistryEntryList.of()) // TODO: add wounding here
+                .build(CRITICAL_GAMBLE.getValue()));
     }
 
     private static RegistryKey<Enchantment> of(String id) {
