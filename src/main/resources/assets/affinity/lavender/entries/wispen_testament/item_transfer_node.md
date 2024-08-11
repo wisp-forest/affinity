@@ -46,4 +46,13 @@ Further, each node may be configured to only accept (or
 refuse) one kind of item. To do this, {c}interact{} with the node to open its interface, inside which the filter can be
 set by {c}clicking on the node preview{} using the desired filter item.
 
-@entry-end
+
+For when more general filtering is required, a node may also be configured to accept {c}all items in an item tag{}. To
+specify a tag for filtering, {c}rename the filter{}
+
+
+@next-page
+
+{c}item{} in an anvil to state the tag ID with a {c}#{} prepended - like so:
+
+<|item-spotlight@lavender:book_components|item=minecraft:oak_planks{display:{Name:'"#minecraft:planks"'}}|>
