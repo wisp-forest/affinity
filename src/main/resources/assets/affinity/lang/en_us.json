@@ -462,6 +462,8 @@
   "advancement.affinity.drag_and_drop.description": "Obtain the Dragon Drop",
   "advancement.affinity.some_assembly_required.title": "Some Assembly Required",
   "advancement.affinity.some_assembly_required.description": "Augment a Crafting Table",
+  "advancement.affinity.this_resource_matters.title": "This Resource Matters",
+  "advancement.affinity.this_resource_matters.description": "Obtain your first piece of Wisp Matter",
   "advancement.affinity.a_resounding_success.title": "A Resounding Success",
   "advancement.affinity.a_resounding_success.description": "Construct a Resounding Chime",
   "advancement.affinity.resistance_is_futile.title": "Resistance is Futile",
