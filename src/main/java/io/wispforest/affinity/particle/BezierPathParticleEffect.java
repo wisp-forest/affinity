@@ -15,7 +15,7 @@ import net.minecraft.util.math.Vec3d;
 public record BezierPathParticleEffect(ParticleEffect effect, Vec3d splineEndpoint, int travelDuration,
                                        boolean randomPath) implements ParticleEffect {
 
-    private static final Endec<BezierPathParticleEffect> ENDEC = RecordEndec.create(BezierPathParticleEffect.class);
+    private static final Endec<BezierPathParticleEffect> ENDEC = RecordEndec.createShared(BezierPathParticleEffect.class);
 
     @Override
     public ParticleType<?> getType() {

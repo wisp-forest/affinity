@@ -1,9 +1,10 @@
 package io.wispforest.affinity.blockentity.impl;
 
 import io.wispforest.affinity.blockentity.template.SyncedBlockEntity;
+import io.wispforest.affinity.endec.CodecUtils;
 import io.wispforest.affinity.endec.nbt.NbtEndec;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.endec.CodecUtils;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -18,7 +19,7 @@ import net.minecraft.util.math.Direction;
 
 public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
-    public static final KeyedEndec<BlockState> CONTAINED_STATE_KEY = CodecUtils.ofCodec(BlockState.CODEC).keyed("ContainedState", (BlockState) null);
+    public static final KeyedEndec<BlockState> CONTAINED_STATE_KEY = CodecUtils.toEndec(BlockState.CODEC).keyed("ContainedState", (BlockState) null);
     public static final KeyedEndec<NbtCompound> CONTAINED_BLOCK_ENTITY_KEY = NbtEndec.COMPOUND.keyed("ContainedBlockEntity", (NbtCompound) null);
 
     private BlockState containedState = null;
@@ -84,7 +85,7 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        nbt.putIfNotNull(CONTAINED_STATE_KEY, this.containedState);
+        nbt.putIfNotNull(SerializationContext.empty(), CONTAINED_STATE_KEY, this.containedState);
 
         if (this.containedBlockEntity != null) {
             nbt.put(CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId());

@@ -1,6 +1,7 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.misc.potion.PotionMixture;
+import io.wispforest.endec.SerializationContext;
 import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.TippedArrowRecipe;
@@ -16,6 +17,6 @@ public class TippedArrowRecipeMixin {
     @Inject(method = "craft(Lnet/minecraft/inventory/RecipeInputInventory;Lnet/minecraft/registry/DynamicRegistryManager;)Lnet/minecraft/item/ItemStack;", at = @At(value = "RETURN", ordinal = 1))
     private void addExtraData(RecipeInputInventory inputInventory, DynamicRegistryManager drm, CallbackInfoReturnable<ItemStack> cir) {
         inputInventory.getStack(1 + inputInventory.getWidth())
-                .copyIfPresent(PotionMixture.EXTRA_DATA, cir.getReturnValue());
+                .copyIfPresent(PotionMixture.EXTRA_DATA, SerializationContext.empty(), cir.getReturnValue());
     }
 }

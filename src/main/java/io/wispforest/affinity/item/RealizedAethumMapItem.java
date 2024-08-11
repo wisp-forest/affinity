@@ -3,6 +3,7 @@ package io.wispforest.affinity.item;
 import io.wispforest.affinity.misc.AethumAcquisitionCache;
 import io.wispforest.affinity.mixin.access.MapStateAccessor;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.minecraft.block.MapColor;
@@ -106,7 +107,7 @@ public class RealizedAethumMapItem extends FilledMapItem {
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType != ClickType.RIGHT) return false;
 
-        stack.mutate(LOCKED, locked -> !locked);
+        stack.mutate(LOCKED, SerializationContext.empty(), locked -> !locked);
         return true;
     }
 

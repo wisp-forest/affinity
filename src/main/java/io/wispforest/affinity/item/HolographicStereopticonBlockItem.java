@@ -14,6 +14,7 @@ import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.ui.core.Color;
@@ -138,7 +139,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
         rendererData.put(IMPRINT_KIND_KEY, nextImprintKind);
 
         var iLoveJava = rendererData;
-        stack.mutate(BLOCK_ENTITY_TAG_KEY, data -> {
+        stack.mutate(BLOCK_ENTITY_TAG_KEY, SerializationContext.empty(), data -> {
             data.put(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY, iLoveJava);
             return data;
         });

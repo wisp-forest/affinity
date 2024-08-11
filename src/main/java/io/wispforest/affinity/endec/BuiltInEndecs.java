@@ -2,9 +2,9 @@ package io.wispforest.affinity.endec;
 
 import com.mojang.datafixers.util.Function3;
 import io.wispforest.affinity.endec.nbt.NbtEndec;
-import io.wispforest.endec.DataToken;
 import io.wispforest.endec.Endec;
-import io.wispforest.endec.format.json.JsonEndec;
+import io.wispforest.endec.SerializationAttributes;
+import io.wispforest.endec.format.gson.GsonEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.item.ItemStack;
@@ -29,23 +29,23 @@ public final class BuiltInEndecs {
 
     public static final Endec<Identifier> IDENTIFIER = Endec.STRING.xmap(Identifier::new, Identifier::toString);
     public static final Endec<ItemStack> ITEM_STACK = NbtEndec.COMPOUND.xmap(ItemStack::fromNbt, stack -> stack.writeNbt(new NbtCompound()));
-    public static final Endec<Text> TEXT = JsonEndec.INSTANCE.xmap(Text.Serializer::fromJson, Text.Serializer::toJsonTree);
+    public static final Endec<Text> TEXT = GsonEndec.INSTANCE.xmap(Text.Serializer::fromJson, Text.Serializer::toJsonTree);
 
     public static final Endec<Vec3i> VEC3I = vectorEndec("Vec3i", Endec.INT, Vec3i::new, Vec3i::getX, Vec3i::getY, Vec3i::getZ);
     public static final Endec<Vec3d> VEC3D = vectorEndec("Vec3d", Endec.DOUBLE, Vec3d::new, Vec3d::getX, Vec3d::getY, Vec3d::getZ);
     public static final Endec<Vector3f> VECTOR3F = vectorEndec("Vector3f", Endec.FLOAT, Vector3f::new, Vector3f::x, Vector3f::y, Vector3f::z);
 
     public static final Endec<BlockPos> BLOCK_POS = Endec
-            .ifToken(
-                    DataToken.HUMAN_READABLE,
+            .ifAttr(
+                    SerializationAttributes.HUMAN_READABLE,
                     vectorEndec("BlockPos", Endec.INT, BlockPos::new, BlockPos::getX, BlockPos::getY, BlockPos::getZ)
             ).orElse(
                     Endec.LONG.xmap(BlockPos::fromLong, BlockPos::asLong)
             );
 
     public static final Endec<ChunkPos> CHUNK_POS = Endec
-            .ifToken(
-                    DataToken.HUMAN_READABLE,
+            .ifAttr(
+                    SerializationAttributes.HUMAN_READABLE,
                     Endec.INT.listOf().validate(ints -> {
                         if (ints.size() != 2) {
                             throw new IllegalStateException("ChunkPos array must have two elements");

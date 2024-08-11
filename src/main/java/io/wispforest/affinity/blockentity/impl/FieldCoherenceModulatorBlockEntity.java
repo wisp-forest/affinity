@@ -11,6 +11,7 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.particle.BezierPathParticleEffect;
 import io.wispforest.affinity.particle.ColoredFallingDustParticleEffect;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
@@ -105,7 +106,7 @@ public class FieldCoherenceModulatorBlockEntity extends AethumNetworkMemberBlock
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         var nbt = super.toInitialChunkDataNbt();
-        nbt.putIfNotNull(STREAM_TARGET_POS_KEY, this.streamTargetPos);
+        nbt.putIfNotNull(SerializationContext.empty(), STREAM_TARGET_POS_KEY, this.streamTargetPos);
         return nbt;
     }
 

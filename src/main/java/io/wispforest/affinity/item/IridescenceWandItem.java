@@ -5,6 +5,7 @@ import io.wispforest.affinity.endec.nbt.NbtEndec;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
 import net.minecraft.block.BlockState;
@@ -48,7 +49,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
         if (this.getStoredPos(playerStack) != null) {
             playerStack.delete(LINK_DATA_KEY);
         } else {
-            playerStack.mutate(MODE_KEY, Mode::next);
+            playerStack.mutate(MODE_KEY, SerializationContext.empty(),  Mode::next);
         }
 
         return TypedActionResult.success(playerStack);
@@ -58,7 +59,7 @@ public class IridescenceWandItem extends Item implements DirectInteractionHandle
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType != ClickType.RIGHT) return false;
 
-        stack.mutate(RETAIN_MODE_KEY, enabled -> !enabled);
+        stack.mutate(RETAIN_MODE_KEY, SerializationContext.empty(), enabled -> !enabled);
         return true;
     }
 

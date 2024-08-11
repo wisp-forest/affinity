@@ -1,9 +1,10 @@
 package io.wispforest.affinity.entity;
 
+import io.wispforest.affinity.endec.CodecUtils;
 import io.wispforest.affinity.endec.nbt.NbtEndec;
 import io.wispforest.affinity.object.AffinityEntities;
-import io.wispforest.endec.CodecUtils;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,7 +37,7 @@ public class EmancipatedBlockEntity extends Entity {
     private static final KeyedEndec<Integer> MAX_AGE_KEY = Endec.INT.keyed("max_age", 15);
     private static final KeyedEndec<Float> ANIMATION_SCALE_KEY = Endec.FLOAT.keyed("animation_scale", 1f);
     private static final KeyedEndec<NbtCompound> EMANCIPATED_BLOCK_ENTITY_DATA_KEY = NbtEndec.COMPOUND.keyed("emancipated_block_entity", (NbtCompound) null);
-    private static final KeyedEndec<BlockState> EMANCIPATED_STATE_KEY = CodecUtils.ofCodec(BlockState.CODEC).keyed("emancipated_state", Blocks.AIR.getDefaultState());
+    private static final KeyedEndec<BlockState> EMANCIPATED_STATE_KEY = CodecUtils.toEndec(BlockState.CODEC).keyed("emancipated_state",Blocks.AIR.getDefaultState());
 
     @Nullable
     @Environment(EnvType.CLIENT)
@@ -122,7 +123,7 @@ public class EmancipatedBlockEntity extends Entity {
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
         nbt.put(EMANCIPATED_STATE_KEY, this.emancipatedState);
-        nbt.putIfNotNull(EMANCIPATED_BLOCK_ENTITY_DATA_KEY, this.emancipatedBlockEntityData());
+        nbt.putIfNotNull(SerializationContext.empty(), EMANCIPATED_BLOCK_ENTITY_DATA_KEY, this.emancipatedBlockEntityData());
         nbt.put(MAX_AGE_KEY, this.maxAge());
         nbt.put(ANIMATION_SCALE_KEY, this.animationScale());
     }
