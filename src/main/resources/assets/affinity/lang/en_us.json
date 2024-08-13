@@ -289,6 +289,7 @@
   "item.affinity.cultivation_staff.super_foraging_mode": "Super Foraging Mode™",
   "item.affinity.salvo_staff": "Salvo Staff",
   "item.affinity.swivel_staff": "Swivel Staff",
+  "item.affinity.swivel_staff.tooltip.consumption_per_spin": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum to spin an entity", "color": "gray"}],
   "item.affinity.nimble_staff": "Nimble Staff",
   "item.affinity.nimble_staff.direction.north": "North",
   "item.affinity.nimble_staff.direction.south": "South",

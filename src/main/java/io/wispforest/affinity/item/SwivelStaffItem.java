@@ -5,6 +5,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import io.wispforest.affinity.Affinity;
+import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.util.InteractionUtil;
@@ -22,6 +23,7 @@ import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -38,6 +40,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
@@ -51,6 +54,7 @@ import java.util.function.Function;
 public class SwivelStaffItem extends StaffItem implements DirectInteractionHandler {
 
     private static final Map<Block, SwivelProperties> SWIVEL_PROPERTIES = new HashMap<>();
+    private static final float AETHUM_PER_ENTITY_SPIN = 1.5f;
 
     public static final KeyedEndec<String> SELECTED_PROPERTY = Endec.STRING.keyed("selected_property", "");
 
@@ -128,6 +132,12 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
     @Override
     protected float getAethumConsumption(ItemStack stack) {
         return .25f;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        tooltip.add(Text.translatable(this.getTranslationKey() + ".tooltip.consumption_per_spin", AETHUM_PER_ENTITY_SPIN));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -273,8 +283,11 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
                 return ActionResult.PASS;
             }
 
-            var entity = InteractionUtil.raycastEntities(player, 1f, 7, 1f, $ -> true);
+            var entity = InteractionUtil.raycastEntities(player, 1f, 7, .1f, $ -> true);
             if (entity == null) return ActionResult.PASS;
+
+            var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
+            if (!aethum.hasAethum(AETHUM_PER_ENTITY_SPIN)) return ActionResult.PASS;
 
             AffinityNetwork.CHANNEL.clientHandle().send(new SwivelEntityPacket(hand));
             return ActionResult.SUCCESS;
@@ -288,6 +301,9 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
 
             var result = InteractionUtil.raycastEntities(access.player(), 1f, 7, .1f, $ -> true);
             if (result == null) return;
+
+            var aethum = access.player().getComponent(AffinityComponents.PLAYER_AETHUM);
+            if (!aethum.tryConsumeAethum(AETHUM_PER_ENTITY_SPIN)) return;
 
             var ticks = new MutableInt();
             ServerTasks.doFor(access.player().getServerWorld(), 30, () -> {
