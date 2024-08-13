@@ -1,0 +1,33 @@
+{
+  "tag": "#c:chests",
+  "properties": {
+    "facing": {
+      "translation_key": "swivel_property.affinity.facing",
+      "predicate": {
+        "type": "any_of",
+        "args": [
+          {
+            "type": "has_property",
+            "property": "type",
+            "value": "single"
+          },
+          {
+            "type": "none_of",
+            "args": [
+              {
+                "type": "has_property",
+                "property": "type"
+              }
+            ]
+          }
+        ]
+      },
+      "cycle": {
+        "north": "east",
+        "east": "south",
+        "south": "west",
+        "west": "north"
+      }
+    }
+  }
+}

@@ -27,6 +27,7 @@
     "affinity:holographic_stereopticon",
     "affinity:graviton_transducer",
     "affinity:ethereal_aethum_flux_node",
-    "affinity:ethereal_aethum_flux_injector"
+    "affinity:ethereal_aethum_flux_injector",
+    "affinity:world_pin"
   ]
 }

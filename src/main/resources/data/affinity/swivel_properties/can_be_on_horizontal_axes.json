@@ -1,0 +1,12 @@
+{
+  "tag": "#affinity:can_be_on_horizontal_axes",
+  "properties": {
+    "axis": {
+      "translation_key": "swivel_property.affinity.axis",
+      "cycle": {
+        "x": "z",
+        "z": "x"
+      }
+    }
+  }
+}

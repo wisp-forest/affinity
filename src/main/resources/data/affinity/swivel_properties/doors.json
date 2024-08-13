@@ -1,0 +1,12 @@
+{
+  "tag": "#minecraft:doors",
+  "properties": {
+    "hinge": {
+      "translation_key": "swivel_property.affinity.door_hinge",
+      "cycle": {
+        "right": "left",
+        "left": "right"
+      }
+    }
+  }
+}

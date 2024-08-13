@@ -143,6 +143,7 @@ public class AffinityItemGroup {
             entries.add(ASTROKINESIS_STAFF);
             entries.add(CULTIVATION_STAFF);
             entries.add(SALVO_STAFF);
+            entries.add(SWIVEL_STAFF);
             entries.add(FEATHERWEIGHT_RING);
             entries.add(EVADE_RING);
             entries.add(LAVALIERE_OF_SAFE_KEEPING);

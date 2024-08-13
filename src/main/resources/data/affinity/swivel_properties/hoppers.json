@@ -1,0 +1,15 @@
+{
+  "tag": "#affinity:hoppers",
+  "properties": {
+    "facing": {
+      "translation_key": "swivel_property.affinity.feed_direction",
+      "cycle": {
+        "north": "east",
+        "east": "south",
+        "south": "west",
+        "west": "down",
+        "down": "north"
+      }
+    }
+  }
+}

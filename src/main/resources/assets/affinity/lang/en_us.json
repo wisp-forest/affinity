@@ -10,6 +10,13 @@
 
   "biome.affinity.wisp_forest": "Wisp Forest",
 
+  "swivel_property.affinity.facing": "Facing",
+  "swivel_property.affinity.feed_direction": "Feed Direction",
+  "swivel_property.affinity.block_half": "Block Half",
+  "swivel_property.affinity.door_hinge": "Hinge Side",
+  "swivel_property.affinity.rotation": "Rotation",
+  "swivel_property.affinity.axis": "Axis",
+
   "item.affinity.wispen_testament": "The Wispen Testament",
   "text.affinity.wispen_testament.next_page": "Continued on next page...",
   "text.affinity.wispen_testament.staff_pedestal_function": {"text": "On Staff Pedestal", "color": "dark_gray"},
@@ -281,6 +288,7 @@
   "item.affinity.cultivation_staff": "Cultivation Staff",
   "item.affinity.cultivation_staff.super_foraging_mode": "Super Foraging Mode™",
   "item.affinity.salvo_staff": "Salvo Staff",
+  "item.affinity.swivel_staff": "Swivel Staff",
   "item.affinity.nimble_staff": "Nimble Staff",
   "item.affinity.nimble_staff.direction.north": "North",
   "item.affinity.nimble_staff.direction.south": "South",

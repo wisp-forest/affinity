@@ -45,6 +45,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item ASTROKINESIS_STAFF = new AstrokinesisStaffItem();
     public static final Item CULTIVATION_STAFF = new CultivationStaffItem();
     public static final Item SALVO_STAFF = new SalvoStaffItem();
+    public static final Item SWIVEL_STAFF = new SwivelStaffItem();
 
     public static final Item AZALEA_FLOWERS = new Item(settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(.5f)
             .statusEffect(new StatusEffectInstance(AffinityStatusEffects.DRIPPING, 1200, 0, false, false, true), 1).build()));

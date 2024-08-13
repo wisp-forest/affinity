@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:stairs",
+    "#minecraft:trapdoors",
+    "#minecraft:fence_gates",
+    "#minecraft:doors",
+    "#minecraft:wall_hanging_signs",
+    "affinity:holographic_stereopticon",
+    "minecraft:lectern",
+    "minecraft:stonecutter",
+    "#minecraft:anvil",
+    "minecraft:furnace",
+    "minecraft:smoker",
+    "minecraft:blast_furnace",
+    "minecraft:bee_nest",
+    "minecraft:beehive",
+    "minecraft:chiseled_bookshelf",
+    "minecraft:repeater",
+    "minecraft:comparator",
+    "minecraft:calibrated_sculk_sensor",
+    "minecraft:lever",
+    "#minecraft:campfires"
+  ]
+}
