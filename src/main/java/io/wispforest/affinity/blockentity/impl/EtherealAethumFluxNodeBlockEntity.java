@@ -8,6 +8,8 @@ import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.serialization.Endec;
 import io.wispforest.owo.serialization.endec.BuiltInEndecs;
@@ -18,6 +20,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.server.world.ServerWorld;
@@ -31,6 +34,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
 
@@ -42,6 +46,7 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
     private static final KeyedEndec<Text> CUSTOM_NAME_KEY = Endec.ofCodec(TextCodecs.STRINGIFIED_CODEC).keyed("custom_name", (Text) null);
     private static final KeyedEndec<UUID> OWNER_KEY = BuiltInEndecs.UUID.keyed("owner", (UUID) null);
     private static final KeyedEndec<Boolean> GLOBAL_KEY = Endec.BOOLEAN.keyed("global", false);
+    private static final KeyedEndec<ItemStack> SHARD = BuiltInEndecs.ITEM_STACK.keyed("shard", ItemStack.EMPTY);
 
     @Environment(EnvType.CLIENT) public Vector4f particle1Offset;
     @Environment(EnvType.CLIENT) public Vector4f particle2Offset;
@@ -50,11 +55,14 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
     private @Nullable UUID owner = null;
     private boolean global = false;
 
+    private ItemStack shard = ItemStack.EMPTY;
+    private boolean hasVoidShard = false;
+
     public EtherealAethumFluxNodeBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ETHEREAL_AETHUM_FLUX_NODE, pos, state);
 
         this.fluxStorage.setFluxCapacity(16000);
-        this.fluxStorage.setMaxInsert(128);
+        this.fluxStorage.setMaxInsert(4000);
     }
 
     @Override
@@ -68,6 +76,8 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
 
     @Override
     public void tickServer() {
+        if (!this.hasShard() || this.world.isReceivingRedstonePower(this.pos)) return;
+
         final var globalNodePos = GlobalPos.create(this.world.getRegistryKey(), this.pos);
 
         var storage = this.world.getScoreboard().getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE);
@@ -75,6 +85,10 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
 
         var injectors = storage.listInjectors(globalNodePos);
         if (injectors == null) return;
+
+        var transferPerInjector = this.hasVoidShard
+                ? this.flux() / injectors.size()
+                : 10;
 
         for (var injectorPos : injectors) {
             var world = ((ServerWorld) this.world).getServer().getWorld(injectorPos.getDimension());
@@ -85,13 +99,13 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
             }
 
             var be = world.getBlockEntity(injectorPos.getPos());
-            if (!(be instanceof EtherealAethumFluxInjectorBlockEntity injector) || !injector.canInsert()) continue;
+            if (!(be instanceof EtherealAethumFluxInjectorBlockEntity injector) || (!this.hasVoidShard && !injector.isPastCooldown())) continue;
 
             var attachedMember = Affinity.AETHUM_MEMBER.find(world, injectorPos.getPos().offset(injector.getCachedState().get(EtherealAethumFluxInjectorBlock.FACING)), null);
             if (attachedMember == null) continue;
 
             try (var transaction = Transaction.openOuter()) {
-                var inserted = attachedMember.insert(Math.min(10, this.flux()), transaction);
+                var inserted = attachedMember.insert(Math.min(transferPerInjector, this.flux()), transaction);
 
                 if (inserted > 0) {
                     transaction.commit();
@@ -158,6 +172,7 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
         nbt.putIfNotNull(CUSTOM_NAME_KEY, this.customName);
         nbt.putIfNotNull(OWNER_KEY, this.owner);
         nbt.put(GLOBAL_KEY, this.global);
+        nbt.put(SHARD, this.shard);
     }
 
     @Override
@@ -165,15 +180,57 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
         this.customName = nbt.get(CUSTOM_NAME_KEY);
         this.owner = nbt.get(OWNER_KEY);
         this.global = nbt.get(GLOBAL_KEY);
+        this.setShardStack(nbt.get(SHARD));
+    }
+
+    public void setShardStack(@NotNull ItemStack shardStack) {
+        this.shard = shardStack;
+        this.hasVoidShard = this.shard.isOf(AffinityItems.VOID_RESONANT_ETHEREAL_AMETHYST_SHARD);
+    }
+
+    public boolean hasShard() {
+        return !this.shard.isEmpty();
+    }
+
+    public boolean hasVoidShard() {
+        return this.hasVoidShard;
     }
 
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!player.isSneaking() || !player.getUuid().equals(this.owner)) return ActionResult.PASS;
+        if (!player.getUuid().equals(this.owner)) return ActionResult.PASS;
 
-        this.global = !this.global;
-        this.markDirty();
+        if (player.isSneaking()) {
+            this.global = !this.global;
+            this.markDirty();
 
-        return ActionResult.SUCCESS;
+            return ActionResult.SUCCESS;
+        } else {
+            var playerStack = player.getStackInHand(hand);
+            if (playerStack.isEmpty()) {
+                if (this.shard.isEmpty()) return ActionResult.PASS;
+
+                player.setStackInHand(hand, this.shard);
+                this.setShardStack(ItemStack.EMPTY);
+            } else  {
+                if (this.shard.isEmpty()) {
+                    if (!playerStack.isOf(AffinityItems.VOID_RESONANT_ETHEREAL_AMETHYST_SHARD) && !playerStack.isOf(AffinityItems.SCULK_RESONANT_ETHEREAL_AMETHYST_SHARD)) return ActionResult.PASS;
+
+                    ItemOps.decrementPlayerHandItem(player, hand);
+                    this.setShardStack(ItemOps.singleCopy(playerStack));
+                } else {
+                    if (ItemOps.canStack(playerStack, this.shard)) {
+                        playerStack.increment(1);
+                    } else {
+                        player.getInventory().insertStack(this.shard);
+                    }
+
+                    this.setShardStack(ItemStack.EMPTY);
+                }
+            }
+
+            this.markDirty();
+            return ActionResult.SUCCESS;
+        }
     }
 }

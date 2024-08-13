@@ -16,10 +16,8 @@ import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.*;
 import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
-import io.wispforest.affinity.client.render.program.DepthMergeBlitProgram;
-import io.wispforest.affinity.client.render.program.DownsampleProgram;
-import io.wispforest.affinity.client.render.program.FizzleProgram;
-import io.wispforest.affinity.client.render.program.SolidFromFramebufferProgram;
+import io.wispforest.affinity.client.render.item.VoidResonantEtherealAmethystShardRenderer;
+import io.wispforest.affinity.client.render.program.*;
 import io.wispforest.affinity.client.screen.*;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
@@ -73,6 +71,7 @@ public class AffinityClient implements ClientModInitializer {
     public static final DownsampleProgram DOWNSAMPLE_PROGRAM = new DownsampleProgram();
     public static final FizzleProgram EMANCIPATE_BLOCK_PROGRAM = new FizzleProgram(Affinity.id("emancipate_block"));
     public static final FizzleProgram EMANCIPATE_ENTITY_PROGRAM = new FizzleProgram(Affinity.id("emancipate_entity"));
+    public static final EndPortalOverTextureProgram END_PORTAL_OVER_TEXTURE_PROGRAM = new EndPortalOverTextureProgram();
 
     public static final KeyBinding ACTIVATE_EVADE_RING = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.activate_evade_ring", GLFW.GLFW_KEY_LEFT_CONTROL, "key.categories.movement"));
     public static final KeyBinding SELECT_STAFF_FROM_BUNDLE = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.select_staff_from_bundle", GLFW.GLFW_KEY_X, "key.categories.inventory"));
@@ -83,11 +82,18 @@ public class AffinityClient implements ClientModInitializer {
         this.assignBlockRenderLayers();
         this.registerColorProviders();
 
-        ModelLoadingPlugin.register(ctx -> ctx.addModels(Affinity.id("item/staff_bundle")));
+        ModelLoadingPlugin.register(ctx -> {
+            ctx.addModels(
+                    Affinity.id("item/staff_bundle"),
+                    Affinity.id("item/void_resonant_ethereal_amethyst_shard_overlay"),
+                    Affinity.id("item/void_resonant_ethereal_amethyst_shard_outline")
+            );
+        });
 
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.MANGROVE_BASKET, new MangroveBasketItemRenderer());
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.AFFINE_INFUSER, new AffineInfuserBlockEntityRenderer(null));
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.FIELD_COHERENCE_MODULATOR, new FieldCoherenceModulatorBlockEntityRenderer(null));
+        BuiltinItemRendererRegistry.INSTANCE.register(AffinityItems.VOID_RESONANT_ETHEREAL_AMETHYST_SHARD, new VoidResonantEtherealAmethystShardRenderer());
         PostItemRenderCallback.EVENT.register((stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
             boolean hasItemGlow = item != null && item.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.ITEM_GLOW);
             if (mode == ModelTransformationMode.GUI || (!stack.isOf(AffinityItems.DRAGON_DROP) && !hasItemGlow)) return;

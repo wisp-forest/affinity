@@ -16,6 +16,7 @@ import org.joml.Vector4f;
 public class EtherealAethumFluxNodeBlockEntityRenderer extends AffinityBlockEntityRenderer<EtherealAethumFluxNodeBlockEntity> {
 
     public static final SpriteIdentifier SHARD_TEXTURE_ID = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, Affinity.id("block/sculk_resonant_ethereal_amethyst_shard_node"));
+    public static final SpriteIdentifier END_SHARD_TEXTURE_ID = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, Affinity.id("block/sculk_resonant_ethereal_amethyst_shard_node"));
     public static final ModelPart FLOATING_SHARD;
 
     static {
@@ -37,6 +38,8 @@ public class EtherealAethumFluxNodeBlockEntityRenderer extends AffinityBlockEnti
 
     @Override
     protected void render(EtherealAethumFluxNodeBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        if (!entity.hasShard()) return;
+
         var transform = new Matrix4f();
 
         transform.translate(.5f - .0625f, .75f, .5f - .0625f);
@@ -53,7 +56,10 @@ public class EtherealAethumFluxNodeBlockEntityRenderer extends AffinityBlockEnti
         matrices.push();
         matrices.multiplyPositionMatrix(transform);
 
-        var consumer = SHARD_TEXTURE_ID.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
+        var consumer = entity.hasVoidShard()
+                ? END_SHARD_TEXTURE_ID.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getEndPortal())
+                : SHARD_TEXTURE_ID.getVertexConsumer(vertexConsumers, identifier -> RenderLayer.getSolid());
+
         FLOATING_SHARD.render(matrices, consumer, light, overlay);
 
         matrices.pop();

@@ -50,7 +50,7 @@ public class EtherealAethumFluxInjectorBlockEntity extends BlockEntity implement
         super(AffinityBlocks.Entities.ETHEREAL_AETHUM_FLUX_INJECTOR, pos, state);
     }
 
-    public boolean canInsert() {
+    public boolean isPastCooldown() {
         return this.world.getTime() - this.lastInsertionTimestamp > 20;
     }
 
