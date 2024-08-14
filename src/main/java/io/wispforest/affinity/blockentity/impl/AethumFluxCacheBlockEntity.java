@@ -250,6 +250,22 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     }
 
     @Override
+    public void updateFlux(long flux) {
+        var fluxBefore = this.flux();
+        super.updateFlux(flux);
+
+        if (fluxBefore != flux) {
+            this.world.updateComparators(this.pos, this.getCachedState().getBlock());
+        }
+    }
+
+    @Override
+    public void onTransactionCommitted() {
+        super.onTransactionCommitted();
+        this.world.updateComparators(this.pos, this.getCachedState().getBlock());
+    }
+
+    @Override
     public Collection<BlockPos> memberBlocks() {
         if (this.parentRef == null || this.parentRef.entity.childCache == null) return List.of();
 
