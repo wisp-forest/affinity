@@ -90,6 +90,7 @@ public class AffinityItemGroup {
             entries.add(FAIRLY_ATTUNED_AMETHYST_SHARD);
             entries.add(GREATLY_ATTUNED_AMETHYST_SHARD);
             entries.add(SCULK_RESONANT_ETHEREAL_AMETHYST_SHARD);
+            entries.add(VOID_RESONANT_ETHEREAL_AMETHYST_SHARD);
             entries.add(ARCANE_FADE_BUCKET);
             entries.add(AETHUM_FLUX_BOTTLE);
             entries.add(EMERALD_BLOCK);
@@ -133,6 +134,8 @@ public class AffinityItemGroup {
             entries.add(MILDLY_ATTUNED_AMETHYST_SHARD);
             entries.add(FAIRLY_ATTUNED_AMETHYST_SHARD);
             entries.add(GREATLY_ATTUNED_AMETHYST_SHARD);
+            entries.add(SCULK_RESONANT_ETHEREAL_AMETHYST_SHARD);
+            entries.add(VOID_RESONANT_ETHEREAL_AMETHYST_SHARD);
         }, false);
 
         group.addCustomTab(Icon.of(RESOUNDING_CHIME), "equipment", (context, entries) -> {
