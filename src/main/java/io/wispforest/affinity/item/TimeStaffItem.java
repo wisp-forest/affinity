@@ -21,6 +21,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -39,7 +40,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     public static final TagKey<Block> IMMUNE_BLOCKS = TagKey.of(RegistryKeys.BLOCK, Affinity.id("time_staff_immune"));
 
     public TimeStaffItem() {
-        super(AffinityItems.settings().maxCount(1));
+        super(AffinityItems.settings().maxCount(1).rarity(Rarity.EPIC));
     }
 
     @Override

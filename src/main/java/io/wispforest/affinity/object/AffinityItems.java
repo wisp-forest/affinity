@@ -26,14 +26,14 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item WISPEN_TESTAMENT = LavenderBookItem.registerForBook(Affinity.id("wispen_testament"), settings().maxCount(1));
 
     public static final Item AETHUM_FLUX_BOTTLE = new AethumFluxBottleItem();
-    public static final Item BARE_RESPLENDENT_GEM = new Item(settings().maxCount(4));
+    public static final Item BARE_RESPLENDENT_GEM = new Item(settings().maxCount(4).rarity(Rarity.UNCOMMON));
     public static final Item RESPLENDENT_GEM = new ResplendentGemItem();
 
-    public static final Item MILDLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.MILDLY_ATTUNED);
-    public static final Item FAIRLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.FAIRLY_ATTUNED);
-    public static final Item GREATLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(AttunedShardTiers.GREATLY_ATTUNED);
+    public static final Item MILDLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(settings(), AttunedShardTiers.MILDLY_ATTUNED);
+    public static final Item FAIRLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(settings().rarity(Rarity.UNCOMMON), AttunedShardTiers.FAIRLY_ATTUNED);
+    public static final Item GREATLY_ATTUNED_AMETHYST_SHARD = new AttunedShardItem(settings().rarity(Rarity.RARE), AttunedShardTiers.GREATLY_ATTUNED);
     public static final Item SCULK_RESONANT_ETHEREAL_AMETHYST_SHARD = new Item(settings());
-    public static final Item VOID_RESONANT_ETHEREAL_AMETHYST_SHARD = new Item(settings());
+    public static final Item VOID_RESONANT_ETHEREAL_AMETHYST_SHARD = new Item(settings().rarity(Rarity.EPIC));
 
     public static final Item EMERALD_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
     public static final Item SAPPHIRE_WAND_OF_IRIDESCENCE = new IridescenceWandItem();
