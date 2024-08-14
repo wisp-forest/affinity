@@ -142,6 +142,7 @@
   "block.affinity.ethereal_aethum_flux_node.tooltip.owned_by_you": "Owned by you",
   "block.affinity.ethereal_aethum_flux_node.tooltip.owned_by_someone_else": "Owned by someone else",
   "block.affinity.ethereal_aethum_flux_injector": "Ethereal Aethum Flux Injector",
+  "block.affinity.local_displacement_gateway": "Local Displacement Gateway",
 
   "block.affinity.spirit_integration_apparatus": "Spirit Integration Apparatus",
   "block.affinity.spirit_integration_apparatus.tooltip.complete": "Complete",

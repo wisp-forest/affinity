@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "affinity:block/local_displacement_gateway"
+    }
+  }
+}

@@ -69,6 +69,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block GRAVITON_TRANSDUCER = new GravitonTransducerBlock();
     public static final Block ETHEREAL_AETHUM_FLUX_NODE = new EtherealAethumFluxNodeBlock();
     public static final Block ETHEREAL_AETHUM_FLUX_INJECTOR = new EtherealAethumFluxInjectorBlock();
+    public static final Block LOCAL_DISPLACEMENT_GATEWAY = new LocalDisplacementGatewayBlock();
     public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
 
     public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
@@ -204,6 +205,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<EtherealAethumFluxInjectorBlockEntity> ETHEREAL_AETHUM_FLUX_INJECTOR =
                 make(EtherealAethumFluxInjectorBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_INJECTOR);
+
+        public static final BlockEntityType<LocalDisplacementGatewayBlockEntity> LOCAL_DISPLACEMENT_GATEWAY =
+                make(LocalDisplacementGatewayBlockEntity::new, AffinityBlocks.LOCAL_DISPLACEMENT_GATEWAY);
 
         @Override
         public void afterFieldProcessing() {
