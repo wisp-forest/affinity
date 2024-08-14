@@ -159,6 +159,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     @Override
     public boolean beforeMangroveBasketCapture(World world, BlockPos pos, MutableObject<BlockState> state, BlockEntity blockEntity) {
         this.tryMoveSelfLinksOntoChild();
+        super.beforeMangroveBasketCapture(world, pos, state, blockEntity);
 
         if (state.getValue().get(AethumFluxCacheBlock.PART) != AethumFluxCacheBlock.Part.STANDALONE) {
             state.setValue(state.getValue().with(AethumFluxCacheBlock.PART, AethumFluxCacheBlock.Part.STANDALONE));
