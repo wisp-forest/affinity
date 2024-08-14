@@ -216,8 +216,8 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
                 if (this.shard.isEmpty()) {
                     if (!playerStack.isOf(AffinityItems.VOID_RESONANT_ETHEREAL_AMETHYST_SHARD) && !playerStack.isOf(AffinityItems.SCULK_RESONANT_ETHEREAL_AMETHYST_SHARD)) return ActionResult.PASS;
 
-                    ItemOps.decrementPlayerHandItem(player, hand);
                     this.setShardStack(ItemOps.singleCopy(playerStack));
+                    ItemOps.decrementPlayerHandItem(player, hand);
                 } else {
                     if (ItemOps.canStack(playerStack, this.shard)) {
                         playerStack.increment(1);
