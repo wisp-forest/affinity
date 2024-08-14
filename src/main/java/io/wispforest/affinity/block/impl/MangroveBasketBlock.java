@@ -11,9 +11,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -70,16 +68,6 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
         stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
 
         return ActionResult.success(world.isClient);
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (world.isClient) return;
-        if (BlockItem.getBlockEntityNbt(itemStack) == null) return;
-
-        if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity basket) {
-            basket.onPlaced(placer);
-        }
     }
 
     @Override

@@ -12,6 +12,7 @@
     "AnvilScreenHandlerMixin",
     "AreaEffectCloudEntityMixin",
     "ArrowEntityMixin",
+    "BlockItemMixin",
     "BoatEntityMixin",
     "BoatEntityTypeMixin",
     "BowItemMixin",
