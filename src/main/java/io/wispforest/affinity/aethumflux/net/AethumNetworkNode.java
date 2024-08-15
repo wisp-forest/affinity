@@ -53,5 +53,5 @@ public interface AethumNetworkNode extends AethumNetworkMember {
      * @return All members linked to this node via a link of type
      * {@link AethumLink.Type#NORMAL} - this also specifically excludes other nodes
      */
-    Collection<AethumNetworkMember> membersWithNormalLink();
+    Collection<AethumNetworkMember> membersByLinkType(AethumLink.Type type);
 }
