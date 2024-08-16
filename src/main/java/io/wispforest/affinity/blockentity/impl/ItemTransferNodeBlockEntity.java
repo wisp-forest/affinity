@@ -341,7 +341,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
                 storage.insert(entry.variant(), entry.item.getCount(), transaction);
             }
 
-            return (int) storage.insert(variant, Long.MAX_VALUE, transaction);
+            return (int) storage.insert(variant, Integer.MAX_VALUE, transaction);
         }
     }
 
