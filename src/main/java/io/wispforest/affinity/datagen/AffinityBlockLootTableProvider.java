@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.entry.ItemEntry;
@@ -43,8 +44,13 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
         ));
 
         this.selfDrop(AZALEA_LOG, AZALEA_WOOD, STRIPPED_AZALEA_LOG, STRIPPED_AZALEA_WOOD, AZALEA_PLANKS);
+        this.selfDrop(AZALEA_HANGING_SIGN, AZALEA_WALL_HANGING_SIGN);
         for (var block : AffinityBlockFamilies.AZALEA.getVariants().values()) {
-            this.selfDrop(block);
+            if (block instanceof DoorBlock) {
+                this.addDrop(block, this.doorDrops(block));
+            } else {
+                this.selfDrop(block);
+            }
         }
 
         this.addDrop(HOLOGRAPHIC_STEREOPTICON, block -> {

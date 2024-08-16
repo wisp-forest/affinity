@@ -11,16 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "block": "affinity:azalea_door",
-              "condition": "minecraft:block_state_property",
-              "properties": {
-                "half": "lower"
-              }
-            }
-          ],
-          "name": "affinity:azalea_door"
+          "name": "affinity:azalea_hanging_sign"
         }
       ],
       "rolls": 1.0
