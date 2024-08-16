@@ -125,7 +125,7 @@ public class EtherealAethumFluxInjectorBlockEntity extends BlockEntity implement
             @NullableComponent GlobalPos currentNode
     ) {}
 
-    public record SetInjectorNodePacket(BlockPos injectorPos, GlobalPos nodePos) {}
+    public record SetInjectorNodePacket(BlockPos injectorPos, @NullableComponent GlobalPos nodePos) {}
 
     public static void initNetwork() {
         //noinspection Convert2MethodRef
@@ -140,7 +140,9 @@ public class EtherealAethumFluxInjectorBlockEntity extends BlockEntity implement
             var globalInjectorPos = GlobalPos.create(access.player().getWorld().getRegistryKey(), message.injectorPos);
 
             var storage = access.player().getWorld().getScoreboard().getComponent(AffinityComponents.ETHEREAL_NODE_STORAGE);
-            storage.addInjector(message.nodePos, globalInjectorPos);
+            if (message.nodePos != null) {
+                storage.addInjector(message.nodePos, globalInjectorPos);
+            }
 
             if (injector.lastKnownSourceNode != null) {
                 storage.removeInjector(injector.lastKnownSourceNode, globalInjectorPos);

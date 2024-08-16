@@ -40,7 +40,7 @@
   ],
   "text.affinity.ethereal_aethum_flux_injector.linked_node_tooltip": [
     "", {"text": "[", "color": "dark_gray"}, {"text": "⌘", "color": "#6A67CE"}, {"text": "]", "color": "dark_gray"},
-    {"text": " Linked", "color": "gray"}
+    {"text": " Linked (click to unlink)", "color": "gray"}
   ],
   "text.affinity.ethereal_aethum_flux_injector.unlinked_node_tooltip": [
     "", {"text": "[", "color": "dark_gray"}, {"text": "+", "color": "green"}, {"text": "]", "color": "dark_gray"},
