@@ -33,6 +33,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
             .group(
                     Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("core_inputs").forGetter(recipe -> recipe.coreInputs),
                     Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("socle_inputs").forGetter(recipe -> recipe.socleInputs),
+                    Codec.INT.optionalFieldOf("transfer_nbt_index", -1).forGetter(recipe -> recipe.transferNbtIndex),
                     EntityData.CODEC.fieldOf("entity").forGetter(recipe -> new EntityData(recipe.entityType, Optional.ofNullable(recipe.entityNbt))),
                     EndecUtil.RECIPE_RESULT_ENDEC.codec(SerializationAttribute.HUMAN_READABLE).fieldOf("output").forGetter(recipe -> recipe.output),
                     Codec.INT.optionalFieldOf("duration", 100).forGetter(recipe -> recipe.duration),
@@ -44,11 +45,12 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
                         }
                     }).optionalFieldOf("flux_cost_per_tick", 0).forGetter(recipe -> recipe.fluxCostPerTick)
             )
-            .apply(instance, (coreInputs, socleInputs, entityData, result, duration, fluxCost) -> {
-                return new SpiritAssimilationRecipe(coreInputs, socleInputs, entityData.type, entityData.nbt.orElse(null), duration, fluxCost, result);
+            .apply(instance, (coreInputs, socleInputs, transferNbtIndex, entityData, result, duration, fluxCost) -> {
+                return new SpiritAssimilationRecipe(coreInputs, socleInputs, transferNbtIndex, entityData.type, entityData.nbt.orElse(null), duration, fluxCost, result);
             }));
 
     public final List<Ingredient> coreInputs;
+    public final int transferNbtIndex;
     public final EntityType<?> entityType;
     @Nullable private final NbtCompound entityNbt;
 
@@ -56,6 +58,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
 
     protected SpiritAssimilationRecipe(List<Ingredient> coreInputs,
                                        List<Ingredient> inputs,
+                                       int transferNbtIndex,
                                        EntityType<?> entityType,
                                        @Nullable NbtCompound entityNbt,
                                        int duration,
@@ -63,6 +66,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
                                        ItemStack output) {
         super(inputs, duration, fluxCostPerTick);
         this.coreInputs = ImmutableList.copyOf(coreInputs);
+        this.transferNbtIndex = transferNbtIndex;
         this.entityType = entityType;
         this.entityNbt = entityNbt;
         this.output = output;
@@ -78,7 +82,20 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
 
     @Override
     public ItemStack craft(SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory inventory, DynamicRegistryManager drm) {
-        return ItemStack.EMPTY;
+        var result = this.output.copy();
+
+        if (this.transferNbtIndex != -1) {
+            var transferNbtIngredient = this.coreInputs.get(this.transferNbtIndex);
+
+            for (var stack : inventory.coreInputs()) {
+                if (!transferNbtIngredient.test(stack)) continue;
+
+                result.setNbt(stack.getNbt());
+                break;
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -124,6 +141,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
             return new SpiritAssimilationRecipe(
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
+                    buf.readVarInt(),
                     Registries.ENTITY_TYPE.get(buf.readVarInt()),
                     buf.readOptional(PacketByteBuf::readNbt).orElse(null),
                     buf.readVarInt(),
@@ -136,6 +154,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
         public void write(PacketByteBuf buf, SpiritAssimilationRecipe recipe) {
             buf.writeCollection(recipe.coreInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
+            buf.writeVarInt(recipe.transferNbtIndex);
 
             buf.writeVarInt(Registries.ENTITY_TYPE.getRawId(recipe.entityType));
             buf.writeOptional(Optional.ofNullable(recipe.entityNbt), PacketByteBuf::writeNbt);

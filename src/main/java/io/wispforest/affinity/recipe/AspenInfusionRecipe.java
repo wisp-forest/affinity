@@ -24,6 +24,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
                     Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("primary_input").forGetter(recipe -> recipe.primaryInput),
                     Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("inputs").forGetter(recipe -> recipe.socleInputs),
                     EndecUtil.RECIPE_RESULT_ENDEC.codec(SerializationAttribute.HUMAN_READABLE).fieldOf("output").forGetter(recipe -> recipe.output),
+                    Codec.BOOL.optionalFieldOf("transfer_nbt", false).forGetter(recipe -> recipe.transferNbt),
                     Codec.INT.optionalFieldOf("duration", 100).forGetter(recipe -> recipe.duration),
                     Codec.INT.optionalFieldOf("flux_cost_per_tick", 0).forGetter(recipe -> recipe.fluxCostPerTick)
             )
@@ -31,11 +32,13 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
     public final Ingredient primaryInput;
     private final ItemStack output;
+    private final boolean transferNbt;
 
-    public AspenInfusionRecipe(Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, int duration, int fluxCostPerTick) {
+    public AspenInfusionRecipe(Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, boolean transferNbt, int duration, int fluxCostPerTick) {
         super(inputs, duration, fluxCostPerTick);
         this.primaryInput = primaryInput;
         this.output = output;
+        this.transferNbt = transferNbt;
     }
 
     @Override
@@ -45,7 +48,13 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
     @Override
     public ItemStack craft(AspRiteCoreBlockEntity.AspenInfusionInventory inventory, DynamicRegistryManager drm) {
-        return this.output.copy();
+        var result = this.output.copy();
+
+        if (this.transferNbt) {
+            result.setNbt(inventory.primaryInput().getNbt());
+        }
+
+        return result;
     }
 
     @Override
@@ -76,6 +85,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
                     Ingredient.fromPacket(buf),
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
                     buf.readItemStack(),
+                    buf.readBoolean(),
                     buf.readVarInt(),
                     buf.readVarInt()
             );
@@ -86,6 +96,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
             recipe.primaryInput.write(buf);
             buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeItemStack(recipe.output);
+            buf.writeBoolean(recipe.transferNbt);
             buf.writeVarInt(recipe.duration);
             buf.writeVarInt(recipe.fluxCostPerTick);
         }

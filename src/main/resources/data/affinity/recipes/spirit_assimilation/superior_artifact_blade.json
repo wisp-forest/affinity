@@ -2,6 +2,7 @@
   "type": "affinity:spirit_assimilation",
   "duration": 1000,
   "flux_cost_per_tick": 80,
+  "transfer_nbt_index": 0,
   "core_inputs": [
     {
       "item": "affinity:strengthened_artifact_blade"
