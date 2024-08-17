@@ -40,7 +40,7 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
 
         this.getOrCreateTagBuilder(BlockTags.AXE_MINEABLE).add(
                 STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ANNIHILATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT,
-                MATTER_HARVESTING_HEARTH, CROP_REAPER
+                MATTER_HARVESTING_HEARTH, CROP_REAPER, AZALEA_CHEST
         );
 
         this.getOrCreateTagBuilder(BlockTags.HOE_MINEABLE).add(
@@ -78,5 +78,9 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
         this.getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS).add(EMERALD_BLOCK);
 
         this.getOrCreateTagBuilder(ConventionalBlockTags.ORES).add(PECULIAR_CLUMP);
+
+        this.getOrCreateTagBuilder(ConventionalBlockTags.CHESTS).add(AZALEA_CHEST);
+        this.getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS).add(AZALEA_CHEST);
+        this.getOrCreateTagBuilder(BlockTags.FEATURES_CANNOT_REPLACE).add(AZALEA_CHEST);
     }
 }

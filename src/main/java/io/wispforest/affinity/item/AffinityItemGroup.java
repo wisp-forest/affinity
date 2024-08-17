@@ -36,11 +36,6 @@ public class AffinityItemGroup {
             //noinspection Convert2MethodRef
             initializeGroup(group);
         }).build();
-
-        ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, GROUP.id())).register(entries -> {
-            if (!GROUP.isTabSelected(0)) return;
-            entries.addBefore(MILDLY_ATTUNED_AMETHYST_SHARD, Items.AMETHYST_SHARD);
-        });
     }
 
     public static OwoItemGroup group() {
@@ -204,6 +199,7 @@ public class AffinityItemGroup {
             entries.add(AffinityItems.AZALEA_HANGING_SIGN);
             entries.add(AZALEA_BOAT);
             entries.add(AZALEA_CHEST_BOAT);
+            entries.add(AZALEA_CHEST);
             entries.add(BUDDING_AZALEA_LEAVES);
             entries.add(Blocks.FLOWERING_AZALEA_LEAVES);
             entries.add(UNFLOWERING_AZALEA_LEAVES);

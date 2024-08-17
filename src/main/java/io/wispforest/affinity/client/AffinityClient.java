@@ -15,6 +15,7 @@ import io.wispforest.affinity.client.render.LightLeakRenderer;
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.*;
+import io.wispforest.affinity.client.render.item.AzaleaChestItemRenderer;
 import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
 import io.wispforest.affinity.client.render.item.VoidResonantEtherealAmethystShardRenderer;
 import io.wispforest.affinity.client.render.program.*;
@@ -95,6 +96,7 @@ public class AffinityClient implements ClientModInitializer {
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.AFFINE_INFUSER, new AffineInfuserBlockEntityRenderer(null));
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.FIELD_COHERENCE_MODULATOR, new FieldCoherenceModulatorBlockEntityRenderer(null));
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityItems.VOID_RESONANT_ETHEREAL_AMETHYST_SHARD, new VoidResonantEtherealAmethystShardRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.AZALEA_CHEST, new AzaleaChestItemRenderer());
         PostItemRenderCallback.EVENT.register((stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
             boolean hasItemGlow = item != null && item.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.ITEM_GLOW);
             if (mode == ModelTransformationMode.GUI || (!stack.isOf(AffinityItems.DRAGON_DROP) && !hasItemGlow)) return;
