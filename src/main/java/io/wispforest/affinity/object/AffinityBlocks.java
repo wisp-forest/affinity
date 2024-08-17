@@ -75,7 +75,6 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 
     @NoBlockItem
-
     public static final Block RANTHRACITE_WIRE = new RanthraciteWireBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
@@ -97,6 +96,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AZALEA_TRAPDOOR = new TrapdoorBlock(AZALEA_BLOCK_SET_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR));
     public static final Block AZALEA_PRESSURE_PLATE = new PressurePlateBlock(AZALEA_BLOCK_SET_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE));
     public static final Block AZALEA_BUTTON = new ButtonBlock(AZALEA_BLOCK_SET_TYPE, 30, FabricBlockSettings.copyOf(Blocks.OAK_BUTTON));
+    public static final Block AZALEA_CHEST = new AzaleaChestBlock(FabricBlockSettings.copyOf(Blocks.CHEST), () -> Entities.AZALEA_CHEST);
 
     @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
     @NoBlockItem public static final Block AZALEA_HANGING_SIGN = new HangingSignBlock(AZALEA_WOOD_TYPE, FabricBlockSettings.copyOf(Blocks.OAK_SIGN));
@@ -208,6 +208,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<LocalDisplacementGatewayBlockEntity> LOCAL_DISPLACEMENT_GATEWAY =
                 make(LocalDisplacementGatewayBlockEntity::new, AffinityBlocks.LOCAL_DISPLACEMENT_GATEWAY);
+
+        public static final BlockEntityType<AzaleaChestBlockEntity> AZALEA_CHEST =
+                make(AzaleaChestBlockEntity::new, AffinityBlocks.AZALEA_CHEST);
 
         @Override
         public void afterFieldProcessing() {

@@ -203,6 +203,9 @@
   "block.affinity.azalea_fence_gate": "Azalea Fence Gate",
   "block.affinity.azalea_sign": "Azalea Sign",
   "block.affinity.azalea_hanging_sign": "Azalea Hanging Sign",
+  "block.affinity.azalea_chest": "Azalea Chest",
+  "container.affinity.azalea_chest": "Azalea Chest",
+  "container.affinity.azalea_chest_double": "Large Azalea Chest",
   "item.affinity.azalea_boat": "Azalea Boat",
   "item.affinity.azalea_chest_boat": "Azalea Boat with Chest",
 

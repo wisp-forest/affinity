@@ -51,6 +51,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -214,6 +215,7 @@ public class AffinityClient implements ClientModInitializer {
         HandledScreens.register(AffinityScreenHandlerTypes.ASSEMBLY_AUGMENT, AssemblyAugmentScreen::new);
         HandledScreens.register(AffinityScreenHandlerTypes.OUIJA_BOARD, OuijaBoardScreen::new);
         HandledScreens.register(AffinityScreenHandlerTypes.ITEM_TRANSFER_NODE, ItemTransferNodeScreen::new);
+        HandledScreens.register(AffinityScreenHandlerTypes.LARGE_AZALEA_CHEST, LargeAzaleaChestScreen::new);
 
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.COLORED_FLAME, ColoredFlamedParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.SMALL_COLORED_FLAME, ColoredFlamedParticle.SmallFactory::new);
@@ -311,6 +313,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ETHEREAL_AETHUM_FLUX_INJECTOR, EtherealAethumFluxInjectorBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ETHEREAL_AETHUM_FLUX_NODE, EtherealAethumFluxNodeBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.LOCAL_DISPLACEMENT_GATEWAY, LocalDisplacementGatewayBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.AZALEA_CHEST, ChestBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {
