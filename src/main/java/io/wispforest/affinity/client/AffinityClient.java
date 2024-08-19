@@ -43,6 +43,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
@@ -252,7 +253,9 @@ public class AffinityClient implements ClientModInitializer {
             }
         });
 
-        AbsoluteEnchantmentGlintHandler.createLayers();
+        CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> {
+            AbsoluteEnchantmentGlintHandler.reloadLayers(registries);
+        });
     }
 
     private void registerColorProviders() {
