@@ -17,7 +17,6 @@ public class AffinityModelPredicateProviders {
         ModelPredicateProviderRegistry.register(AffinityItems.EMERALD_WAND_OF_IRIDESCENCE, Affinity.id("mode"), IRIDESCENCE_WAND_MODE);
         ModelPredicateProviderRegistry.register(AffinityItems.SAPPHIRE_WAND_OF_IRIDESCENCE, Affinity.id("mode"), IRIDESCENCE_WAND_MODE);
 
-        // TODO: not allocate a new stack on every frame
         ModelPredicateProviderRegistry.register(AffinityItems.AZALEA_BOW, Identifier.of("pulling"), (ClampedModelPredicateProvider) ModelPredicateProviderRegistry.get(Items.BOW.getDefaultStack(), Identifier.of("pulling")));
         ModelPredicateProviderRegistry.register(AffinityItems.AZALEA_BOW, Identifier.of("pull"), (stack, world, entity, seed) -> {
             if (entity == null) {

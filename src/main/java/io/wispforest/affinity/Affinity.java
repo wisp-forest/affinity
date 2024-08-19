@@ -81,6 +81,7 @@ public class Affinity implements ModInitializer {
         AutoRegistryContainer.register(AffinityRecipeTypes.class, MOD_ID, true);
         AutoRegistryContainer.register(AffinityScreenHandlerTypes.class, MOD_ID, false);
         AutoRegistryContainer.register(AffinityEnchantmentEffectComponents.class, MOD_ID, false);
+
         IlliteracyEffectLogic.initialize();
         GravecallerEnchantmentLogic.initialize();
         BastionEnchantmentLogic.initialize();

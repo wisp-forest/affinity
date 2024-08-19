@@ -73,7 +73,7 @@ public class ResoundingChimeItem extends SwordItem {
 
         @Override
         public TagKey<Block> getInverseTag() {
-            return BlockTags.NEEDS_STONE_TOOL; // TODO: ???
+            return BlockTags.INCORRECT_FOR_IRON_TOOL;
         }
 
         @Override

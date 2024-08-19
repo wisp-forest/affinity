@@ -122,8 +122,8 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item WISE_WISP_SPAWN_EGG = new WispSpawnEggItem(AffinityEntities.WISE_WISP, AffinityWispTypes.WISE);
     public static final Item VICIOUS_WISP_SPAWN_EGG = new WispSpawnEggItem(AffinityEntities.VICIOUS_WISP, AffinityWispTypes.VICIOUS);
 
-    public static OwoItemSettings settings() {
-        return new OwoItemSettings();
+    public static Item.Settings settings() {
+        return new Item.Settings();
     }
 
     public static ItemStack makePotionOfInfiniteProwess() {

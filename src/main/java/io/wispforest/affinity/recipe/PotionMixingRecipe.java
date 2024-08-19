@@ -89,7 +89,6 @@ public class PotionMixingRecipe implements Recipe<PotionMixingRecipe.Input> {
         return effectsConfirmed && confirmedItemInputs == this.itemInputs.size();
     }
 
-    // TODO this might be bad
     @Override
     @Deprecated
     public ItemStack craft(Input input, RegistryWrapper.WrapperLookup registries) {

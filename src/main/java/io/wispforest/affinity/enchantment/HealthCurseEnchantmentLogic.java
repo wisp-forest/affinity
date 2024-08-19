@@ -31,11 +31,10 @@ public class HealthCurseEnchantmentLogic {
         });
 
         ItemEquipEvents.UNEQUIP.register((entity, slot, stack) -> {
-            var ench = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.CURSE_OF_HEALTH).orElseThrow();
+            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.CURSE_OF_HEALTH).orElseThrow();
+            if (EnchantmentHelper.getLevel(enchantment, stack) == 0) return;
 
-            if (EnchantmentHelper.getLevel(ench, stack) == 0) return;
-
-            if (!ench.value().slotMatches(slot)) return;
+            if (!enchantment.value().slotMatches(slot)) return;
 
             healthAttribute(entity).removeModifier(HEALTH_ADDITION.id());
 

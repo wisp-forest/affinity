@@ -30,11 +30,10 @@ public class GravecallerEnchantmentLogic {
 
     public static void initialize() {
         ItemEquipEvents.UNEQUIP.register((entity, slot, stack) -> {
-            var ench = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.GRAVECALLER).orElseThrow();
+            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.GRAVECALLER).orElseThrow();
+            if (!enchantment.value().slotMatches(slot)) return;
 
-            if (!ench.value().slotMatches(slot)) return;
-
-            if (!AbsoluteEnchantmentLogic.hasCompleteArmor(entity, ench) && AffinityEntityAddon.hasData(entity, MINIONS_KEY)) {
+            if (!AbsoluteEnchantmentLogic.hasCompleteArmor(entity, enchantment) && AffinityEntityAddon.hasData(entity, MINIONS_KEY)) {
                 final var minions = AffinityEntityAddon.removeData(entity, MINIONS_KEY);
                 for (var minion : minions) {
                     if (!minion.present()) continue;
@@ -44,9 +43,8 @@ public class GravecallerEnchantmentLogic {
         });
 
         LivingEntityTickCallback.EVENT.register(entity -> {
-            var ench = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.GRAVECALLER).orElseThrow();
-
-            if (!AbsoluteEnchantmentLogic.hasCompleteArmor(entity, ench)) return;
+            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.GRAVECALLER).orElseThrow();
+            if (!AbsoluteEnchantmentLogic.hasCompleteArmor(entity, enchantment)) return;
 
             if (!entity.getWorld().isClient) {
                 serverTick(entity);

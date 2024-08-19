@@ -10,7 +10,6 @@ import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.endec.Endec;
-import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,11 +17,9 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
@@ -39,10 +36,8 @@ import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ArtifactBladeItem extends SwordItem {
 
