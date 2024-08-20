@@ -17,7 +17,7 @@ public record BezierPathEmitterParticleEffect(ParticleEffect effect, Vec3d splin
                                               int emitterDuration,
                                               boolean randomPath) implements ParticleEffect {
 
-    private static final Endec<BezierPathEmitterParticleEffect> ENDEC = RecordEndec.create(BezierPathEmitterParticleEffect.class);
+    private static final Endec<BezierPathEmitterParticleEffect> ENDEC = RecordEndec.createShared(BezierPathEmitterParticleEffect.class);
 
     public static BezierPathEmitterParticleEffect item(ItemStack stack, Vec3d splineEndpoint, int travelDuration, int emitterDuration, boolean randomPath) {
         return new BezierPathEmitterParticleEffect(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), splineEndpoint, travelDuration, emitterDuration, randomPath);

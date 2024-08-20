@@ -36,7 +36,7 @@ public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
 
     static {
         PacketBufSerializer.register(PotionMixture.class, (buf, mixture) -> buf.write(PotionMixture.ENDEC, mixture), buf -> buf.read(PotionMixture.ENDEC));
-        ReflectiveEndecBuilder.INSTANCE.register(PotionMixture.ENDEC, PotionMixture.class);
+        ReflectiveEndecBuilder.SHARED_INSTANCE.register(PotionMixture.ENDEC, PotionMixture.class);
     }
 
     @Override

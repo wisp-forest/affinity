@@ -3,6 +3,7 @@ package io.wispforest.affinity.component;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
+import io.wispforest.endec.SerializationContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.DyeColor;
@@ -23,7 +24,7 @@ public class GlowingColorComponent implements Component, AutoSyncedComponent {
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-        tag.putIfNotNull(GlowingPotion.COLOR_KEY, this.color);
+        tag.putIfNotNull(SerializationContext.empty(), GlowingPotion.COLOR_KEY, this.color);
     }
 
     public DyeColor color() {

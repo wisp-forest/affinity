@@ -14,7 +14,7 @@ public record GenericEmitterParticleEffect(ParticleEffect effect, Vec3d emitVelo
                                            float emitDeviation, boolean randomizeVelocity,
                                            int emitterLifetime) implements ParticleEffect {
 
-    private static final Endec<GenericEmitterParticleEffect> ENDEC = RecordEndec.create(GenericEmitterParticleEffect.class);
+    private static final Endec<GenericEmitterParticleEffect> ENDEC = RecordEndec.createShared(GenericEmitterParticleEffect.class);
 
     public static final ParticleEffect.Factory<GenericEmitterParticleEffect> FACTORY = new Factory<>() {
         @Override

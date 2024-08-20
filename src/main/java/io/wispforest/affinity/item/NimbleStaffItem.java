@@ -5,9 +5,9 @@ import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.endec.BuiltInEndecs;
+import io.wispforest.affinity.endec.CodecUtils;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.endec.CodecUtils;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.particles.ClientParticles;
@@ -35,7 +35,7 @@ import java.util.function.BooleanSupplier;
 
 public class NimbleStaffItem extends StaffItem {
 
-    public static final KeyedEndec<Direction> DIRECTION = CodecUtils.ofCodec(Direction.CODEC).keyed("Direction", Direction.NORTH);
+    public static final KeyedEndec<Direction> DIRECTION = CodecUtils.toEndec(Direction.CODEC).keyed("Direction",Direction.NORTH);
     public static final KeyedEndec<BlockPos> ECHO_SHARD_TARGET = BuiltInEndecs.BLOCK_POS.keyed("EchoShardTarget", (BlockPos) null);
 
     private static final InquirableOutlineProvider.Outline UP_AOE = new InquirableOutlineProvider.Outline(-4, 0, -4, 4, 4, 4);

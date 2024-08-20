@@ -10,6 +10,7 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.annotations.NullableComponent;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.network.ClientAccess;
@@ -104,7 +105,7 @@ public class EtherealAethumFluxInjectorBlockEntity extends BlockEntity implement
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        nbt.putIfNotNull(LAST_KNOWN_SOURCE_NODE_KEY, this.lastKnownSourceNode);
+        nbt.putIfNotNull(SerializationContext.empty(), LAST_KNOWN_SOURCE_NODE_KEY, this.lastKnownSourceNode);
         nbt.put(LAST_INSERTION_TIMESTAMP_KEY, this.lastInsertionTimestamp);
     }
 

@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.misc.DamageTypeKey;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinitySoundEvents;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.BuiltInEndecs;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.particles.ClientParticles;
@@ -94,7 +95,7 @@ public class AethumMissileEntity extends ProjectileEntity {
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putIfNotNull(TARGET_KEY, this.targetEntity);
+        nbt.putIfNotNull(SerializationContext.empty(), TARGET_KEY, this.targetEntity);
     }
 
     @Override

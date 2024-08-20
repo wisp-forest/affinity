@@ -9,6 +9,7 @@ import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.BuiltInEndecs;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.particles.ClientParticles;
@@ -154,8 +155,8 @@ public class EtherealAethumFluxNodeBlockEntity extends AethumNetworkMemberBlockE
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        nbt.putIfNotNull(CUSTOM_NAME_KEY, this.customName);
-        nbt.putIfNotNull(OWNER_KEY, this.owner);
+        nbt.putIfNotNull(SerializationContext.empty(), CUSTOM_NAME_KEY, this.customName);
+        nbt.putIfNotNull(SerializationContext.empty(), OWNER_KEY, this.owner);
         nbt.put(GLOBAL_KEY, this.global);
     }
 

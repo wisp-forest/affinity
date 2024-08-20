@@ -6,6 +6,7 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
@@ -117,7 +118,7 @@ public class CultivationStaffItem extends StaffItem {
 
     @Override
     public ActionResult onPedestalScrolled(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, boolean direction) {
-        pedestal.getItem().mutate(SUPER_FORAGING_MODE_KEY, enabled -> direction);
+        pedestal.getItem().mutate(SUPER_FORAGING_MODE_KEY, SerializationContext.empty(), enabled -> direction);
         return ActionResult.SUCCESS;
     }
 

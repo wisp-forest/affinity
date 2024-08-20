@@ -8,6 +8,7 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -65,7 +66,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     @Override
     public ActionResult onPedestalScrolled(World world, BlockPos pos, StaffPedestalBlockEntity pedestal, boolean direction) {
         if (!world.isClient) {
-            pedestal.getItem().mutate(MODE, mode -> mode.cycle(direction));
+            pedestal.getItem().mutate(MODE, SerializationContext.empty(), mode -> mode.cycle(direction));
             pedestal.markDirty();
         }
 
@@ -99,7 +100,7 @@ public class TimeStaffItem extends StaffItem implements DirectInteractionHandler
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (user.isSneaking()) {
             var stack = user.getStackInHand(hand);
-            if (!world.isClient) stack.mutate(MODE, Mode::next);
+            if (!world.isClient) stack.mutate(MODE, SerializationContext.empty(), Mode::next);
             return TypedActionResult.success(stack, world.isClient);
         }
 

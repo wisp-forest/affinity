@@ -3,6 +3,7 @@ package io.wispforest.affinity.mixin;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.endec.SerializationContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtil;
@@ -25,7 +26,7 @@ public abstract class BrewingRecipeRegistryMixin {
 
     @Inject(method = "craft", at = @At("RETURN"))
     private static void addExtraData(ItemStack ingredient, ItemStack input, CallbackInfoReturnable<ItemStack> cir) {
-        input.copyIfPresent(PotionMixture.EXTRA_DATA, cir.getReturnValue());
+        input.copyIfPresent(PotionMixture.EXTRA_DATA, SerializationContext.empty(), cir.getReturnValue());
     }
 
     @Inject(method = "isValidIngredient", at = @At("HEAD"), cancellable = true)

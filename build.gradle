@@ -34,7 +34,7 @@ repositories {
     maven { url "https://maven.ladysnake.org/releases" }
 
     // owo
-    maven { url "https://maven.wispforest.io" }
+    maven { url "https://maven.wispforest.io/releases" }
 
     // rei
     maven { url "https://maven.shedaniel.me/" }
@@ -99,10 +99,9 @@ dependencies {
 
     modImplementation include("io.wispforest:worldmesher:${project.worldmesher_version}")
 
-    implementation include("io.wispforest:endec:0.1.0-pre.7")
-    implementation include("io.wispforest.endec:gson:0.1.0-pre.1")
-    implementation include("io.wispforest.endec:netty:0.1.0-pre.1")
-    implementation include("io.wispforest.endec:codec:0.1.0-pre.1")
+    implementation include("io.wispforest:endec:0.1.7")
+    implementation include("io.wispforest.endec:gson:0.1.4")
+    implementation include("io.wispforest.endec:netty:0.1.3")
 
     // sky block compatibility
     modCompileOnly "maven.modrinth:sodium:${project.sodium_version}"

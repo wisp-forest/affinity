@@ -15,7 +15,7 @@ public record OrbitingEmitterParticleEffect(ParticleEffect outerEffect, Particle
                                             float radius, int emitInterval,
                                             int orbitSpeed, int lifetime) implements ParticleEffect {
 
-    private static final Endec<OrbitingEmitterParticleEffect> ENDEC = RecordEndec.create(OrbitingEmitterParticleEffect.class);
+    private static final Endec<OrbitingEmitterParticleEffect> ENDEC = RecordEndec.createShared(OrbitingEmitterParticleEffect.class);
 
     public static final ParticleEffect.Factory<OrbitingEmitterParticleEffect> FACTORY = new Factory<>() {
         @Override

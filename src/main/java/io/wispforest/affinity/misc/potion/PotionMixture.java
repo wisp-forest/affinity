@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import io.wispforest.affinity.endec.BuiltInEndecs;
 import io.wispforest.affinity.endec.nbt.NbtEndec;
 import io.wispforest.endec.Endec;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -98,7 +99,7 @@ public class PotionMixture {
             PotionUtil.setPotion(stack, DUBIOUS_POTION);
         }
 
-        stack.putIfNotNull(EXTRA_DATA, extraNbt);
+        stack.putIfNotNull(SerializationContext.empty(), EXTRA_DATA, extraNbt);
 
         return stack;
     }
