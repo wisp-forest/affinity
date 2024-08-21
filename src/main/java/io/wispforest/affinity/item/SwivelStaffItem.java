@@ -39,6 +39,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
@@ -283,6 +284,9 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
             var entity = InteractionUtil.raycastEntities(player, 1f, 7, .1f, $ -> true);
             if (entity == null) return ActionResult.PASS;
 
+            var blockRaycast = player.raycast(7, 1f, false);
+            if (blockRaycast.getType() != HitResult.Type.MISS && blockRaycast.squaredDistanceTo(player) < entity.squaredDistanceTo(player)) return ActionResult.PASS;
+
             var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
             if (!aethum.hasAethum(AETHUM_PER_ENTITY_SPIN)) return ActionResult.PASS;
 
@@ -298,6 +302,9 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
 
             var result = InteractionUtil.raycastEntities(access.player(), 1f, 7, .1f, $ -> true);
             if (result == null) return;
+
+            var blockRaycast = access.player().raycast(7, 1f, false);
+            if (blockRaycast.getType() != HitResult.Type.MISS && blockRaycast.squaredDistanceTo(access.player()) < result.squaredDistanceTo(access.player())) return;
 
             var aethum = access.player().getComponent(AffinityComponents.PLAYER_AETHUM);
             if (!aethum.tryConsumeAethum(AETHUM_PER_ENTITY_SPIN)) return;

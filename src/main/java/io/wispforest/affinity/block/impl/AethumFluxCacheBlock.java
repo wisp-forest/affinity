@@ -33,6 +33,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static io.wispforest.affinity.object.AffinityBlocks.AETHUM_FLUX_CACHE;
@@ -185,7 +186,7 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock implements Bl
 
         @Override
         public String asString() {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
 }
