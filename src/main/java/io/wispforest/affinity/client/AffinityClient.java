@@ -70,6 +70,7 @@ public class AffinityClient implements ClientModInitializer {
     public static final DownsampleProgram DOWNSAMPLE_PROGRAM = new DownsampleProgram();
     public static final FizzleProgram EMANCIPATE_BLOCK_PROGRAM = new FizzleProgram(Affinity.id("emancipate_block"));
     public static final FizzleProgram EMANCIPATE_ENTITY_PROGRAM = new FizzleProgram(Affinity.id("emancipate_entity"));
+    public static final BlitPostEffectBufferProgram BLIT_POST_EFFECT_BUFFER = new BlitPostEffectBufferProgram();
 
     public static final KeyBinding ACTIVATE_EVADE_RING = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.activate_evade_ring", GLFW.GLFW_KEY_LEFT_CONTROL, "key.categories.movement"));
     public static final KeyBinding SELECT_STAFF_FROM_BUNDLE = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.select_staff_from_bundle", GLFW.GLFW_KEY_X, "key.categories.inventory"));
