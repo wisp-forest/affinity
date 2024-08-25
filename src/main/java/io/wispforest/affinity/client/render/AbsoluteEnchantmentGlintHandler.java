@@ -13,10 +13,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
@@ -25,12 +22,24 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
 
     private static RegistryEntry<Enchantment> currentRenderEnchantment = null;
 
+    private static Consumer<RenderLayer> clearAssignment = null;
+    private static Consumer<RenderLayer> assignBuffer = null;
+
     private AbsoluteEnchantmentGlintHandler(String name, VertexFormat vertexFormat, VertexFormat.DrawMode drawMode, int expectedBufferSize, boolean hasCrumbling, boolean translucent, Runnable startAction, Runnable endAction) {
         super(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, startAction, endAction);
         throw new IllegalStateException("This class should never ever be instantiated");
     }
 
+    public static void setupCallbacks(Consumer<RenderLayer> clearAssignment, Consumer<RenderLayer> assignBuffer) {
+        AbsoluteEnchantmentGlintHandler.clearAssignment = clearAssignment;
+        AbsoluteEnchantmentGlintHandler.assignBuffer = assignBuffer;
+    }
+
     public static void reloadLayers(RegistryWrapper.WrapperLookup registries) {
+        LAYERS.forEach((enchantmentRegistryEntry, renderLayers) -> {
+            renderLayers.forEach(clearAssignment);
+        });
+
         LAYERS.clear();
 
         var registry = registries.getWrapperOrThrow(RegistryKeys.ENCHANTMENT);
@@ -38,16 +47,11 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
                 .filter(entry -> entry.value().effects().contains(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE))
                 .forEach(entry -> {
                     final var id = entry.registryKey().getValue().getPath();
-                    LAYERS.put(entry, makeGlintLayers(id.toLowerCase(Locale.ROOT), entry.value().effects().get(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE)));
-                });
-    }
+                    final var layers = makeGlintLayers(id.toLowerCase(Locale.ROOT), entry.value().effects().get(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE));
 
-    public static void assignBuffers(Consumer<RenderLayer> bufferMaker) {
-        LAYERS.forEach((absoluteEnchantment, renderLayers) -> {
-            for (var layer : renderLayers) {
-                bufferMaker.accept(layer);
-            }
-        });
+                    layers.forEach(assignBuffer);
+                    LAYERS.put(entry, layers);
+                });
     }
 
     public static void prepareGlintColor(ItemStack targetStack) {

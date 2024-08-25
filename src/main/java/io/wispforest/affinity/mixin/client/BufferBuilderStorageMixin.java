@@ -21,12 +21,13 @@ public class BufferBuilderStorageMixin {
 
     @Inject(method = "method_54639", at = @At("TAIL"))
     private void insertAffinityLayers(Object2ObjectLinkedOpenHashMap<RenderLayer, BufferBuilder> builderStorage, CallbackInfo callbackInfo) {
-        AbsoluteEnchantmentGlintHandler.assignBuffers(renderLayer -> assignBufferBuilder(builderStorage, renderLayer));
-        assignBufferBuilder(builderStorage, SkyCaptureBuffer.SKY_STENCIL_LAYER);
+        AbsoluteEnchantmentGlintHandler.setupCallbacks(
+                builderStorage::remove,
+                renderLayer -> assignBufferBuilder(builderStorage, renderLayer)
+        );
     }
 
     static {
         RenderLayerAccessor.setBlockLayers(ImmutableList.<RenderLayer>builder().addAll(RenderLayer.getBlockLayers()).add(SkyCaptureBuffer.SKY_STENCIL_LAYER).build());
     }
-
 }
