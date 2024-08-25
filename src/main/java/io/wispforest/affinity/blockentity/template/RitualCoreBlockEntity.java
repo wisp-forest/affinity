@@ -27,6 +27,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -234,13 +235,13 @@ public abstract class RitualCoreBlockEntity extends AethumNetworkMemberBlockEnti
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
-        this.item = nbt.get(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), ITEM_KEY);
+        this.item = nbt.get(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), ITEM_KEY);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
-        nbt.put(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), ITEM_KEY, this.item);
+        nbt.put(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), ITEM_KEY, this.item);
     }
 
     public @NotNull ItemStack getItem() {

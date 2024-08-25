@@ -36,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
@@ -416,7 +417,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        var ctx = SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager()));
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries));
 
         nbt.put(ctx, LINKS_KEY, this.links);
         nbt.put(ctx, ENTRIES_KEY, this.entries);
@@ -432,7 +433,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        var ctx = SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager()));
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries));
 
         this.links = nbt.get(ctx, LINKS_KEY);
         this.entries = nbt.get(ctx, ENTRIES_KEY);

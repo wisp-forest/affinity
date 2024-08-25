@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -126,7 +127,7 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
 
-        this.currentlyHarvesting = nbt.get(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), CURRENTLY_HARVESTING_KEY);
+        this.currentlyHarvesting = nbt.get(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), CURRENTLY_HARVESTING_KEY);
         this.harvestTicks = nbt.get(HARVEST_TICKS_KEY);
     }
 
@@ -134,7 +135,7 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
 
-        nbt.put(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), CURRENTLY_HARVESTING_KEY, this.currentlyHarvesting);
+        nbt.put(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), CURRENTLY_HARVESTING_KEY, this.currentlyHarvesting);
         nbt.put(HARVEST_TICKS_KEY, this.harvestTicks);
     }
 
