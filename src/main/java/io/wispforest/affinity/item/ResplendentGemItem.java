@@ -14,7 +14,7 @@ import net.minecraft.util.Rarity;
 public class ResplendentGemItem extends EnchantedBookItem {
 
     public ResplendentGemItem() {
-        super(AffinityItems.settings().rarity(Rarity.UNCOMMON).maxCount(1));
+        super(AffinityItems.settings().rarity(Rarity.UNCOMMON).maxCount(1).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
     }
 
     public static ItemStack make(RegistryKey<Enchantment> enchantment, RegistryWrapper.WrapperLookup registries) {

@@ -68,18 +68,16 @@ public class AbsoluteEnchantmentGlintHandler extends RenderLayer {
 
     public static void inject(CallbackInfoReturnable<RenderLayer> cir, int index) {
         if (currentRenderEnchantment == null) return;
+        if (!LAYERS.containsKey(currentRenderEnchantment) || index >= LAYERS.get(currentRenderEnchantment).size()) return;
+
         cir.setReturnValue(LAYERS.get(currentRenderEnchantment).get(index));
     }
 
     private static List<RenderLayer> makeGlintLayers(String name, int hue) {
-        // TODO: investigate where the glint on items went
-
         return List.of(
-//                makeGlintLayer(ARMOR_GLINT_PROGRAM, GLINT_TEXTURING, "armor_" + name, false, true, hue),
                 makeGlintLayer(ARMOR_ENTITY_GLINT_PROGRAM, ENTITY_GLINT_TEXTURING, "armor_entity_" + name, false, true, hue),
                 makeGlintLayer(TRANSLUCENT_GLINT_PROGRAM, GLINT_TEXTURING, "translucent" + name, true, false, hue),
                 makeGlintLayer(GLINT_PROGRAM, GLINT_TEXTURING, "normal" + name, false, false, hue),
-//                makeGlintLayer(DIRECT_GLINT_PROGRAM, GLINT_TEXTURING, "direct" + name, false, false, hue),
                 makeGlintLayer(ENTITY_GLINT_PROGRAM, ENTITY_GLINT_TEXTURING, "entity" + name, true, false, hue),
                 makeGlintLayer(DIRECT_ENTITY_GLINT_PROGRAM, ENTITY_GLINT_TEXTURING, "direct_entity" + name, false, false, hue)
         );
