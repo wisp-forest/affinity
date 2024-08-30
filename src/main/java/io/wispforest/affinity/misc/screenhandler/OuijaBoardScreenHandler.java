@@ -105,9 +105,7 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
     }
 
     public int enchantmentCost(RegistryEntry<Enchantment> curse) {
-        // TODO: check if this is actually anvilcost
         int baseCost = curse.value().getAnvilCost();
-
         return baseCost + this.inventory.getStack(0).getEnchantments().getEnchantments().size() * 4;
     }
 

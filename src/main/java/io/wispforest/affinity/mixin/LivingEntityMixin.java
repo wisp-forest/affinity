@@ -182,9 +182,9 @@ public abstract class LivingEntityMixin extends Entity {
     private void executeDeath(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (!(source.getAttacker() instanceof LivingEntity attacker)) return;
 
-        var executeEntry = getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.EXECUTE).orElseThrow();
-        if (EnchantmentHelper.getLevel(executeEntry, attacker.getMainHandStack()) > 0) {
-            if (this.getHealth() >= this.getMaxHealth() * .1) return;
+        var executeEffectAndLevel = EnchantmentHelper.getEffectListAndLevel(attacker.getMainHandStack(), AffinityEnchantmentEffectComponents.KILL_TARGET_WHEN_LOW_ON_HEALTH);
+        if (executeEffectAndLevel != null) {
+            if (this.getHealth() >= this.getMaxHealth() * executeEffectAndLevel.getFirst().getValue(executeEffectAndLevel.getSecond())) return;
 
             affinity$killWithAttacker((LivingEntity) (Object) this, attacker);
         }

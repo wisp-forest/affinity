@@ -20,7 +20,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -38,7 +37,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.ArrayList;
 
@@ -106,18 +104,18 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private float applyWoundingMultiplier(float damage, Entity entity) {
         final var weapon = this.getMainHandStack();
 
-        var criticalGambleEntry = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.CRITICAL_GAMBLE).orElseThrow();
-        final int criticalGambleLevel = EnchantmentHelper.getLevel(criticalGambleEntry, weapon);
-        if (criticalGambleLevel > 0 && this.random.nextFloat() < criticalGambleLevel * .01f) {
+        var killChanceAndLevel = EnchantmentHelper.getEffectListAndLevel(weapon, AffinityEnchantmentEffectComponents.INSTANT_KILL_CHANCE);
+        if (killChanceAndLevel != null && this.random.nextFloat() < killChanceAndLevel.getFirst().getValue(killChanceAndLevel.getSecond())) {
             AffinityEntityAddon.setData(this, CriticalGambleEnchantmentLogic.ACTIVATED_AT, this.getWorld().getTime());
+
+            // TODO this is probably wrong, investigate later
             return (damage / 3) * 2;
         }
 
-        var woundingEntry = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.WOUNDING).orElseThrow();
-        final int woundingLevel = EnchantmentHelper.getLevel(woundingEntry, weapon);
-        if (woundingLevel < 1) return damage;
+        var critMultiplierAndLevel = EnchantmentHelper.getEffectListAndLevel(weapon, AffinityEnchantmentEffectComponents.INCREASES_CRIT_DAMAGE);
+        if (critMultiplierAndLevel == null) return damage;
 
-        return damage * ((1.5f + .1f * woundingLevel) / 1.5f);
+        return damage * ((1.5f + critMultiplierAndLevel.getFirst().getValue(critMultiplierAndLevel.getSecond())) / 1.5f);
     }
 
     @Inject(method = "attack", at = @At(value = "CONSTANT", args = "floatValue=1.5", shift = At.Shift.BY, by = 4))

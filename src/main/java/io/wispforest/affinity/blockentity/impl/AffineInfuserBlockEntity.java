@@ -8,7 +8,7 @@ import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.affinity.object.AffinityEnchantments;
+import io.wispforest.affinity.object.AffinityEnchantmentEffectComponents;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
 import io.wispforest.affinity.particle.ColoredFallingDustParticleEffect;
@@ -23,7 +23,6 @@ import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -96,9 +95,7 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
     }
 
     private void repairIfEnchanted(ItemStack stack) {
-        var ench = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.AFFINE).orElseThrow();
-
-        if (EnchantmentHelper.getLevel(ench, stack) < 1) return;
+        if (!EnchantmentHelper.hasAnyEnchantmentsWith(stack, AffinityEnchantmentEffectComponents.REPAIR_WITH_AFFINE_INFUSER)) return;
         if (stack.getDamage() < 1) return;
 
         stack.setDamage(stack.getDamage() - 1);

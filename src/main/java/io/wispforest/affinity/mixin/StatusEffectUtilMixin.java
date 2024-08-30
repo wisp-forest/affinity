@@ -16,7 +16,7 @@ public class StatusEffectUtilMixin {
 
     @Inject(method = "getDurationText", at = @At("HEAD"), cancellable = true)
     private static void injectBastionRegenerationName(StatusEffectInstance effect, float multiplier, float tickRate, CallbackInfoReturnable<Text> cir) {
-        if (effect.getEffectType() != AffinityStatusEffects.BASTION_REGENERATION) return;
+        if (effect.getEffectType().value() != AffinityStatusEffects.BASTION_REGENERATION) return;
         cir.setReturnValue(StatusEffects.REGENERATION.value().getName().copy().formatted(Formatting.WHITE));
     }
 

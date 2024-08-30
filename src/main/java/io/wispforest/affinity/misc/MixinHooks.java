@@ -3,11 +3,12 @@ package io.wispforest.affinity.misc;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.enchantment.BerserkerEnchantmentLogic;
-import io.wispforest.affinity.enchantment.template.AffinityDamageEnchantment;
 import io.wispforest.affinity.item.WispMistItem;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
+import io.wispforest.affinity.object.AffinityEnchantmentEffectComponents;
+import io.wispforest.affinity.object.AffinityStatusEffects;
 import io.wispforest.affinity.statuseffects.AffinityStatusEffect;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -15,6 +16,7 @@ import net.minecraft.component.ComponentMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -23,6 +25,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
@@ -54,17 +57,22 @@ public class MixinHooks {
         if (!(entity instanceof LivingEntity target)) return baseAmount;
 
         float extraDamage = 0;
+        var weapon = attacker.getMainHandStack();
 
-        // TODO: fix this when affinity damage enchantments are ported.
-//        final var enchantments = EnchantmentHelper.get(attacker.getMainHandStack());
-//        for (var enchantment : enchantments.keySet()) {
-//            if (!(enchantment instanceof AffinityDamageEnchantment damageEnchantment)) continue;
-//
-//            final int level = enchantments.get(enchantment);
-//            if (!damageEnchantment.shouldApplyDamage(level, attacker, target, baseAmount)) continue;
-//
-//            extraDamage += damageEnchantment.getExtraDamage(level, attacker, target, baseAmount);
-//        }
+        var updogLevel = EnchantmentHelper.getEffectListAndLevel(weapon, AffinityEnchantmentEffectComponents.UPDOG_DAMAGE);
+        if (updogLevel != null) {
+            float attackerPercent = attacker.getHealth() / attacker.getMaxHealth();
+            float targetPercent = target.getHealth() / target.getMaxHealth();
+
+            extraDamage += Math.max(0, targetPercent - attackerPercent) * updogLevel.getSecond() * baseAmount;
+        }
+
+        var smite = attacker.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.SMITE);
+        int smiteLevel = smite.map(entry -> EnchantmentHelper.getLevel(entry, weapon)).orElse(0);
+
+        if (target.hasStatusEffect(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.UNHOLY)) && smiteLevel > 0) {
+            extraDamage += 2.5f * smiteLevel * (1 + target.getStatusEffect(Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.UNHOLY)).getAmplifier());
+        }
 
         if (AffinityEntityAddon.getData(attacker, BerserkerEnchantmentLogic.BERSERK_KEY)) {
             extraDamage += (1 - (attacker.getHealth() / attacker.getMaxHealth())) * (1 - (attacker.getHealth() / attacker.getMaxHealth())) * 15;
@@ -111,12 +119,12 @@ public class MixinHooks {
 
         PotionUtil.setPotion(result, Potions.WATER.value());
         PotionUtil.setCustomPotionEffects(result, effects.stream().map(instance -> new StatusEffectInstance(
-                instance.getEffectType(),
-                instance.getDuration(),
-                instance.getAmplifier() + 1,
-                instance.isAmbient(),
-                instance.shouldShowParticles(),
-                instance.shouldShowIcon()
+            instance.getEffectType(),
+            instance.getDuration(),
+            instance.getAmplifier() + 1,
+            instance.isAmbient(),
+            instance.shouldShowParticles(),
+            instance.shouldShowIcon()
         )).toList());
 
         return result;
