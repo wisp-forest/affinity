@@ -15,11 +15,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.component.ComponentChanges;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.AttributeModifierSlot;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
@@ -48,29 +54,27 @@ public class ArtifactBladeItem extends SwordItem {
     private static final EntityAttributeModifier DAMAGE_MODIFIER = new EntityAttributeModifier(Affinity.id("aethum_ability_damage_boost"), 2, EntityAttributeModifier.Operation.ADD_VALUE);
 
     public final Tier tier;
-//    private final Multimap<EntityAttribute, EntityAttributeModifier> modifiers;
-//    private final Multimap<EntityAttribute, EntityAttributeModifier> modifiersWithDamage;
 
     public ArtifactBladeItem(Tier tier) {
         super(tier, AffinityItems.settings().maxCount(1).rarity(tier.data.rarity).trackUsageStat().attributeModifiers(SwordItem.createAttributeModifiers(tier, 0, tier.data.attackSpeed)));
         this.tier = tier;
-
-        // TODO: port this to the new item attribute modifiers.
-//        var modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-//                .putAll(super.getAttributeModifiers(EquipmentSlot.MAINHAND))
-//                .putAll(this.tier.data.modifiers());
-//        this.modifiers = modifiers.build();
-//
-//        modifiers.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, DAMAGE_MODIFIER);
-//        this.modifiersWithDamage = modifiers.build();
     }
 
-//    @Override
-//    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-//        return slot == EquipmentSlot.MAINHAND
-//                ? stack.has(ABILITY_START_TIME) ? this.modifiersWithDamage : this.modifiers
-//                : super.getAttributeModifiers(slot);
-//    }
+
+    @Override
+    public void deriveStackComponents(ComponentMap source, ComponentChanges.Builder target) {
+        if (!source.contains(ABILITY_START_TIME)) return;
+
+        var attributes = source.getOrDefault(
+            DataComponentTypes.ATTRIBUTE_MODIFIERS,
+            AttributeModifiersComponent.DEFAULT
+        ).with(
+            EntityAttributes.GENERIC_ATTACK_DAMAGE,
+            DAMAGE_MODIFIER, AttributeModifierSlot.MAINHAND
+        );
+
+        target.add(DataComponentTypes.ATTRIBUTE_MODIFIERS, attributes);
+    }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
@@ -161,33 +165,33 @@ public class ArtifactBladeItem extends SwordItem {
 
     public enum Tier implements ToolMaterial {
         FORGOTTEN(new TierData(
-                500, 2, 20, 6, 7f, -2.4f, Rarity.UNCOMMON, 100, 300, .35f,
-                ImmutableMultimap.of()
+            500, 2, 20, 6, 7f, -2.4f, Rarity.UNCOMMON, 100, 300, .35f,
+            ImmutableMultimap.of()
         )),
         STABILIZED(new TierData(
-                1000, 3, 25, 8f, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f,
-                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_5"), .15, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                        .build()
+            1000, 3, 25, 8f, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f,
+            ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_5"), .15, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .build()
         )),
         STRENGTHENED(new TierData(
-                1500, 4, 35, 11, 12f, -2f, Rarity.RARE, 160, 400, .65f,
-                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_4"), .35, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                        .build()
+            1500, 4, 35, 11, 12f, -2f, Rarity.RARE, 160, 400, .65f,
+            ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_4"), .35, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .build()
         )),
         SUPERIOR(new TierData(
-                3000, 5, 40, 15, 15f, -1.8f, Rarity.EPIC, 200, 800, .75f,
-                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_3"), .5, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                        .build()
+            3000, 5, 40, 15, 15f, -1.8f, Rarity.EPIC, 200, 800, .75f,
+            ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_3"), .5, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .build()
         )),
         ASTRAL(new TierData(
-                69000, 6, 100, 6969, 75f, 21f, Rarity.EPIC, 200, 800, 1f,
-                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                        .put(AffinityEntityAttributes.MAX_AETHUM, new EntityAttributeModifier(Affinity.id("todo_needs_name_2"),  1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_1"), 3, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                        .build()
+            69000, 6, 100, 6969, 75f, 21f, Rarity.EPIC, 200, 800, 1f,
+            ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .put(AffinityEntityAttributes.MAX_AETHUM, new EntityAttributeModifier(Affinity.id("todo_needs_name_2"), 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_1"), 3, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .build()
         ));
 
         private final TierData data;

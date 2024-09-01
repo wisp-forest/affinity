@@ -10,13 +10,11 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.effect.value.AddEnchantmentEffect;
 import net.minecraft.enchantment.effect.value.MultiplyEnchantmentEffect;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
 import net.minecraft.loot.condition.EntityPropertiesLootCondition;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.entity.EntityTypePredicate;
 import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntryList;
@@ -38,12 +36,16 @@ public class AffinityEnchantments {
     public static final RegistryKey<Enchantment> PROSECUTE = of("prosecute");
     public static final RegistryKey<Enchantment> UPDOG = of("updog");
 
+    public static final TagKey<EntityType<?>> END_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE, Affinity.id("end_entities"));
+    public static final TagKey<Enchantment> CRIT_EXCLUSIVE_SET = TagKey.of(RegistryKeys.ENCHANTMENT, Affinity.id("exclusive_set/crit"));
+
     public static void bootstrap(Registerable<Enchantment> registerable) {
-        RegistryEntryLookup<Item> items = registerable.getRegistryLookup(RegistryKeys.ITEM);
+        var itemLookup = registerable.getRegistryLookup(RegistryKeys.ITEM);
+        var enchantmentLookup = registerable.getRegistryLookup(RegistryKeys.ENCHANTMENT);
 
         registerable.register(CURSE_OF_ILLITERACY,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.HEAD_ARMOR_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.HEAD_ARMOR_ENCHANTABLE),
                     2,
                     1,
                     Enchantment.leveledCost(1, 10),
@@ -56,7 +58,7 @@ public class AffinityEnchantments {
 
         registerable.register(CURSE_OF_HEALTH,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.CHEST_ARMOR_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.CHEST_ARMOR_ENCHANTABLE),
                     1,
                     1,
                     Enchantment.leveledCost(1, 10),
@@ -68,7 +70,7 @@ public class AffinityEnchantments {
 
         registerable.register(AFFINE,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.DURABILITY_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.DURABILITY_ENCHANTABLE),
                     2,
                     1,
                     Enchantment.leveledCost(1, 10),
@@ -82,7 +84,7 @@ public class AffinityEnchantments {
 
         registerable.register(GRAVECALLER,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
                     1,
                     1,
                     Enchantment.leveledCost(1, 10),
@@ -95,7 +97,7 @@ public class AffinityEnchantments {
 
         registerable.register(BASTION,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
                     1,
                     1,
                     Enchantment.leveledCost(1, 10),
@@ -108,7 +110,7 @@ public class AffinityEnchantments {
 
         registerable.register(BERSERKER,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.ARMOR_ENCHANTABLE),
                     1,
                     1,
                     Enchantment.leveledCost(1, 10),
@@ -121,7 +123,7 @@ public class AffinityEnchantments {
 
         registerable.register(WOUNDING,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
                     2,
                     5,
                     Enchantment.leveledCost(1, 10),
@@ -130,12 +132,12 @@ public class AffinityEnchantments {
                     AttributeModifierSlot.MAINHAND
                 ))
                 .addNonListEffect(AffinityEnchantmentEffectComponents.INCREASES_CRIT_DAMAGE, EnchantmentLevelBasedValue.linear(.1f))
-                .exclusiveSet(RegistryEntryList.of()) // TODO: add critical gamble here
+                .exclusiveSet(enchantmentLookup.getOrThrow(CRIT_EXCLUSIVE_SET))
                 .build(WOUNDING.getValue()));
 
         registerable.register(CRITICAL_GAMBLE,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
                     2,
                     5,
                     Enchantment.leveledCost(1, 10),
@@ -144,16 +146,13 @@ public class AffinityEnchantments {
                     AttributeModifierSlot.MAINHAND
                 ))
                 .addNonListEffect(AffinityEnchantmentEffectComponents.INSTANT_KILL_CHANCE, EnchantmentLevelBasedValue.linear(.01f))
-                .exclusiveSet(RegistryEntryList.of()) // TODO: add wounding here
+                .exclusiveSet(enchantmentLookup.getOrThrow(CRIT_EXCLUSIVE_SET))
                 .build(CRITICAL_GAMBLE.getValue()));
-
-        // TODO: put this field where necessary
-        TagKey<EntityType<?>> END_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE, Affinity.id("end_entities"));
 
         registerable.register(ENDER_SCOURGE,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
-                    items.getOrThrow(ItemTags.SWORD_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.SWORD_ENCHANTABLE),
                     2,
                     5,
                     Enchantment.leveledCost(-3, 8),
@@ -172,8 +171,8 @@ public class AffinityEnchantments {
 
         registerable.register(PROSECUTE,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
-                    items.getOrThrow(ItemTags.SWORD_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.SWORD_ENCHANTABLE),
                     2,
                     1,
                     Enchantment.leveledCost(1, 10),
@@ -181,7 +180,7 @@ public class AffinityEnchantments {
                     4,
                     AttributeModifierSlot.MAINHAND
                 ))
-                .exclusiveSet(RegistryEntryList.of()) // TODO add execute
+                .exclusiveSet(RegistryEntryList.of(enchantmentLookup.getOrThrow(EXECUTE)))
                 .addEffect(
                     EnchantmentEffectComponentTypes.DAMAGE,
                     new MultiplyEnchantmentEffect(EnchantmentLevelBasedValue.constant(1.2f)),
@@ -192,7 +191,7 @@ public class AffinityEnchantments {
 
         registerable.register(EXECUTE,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
                     2,
                     1,
                     Enchantment.leveledCost(1, 10),
@@ -201,12 +200,12 @@ public class AffinityEnchantments {
                     AttributeModifierSlot.MAINHAND
                 ))
                 .addNonListEffect(AffinityEnchantmentEffectComponents.KILL_TARGET_WHEN_LOW_ON_HEALTH, EnchantmentLevelBasedValue.constant(.1f))
-                .exclusiveSet(RegistryEntryList.of()) // TODO: add prosecute here
+                .exclusiveSet(RegistryEntryList.of(enchantmentLookup.getOrThrow(PROSECUTE)))
                 .build(EXECUTE.getValue()));
 
         registerable.register(UPDOG,
             Enchantment.builder(Enchantment.definition(
-                    items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
+                    itemLookup.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
                     2,
                     3,
                     Enchantment.leveledCost(1, 10),
@@ -222,29 +221,3 @@ public class AffinityEnchantments {
         return RegistryKey.of(RegistryKeys.ENCHANTMENT, Affinity.id(id));
     }
 }
-
-//public class AffinityEnchantments implements AutoRegistryContainer<Enchantment> {
-//
-//    public static final IlliteracyCurseEnchantment CURSE_OF_ILLITERACY = new IlliteracyCurseEnchantment();
-//    public static final HealthCurseEnchantment CURSE_OF_HEALTH = new HealthCurseEnchantment();
-//    public static final AffineEnchantment AFFINE = new AffineEnchantment();
-//    public static final EnderScourgeEnchantment ENDER_SCOURGE = new EnderScourgeEnchantment();
-//    public static final BerserkerEnchantment BERSERKER = new BerserkerEnchantment();
-//    public static final GravecallerEnchantment GRAVECALLER = new GravecallerEnchantment();
-//    public static final BastionEnchantment BASTION = new BastionEnchantment();
-//    public static final WoundingEnchantment WOUNDING = new WoundingEnchantment();
-//    public static final CriticalGambleEnchantment CRITICAL_GAMBLE = new CriticalGambleEnchantment();
-//    public static final ExecuteEnchantment EXECUTE = new ExecuteEnchantment();
-//    public static final ProsecuteEnchantment PROSECUTE = new ProsecuteEnchantment();
-//    public static final UpdogEnchantment UPDOG = new UpdogEnchantment();
-//
-//    @Override
-//    public Registry<Enchantment> getRegistry() {
-//        return Registries.ENCHANTMENT;
-//    }
-//
-//    @Override
-//    public Class<Enchantment> getTargetFieldType() {
-//        return Enchantment.class;
-//    }
-//}

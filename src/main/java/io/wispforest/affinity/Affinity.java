@@ -1,8 +1,6 @@
 package io.wispforest.affinity;
 
-import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
-import com.mojang.serialization.MapCodec;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.enchantment.*;
@@ -31,9 +29,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.ComponentType;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.condition.EntityPropertiesLootCondition;
@@ -44,29 +40,22 @@ import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.predicate.entity.EntityEquipmentPredicate;
 import net.minecraft.predicate.entity.EntityPredicate;
-import net.minecraft.predicate.entity.EntitySubPredicate;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
-import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Supplier;
 
 public class Affinity implements ModInitializer {
 
     public static final String MOD_ID = "affinity";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    // TODO: ConfigWrapper shouldn't clinit Screen.
-    private static final Supplier<io.wispforest.affinity.AffinityConfig> CONFIG = Suppliers.memoize(io.wispforest.affinity.AffinityConfig::createAndLoad);
+    private static final io.wispforest.affinity.AffinityConfig CONFIG = io.wispforest.affinity.AffinityConfig.createAndLoad();
 
     public static final Color AETHUM_FLUX_COLOR = Color.ofRgb(0x6A67CE);
 
@@ -128,13 +117,13 @@ public class Affinity implements ModInitializer {
             if (!EntityType.WARDEN.getLootTableId().equals(key)) return;
 
             builder.pool(LootPool.builder()
-                    .with(ItemEntry.builder(AffinityItems.RESONANCE_CRYSTAL).apply(EnchantedCountIncreaseLootFunction.builder(registries, UniformLootNumberProvider.create(0, .75f))))
-                    .conditionally(EntityPropertiesLootCondition.builder(
-                            LootContext.EntityTarget.ATTACKING_PLAYER, EntityPredicate.Builder.create()
-                                    .equipment(EntityEquipmentPredicate.Builder.create()
-                                            .mainhand(ItemPredicate.Builder.create().tag(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades"))))
-                                            .build()))
-                    ));
+                .with(ItemEntry.builder(AffinityItems.RESONANCE_CRYSTAL).apply(EnchantedCountIncreaseLootFunction.builder(registries, UniformLootNumberProvider.create(0, .75f))))
+                .conditionally(EntityPropertiesLootCondition.builder(
+                    LootContext.EntityTarget.ATTACKING_PLAYER, EntityPredicate.Builder.create()
+                        .equipment(EntityEquipmentPredicate.Builder.create()
+                            .mainhand(ItemPredicate.Builder.create().tag(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades"))))
+                            .build()))
+                ));
         });
 
         if (!Owo.DEBUG) return;
@@ -150,7 +139,7 @@ public class Affinity implements ModInitializer {
     }
 
     public static io.wispforest.affinity.AffinityConfig config() {
-        return CONFIG.get();
+        return CONFIG;
     }
 
     public static boolean onClient() {
@@ -159,33 +148,33 @@ public class Affinity implements ModInitializer {
 
     public static <T> ComponentType<T> component(String name, Endec<T> endec) {
         return Registry.register(
-                Registries.DATA_COMPONENT_TYPE,
-                id(name),
-                ComponentType.<T>builder()
-                        .codec(CodecUtils.toCodec(endec))
-                        .packetCodec(CodecUtils.toPacketCodec(endec))
-                        .build()
+            Registries.DATA_COMPONENT_TYPE,
+            id(name),
+            ComponentType.<T>builder()
+                .codec(CodecUtils.toCodec(endec))
+                .packetCodec(CodecUtils.toPacketCodec(endec))
+                .build()
         );
     }
 
     public static ComponentType<Unit> unitComponent(String name) {
         return Registry.register(
-                Registries.DATA_COMPONENT_TYPE,
-                id(name),
-                ComponentType.<Unit>builder()
-                        .codec(Unit.CODEC)
-                        .packetCodec(PacketCodec.unit(Unit.INSTANCE))
-                        .build()
+            Registries.DATA_COMPONENT_TYPE,
+            id(name),
+            ComponentType.<Unit>builder()
+                .codec(Unit.CODEC)
+                .packetCodec(PacketCodec.unit(Unit.INSTANCE))
+                .build()
         );
     }
 
     public static <T> ComponentType<T> transientComponent(String name, Endec<T> endec) {
         return Registry.register(
-                Registries.DATA_COMPONENT_TYPE,
-                id(name),
-                ComponentType.<T>builder()
-                        .packetCodec(CodecUtils.toPacketCodec(endec))
-                        .build()
+            Registries.DATA_COMPONENT_TYPE,
+            id(name),
+            ComponentType.<T>builder()
+                .packetCodec(CodecUtils.toPacketCodec(endec))
+                .build()
         );
     }
 }

@@ -120,7 +120,7 @@ public class PotionMixture {
     }
 
     public boolean isEmpty() {
-        return this == EMPTY || (basePotion == Potions.WATER && effects.isEmpty());
+        return this == EMPTY || (basePotion == Potions.WATER.value() && effects.isEmpty());
     }
 
     public int color() {

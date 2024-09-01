@@ -213,7 +213,6 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
 
         @Override
         public void onTakeItem(PlayerEntity player, ItemStack stack) {
-            // TODO: why does this get a this.input?
             var input = new RecipeInput(inventory.getStack(ORNAMENT_INGREDIENT_SLOT));
 
             DefaultedList<ItemStack> defaultedList = player.getWorld().getRecipeManager()

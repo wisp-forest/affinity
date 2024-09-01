@@ -151,9 +151,8 @@ public class SpiritIntegrationApparatusBlock extends RitualCoreBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        // TODO: investigate whether this needs to work with the offhand
-        return InteractableBlockEntity.tryHandle(world, pos, player, Hand.MAIN_HAND, hit);
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        return InteractableBlockEntity.tryHandleWithItem(world, pos, player, hand, hit);
     }
 
     @Override
