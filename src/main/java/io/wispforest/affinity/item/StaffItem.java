@@ -49,8 +49,6 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
             MinecraftEndecs.ITEM_STACK.listOf().xmap(ImmutableList::copyOf, list -> list)
     );
 
-//    public static final KeyedEndec<List<ItemStack>> BUNDLED_STAFFS = BuiltInEndecs.ITEM_STACK.listOf().keyed("bundled_staffs", (List<ItemStack>) null);
-
     protected StaffItem(Settings settings) {
         super(settings);
     }

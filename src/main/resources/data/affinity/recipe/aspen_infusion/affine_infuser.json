@@ -1,0 +1,51 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 400,
+  "flux_cost_per_tick": 25,
+  "primary_input": {
+    "item": "affinity:infused_stone"
+  },
+  "inputs": [
+    {
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "affinity:affine": 1
+        }
+      }
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "affinity:azalea_log"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    }
+  ],
+  "output": {
+    "id": "affinity:affine_infuser"
+  }
+}

@@ -9,8 +9,6 @@ import java.util.List;
 
 @Mixin(BrewingRecipeRegistry.class)
 public interface BrewingRecipeRegistryAccessor {
-    @Accessor("POTION_TYPES")
-    static List<Ingredient> affinity$getPotionTypes() {
-        throw new UnsupportedOperationException();
-    }
+    @Accessor("potionTypes")
+    List<Ingredient> affinity$getPotionTypes();
 }

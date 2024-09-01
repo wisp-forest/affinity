@@ -1,16 +1,16 @@
 package io.wispforest.affinity.mixin;
 
+import com.google.common.base.Suppliers;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.ChunkAethumComponent;
-import io.wispforest.affinity.misc.ArcaneFadeFluid;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.misc.potion.GlowingPotion;
 import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.owo.ui.core.Color;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
@@ -31,11 +31,11 @@ public abstract class ItemStackMixin {
     private void injectNameColorForIncandescence(CallbackInfoReturnable<Text> cir) {
         final var stack = (ItemStack) (Object) this;
         if (!(PotionUtil.getPotion(stack) instanceof GlowingPotion)) return;
-        if (!stack.has(PotionMixture.EXTRA_DATA) || !stack.get(PotionMixture.EXTRA_DATA).has(GlowingPotion.COLOR_KEY)) {
+        if (!stack.contains(GlowingPotion.COLOR)) {
             return;
         }
 
-        var color = stack.get(PotionMixture.EXTRA_DATA).get(GlowingPotion.COLOR_KEY);
+        var color = stack.get(GlowingPotion.COLOR);
         cir.setReturnValue(cir.getReturnValue().copy().styled(style -> style.withColor(Color.ofDye(color).rgb())));
     }
 
@@ -47,12 +47,6 @@ public abstract class ItemStackMixin {
         if (!component.isEffectActive(ChunkAethumComponent.INFERTILITY)) return;
 
         cir.setReturnValue(ActionResult.PASS);
-    }
-
-    @Inject(method = "hasGlint", at = @At("HEAD"), cancellable = true)
-    private void removeGlint(CallbackInfoReturnable<Boolean> cir) {
-        if (!((ItemStack) (Object) this).get(ArcaneFadeFluid.REMOVE_ENCHANTMENT_GLINT_KEY)) return;
-        cir.setReturnValue(false);
     }
 
 }

@@ -159,6 +159,7 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
     @Override
     public boolean beforeMangroveBasketCapture(World world, BlockPos pos, MutableObject<BlockState> state, BlockEntity blockEntity) {
         this.tryMoveSelfLinksOntoChild();
+        super.beforeMangroveBasketCapture(world, pos, state, blockEntity);
 
         if (state.getValue().get(AethumFluxCacheBlock.PART) != AethumFluxCacheBlock.Part.STANDALONE) {
             state.setValue(state.getValue().with(AethumFluxCacheBlock.PART, AethumFluxCacheBlock.Part.STANDALONE));
@@ -246,6 +247,22 @@ public class AethumFluxCacheBlockEntity extends ShardBearingAethumNetworkMemberB
 
     private long directInsert(long max, TransactionContext transaction) {
         return super.insert(max, transaction);
+    }
+
+    @Override
+    public void updateFlux(long flux) {
+        var fluxBefore = this.flux();
+        super.updateFlux(flux);
+
+        if (fluxBefore != flux) {
+            this.world.updateComparators(this.pos, this.getCachedState().getBlock());
+        }
+    }
+
+    @Override
+    public void onTransactionCommitted() {
+        super.onTransactionCommitted();
+        this.world.updateComparators(this.pos, this.getCachedState().getBlock());
     }
 
     @Override

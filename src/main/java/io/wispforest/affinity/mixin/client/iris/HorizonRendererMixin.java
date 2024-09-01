@@ -7,6 +7,7 @@ import io.wispforest.affinity.misc.CompatMixin;
 import net.irisshaders.iris.pathways.HorizonRenderer;
 import net.minecraft.client.gl.ShaderProgram;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,12 +20,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class HorizonRendererMixin {
 
     @Inject(method = "renderHorizon", at = @At("TAIL"))
-    private void captureShaderSky(Matrix4f par1, Matrix4f par2, ShaderProgram program, CallbackInfo ci) {
-        if (!Affinity.CONFIG.theSkyIrisIntegration()) return;
+    private void captureShaderSky(Matrix4fc modelView, Matrix4fc projection, ShaderProgram shader, CallbackInfo ci) {
+        if (!Affinity.config().theSkyIrisIntegration()) return;
 
-        program.bind();
+        shader.bind();
         var fb = GlStateManager.getBoundFramebuffer();
-        program.unbind();
+        shader.unbind();
 
         SkyCaptureBuffer.captureSky(fb);
     }

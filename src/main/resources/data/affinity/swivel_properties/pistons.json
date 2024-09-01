@@ -1,0 +1,21 @@
+{
+  "tag": "#affinity:pistons",
+  "properties": {
+    "facing": {
+      "translation_key": "swivel_property.affinity.facing",
+      "predicate": {
+        "type": "has_property",
+        "property": "extended",
+        "value": "false"
+      },
+      "cycle": {
+        "north": "east",
+        "east": "south",
+        "south": "west",
+        "west": "up",
+        "up": "down",
+        "down": "north"
+      }
+    }
+  }
+}

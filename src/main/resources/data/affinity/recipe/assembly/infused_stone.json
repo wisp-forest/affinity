@@ -1,0 +1,27 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "s": {
+      "item": "minecraft:stone"
+    },
+    "w": {
+      "item": "affinity:inert_wisp_matter"
+    },
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "r": {
+      "item": "affinity:anthracite_powder"
+    }
+  },
+  "pattern": [
+    "sws",
+    "rdr",
+    "sws"
+  ],
+  "result": {
+    "id": "affinity:infused_stone",
+    "count": 4
+  }
+}

@@ -15,6 +15,7 @@ import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.hud.Hud;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 public class AethumNetworkLinkingHud {
@@ -52,17 +53,17 @@ public class AethumNetworkLinkingHud {
                                 .sizing(Sizing.fixed(16)));
 
                         var linkActionLabel = Text.empty();
-                        switch (stack.get(IridescenceWandItem.MODE)) {
+                        switch (stack.getOrDefault(IridescenceWandItem.MODE, IridescenceWandItem.Mode.BIND)) {
                             case BIND -> {
                                 linkActionLabel = Text.literal("+").styled(style -> style.withColor(0x28FFBF));
 
-                                var linkData = stack.get(IridescenceWandItem.LINK_DATA_KEY);
+                                var linkData = stack.get(IridescenceWandItem.LINK_DATA);
                                 if (!linkData.has(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY)) break;
-                                if (linkData.get(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY) != AethumLink.Type.PUSH) {
-                                    break;
+                                if (linkData.get(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY) == AethumLink.Type.PUSH) {
+                                    linkActionLabel = Text.literal("→").styled(style -> style.withColor(0x3955E5));
+                                } else if (linkData.get(AethumNetworkMemberBlockEntity.LINK_TYPE_KEY) == AethumLink.Type.PRIORITIZED) {
+                                    linkActionLabel = Text.literal("⌘").styled(style -> style.withFormatting(Formatting.YELLOW));
                                 }
-
-                                linkActionLabel = Text.literal("→").styled(style -> style.withColor(0x3955E5));
                             }
                             case RELEASE ->
                                     linkActionLabel = Text.literal("-").styled(style -> style.withColor(0xEB1D36));

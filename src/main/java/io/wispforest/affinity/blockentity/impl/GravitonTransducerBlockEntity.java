@@ -27,6 +27,7 @@ import net.minecraft.entity.projectile.ShulkerBulletEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -107,13 +108,13 @@ public class GravitonTransducerBlockEntity extends AethumNetworkMemberBlockEntit
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
-        this.shard = nbt.get(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), SHARD_KEY);
+        this.shard = nbt.get(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), SHARD_KEY);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
-        nbt.put(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), SHARD_KEY, this.shard);
+        nbt.put(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), SHARD_KEY, this.shard);
     }
 
     @Override

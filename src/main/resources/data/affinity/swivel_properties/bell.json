@@ -1,0 +1,29 @@
+{
+  "tag": "#affinity:bell",
+  "properties": {
+    "facing": {
+      "translation_key": "swivel_property.affinity.facing",
+      "predicate": {
+        "type": "any_of",
+        "args": [
+          {
+            "type": "has_property",
+            "property": "attachment",
+            "value": "floor"
+          },
+          {
+            "type": "has_property",
+            "property": "attachment",
+            "value": "ceiling"
+          }
+        ]
+      },
+      "cycle": {
+        "north": "east",
+        "east": "south",
+        "south": "west",
+        "west": "north"
+      }
+    }
+  }
+}

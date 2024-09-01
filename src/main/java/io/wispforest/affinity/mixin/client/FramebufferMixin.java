@@ -30,10 +30,8 @@ public class FramebufferMixin implements AffinityFramebufferExtension {
 
     @Override
     public void affinity$setRenderColor(Color color) {
-        if (this.blitProgram != null) {
+        if (this.blitProgram != null && this.blitProgram.get().colorModulator != null) {
             this.blitProgram.get().colorModulator.set(color.red(), color.green(), color.blue(), color.alpha());
-        } else {
-            MinecraftClient.getInstance().gameRenderer.blitScreenProgram.colorModulator.set(color.red(), color.green(), color.blue(), color.alpha());
         }
     }
 }

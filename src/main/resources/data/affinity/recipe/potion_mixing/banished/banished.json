@@ -1,0 +1,38 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:banished",
+  "effect_inputs": [
+    "minecraft:speed"
+  ],
+  "copy_nbt_index": 1,
+  "item_inputs": [
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "fabric:type": "affinity:passthrough",
+      "display_stacks": [{"id": "minecraft:echo_shard", "count": 1}],
+      "base": {
+        "fabric:type": "fabric:difference",
+        "base": {
+          "item": "minecraft:echo_shard"
+        },
+        "subtracted": {
+          "fabric:type": "fabric:components",
+          "base": {
+            "item": "minecraft:echo_shard"
+          },
+          "components": {
+            "!affinity:bound_location": {}
+          }
+        }
+      }
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ]
+}

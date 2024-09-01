@@ -1,9 +1,14 @@
 package io.wispforest.affinity.mixin;
 
 import io.wispforest.affinity.item.ResplendentGemItem;
+import io.wispforest.affinity.object.AffinityEnchantmentEffectComponents;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityItems;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.*;
 import net.minecraft.text.Text;
@@ -32,23 +37,25 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     @ModifyVariable(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isDamageable()Z", ordinal = 0))
     private boolean allowResplendentGem(boolean allowed) {
         final var addition = this.input.getStack(1);
-        return allowed || (addition.isOf(AffinityItems.RESPLENDENT_GEM) && !ResplendentGemItem.getEnchantmentNbt(addition).isEmpty());
+        return allowed || (addition.isOf(AffinityItems.RESPLENDENT_GEM) && addition.getOrDefault(DataComponentTypes.STORED_ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT).isEmpty());
     }
 
-    @Inject(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;set(Ljava/util/Map;Lnet/minecraft/item/ItemStack;)V"))
+    @Inject(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;set(Lnet/minecraft/item/ItemStack;Lnet/minecraft/component/type/ItemEnchantmentsComponent;)V"))
     private void setResplendentGemCost(CallbackInfo ci) {
         if (!this.input.getStack(1).isOf(AffinityItems.RESPLENDENT_GEM)) return;
         this.levelCost.set(30);
     }
 
-    @ModifyArg(method = {"updateResult", "setNewItemName"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;setCustomName(Lnet/minecraft/text/Text;)Lnet/minecraft/item/ItemStack;"))
-    private @Nullable Text applyIlliteracy(@Nullable Text name) {
+    @ModifyArg(method = {"updateResult", "setNewItemName"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;"))
+    private @Nullable Object applyIlliteracy(ComponentType<?> type, @Nullable Object name) {
+        if (type != DataComponentTypes.CUSTOM_NAME) return name;
         if (!this.isIlliterate()) return name;
-        return name.copy().styled(style -> style.withObfuscated(true));
+
+        return ((Text) name).copy().styled(style -> style.withObfuscated(true));
     }
 
     @Unique
     private boolean isIlliterate() {
-        return EnchantmentHelper.getEquipmentLevel(AffinityEnchantments.CURSE_OF_ILLITERACY, this.player) > 0;
+        return EnchantmentHelper.hasAnyEnchantmentsWith(this.player.getEquippedStack(EquipmentSlot.HEAD), AffinityEnchantmentEffectComponents.CAUSES_ILLITERACY);
     }
 }

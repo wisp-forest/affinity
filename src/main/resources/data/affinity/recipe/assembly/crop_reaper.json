@@ -1,0 +1,29 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    "v": {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    "z": {
+      "item": "affinity:azalea_log"
+    },
+    "s": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "d": {
+      "item": "minecraft:deepslate_bricks"
+    }
+  },
+  "pattern": [
+    "sas",
+    "vzv",
+    "dzd"
+  ],
+  "result": {
+    "id": "affinity:crop_reaper"
+  }
+}

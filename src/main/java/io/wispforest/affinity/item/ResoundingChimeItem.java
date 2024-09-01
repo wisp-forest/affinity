@@ -7,12 +7,18 @@ import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.Block;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
@@ -20,17 +26,19 @@ import net.minecraft.util.Formatting;
 public class ResoundingChimeItem extends SwordItem {
 
     public ResoundingChimeItem() {
-        super(Material.INSTANCE, 0, -2.4f, AffinityItems.settings().maxCount(1));
+        super(Material.INSTANCE, AffinityItems.settings().maxCount(1).attributeModifiers(SwordItem.createAttributeModifiers(Material.INSTANCE, 0, -2.4F)));
     }
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        var resonantEntry = Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.RESONANT);
+
         var amplifier = 0;
-        if (target.hasStatusEffect(AffinityStatusEffects.RESONANT)) {
-            amplifier = Math.min(target.getStatusEffect(AffinityStatusEffects.RESONANT).getAmplifier() + 1, 5);
+        if (target.hasStatusEffect(resonantEntry)) {
+            amplifier = Math.min(target.getStatusEffect(resonantEntry).getAmplifier() + 1, 5);
         }
 
-        target.addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.RESONANT, 100, amplifier));
+        target.addStatusEffect(new StatusEffectInstance(resonantEntry, 100, amplifier));
         target.getWorld().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.BLOCK_BELL_USE, SoundCategory.PLAYERS, 2f, 1 + amplifier * .2f);
 
         return super.postHit(stack, target, attacker);
@@ -64,7 +72,9 @@ public class ResoundingChimeItem extends SwordItem {
         public float getAttackDamage() {return -1 + 1e-7f;}
 
         @Override
-        public int getMiningLevel() {return 0;}
+        public TagKey<Block> getInverseTag() {
+            return BlockTags.INCORRECT_FOR_IRON_TOOL;
+        }
 
         @Override
         public int getEnchantability() {return 0;}

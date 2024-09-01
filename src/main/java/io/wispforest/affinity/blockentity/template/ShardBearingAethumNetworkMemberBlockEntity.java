@@ -48,14 +48,14 @@ public abstract class ShardBearingAethumNetworkMemberBlockEntity extends AethumN
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
-        nbt.put("Shard", this.shard.encode(registries));
+        nbt.put("Shard", this.shard.encodeAllowEmpty(registries));
     }
 
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
 
-        this.shard = ItemStack.fromNbt(registries, nbt.getCompound("Shard")).orElse(ItemStack.EMPTY);
+        this.shard = ItemStack.fromNbtOrEmpty(registries, nbt.getCompound("Shard"));
         this.setTierFromNbt(AttunedShardTier.forItem(this.shard.getItem()));
         this.updateTransferRateForTier();
     }

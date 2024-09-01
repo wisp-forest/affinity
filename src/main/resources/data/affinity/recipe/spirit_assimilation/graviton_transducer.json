@@ -1,0 +1,54 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 400,
+  "flux_cost_per_tick": 60,
+  "core_inputs": [
+    {
+      "item": "affinity:infused_stone"
+    },
+    {
+      "item": "affinity:infused_stone"
+    },
+    {
+      "item": "affinity:infused_stone"
+    },
+    {
+      "item": "affinity:infused_stone"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "affinity:azalea_log"
+    },
+    {
+      "item": "affinity:crystalline_wisp_matter_composite"
+    },
+    {
+      "item": "minecraft:phantom_membrane"
+    },
+    {
+      "item": "affinity:azalea_log"
+    },
+    {
+      "item": "affinity:azalea_log"
+    },
+    {
+      "item": "minecraft:phantom_membrane"
+    },
+    {
+      "item": "affinity:crystalline_wisp_matter_composite"
+    },
+    {
+      "item": "affinity:azalea_log"
+    }
+  ],
+  "output": {
+    "id": "affinity:graviton_transducer"
+  },
+  "entity": {
+    "id": "minecraft:endermite"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 400,
+  "flux_cost_per_tick": 20,
+  "primary_input": {
+    "item": "affinity:archetypal_iron_ring"
+  },
+  "inputs": [
+    {
+      "item": "affinity:fairly_attuned_amethyst_shard"
+    },
+    {
+      "item": "minecraft:feather"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "fabric:type": "fabric:components",
+      "base": {
+        "tag": "c:potions"
+      },
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:slow_falling"
+        }
+      }
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "minecraft:feather"
+    }
+  ],
+  "output": {
+    "id": "affinity:featherweight_ring"
+  }
+}

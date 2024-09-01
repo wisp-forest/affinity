@@ -22,8 +22,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -68,9 +68,8 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-
-        if (!(world.getBlockEntity(pos) instanceof BrewingCauldronBlockEntity cauldron)) return ActionResult.PASS;
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!(world.getBlockEntity(pos) instanceof BrewingCauldronBlockEntity cauldron)) return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         final var playerStack = player.getStackInHand(hand);
 
         if (!playerStack.isEmpty() && ItemOps.canStack(playerStack, ListUtil.peekLast(cauldron.getItems()))) {
@@ -82,53 +81,53 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
                 cauldron.markDirty(false);
             }
 
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         } else if (playerStack.getItem() instanceof PotionItem) {
-            if (!cauldron.canPotionBeAdded()) return ActionResult.PASS;
+            if (!cauldron.canPotionBeAdded()) return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
             if (!world.isClient()) {
                 cauldron.addOneBottle(PotionMixture.fromStack(playerStack));
                 player.setStackInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
             }
 
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         } else if (playerStack.isOf(Items.GLASS_BOTTLE)) {
 
-            if (!cauldron.canPotionBeExtracted()) return ActionResult.PASS;
+            if (!cauldron.canPotionBeExtracted()) return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
             if (!world.isClient()) {
                 final var potionStack = cauldron.extractOneBottle();
-                if (potionStack.isEmpty()) return ActionResult.PASS;
+                if (potionStack.isEmpty()) return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
                 ItemOps.decrementPlayerHandItem(player, hand);
                 player.getInventory().offerOrDrop(potionStack);
             }
 
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         } else if (!playerStack.isEmpty()) {
 
-            if (!cauldron.itemAvailable()) return ActionResult.PASS;
+            if (!cauldron.itemAvailable()) return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
             if (!world.isClient()) {
                 final var item = new ItemEntity(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5,
-                        ListUtil.getAndRemoveLast(cauldron.getItems()));
+                    ListUtil.getAndRemoveLast(cauldron.getItems()));
                 item.getComponent(AffinityComponents.ENTITY_FLAGS).setFlag(EntityFlagComponent.SPAWNED_BY_BREWING_CAULDRON);
 
                 world.spawnEntity(item);
                 cauldron.markDirty(false);
             }
 
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         } else {
 
-            if (!cauldron.itemAvailable()) return ActionResult.PASS;
+            if (!cauldron.itemAvailable()) return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
             if (!world.isClient()) {
                 player.setStackInHand(hand, ListUtil.getAndRemoveLast(cauldron.getItems()));
                 cauldron.markDirty(false);
             }
 
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
     }
 }

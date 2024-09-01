@@ -1,0 +1,100 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 1000,
+  "flux_cost_per_tick": 80,
+  "transfer_nbt_index": 0,
+  "core_inputs": [
+    {
+      "item": "affinity:strengthened_artifact_blade"
+    },
+    {
+      "item": "minecraft:nether_star"
+    },
+    {
+      "item": "minecraft:nether_star"
+    },
+    {
+      "item": "affinity:synthetic_dragon_heart"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "item": "minecraft:dragon_head"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "minecraft:end_stone"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:knockback": 2
+        }
+      }
+    },
+    {
+      "item": "affinity:crystalline_wisp_matter_composite"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "minecraft:obsidian"
+    },
+    {
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:sweeping_edge": 3
+        }
+      }
+    },
+    {
+      "item": "minecraft:obsidian"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "affinity:crystalline_wisp_matter_composite"
+    },
+    {
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:sharpness": 5
+        }
+      }
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "item": "minecraft:end_stone"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    }
+  ],
+  "output": {
+    "id": "affinity:superior_artifact_blade"
+  },
+  "entity": {
+    "id": "minecraft:enderman"
+  }
+}

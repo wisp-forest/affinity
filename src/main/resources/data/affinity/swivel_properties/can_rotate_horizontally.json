@@ -1,0 +1,14 @@
+{
+  "tag": "#affinity:can_rotate_horizontally",
+  "properties": {
+    "facing": {
+      "translation_key": "swivel_property.affinity.facing",
+      "cycle": {
+        "north": "east",
+        "east": "south",
+        "south": "west",
+        "west": "north"
+      }
+    }
+  }
+}

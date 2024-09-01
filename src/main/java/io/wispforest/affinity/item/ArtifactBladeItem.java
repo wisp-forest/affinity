@@ -9,15 +9,19 @@ import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.endec.Endec;
 import io.wispforest.owo.ops.TextOps;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.block.Block;
+import net.minecraft.component.ComponentChanges;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.AttributeModifierSlot;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -26,7 +30,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
@@ -35,61 +42,58 @@ import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.UUID;
 
 public class ArtifactBladeItem extends SwordItem {
 
     public static final DamageTypeKey DAMAGE_TYPE = new DamageTypeKey(Affinity.id("artifact_blade"));
     public static final AffinityEntityAddon.DataKey<Boolean> DID_CRIT = AffinityEntityAddon.DataKey.withDefaultConstant(false);
 
-    private static final KeyedEndec<Long> ABILITY_START_TIME = Endec.LONG.keyed("AbilityStartTime", -1L);
-    private static final EntityAttributeModifier DAMAGE_MODIFIER = new EntityAttributeModifier(UUID.fromString("3fb1b365-3b7b-421e-9237-6d5c92d97625"), "Aethum Ability Damage Boost", 2, EntityAttributeModifier.Operation.ADDITION);
+    private static final ComponentType<Long> ABILITY_START_TIME = Affinity.component("artifact_blade_ability_start_time", Endec.LONG);
+    private static final EntityAttributeModifier DAMAGE_MODIFIER = new EntityAttributeModifier(Affinity.id("aethum_ability_damage_boost"), 2, EntityAttributeModifier.Operation.ADD_VALUE);
 
     public final Tier tier;
-    private final Multimap<EntityAttribute, EntityAttributeModifier> modifiers;
-    private final Multimap<EntityAttribute, EntityAttributeModifier> modifiersWithDamage;
 
     public ArtifactBladeItem(Tier tier) {
-        super(tier, 0, tier.data.attackSpeed, AffinityItems.settings().maxCount(1).rarity(tier.data.rarity).trackUsageStat());
+        super(tier, AffinityItems.settings().maxCount(1).rarity(tier.data.rarity).trackUsageStat().attributeModifiers(SwordItem.createAttributeModifiers(tier, 0, tier.data.attackSpeed)));
         this.tier = tier;
-
-        var modifiers = ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                .putAll(super.getAttributeModifiers(EquipmentSlot.MAINHAND))
-                .putAll(this.tier.data.modifiers());
-        this.modifiers = modifiers.build();
-
-        modifiers.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, DAMAGE_MODIFIER);
-        this.modifiersWithDamage = modifiers.build();
     }
 
+
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND
-                ? stack.has(ABILITY_START_TIME) ? this.modifiersWithDamage : this.modifiers
-                : super.getAttributeModifiers(slot);
+    public void deriveStackComponents(ComponentMap source, ComponentChanges.Builder target) {
+        if (!source.contains(ABILITY_START_TIME)) return;
+
+        var attributes = source.getOrDefault(
+            DataComponentTypes.ATTRIBUTE_MODIFIERS,
+            AttributeModifiersComponent.DEFAULT
+        ).with(
+            EntityAttributes.GENERIC_ATTACK_DAMAGE,
+            DAMAGE_MODIFIER, AttributeModifierSlot.MAINHAND
+        );
+
+        target.add(DataComponentTypes.ATTRIBUTE_MODIFIERS, attributes);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         var playerStack = user.getStackInHand(hand);
-        if (playerStack.has(ABILITY_START_TIME)) return TypedActionResult.pass(playerStack);
+        if (playerStack.contains(ABILITY_START_TIME)) return TypedActionResult.pass(playerStack);
 
         var aethum = user.getComponent(AffinityComponents.PLAYER_AETHUM);
         if (!(aethum.tryConsumeAethum(aethum.maxAethum() * this.tier.data.abilityAethumCost))) {
             return TypedActionResult.pass(playerStack);
         }
 
-        playerStack.put(ABILITY_START_TIME, world.getTime());
+        playerStack.set(ABILITY_START_TIME, world.getTime());
         return TypedActionResult.success(playerStack);
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (getAbilityTicks(world, stack) > this.tier.data.abilityDuration) {
-            stack.delete(ABILITY_START_TIME);
+            stack.remove(ABILITY_START_TIME);
 
             if (!(entity instanceof PlayerEntity player)) return;
             player.getItemCooldownManager().set(this, this.tier.data.abilityCooldown);
@@ -97,7 +101,7 @@ public class ArtifactBladeItem extends SwordItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("item.affinity.staff.tooltip.consumption_per_use", Text.literal((int) (this.tier.data.abilityAethumCost * 100) + "%")));
     }
 
@@ -111,7 +115,7 @@ public class ArtifactBladeItem extends SwordItem {
     }
 
     public static int getAbilityTicks(World world, ItemStack stack) {
-        if (!stack.has(ABILITY_START_TIME)) return -1;
+        if (!stack.contains(ABILITY_START_TIME)) return -1;
         return (int) (world.getTime() - stack.get(ABILITY_START_TIME));
     }
 
@@ -161,33 +165,33 @@ public class ArtifactBladeItem extends SwordItem {
 
     public enum Tier implements ToolMaterial {
         FORGOTTEN(new TierData(
-                500, 2, 20, 6, 7f, -2.4f, Rarity.UNCOMMON, 100, 300, .35f,
-                ImmutableMultimap.of()
+            500, 2, 20, 6, 7f, -2.4f, Rarity.UNCOMMON, 100, 300, .35f,
+            ImmutableMultimap.of()
         )),
         STABILIZED(new TierData(
-                1000, 3, 25, 8f, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f,
-                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes season 4: remade", .15, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
-                        .build()
+            1000, 3, 25, 8f, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f,
+            ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_5"), .15, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .build()
         )),
         STRENGTHENED(new TierData(
-                1500, 4, 35, 11, 12f, -2f, Rarity.RARE, 160, 400, .65f,
-                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes season 3 the prequel", .35, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
-                        .build()
+            1500, 4, 35, 11, 12f, -2f, Rarity.RARE, 160, 400, .65f,
+            ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_4"), .35, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .build()
         )),
         SUPERIOR(new TierData(
-                3000, 5, 40, 15, 15f, -1.8f, Rarity.EPIC, 200, 800, .75f,
-                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes season 2", .5, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
-                        .build()
+            3000, 5, 40, 15, 15f, -1.8f, Rarity.EPIC, 200, 800, .75f,
+            ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_3"), .5, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .build()
         )),
         ASTRAL(new TierData(
-                69000, 6, 100, 6969, 75f, 21f, Rarity.EPIC, 200, 800, 1f,
-                ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                        .put(AffinityEntityAttributes.MAX_AETHUM, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes", 1, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
-                        .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(UUID.randomUUID(), "i hate attributes episode 2", 3, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
-                        .build()
+            69000, 6, 100, 6969, 75f, 21f, Rarity.EPIC, 200, 800, 1f,
+            ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+                .put(AffinityEntityAttributes.MAX_AETHUM, new EntityAttributeModifier(Affinity.id("todo_needs_name_2"), 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_1"), 3, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .build()
         ));
 
         private final TierData data;
@@ -212,8 +216,9 @@ public class ArtifactBladeItem extends SwordItem {
         }
 
         @Override
-        public int getMiningLevel() {
-            return this.data.miningLevel;
+        public TagKey<Block> getInverseTag() {
+            // TODO: ??? convert from mining level to inverse tag.
+            return BlockTags.AIR;
         }
 
         @Override

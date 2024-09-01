@@ -1,0 +1,25 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    "i": {
+      "item": "affinity:infused_stone"
+    },
+    "z": {
+      "item": "affinity:azalea_log"
+    },
+    "s": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "pattern": [
+    "sas",
+    "ziz"
+  ],
+  "result": {
+    "id": "affinity:matter_harvesting_hearth"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "type": "affinity:potion_mixing",
+  "output": "affinity:resistance",
+  "effect_inputs": [
+    "minecraft:resistance",
+    "minecraft:slowness",
+    "minecraft:speed"
+  ],
+  "item_inputs": [
+    {
+      "item": "minecraft:turtle_scute"
+    },
+    {
+      "item": "minecraft:crying_obsidian"
+    },
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    }
+  ]
+}

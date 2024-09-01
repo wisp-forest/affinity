@@ -1,0 +1,58 @@
+{
+  "parent": "affinity:this_resource_matters",
+  "display": {
+    "icon": {
+      "id": "affinity:the_sky"
+    },
+    "title": {
+      "translate": "advancement.affinity.the_sky_suit.title"
+    },
+    "description": "https://modrinth.com/mod/wearthat",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "sky_suit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "equipment": {
+                "head": {
+                  "items": [
+                    "affinity:the_sky"
+                  ]
+                },
+                "chest": {
+                  "items": [
+                    "affinity:the_sky"
+                  ]
+                },
+                "legs": {
+                  "items": [
+                    "affinity:the_sky"
+                  ]
+                },
+                "feet": {
+                  "items": [
+                    "affinity:the_sky"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "sky_suit"
+    ]
+  ]
+}

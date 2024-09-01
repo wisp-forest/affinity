@@ -1,19 +1,29 @@
 package io.wispforest.affinity.recipe;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.wispforest.affinity.misc.potion.ExtraPotionData;
 import io.wispforest.affinity.misc.potion.PotionMixture;
+import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.affinity.object.AffinityRecipeTypes;
+import io.wispforest.endec.Endec;
+import io.wispforest.endec.StructEndec;
+import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.owo.serialization.EndecRecipeSerializer;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentMapImpl;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
-import net.minecraft.recipe.*;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -22,15 +32,14 @@ import java.util.stream.Stream;
 
 public class PotionMixingRecipe implements Recipe<PotionMixingRecipe.Input> {
 
-    public static final Codec<PotionMixingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(
-                    Registries.STATUS_EFFECT.getCodec().listOf().fieldOf("effect_inputs").forGetter(recipe -> recipe.effectInputs),
-                    Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("item_inputs").forGetter(recipe -> recipe.itemInputs),
-                    Codec.INT.optionalFieldOf("copy_nbt_index", -1).forGetter(recipe -> recipe.copyComponentsIndex),
-                    Registries.POTION.getCodec().fieldOf("output").forGetter(recipe -> recipe.output),
-                    Codec.BOOL.optionalFieldOf("strong", false).forGetter(recipe -> recipe.strong)
-            )
-            .apply(instance, PotionMixingRecipe::new));
+    public static final StructEndec<PotionMixingRecipe> ENDEC = StructEndecBuilder.of(
+            MinecraftEndecs.ofRegistry(Registries.STATUS_EFFECT).listOf().fieldOf("effect_inputs", recipe -> recipe.effectInputs),
+            EndecUtil.INGREDIENT_ENDEC.listOf().fieldOf("item_inputs", recipe -> recipe.itemInputs),
+            Endec.INT.optionalFieldOf("copy_nbt_index", recipe -> recipe.copyComponentsIndex, -1),
+            MinecraftEndecs.ofRegistry(Registries.POTION).fieldOf("output", recipe -> recipe.output),
+            Endec.BOOLEAN.optionalFieldOf("strong", recipe -> recipe.strong, false),
+            PotionMixingRecipe::new
+    );
 
     public final List<StatusEffect> effectInputs;
     public final List<Ingredient> itemInputs;
@@ -56,8 +65,12 @@ public class PotionMixingRecipe implements Recipe<PotionMixingRecipe.Input> {
     public boolean matches(Input input, World world) {
         if (input.mixture.isEmpty()) return false;
 
-        var effectInputs = Stream.concat(input.mixture.effects().stream(), input.mixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).distinct().toList();
         var itemInputs = new ConcurrentLinkedQueue<>(input.items.stream().filter(stack -> !stack.isEmpty()).toList());
+        var effectInputs = Stream.concat(input.mixture.effects().stream(), input.mixture.basePotion().getEffects().stream())
+            .map(StatusEffectInstance::getEffectType)
+            .map(RegistryEntry::value)
+            .distinct()
+            .toList();
 
         if (effectInputs.size() != this.effectInputs.size() || itemInputs.size() != this.itemInputs.size()) {
             return false;
@@ -81,7 +94,6 @@ public class PotionMixingRecipe implements Recipe<PotionMixingRecipe.Input> {
         return effectsConfirmed && confirmedItemInputs == this.itemInputs.size();
     }
 
-    // TODO this might be bad
     @Override
     @Deprecated
     public ItemStack craft(Input input, RegistryWrapper.WrapperLookup registries) {
@@ -105,22 +117,20 @@ public class PotionMixingRecipe implements Recipe<PotionMixingRecipe.Input> {
     }
 
     public PotionMixture craftPotion(List<ItemStack> inputStacks) {
-        var extraNbt = new NbtCompound();
+        var extraData = new ComponentMapImpl(ComponentMap.EMPTY);
 
         if (this.copyComponentsIndex != -1) {
             var copyNbtIngredient = this.itemInputs.get(this.copyComponentsIndex);
             for (var stack : inputStacks) {
                 if (!copyNbtIngredient.test(stack)) continue;
 
-                if (stack.hasNbt()) {
-                    extraNbt.copyFrom(stack.getNbt());
-                }
+                ExtraPotionData.copyExtraData(stack, extraData);
 
                 break;
             }
         }
 
-        return new PotionMixture(this.potionOutput(), extraNbt.isEmpty() ? null : extraNbt);
+        return new PotionMixture(this.potionOutput(), extraData);
     }
 
     @Override
@@ -142,6 +152,12 @@ public class PotionMixingRecipe implements Recipe<PotionMixingRecipe.Input> {
         @Override
         public int getSize() {
             return this.items.size();
+        }
+    }
+
+    public static final class Serializer extends EndecRecipeSerializer<PotionMixingRecipe> {
+        public Serializer() {
+            super(PotionMixingRecipe.ENDEC);
         }
     }
 }

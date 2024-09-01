@@ -11,8 +11,6 @@ import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -127,7 +125,7 @@ public class CuboidRenderer {
             matrices.translate(-cam.x, -cam.y, -cam.z);
 
             for (var cuboid : CUBOIDS.values()) {
-                cuboid.completeness += Delta.compute(cuboid.completeness, cuboid.targetCompleteness, MinecraftClient.getInstance().getLastFrameDuration() * .25f);
+                cuboid.completeness += Delta.compute(cuboid.completeness, cuboid.targetCompleteness, MinecraftClient.getInstance().getRenderTickCounter().getLastFrameDuration() * .25f);
                 renderCuboidEdges(matrices, outlineBuffer, cuboid);
             }
 
@@ -176,8 +174,6 @@ public class CuboidRenderer {
     }
 
     public static void cuboid(MatrixStack matrices, VertexConsumer buffer, float fromX, float fromY, float fromZ, float toX, float toY, float toZ, Color color) {
-        var positionMatrix = matrices.peek().getPositionMatrix();
-        var normalMatrix = matrices.peek().getNormalMatrix();
         int argb = color.argb();
 
         fromX -= 5e-4f;
@@ -187,40 +183,40 @@ public class CuboidRenderer {
         toY += 5e-4f;
         toZ += 5e-4f;
 
-        vertex(buffer, positionMatrix, normalMatrix, fromX, fromY, fromZ, argb, 0, -1, -0);
-        vertex(buffer, positionMatrix, normalMatrix, toX, fromY, fromZ, argb, 0, -1, -0);
-        vertex(buffer, positionMatrix, normalMatrix, toX, fromY, toZ, argb, 0, -1, -0);
-        vertex(buffer, positionMatrix, normalMatrix, fromX, fromY, toZ, argb, 0, -1, -0);
+        vertex(buffer, matrices, fromX, fromY, fromZ, argb, 0, -1, -0);
+        vertex(buffer, matrices, toX, fromY, fromZ, argb, 0, -1, -0);
+        vertex(buffer, matrices, toX, fromY, toZ, argb, 0, -1, -0);
+        vertex(buffer, matrices, fromX, fromY, toZ, argb, 0, -1, -0);
 
-        vertex(buffer, positionMatrix, normalMatrix, fromX, toY, toZ, argb, 0, 1, 0);
-        vertex(buffer, positionMatrix, normalMatrix, toX, toY, toZ, argb, 0, 1, 0);
-        vertex(buffer, positionMatrix, normalMatrix, toX, toY, fromZ, argb, 0, 1, 0);
-        vertex(buffer, positionMatrix, normalMatrix, fromX, toY, fromZ, argb, 0, 1, 0);
+        vertex(buffer, matrices, fromX, toY, toZ, argb, 0, 1, 0);
+        vertex(buffer, matrices, toX, toY, toZ, argb, 0, 1, 0);
+        vertex(buffer, matrices, toX, toY, fromZ, argb, 0, 1, 0);
+        vertex(buffer, matrices, fromX, toY, fromZ, argb, 0, 1, 0);
 
-        vertex(buffer, positionMatrix, normalMatrix, fromX, fromY, toZ, argb, -1, 0, 0);
-        vertex(buffer, positionMatrix, normalMatrix, fromX, toY, toZ, argb, -1, 0, 0);
-        vertex(buffer, positionMatrix, normalMatrix, fromX, toY, fromZ, argb, -1, 0, 0);
-        vertex(buffer, positionMatrix, normalMatrix, fromX, fromY, fromZ, argb, -1, 0, 0);
+        vertex(buffer, matrices, fromX, fromY, toZ, argb, -1, 0, 0);
+        vertex(buffer, matrices, fromX, toY, toZ, argb, -1, 0, 0);
+        vertex(buffer, matrices, fromX, toY, fromZ, argb, -1, 0, 0);
+        vertex(buffer, matrices, fromX, fromY, fromZ, argb, -1, 0, 0);
 
-        vertex(buffer, positionMatrix, normalMatrix, toX, fromY, fromZ, argb, 1, 0, 0);
-        vertex(buffer, positionMatrix, normalMatrix, toX, toY, fromZ, argb, 1, 0, 0);
-        vertex(buffer, positionMatrix, normalMatrix, toX, toY, toZ, argb, 1, 0, 0);
-        vertex(buffer, positionMatrix, normalMatrix, toX, fromY, toZ, argb, 1, 0, 0);
+        vertex(buffer, matrices, toX, fromY, fromZ, argb, 1, 0, 0);
+        vertex(buffer, matrices, toX, toY, fromZ, argb, 1, 0, 0);
+        vertex(buffer, matrices, toX, toY, toZ, argb, 1, 0, 0);
+        vertex(buffer, matrices, toX, fromY, toZ, argb, 1, 0, 0);
 
-        vertex(buffer, positionMatrix, normalMatrix, fromX, fromY, fromZ, argb, 0, 0, -1);
-        vertex(buffer, positionMatrix, normalMatrix, fromX, toY, fromZ, argb, 0, 0, -1);
-        vertex(buffer, positionMatrix, normalMatrix, toX, toY, fromZ, argb, 0, 0, -1);
-        vertex(buffer, positionMatrix, normalMatrix, toX, fromY, fromZ, argb, 0, 0, -1);
+        vertex(buffer, matrices, fromX, fromY, fromZ, argb, 0, 0, -1);
+        vertex(buffer, matrices, fromX, toY, fromZ, argb, 0, 0, -1);
+        vertex(buffer, matrices, toX, toY, fromZ, argb, 0, 0, -1);
+        vertex(buffer, matrices, toX, fromY, fromZ, argb, 0, 0, -1);
 
-        vertex(buffer, positionMatrix, normalMatrix, toX, fromY, toZ, argb, 0, 0, 1);
-        vertex(buffer, positionMatrix, normalMatrix, toX, toY, toZ, argb, 0, 0, 1);
-        vertex(buffer, positionMatrix, normalMatrix, fromX, toY, toZ, argb, 0, 0, 1);
-        vertex(buffer, positionMatrix, normalMatrix, fromX, fromY, toZ, argb, 0, 0, 1);
+        vertex(buffer, matrices, toX, fromY, toZ, argb, 0, 0, 1);
+        vertex(buffer, matrices, toX, toY, toZ, argb, 0, 0, 1);
+        vertex(buffer, matrices, fromX, toY, toZ, argb, 0, 0, 1);
+        vertex(buffer, matrices, fromX, fromY, toZ, argb, 0, 0, 1);
     }
 
-    private static void vertex(VertexConsumer buffer, Matrix4f position, Matrix3f normal, float x, float y, float z, int color, float normalX, float normalY, float normalZ) {
-        buffer.vertex(position, x, y, z).color(color).texture(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(LightmapTextureManager.MAX_LIGHT_COORDINATE)
-                .normal(normal, normalX, normalY, normalZ).next();
+    private static void vertex(VertexConsumer buffer, MatrixStack matrices, float x, float y, float z, int color, float normalX, float normalY, float normalZ) {
+        buffer.vertex(matrices.peek(), x, y, z).color(color).texture(0, 0).overlay(OverlayTexture.DEFAULT_UV).light(LightmapTextureManager.MAX_LIGHT_COORDINATE)
+                .normal(matrices.peek(), normalX, normalY, normalZ);
     }
 
     public static class Cuboid {

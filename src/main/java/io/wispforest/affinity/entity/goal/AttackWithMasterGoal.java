@@ -1,6 +1,6 @@
 package io.wispforest.affinity.entity.goal;
 
-import io.wispforest.affinity.enchantment.impl.GravecallerEnchantment;
+import io.wispforest.affinity.enchantment.GravecallerEnchantmentLogic;
 import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
@@ -22,10 +22,10 @@ public class AttackWithMasterGoal extends TrackTargetGoal {
 
     @Override
     public boolean canStart() {
-        if (AffinityEntityAddon.hasData(mob, GravecallerEnchantment.MASTER_KEY)) {
-            final var masterRef = AffinityEntityAddon.getData(mob, GravecallerEnchantment.MASTER_KEY);
+        if (AffinityEntityAddon.hasData(mob, GravecallerEnchantmentLogic.MASTER_KEY)) {
+            final var masterRef = AffinityEntityAddon.getData(mob, GravecallerEnchantmentLogic.MASTER_KEY);
             if (!masterRef.present()) {
-                AffinityEntityAddon.removeData(mob, GravecallerEnchantment.MASTER_KEY);
+                AffinityEntityAddon.removeData(mob, GravecallerEnchantmentLogic.MASTER_KEY);
                 return false;
             }
 
@@ -40,7 +40,8 @@ public class AttackWithMasterGoal extends TrackTargetGoal {
     @Override
     public void start() {
         this.mob.setTarget(this.attacking);
-        final var masterRef = AffinityEntityAddon.getData(mob, GravecallerEnchantment.MASTER_KEY);
+
+        final var masterRef = AffinityEntityAddon.getData(mob, GravecallerEnchantmentLogic.MASTER_KEY);
         if (masterRef != null && masterRef.present()) {
             this.lastAttackTime = masterRef.get().getLastAttackTime();
         }

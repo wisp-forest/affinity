@@ -26,23 +26,28 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -85,6 +90,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     public boolean ignoreData = true;
     public boolean invertFilter = false;
     @NotNull private ItemStack filterStack = ItemStack.EMPTY;
+    @Nullable private TagKey<Item> filterTag = null;
 
     private long time = ThreadLocalRandom.current().nextLong(0, 10);
     private int startIndex = 0;
@@ -342,7 +348,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
                 storage.insert(entry.variant(), entry.item.getCount(), transaction);
             }
 
-            return (int) storage.insert(variant, Long.MAX_VALUE, transaction);
+            return (int) storage.insert(variant, Integer.MAX_VALUE, transaction);
         }
     }
 
@@ -352,7 +358,12 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     }
 
     private boolean testFilter(ItemVariant variant) {
-        if (this.filterStack.getItem() != variant.getItem()) return false;
+        if (this.filterTag != null) {
+            if (!variant.getItem().getRegistryEntry().isIn(this.filterTag)) return false;
+        } else {
+            if (this.filterStack.getItem() != variant.getItem()) return false;
+        }
+
         if (this.ignoreData) return true;
 
         var standard = this.filterStack.getComponentChanges();
@@ -416,7 +427,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        var ctx = SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager()));
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries));
 
         nbt.put(ctx, LINKS_KEY, this.links);
         nbt.put(ctx, ENTRIES_KEY, this.entries);
@@ -432,7 +443,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        var ctx = SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager()));
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries));
 
         this.links = nbt.get(ctx, LINKS_KEY);
         this.entries = nbt.get(ctx, ENTRIES_KEY);
@@ -442,7 +453,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
         this.mode = nbt.get(ctx, MODE_KEY);
         this.stackSize = nbt.get(ctx, STACK_SIZE_KEY);
-        this.filterStack = nbt.get(ctx, FILTER_STACK_KEY);
+        this.setFilterStack(nbt.get(ctx, FILTER_STACK_KEY));
 
         this.ignoreDamage = nbt.get(ctx, IGNORE_DAMAGE_KEY);
         this.ignoreData = nbt.get(ctx, IGNORE_DATA_KEY);
@@ -450,9 +461,9 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     }
 
     @Override
-    public void setStackNbt(ItemStack stack, RegistryWrapper.WrapperLookup registries) {
-        super.setStackNbt(stack, registries);
-        NbtUtil.processBlockEntityNbt(stack, this, nbt -> nbt.remove("Links"));
+    @SuppressWarnings("deprecation")
+    public void removeFromCopiedStackNbt(NbtCompound nbt) {
+        nbt.remove("Links");
     }
 
     @Override
@@ -482,6 +493,17 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     public void setFilterStack(ItemStack filterStack) {
         this.filterStack = filterStack.copyWithCount(1);
+
+        var nameString = this.filterStack.getName().getString();
+        if (nameString.startsWith("#")) {
+            var tagId = Identifier.tryParse(nameString.substring(1));
+            this.filterTag = tagId != null
+                    ? TagKey.of(RegistryKeys.ITEM, tagId)
+                    : null;
+        } else {
+            this.filterTag = null;
+        }
+
         this.markDirty();
     }
 

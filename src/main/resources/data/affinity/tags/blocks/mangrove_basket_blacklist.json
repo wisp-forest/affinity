@@ -1,8 +1,0 @@
-{
-    "replace": false,
-    "values": [
-        "#minecraft:beds",
-        "#c:movement_restricted",
-        "affinity:mangrove_basket"
-    ]
-}

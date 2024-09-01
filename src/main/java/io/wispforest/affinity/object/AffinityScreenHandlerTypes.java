@@ -1,9 +1,6 @@
 package io.wispforest.affinity.object;
 
-import io.wispforest.affinity.misc.screenhandler.AssemblyAugmentScreenHandler;
-import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
-import io.wispforest.affinity.misc.screenhandler.OuijaBoardScreenHandler;
-import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
+import io.wispforest.affinity.misc.screenhandler.*;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -16,6 +13,7 @@ public class AffinityScreenHandlerTypes implements AutoRegistryContainer<ScreenH
     public static final ScreenHandlerType<AssemblyAugmentScreenHandler> ASSEMBLY_AUGMENT = new ScreenHandlerType<>(AssemblyAugmentScreenHandler::client, FeatureFlags.DEFAULT_ENABLED_FEATURES);
     public static final ScreenHandlerType<OuijaBoardScreenHandler> OUIJA_BOARD = new ScreenHandlerType<>(OuijaBoardScreenHandler::client, FeatureFlags.DEFAULT_ENABLED_FEATURES);
     public static final ScreenHandlerType<ItemTransferNodeScreenHandler> ITEM_TRANSFER_NODE = new ScreenHandlerType<>(ItemTransferNodeScreenHandler::client, FeatureFlags.DEFAULT_ENABLED_FEATURES);
+    public static final ScreenHandlerType<LargeAzaleaChestScreenHandler> LARGE_AZALEA_CHEST = new ScreenHandlerType<>(LargeAzaleaChestScreenHandler::client, FeatureFlags.DEFAULT_ENABLED_FEATURES);
 
     @Override
     public Registry<ScreenHandlerType<?>> getRegistry() {

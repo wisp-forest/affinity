@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -69,11 +70,11 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
         }
 
         this.enforceBlockState(true);
-        if (this.time % 20 == 0) {
+        if (this.time % 10 == 0) {
             this.updateFlux(Math.min(this.flux() + matter.wispType().aethumFluxPerSecond(), this.fluxCapacity()));
         }
 
-        if (++this.harvestTicks < 400) return;
+        if (++this.harvestTicks < 200) return;
 
         this.harvestTicks = 0;
         if (!ItemOps.emptyAwareDecrement(this.currentlyHarvesting)) {
@@ -87,7 +88,7 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
         super.appendTooltipEntries(entries);
 
         if (!(this.currentlyHarvesting.getItem() instanceof WispMatterItem matter)) return;
-        entries.add(Entry.icon(Text.of(matter.wispType().aethumFluxPerSecond() + "/s"), 8, 0));
+        entries.add(Entry.icon(Text.of(matter.wispType().aethumFluxPerSecond() * 2 + "/s"), 8, 0));
     }
 
     private void enforceBlockState(boolean lit) {
@@ -126,7 +127,7 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
 
-        this.currentlyHarvesting = nbt.get(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), CURRENTLY_HARVESTING_KEY);
+        this.currentlyHarvesting = nbt.get(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), CURRENTLY_HARVESTING_KEY);
         this.harvestTicks = nbt.get(HARVEST_TICKS_KEY);
     }
 
@@ -134,7 +135,7 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
 
-        nbt.put(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), CURRENTLY_HARVESTING_KEY, this.currentlyHarvesting);
+        nbt.put(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), CURRENTLY_HARVESTING_KEY, this.currentlyHarvesting);
         nbt.put(HARVEST_TICKS_KEY, this.harvestTicks);
     }
 

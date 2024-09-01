@@ -1,0 +1,37 @@
+{
+  "type": "affinity:aspen_infusion",
+  "flux_cost_per_tick": 5,
+  "primary_input": {
+    "item": "minecraft:redstone"
+  },
+  "inputs": [
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    },
+    {
+      "item": "affinity:anthracite_powder"
+    }
+  ],
+  "output": {
+    "id": "affinity:ranthracite_dust",
+    "count": 9
+  }
+}

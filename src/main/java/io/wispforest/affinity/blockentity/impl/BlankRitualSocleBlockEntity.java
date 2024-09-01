@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -44,14 +45,15 @@ public class BlankRitualSocleBlockEntity extends SyncedBlockEntity implements In
     public void onBroken() {
         ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), this.item);
     }
+
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        this.item = nbt.get(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), ITEM_KEY);
+        this.item = nbt.get(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), ITEM_KEY);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        nbt.put(SerializationContext.attributes(RegistriesAttribute.of(this.world.getRegistryManager())), ITEM_KEY, this.item);
+        nbt.put(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), ITEM_KEY, this.item);
     }
 
     public @NotNull ItemStack getItem() {

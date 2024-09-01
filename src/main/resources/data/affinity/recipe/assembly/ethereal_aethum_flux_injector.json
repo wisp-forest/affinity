@@ -1,0 +1,23 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "d": {
+      "item": "minecraft:deepslate_tiles"
+    },
+    "s": {
+      "item": "affinity:sculk_resonant_ethereal_amethyst_shard"
+    },
+    "c": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "pattern": [
+    "dcd",
+    "csc",
+    "dcd"
+  ],
+  "result": {
+    "id": "affinity:ethereal_aethum_flux_injector"
+  }
+}

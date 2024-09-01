@@ -2,7 +2,7 @@ package io.wispforest.affinity.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import io.wispforest.affinity.component.AffinityComponents;
-import io.wispforest.affinity.enchantment.impl.CriticalGambleEnchantment;
+import io.wispforest.affinity.enchantment.CriticalGambleEnchantmentLogic;
 import io.wispforest.affinity.item.ArtifactBladeItem;
 import io.wispforest.affinity.item.LavaliereOfSafeKeepingItem;
 import io.wispforest.affinity.misc.MixinHooks;
@@ -18,6 +18,8 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -35,7 +37,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.ArrayList;
 
@@ -71,15 +72,19 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"))
     private static void injectAethumAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
-        cir.getReturnValue().add(AffinityEntityAttributes.MAX_AETHUM, 15).add(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, 0.025);
+        cir.getReturnValue()
+            .add(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.MAX_AETHUM), 15)
+            .add(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED), 0.025);
     }
 
     @Inject(method = "damage", at = @At("RETURN"))
     private void removeFlightWhenDamaged(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.getWorld().isClient) return;
 
-        if (!this.hasStatusEffect(AffinityStatusEffects.FLIGHT)) return;
-        this.removeStatusEffect(AffinityStatusEffects.FLIGHT);
+        var flightEntry = Registries.STATUS_EFFECT.getEntry(AffinityStatusEffects.FLIGHT);
+
+        if (!this.hasStatusEffect(flightEntry)) return;
+        this.removeStatusEffect(flightEntry);
 
         AffinityParticleSystems.FLIGHT_REMOVED.spawn(this.getWorld(), getPos());
         WorldOps.playSound(this.getWorld(), getPos(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.PLAYERS, .5f, 0f);
@@ -99,16 +104,18 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private float applyWoundingMultiplier(float damage, Entity entity) {
         final var weapon = this.getMainHandStack();
 
-        final int criticalGambleLevel = EnchantmentHelper.getLevel(AffinityEnchantments.CRITICAL_GAMBLE, weapon);
-        if (criticalGambleLevel > 0 && this.random.nextFloat() < criticalGambleLevel * .01f) {
-            AffinityEntityAddon.setData(this, CriticalGambleEnchantment.ACTIVATED_AT, this.getWorld().getTime());
+        var killChanceAndLevel = EnchantmentHelper.getEffectListAndLevel(weapon, AffinityEnchantmentEffectComponents.INSTANT_KILL_CHANCE);
+        if (killChanceAndLevel != null && this.random.nextFloat() < killChanceAndLevel.getFirst().getValue(killChanceAndLevel.getSecond())) {
+            AffinityEntityAddon.setData(this, CriticalGambleEnchantmentLogic.ACTIVATED_AT, this.getWorld().getTime());
+
+            // TODO this is probably wrong, investigate later
             return (damage / 3) * 2;
         }
 
-        final int woundingLevel = EnchantmentHelper.getLevel(AffinityEnchantments.WOUNDING, weapon);
-        if (woundingLevel < 1) return damage;
+        var critMultiplierAndLevel = EnchantmentHelper.getEffectListAndLevel(weapon, AffinityEnchantmentEffectComponents.INCREASES_CRIT_DAMAGE);
+        if (critMultiplierAndLevel == null) return damage;
 
-        return damage * ((1.5f + .1f * woundingLevel) / 1.5f);
+        return damage * ((1.5f + critMultiplierAndLevel.getFirst().getValue(critMultiplierAndLevel.getSecond())) / 1.5f);
     }
 
     @Inject(method = "attack", at = @At(value = "CONSTANT", args = "floatValue=1.5", shift = At.Shift.BY, by = 4))

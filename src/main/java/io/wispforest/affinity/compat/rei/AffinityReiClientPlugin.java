@@ -11,6 +11,7 @@ import io.wispforest.affinity.compat.rei.category.*;
 import io.wispforest.affinity.compat.rei.display.*;
 import io.wispforest.affinity.item.SocleOrnamentItem;
 import io.wispforest.affinity.misc.MixinHooks;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.mixin.access.BrewingRecipeRegistryAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
@@ -29,11 +30,11 @@ import me.shedaniel.rei.plugin.common.displays.brewing.DefaultBrewingDisplay;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -98,7 +99,9 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
             var testStack = item.getDefaultStack();
             if (!MixinHooks.isMistInfusion(testStack, null)) continue;
 
-            BrewingRecipeRegistryAccessor.affinity$getPotionTypes()
+            var brewing = (BrewingRecipeRegistryAccessor) MinecraftClient.getInstance().world.getBrewingRecipeRegistry();
+
+            brewing.affinity$getPotionTypes()
                     .stream()
                     .flatMap(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStack::copy))
                     .forEach(potionStack -> {
@@ -132,7 +135,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
 
         for (Potion potion : Registries.POTION) {
             for (StatusEffectInstance effectInst : potion.getEffects()) {
-                effectToPotion.computeIfAbsent(effectInst.getEffectType(), unused -> new ArrayList<>()).add(potion);
+                effectToPotion.computeIfAbsent(effectInst.getEffectType().value(), unused -> new ArrayList<>()).add(potion);
             }
         }
 
@@ -180,7 +183,7 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
 
                     var recipeArray = JsonHelper.getArray(json, "hidden_recipes");
                     for (var element : recipeArray) {
-                        HIDDEN_RECIPES.add(new Identifier(element.getAsString()));
+                        HIDDEN_RECIPES.add(Identifier.of(element.getAsString()));
                     }
                 } catch (Exception e) {
                     throw new RuntimeException("Exception loading hidden REI recipes from " + identifier, e);

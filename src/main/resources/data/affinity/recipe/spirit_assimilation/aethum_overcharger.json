@@ -1,0 +1,59 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 500,
+  "flux_cost_per_tick": 20,
+  "core_inputs": [
+    {
+      "item": "minecraft:totem_of_undying"
+    },
+    {
+      "item": "affinity:mildly_attuned_amethyst_shard"
+    },
+    {
+      "item": "affinity:mildly_attuned_amethyst_shard"
+    },
+    {
+      "item": "minecraft:nether_star"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "item": "minecraft:dragon_breath"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "fabric:type": "fabric:components",
+      "base": {
+        "tag": "c:potions"
+      },
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "affinity:strong_resistance"
+        }
+      }
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    }
+  ],
+  "output": {
+    "id": "affinity:aethum_overcharger"
+  },
+  "entity": {
+    "id": "minecraft:player"
+  }
+}

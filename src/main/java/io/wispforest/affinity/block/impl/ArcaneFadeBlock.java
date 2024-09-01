@@ -3,7 +3,7 @@ package io.wispforest.affinity.block.impl;
 import io.wispforest.affinity.misc.ArcaneFadeFluid;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -139,16 +139,11 @@ public class ArcaneFadeBlock extends FluidBlock {
             }
 
             AffinityParticleSystems.ARCANE_FADE_BLEACH_SHEEP.spawn(item.getWorld(), item.getPos().add(0, .5f, 0), .25f);
-
         });
 
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            reloadGroups(Registries.BLOCK, BLOCK_GROUPS);
-            reloadGroups(Registries.ITEM, ITEM_GROUPS);
-        });
+        CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> {
+            if (client) return;
 
-        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
-            if (!success) return;
             reloadGroups(Registries.BLOCK, BLOCK_GROUPS);
             reloadGroups(Registries.ITEM, ITEM_GROUPS);
         });

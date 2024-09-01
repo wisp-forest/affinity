@@ -78,8 +78,9 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
         this.context.run((world, blockPos) -> {
             if (world.isClient()) return;
 
+            var input = new RecipeInput(inventory.getStack(ORNAMENT_INGREDIENT_SLOT));
             var resultStack = world.getRecipeManager()
-                    .getFirstMatch(AffinityRecipeTypes.ORNAMENT_CARVING, inventory, world)
+                    .getFirstMatch(AffinityRecipeTypes.ORNAMENT_CARVING, input, world)
                     .map(entry -> entry.value().getResult(world.getRegistryManager()))
                     .orElse(ItemStack.EMPTY);
 
@@ -212,8 +213,10 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
 
         @Override
         public void onTakeItem(PlayerEntity player, ItemStack stack) {
-            DefaultedList<ItemStack> defaultedList = player.getWorld().getRecipeManager().getRemainingStacks(AffinityRecipeTypes.ORNAMENT_CARVING,
-                    this.input, player.getWorld());
+            var input = new RecipeInput(inventory.getStack(ORNAMENT_INGREDIENT_SLOT));
+
+            DefaultedList<ItemStack> defaultedList = player.getWorld().getRecipeManager()
+                .getRemainingStacks(AffinityRecipeTypes.ORNAMENT_CARVING, input, player.getWorld());
 
             for (int i = 0; i < defaultedList.size(); ++i) {
                 ItemStack itemStack = this.input.getStack(i);
@@ -226,7 +229,7 @@ public class RitualSocleComposerScreenHandler extends ScreenHandler {
                 if (!itemStack2.isEmpty()) {
                     if (itemStack.isEmpty()) {
                         this.input.setStack(i, itemStack2);
-                    } else if (ItemStack.canCombine(itemStack, itemStack2)) {
+                    } else if (ItemStack.areItemsAndComponentsEqual(itemStack, itemStack2)) {
                         itemStack2.increment(itemStack.getCount());
                         this.input.setStack(i, itemStack2);
                     } else if (!this.player.getInventory().insertStack(itemStack2)) {

@@ -33,14 +33,14 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
                 RUDIMENTARY_RITUAL_SOCLE, REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, SPIRIT_INTEGRATION_APPARATUS, ARCANE_TREETAP, STAFF_PEDESTAL,
                 OUIJA_BOARD, ITEM_TRANSFER_NODE, EMERALD_BLOCK, PECULIAR_CLUMP, THE_SKY, INVERSION_STONE, SUNSHINE_MONOLITH, INFUSED_STONE,
                 RITUAL_SOCLE_COMPOSER, AFFINE_INFUSER, FIELD_COHERENCE_MODULATOR, HOLOGRAPHIC_STEREOPTICON, GRAVITON_TRANSDUCER, ETHEREAL_AETHUM_FLUX_NODE,
-                ETHEREAL_AETHUM_FLUX_INJECTOR, WORLD_PIN
+                ETHEREAL_AETHUM_FLUX_INJECTOR, WORLD_PIN, LOCAL_DISPLACEMENT_GATEWAY
         );
 
         this.getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(EMERALD_BLOCK, PECULIAR_CLUMP, INFUSED_STONE);
 
         this.getOrCreateTagBuilder(BlockTags.AXE_MINEABLE).add(
                 STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ANNIHILATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT,
-                MATTER_HARVESTING_HEARTH, CROP_REAPER
+                MATTER_HARVESTING_HEARTH, CROP_REAPER, AZALEA_CHEST
         );
 
         this.getOrCreateTagBuilder(BlockTags.HOE_MINEABLE).add(
@@ -78,5 +78,9 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
         this.getOrCreateTagBuilder(BlockTags.BEACON_BASE_BLOCKS).add(EMERALD_BLOCK);
 
         this.getOrCreateTagBuilder(ConventionalBlockTags.ORES).add(PECULIAR_CLUMP);
+
+        this.getOrCreateTagBuilder(ConventionalBlockTags.CHESTS).add(AZALEA_CHEST);
+        this.getOrCreateTagBuilder(BlockTags.GUARDED_BY_PIGLINS).add(AZALEA_CHEST);
+        this.getOrCreateTagBuilder(BlockTags.FEATURES_CANNOT_REPLACE).add(AZALEA_CHEST);
     }
 }

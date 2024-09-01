@@ -40,7 +40,7 @@ public class EtherealAethumFluxInjectorScreen extends BaseUIModelScreen<FlowLayo
     private final BlockPos injectorPos;
     private final List<GlobalPos> globalNodes, privateNodes;
     private final Map<GlobalPos, Text> nodeNames;
-    private GlobalPos currentSource;
+    private @Nullable GlobalPos currentSource;
 
     private boolean showingPrivateNodes = true;
 
@@ -134,8 +134,8 @@ public class EtherealAethumFluxInjectorScreen extends BaseUIModelScreen<FlowLayo
                     var tooltip = new ArrayList<Text>();
                     tooltip.add(Text.translatable(
                             "text.affinity.ethereal_aethum_flux_injector.node_location_tooltip",
-                            nodePos.getPos().getX() + " " + nodePos.getPos().getY() + " " + nodePos.getPos().getZ(),
-                            Text.translatable(Util.createTranslationKey("dimension", nodePos.getDimension().getValue()))
+                            nodePos.pos().getX() + " " + nodePos.pos().getY() + " " + nodePos.pos().getZ(),
+                            Text.translatable(Util.createTranslationKey("dimension", nodePos.dimension().getValue()))
                     ));
 
                     if (nodePos.equals(this.currentSource)) {
@@ -145,21 +145,21 @@ public class EtherealAethumFluxInjectorScreen extends BaseUIModelScreen<FlowLayo
                         tooltip.add(Text.translatable("text.affinity.ethereal_aethum_flux_injector.linked_node_tooltip"));
                     } else {
                         tooltip.add(Text.translatable("text.affinity.ethereal_aethum_flux_injector.unlinked_node_tooltip"));
-
-                        component.cursorStyle(CursorStyle.HAND);
-                        component.mouseDown().subscribe((mouseX, mouseY, button) -> {
-                            this.currentSource = nodePos;
-
-                            UISounds.playInteractionSound();
-                            AffinityNetwork.CHANNEL.clientHandle().send(new EtherealAethumFluxInjectorBlockEntity.SetInjectorNodePacket(
-                                    this.injectorPos,
-                                    nodePos
-                            ));
-
-                            component.parent().queue(this::rebuildNodeList);
-                            return true;
-                        });
                     }
+
+                    component.cursorStyle(CursorStyle.HAND);
+                    component.mouseDown().subscribe((mouseX, mouseY, button) -> {
+                        this.currentSource = !nodePos.equals(this.currentSource) ? nodePos : null;
+
+                        UISounds.playInteractionSound();
+                        AffinityNetwork.CHANNEL.clientHandle().send(new EtherealAethumFluxInjectorBlockEntity.SetInjectorNodePacket(
+                                this.injectorPos,
+                                this.currentSource
+                        ));
+
+                        component.parent().queue(this::rebuildNodeList);
+                        return true;
+                    });
 
                     component.tooltip(tooltip);
                 }));

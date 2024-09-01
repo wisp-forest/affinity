@@ -94,7 +94,8 @@ dependencies {
     modImplementation annotationProcessor("io.wispforest:owo-lib:${project.owo_version}")
     include "io.wispforest:owo-sentinel:${project.owo_version}"
 
-    modImplementation("io.wispforest:owo-whats-this:${project.owo_whats_this_version}")
+    // TODO: re-enable this when owo what's this gets a 1.21 update
+    /*modImplementation*/ modCompileOnly("io.wispforest:owo-whats-this:${project.owo_whats_this_version}")
     modImplementation("io.wispforest:lavender:${project.lavender_version}")
 
     modImplementation "com.github.glitchfiend:TerraBlender-fabric:${project.terrablender_version}"

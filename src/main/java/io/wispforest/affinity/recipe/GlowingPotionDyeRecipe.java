@@ -14,6 +14,7 @@ import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
 
 public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
@@ -29,7 +30,7 @@ public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
 
         for (int i = 0; i < input.getSize(); i++) {
             var stack = input.getStackInSlot(i);
-            if (stack.getItem() instanceof PotionItem && stack.getOrDefault(DataComponentTypes.POTION_CONTENTS, PotionContentsComponent.DEFAULT).potion().orElse(null) instanceof GlowingPotion) {
+            if (stack.getItem() instanceof PotionItem && stack.getOrDefault(DataComponentTypes.POTION_CONTENTS, PotionContentsComponent.DEFAULT).potion().map(RegistryEntry::value).orElse(null) instanceof GlowingPotion) {
                 if (!isValid(potion)) {
                     potion = stack;
                 } else {
@@ -70,9 +71,7 @@ public class GlowingPotionDyeRecipe extends SpecialCraftingRecipe {
             }
         }
 
-        var data = new NbtCompound();
-        data.put(GlowingPotion.COLOR_KEY, ((DyeItem) dye.getItem()).getColor());
-        potion.put(PotionMixture.EXTRA_DATA, data);
+        potion.set(GlowingPotion.COLOR, ((DyeItem) dye.getItem()).getColor());
 
         return potion;
     }

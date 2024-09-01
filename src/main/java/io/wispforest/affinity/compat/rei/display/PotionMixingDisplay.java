@@ -1,13 +1,13 @@
 package io.wispforest.affinity.compat.rei.display;
 
 import io.wispforest.affinity.compat.rei.AffinityReiCommonPlugin;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.recipe.PotionMixingRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Util;
 

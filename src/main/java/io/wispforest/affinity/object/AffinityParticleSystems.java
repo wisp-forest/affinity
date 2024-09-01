@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.ArcaneTreetapBlock;
 import io.wispforest.affinity.block.impl.SpiritIntegrationApparatusBlock;
 import io.wispforest.affinity.misc.util.MathUtil;
+import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
 import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
 import io.wispforest.affinity.particle.OrbitingEmitterParticleEffect;
@@ -27,6 +28,10 @@ import java.util.List;
 public class AffinityParticleSystems {
 
     private static final ParticleSystemController CONTROLLER = new ParticleSystemController(Affinity.id("particles"));
+
+    static {
+        AffinityNetwork.addEndecs(CONTROLLER.endecBuilder());
+    }
 
     public static final ParticleSystem<Void> FLIGHT_REMOVED = CONTROLLER.register(Void.class, (world, pos, data) -> {
         pos = pos.add(0, 1, 0);
@@ -149,7 +154,7 @@ public class AffinityParticleSystems {
         ClientParticles.setParticleCount(25);
         ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, pos.subtract(0, 2, 0), 3, 1, 3);
 
-        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, .75f, .75f, false);
+        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.BLOCKS, .75f, .75f, false);
     });
 
     public static final ParticleSystem<Void> LAVA_ERUPTION = CONTROLLER.register(Void.class, (world, pos, data) -> {
@@ -182,7 +187,7 @@ public class AffinityParticleSystems {
         ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, pos, 3, 1, 3);
 
         MinecraftClient.getInstance().getSoundManager().stopSounds(AffinitySoundEvents.BLOCK_ASP_RITE_CORE_ACTIVE.getId(), SoundCategory.BLOCKS);
-        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, .75f, 1.25f, false);
+        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.BLOCKS, .75f, 1.25f, false);
     });
 
     public static final ParticleSystem<BezierVortexData> BEZIER_VORTEX = CONTROLLER.register(BezierVortexData.class, (world, pos, data) -> {
@@ -291,6 +296,18 @@ public class AffinityParticleSystems {
         if (entity == client.player) {
             client.gameRenderer.showFloatingItem(AffinityItems.DRAGON_DROP.getDefaultStack());
         }
+    });
+
+    public static final ParticleSystem<Void> LOCAL_DISPLACEMENT_GATEWAY_TELEPORT = CONTROLLER.register(Void.class, (world, pos, data) -> {
+        ClientParticles.setParticleCount(10);
+        ClientParticles.randomizeVelocity(.1f);
+        ClientParticles.spawnPrecise(ParticleTypes.FIREWORK, world, pos.add(0, 1, 0), 1, 2, 1);
+
+        ClientParticles.setParticleCount(20);
+        ClientParticles.randomizeVelocity(.1f);
+        ClientParticles.spawnPrecise(new DustColorTransitionParticleEffect(MathUtil.rgbToVec3f(0x674188), MathUtil.rgbToVec3f(0xC8A1E0), 1f), world, pos.add(0, 1, 0), 1, 2, 1);
+
+        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_PLAYER_TELEPORT, SoundCategory.PLAYERS, 1f, 1f, false);
     });
 
     public static final ParticleSystem<BlockPos> TRANSDUCE_SHULKER_BULLET = CONTROLLER.register(BlockPos.class, (world, pos, transducerPos) -> {

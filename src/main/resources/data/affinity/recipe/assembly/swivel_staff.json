@@ -1,0 +1,19 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "s": {
+      "item": "affinity:staff_prototype"
+    },
+    "g": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "pattern": [
+    "g ",
+    "sg"
+  ],
+  "result": {
+    "id": "affinity:swivel_staff"
+  }
+}

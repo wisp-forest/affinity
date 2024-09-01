@@ -1,0 +1,31 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 400,
+  "flux_cost_per_tick": 40,
+  "primary_input": {
+    "item": "affinity:scintillant_anthracite_blend"
+  },
+  "inputs": [
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "output": {
+    "id": "affinity:crystalline_wisp_matter_composite"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "affinity:azalea_flowers"
+    },
+    {
+      "item": "minecraft:azalea"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:flowering_azalea"
+  }
+}

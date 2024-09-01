@@ -5,6 +5,7 @@ import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.serialization.CodecUtils;
+import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.serialization.format.nbt.NbtEndec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -14,15 +15,18 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 
 public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
+    // TODO: move these to data components
     public static final KeyedEndec<BlockState> CONTAINED_STATE_KEY = CodecUtils.toEndec(BlockState.CODEC).keyed("ContainedState", (BlockState) null);
     public static final KeyedEndec<NbtCompound> CONTAINED_BLOCK_ENTITY_KEY = NbtEndec.COMPOUND.keyed("ContainedBlockEntity", (NbtCompound) null);
 
@@ -55,23 +59,14 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
     public ItemStack toItem(RegistryWrapper.WrapperLookup registries) {
         var stack = new ItemStack(AffinityBlocks.MANGROVE_BASKET);
         var nbt = new NbtCompound();
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries));
 
         if (this.containedState != null) {
-            var newState = this.containedState;
-
-            if (newState.contains(Properties.HORIZONTAL_FACING)) {
-                newState = newState.with(Properties.HORIZONTAL_FACING, Direction.NORTH);
-            }
-
-            if (newState.contains(Properties.FACING)) {
-                newState = newState.with(Properties.FACING, Direction.NORTH);
-            }
-
-            nbt.put(CONTAINED_STATE_KEY, newState);
+            nbt.put(ctx, CONTAINED_STATE_KEY, this.containedState);
         }
 
         if (this.containedBlockEntity != null) {
-            nbt.put(CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId(registries));
+            nbt.put(ctx, CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId(registries));
         }
 
         nbt.putString("id", BlockEntityType.getId(this.getType()).toString());
@@ -90,28 +85,40 @@ public class MangroveBasketBlockEntity extends SyncedBlockEntity {
 
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        nbt.putIfNotNull(SerializationContext.empty(), CONTAINED_STATE_KEY, this.containedState);
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries));
+
+        nbt.putIfNotNull(ctx, CONTAINED_STATE_KEY, this.containedState);
 
         if (this.containedBlockEntity != null) {
-            nbt.put(CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId(registries));
+            nbt.put(ctx, CONTAINED_BLOCK_ENTITY_KEY, this.containedBlockEntity.createNbtWithId(registries));
         }
     }
 
-    public void onPlaced(LivingEntity placer) {
+    public void onPlaced(ItemPlacementContext ctx) {
         if (this.containedState == null) return;
+
         var newState = this.containedState;
+        var placementState = this.containedState.getBlock().getPlacementState(ctx);
 
-        if (newState.contains(Properties.HORIZONTAL_FACING)) {
-            newState = newState.with(Properties.HORIZONTAL_FACING, placer.getHorizontalFacing().getOpposite());
-        }
-
-        if (newState.contains(Properties.FACING)) {
-            newState = newState.with(Properties.FACING, Direction.getEntityFacingOrder(placer)[0].getOpposite().getOpposite());
-        }
+        newState = copyProperty(placementState, newState, Properties.HORIZONTAL_FACING);
+        newState = copyProperty(placementState, newState, Properties.FACING);
+        newState = copyProperty(placementState, newState, Properties.HORIZONTAL_AXIS);
+        newState = copyProperty(placementState, newState, Properties.AXIS);
+        newState = copyProperty(placementState, newState, Properties.ATTACHMENT);
+        newState = copyProperty(placementState, newState, Properties.BLOCK_FACE);
+        newState = copyProperty(placementState, newState, Properties.HOPPER_FACING);
 
         if (!this.containedState.equals(newState)) {
             this.containedState = newState;
             this.markDirty();
         }
+    }
+
+    private static <T extends Comparable<T>> BlockState copyProperty(BlockState from, BlockState to, Property<T> property) {
+        if (from.contains(property)) {
+            return to.with(property, from.get(property));
+        }
+
+        return to;
     }
 }

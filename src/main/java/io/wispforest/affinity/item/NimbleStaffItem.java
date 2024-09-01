@@ -1,17 +1,20 @@
 package io.wispforest.affinity.item;
 
 import com.google.common.collect.ImmutableMap;
+import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
+import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.Endec;
-import io.wispforest.owo.serialization.endec.BuiltInEndecs;
-import io.wispforest.owo.serialization.endec.KeyedEndec;
+import io.wispforest.owo.serialization.CodecUtils;
+import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.minecraft.component.ComponentMapImpl;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -35,8 +38,8 @@ import java.util.function.BooleanSupplier;
 
 public class NimbleStaffItem extends StaffItem {
 
-    public static final KeyedEndec<Direction> DIRECTION = Endec.ofCodec(Direction.CODEC).keyed("Direction", Direction.NORTH);
-    public static final KeyedEndec<BlockPos> ECHO_SHARD_TARGET = BuiltInEndecs.BLOCK_POS.keyed("EchoShardTarget", (BlockPos) null);
+    public static final ComponentType<Direction> DIRECTION = Affinity.component("nimble_staff_direction", CodecUtils.toEndec(Direction.CODEC));
+    public static final ComponentType<BlockPos> ECHO_SHARD_TARGET = Affinity.component("nimble_staff_echo_shard_target", MinecraftEndecs.BLOCK_POS);
 
     private static final InquirableOutlineProvider.Outline UP_AOE = new InquirableOutlineProvider.Outline(-4, 0, -4, 4, 4, 4);
     private static final InquirableOutlineProvider.Outline DOWN_AOE = new InquirableOutlineProvider.Outline(-4, -4, -4, 4, 0, 4);
@@ -67,11 +70,11 @@ public class NimbleStaffItem extends StaffItem {
             pushDelta = Vec3d.ofCenter(echoShardTarget).subtract(Vec3d.ofCenter(pos)).normalize();
 
             if (!echoShardTarget.equals(pedestal.getItem().get(ECHO_SHARD_TARGET))) {
-                pedestal.getItem().put(ECHO_SHARD_TARGET, echoShardTarget);
+                pedestal.getItem().set(ECHO_SHARD_TARGET, echoShardTarget);
                 pedestal.markDirty();
             }
-        } else if (pedestal.getItem().has(ECHO_SHARD_TARGET)) {
-            pedestal.getItem().delete(ECHO_SHARD_TARGET);
+        } else if (pedestal.getItem().contains(ECHO_SHARD_TARGET)) {
+            pedestal.getItem().remove(ECHO_SHARD_TARGET);
             pedestal.markDirty();
         }
 
@@ -123,9 +126,12 @@ public class NimbleStaffItem extends StaffItem {
         BlockPos targetPos = null;
         for (var view : storageBelow) {
             if (!view.getResource().isOf(Items.ECHO_SHARD)) continue;
-            if (!view.getResource().hasNbt()) continue;
 
-            targetPos = EchoShardExtension.tryGetLocationInWorld(pedestal.getWorld(), view.getResource().getNbt());
+            // TODO: fabric transfer api is dumb. this shouldn't allocate every tick
+            var components = new ComponentMapImpl(view.getResource().getItem().getComponents());
+            components.applyChanges(view.getResource().getComponents());
+
+            targetPos = EchoShardExtension.tryGetLocationInWorld(pedestal.getWorld(), () -> components);
             if (targetPos != null) break;
         }
 
@@ -144,7 +150,7 @@ public class NimbleStaffItem extends StaffItem {
                         : storedDirection.rotateYCounterclockwise();
             }
 
-            pedestal.getItem().put(DIRECTION, storedDirection);
+            pedestal.getItem().set(DIRECTION, storedDirection);
             pedestal.markDirty();
         }
 

@@ -12,6 +12,8 @@ import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
@@ -23,6 +25,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -38,8 +42,10 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
 
     private final SimpleInventory inventory = new SimpleInventory(1);
     private final ScreenHandlerContext context;
+    private final PlayerEntity player;
 
-    private final Enchantment[] currentCurses = new Enchantment[3];
+    @SuppressWarnings("unchecked")
+    private final RegistryEntry<Enchantment>[] currentCurses = new RegistryEntry[3];
     private final SyncedProperty<Integer> seed;
 
     public static OuijaBoardScreenHandler client(int syncId, PlayerInventory playerInventory) {
@@ -64,6 +70,7 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
         this.seed.observe(integer -> this.updateCurses());
         this.inventory.addListener(sender -> this.updateCurses());
 
+        this.player = playerInventory.player;
         this.seed.set(playerInventory.player.getEnchantmentTableSeed());
     }
 
@@ -79,7 +86,10 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
             var stack = this.inventory.getStack(0);
             if (stack.isOf(Items.BOOK)) {
                 var enchantedBook = Items.ENCHANTED_BOOK.getDefaultStack();
-                EnchantedBookItem.addEnchantment(enchantedBook, new EnchantmentLevelEntry(selectedCurse, 1));
+
+                var builder = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
+                builder.add(selectedCurse, 1);
+                enchantedBook.set(DataComponentTypes.STORED_ENCHANTMENTS, builder.build());
 
                 this.inventory.setStack(0, enchantedBook);
             } else {
@@ -96,15 +106,9 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
         }
     }
 
-    public int enchantmentCost(Enchantment curse) {
-        int baseCost = switch (curse.getRarity()) {
-            case COMMON -> 1;
-            case UNCOMMON -> 2;
-            case RARE -> 4;
-            case VERY_RARE -> 8;
-        };
-
-        return baseCost + this.inventory.getStack(0).getEnchantments().size() * 4;
+    public int enchantmentCost(RegistryEntry<Enchantment> curse) {
+        int baseCost = curse.value().getAnvilCost();
+        return baseCost + this.inventory.getStack(0).getEnchantments().getEnchantments().size() * 4;
     }
 
     public boolean canAfford(int levels) {
@@ -114,10 +118,10 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
     private void updateCurses() {
         var stack = this.inventory.getStack(0);
 
-        var curses = Registries.ENCHANTMENT.stream()
-                .filter(Enchantment::isCursed)
-                .filter(enchantment -> !enchantment.getRegistryEntry().isIn(NOT_AVAILABLE_IN_OUIJA_BOARD))
-                .filter(enchantment -> enchantment.isAcceptableItem(stack) || stack.isOf(Items.BOOK))
+        var curses = this.player.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries()
+                .filter(x -> x.isIn(EnchantmentTags.CURSE))
+                .filter(enchantment -> !enchantment.isIn(NOT_AVAILABLE_IN_OUIJA_BOARD))
+                .filter(enchantment -> enchantment.value().isAcceptableItem(stack) || stack.isOf(Items.BOOK))
                 .filter(enchantment -> EnchantmentHelper.getLevel(enchantment, stack) < 1)
                 .collect(Collectors.toList());
 
@@ -142,7 +146,7 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
         screen.updateCurses();
     }
 
-    public Enchantment[] currentCurses() {
+    public RegistryEntry<Enchantment>[] currentCurses() {
         return this.currentCurses;
     }
 

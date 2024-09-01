@@ -10,6 +10,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.enums.WireConnection;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
@@ -42,7 +43,7 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
             new Vec3d((rgb >> 16) / 255d, ((rgb >> 8) & 0xFF) / 255d, (rgb & 0xFF) / 255d)
     ).toList().toArray(Vec3d[]::new);
 
-    private static final Map<ChunkPos, WeakReference<Chunk>> CHUNK_CACHE = new HashMap<>();
+    private static final Map<CacheKey, WeakReference<Chunk>> CHUNK_CACHE = new HashMap<>();
 
     private static final VoxelShape DOT_SHAPE = Block.createCuboidShape(3.0, 15, 3.0, 13.0, 16, 13.0);
 
@@ -207,8 +208,7 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
             if (!world.isChunkLoaded(nextPos)) continue;
             if (searchQueue.contains(nextPos) || foundNodes.contains(nextPos)) continue;
 
-            final var nextState = CHUNK_CACHE.computeIfAbsent(new ChunkPos(nextPos), chunkPos -> new WeakReference<>(world.getChunk(nextPos)))
-                    .get().getBlockState(nextPos);
+            final var nextState = getChunk(world, new ChunkPos(nextPos)).getBlockState(nextPos);
             if (!nextState.isOf(this)) continue;
             foundNodes.add(nextPos);
 
@@ -245,7 +245,7 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
             }
 
             for (var node : foundNodes) {
-                world.setBlockState(node, CHUNK_CACHE.get(new ChunkPos(node)).get().getBlockState(node).with(POWER, networkPower));
+                world.setBlockState(node, getChunk(world, new ChunkPos(node)).getBlockState(node).with(POWER, networkPower));
                 for (var dir : DIRECTIONS) {
                     world.updateNeighborsAlways(node.offset(dir), this);
                 }
@@ -258,6 +258,22 @@ public class RanthraciteWireBlock extends RedstoneWireBlock {
             this.respondToBlockUpdates = true;
         }
     }
+
+    private static Chunk getChunk(World world, ChunkPos pos) {
+        var key = new CacheKey(world.getRegistryKey().getValue(), pos);
+
+        var chunkRef = CHUNK_CACHE.get(key);
+        if (chunkRef == null || chunkRef.get() == null) {
+            var chunk = world.getChunk(pos.x, pos.z);
+            CHUNK_CACHE.put(key, new WeakReference<>(chunk));
+
+            return chunk;
+        } else {
+            return chunkRef.get();
+        }
+    }
+
+    private record CacheKey(Identifier world, ChunkPos pos) {}
 
     @Override
     protected WireConnection getRenderConnectionType(BlockView world, BlockPos pos, Direction direction) {

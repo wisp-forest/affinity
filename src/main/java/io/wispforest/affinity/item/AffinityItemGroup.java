@@ -2,6 +2,7 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityEnchantmentEffectComponents;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.itemgroup.Icon;
@@ -37,11 +38,6 @@ public class AffinityItemGroup {
             //noinspection Convert2MethodRef
             initializeGroup(group);
         }).build();
-
-        ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, GROUP.id())).register(entries -> {
-            if (!GROUP.isTabSelected(0)) return;
-            entries.addBefore(MILDLY_ATTUNED_AMETHYST_SHARD, Items.AMETHYST_SHARD);
-        });
     }
 
     public static OwoItemGroup group() {
@@ -91,6 +87,7 @@ public class AffinityItemGroup {
             entries.add(FAIRLY_ATTUNED_AMETHYST_SHARD);
             entries.add(GREATLY_ATTUNED_AMETHYST_SHARD);
             entries.add(SCULK_RESONANT_ETHEREAL_AMETHYST_SHARD);
+            entries.add(VOID_RESONANT_ETHEREAL_AMETHYST_SHARD);
             entries.add(ARCANE_FADE_BUCKET);
             entries.add(AETHUM_FLUX_BOTTLE);
             entries.add(EMERALD_BLOCK);
@@ -130,10 +127,13 @@ public class AffinityItemGroup {
             entries.add(AETHUM_PROBE);
             entries.add(ITEM_TRANSFER_NODE);
             entries.add(WORLD_PIN);
+            entries.add(LOCAL_DISPLACEMENT_GATEWAY);
             entries.add(Items.AMETHYST_SHARD);
             entries.add(MILDLY_ATTUNED_AMETHYST_SHARD);
             entries.add(FAIRLY_ATTUNED_AMETHYST_SHARD);
             entries.add(GREATLY_ATTUNED_AMETHYST_SHARD);
+            entries.add(SCULK_RESONANT_ETHEREAL_AMETHYST_SHARD);
+            entries.add(VOID_RESONANT_ETHEREAL_AMETHYST_SHARD);
         }, false);
 
         group.addCustomTab(Icon.of(RESOUNDING_CHIME), "equipment", (context, entries) -> {
@@ -144,6 +144,7 @@ public class AffinityItemGroup {
             entries.add(ASTROKINESIS_STAFF);
             entries.add(CULTIVATION_STAFF);
             entries.add(SALVO_STAFF);
+            entries.add(SWIVEL_STAFF);
             entries.add(FEATHERWEIGHT_RING);
             entries.add(EVADE_RING);
             entries.add(LAVALIERE_OF_SAFE_KEEPING);
@@ -160,14 +161,15 @@ public class AffinityItemGroup {
             entries.add(EMERALD_CHESTPLATE);
             entries.add(EMERALD_LEGGINGS);
             entries.add(EMERALD_BOOTS);
-            entries.add(ResplendentGemItem.make(AffinityEnchantments.BERSERKER));
-            entries.add(ResplendentGemItem.make(AffinityEnchantments.GRAVECALLER));
-            entries.add(ResplendentGemItem.make(AffinityEnchantments.BASTION));
 
             context.lookup().getOptionalWrapper(RegistryKeys.ENCHANTMENT).ifPresent(wrapper -> {
+                entries.add(ResplendentGemItem.make(AffinityEnchantments.BERSERKER, wrapper));
+                entries.add(ResplendentGemItem.make(AffinityEnchantments.GRAVECALLER, wrapper));
+                entries.add(ResplendentGemItem.make(AffinityEnchantments.BASTION, wrapper));
+
                 wrapper.streamEntries()
                         .filter(entry -> entry.registryKey().getValue().getNamespace().equals(Affinity.MOD_ID))
-//                        .filter(enchantment -> !(enchantment instanceof AbsoluteEnchantment))
+                        .filter(enchantment -> !enchantment.value().effects().contains(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE))
                         .map(enchantment -> new EnchantmentLevelEntry(enchantment, enchantment.value().getMaxLevel()))
                         .map(EnchantedBookItem::forEnchantment)
                         .forEach(entries::add);
@@ -199,6 +201,7 @@ public class AffinityItemGroup {
             entries.add(AffinityItems.AZALEA_HANGING_SIGN);
             entries.add(AZALEA_BOAT);
             entries.add(AZALEA_CHEST_BOAT);
+            entries.add(AZALEA_CHEST);
             entries.add(BUDDING_AZALEA_LEAVES);
             entries.add(Blocks.FLOWERING_AZALEA_LEAVES);
             entries.add(UNFLOWERING_AZALEA_LEAVES);

@@ -110,7 +110,7 @@ public class AssemblyAugmentScreenHandler extends CraftingScreenHandler {
     }
 
     public boolean matchesAutocraftingRecipe() {
-        return this.autocraftingRecipe != null && this.autocraftingRecipe.matches(((CraftingScreenHandlerAccessor) this).affinity$getInput(), this.player().getWorld());
+        return this.autocraftingRecipe != null && this.autocraftingRecipe.matches(((CraftingScreenHandlerAccessor) this).affinity$getInput().createRecipeInput(), this.player().getWorld());
     }
 
     @Override

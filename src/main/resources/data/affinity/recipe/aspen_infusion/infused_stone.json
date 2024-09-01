@@ -1,0 +1,31 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 200,
+  "primary_input": {
+    "item": "affinity:inert_wisp_matter"
+  },
+  "inputs": [
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "minecraft:stone"
+    },
+    {
+      "item": "minecraft:stone"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "minecraft:stone"
+    },
+    {
+      "item": "minecraft:stone"
+    }
+  ],
+  "output": {
+    "id": "affinity:infused_stone",
+    "count": 6
+  }
+}

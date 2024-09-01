@@ -6,7 +6,7 @@ import net.caffeinemc.mods.sodium.api.vertex.attributes.CommonVertexAttribute;
 import net.caffeinemc.mods.sodium.api.vertex.attributes.common.*;
 import net.caffeinemc.mods.sodium.api.vertex.buffer.VertexBufferWriter;
 import net.caffeinemc.mods.sodium.api.vertex.format.VertexFormatDescription;
-import net.minecraft.client.render.FixedColorVertexConsumer;
+import net.minecraft.client.render.VertexConsumer;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @CompatMixin("sodium")
 @Mixin(targets = "io.wispforest.affinity.client.render.EmancipationVertexConsumerProvider$AlphaMaskConsumer", remap = false)
-public abstract class AlphaMaskConsumerMixin extends FixedColorVertexConsumer implements VertexBufferWriter {
+public abstract class AlphaMaskConsumerMixin implements VertexConsumer, VertexBufferWriter {
 
     @Shadow
     @Final
@@ -29,6 +29,8 @@ public abstract class AlphaMaskConsumerMixin extends FixedColorVertexConsumer im
     private Vector2f texture;
     @Shadow
     private int light;
+
+    @Shadow abstract void next();
 
     @Override
     public void push(MemoryStack memoryStack, long srcBuffer, int vtxCount, VertexFormatDescription format) {

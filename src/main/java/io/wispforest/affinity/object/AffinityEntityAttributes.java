@@ -3,11 +3,13 @@ package io.wispforest.affinity.object;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.owo.registration.annotations.AssignedName;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
+import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
+// TODO: migrate to RegistryEntry
 public class AffinityEntityAttributes implements AutoRegistryContainer<EntityAttribute> {
 
     @AssignedName("player.max_aethum")
@@ -36,5 +38,14 @@ public class AffinityEntityAttributes implements AutoRegistryContainer<EntityAtt
     @Override
     public Class<EntityAttribute> getTargetFieldType() {
         return EntityAttribute.class;
+    }
+
+    public static void initialize() { /* trigger static init */ }
+
+    static {
+        // Apparently I need to register all of these attributes way earlier than mod init so that PlayerEntityMixin can
+        // get them.
+        // TODO: ???
+        AutoRegistryContainer.register(AffinityEntityAttributes.class, Affinity.MOD_ID, false);
     }
 }

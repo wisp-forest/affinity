@@ -41,6 +41,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.LightType;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.event.EntityPositionSource;
@@ -89,11 +90,6 @@ public abstract class WispEntity extends PathAwareEntity implements Vibrations {
     @Override
     protected Vec3d getLeashOffset() {
         return new Vec3d(0, .1f, 0);
-    }
-
-    @Override
-    public boolean canImmediatelyDespawn(double distanceSquared) {
-        return false;
     }
 
     @Override
@@ -245,7 +241,7 @@ public abstract class WispEntity extends PathAwareEntity implements Vibrations {
     }
 
     public static <E extends WispEntity> boolean isValidSpawn(EntityType<E> type, ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getBlockState(pos).isAir() && world.getLightLevel(pos) > 5;
+        return world.getBlockState(pos).isAir() && world.getLightLevel(LightType.SKY, pos) > 7;
     }
 
     private final class VibrationsCallback implements Vibrations.Callback {

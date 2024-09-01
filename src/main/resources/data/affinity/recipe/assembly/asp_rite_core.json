@@ -1,0 +1,23 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "affinity:azalea_log"
+    },
+    "r": {
+      "item": "affinity:anthracite_powder"
+    },
+    "c": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "pattern": [
+    " a ",
+    "crc",
+    "aaa"
+  ],
+  "result": {
+    "id": "affinity:asp_rite_core"
+  }
+}

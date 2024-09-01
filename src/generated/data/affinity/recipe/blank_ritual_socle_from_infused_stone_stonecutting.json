@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "affinity:infused_stone"
+  },
+  "result": {
+    "count": 1,
+    "id": "affinity:blank_ritual_socle"
+  }
+}

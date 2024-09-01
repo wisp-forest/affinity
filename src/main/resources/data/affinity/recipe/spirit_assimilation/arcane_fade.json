@@ -1,0 +1,54 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 400,
+  "flux_cost_per_tick": 40,
+  "core_inputs": [
+    {
+      "item": "affinity:vicious_wisp_matter"
+    },
+    {
+      "item": "minecraft:water_bucket"
+    },
+    {
+      "item": "minecraft:water_bucket"
+    },
+    {
+      "item": "affinity:vicious_wisp_matter"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "item": "minecraft:nether_wart"
+    },
+    {
+      "item": "affinity:azalea_flowers"
+    },
+    {
+      "item": "minecraft:nether_wart"
+    },
+    {
+      "fabric:type": "fabric:components",
+      "base": {
+        "tag": "c:potions"
+      },
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "affinity:strong_wither"
+        }
+      }
+    },
+    {
+      "item": "minecraft:nether_wart"
+    },
+    {
+      "item": "affinity:azalea_flowers"
+    }
+
+  ],
+  "output": {
+    "id": "affinity:arcane_fade_bucket"
+  },
+  "entity": {
+    "id": "minecraft:goat"
+  }
+}

@@ -6,6 +6,7 @@ import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.affinity.client.AffinityClient;
 import io.wispforest.affinity.misc.quack.AffinityFramebufferExtension;
+import io.wispforest.affinity.mixin.access.FramebufferAccessor;
 import io.wispforest.owo.ui.event.WindowResizeCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.irisshaders.iris.Iris;
@@ -95,9 +96,11 @@ public class SkyCaptureBuffer extends RenderLayer {
     public static void draw() {
         RenderSystem.backupProjectionMatrix();
 
-        GameRenderer.getPositionTexColorNormalProgram().bind();
+        // bind a shader used during terrain rendering
+        // to trick iris into binding the proper target for us to steal
+        GameRenderer.getRenderTypeSolidProgram().bind();
         var blockTarget = GlStateManager.getBoundFramebuffer();
-        GameRenderer.getPositionTexColorNormalProgram().unbind();
+        GameRenderer.getRenderTypeSolidProgram().unbind();
 
         skyStencil.beginWrite(true);
 
@@ -193,7 +196,7 @@ public class SkyCaptureBuffer extends RenderLayer {
                 );
             }
 
-            this.setTexFilter(GlConst.GL_NEAREST);
+            ((FramebufferAccessor) this).affinity$setTexFilter(GlConst.GL_NEAREST, true);
             GlStateManager._bindTexture(this.colorAttachment);
             GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_S, GlConst.GL_CLAMP_TO_EDGE);
             GlStateManager._texParameter(GlConst.GL_TEXTURE_2D, GlConst.GL_TEXTURE_WRAP_T, GlConst.GL_CLAMP_TO_EDGE);

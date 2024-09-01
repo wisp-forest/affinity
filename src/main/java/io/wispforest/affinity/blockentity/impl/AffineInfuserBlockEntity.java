@@ -8,7 +8,7 @@ import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.affinity.object.AffinityEnchantments;
+import io.wispforest.affinity.object.AffinityEnchantmentEffectComponents;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
 import io.wispforest.affinity.particle.ColoredFallingDustParticleEffect;
@@ -74,7 +74,7 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
             }
 
             if (entity instanceof PlayerEntity player) {
-                player.getEquippedItems().forEach(AffineInfuserBlockEntity::repairIfEnchanted);
+                player.getEquippedItems().forEach(this::repairIfEnchanted);
             } else if (entity instanceof ItemFrameEntity frame) {
                 repairIfEnchanted(frame.getHeldItemStack());
             } else if (entity instanceof ItemEntity item) {
@@ -94,8 +94,8 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
         return CuboidRenderer.Cuboid.symmetrical(32, 32, 32);
     }
 
-    private static void repairIfEnchanted(ItemStack stack) {
-        if (EnchantmentHelper.getLevel(AffinityEnchantments.AFFINE, stack) < 1) return;
+    private void repairIfEnchanted(ItemStack stack) {
+        if (!EnchantmentHelper.hasAnyEnchantmentsWith(stack, AffinityEnchantmentEffectComponents.REPAIR_WITH_AFFINE_INFUSER)) return;
         if (stack.getDamage() < 1) return;
 
         stack.setDamage(stack.getDamage() - 1);
@@ -103,6 +103,6 @@ public class AffineInfuserBlockEntity extends AethumNetworkMemberBlockEntity imp
     }
 
     private static int repairCostPerItem() {
-        return Affinity.CONFIG.affineInfuserCostPerDurabilityPoint();
+        return Affinity.config().affineInfuserCostPerDurabilityPoint();
     }
 }

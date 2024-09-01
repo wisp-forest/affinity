@@ -1,0 +1,23 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "i": {
+      "item": "minecraft:iron_block"
+    },
+    "o": {
+      "item": "minecraft:obsidian"
+    },
+    "e": {
+      "item": "minecraft:ender_eye"
+    }
+  },
+  "pattern": [
+    "ioi",
+    "oeo",
+    "ioi"
+  ],
+  "result": {
+    "id": "affinity:local_displacement_gateway"
+  }
+}

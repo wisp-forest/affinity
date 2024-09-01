@@ -3,12 +3,12 @@ package io.wispforest.affinity.compat.emi.recipe;
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
-import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.wispforest.affinity.compat.emi.AffinityEmiPlugin;
 import io.wispforest.affinity.compat.emi.EmiUIAdapter;
 import io.wispforest.affinity.compat.emi.StatusEffectEmiStack;
 import io.wispforest.affinity.compat.emi.StatusEffectSlotWidget;
+import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.core.HorizontalAlignment;
 import io.wispforest.owo.ui.core.VerticalAlignment;
@@ -16,7 +16,6 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
 
 import java.util.List;
 

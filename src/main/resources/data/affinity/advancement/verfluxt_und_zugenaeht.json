@@ -1,0 +1,28 @@
+{
+  "parent": "affinity:i_still_use_paint",
+  "display": {
+    "icon": {
+      "id": "affinity:scintillant_anthracite_blend"
+    },
+    "title": {
+      "translate": "advancement.affinity.verfluxt_und_zugenaeht.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.verfluxt_und_zugenaeht.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "verfluxt_und_zugenaeht": {
+      "trigger": "affinity:fail_ritual"
+    }
+  },
+  "requirements": [
+    [
+      "verfluxt_und_zugenaeht"
+    ]
+  ]
+}

@@ -28,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -49,9 +50,9 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     @Environment(EnvType.CLIENT) public double time;
 
     private long lastTick = 0;
-    private Collection<AethumNetworkMember> cachedMembers = null;
+    private final Map<AethumLink.Type, Collection<AethumNetworkMember>> cachedMembers = new HashMap<>();
 
-    private final DefaultedList<ItemStack> outerShards = DefaultedList.ofSize(Affinity.CONFIG.maxFluxNodeShards(), ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> outerShards = DefaultedList.ofSize(Affinity.config().maxFluxNodeShards(), ItemStack.EMPTY);
     private int outerShardCount = 0;
     private boolean allLinksValid = false;
 
@@ -119,7 +120,12 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
         final var network = this.visitNetwork();
         final var nodes = new ArrayList<AethumFluxNodeBlockEntity>();
-        final var members = new ArrayList<TransferMember>();
+
+        final var standardMembers = new ArrayList<TransferMember>();
+        int standardInsertMembers = 0;
+
+        final var priorityMembers = new ArrayList<TransferMember>();
+        int priorityInsertMembers = 0;
 
         long networkFlux = 0;
         long networkCapacity = 0;
@@ -132,16 +138,36 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
             networkFlux += node.flux();
             networkCapacity += node.fluxCapacity();
 
-            for (var member : node.membersWithNormalLink()) {
-                members.add(new TransferMember(node, member));
+            for (var member : node.membersByLinkType(AethumLink.Type.NORMAL)) {
+                var transferMember = new TransferMember(node, member);
+                standardMembers.add(transferMember);
+
+                if (transferMember.potentialInsert > 0) standardInsertMembers++;
+            }
+
+            for (var member : node.membersByLinkType(AethumLink.Type.PRIORITIZED)) {
+                var transferMember = new TransferMember(node, member);
+                priorityMembers.add(transferMember);
+
+                if (transferMember.potentialInsert > 0) priorityInsertMembers++;
             }
         }
 
         if (networkFlux < 0) networkFlux = 0;
         if (networkFlux > networkCapacity) networkFlux = networkCapacity;
 
-        networkFlux = this.transfer(members, networkFlux, networkCapacity, TransferFunction.EXTRACT_FROM_MEMBER);
-        networkFlux = this.transfer(members, networkFlux, networkCapacity, TransferFunction.INSERT_INTO_MEMBER);
+        networkFlux = this.transfer(priorityMembers, networkFlux, networkCapacity, Long.MAX_VALUE, TransferFunction.EXTRACT_FROM_MEMBER);
+        networkFlux = this.transfer(standardMembers, networkFlux, networkCapacity, Long.MAX_VALUE, TransferFunction.EXTRACT_FROM_MEMBER);
+
+        if (networkFlux > 0 && priorityInsertMembers > 0) {
+            networkFlux = this.transfer(priorityMembers, networkFlux, networkCapacity, networkFlux / priorityInsertMembers, TransferFunction.INSERT_INTO_MEMBER);
+            networkFlux = this.transfer(priorityMembers, networkFlux, networkCapacity, Long.MAX_VALUE, TransferFunction.INSERT_INTO_MEMBER);
+        }
+
+        if (networkFlux > 0 && standardInsertMembers > 0) {
+            networkFlux = this.transfer(standardMembers, networkFlux, networkCapacity, networkFlux / standardInsertMembers, TransferFunction.INSERT_INTO_MEMBER);
+            networkFlux = this.transfer(standardMembers, networkFlux, networkCapacity, Long.MAX_VALUE, TransferFunction.INSERT_INTO_MEMBER);
+        }
 
         var fluxPerNode = (long) Math.ceil(networkFlux / (double) nodes.size());
 
@@ -152,13 +178,13 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         }
     }
 
-    private long transfer(List<TransferMember> members, long networkFlux, long networkCapacity, TransferFunction function) {
+    private long transfer(List<TransferMember> members, long networkFlux, long networkCapacity, long maxTransfer, TransferFunction function) {
         Collections.shuffle(members);
         members.sort(function.comparator());
 
         try (var transaction = Transaction.openOuter()) {
             for (var transferMember : members) {
-                networkFlux = function.transfer(transferMember, networkFlux, networkCapacity, transaction);
+                networkFlux = function.transfer(transferMember, networkFlux, networkCapacity, maxTransfer, transaction);
                 if (networkFlux < 0 || networkFlux > networkCapacity) break;
             }
 
@@ -205,20 +231,21 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         return CuboidRenderer.Cuboid.symmetrical(distance, distance, distance);
     }
 
-    public Collection<AethumNetworkMember> membersWithNormalLink() {
-        if (this.cachedMembers != null) return this.cachedMembers;
+    public Collection<AethumNetworkMember> membersByLinkType(AethumLink.Type type) {
+        if (this.cachedMembers.containsKey(type)) return this.cachedMembers.get(type);
 
-        this.cachedMembers = new ArrayList<>(this.links.size());
+        var cachedMembers = new ArrayList<AethumNetworkMember>(this.links.size());
         for (var memberLink : links.keySet()) {
-            if (links.get(memberLink) != AethumLink.Type.NORMAL) continue;
+            if (links.get(memberLink) != type) continue;
             final var member = Affinity.AETHUM_MEMBER.find(world, memberLink, null);
 
             if (member == null) continue;
             if (member instanceof AethumNetworkNode) continue;
 
-            this.cachedMembers.add(member);
+            cachedMembers.add(member);
         }
 
+        this.cachedMembers.put(type, cachedMembers);
         return cachedMembers;
     }
 
@@ -243,7 +270,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         }
 
         this.links.put(pos.toImmutable(), type);
-        this.cachedMembers = null;
+        this.cachedMembers.clear();
         this.markDirty(true);
 
         return LinkResult.LINK_CREATED;
@@ -265,7 +292,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         }
 
         this.links.remove(pos.toImmutable());
-        this.cachedMembers = null;
+        this.cachedMembers.clear();
         this.markDirty(true);
 
         return LinkResult.LINK_DESTROYED;
@@ -296,7 +323,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     @Override
     public void onLinkTargetRemoved(BlockPos pos) {
         super.onLinkTargetRemoved(pos);
-        this.cachedMembers = null;
+        this.cachedMembers.clear();
     }
 
     @Override
@@ -330,19 +357,19 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     // -------------
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
 
-        NbtUtil.readItemStackList(nbt, "OuterShards", this.outerShards);
+        NbtUtil.readItemStackList(nbt, "OuterShards", this.outerShards, registries);
 
         updatePropertyCache();
-        this.cachedMembers = null;
+        this.cachedMembers.clear();
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        NbtUtil.writeItemStackList(nbt, "OuterShards", this.outerShards);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
+        NbtUtil.writeItemStackList(nbt, "OuterShards", this.outerShards, registries);
     }
 
     // -----------
@@ -462,6 +489,11 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
         return this.linkAttachmentPoint;
     }
 
+    @Override
+    public AethumLink.Type specialLinkType() {
+        return AethumLink.Type.PRIORITIZED;
+    }
+
     // ------------------------
     // Transfer utility classes
     // ------------------------
@@ -469,8 +501,8 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     private static class TransferMember {
 
         private final AethumNetworkMember member;
-        private final long potentialInsert;
-        private final long potentialExtract;
+        private long potentialInsert;
+        private long potentialExtract;
 
         public TransferMember(AethumNetworkNode node, AethumNetworkMember member) {
             this.member = member;
@@ -492,9 +524,14 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
         TransferFunction INSERT_INTO_MEMBER = new TransferFunction() {
             @Override
-            public long transfer(TransferMember transferMember, long networkFlux, long networkCapacity, TransactionContext transactionContext) {
-                return networkFlux - transferMember.member.insert(Math.min(transferMember.potentialInsert, networkFlux),
-                        transactionContext);
+            public long transfer(TransferMember transferMember, long networkFlux, long networkCapacity, long maxTransfer, TransactionContext transactionContext) {
+                long inserted = transferMember.member.insert(
+                        Math.min(maxTransfer, Math.min(transferMember.potentialInsert, networkFlux)),
+                        transactionContext
+                );
+
+                transferMember.potentialInsert -= inserted;
+                return networkFlux - inserted;
             }
 
             @Override
@@ -505,9 +542,14 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
 
         TransferFunction EXTRACT_FROM_MEMBER = new TransferFunction() {
             @Override
-            public long transfer(TransferMember transferMember, long networkFlux, long networkCapacity, TransactionContext transactionContext) {
-                return networkFlux + transferMember.member.extract(Math.min(transferMember.potentialExtract, networkCapacity - networkFlux),
-                        transactionContext);
+            public long transfer(TransferMember transferMember, long networkFlux, long networkCapacity, long maxTransfer, TransactionContext transactionContext) {
+                long extracted = transferMember.member.extract(
+                        Math.min(maxTransfer, Math.min(transferMember.potentialExtract, networkCapacity - networkFlux)),
+                        transactionContext
+                );
+
+                transferMember.potentialExtract -= extracted;
+                return networkFlux + extracted;
             }
 
             @Override
@@ -516,7 +558,7 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
             }
         };
 
-        long transfer(TransferMember transferMember, long networkFlux, long networkCapacity, TransactionContext transactionContext);
+        long transfer(TransferMember transferMember, long networkFlux, long networkCapacity, long maxTransfer, TransactionContext transactionContext);
 
         Comparator<TransferMember> comparator();
     }

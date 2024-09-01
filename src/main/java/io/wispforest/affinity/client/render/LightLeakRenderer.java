@@ -47,19 +47,19 @@ public class LightLeakRenderer {
     }
 
     private static void sourceVertex(VertexConsumer buffer, Matrix4f matrix, float alpha) {
-        buffer.vertex(matrix, 0, 0, 0).color(1f, 1f, 1f, alpha).next();
+        buffer.vertex(matrix, 0, 0, 0).color(1f, 1f, 1f, alpha);
     }
 
     private static void negativeXTerminalVertex(VertexConsumer buffer, Matrix4f matrix, float radius, float width, Color color) {
-        buffer.vertex(matrix, -HALF_SQRT_3 * width, radius, -.5f * width).color(color.red(), color.green(), color.blue(), 0f).next();
+        buffer.vertex(matrix, -HALF_SQRT_3 * width, radius, -.5f * width).color(color.red(), color.green(), color.blue(), 0f);
     }
 
     private static void positiveXTerminalVertex(VertexConsumer buffer, Matrix4f matrix, float radius, float width, Color color) {
-        buffer.vertex(matrix, HALF_SQRT_3 * width, radius, -.5f * width).color(color.red(), color.green(), color.blue(), 0f).next();
+        buffer.vertex(matrix, HALF_SQRT_3 * width, radius, -.5f * width).color(color.red(), color.green(), color.blue(), 0f);
     }
 
     private static void positiveZTerminalVertex(VertexConsumer buffer, Matrix4f matrix, float radius, float width, Color color) {
-        buffer.vertex(matrix, 0, radius, width).color(color.red(), color.green(), color.blue(), 0f).next();
+        buffer.vertex(matrix, 0, radius, width).color(color.red(), color.green(), color.blue(), 0f);
     }
 
 }

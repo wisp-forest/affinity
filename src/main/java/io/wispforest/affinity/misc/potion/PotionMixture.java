@@ -7,16 +7,11 @@ import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.StructEndecBuilder;
 import io.wispforest.owo.serialization.CodecUtils;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
-import io.wispforest.owo.serialization.format.nbt.NbtEndec;
-import net.minecraft.component.ComponentChanges;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.*;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
@@ -47,6 +42,10 @@ public class PotionMixture {
             ComponentType.<Float>builder().codec(Codec.FLOAT).packetCodec(PacketCodecs.FLOAT).build()
     );
 
+    static {
+        ExtraPotionData.mark(EXTEND_DURATION_BY);
+    }
+
     public static final PotionMixture EMPTY = new PotionMixture(Potions.WATER.value(), ImmutableList.of(), true, ComponentMap.EMPTY);
     public static final Potion DUBIOUS_POTION = new Potion("dubious");
 
@@ -54,13 +53,13 @@ public class PotionMixture {
     private final List<StatusEffectInstance> effects;
     private final boolean pure;
     private final int color;
-    private final ComponentMap extraComponents;
+    private final ComponentMapImpl extraComponents;
 
     public PotionMixture(Potion basePotion, ComponentMap extraComponents) {
         this.basePotion = basePotion;
         this.effects = ImmutableList.of();
         this.pure = true;
-        this.extraComponents = extraComponents;
+        this.extraComponents = extraComponents instanceof ComponentMapImpl existing ? existing : new ComponentMapImpl(extraComponents);
 
         final var colorEffects = new ArrayList<>(effects);
         if (basePotion != Potions.WATER.value()) colorEffects.addAll(basePotion.getEffects());
@@ -72,7 +71,7 @@ public class PotionMixture {
         this.basePotion = basePotion;
         this.effects = ImmutableList.copyOf(effects);
         this.pure = pure;
-        this.extraComponents = extraComponents;
+        this.extraComponents = extraComponents instanceof ComponentMapImpl existing ? existing : new ComponentMapImpl(extraComponents);
 
         final var colorEffects = new ArrayList<>(effects);
         if (basePotion != Potions.WATER.value()) colorEffects.addAll(basePotion.getEffects());
@@ -89,12 +88,16 @@ public class PotionMixture {
         effects.addAll(basePotion.getEffects());
         effects.addAll(other.basePotion.getEffects());
 
-        return new PotionMixture(Potions.WATER.value(), effects, false, null);
+        return new PotionMixture(Potions.WATER.value(), effects, false, ComponentMap.EMPTY);
     }
 
     public static PotionMixture fromStack(ItemStack stack) {
         final var component = stack.getOrDefault(DataComponentTypes.POTION_CONTENTS, PotionContentsComponent.DEFAULT);
-        return new PotionMixture(component.potion().orElse(Potions.WATER).value(), component.customEffects(), true, stack.get(EXTRA_DATA));
+
+        var extraData = new ComponentMapImpl(ComponentMap.EMPTY);
+        extraData.applyChanges(ExtraPotionData.copyExtraDataChanges(stack));
+
+        return new PotionMixture(component.potion().orElse(Potions.WATER).value(), component.customEffects(), true, extraData);
     }
 
     public ItemStack toStack() {
@@ -117,7 +120,7 @@ public class PotionMixture {
     }
 
     public boolean isEmpty() {
-        return this == EMPTY || (basePotion == Potions.WATER && effects.isEmpty());
+        return this == EMPTY || (basePotion == Potions.WATER.value() && effects.isEmpty());
     }
 
     public int color() {
@@ -132,7 +135,7 @@ public class PotionMixture {
         return basePotion;
     }
 
-    public ComponentMap extraComponents() {
+    public ComponentMapImpl extraComponents() {
         return extraComponents;
     }
 
