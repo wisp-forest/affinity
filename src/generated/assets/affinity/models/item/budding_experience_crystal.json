@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "affinity:item/budding_experience_crystal"
+  }
+}

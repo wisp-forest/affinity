@@ -1,0 +1,28 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.affinity.wounding"
+  },
+  "effects": {
+    "affinity:increases_crit_damage": {
+      "type": "minecraft:linear",
+      "base": 0.1,
+      "per_level_above_first": 0.1
+    }
+  },
+  "exclusive_set": "#affinity:exclusive_set/crit",
+  "max_cost": {
+    "base": 6,
+    "per_level_above_first": 10
+  },
+  "max_level": 5,
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:enchantable/weapon",
+  "weight": 2
+}
