@@ -279,11 +279,11 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "onStatusEffectRemoved", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/effect/StatusEffect;onRemoved(Lnet/minecraft/entity/attribute/AttributeContainer;)V", shift = At.Shift.AFTER))
     private void passEntityContextToStatusEffect(StatusEffectInstance effect, CallbackInfo ci) {
-        if (effect.getEffectType() == StatusEffects.GLOWING && (Object) this instanceof PlayerEntity player) {
+        if (effect.getEffectType().value() == StatusEffects.GLOWING && (Object) this instanceof PlayerEntity player) {
             player.getComponent(AffinityComponents.GLOWING_COLOR).reset();
         }
 
-        if (effect.getEffectType() instanceof AffinityStatusEffect affinityEffect) {
+        if (effect.getEffectType().value() instanceof AffinityStatusEffect affinityEffect) {
             affinityEffect.onRemovedFromEntity((LivingEntity) (Object) this);
         }
     }

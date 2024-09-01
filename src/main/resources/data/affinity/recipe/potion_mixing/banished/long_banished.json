@@ -11,12 +11,22 @@
       "item": "minecraft:ender_pearl"
     },
     {
-      "fabric:type": "fabric:nbt",
+      "fabric:type": "affinity:passthrough",
+      "display_stacks": [{"id": "minecraft:echo_shard", "count": 1}],
       "base": {
-        "item": "minecraft:echo_shard"
-      },
-      "nbt": {
-        "Bound": true
+        "fabric:type": "fabric:difference",
+        "base": {
+          "item": "minecraft:echo_shard"
+        },
+        "subtracted": {
+          "fabric:type": "fabric:components",
+          "base": {
+            "item": "minecraft:echo_shard"
+          },
+          "components": {
+            "!affinity:bound_location": {}
+          }
+        }
       }
     },
     {

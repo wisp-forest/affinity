@@ -23,6 +23,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -64,8 +65,12 @@ public class PotionMixingRecipe implements Recipe<PotionMixingRecipe.Input> {
     public boolean matches(Input input, World world) {
         if (input.mixture.isEmpty()) return false;
 
-        var effectInputs = Stream.concat(input.mixture.effects().stream(), input.mixture.basePotion().getEffects().stream()).map(StatusEffectInstance::getEffectType).distinct().toList();
         var itemInputs = new ConcurrentLinkedQueue<>(input.items.stream().filter(stack -> !stack.isEmpty()).toList());
+        var effectInputs = Stream.concat(input.mixture.effects().stream(), input.mixture.basePotion().getEffects().stream())
+            .map(StatusEffectInstance::getEffectType)
+            .map(RegistryEntry::value)
+            .distinct()
+            .toList();
 
         if (effectInputs.size() != this.effectInputs.size() || itemInputs.size() != this.itemInputs.size()) {
             return false;

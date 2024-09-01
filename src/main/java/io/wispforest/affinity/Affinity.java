@@ -93,6 +93,7 @@ public class Affinity implements ModInitializer {
         InquiryQuestions.initialize();
 
         LivingEntityHealthPredicate.register();
+        AffinityCustomIngredients.initialize();
 
         EchoShardExtension.apply();
         AffinityWorldgen.initialize();

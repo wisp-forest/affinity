@@ -18,8 +18,15 @@
   ],
   "socle_inputs": [
     {
-      "fabric:type": "affinity:potion",
-      "potion": "minecraft:strong_regeneration"
+      "fabric:type": "fabric:components",
+      "base": {
+        "tag": "c:potions"
+      },
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:strong_regeneration"
+        }
+      }
     },
     {
       "item": "affinity:scintillant_anthracite_blend"
@@ -31,21 +38,26 @@
       "item": "minecraft:ghast_tear"
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:unbreaking",
-          "level": 3
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:unbreaking": 3
         }
-      ]
+      }
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:mending"
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:mending": 1
         }
-      ]
+      }
     },
     {
       "item": "minecraft:ghast_tear"
@@ -58,15 +70,12 @@
     }
   ],
   "output": {
-    "item": "affinity:resplendent_gem",
+    "id": "affinity:resplendent_gem",
     "count": 4,
-    "data": {
-      "StoredEnchantments": [
-        {
-          "id": "affinity:bastion",
-          "lvl": 1
-        }
-      ]
+    "components": {
+      "minecraft:stored_enchantments": {
+        "affinity:bastion": 1
+      }
     }
   },
   "entity": {

@@ -25,16 +25,26 @@
       "item": "minecraft:iron_ingot"
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:infinity"
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:infinity": 1
         }
-      ]
+      }
     },
     {
-      "fabric:type": "affinity:potion",
-      "potion": "minecraft:strong_swiftness"
+      "fabric:type": "fabric:components",
+      "base": {
+        "tag": "c:potions"
+      },
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:strong_swiftness"
+        }
+      }
     },
     {
       "item": "minecraft:iron_ingot"

@@ -2,7 +2,7 @@
   "parent": "affinity:some_assembly_required",
   "display": {
     "icon": {
-      "item": "affinity:wise_wisp_matter"
+      "id": "affinity:wise_wisp_matter"
     },
     "title": {
       "translate": "advancement.affinity.this_resource_matters.title"

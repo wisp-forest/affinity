@@ -3,7 +3,7 @@
   "duration": 200,
   "flux_cost_per_tick": 5,
   "output": {
-    "item": "affinity:azalea_chest"
+    "id": "affinity:azalea_chest"
   },
   "primary_input": {
     "item": "minecraft:gold_ingot"

@@ -42,6 +42,7 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
 
     private final SimpleInventory inventory = new SimpleInventory(1);
     private final ScreenHandlerContext context;
+    private final PlayerEntity player;
 
     @SuppressWarnings("unchecked")
     private final RegistryEntry<Enchantment>[] currentCurses = new RegistryEntry[3];
@@ -69,6 +70,7 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
         this.seed.observe(integer -> this.updateCurses());
         this.inventory.addListener(sender -> this.updateCurses());
 
+        this.player = playerInventory.player;
         this.seed.set(playerInventory.player.getEnchantmentTableSeed());
     }
 
@@ -116,7 +118,7 @@ public class OuijaBoardScreenHandler extends ScreenHandler {
     private void updateCurses() {
         var stack = this.inventory.getStack(0);
 
-        var curses = player().getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries()
+        var curses = this.player.getWorld().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries()
                 .filter(x -> x.isIn(EnchantmentTags.CURSE))
                 .filter(enchantment -> !enchantment.isIn(NOT_AVAILABLE_IN_OUIJA_BOARD))
                 .filter(enchantment -> enchantment.value().isAcceptableItem(stack) || stack.isOf(Items.BOOK))

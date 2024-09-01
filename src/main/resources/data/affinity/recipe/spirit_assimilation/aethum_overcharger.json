@@ -30,8 +30,15 @@
       "item": "affinity:scintillant_anthracite_blend"
     },
     {
-      "fabric:type": "affinity:potion",
-      "potion": "affinity:strong_resistance"
+      "fabric:type": "fabric:components",
+      "base": {
+        "tag": "c:potions"
+      },
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "affinity:strong_resistance"
+        }
+      }
     },
     {
       "item": "affinity:wise_wisp_matter"

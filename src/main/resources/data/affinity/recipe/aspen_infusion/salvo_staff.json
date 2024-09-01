@@ -19,13 +19,15 @@
       "item": "affinity:wise_wisp_matter"
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:quick_charge",
-          "level": 3
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:quick_charge": 3
         }
-      ]
+      }
     },
     {
       "item": "affinity:wise_wisp_matter"

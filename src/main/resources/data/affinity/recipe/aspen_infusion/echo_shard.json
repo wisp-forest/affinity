@@ -3,7 +3,7 @@
   "duration": 300,
   "flux_cost_per_tick": 10,
   "output": {
-    "item": "minecraft:echo_shard",
+    "id": "minecraft:echo_shard",
     "count": 4
   },
   "primary_input": {

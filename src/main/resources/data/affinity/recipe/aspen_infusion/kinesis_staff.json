@@ -19,13 +19,15 @@
       "item": "affinity:vicious_wisp_matter"
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:punch",
-          "level": 2
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:punch": 2
         }
-      ]
+      }
     },
     {
       "item": "affinity:wise_wisp_matter"

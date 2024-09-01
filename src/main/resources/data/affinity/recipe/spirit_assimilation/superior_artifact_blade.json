@@ -31,13 +31,15 @@
       "item": "minecraft:ender_pearl"
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:knockback",
-          "level": 2
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:knockback": 2
         }
-      ]
+      }
     },
     {
       "item": "affinity:crystalline_wisp_matter_composite"
@@ -49,13 +51,15 @@
       "item": "minecraft:obsidian"
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:sweeping",
-          "level": 3
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:sweeping_edge": 3
         }
-      ]
+      }
     },
     {
       "item": "minecraft:obsidian"
@@ -67,13 +71,15 @@
       "item": "affinity:crystalline_wisp_matter_composite"
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:sharpness",
-          "level": 5
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:sharpness": 5
         }
-      ]
+      }
     },
     {
       "item": "minecraft:ender_pearl"

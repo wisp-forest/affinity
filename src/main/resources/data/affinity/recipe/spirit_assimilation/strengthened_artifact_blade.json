@@ -31,13 +31,15 @@
       "item": "minecraft:wither_skeleton_skull"
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:sharpness",
-          "level": 5
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:sharpness": 5
         }
-      ]
+      }
     },
     {
       "item": "minecraft:wither_skeleton_skull"

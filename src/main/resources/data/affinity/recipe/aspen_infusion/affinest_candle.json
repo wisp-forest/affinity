@@ -2,14 +2,12 @@
   "type": "affinity:aspen_infusion",
   "flux_cost_per_tick": 10,
   "primary_input": {
-    "fabric:type": "fabric:nbt",
+    "fabric:type": "fabric:components",
     "base": {
       "item": "affinity:affine_candle"
     },
-    "nbt": {
-      "display": {
-        "Name": "{\"text\": \"Affiner Candle\", \"italic\": false}"
-      }
+    "components": {
+      "minecraft:custom_name": "{\"text\": \"Affiner Candle\", \"italic\": false}"
     }
   },
   "inputs": [
@@ -31,10 +29,8 @@
   ],
   "output": {
     "id": "affinity:affine_candle",
-    "data": {
-      "display": {
-        "Name": "{\"text\": \"Affinest Candle\", \"italic\": false}"
-      }
+    "components": {
+      "minecraft:custom_name": "{\"text\": \"Affinest Candle\", \"italic\": false}"
     }
   }
 }

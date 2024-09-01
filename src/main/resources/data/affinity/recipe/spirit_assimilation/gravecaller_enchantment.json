@@ -18,8 +18,15 @@
   ],
   "socle_inputs": [
     {
-      "fabric:type": "affinity:potion",
-      "potion": "minecraft:invisibility"
+      "fabric:type": "fabric:components",
+      "base": {
+        "tag": "c:potions"
+      },
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:invisibility"
+        }
+      }
     },
     {
       "item": "affinity:scintillant_anthracite_blend"
@@ -31,22 +38,26 @@
       "item": "minecraft:rotten_flesh"
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:lure",
-          "level": 3
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:lure": 3
         }
-      ]
+      }
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:loyalty",
-          "level": 3
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:loyalty": 3
         }
-      ]
+      }
     },
     {
       "item": "minecraft:rotten_flesh"
@@ -59,15 +70,12 @@
     }
   ],
   "output": {
-    "item": "affinity:resplendent_gem",
+    "id": "affinity:resplendent_gem",
     "count": 4,
-    "data": {
-      "StoredEnchantments": [
-        {
-          "id": "affinity:gravecaller",
-          "lvl": 1
-        }
-      ]
+    "components": {
+      "minecraft:stored_enchantments": {
+        "affinity:gravecaller": 1
+      }
     }
   },
   "entity": {

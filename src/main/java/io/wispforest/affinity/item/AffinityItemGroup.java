@@ -161,11 +161,12 @@ public class AffinityItemGroup {
             entries.add(EMERALD_CHESTPLATE);
             entries.add(EMERALD_LEGGINGS);
             entries.add(EMERALD_BOOTS);
-            entries.add(ResplendentGemItem.make(AffinityEnchantments.BERSERKER, context.lookup()));
-            entries.add(ResplendentGemItem.make(AffinityEnchantments.GRAVECALLER, context.lookup()));
-            entries.add(ResplendentGemItem.make(AffinityEnchantments.BASTION, context.lookup()));
 
             context.lookup().getOptionalWrapper(RegistryKeys.ENCHANTMENT).ifPresent(wrapper -> {
+                entries.add(ResplendentGemItem.make(AffinityEnchantments.BERSERKER, wrapper));
+                entries.add(ResplendentGemItem.make(AffinityEnchantments.GRAVECALLER, wrapper));
+                entries.add(ResplendentGemItem.make(AffinityEnchantments.BASTION, wrapper));
+
                 wrapper.streamEntries()
                         .filter(entry -> entry.registryKey().getValue().getNamespace().equals(Affinity.MOD_ID))
                         .filter(enchantment -> !enchantment.value().effects().contains(AffinityEnchantmentEffectComponents.ABSOLUTE_NAME_HUE))

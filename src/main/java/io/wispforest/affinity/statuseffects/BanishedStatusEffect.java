@@ -32,12 +32,11 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
     static {
         if (Affinity.onClient()) {
             ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
-                if (PotionUtil.getPotionEffects(stack).stream().noneMatch(x -> x.getEffectType() == AffinityStatusEffects.BANISHED)) {
+                if (PotionUtil.getPotionEffects(stack).stream().noneMatch(x -> x.getEffectType().value() == AffinityStatusEffects.BANISHED)) {
                     return;
                 }
 
                 var location = stack.get(EchoShardExtension.COMPONENT);
-
                 if (location == null) return;
 
                 EchoShardExtension.formatLocationTooltip(location, lines);

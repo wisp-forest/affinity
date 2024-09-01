@@ -14,13 +14,13 @@ import net.minecraft.util.Rarity;
 public class ResplendentGemItem extends EnchantedBookItem {
 
     public ResplendentGemItem() {
-        super(AffinityItems.settings().rarity(Rarity.UNCOMMON).maxCount(1).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
+        super(AffinityItems.settings().rarity(Rarity.UNCOMMON).maxCount(4).component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true));
     }
 
-    public static ItemStack make(RegistryKey<Enchantment> enchantment, RegistryWrapper.WrapperLookup registries) {
+    public static ItemStack make(RegistryKey<Enchantment> enchantment, RegistryWrapper<Enchantment> enchantments) {
         ItemStack itemStack = new ItemStack(AffinityItems.RESPLENDENT_GEM);
 
-        var entry = registries.getWrapperOrThrow(RegistryKeys.ENCHANTMENT).getOrThrow(enchantment);
+        var entry = enchantments.getOrThrow(enchantment);
         var mutable = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
         mutable.add(entry, 1);
         itemStack.set(DataComponentTypes.STORED_ENCHANTMENTS, mutable.build());

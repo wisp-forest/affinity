@@ -18,8 +18,15 @@
   ],
   "socle_inputs": [
     {
-      "fabric:type": "affinity:potion",
-      "potion": "minecraft:strong_swiftness"
+      "fabric:type": "fabric:components",
+      "base": {
+        "tag": "c:potions"
+      },
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:strong_swiftness"
+        }
+      }
     },
     {
       "item": "affinity:crystalline_wisp_matter_composite"
@@ -31,8 +38,15 @@
       "item": "affinity:scintillant_anthracite_blend"
     },
     {
-      "fabric:type": "affinity:potion",
-      "potion": "minecraft:strong_slowness"
+      "fabric:type": "fabric:components",
+      "base": {
+        "tag": "c:potions"
+      },
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:strong_slowness"
+        }
+      }
     },
     {
       "item": "affinity:scintillant_anthracite_blend"

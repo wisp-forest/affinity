@@ -87,7 +87,7 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
                     .orElse(candidates.get(0));
 
             stack.set(SELECTED_PROPERTY, Util.next(candidates, selectedProp).getName());
-            context.getPlayer().playSound(SoundEvents.ENTITY_ITEM_PICKUP, .5f, 2f);
+            world.playSound(null, context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS);
 
             return ActionResult.SUCCESS;
         } else {
@@ -120,7 +120,7 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
             world.scheduleFluidTick(clickedBlock, newState.getFluidState().getFluid(), newState.getFluidState().getFluid().getTickRate(world));
         }
 
-        player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(), 1f, 1f);
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(), SoundCategory.PLAYERS);
         return TypedActionResult.success(stack);
     }
 

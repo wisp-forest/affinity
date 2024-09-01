@@ -4,6 +4,6 @@
     "minecraft:dropper",
     "minecraft:dispenser",
     "minecraft:observer",
-    "#c:wooden_barrels"
+    "#c:barrels"
   ]
 }

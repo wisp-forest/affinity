@@ -3,14 +3,11 @@
   "duration": 200,
   "flux_cost_per_tick": 5,
   "output": {
-    "item": "minecraft:enchanted_book",
-    "data": {
-      "StoredEnchantments": [
-        {
-          "id": "affinity:affine",
-          "lvl": 1
-        }
-      ]
+    "id": "minecraft:enchanted_book",
+    "components": {
+      "minecraft:stored_enchantments": {
+        "affinity:affine": 1
+      }
     }
   },
   "primary_input": {

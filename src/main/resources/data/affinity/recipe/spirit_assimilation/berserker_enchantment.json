@@ -30,17 +30,26 @@
       "item": "minecraft:glistering_melon_slice"
     },
     {
-      "fabric:type": "affinity:potion",
-      "potion": "minecraft:strong_strength"
+      "fabric:type": "fabric:components",
+      "base": {
+        "tag": "c:potions"
+      },
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:strong_strength"
+        }
+      }
     },
     {
-      "fabric:type": "affinity:enchantments",
-      "enchantments": [
-        {
-          "id": "minecraft:sharpness",
-          "level": 5
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:enchanted_book"
+      },
+      "components": {
+        "minecraft:enchantments": {
+          "minecraft:sharpness": 5
         }
-      ]
+      }
     },
     {
       "item": "minecraft:glistering_melon_slice"
@@ -53,15 +62,12 @@
     }
   ],
   "output": {
-    "item": "affinity:resplendent_gem",
+    "id": "affinity:resplendent_gem",
     "count": 4,
-    "data": {
-      "StoredEnchantments": [
-        {
-          "id": "affinity:berserker",
-          "lvl": 1
-        }
-      ]
+    "components": {
+      "minecraft:stored_enchantments": {
+        "affinity:berserker": 1
+      }
     }
   },
   "entity": {

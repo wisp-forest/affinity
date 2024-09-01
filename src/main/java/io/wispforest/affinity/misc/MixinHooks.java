@@ -90,7 +90,7 @@ public class MixinHooks {
             target.getComponent(AffinityComponents.GLOWING_COLOR).setColor(data.get(GlowingPotion.COLOR));
         }
 
-        if (effect.getEffectType() instanceof AffinityStatusEffect affinityEffect) {
+        if (effect.getEffectType().value() instanceof AffinityStatusEffect affinityEffect) {
             affinityEffect.onPotionApplied(target, data);
         }
     }

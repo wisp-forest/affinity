@@ -49,7 +49,7 @@
     }
   ],
   "output": {
-    "item": "affinity:void_resonant_ethereal_amethyst_shard"
+    "id": "affinity:void_resonant_ethereal_amethyst_shard"
   },
   "entity": {
     "id": "minecraft:enderman"

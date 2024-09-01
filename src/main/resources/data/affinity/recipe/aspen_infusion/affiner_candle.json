@@ -23,10 +23,8 @@
   ],
   "output": {
     "id": "affinity:affine_candle",
-    "data": {
-      "display": {
-        "Name": "{\"text\": \"Affiner Candle\", \"italic\": false}"
-      }
+    "components": {
+      "minecraft:custom_name": "{\"text\": \"Affiner Candle\", \"italic\": false}"
     }
   }
 }

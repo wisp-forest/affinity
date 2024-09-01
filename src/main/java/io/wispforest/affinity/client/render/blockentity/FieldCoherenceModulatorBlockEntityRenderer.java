@@ -48,7 +48,7 @@ public class FieldCoherenceModulatorBlockEntityRenderer extends AffinityBlockEnt
 
     @Override
     public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        renderSpinny(System.currentTimeMillis() / 20d, matrices, vertexConsumers, light, overlay);
+        renderSpinny(System.currentTimeMillis() / 65d, matrices, vertexConsumers, light, overlay);
     }
 
     private static void renderSpinny(double spin, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {

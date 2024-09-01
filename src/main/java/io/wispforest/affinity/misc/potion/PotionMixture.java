@@ -88,7 +88,7 @@ public class PotionMixture {
         effects.addAll(basePotion.getEffects());
         effects.addAll(other.basePotion.getEffects());
 
-        return new PotionMixture(Potions.WATER.value(), effects, false, null);
+        return new PotionMixture(Potions.WATER.value(), effects, false, ComponentMap.EMPTY);
     }
 
     public static PotionMixture fromStack(ItemStack stack) {
