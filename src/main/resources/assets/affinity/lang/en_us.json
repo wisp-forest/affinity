@@ -10,6 +10,13 @@
 
   "biome.affinity.wisp_forest": "Wisp Forest",
 
+  "swivel_property.affinity.facing": "Facing",
+  "swivel_property.affinity.feed_direction": "Feed Direction",
+  "swivel_property.affinity.block_half": "Block Half",
+  "swivel_property.affinity.door_hinge": "Hinge Side",
+  "swivel_property.affinity.rotation": "Rotation",
+  "swivel_property.affinity.axis": "Axis",
+
   "item.affinity.wispen_testament": "The Wispen Testament",
   "text.affinity.wispen_testament.next_page": "Continued on next page...",
   "text.affinity.wispen_testament.staff_pedestal_function": {"text": "On Staff Pedestal", "color": "dark_gray"},
@@ -33,7 +40,7 @@
   ],
   "text.affinity.ethereal_aethum_flux_injector.linked_node_tooltip": [
     "", {"text": "[", "color": "dark_gray"}, {"text": "⌘", "color": "#6A67CE"}, {"text": "]", "color": "dark_gray"},
-    {"text": " Linked", "color": "gray"}
+    {"text": " Linked (click to unlink)", "color": "gray"}
   ],
   "text.affinity.ethereal_aethum_flux_injector.unlinked_node_tooltip": [
     "", {"text": "[", "color": "dark_gray"}, {"text": "+", "color": "green"}, {"text": "]", "color": "dark_gray"},
@@ -135,6 +142,7 @@
   "block.affinity.ethereal_aethum_flux_node.tooltip.owned_by_you": "Owned by you",
   "block.affinity.ethereal_aethum_flux_node.tooltip.owned_by_someone_else": "Owned by someone else",
   "block.affinity.ethereal_aethum_flux_injector": "Ethereal Aethum Flux Injector",
+  "block.affinity.local_displacement_gateway": "Local Displacement Gateway",
 
   "block.affinity.spirit_integration_apparatus": "Spirit Integration Apparatus",
   "block.affinity.spirit_integration_apparatus.tooltip.complete": "Complete",
@@ -195,6 +203,9 @@
   "block.affinity.azalea_fence_gate": "Azalea Fence Gate",
   "block.affinity.azalea_sign": "Azalea Sign",
   "block.affinity.azalea_hanging_sign": "Azalea Hanging Sign",
+  "block.affinity.azalea_chest": "Azalea Chest",
+  "container.affinity.azalea_chest": "Azalea Chest",
+  "container.affinity.azalea_chest_double": "Large Azalea Chest",
   "item.affinity.azalea_boat": "Azalea Boat",
   "item.affinity.azalea_chest_boat": "Azalea Boat with Chest",
 
@@ -281,6 +292,8 @@
   "item.affinity.cultivation_staff": "Cultivation Staff",
   "item.affinity.cultivation_staff.super_foraging_mode": "Super Foraging Mode™",
   "item.affinity.salvo_staff": "Salvo Staff",
+  "item.affinity.swivel_staff": "Swivel Staff",
+  "item.affinity.swivel_staff.tooltip.consumption_per_spin": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum to spin an entity", "color": "gray"}],
   "item.affinity.nimble_staff": "Nimble Staff",
   "item.affinity.nimble_staff.direction.north": "North",
   "item.affinity.nimble_staff.direction.south": "South",
@@ -356,6 +369,7 @@
   "item.affinity.fairly_attuned_amethyst_shard": "Fairly Attuned Amethyst Shard",
   "item.affinity.greatly_attuned_amethyst_shard": "Greatly Attuned Amethyst Shard",
   "item.affinity.sculk_resonant_ethereal_amethyst_shard": "Sculk-Resonant Ethereal Amethyst Shard",
+  "item.affinity.void_resonant_ethereal_amethyst_shard": "Void-Resonant Ethereal Amethyst Shard",
 
   "item.affinity.anthracite_powder": "Anthracite Powder",
   "item.affinity.carbon_copy.empty": "Carbon Copy of ... Nothing?",
@@ -462,6 +476,8 @@
   "advancement.affinity.drag_and_drop.description": "Obtain the Dragon Drop",
   "advancement.affinity.some_assembly_required.title": "Some Assembly Required",
   "advancement.affinity.some_assembly_required.description": "Augment a Crafting Table",
+  "advancement.affinity.this_resource_matters.title": "This Resource Matters",
+  "advancement.affinity.this_resource_matters.description": "Obtain your first piece of Wisp Matter",
   "advancement.affinity.a_resounding_success.title": "A Resounding Success",
   "advancement.affinity.a_resounding_success.description": "Construct a Resounding Chime",
   "advancement.affinity.resistance_is_futile.title": "Resistance is Futile",

@@ -59,7 +59,7 @@ public class EchoShardExtension {
 
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             final var stack = player.getStackInHand(hand);
-            if (!stack.isOf(Items.ECHO_SHARD)) return ActionResult.PASS;
+            if (!stack.isOf(Items.ECHO_SHARD) || !player.shouldCancelInteraction()) return ActionResult.PASS;
 
             return handleBlockUse(world, stack, hitResult.getBlockPos().up());
         });

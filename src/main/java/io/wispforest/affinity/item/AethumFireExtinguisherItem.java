@@ -67,6 +67,8 @@ public class AethumFireExtinguisherItem extends StaffItem {
                 entity.velocityModified = true;
             });
 
+            player.extinguish();
+
             var targetPos = player.raycast(10, 0f, false);
             if (targetPos instanceof BlockHitResult blockHit && blockHit.getType() != HitResult.Type.MISS) {
                 ServerTasks.doDelayed(serverWorld, (int) (Math.sqrt(blockHit.squaredDistanceTo(player))), () -> {

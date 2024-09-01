@@ -6,6 +6,7 @@
     "affinity:kinesis_staff",
     "affinity:astrokinesis_staff",
     "affinity:cultivation_staff",
-    "affinity:salvo_staff"
+    "affinity:salvo_staff",
+    "affinity:swivel_staff"
   ]
 }

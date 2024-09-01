@@ -5,9 +5,6 @@
     "a": {
       "item": "affinity:scintillant_anthracite_blend"
     },
-    "s": {
-      "item": "affinity:sculk_resonant_ethereal_amethyst_shard"
-    },
     "e": {
       "item": "minecraft:polished_deepslate_slab"
     },
@@ -20,7 +17,7 @@
   },
   "pattern": [
     "ece",
-    "asa",
+    "a a",
     "dcd"
   ],
   "result": {

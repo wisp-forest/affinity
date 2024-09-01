@@ -1,5 +1,5 @@
 {
-  "parent": "affinity:some_assembly_required",
+  "parent": "affinity:this_resource_matters",
   "display": {
     "icon": {
       "id": "affinity:geological_resonator"

@@ -32,11 +32,12 @@ public class AffinityEntities implements AutoRegistryContainer<EntityType<?>> {
             .build();
 
     private static <W extends WispEntity> EntityType<W> createWispType(EntityType.EntityFactory<W> factory) {
-        var type = EntityType.Builder.create(factory, SpawnGroup.MONSTER).dimensions(.25f, .25f).build();
-        SpawnRestriction.register(type, SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.WORLD_SURFACE, WispEntity::isValidSpawn);
-        FabricDefaultAttributeRegistry.register(type, WispEntity.createWispAttributes());
-
-        return type;
+        return FabricEntityTypeBuilder.<WispEntity>createMob()
+                .spawnGroup(SpawnGroup.MONSTER)
+                .entityFactory(factory)
+                .dimensions(EntityDimensions.fixed(.25f, .25f))
+                .spawnRestriction(SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING, WispEntity::isValidSpawn)
+                .defaultAttributes(WispEntity::createWispAttributes).build();
     }
 
     @Override

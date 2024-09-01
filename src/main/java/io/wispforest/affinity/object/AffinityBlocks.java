@@ -9,6 +9,7 @@ import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
 import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.type.BlockSetTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.type.WoodTypeBuilder;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
@@ -67,12 +68,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block GRAVITON_TRANSDUCER = new GravitonTransducerBlock();
     public static final Block ETHEREAL_AETHUM_FLUX_NODE = new EtherealAethumFluxNodeBlock();
     public static final Block ETHEREAL_AETHUM_FLUX_INJECTOR = new EtherealAethumFluxInjectorBlock();
+    public static final Block LOCAL_DISPLACEMENT_GATEWAY = new LocalDisplacementGatewayBlock();
     public static final Block INFUSED_STONE = new Block(AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
 
     public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 
     @NoBlockItem
-
     public static final Block RANTHRACITE_WIRE = new RanthraciteWireBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
@@ -94,6 +95,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AZALEA_TRAPDOOR = new TrapdoorBlock(AZALEA_BLOCK_SET_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_TRAPDOOR));
     public static final Block AZALEA_PRESSURE_PLATE = new PressurePlateBlock(AZALEA_BLOCK_SET_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_PRESSURE_PLATE));
     public static final Block AZALEA_BUTTON = new ButtonBlock(AZALEA_BLOCK_SET_TYPE, 30, AbstractBlock.Settings.copy(Blocks.OAK_BUTTON));
+    public static final Block AZALEA_CHEST = new AzaleaChestBlock(AbstractBlock.Settings.copy(Blocks.CHEST), () -> Entities.AZALEA_CHEST);
 
     @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(AZALEA_WOOD_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_SIGN));
     @NoBlockItem public static final Block AZALEA_HANGING_SIGN = new HangingSignBlock(AZALEA_WOOD_TYPE, AbstractBlock.Settings.copy(Blocks.OAK_SIGN));
@@ -202,6 +204,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<EtherealAethumFluxInjectorBlockEntity> ETHEREAL_AETHUM_FLUX_INJECTOR =
                 make(EtherealAethumFluxInjectorBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_INJECTOR);
+
+        public static final BlockEntityType<LocalDisplacementGatewayBlockEntity> LOCAL_DISPLACEMENT_GATEWAY =
+                make(LocalDisplacementGatewayBlockEntity::new, AffinityBlocks.LOCAL_DISPLACEMENT_GATEWAY);
+
+        public static final BlockEntityType<AzaleaChestBlockEntity> AZALEA_CHEST =
+                make(AzaleaChestBlockEntity::new, AffinityBlocks.AZALEA_CHEST);
 
         @Override
         public void afterFieldProcessing() {

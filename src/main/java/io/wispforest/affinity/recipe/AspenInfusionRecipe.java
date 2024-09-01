@@ -22,6 +22,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
             EndecUtil.INGREDIENT_ENDEC.fieldOf("primary_input", recipe -> recipe.primaryInput),
             EndecUtil.INGREDIENT_ENDEC.listOf().fieldOf("inputs", recipe -> recipe.socleInputs),
             EndecUtil.RECIPE_RESULT_ENDEC.fieldOf("output", recipe -> recipe.output),
+            Endec.BOOLEAN.optionalFieldOf("transfer_components", recipe -> recipe.transferComponents, false),
             Endec.INT.optionalFieldOf("duration", recipe -> recipe.duration, 100),
             Endec.INT.optionalFieldOf("flux_field_per_tick", recipe -> recipe.fluxCostPerTick, 0),
             AspenInfusionRecipe::new
@@ -29,11 +30,13 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
     public final Ingredient primaryInput;
     private final ItemStack output;
+    private final boolean transferComponents;
 
-    public AspenInfusionRecipe(Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, int duration, int fluxCostPerTick) {
+    public AspenInfusionRecipe(Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, boolean transferComponents, int duration, int fluxCostPerTick) {
         super(inputs, duration, fluxCostPerTick);
         this.primaryInput = primaryInput;
         this.output = output;
+        this.transferComponents = transferComponents;
     }
 
     @Override
@@ -43,7 +46,13 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
     @Override
     public ItemStack craft(AspRiteCoreBlockEntity.AspenInfusionRecipeInput inventory, RegistryWrapper.WrapperLookup registries) {
-        return this.output.copy();
+        var result = this.output.copy();
+
+        if (this.transferComponents) {
+            result.applyComponentsFrom(inventory.primaryInput().getComponents());
+        }
+
+        return result;
     }
 
     @Override

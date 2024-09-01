@@ -7,6 +7,7 @@ import io.wispforest.affinity.block.impl.RitualSocleBlock;
 import io.wispforest.affinity.client.hud.AethumNetworkLinkingHud;
 import io.wispforest.affinity.client.hud.NimbleStaffHud;
 import io.wispforest.affinity.client.hud.PlayerAethumHud;
+import io.wispforest.affinity.client.hud.SwivelStaffHud;
 import io.wispforest.affinity.client.particle.*;
 import io.wispforest.affinity.client.render.AbsoluteEnchantmentGlintHandler;
 import io.wispforest.affinity.client.render.CuboidRenderer;
@@ -14,7 +15,9 @@ import io.wispforest.affinity.client.render.LightLeakRenderer;
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.*;
+import io.wispforest.affinity.client.render.item.AzaleaChestItemRenderer;
 import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
+import io.wispforest.affinity.client.render.item.VoidResonantEtherealAmethystShardRenderer;
 import io.wispforest.affinity.client.render.program.*;
 import io.wispforest.affinity.client.screen.*;
 import io.wispforest.affinity.component.AffinityComponents;
@@ -50,6 +53,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
 import net.minecraft.client.render.entity.EmptyEntityRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -71,6 +75,7 @@ public class AffinityClient implements ClientModInitializer {
     public static final FizzleProgram EMANCIPATE_BLOCK_PROGRAM = new FizzleProgram(Affinity.id("emancipate_block"));
     public static final FizzleProgram EMANCIPATE_ENTITY_PROGRAM = new FizzleProgram(Affinity.id("emancipate_entity"));
     public static final BlitPostEffectBufferProgram BLIT_POST_EFFECT_BUFFER = new BlitPostEffectBufferProgram();
+    public static final EndPortalOverTextureProgram END_PORTAL_OVER_TEXTURE_PROGRAM = new EndPortalOverTextureProgram();
 
     public static final KeyBinding ACTIVATE_EVADE_RING = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.activate_evade_ring", GLFW.GLFW_KEY_LEFT_CONTROL, "key.categories.movement"));
     public static final KeyBinding SELECT_STAFF_FROM_BUNDLE = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.affinity.select_staff_from_bundle", GLFW.GLFW_KEY_X, "key.categories.inventory"));
@@ -81,11 +86,19 @@ public class AffinityClient implements ClientModInitializer {
         this.assignBlockRenderLayers();
         this.registerColorProviders();
 
-        ModelLoadingPlugin.register(ctx -> ctx.addModels(Affinity.id("item/staff_bundle")));
+        ModelLoadingPlugin.register(ctx -> {
+            ctx.addModels(
+                    Affinity.id("item/staff_bundle"),
+                    Affinity.id("item/void_resonant_ethereal_amethyst_shard_overlay"),
+                    Affinity.id("item/void_resonant_ethereal_amethyst_shard_outline")
+            );
+        });
 
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.MANGROVE_BASKET, new MangroveBasketItemRenderer());
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.AFFINE_INFUSER, new AffineInfuserBlockEntityRenderer(null));
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.FIELD_COHERENCE_MODULATOR, new FieldCoherenceModulatorBlockEntityRenderer(null));
+        BuiltinItemRendererRegistry.INSTANCE.register(AffinityItems.VOID_RESONANT_ETHEREAL_AMETHYST_SHARD, new VoidResonantEtherealAmethystShardRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.AZALEA_CHEST, new AzaleaChestItemRenderer());
         PostItemRenderCallback.EVENT.register((stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
             boolean hasItemGlow = item != null && item.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.ITEM_GLOW);
             if (mode == ModelTransformationMode.GUI || (!stack.isOf(AffinityItems.DRAGON_DROP) && !hasItemGlow)) return;
@@ -193,6 +206,7 @@ public class AffinityClient implements ClientModInitializer {
         AethumNetworkLinkingHud.initialize();
         PlayerAethumHud.initialize();
         NimbleStaffHud.initialize();
+        SwivelStaffHud.initialize();
         InWorldTooltipRenderer.initialize();
         AffinityLavenderRecipePreviewBuilders.initialize();
 
@@ -205,6 +219,7 @@ public class AffinityClient implements ClientModInitializer {
         HandledScreens.register(AffinityScreenHandlerTypes.ASSEMBLY_AUGMENT, AssemblyAugmentScreen::new);
         HandledScreens.register(AffinityScreenHandlerTypes.OUIJA_BOARD, OuijaBoardScreen::new);
         HandledScreens.register(AffinityScreenHandlerTypes.ITEM_TRANSFER_NODE, ItemTransferNodeScreen::new);
+        HandledScreens.register(AffinityScreenHandlerTypes.LARGE_AZALEA_CHEST, LargeAzaleaChestScreen::new);
 
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.COLORED_FLAME, ColoredFlamedParticle.Factory::new);
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.SMALL_COLORED_FLAME, ColoredFlamedParticle.SmallFactory::new);
@@ -303,6 +318,8 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ARBOREAL_ANNIHILATION_APPARATUS, ArborealAnnihilationApparatusBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ETHEREAL_AETHUM_FLUX_INJECTOR, EtherealAethumFluxInjectorBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ETHEREAL_AETHUM_FLUX_NODE, EtherealAethumFluxNodeBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.LOCAL_DISPLACEMENT_GATEWAY, LocalDisplacementGatewayBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.AZALEA_CHEST, ChestBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {

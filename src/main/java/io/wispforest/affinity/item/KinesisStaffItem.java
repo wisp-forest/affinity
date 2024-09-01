@@ -63,6 +63,10 @@ public class KinesisStaffItem extends StaffItem {
         super(AffinityItems.settings().maxCount(1));
     }
 
+    protected KinesisStaffItem(Settings settings) {
+        super(settings);
+    }
+
     @Override
     public boolean canBePlacedOnPedestal() {
         return true;

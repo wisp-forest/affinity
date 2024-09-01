@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "affinity:brewing_cauldron",
     "affinity:copper_plated_aethum_flux_node",
@@ -27,6 +28,7 @@
     "affinity:graviton_transducer",
     "affinity:ethereal_aethum_flux_node",
     "affinity:ethereal_aethum_flux_injector",
-    "affinity:world_pin"
+    "affinity:world_pin",
+    "affinity:local_displacement_gateway"
   ]
 }

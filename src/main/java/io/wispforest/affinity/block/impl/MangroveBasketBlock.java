@@ -14,7 +14,6 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -70,16 +69,6 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
         stack.damage(1, player, LivingEntity.getSlotForHand(hand));
 
         return ItemActionResult.success(world.isClient);
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (world.isClient) return;
-        if (itemStack.get(DataComponentTypes.BLOCK_ENTITY_DATA) == null) return;
-
-        if (world.getBlockEntity(pos) instanceof MangroveBasketBlockEntity basket) {
-            basket.onPlaced(placer);
-        }
     }
 
     @Override

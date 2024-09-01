@@ -1,0 +1,35 @@
+{
+  "parent": "affinity:some_assembly_required",
+  "display": {
+    "icon": {
+      "item": "affinity:wise_wisp_matter"
+    },
+    "title": {
+      "translate": "advancement.affinity.this_resource_matters.title"
+    },
+    "description": {
+      "translate": "advancement.affinity.this_resource_matters.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "wisp_matter": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "affinity:wisp_matter"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "wisp_matter"
+    ]
+  ]
+}

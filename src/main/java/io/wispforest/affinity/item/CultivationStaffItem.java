@@ -16,11 +16,13 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.Block;
 import net.minecraft.block.CropBlock;
+import net.minecraft.block.Fertilizable;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -42,6 +44,7 @@ public class CultivationStaffItem extends StaffItem {
 
     public static final ComponentType<Unit> SUPER_FORAGING_MODE = Affinity.unitComponent("cultivation_staff_super_foraging_mode");
 
+    private static final TagKey<Block> BLOCKS_TO_CULTIVATE = TagKey.of(RegistryKeys.BLOCK, Affinity.id("blocks_to_cultivate"));
     private static final InquirableOutlineProvider.Outline AOE = InquirableOutlineProvider.Outline.symmetrical(4, 0, 4);
 
     public CultivationStaffItem() {
@@ -65,10 +68,13 @@ public class CultivationStaffItem extends StaffItem {
                 if (world.random.nextFloat() > .005f) continue;
 
                 var state = world.getBlockState(cropPos);
-                if (!(state.getBlock() instanceof CropBlock crop)) continue;
+                if (!(state.getBlock() instanceof Fertilizable crop)) continue;
 
-                world.setBlockState(cropPos, crop.withAge(Math.min(crop.getAge(state) + 1, crop.getMaxAge())), Block.NOTIFY_LISTENERS);
-                world.syncWorldEvent(WorldEvents.BLOCK_BROKEN, cropPos, Block.getRawIdFromState(state));
+                if (crop.isFertilizable(world, pos, state) && crop.canGrow(world, world.random, cropPos, state)) {
+                    crop.grow(world, world.random, cropPos, state);
+                }
+
+                world.syncWorldEvent(WorldEvents.BONE_MEAL_USED, cropPos, 0);
             }
         }
 
@@ -78,18 +84,20 @@ public class CultivationStaffItem extends StaffItem {
         var cropPos = pos.add(-4 + index / sideLength, 0, -4 + index % sideLength);
         var state = world.getBlockState(cropPos);
 
-        if (!(state.getBlock() instanceof CropBlock crop) || !crop.isMature(state)) return;
+        var isCrop = state.getBlock() instanceof CropBlock;
+        if ((!isCrop || !((CropBlock) state.getBlock()).isMature(state)) && !state.isIn(BLOCKS_TO_CULTIVATE)) return;
 
         if (!pedestal.hasFlux(50)) return;
         pedestal.consumeFlux(50);
 
         var drops = Block.getDroppedStacks(state, world, cropPos, world.getBlockEntity(cropPos));
-        boolean foundSeeds = false;
+        boolean decrementSeeds = isCrop;
 
         try (var transaction = Transaction.openOuter()) {
             for (var drop : drops) {
-                if (!foundSeeds && drop.getItem() == state.getBlock().asItem()) {
+                if (decrementSeeds && drop.getItem() == state.getBlock().asItem()) {
                     drop.decrement(1);
+                    decrementSeeds = false;
                 }
 
                 if (drop.isEmpty()) continue;
@@ -105,7 +113,7 @@ public class CultivationStaffItem extends StaffItem {
         }
 
         world.breakBlock(cropPos, false);
-        world.setBlockState(cropPos, crop.withAge(0), Block.NOTIFY_LISTENERS);
+        if (state.getBlock() instanceof CropBlock crop) world.setBlockState(cropPos, crop.withAge(0), Block.NOTIFY_LISTENERS);
     }
 
     @Override
