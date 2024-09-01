@@ -29,6 +29,7 @@ import java.util.Optional;
 public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory> {
 
     public final List<Ingredient> coreInputs;
+    public final int transferNbtIndex;
     public final EntityType<?> entityType;
     @Nullable private final NbtCompound entityNbt;
 
@@ -37,6 +38,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
     protected SpiritAssimilationRecipe(Identifier id,
                                        List<Ingredient> coreInputs,
                                        List<Ingredient> inputs,
+                                       int transferNbtIndex,
                                        EntityType<?> entityType,
                                        @Nullable NbtCompound entityNbt,
                                        int duration,
@@ -44,6 +46,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
                                        ItemStack output) {
         super(id, inputs, duration, fluxCostPerTick);
         this.coreInputs = ImmutableList.copyOf(coreInputs);
+        this.transferNbtIndex = transferNbtIndex;
         this.entityType = entityType;
         this.entityNbt = entityNbt;
         this.output = output;
@@ -59,7 +62,20 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
 
     @Override
     public ItemStack craft(SpiritIntegrationApparatusBlockEntity.SpiritAssimilationInventory inventory, DynamicRegistryManager drm) {
-        return ItemStack.EMPTY;
+        var result = this.output.copy();
+
+        if (this.transferNbtIndex != -1) {
+            var transferNbtIngredient = this.coreInputs.get(this.transferNbtIndex);
+
+            for (var stack : inventory.coreInputs()) {
+                if (!transferNbtIngredient.test(stack)) continue;
+
+                result.setNbt(stack.getNbt());
+                break;
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -99,6 +115,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
             return new SpiritAssimilationRecipe(id,
                     JsonUtil.readIngredientList(json, "core_inputs"),
                     JsonUtil.readIngredientList(json, "socle_inputs"),
+                    JsonHelper.getInt(json, "transfer_nbt_index", -1),
                     JsonUtil.readFromRegistry(entityObject, "id", Registries.ENTITY_TYPE),
                     entityObject.has("data") ? JsonUtil.readNbt(entityObject, "data") : null,
                     JsonHelper.getInt(json, "duration", 100),
@@ -113,6 +130,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
                     id,
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
+                    buf.readVarInt(),
                     Registries.ENTITY_TYPE.get(buf.readVarInt()),
                     buf.readOptional(PacketByteBuf::readNbt).orElse(null),
                     buf.readVarInt(),
@@ -125,6 +143,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
         public void write(PacketByteBuf buf, SpiritAssimilationRecipe recipe) {
             buf.writeCollection(recipe.coreInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
+            buf.writeVarInt(recipe.transferNbtIndex);
 
             buf.writeVarInt(Registries.ENTITY_TYPE.getRawId(recipe.entityType));
             buf.writeOptional(Optional.ofNullable(recipe.entityNbt), PacketByteBuf::writeNbt);

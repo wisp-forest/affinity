@@ -293,6 +293,18 @@ public class AffinityParticleSystems {
         }
     });
 
+    public static final ParticleSystem<Void> LOCAL_DISPLACEMENT_GATEWAY_TELEPORT = CONTROLLER.register(Void.class, (world, pos, data) -> {
+        ClientParticles.setParticleCount(10);
+        ClientParticles.randomizeVelocity(.1f);
+        ClientParticles.spawnPrecise(ParticleTypes.FIREWORK, world, pos.add(0, 1, 0), 1, 2, 1);
+
+        ClientParticles.setParticleCount(20);
+        ClientParticles.randomizeVelocity(.1f);
+        ClientParticles.spawnPrecise(new DustColorTransitionParticleEffect(MathUtil.rgbToVec3f(0x674188), MathUtil.rgbToVec3f(0xC8A1E0), 1f), world, pos.add(0, 1, 0), 1, 2, 1);
+
+        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1f, 1f, false);
+    });
+
     public static final ParticleSystem<BlockPos> TRANSDUCE_SHULKER_BULLET = CONTROLLER.register(BlockPos.class, (world, pos, transducerPos) -> {
         for (var axis : Direction.Axis.VALUES) {
             ClientParticles.setParticleCount(7);

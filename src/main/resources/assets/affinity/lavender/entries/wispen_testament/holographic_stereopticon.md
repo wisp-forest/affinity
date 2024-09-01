@@ -45,4 +45,13 @@ instructions in the resulting tooltip. It should further be noted that any impri
 Merely {concept}section imprints{} form an exception to this rule, as they constantly evolve to match
 the changes in the world around them.
 
+
+Finally, a placed Stereopticon {c}may be configured{} to alter the
+
+
+@next-page
+
+display of its imprint. The constant rotation of said imprint may be disabled by {c}sneak-interacting{} with the
+Stereopticon, and its size altered by {c}scrolling while sneaking{} and looking at the Stereopticon.
+
 @entry-end

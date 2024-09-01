@@ -1,0 +1,76 @@
+{
+  "type": "affinity:spirit_assimilation",
+  "duration": 400,
+  "flux_cost_per_tick": 40,
+  "core_inputs": [
+    {
+      "item": "affinity:bare_resplendent_gem"
+    },
+    {
+      "item": "affinity:bare_resplendent_gem"
+    },
+    {
+      "item": "affinity:bare_resplendent_gem"
+    },
+    {
+      "item": "affinity:bare_resplendent_gem"
+    }
+  ],
+  "socle_inputs": [
+    {
+      "fabric:type": "affinity:potion",
+      "potion": "minecraft:invisibility"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "minecraft:lure",
+          "level": 3
+        }
+      ]
+    },
+    {
+      "fabric:type": "affinity:enchantments",
+      "enchantments": [
+        {
+          "id": "minecraft:loyalty",
+          "level": 3
+        }
+      ]
+    },
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "affinity:wise_wisp_matter"
+    },
+    {
+      "item": "affinity:scintillant_anthracite_blend"
+    }
+  ],
+  "output": {
+    "item": "affinity:resplendent_gem",
+    "count": 4,
+    "data": {
+      "StoredEnchantments": [
+        {
+          "id": "affinity:gravecaller",
+          "lvl": 1
+        }
+      ]
+    }
+  },
+  "entity": {
+    "id": "minecraft:zoglin"
+  }
+}

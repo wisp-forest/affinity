@@ -1,0 +1,12 @@
+{
+  "tag": "#minecraft:slabs",
+  "properties": {
+    "type": {
+      "translation_key": "swivel_property.affinity.block_half",
+      "cycle": {
+        "top": "bottom",
+        "bottom": "top"
+      }
+    }
+  }
+}

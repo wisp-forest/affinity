@@ -7,9 +7,9 @@ import io.wispforest.affinity.blockentity.impl.EtherealAethumFluxInjectorBlockEn
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.item.StaffItem;
+import io.wispforest.affinity.item.SwivelStaffItem;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.affinity.misc.util.EndecUtil;
-import io.wispforest.endec.impl.ReflectiveEndecBuilder;
 import io.wispforest.owo.network.OwoNetChannel;
 import io.wispforest.owo.network.serialization.PacketBufSerializer;
 import net.minecraft.block.entity.BlockEntity;
@@ -49,6 +49,11 @@ public class AffinityNetwork {
 
     public static void initialize() {
         PacketBufSerializer.register(GlobalPos.class, (buf, globalPos) -> buf.write(EndecUtil.GLOBAL_POS_ENDEC, globalPos), buf -> buf.read(EndecUtil.GLOBAL_POS_ENDEC));
+        PacketBufSerializer.register(
+            SwivelStaffItem.SyncSwivelProperties.class,
+            (buf, properties) -> buf.write(SwivelStaffItem.SyncSwivelProperties.ENDEC, properties),
+            buf -> buf.read(SwivelStaffItem.SyncSwivelProperties.ENDEC)
+        );
 
         CHANNEL.registerClientbound(FluxSyncHandler.FluxSyncPacket.class, (message, access) -> {
             final var chunk = access.runtime().world.getChunk(message.chunk().x, message.chunk().z);

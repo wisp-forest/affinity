@@ -2,20 +2,21 @@ package io.wispforest.affinity.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import io.wispforest.affinity.endec.BuiltInEndecs;
+import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.impl.KeyedEndec;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BanishmentComponent implements Component {
 
-    public static final KeyedEndec<Identifier> DIMENSION = BuiltInEndecs.IDENTIFIER.keyed("Dimension", World.OVERWORLD.getValue());
-    public static final KeyedEndec<BlockPos> POSITION = BuiltInEndecs.BLOCK_POS.keyed("Pos", BlockPos.ORIGIN);
+    public static final KeyedEndec<Identifier> DIMENSION = BuiltInEndecs.IDENTIFIER.keyed("Dimension", (Identifier) null);
+    public static final KeyedEndec<BlockPos> POSITION = BuiltInEndecs.BLOCK_POS.keyed("Pos", (BlockPos) null);
 
-    public Identifier dimension = World.OVERWORLD.getValue();
-    public BlockPos pos = BlockPos.ORIGIN;
+    public @Nullable Identifier dimension = null;
+    public @Nullable BlockPos pos = null;
 
     @Override
     public void readFromNbt(@NotNull NbtCompound tag) {
@@ -25,7 +26,7 @@ public class BanishmentComponent implements Component {
 
     @Override
     public void writeToNbt(@NotNull NbtCompound tag) {
-        tag.put(DIMENSION, this.dimension);
-        tag.put(POSITION, this.pos);
+        tag.putIfNotNull(SerializationContext.empty(), DIMENSION, this.dimension);
+        tag.putIfNotNull(SerializationContext.empty(), POSITION, this.pos);
     }
 }

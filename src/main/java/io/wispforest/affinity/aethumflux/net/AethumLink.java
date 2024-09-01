@@ -4,7 +4,8 @@ public final class AethumLink {
 
     public enum Type {
         NORMAL,
-        PUSH;
+        PUSH,
+        PRIORITIZED;
     }
 
     public enum Element {

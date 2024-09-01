@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.entry.ItemEntry;
@@ -27,7 +28,8 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
                 ARBOREAL_ANNIHILATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE, REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, ASSEMBLY_AUGMENT,
                 SPIRIT_INTEGRATION_APPARATUS, RITUAL_SOCLE_COMPOSER, AFFINE_INFUSER, RANTHRACITE_WIRE, CROP_REAPER, WORLD_PIN, SUNDIAL, ARCANE_TREETAP,
                 STAFF_PEDESTAL, OUIJA_BOARD, ITEM_TRANSFER_NODE, AETHUM_PROBE, EMERALD_BLOCK, EMERALD_BLOCK, THE_SKY, INVERSION_STONE,
-                INFUSED_STONE, MATTER_HARVESTING_HEARTH, ASP_RITE_CORE, FIELD_COHERENCE_MODULATOR, GRAVITON_TRANSDUCER, ETHEREAL_AETHUM_FLUX_INJECTOR
+                INFUSED_STONE, MATTER_HARVESTING_HEARTH, ASP_RITE_CORE, FIELD_COHERENCE_MODULATOR, GRAVITON_TRANSDUCER, ETHEREAL_AETHUM_FLUX_INJECTOR,
+                LOCAL_DISPLACEMENT_GATEWAY, AZALEA_CHEST
         );
 
         this.addDrop(AFFINE_CANDLE, candleDrops(AFFINE_CANDLE));
@@ -42,8 +44,13 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
         ));
 
         this.selfDrop(AZALEA_LOG, AZALEA_WOOD, STRIPPED_AZALEA_LOG, STRIPPED_AZALEA_WOOD, AZALEA_PLANKS);
+        this.selfDrop(AZALEA_HANGING_SIGN, AZALEA_WALL_HANGING_SIGN);
         for (var block : AffinityBlockFamilies.AZALEA.getVariants().values()) {
-            this.selfDrop(block);
+            if (block instanceof DoorBlock) {
+                this.addDrop(block, this.doorDrops(block));
+            } else {
+                this.selfDrop(block);
+            }
         }
 
         this.addDrop(HOLOGRAPHIC_STEREOPTICON, block -> {

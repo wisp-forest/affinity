@@ -66,11 +66,11 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
         }
 
         this.enforceBlockState(true);
-        if (this.time % 20 == 0) {
+        if (this.time % 10 == 0) {
             this.updateFlux(Math.min(this.flux() + matter.wispType().aethumFluxPerSecond(), this.fluxCapacity()));
         }
 
-        if (++this.harvestTicks < 400) return;
+        if (++this.harvestTicks < 200) return;
 
         this.harvestTicks = 0;
         if (!ItemOps.emptyAwareDecrement(this.currentlyHarvesting)) {
@@ -84,7 +84,7 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
         super.appendTooltipEntries(entries);
 
         if (!(this.currentlyHarvesting.getItem() instanceof WispMatterItem matter)) return;
-        entries.add(Entry.icon(Text.of(matter.wispType().aethumFluxPerSecond() + "/s"), 8, 0));
+        entries.add(Entry.icon(Text.of(matter.wispType().aethumFluxPerSecond() * 2 + "/s"), 8, 0));
     }
 
     private void enforceBlockState(boolean lit) {

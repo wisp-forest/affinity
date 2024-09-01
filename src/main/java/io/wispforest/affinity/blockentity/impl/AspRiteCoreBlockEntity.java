@@ -19,6 +19,7 @@ import java.util.List;
 public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Nullable private AspenInfusionRecipe cachedRecipe = null;
+    @Nullable private ItemStack cachedResult = null;
 
     public AspRiteCoreBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.ASP_RITE_CORE, pos, state);
@@ -34,6 +35,7 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
         if (recipeOptional.isEmpty()) return false;
         this.cachedRecipe = recipeOptional.get();
+        this.cachedResult = this.cachedRecipe.craft(inventory, this.world.getRegistryManager());
 
         setup.configureLength(this.cachedRecipe.duration);
 
@@ -62,7 +64,10 @@ public class AspRiteCoreBlockEntity extends RitualCoreBlockEntity {
 
     @Override
     protected boolean onRitualCompleted() {
-        this.item = this.cachedRecipe.getOutput(null);
+        this.item = this.cachedResult;
+
+        this.cachedRecipe = null;
+        this.cachedResult = null;
 
         AffinityParticleSystems.ASPEN_INFUSION_CRAFT.spawn(this.world, Vec3d.ofCenter(this.pos, 1f));
         WorldOps.playSound(this.world, this.pos, AffinitySoundEvents.BLOCK_ASP_RITE_CORE_CRAFT, SoundCategory.BLOCKS);

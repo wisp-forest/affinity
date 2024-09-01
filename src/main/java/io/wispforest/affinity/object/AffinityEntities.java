@@ -37,7 +37,7 @@ public class AffinityEntities implements AutoRegistryContainer<EntityType<?>> {
                 .spawnGroup(SpawnGroup.MONSTER)
                 .entityFactory(factory)
                 .dimensions(EntityDimensions.fixed(.25f, .25f))
-                .spawnRestriction(SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.WORLD_SURFACE, WispEntity::isValidSpawn)
+                .spawnRestriction(SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING, WispEntity::isValidSpawn)
                 .defaultAttributes(WispEntity::createWispAttributes).build();
     }
 

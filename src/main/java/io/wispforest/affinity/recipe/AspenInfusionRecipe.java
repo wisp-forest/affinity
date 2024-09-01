@@ -21,11 +21,13 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
     public final Ingredient primaryInput;
     private final ItemStack output;
+    private final boolean transferNbt;
 
-    public AspenInfusionRecipe(Identifier id, Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, int duration, int fluxCostPerTick) {
+    public AspenInfusionRecipe(Identifier id, Ingredient primaryInput, List<Ingredient> inputs, ItemStack output, boolean transferNbt, int duration, int fluxCostPerTick) {
         super(id, inputs, duration, fluxCostPerTick);
         this.primaryInput = primaryInput;
         this.output = output;
+        this.transferNbt = transferNbt;
     }
 
     @Override
@@ -35,7 +37,13 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
 
     @Override
     public ItemStack craft(AspRiteCoreBlockEntity.AspenInfusionInventory inventory, DynamicRegistryManager drm) {
-        return this.output.copy();
+        var result = this.output.copy();
+
+        if (this.transferNbt) {
+            result.setNbt(inventory.primaryInput().getNbt());
+        }
+
+        return result;
     }
 
     @Override
@@ -63,6 +71,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
                     Ingredient.fromJson(JsonHelper.getObject(json, "primary_input")),
                     JsonUtil.readIngredientList(json, "inputs"),
                     JsonUtil.readChadStack(json, "output"),
+                    JsonHelper.getBoolean(json, "transfer_nbt", false),
                     JsonHelper.getInt(json, "duration", 100),
                     JsonHelper.getInt(json, "flux_cost_per_tick", 0)
             );
@@ -75,6 +84,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
                     Ingredient.fromPacket(buf),
                     buf.readCollection(ArrayList::new, Ingredient::fromPacket),
                     buf.readItemStack(),
+                    buf.readBoolean(),
                     buf.readVarInt(),
                     buf.readVarInt()
             );
@@ -85,6 +95,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
             recipe.primaryInput.write(buf);
             buf.writeCollection(recipe.socleInputs, (packetByteBuf, ingredient) -> ingredient.write(packetByteBuf));
             buf.writeItemStack(recipe.output);
+            buf.writeBoolean(recipe.transferNbt);
             buf.writeVarInt(recipe.duration);
             buf.writeVarInt(recipe.fluxCostPerTick);
         }

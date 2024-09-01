@@ -1,0 +1,38 @@
+{
+  "type": "affinity:aspen_infusion",
+  "duration": 300,
+  "flux_cost_per_tick": 10,
+  "output": {
+    "item": "minecraft:echo_shard",
+    "count": 4
+  },
+  "primary_input": {
+    "item": "minecraft:amethyst_shard"
+  },
+  "inputs": [
+    {
+      "item": "minecraft:sculk_catalyst"
+    },
+    {
+      "item": "minecraft:sculk"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "minecraft:sculk"
+    },
+    {
+      "item": "minecraft:ender_eye"
+    },
+    {
+      "item": "minecraft:sculk"
+    },
+    {
+      "item": "affinity:inert_wisp_matter"
+    },
+    {
+      "item": "minecraft:sculk"
+    }
+  ]
+}

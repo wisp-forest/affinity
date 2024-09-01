@@ -49,6 +49,8 @@ public class BanishedStatusEffect extends AffinityStatusEffect {
             var entity = outerEntity;
 
             var component = entity.getComponent(AffinityComponents.BANISHMENT);
+            if (component.dimension == null || component.pos == null) return;
+
             var world = server.getWorld(RegistryKey.of(RegistryKeys.WORLD, component.dimension));
 
             spawnCloud(entity);

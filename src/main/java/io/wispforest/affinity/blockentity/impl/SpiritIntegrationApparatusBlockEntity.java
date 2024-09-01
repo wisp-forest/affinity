@@ -44,12 +44,10 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     public static final Vec3d PARTICLE_OFFSET = new Vec3d(.5, .85, .5);
     private static final DamageTypeKey DAMAGE_TYPE = new DamageTypeKey(Affinity.id("ritual_sacrifice"));
 
-    @Nullable
-    private SpiritAssimilationRecipe cachedRecipe = null;
-    @Nullable
-    private SpiritIntegrationApparatusBlock.ApparatusSet neighborPositions = null;
-    @Nullable
-    private SpiritIntegrationApparatusBlockEntity[] cachedNeighbors = null;
+    @Nullable private SpiritAssimilationRecipe cachedRecipe = null;
+    @Nullable private ItemStack cachedResult = null;
+    @Nullable private SpiritIntegrationApparatusBlock.ApparatusSet neighborPositions = null;
+    @Nullable private SpiritIntegrationApparatusBlockEntity[] cachedNeighbors = null;
 
     public final RitualLock<SpiritIntegrationApparatusBlockEntity> ritualLock = new RitualLock<>();
 
@@ -92,6 +90,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
 
         if (recipeOptional.isEmpty()) return false;
         this.cachedRecipe = recipeOptional.get();
+        this.cachedResult = this.cachedRecipe.craft(inventory, this.world.getRegistryManager());
 
         setup.configureLength(this.cachedRecipe.duration);
         this.ritualLock.acquire(this);
@@ -170,7 +169,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
     protected boolean onRitualCompleted() {
         final var pos = Vec3d.ofCenter(this.ritualCenterPos(), 2.5);
 
-        var item = new ItemEntity(this.world, pos.x, pos.y - .25, pos.z, this.cachedRecipe.getOutput(null));
+        var item = new ItemEntity(this.world, pos.x, pos.y - .25, pos.z, this.cachedResult);
         item.setVelocity(
                 this.world.random.nextTriangular(0.0, 0.115),
                 this.world.random.nextTriangular(0.2, 0.115),
@@ -184,6 +183,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
         this.ritualLock.release();
 
         this.cachedRecipe = null;
+        this.cachedResult = null;
         this.cachedNeighbors = null;
         this.neighborPositions = null;
 

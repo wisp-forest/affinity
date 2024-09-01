@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:dropper",
+    "minecraft:dispenser",
+    "minecraft:observer",
+    "#c:wooden_barrels"
+  ]
+}

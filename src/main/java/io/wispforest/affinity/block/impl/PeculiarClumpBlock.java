@@ -39,7 +39,7 @@ public class PeculiarClumpBlock extends Block {
         final var validDirection = getValidDirection(pos);
         WAS_MINED_CORRECTLY.put(pos, side == validDirection);
 
-        if (player instanceof ServerPlayerEntity serverPlayer) {
+        if (player instanceof ServerPlayerEntity serverPlayer && serverPlayer.canHarvest(state)) {
             AffinityCriteria.MINED_PECULIAR_CLUMP.trigger(serverPlayer, side == validDirection);
         }
 

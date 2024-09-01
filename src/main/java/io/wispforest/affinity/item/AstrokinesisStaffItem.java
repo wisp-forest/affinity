@@ -22,6 +22,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -41,6 +42,10 @@ public class AstrokinesisStaffItem extends KinesisStaffItem {
     public static final TagKey<DimensionType> WHITELISTED_DIMENSIONS = TagKey.of(RegistryKeys.DIMENSION_TYPE, Affinity.id("astrokinesis_staff_whitelist"));
     public static final KeyedEndec<Boolean> PERFORMING_ASTROKINESIS = Endec.BOOLEAN.keyed("PerformingAstrokinesis", false);
     public static final AffinityEntityAddon.DataKey<Float> ASTEROID_ORIGIN = AffinityEntityAddon.DataKey.withNullDefault();
+
+    public AstrokinesisStaffItem() {
+        super(AffinityItems.settings().maxCount(1).rarity(Rarity.RARE));
+    }
 
     @Override
     protected TypedActionResult<ItemStack> executeSpell(World world, PlayerEntity player, ItemStack stack, int remainingTicks, @Nullable BlockPos clickedBlock) {

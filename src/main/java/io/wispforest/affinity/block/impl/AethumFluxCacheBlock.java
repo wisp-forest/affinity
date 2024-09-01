@@ -33,6 +33,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static io.wispforest.affinity.object.AffinityBlocks.AETHUM_FLUX_CACHE;
@@ -119,6 +120,18 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock implements Bl
         return getUpdateState(above, below);
     }
 
+    @Override
+    public boolean hasComparatorOutput(BlockState state) {
+        return state.get(PART) == Part.BOTTOM || state.get(PART) == Part.STANDALONE;
+    }
+
+    @Override
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        if (!(world.getBlockEntity(pos) instanceof AethumFluxCacheBlockEntity cache)) return 0;
+
+        return (int) ((cache.displayFlux() / (float) cache.displayFluxCapacity()) * 15);
+    }
+
     private BlockState getUpdateState(BlockState above, BlockState below) {
         if (!above.isOf(AETHUM_FLUX_CACHE) && !below.isOf(AETHUM_FLUX_CACHE)) {
             return this.getDefaultState();
@@ -173,7 +186,7 @@ public class AethumFluxCacheBlock extends AethumNetworkMemberBlock implements Bl
 
         @Override
         public String asString() {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
 }

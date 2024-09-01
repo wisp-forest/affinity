@@ -69,12 +69,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block GRAVITON_TRANSDUCER = new GravitonTransducerBlock();
     public static final Block ETHEREAL_AETHUM_FLUX_NODE = new EtherealAethumFluxNodeBlock();
     public static final Block ETHEREAL_AETHUM_FLUX_INJECTOR = new EtherealAethumFluxInjectorBlock();
+    public static final Block LOCAL_DISPLACEMENT_GATEWAY = new LocalDisplacementGatewayBlock();
     public static final Block INFUSED_STONE = new Block(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS));
 
     public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
 
     @NoBlockItem
-
     public static final Block RANTHRACITE_WIRE = new RanthraciteWireBlock();
 
     public static final Block PECULIAR_CLUMP = new PeculiarClumpBlock();
@@ -96,6 +96,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AZALEA_TRAPDOOR = new TrapdoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR), AZALEA_BLOCK_SET_TYPE);
     public static final Block AZALEA_PRESSURE_PLATE = new PressurePlateBlock(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE), AZALEA_BLOCK_SET_TYPE);
     public static final Block AZALEA_BUTTON = new ButtonBlock(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON), AZALEA_BLOCK_SET_TYPE, 30, true);
+    public static final Block AZALEA_CHEST = new AzaleaChestBlock(FabricBlockSettings.copyOf(Blocks.CHEST), () -> Entities.AZALEA_CHEST);
 
     @NoBlockItem public static final Block AZALEA_SIGN = new SignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_WOOD_TYPE);
     @NoBlockItem public static final Block AZALEA_HANGING_SIGN = new HangingSignBlock(FabricBlockSettings.copyOf(Blocks.OAK_SIGN), AZALEA_WOOD_TYPE);
@@ -204,6 +205,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<EtherealAethumFluxInjectorBlockEntity> ETHEREAL_AETHUM_FLUX_INJECTOR =
                 make(EtherealAethumFluxInjectorBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_INJECTOR);
+
+        public static final BlockEntityType<LocalDisplacementGatewayBlockEntity> LOCAL_DISPLACEMENT_GATEWAY =
+                make(LocalDisplacementGatewayBlockEntity::new, AffinityBlocks.LOCAL_DISPLACEMENT_GATEWAY);
+
+        public static final BlockEntityType<AzaleaChestBlockEntity> AZALEA_CHEST =
+                make(AzaleaChestBlockEntity::new, AffinityBlocks.AZALEA_CHEST);
 
         @Override
         public void afterFieldProcessing() {
