@@ -180,7 +180,7 @@ public class NimbleStaffItem extends StaffItem {
     }
 
     private static Direction getDirection(ItemStack stack) {
-        return stack.get(DIRECTION);
+        return stack.getOrDefault(DIRECTION, Direction.NORTH);
     }
 
     public static @Nullable BlockHitResult findFlingTarget(PlayerEntity player) {
