@@ -275,7 +275,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     private void sendToNode(ItemTransferNodeBlockEntity targetNode, ItemStack stack, int insertCount) {
         var transferTime = Math.max(15, (int) Math.round(Math.sqrt(targetNode.pos.getSquaredDistance(this.pos))) * 5);
         AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, particleOrigin(this), new AffinityParticleSystems.DissolveData(
-                stack, particleOrigin(targetNode), 10, transferTime
+                stack.copy(), particleOrigin(targetNode), 10, transferTime
         ));
 
         targetNode.insertItem(this, stack.copyWithCount(insertCount), transferTime + 10);
