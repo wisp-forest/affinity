@@ -7,6 +7,7 @@ import io.wispforest.affinity.enchantment.*;
 import io.wispforest.affinity.entity.EmancipatedBlockEntity;
 import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.item.EchoShardExtension;
+import io.wispforest.affinity.misc.AffinityCommands;
 import io.wispforest.affinity.misc.AffinityDebugCommands;
 import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
 import io.wispforest.affinity.misc.InquiryQuestions;
@@ -126,6 +127,8 @@ public class Affinity implements ModInitializer {
                             .build()))
                 ));
         });
+
+        AffinityCommands.register();
 
         if (!Owo.DEBUG) return;
         AffinityDebugCommands.register();
