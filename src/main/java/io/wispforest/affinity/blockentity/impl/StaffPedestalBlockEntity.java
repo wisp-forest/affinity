@@ -140,7 +140,8 @@ public class StaffPedestalBlockEntity extends AethumNetworkMemberBlockEntity imp
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
-        this.item = nbt.get(ITEM_KEY);
+        var ctx = SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries));
+        this.item = nbt.get(ctx, ITEM_KEY);
     }
 
     @Override
