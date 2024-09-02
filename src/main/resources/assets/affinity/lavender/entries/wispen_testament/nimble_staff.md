@@ -35,11 +35,11 @@ at the {item}Staff Pedestal{} in use.
 
 
 To tune this direction with more fidelity (and unlock the vertical axis), deposit a {item}bound Echo Shard{} into a
-container at the pedestal's base. To bind an {item}Echo Shard{}, simply use it on a block to
+container at the pedestal's base. To bind an {item}Echo Shard{}, simply sneak-use it on a
 
 ;;;;;
 
-remember its location. Thus configured, the {item}Nimble Staff{} will instead direct entities towards the {item}Echo
-Shard{}'s bound location.
+block to remember its location. Thus configured, the {item}Nimble Staff{} will instead direct entities towards the
+{item}Echo Shard{}'s bound location.
 
 @entry-end
