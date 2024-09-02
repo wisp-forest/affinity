@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "bottom": "affinity:block/azalea_planks",
-    "side": "affinity:block/azalea_planks",
-    "top": "affinity:block/azalea_planks"
-  }
-}

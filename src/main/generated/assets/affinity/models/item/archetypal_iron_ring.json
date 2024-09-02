@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "affinity:item/archetypal_iron_ring"
-  }
-}

@@ -14,10 +14,9 @@ import net.minecraft.util.ActionResult;
 import java.util.Collection;
 import java.util.List;
 
-@SuppressWarnings("UnstableApiUsage")
 public class AethumFluxBottleItem extends Item implements DirectInteractionHandler {
 
-    private final List<Block> INTERACTION_OVERRIDES = List.of(Blocks.FLOWERING_AZALEA_LEAVES);
+    private static final List<Block> INTERACTION_OVERRIDES = List.of(Blocks.FLOWERING_AZALEA_LEAVES);
 
     public AethumFluxBottleItem() {
         super(AffinityItems.settings().maxCount(7));
