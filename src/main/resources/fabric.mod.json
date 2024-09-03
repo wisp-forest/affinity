@@ -60,9 +60,9 @@
   "depends": {
     "fabricloader": ">=0.15.0",
     "fabric-api": "*",
-    "minecraft": ">=1.20.4",
+    "minecraft": ">=1.21",
     "trinkets": "*",
-    "owo": ">=0.12.11+1.21",
+    "owo": ">=0.12.12+1.21",
     "terrablender": "*",
     "cardinal-components-entity": "*",
     "cardinal-components-chunk": "*",
