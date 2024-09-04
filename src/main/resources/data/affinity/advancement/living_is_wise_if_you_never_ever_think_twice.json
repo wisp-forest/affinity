@@ -21,11 +21,18 @@
       "conditions": {
         "items": [
           {
-            "enchantments": [
-              {
-                "enchantment": "affinity:curse_of_health"
-              }
-            ]
+            "predicates": {
+              "minecraft:enchantments": [
+                {
+                  "enchantments": [
+                    "affinity:curse_of_health"
+                  ],
+                  "levels": {
+                    "min": 1
+                  }
+                }
+              ]
+            }
           }
         ]
       }

@@ -27,11 +27,18 @@
               "type": "minecraft:player",
               "equipment": {
                 "head": {
-                  "enchantments": [
-                    {
-                      "enchantment": "affinity:curse_of_illiteracy"
-                    }
-                  ]
+                  "predicates": {
+                    "minecraft:enchantments": [
+                      {
+                        "enchantments": [
+                          "affinity:curse_of_illiteracy"
+                        ],
+                        "levels": {
+                          "min": 1
+                        }
+                      }
+                    ]
+                  }
                 }
               }
             }

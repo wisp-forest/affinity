@@ -22,10 +22,9 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "affinity:long_flight"
+            "predicates": {
+              "minecraft:potion_contents": "affinity:long_flight"
+            }
           }
         ]
       }
