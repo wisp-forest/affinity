@@ -40,10 +40,15 @@ public class NimbleStaffHud {
                 if (!MinecraftClient.getInstance().player.isHolding(AffinityItems.NIMBLE_STAFF) && MathHelper.approximatelyEquals(this.opacity, 0)) return;
                 this.opacity += Delta.compute(this.opacity, NimbleStaffItem.findFlingTarget(MinecraftClient.getInstance().player) != null ? 1 : 0, delta * 1.25f);
 
+                RenderSystem.enableBlend();
+                RenderSystem.defaultBlendFunc();
+
                 var color = RenderSystem.getShaderColor().clone();
                 RenderSystem.setShaderColor(1f, 1f, 1f, this.opacity);
                 context.drawGuiTexture(TEXTURE_ID, this.x, this.y, 3, 19);
                 RenderSystem.setShaderColor(color[0], color[1], color[2], color[3]);
+
+                RenderSystem.disableBlend();
             }
         }.positioning(Positioning.relative(50, 50)));
     }
