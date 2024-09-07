@@ -3,6 +3,8 @@
     "values": [
         "#minecraft:beds",
         "#c:relocation_not_supported",
-        "affinity:mangrove_basket"
+        "affinity:mangrove_basket",
+        "minecraft:trial_spawner",
+        "minecraft:vault"
     ]
 }
