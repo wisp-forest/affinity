@@ -6,10 +6,8 @@ import io.wispforest.affinity.block.template.BlockItemProvider;
 import io.wispforest.affinity.blockentity.impl.*;
 import io.wispforest.affinity.misc.ArcaneFadeFluid;
 import io.wispforest.affinity.object.rituals.AffinityRitualSocleTypes;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.registration.reflect.AutoRegistryContainer;
 import io.wispforest.owo.registration.reflect.BlockRegistryContainer;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.type.BlockSetTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.type.WoodTypeBuilder;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
@@ -63,6 +61,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block AETHUM_PROBE = new AethumProbeBlock();
     public static final Block FIELD_COHERENCE_MODULATOR = new FieldCoherenceModulatorBlock();
     public static final Block HOLOGRAPHIC_STEREOPTICON = new HolographicStereopticonBlock();
+    public static final Block VILLAGER_ARMATURE = new VillagerArmatureBlock(AbstractBlock.Settings.copy(STAFF_PEDESTAL));
     public static final Block EMERALD_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.EMERALD_BLOCK));
     public static final Block VOID_BEACON = new VoidBeaconBlock();
     public static final Block GRAVITON_TRANSDUCER = new GravitonTransducerBlock();
@@ -118,98 +117,101 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static class Entities implements AutoRegistryContainer<BlockEntityType<?>> {
 
         public static final BlockEntityType<BrewingCauldronBlockEntity> BREWING_CAULDRON =
-                make(BrewingCauldronBlockEntity::new, AffinityBlocks.BREWING_CAULDRON);
+            make(BrewingCauldronBlockEntity::new, AffinityBlocks.BREWING_CAULDRON);
 
         public static final BlockEntityType<AethumFluxNodeBlockEntity> AETHUM_FLUX_NODE =
-                make(AethumFluxNodeBlockEntity::new,
-                        AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_NODE,
-                        AffinityBlocks.STONE_BANDED_AETHUM_FLUX_NODE);
+            make(AethumFluxNodeBlockEntity::new,
+                AffinityBlocks.COPPER_PLATED_AETHUM_FLUX_NODE,
+                AffinityBlocks.STONE_BANDED_AETHUM_FLUX_NODE);
 
         public static final BlockEntityType<AethumFluxCacheBlockEntity> AETHUM_FLUX_CACHE =
-                make(AethumFluxCacheBlockEntity::new, AffinityBlocks.AETHUM_FLUX_CACHE);
+            make(AethumFluxCacheBlockEntity::new, AffinityBlocks.AETHUM_FLUX_CACHE);
 
         public static final BlockEntityType<CreativeAethumFluxCacheBlockEntity> CREATIVE_AETHUM_FLUX_CACHE =
-                make(CreativeAethumFluxCacheBlockEntity::new, AffinityBlocks.CREATIVE_AETHUM_FLUX_CACHE);
+            make(CreativeAethumFluxCacheBlockEntity::new, AffinityBlocks.CREATIVE_AETHUM_FLUX_CACHE);
 
         public static final BlockEntityType<RitualSocleBlockEntity> RITUAL_SOCLE =
-                make(RitualSocleBlockEntity::new,
-                        AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE,
-                        AffinityBlocks.REFINED_RITUAL_SOCLE,
-                        AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
+            make(RitualSocleBlockEntity::new,
+                AffinityBlocks.RUDIMENTARY_RITUAL_SOCLE,
+                AffinityBlocks.REFINED_RITUAL_SOCLE,
+                AffinityBlocks.SOPHISTICATED_RITUAL_SOCLE);
 
         public static final BlockEntityType<BlankRitualSocleBlockEntity> BLANK_RITUAL_SOCLE =
-                make(BlankRitualSocleBlockEntity::new, AffinityBlocks.BLANK_RITUAL_SOCLE);
+            make(BlankRitualSocleBlockEntity::new, AffinityBlocks.BLANK_RITUAL_SOCLE);
 
         public static final BlockEntityType<AspRiteCoreBlockEntity> ASP_RITE_CORE =
-                make(AspRiteCoreBlockEntity::new, AffinityBlocks.ASP_RITE_CORE);
+            make(AspRiteCoreBlockEntity::new, AffinityBlocks.ASP_RITE_CORE);
         public static final BlockEntityType<SpiritIntegrationApparatusBlockEntity> SPIRIT_INTEGRATION_APPARATUS =
-                make(SpiritIntegrationApparatusBlockEntity::new, AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS);
+            make(SpiritIntegrationApparatusBlockEntity::new, AffinityBlocks.SPIRIT_INTEGRATION_APPARATUS);
 
         public static final BlockEntityType<AffineInfuserBlockEntity> AFFINE_INFUSER =
-                make(AffineInfuserBlockEntity::new, AffinityBlocks.AFFINE_INFUSER);
+            make(AffineInfuserBlockEntity::new, AffinityBlocks.AFFINE_INFUSER);
 
         public static final BlockEntityType<SundialBlockEntity> SUNDIAL =
-                make(SundialBlockEntity::new, AffinityBlocks.SUNDIAL);
+            make(SundialBlockEntity::new, AffinityBlocks.SUNDIAL);
 
         public static final BlockEntityType<ArborealAnnihilationApparatusBlockEntity> ARBOREAL_ANNIHILATION_APPARATUS =
-                make(ArborealAnnihilationApparatusBlockEntity::new, AffinityBlocks.ARBOREAL_ANNIHILATION_APPARATUS);
+            make(ArborealAnnihilationApparatusBlockEntity::new, AffinityBlocks.ARBOREAL_ANNIHILATION_APPARATUS);
 
         public static final BlockEntityType<CropReaperBlockEntity> CROP_REAPER =
-                make(CropReaperBlockEntity::new, AffinityBlocks.CROP_REAPER);
+            make(CropReaperBlockEntity::new, AffinityBlocks.CROP_REAPER);
 
         public static final BlockEntityType<AffineCandleBlockEntity> AFFINE_CANDLE =
-                make(AffineCandleBlockEntity::new, AffinityBlocks.AFFINE_CANDLE);
+            make(AffineCandleBlockEntity::new, AffinityBlocks.AFFINE_CANDLE);
 
         public static final BlockEntityType<WorldPinBlockEntity> WORLD_PIN =
-                make(WorldPinBlockEntity::new, AffinityBlocks.WORLD_PIN);
+            make(WorldPinBlockEntity::new, AffinityBlocks.WORLD_PIN);
 
         public static final BlockEntityType<SunshineMonolithBlockEntity> SUNSHINE_MONOLITH =
-                make(SunshineMonolithBlockEntity::new, AffinityBlocks.SUNSHINE_MONOLITH);
+            make(SunshineMonolithBlockEntity::new, AffinityBlocks.SUNSHINE_MONOLITH);
 
         public static final BlockEntityType<AssemblyAugmentBlockEntity> ASSEMBLY_AUGMENT =
-                make(AssemblyAugmentBlockEntity::new, AffinityBlocks.ASSEMBLY_AUGMENT);
+            make(AssemblyAugmentBlockEntity::new, AffinityBlocks.ASSEMBLY_AUGMENT);
 
         public static final BlockEntityType<MangroveBasketBlockEntity> MANGROVE_BASKET =
-                make(MangroveBasketBlockEntity::new, AffinityBlocks.MANGROVE_BASKET);
+            make(MangroveBasketBlockEntity::new, AffinityBlocks.MANGROVE_BASKET);
 
         public static final BlockEntityType<StaffPedestalBlockEntity> STAFF_PEDESTAL =
-                make(StaffPedestalBlockEntity::new, AffinityBlocks.STAFF_PEDESTAL);
+            make(StaffPedestalBlockEntity::new, AffinityBlocks.STAFF_PEDESTAL);
 
         public static final BlockEntityType<ItemTransferNodeBlockEntity> ITEM_TRANSFER_NODE =
-                make(ItemTransferNodeBlockEntity::new, AffinityBlocks.ITEM_TRANSFER_NODE);
+            make(ItemTransferNodeBlockEntity::new, AffinityBlocks.ITEM_TRANSFER_NODE);
 
         public static final BlockEntityType<AethumProbeBlockEntity> AETHUM_PROBE =
-                make(AethumProbeBlockEntity::new, AffinityBlocks.AETHUM_PROBE);
+            make(AethumProbeBlockEntity::new, AffinityBlocks.AETHUM_PROBE);
 
         public static final BlockEntityType<OuijaBoardBlockEntity> OUIJA_BOARD =
-                make(OuijaBoardBlockEntity::new, AffinityBlocks.OUIJA_BOARD);
+            make(OuijaBoardBlockEntity::new, AffinityBlocks.OUIJA_BOARD);
 
         public static final BlockEntityType<MatterHarvestingHearthBlockEntity> MATTER_HARVESTING_HEARTH =
-                make(MatterHarvestingHearthBlockEntity::new, AffinityBlocks.MATTER_HARVESTING_HEARTH);
+            make(MatterHarvestingHearthBlockEntity::new, AffinityBlocks.MATTER_HARVESTING_HEARTH);
 
         public static final BlockEntityType<VoidBeaconBlockEntity> VOID_BEACON =
-                make(VoidBeaconBlockEntity::new, AffinityBlocks.VOID_BEACON);
+            make(VoidBeaconBlockEntity::new, AffinityBlocks.VOID_BEACON);
 
         public static final BlockEntityType<FieldCoherenceModulatorBlockEntity> FIELD_COHERENCE_MODULATOR =
-                make(FieldCoherenceModulatorBlockEntity::new, AffinityBlocks.FIELD_COHERENCE_MODULATOR);
+            make(FieldCoherenceModulatorBlockEntity::new, AffinityBlocks.FIELD_COHERENCE_MODULATOR);
 
         public static final BlockEntityType<HolographicStereopticonBlockEntity> HOLOGRAPHIC_STEREOPTICON =
-                make(HolographicStereopticonBlockEntity::new, AffinityBlocks.HOLOGRAPHIC_STEREOPTICON);
+            make(HolographicStereopticonBlockEntity::new, AffinityBlocks.HOLOGRAPHIC_STEREOPTICON);
 
         public static final BlockEntityType<GravitonTransducerBlockEntity> GRAVITON_TRANSDUCER =
-                make(GravitonTransducerBlockEntity::new, AffinityBlocks.GRAVITON_TRANSDUCER);
+            make(GravitonTransducerBlockEntity::new, AffinityBlocks.GRAVITON_TRANSDUCER);
 
         public static final BlockEntityType<EtherealAethumFluxNodeBlockEntity> ETHEREAL_AETHUM_FLUX_NODE =
-                make(EtherealAethumFluxNodeBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_NODE);
+            make(EtherealAethumFluxNodeBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_NODE);
 
         public static final BlockEntityType<EtherealAethumFluxInjectorBlockEntity> ETHEREAL_AETHUM_FLUX_INJECTOR =
-                make(EtherealAethumFluxInjectorBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_INJECTOR);
+            make(EtherealAethumFluxInjectorBlockEntity::new, AffinityBlocks.ETHEREAL_AETHUM_FLUX_INJECTOR);
 
         public static final BlockEntityType<LocalDisplacementGatewayBlockEntity> LOCAL_DISPLACEMENT_GATEWAY =
-                make(LocalDisplacementGatewayBlockEntity::new, AffinityBlocks.LOCAL_DISPLACEMENT_GATEWAY);
+            make(LocalDisplacementGatewayBlockEntity::new, AffinityBlocks.LOCAL_DISPLACEMENT_GATEWAY);
 
         public static final BlockEntityType<AzaleaChestBlockEntity> AZALEA_CHEST =
-                make(AzaleaChestBlockEntity::new, AffinityBlocks.AZALEA_CHEST);
+            make(AzaleaChestBlockEntity::new, AffinityBlocks.AZALEA_CHEST);
+
+        public static final BlockEntityType<VillagerArmatureBlockEntity> VILLAGER_ARMATURE =
+            make(VillagerArmatureBlockEntity::new, AffinityBlocks.VILLAGER_ARMATURE);
 
         @Override
         public void afterFieldProcessing() {
@@ -233,6 +235,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
             Affinity.AETHUM_MEMBER.registerSelf(FIELD_COHERENCE_MODULATOR);
             Affinity.AETHUM_MEMBER.registerSelf(GRAVITON_TRANSDUCER);
             Affinity.AETHUM_MEMBER.registerSelf(ETHEREAL_AETHUM_FLUX_NODE);
+            Affinity.AETHUM_MEMBER.registerSelf(VILLAGER_ARMATURE);
         }
 
         @Override
@@ -271,12 +274,12 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public void postProcessField(String namespace, Block value, String identifier, Field field) {
         if (field.isAnnotationPresent(NoBlockItem.class)) return;
 
-        BiFunction<Block, OwoItemSettings, Item> factory = value instanceof BlockItemProvider provider
-                ? provider::createBlockItem
-                : BlockItem::new;
+        BiFunction<Block, Item.Settings, Item> factory = value instanceof BlockItemProvider provider
+            ? provider::createBlockItem
+            : BlockItem::new;
 
         Registry.register(Registries.ITEM, Identifier.of(namespace, identifier),
-                factory.apply(value, new OwoItemSettings()));
+            factory.apply(value, new Item.Settings()));
     }
 
     @Retention(RetentionPolicy.RUNTIME)

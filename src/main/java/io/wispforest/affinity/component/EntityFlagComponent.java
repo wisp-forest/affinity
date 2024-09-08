@@ -12,6 +12,7 @@ public class EntityFlagComponent implements Component, AutoSyncedComponent {
     public static final int ITEM_GLOW                          = 0b00000010;
     public static final int SHOT_BY_AZALEA_BOW                 = 0b00000100;
     public static final int SPAWNED_BY_BREWING_CAULDRON        = 0b00001000;
+    public static final int VILLAGER_HAS_NO_ARMS               = 0b00010000;
     // @formatter:on
 
     private int flags = 0;

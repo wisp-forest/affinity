@@ -78,6 +78,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item REALIZED_AETHUM_MAP = new RealizedAethumMapItem();
     public static final Item UNCANNY_ROD = new Item(settings().maxCount(16));
     public static final Item STAFF_PROTOTYPE = new Item(settings().maxCount(7));
+    public static final Item VILLAGER_ARMS = new VillagerArmsItem(settings().maxCount(3));
 
     public static final Item AZALEA_SIGN = new SignItem(settings().maxCount(16), AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN);
     public static final Item AZALEA_HANGING_SIGN = new HangingSignItem(AffinityBlocks.AZALEA_HANGING_SIGN, AffinityBlocks.AZALEA_WALL_HANGING_SIGN, settings().maxCount(16));

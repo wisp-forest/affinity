@@ -145,7 +145,6 @@ public class MatterHarvestingHearthBlockEntity extends AethumNetworkMemberBlockE
     }
 
     static {
-        //noinspection UnstableApiUsage
         ItemStorage.SIDED.registerForBlockEntity((hearth, direction) -> hearth.storageProvider, AffinityBlocks.Entities.MATTER_HARVESTING_HEARTH);
     }
 }

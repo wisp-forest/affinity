@@ -3,7 +3,6 @@ package io.wispforest.affinity.item;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.blockentity.impl.MangroveBasketBlockEntity;
 import io.wispforest.affinity.misc.callback.BeforeMangroveBasketCaptureCallback;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.DataComponentTypes;
@@ -22,7 +21,7 @@ import java.util.List;
 public class MangroveBasketItem extends BlockItem {
     public static final TagKey<Block> MANGROVE_BASKET_BLACKLIST = TagKey.of(RegistryKeys.BLOCK, Affinity.id("mangrove_basket_blacklist"));
 
-    public MangroveBasketItem(Block block, OwoItemSettings settings) {
+    public MangroveBasketItem(Block block, Item.Settings settings) {
         super(block, settings);
     }
 

@@ -320,6 +320,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ETHEREAL_AETHUM_FLUX_NODE, EtherealAethumFluxNodeBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.LOCAL_DISPLACEMENT_GATEWAY, LocalDisplacementGatewayBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.AZALEA_CHEST, ChestBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.VILLAGER_ARMATURE, VillagerArmatureBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {

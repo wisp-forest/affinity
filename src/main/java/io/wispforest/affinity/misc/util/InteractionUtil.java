@@ -12,6 +12,7 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -19,6 +20,7 @@ import java.util.function.Supplier;
 
 public class InteractionUtil {
 
+    @Nullable
     public static EntityHitResult raycastEntities(Entity entity, float tickDelta, double reach, double margin, Predicate<Entity> predicate) {
         var maxReach = entity.getRotationVec(tickDelta).multiply(reach);
 

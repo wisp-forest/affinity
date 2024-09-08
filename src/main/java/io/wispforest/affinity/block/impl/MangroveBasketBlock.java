@@ -6,11 +6,9 @@ import io.wispforest.affinity.blockentity.impl.MangroveBasketBlockEntity;
 import io.wispforest.affinity.item.MangroveBasketItem;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +19,6 @@ import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -106,7 +103,7 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
     }
 
     @Override
-    public Item createBlockItem(Block block, OwoItemSettings settings) {
+    public Item createBlockItem(Block block, Item.Settings settings) {
         return new MangroveBasketItem(block, settings);
     }
 

@@ -143,6 +143,7 @@
   "block.affinity.ethereal_aethum_flux_node.tooltip.owned_by_someone_else": "Owned by someone else",
   "block.affinity.ethereal_aethum_flux_injector": "Ethereal Aethum Flux Injector",
   "block.affinity.local_displacement_gateway": "Local Displacement Gateway",
+  "block.affinity.villager_armature": "Villager Armature",
 
   "block.affinity.spirit_integration_apparatus": "Spirit Integration Apparatus",
   "block.affinity.spirit_integration_apparatus.tooltip.complete": "Complete",
@@ -370,6 +371,7 @@
   "item.affinity.greatly_attuned_amethyst_shard": "Greatly Attuned Amethyst Shard",
   "item.affinity.sculk_resonant_ethereal_amethyst_shard": "Sculk-Resonant Ethereal Amethyst Shard",
   "item.affinity.void_resonant_ethereal_amethyst_shard": "Void-Resonant Ethereal Amethyst Shard",
+  "item.affinity.villager_arms": "Villager Arms",
 
   "item.affinity.anthracite_powder": "Anthracite Powder",
   "item.affinity.carbon_copy.empty": "Carbon Copy of ... Nothing?",

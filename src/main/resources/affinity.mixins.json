@@ -71,13 +71,15 @@
     "access.MobSpawnerLogicAccessor",
     "access.OverworldBiomeCreatorInvoker",
     "access.ServerChunkManagerAccessor",
+    "access.ServerPlayerInteractionManagerAccessor",
     "access.ShapedRecipeAccessor",
     "access.ShapelessRecipeAccessor",
     "access.SlotAccessor",
     "access.StatusEffectInstanceAccessor",
     "access.StructureFeatureAccessor",
     "access.WorldAccessor",
-    "client.LivingEntityRendererMixin"
+    "client.LivingEntityRendererMixin",
+    "client.VillagerHeldItemFeatureRendererMixin"
   ],
   "client": [
     "BeaconBlockEntityMixin",
@@ -118,6 +120,7 @@
     "client.RenderLayersMixin",
     "client.StyleMixin",
     "client.TexturedRenderLayersMixin",
+    "client.VillagerEntityRendererMixin",
     "client.WorldRendererAccessor",
     "client.WorldRendererMixin",
     "client.iris.HorizonRendererMixin",

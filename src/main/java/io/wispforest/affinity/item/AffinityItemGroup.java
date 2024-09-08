@@ -128,6 +128,7 @@ public class AffinityItemGroup {
             entries.add(ITEM_TRANSFER_NODE);
             entries.add(WORLD_PIN);
             entries.add(LOCAL_DISPLACEMENT_GATEWAY);
+            entries.add(VILLAGER_ARMATURE);
             entries.add(Items.AMETHYST_SHARD);
             entries.add(MILDLY_ATTUNED_AMETHYST_SHARD);
             entries.add(FAIRLY_ATTUNED_AMETHYST_SHARD);

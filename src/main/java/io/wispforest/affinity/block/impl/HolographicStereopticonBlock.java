@@ -8,7 +8,6 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.item.HolographicStereopticonBlockItem;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -94,7 +93,7 @@ public class HolographicStereopticonBlock extends BlockWithEntity implements Blo
     }
 
     @Override
-    public Item createBlockItem(Block block, OwoItemSettings settings) {
+    public Item createBlockItem(Block block, Item.Settings settings) {
         return new HolographicStereopticonBlockItem(block, settings);
     }
 

@@ -7,7 +7,6 @@ import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.item.DirectInteractionHandler;
 import io.wispforest.affinity.misc.screenhandler.AssemblyAugmentScreenHandler;
 import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
 import io.wispforest.owo.particles.ClientParticles;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,7 +27,6 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -129,7 +127,7 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
     }
 
     @Override
-    public Item createBlockItem(Block block, OwoItemSettings settings) {
+    public Item createBlockItem(Block block, Item.Settings settings) {
         return new AssemblyAugmentItem(block, settings);
     }
 
