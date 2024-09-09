@@ -1,0 +1,85 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.21/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+<!--                <flow-layout direction="vertical" id="stats-tooltip">-->
+<!--                    <children>-->
+<!--                        <label>-->
+<!--                            <text translate="true">gui.affinity.flux_network_visualizer.network_statistics</text>-->
+<!--                            <shadow>true</shadow>-->
+
+<!--                            <margins>-->
+<!--                                <bottom>4</bottom>-->
+<!--                            </margins>-->
+<!--                        </label>-->
+
+<!--                        <label id="member-count-label">-->
+<!--                            <color>gray</color>-->
+<!--                        </label>-->
+<!--                        <label id="node-count-label">-->
+<!--                            <color>gray</color>-->
+<!--                        </label>-->
+<!--                        <label id="flux-capacity-label">-->
+<!--                            <color>gray</color>-->
+<!--                        </label>-->
+<!--                        <label id="total-flux-label">-->
+<!--                            <color>gray</color>-->
+<!--                        </label>-->
+<!--                    </children>-->
+
+<!--                    <gap>3</gap>-->
+<!--                    <surface>-->
+<!--                        <tooltip/>-->
+<!--                    </surface>-->
+
+<!--                    <positioning type="relative">0,100</positioning>-->
+
+<!--                    <padding>-->
+<!--                        <all>6</all>-->
+<!--                    </padding>-->
+<!--                    <margins>-->
+<!--                        <left>25</left>-->
+<!--                        <bottom>25</bottom>-->
+<!--                    </margins>-->
+<!--                </flow-layout>-->
+
+                <flow-layout direction="vertical">
+                    <children>
+                        <label>
+                            <text translate="true">gui.affinity.flux_network_visualizer.rotate_hint</text>
+                        </label>
+                        <label>
+                            <text translate="true">gui.affinity.flux_network_visualizer.move_hint</text>
+                        </label>
+
+                        <label>
+                            <text translate="true">gui.affinity.flux_network_visualizer.reset_hint</text>
+
+                            <margins>
+                                <top>4</top>
+                            </margins>
+                        </label>
+
+                        <label>
+                            <text translate="true">gui.affinity.flux_network_visualizer.hover_hint</text>
+
+                            <margins>
+                                <top>4</top>
+                            </margins>
+                        </label>
+                    </children>
+
+                    <gap>3</gap>
+
+                    <positioning type="relative">100,100</positioning>
+
+                    <margins>
+                        <right>25</right>
+                        <bottom>25</bottom>
+                    </margins>
+                </flow-layout>
+            </children>
+        </flow-layout>
+    </components>
+</owo-ui>

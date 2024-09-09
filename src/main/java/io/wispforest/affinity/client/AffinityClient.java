@@ -90,7 +90,8 @@ public class AffinityClient implements ClientModInitializer {
             ctx.addModels(
                     Affinity.id("item/staff_bundle"),
                     Affinity.id("item/void_resonant_ethereal_amethyst_shard_overlay"),
-                    Affinity.id("item/void_resonant_ethereal_amethyst_shard_outline")
+                    Affinity.id("item/void_resonant_ethereal_amethyst_shard_outline"),
+                    Affinity.id("villager_armature_crosshair")
             );
         });
 

@@ -6,7 +6,9 @@ import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntit
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
+import io.wispforest.affinity.client.screen.VillagerArmatureScreen;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
+import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.mixin.access.ExperienceOrbEntityAccessor;
 import io.wispforest.affinity.mixin.access.LivingEntityAccessor;
@@ -15,12 +17,15 @@ import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.SerializationContext;
+import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.impl.KeyedEndec;
+import io.wispforest.endec.impl.StructEndecBuilder;
 import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ExperienceOrbEntity;
@@ -38,6 +43,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,6 +56,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
 
     private static final KeyedEndec<ItemStack> HELD_STACK = MinecraftEndecs.ITEM_STACK.keyed("held_stack", ItemStack.EMPTY);
     private static final KeyedEndec<Action> ACTION = Action.ENDEC.keyed("action", Action.USE);
+    private static final KeyedEndec<Vec2f> CLICK_POSITION = EndecUtil.VEC2F_ENDEC.keyed("click_position", new Vec2f(.5f, .5f));
 
     private final GameProfile playerProfile = new GameProfile(UUID.randomUUID(), "villager_armature");
 
@@ -57,8 +64,10 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     private final SingleStackStorageProvider storage = new SingleStackStorageProvider(this::heldStack, this::setHeldStack, this::markDirty);
 
     private Action action = Action.USE;
+    public Vec2f clickPosition = new Vec2f(.5f, .5f);
 
     private int time = 0;
+    private int lastActionTimestamp = 0;
     private BlockPos miningPos = BlockPos.ORIGIN;
 
     public VillagerArmatureBlockEntity(BlockPos pos, BlockState state) {
@@ -94,11 +103,11 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         if (!this.world.isReceivingRedstonePower(this.pos)) {
             if (this.action == Action.BREAK && this.miningPos != null) {
                 player.interactionManager.processBlockBreakingAction(
-                        this.miningPos,
-                        PlayerActionC2SPacket.Action.ABORT_DESTROY_BLOCK,
-                        this.getCachedState().get(VillagerArmatureBlock.FACING).getOpposite(),
-                        this.world.getHeight(),
-                        0
+                    this.miningPos,
+                    PlayerActionC2SPacket.Action.ABORT_DESTROY_BLOCK,
+                    this.getCachedState().get(VillagerArmatureBlock.FACING).getOpposite(),
+                    this.world.getHeight(),
+                    0
                 );
 
                 this.miningPos = null;
@@ -109,8 +118,9 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
 
         switch (this.action) {
             case USE -> {
-                if (this.time % 5 == 0 && this.useItem(player, false).isAccepted()) {
+                if (this.timeSinceLastAction() >= 5 && this.useItem(player, false).isAccepted()) {
                     this.punch();
+                    this.lastActionTimestamp = this.time;
                 }
             }
             case ATTACK -> {
@@ -119,11 +129,16 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
                 }
             }
             case BREAK -> {
-                if (this.breakBlock(player).isAccepted() && this.time % 4 == 0) {
+                if (this.breakBlock(player).isAccepted() && this.timeSinceLastAction() >= 4) {
                     this.punch();
+                    this.lastActionTimestamp = this.time;
                 }
             }
         }
+    }
+
+    private long timeSinceLastAction() {
+        return this.time - this.lastActionTimestamp;
     }
 
     @Override
@@ -149,6 +164,8 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
             return blockResult;
         }
 
+        // TODO use item on entity
+
         return ActionResult.PASS;
     }
 
@@ -161,20 +178,20 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         if (breakProgress < 0 || breakProgress >= 10 || !blockHit.getBlockPos().equals(this.miningPos)) {
             if (breakProgress >= 10 && miningPos != null) {
                 player.interactionManager.processBlockBreakingAction(
-                        this.miningPos,
-                        PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK,
-                        blockHit.getSide(),
-                        this.world.getHeight(),
-                        0
+                    this.miningPos,
+                    PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK,
+                    blockHit.getSide(),
+                    this.world.getHeight(),
+                    0
                 );
             }
 
             player.interactionManager.processBlockBreakingAction(
-                    blockHit.getBlockPos(),
-                    PlayerActionC2SPacket.Action.START_DESTROY_BLOCK,
-                    blockHit.getSide(),
-                    this.world.getHeight(),
-                    0
+                blockHit.getBlockPos(),
+                PlayerActionC2SPacket.Action.START_DESTROY_BLOCK,
+                blockHit.getSide(),
+                this.world.getHeight(),
+                0
             );
 
             this.miningPos = blockHit.getBlockPos();
@@ -188,8 +205,8 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         if (player.getAttackCooldownProgress(.5f) < .9f) return ActionResult.PASS;
 
         var entityResult = InteractionUtil.raycastEntities(
-                player, 1f, player.getEntityInteractionRange(), .5f,
-                entity -> entity.isAlive() && entity.isAttackable() && entity.timeUntilRegen <= 10
+            player, 1f, player.getEntityInteractionRange(), .5f,
+            entity -> entity.isAlive() && entity.isAttackable() && entity.timeUntilRegen <= 10
         );
         if (entityResult == null) return ActionResult.PASS;
 
@@ -203,7 +220,11 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         if (!(this.world instanceof ServerWorld serverWorld)) return null;
 
         var facing = this.getCachedState().get(VillagerArmatureBlock.FACING);
-        var playerPos = Vec3d.ofCenter(this.pos.down(), 0).add(facing.getOffsetX() * .5, 0, facing.getOffsetZ() * .5);
+        var playerPos = Vec3d.ofCenter(this.pos.down(), this.clickPosition.y - .6).add(
+            facing.getOffsetX() * .5 + facing.getOffsetZ() * (this.clickPosition.x - .5),
+            0,
+            facing.getOffsetZ() * .5 + facing.getOffsetX() * (this.clickPosition.x - .5)
+        );
 
         var fakePlayer = FakePlayer.get(serverWorld, this.playerProfile);
         fakePlayer.refreshPositionAndAngles(playerPos.x, playerPos.y, playerPos.z, facing.asRotation(), 0);
@@ -244,6 +265,14 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
 
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (player.isSneaking()) {
+            if (!this.world.isClient) return ActionResult.SUCCESS;
+
+            // TODO cringe
+            MinecraftClient.getInstance().setScreen(new VillagerArmatureScreen(this));
+            return ActionResult.SUCCESS;
+        }
+
         return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand, this::heldStack, this::setHeldStack, this::markDirty);
     }
 
@@ -275,6 +304,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         super.readNbt(nbt, registries);
         this.setHeldStack(nbt.get(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), HELD_STACK));
         this.action = nbt.get(ACTION);
+        this.clickPosition = nbt.get(CLICK_POSITION);
     }
 
     @Override
@@ -282,12 +312,20 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         super.writeNbt(nbt, registries);
         nbt.put(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), HELD_STACK, this.heldStack);
         nbt.put(ACTION, this.action);
+        nbt.put(CLICK_POSITION, this.clickPosition);
     }
 
     public static void initNetwork() {
         AffinityNetwork.CHANNEL.registerClientbound(PunchPacket.class, (message, access) -> {
             if (!(access.player().getWorld().getBlockEntity(message.armaturePos) instanceof VillagerArmatureBlockEntity armature)) return;
             armature.punchAnimationState.start(armature.time);
+        });
+
+        AffinityNetwork.CHANNEL.registerServerbound(SetClickPositionPacket.class, SetClickPositionPacket.ENDEC, (message, access) -> {
+            if (!(access.player().getWorld().getBlockEntity(message.armaturePos) instanceof VillagerArmatureBlockEntity armature)) return;
+
+            armature.clickPosition = message.clickPosition;
+            armature.markDirty();
         });
     }
 
@@ -297,6 +335,14 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     }
 
     public record PunchPacket(BlockPos armaturePos) {}
+
+    public record SetClickPositionPacket(BlockPos armaturePos, Vec2f clickPosition) {
+        public static final StructEndec<SetClickPositionPacket> ENDEC = StructEndecBuilder.of(
+            MinecraftEndecs.BLOCK_POS.fieldOf("armature_pos", SetClickPositionPacket::armaturePos),
+            EndecUtil.VEC2F_ENDEC.fieldOf("click_position", SetClickPositionPacket::clickPosition),
+            SetClickPositionPacket::new
+        );
+    }
 
     static {
         ItemStorage.SIDED.registerForBlockEntity((armature, direction) -> armature.storage, AffinityBlocks.Entities.VILLAGER_ARMATURE);

@@ -48,7 +48,7 @@ import java.util.*;
 
 public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
-    private static final PostEffectBuffer visualizerBuffer = new PostEffectBuffer();
+    public static final PostEffectBuffer VISUALIZER_BUFFER = new PostEffectBuffer();
 
     private final WorldMesh mesh;
     private final BlockRenderView world;
@@ -172,7 +172,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             //noinspection deprecation
             RenderSystem.runAsFancy(() -> {
-                visualizerBuffer.beginWrite(true, GL30.GL_COLOR_BUFFER_BIT);
+                VISUALIZER_BUFFER.beginWrite(true, GL30.GL_COLOR_BUFFER_BIT);
 
                 var meshViewStack = new MatrixStack();
                 meshViewStack.peek().getPositionMatrix().set(modelViewStack);
@@ -197,7 +197,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
                 this.client.getBufferBuilders().getEntityVertexConsumers().draw();
 
-                visualizerBuffer.endWrite();
+                VISUALIZER_BUFFER.endWrite();
             });
 
             // Raycast while we still can,
@@ -219,7 +219,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             // End model view / projection crimes
 
-            visualizerBuffer.draw(new Color(1f, 1f, 1f, Easing.SINE.apply(ageScalar)));
+            VISUALIZER_BUFFER.draw(new Color(1f, 1f, 1f, Easing.SINE.apply(ageScalar)));
 
             if (raycastResult instanceof BlockHitResult blockHit && blockHit.getType() != HitResult.Type.MISS) {
                 var blockEntity = this.world.getBlockEntity(blockHit.getBlockPos());
@@ -363,7 +363,13 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         return false;
     }
 
-    private static class Interpolator {
+    @Override
+    public void removed() {
+        super.removed();
+        this.mesh.reset();
+    }
+
+    public static class Interpolator {
 
         private final float defaultValue;
 
