@@ -8,6 +8,7 @@ import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.InteractionUtil;
+import io.wispforest.affinity.mixin.access.ExperienceOrbEntityAccessor;
 import io.wispforest.affinity.mixin.access.LivingEntityAccessor;
 import io.wispforest.affinity.mixin.access.ServerPlayerInteractionManagerAccessor;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -22,6 +23,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -35,6 +37,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,6 +49,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     public final AnimationState punchAnimationState = new AnimationState();
 
     private static final KeyedEndec<ItemStack> HELD_STACK = MinecraftEndecs.ITEM_STACK.keyed("held_stack", ItemStack.EMPTY);
+    private static final KeyedEndec<Action> ACTION = Action.ENDEC.keyed("action", Action.USE);
 
     private final GameProfile playerProfile = new GameProfile(UUID.randomUUID(), "villager_armature");
 
@@ -65,23 +69,57 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     public void tickServer() {
         this.time++;
 
-        var player = FakePlayer.get((ServerWorld) this.world, this.playerProfile);
+        var player = this.preparePlayer();
+        if (player == null) return;
+
         player.interactionManager.update();
         ((LivingEntityAccessor) player).affinity$setLastAttackedTicks(((LivingEntityAccessor) player).affinity$getLastAttackedTicks() + 1);
 
+        if (this.time % 3 == 0) {
+            this.world.getEntitiesByClass(ExperienceOrbEntity.class, new Box(this.pos).expand(.25), entity -> entity.getExperienceAmount() > 0).stream().findFirst().ifPresent(xpOrb -> {
+                var newAmount = ((ExperienceOrbEntityAccessor) xpOrb).affinity$repairPlayerGears(player, xpOrb.getExperienceAmount());
+                if (newAmount != xpOrb.getExperienceAmount()) {
+                    if (newAmount != 0) {
+                        ((ExperienceOrbEntityAccessor) xpOrb).affinity$setAmount(newAmount);
+                    } else {
+                        var count = ((ExperienceOrbEntityAccessor) xpOrb).affinity$getPickingCount() - 1;
+                        ((ExperienceOrbEntityAccessor) xpOrb).affinity$setPickingCount(count);
+
+                        if (count <= 0) xpOrb.discard();
+                    }
+                }
+            });
+        }
+
+        if (!this.world.isReceivingRedstonePower(this.pos)) {
+            if (this.action == Action.BREAK && this.miningPos != null) {
+                player.interactionManager.processBlockBreakingAction(
+                        this.miningPos,
+                        PlayerActionC2SPacket.Action.ABORT_DESTROY_BLOCK,
+                        this.getCachedState().get(VillagerArmatureBlock.FACING).getOpposite(),
+                        this.world.getHeight(),
+                        0
+                );
+
+                this.miningPos = null;
+            }
+
+            return;
+        }
+
         switch (this.action) {
             case USE -> {
-                if (this.time % 5 == 0 && this.useItem(false).isAccepted()) {
+                if (this.time % 5 == 0 && this.useItem(player, false).isAccepted()) {
                     this.punch();
                 }
             }
             case ATTACK -> {
-                if (this.attack().isAccepted()) {
+                if (this.attack(player).isAccepted()) {
                     this.punch();
                 }
             }
             case BREAK -> {
-                if (this.breakBlock().isAccepted() && this.time % 4 == 0) {
+                if (this.breakBlock(player).isAccepted() && this.time % 4 == 0) {
                     this.punch();
                 }
             }
@@ -93,10 +131,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         this.time++;
     }
 
-    public ActionResult useItem(boolean sneak) {
-        var player = this.preparePlayer();
-        if (player == null) return ActionResult.PASS;
-
+    public ActionResult useItem(FakePlayer player, boolean sneak) {
         var blockHit = this.raycastBlock(player);
         if (blockHit == null) return ActionResult.PASS;
 
@@ -117,32 +152,29 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         return ActionResult.PASS;
     }
 
-    public ActionResult breakBlock() {
-        var player = this.preparePlayer();
-        if (player == null) return ActionResult.PASS;
-
+    public ActionResult breakBlock(FakePlayer player) {
         var blockHit = this.raycastBlock(player);
         if (blockHit == null) return ActionResult.PASS;
 
         var breakProgress = ((ServerPlayerInteractionManagerAccessor) player.interactionManager).affinity$blockBreakingProgress();
 
-        if (breakProgress < 0 || breakProgress >= 10 || !this.miningPos.equals(blockHit.getBlockPos())) {
-            if (breakProgress >= 10) {
+        if (breakProgress < 0 || breakProgress >= 10 || !blockHit.getBlockPos().equals(this.miningPos)) {
+            if (breakProgress >= 10 && miningPos != null) {
                 player.interactionManager.processBlockBreakingAction(
-                    this.miningPos,
-                    PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK,
-                    blockHit.getSide(),
-                    this.world.getHeight(),
-                    0
+                        this.miningPos,
+                        PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK,
+                        blockHit.getSide(),
+                        this.world.getHeight(),
+                        0
                 );
             }
 
             player.interactionManager.processBlockBreakingAction(
-                blockHit.getBlockPos(),
-                PlayerActionC2SPacket.Action.START_DESTROY_BLOCK,
-                blockHit.getSide(),
-                this.world.getHeight(),
-                0
+                    blockHit.getBlockPos(),
+                    PlayerActionC2SPacket.Action.START_DESTROY_BLOCK,
+                    blockHit.getSide(),
+                    this.world.getHeight(),
+                    0
             );
 
             this.miningPos = blockHit.getBlockPos();
@@ -152,13 +184,13 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         return ActionResult.SUCCESS;
     }
 
-    public ActionResult attack() {
-        var player = this.preparePlayer();
-        if (player == null) return ActionResult.PASS;
-
+    public ActionResult attack(FakePlayer player) {
         if (player.getAttackCooldownProgress(.5f) < .9f) return ActionResult.PASS;
 
-        var entityResult = InteractionUtil.raycastEntities(player, 1f, player.getEntityInteractionRange(), .5f, entity -> entity.isAlive() && entity.isAttackable());
+        var entityResult = InteractionUtil.raycastEntities(
+                player, 1f, player.getEntityInteractionRange(), .5f,
+                entity -> entity.isAlive() && entity.isAttackable() && entity.timeUntilRegen <= 10
+        );
         if (entityResult == null) return ActionResult.PASS;
 
         player.attack(entityResult.getEntity());
@@ -217,7 +249,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
 
     public ActionResult onScroll(boolean direction) {
         var actionIdx = this.action.ordinal() + (direction ? 1 : -1);
-        if (actionIdx > Action.values().length) actionIdx -= Action.values().length;
+        if (actionIdx >= Action.values().length) actionIdx -= Action.values().length;
         if (actionIdx < 0) actionIdx += Action.values().length;
 
         this.action = Action.values()[actionIdx];
@@ -226,7 +258,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         return ActionResult.SUCCESS;
     }
 
-    public int age() {
+    public int time() {
         return this.time;
     }
 
@@ -242,12 +274,14 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
         this.setHeldStack(nbt.get(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), HELD_STACK));
+        this.action = nbt.get(ACTION);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
         nbt.put(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), HELD_STACK, this.heldStack);
+        nbt.put(ACTION, this.action);
     }
 
     public static void initNetwork() {

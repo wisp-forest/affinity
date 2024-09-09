@@ -8,8 +8,10 @@ import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntit
 import io.wispforest.affinity.blockentity.impl.VillagerArmatureBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.item.StaffItem;
+import io.wispforest.affinity.misc.quack.AffinityExperienceOrbExtension;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.affinity.misc.util.EndecUtil;
+import io.wispforest.endec.annotations.NullableComponent;
 import io.wispforest.endec.impl.ReflectiveEndecBuilder;
 import io.wispforest.owo.network.OwoNetChannel;
 import io.wispforest.owo.serialization.CodecUtils;
@@ -88,6 +90,13 @@ public class AffinityNetwork {
             player.swingHand(Hand.MAIN_HAND);
         });
 
+        CHANNEL.registerClientbound(SetExperienceOrbTargetPacket.class, (message, access) -> {
+            var entity = access.player().getWorld().getEntityById(message.entityId);
+            if (!(entity instanceof AffinityExperienceOrbExtension extension)) return;
+
+            extension.affinity$setArmatureTarget(message.armaturePos);
+        });
+
         HolographicStereopticonBlockEntity.initNetwork();
         RitualSocleComposerScreenHandler.initNetwork();
         EtherealAethumFluxInjectorBlockEntity.initNetwork();
@@ -99,4 +108,5 @@ public class AffinityNetwork {
         builder.register(CodecUtils.toEndecWithRegistries(ParticleTypes.TYPE_CODEC, ParticleTypes.PACKET_CODEC), ParticleEffect.class);
     }
 
+    public record SetExperienceOrbTargetPacket(int entityId, @NullableComponent BlockPos armaturePos) {}
 }

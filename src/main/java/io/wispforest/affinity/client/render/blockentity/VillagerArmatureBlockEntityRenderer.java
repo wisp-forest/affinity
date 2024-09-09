@@ -71,7 +71,7 @@ public class VillagerArmatureBlockEntityRenderer extends AffinityBlockEntityRend
         var animationState = entity.punchAnimationState;
 
         this.arms.traverse().forEach(ModelPart::resetTransform);
-        animationState.update(entity.age() + tickDelta, 1f);
+        animationState.update(entity.time() + tickDelta, 1f);
         animationState.run(state -> animate(this.arms, PUNCH_ANIMATION, state.getTimeRunning(), 1f, new Vector3f()));
 
         matrices.push();

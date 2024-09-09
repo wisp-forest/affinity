@@ -24,5 +24,8 @@ public class AffinityPoiTypes {
     public static final PointOfInterestType FIELD_COHERENCE_MODULATOR = PointOfInterestHelper.register(Affinity.id("field_coherence_modulator"), 0, 1,
             AffinityBlocks.FIELD_COHERENCE_MODULATOR);
 
+    public static final PointOfInterestType VILLAGER_ARMATURE = PointOfInterestHelper.register(Affinity.id("villager_armature"), 0, 1,
+            AffinityBlocks.VILLAGER_ARMATURE);
+
     public static void initialize() {}
 }

@@ -32,14 +32,12 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Language;
-import net.minecraft.util.Rarity;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -56,10 +54,15 @@ public class ArtifactBladeItem extends SwordItem {
     public final Tier tier;
 
     public ArtifactBladeItem(Tier tier) {
-        super(tier, AffinityItems.settings().maxCount(1).rarity(tier.data.rarity).trackUsageStat().attributeModifiers(SwordItem.createAttributeModifiers(tier, 0, tier.data.attackSpeed)));
+        super(tier, AffinityItems.settings().maxCount(1).rarity(tier.data.rarity).trackUsageStat().attributeModifiers(Util.make(() -> {
+            var attributes = SwordItem.createAttributeModifiers(tier, 0, tier.data.attackSpeed);
+            for (var entry : tier.data.modifiers.entries()) {
+                attributes = attributes.with(Registries.ATTRIBUTE.getEntry(entry.getKey()), entry.getValue(), AttributeModifierSlot.MAINHAND);
+            }
+            return attributes;
+        })));
         this.tier = tier;
     }
-
 
     @Override
     public void deriveStackComponents(ComponentMap source, ComponentChanges.Builder target) {
@@ -171,26 +174,26 @@ public class ArtifactBladeItem extends SwordItem {
         STABILIZED(new TierData(
             1000, 3, 25, 8f, 10f, -2.4f, Rarity.UNCOMMON, 100, 300, .5f,
             ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_5"), .15, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("stabilized_blade_regen"), .15, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
                 .build()
         )),
         STRENGTHENED(new TierData(
             1500, 4, 35, 11, 12f, -2f, Rarity.RARE, 160, 400, .65f,
             ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_4"), .35, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("strengthened_blade_regen"), .35, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
                 .build()
         )),
         SUPERIOR(new TierData(
             3000, 5, 40, 15, 15f, -1.8f, Rarity.EPIC, 200, 800, .75f,
             ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_3"), .5, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("superior_blade_regen"), .5, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
                 .build()
         )),
         ASTRAL(new TierData(
             69000, 6, 100, 6969, 75f, 21f, Rarity.EPIC, 200, 800, 1f,
             ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-                .put(AffinityEntityAttributes.MAX_AETHUM, new EntityAttributeModifier(Affinity.id("todo_needs_name_2"), 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
-                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("todo_needs_name_1"), 3, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .put(AffinityEntityAttributes.MAX_AETHUM, new EntityAttributeModifier(Affinity.id("astral_blade_max_buff"), 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                .put(AffinityEntityAttributes.NATURAL_AETHUM_REGEN_SPEED, new EntityAttributeModifier(Affinity.id("astral_blade_regen"), 3, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
                 .build()
         ));
 
@@ -217,7 +220,6 @@ public class ArtifactBladeItem extends SwordItem {
 
         @Override
         public TagKey<Block> getInverseTag() {
-            // TODO: ??? convert from mining level to inverse tag.
             return BlockTags.AIR;
         }
 
