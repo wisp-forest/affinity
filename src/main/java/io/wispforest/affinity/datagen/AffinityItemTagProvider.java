@@ -70,6 +70,8 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 FORGOTTEN_ARTIFACT_BLADE, STABILIZED_ARTIFACT_BLADE, STRENGTHENED_ARTIFACT_BLADE, SUPERIOR_ARTIFACT_BLADE, ASTRAL_ARTIFACT_BLADE
         );
 
+        this.getOrCreateTagBuilder(ItemTags.SWORDS).addTag(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades")));
+
         FieldRegistrationHandler.process(AffinityItems.class, (item, name, field) -> {
             if (item instanceof StaffItem && !(item instanceof AethumFireExtinguisherItem)) {
                 this.getOrCreateTagBuilder(STAFFS).add(item);
