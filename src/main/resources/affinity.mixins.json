@@ -45,6 +45,7 @@
     "PotionItemMixin",
     "ProjectileEntityMixin",
     "ProjectileUtilMixin",
+    "RangedWeaponItemMixin",
     "RedstoneWireBlockMixin",
     "Schema1460Mixin",
     "SchemasMixin",
