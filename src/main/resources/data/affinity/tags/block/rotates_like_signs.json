@@ -9,6 +9,7 @@
     "minecraft:zombie_head",
     "minecraft:creeper_head",
     "minecraft:piglin_head",
-    "minecraft:dragon_head"
+    "minecraft:dragon_head",
+    "#minecraft:banners"
   ]
 }
