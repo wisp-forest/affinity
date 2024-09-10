@@ -34,6 +34,7 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
         generator.excludeFromSimpleItemModelGeneration(AFFINE_INFUSER);
         generator.excludeFromSimpleItemModelGeneration(FIELD_COHERENCE_MODULATOR);
         generator.excludeFromSimpleItemModelGeneration(AZALEA_CHEST);
+        generator.excludeFromSimpleItemModelGeneration(VILLAGER_ARMATURE);
         this.primitiveState(generator,
                 STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ANNIHILATION_APPARATUS, BLANK_RITUAL_SOCLE, RUDIMENTARY_RITUAL_SOCLE,
                 REFINED_RITUAL_SOCLE, SOPHISTICATED_RITUAL_SOCLE, SPIRIT_INTEGRATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT,
