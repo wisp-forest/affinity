@@ -31,6 +31,7 @@ public class VillagerArmsItem extends Item {
 
             // ha! gottem
             flags.setFlag(EntityFlagComponent.VILLAGER_HAS_NO_ARMS);
+            AffinityComponents.ENTITY_FLAGS.sync(villager);
             ItemScatterer.spawn(world, villager.getX(), villager.getY(), villager.getZ(), AffinityItems.VILLAGER_ARMS.getDefaultStack());
 
             villager.playSound(SoundEvents.ITEM_AXE_STRIP);
@@ -51,6 +52,7 @@ public class VillagerArmsItem extends Item {
 
             // there you go, have them back
             flags.unsetFlag(EntityFlagComponent.VILLAGER_HAS_NO_ARMS);
+            AffinityComponents.ENTITY_FLAGS.sync(villager);
             ItemOps.decrementPlayerHandItem(player, hand);
 
             return ActionResult.SUCCESS;
