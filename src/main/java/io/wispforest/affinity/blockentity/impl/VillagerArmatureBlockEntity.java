@@ -22,11 +22,15 @@ import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
 import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.AnimationState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -41,10 +45,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -147,24 +148,37 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     }
 
     public ActionResult useItem(FakePlayer player, boolean sneak) {
+        player.setSneaking(sneak);
+
+        var entityHit = InteractionUtil.raycastEntities(player, 1f, player.getEntityInteractionRange(), .25f, Entity::isAlive);
+        if (entityHit != null) {
+            var eventResult = UseEntityCallback.EVENT.invoker().interact(player, this.world, Hand.MAIN_HAND, entityHit.getEntity(), entityHit);
+            if (eventResult.isAccepted()) {
+                this.updateItem(player);
+                return eventResult;
+            }
+
+            var entityResult = player.interact(entityHit.getEntity(), Hand.MAIN_HAND);
+            if (entityResult.isAccepted()) {
+                this.updateItem(player);
+                return entityResult;
+            }
+        }
+
         var blockHit = this.raycastBlock(player);
         if (blockHit == null) return ActionResult.PASS;
 
-        player.setSneaking(sneak);
-
         var itemResult = player.interactionManager.interactItem(player, player.getWorld(), player.getMainHandStack(), Hand.MAIN_HAND);
         if (itemResult.isAccepted()) {
-            this.updateItem();
+            this.updateItem(player);
             return itemResult;
         }
 
         var blockResult = player.interactionManager.interactBlock(player, player.getWorld(), player.getMainHandStack(), Hand.MAIN_HAND, blockHit);
         if (blockResult.isAccepted()) {
-            this.updateItem();
+            this.updateItem(player);
             return blockResult;
         }
-
-        // TODO use item on entity
 
         return ActionResult.PASS;
     }
@@ -197,7 +211,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
             this.miningPos = blockHit.getBlockPos();
         }
 
-        this.updateItem();
+        this.updateItem(player);
         return ActionResult.SUCCESS;
     }
 
@@ -219,14 +233,11 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     private FakePlayer preparePlayer() {
         if (!(this.world instanceof ServerWorld serverWorld)) return null;
 
-        var facing = this.getCachedState().get(VillagerArmatureBlock.FACING);
-        var playerPos = Vec3d.ofCenter(this.pos.down(), this.clickPosition.y - .6).add(
-            facing.getOffsetX() * .5 + facing.getOffsetZ() * (this.clickPosition.x - .5),
-            0,
-            facing.getOffsetZ() * .5 + facing.getOffsetX() * (this.clickPosition.x - .5)
-        );
-
         var fakePlayer = FakePlayer.get(serverWorld, this.playerProfile);
+
+        var facing = this.getCachedState().get(VillagerArmatureBlock.FACING);
+        var playerPos = this.raycastOrigin().add(0, -fakePlayer.getEyeHeight(fakePlayer.getPose()), 0);
+
         fakePlayer.refreshPositionAndAngles(playerPos.x, playerPos.y, playerPos.z, facing.asRotation(), 0);
         fakePlayer.setHeadYaw(fakePlayer.getYaw());
         fakePlayer.setOnGround(true);
@@ -238,7 +249,21 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         return fakePlayer;
     }
 
-    private void updateItem() {
+    public Vec3d raycastOrigin() {
+        var facing = this.getCachedState().get(VillagerArmatureBlock.FACING);
+        return Vec3d.ofCenter(this.getPos(), this.clickPosition.y).add(
+            facing.getOffsetX() * .5 + facing.getOffsetZ() * (this.clickPosition.x - .5),
+            0,
+            facing.getOffsetZ() * .5 + facing.getOffsetX() * (this.clickPosition.x - .5)
+        );
+    }
+
+    public Direction facing() {
+        return this.getCachedState().get(VillagerArmatureBlock.FACING);
+    }
+
+    private void updateItem(FakePlayer player) {
+        this.heldStack = player.getMainHandStack();
         if (this.heldStack.isEmpty()) {
             this.heldStack = ItemStack.EMPTY;
         }
@@ -268,12 +293,16 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         if (player.isSneaking()) {
             if (!this.world.isClient) return ActionResult.SUCCESS;
 
-            // TODO cringe
-            MinecraftClient.getInstance().setScreen(new VillagerArmatureScreen(this));
+            this.openScreen();
             return ActionResult.SUCCESS;
         }
 
         return InteractionUtil.handleSingleItemContainer(this.world, this.pos, player, hand, this::heldStack, this::setHeldStack, this::markDirty);
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void openScreen() {
+        MinecraftClient.getInstance().setScreen(new VillagerArmatureScreen(this));
     }
 
     public ActionResult onScroll(boolean direction) {
@@ -343,7 +372,6 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
             SetClickPositionPacket::new
         );
     }
-
     static {
         ItemStorage.SIDED.registerForBlockEntity((armature, direction) -> armature.storage, AffinityBlocks.Entities.VILLAGER_ARMATURE);
     }
