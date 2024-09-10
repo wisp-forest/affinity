@@ -470,6 +470,10 @@
   "gui.affinity.flux_network_visualizer.reset_hint": ["Double-click to ", {"text": "reset", "color": "yellow"}],
   "gui.affinity.flux_network_visualizer.hover_hint": ["Hover to ", {"text": "view information", "color": "yellow"}],
 
+  "gui.affinity.villager_armature.rotate_hint": ["Mouse 1 to ", {"text": "rotate", "color": "yellow"}],
+  "gui.affinity.villager_armature.click_hint": ["Mouse 2 to ", {"text": "set target", "color": "yellow"}],
+  "gui.affinity.villager_armature.reset_hint": ["Double-click to ", {"text": "reset", "color": "yellow"}],
+
   "advancement.affinity.root.title": "Affinity",
   "advancement.affinity.root.description": "Tomfoolery awaits",
   "advancement.affinity.so_tell_me_whats_your_intention.title": "So Tell Me, What's Your Intention?",

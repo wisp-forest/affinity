@@ -47,22 +47,14 @@
                 <flow-layout direction="vertical">
                     <children>
                         <label>
-                            <text translate="true">gui.affinity.flux_network_visualizer.rotate_hint</text>
+                            <text translate="true">gui.affinity.villager_armature.rotate_hint</text>
                         </label>
                         <label>
-                            <text translate="true">gui.affinity.flux_network_visualizer.move_hint</text>
-                        </label>
-
-                        <label>
-                            <text translate="true">gui.affinity.flux_network_visualizer.reset_hint</text>
-
-                            <margins>
-                                <top>4</top>
-                            </margins>
+                            <text translate="true">gui.affinity.villager_armature.click_hint</text>
                         </label>
 
                         <label>
-                            <text translate="true">gui.affinity.flux_network_visualizer.hover_hint</text>
+                            <text translate="true">gui.affinity.villager_armature.reset_hint</text>
 
                             <margins>
                                 <top>4</top>

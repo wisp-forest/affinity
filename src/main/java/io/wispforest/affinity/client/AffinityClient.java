@@ -91,7 +91,8 @@ public class AffinityClient implements ClientModInitializer {
                     Affinity.id("item/staff_bundle"),
                     Affinity.id("item/void_resonant_ethereal_amethyst_shard_overlay"),
                     Affinity.id("item/void_resonant_ethereal_amethyst_shard_outline"),
-                    Affinity.id("villager_armature_crosshair")
+                    VillagerArmatureScreen.CROSSHAIR_MODEL_ID,
+                    VillagerArmatureScreen.CROSSHAIR_PREVIEW_MODEL_ID
             );
         });
 
