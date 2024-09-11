@@ -66,31 +66,27 @@ public class VillagerArmatureBlockEntityRenderer extends AffinityBlockEntityRend
             ))
             .build();
 
-    private final ModelPart arms;
-
     public VillagerArmatureBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
         super(ctx);
-
-        this.arms = ARMS;
     }
 
     @Override
     protected void render(VillagerArmatureBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         var animationState = entity.punchAnimationState;
 
-        this.arms.traverse().forEach(ModelPart::resetTransform);
+        ARMS.traverse().forEach(ModelPart::resetTransform);
         animationState.update(entity.time() + tickDelta, 1f);
-        animationState.run(state -> animate(this.arms, PUNCH_ANIMATION, state.getTimeRunning(), 1f, new Vector3f()));
+        animationState.run(state -> animate(ARMS, PUNCH_ANIMATION, state.getTimeRunning(), 1f, new Vector3f()));
 
         matrices.push();
         matrices.translate(.5, 0, .5);
         matrices.multiply(entity.getCachedState().get(VillagerArmatureBlock.FACING).getRotationQuaternion().rotateX((float) (Math.PI / -2)));
 
         var buffer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(Affinity.id("textures/item/villager_arms.png")));
-        this.arms.render(matrices, buffer, light, overlay);
+        ARMS.render(matrices, buffer, light, overlay);
 
         if (!entity.heldStack().isEmpty()) {
-            this.arms.getChild("arms").rotate(matrices);
+            ARMS.getChild("arms").rotate(matrices);
             matrices.translate(0, .325, -.1);
             matrices.multiply(new Quaternionf().rotationY((float) Math.PI).rotateX((float) Math.toRadians(100)));
             this.ctx.getItemRenderer().renderItem(entity.heldStack(), ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, light, overlay, matrices, vertexConsumers, entity.getWorld(), 0);

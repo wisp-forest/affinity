@@ -20,19 +20,21 @@ import java.util.function.UnaryOperator;
 import static net.minecraft.entity.EntityType.VILLAGER;
 
 public class VillagerArmsItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
+    public static final Identifier NORMIE = Identifier.ofVanilla("textures/entity/villager/villager.png");
+
     @Override
     public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
         matrices.translate(-0.5, -1/7f, -0.75);
-        renderArms(Identifier.ofVanilla("textures/entity/villager/villager.png"), matrices, vertexConsumers, light, overlay);
+        this.renderArms(NORMIE, matrices, vertexConsumers, light, overlay);
         var data = stack.get(VillagerArmsItem.VILLAGER_DATA);
         if (data == null) return;
-        renderArms(findTexture("type", Registries.VILLAGER_TYPE.getId(data.getType())), matrices, vertexConsumers, light, overlay);
+        this.renderArms(findTexture("type", Registries.VILLAGER_TYPE.getId(data.getType())), matrices, vertexConsumers, light, overlay);
         var profession = data.getProfession();
         if (profession == VillagerProfession.NONE) return;
-        renderArms(findTexture("profession", Registries.VILLAGER_PROFESSION.getId(profession)), matrices, vertexConsumers, light, overlay);
+        this.renderArms(findTexture("profession", Registries.VILLAGER_PROFESSION.getId(profession)), matrices, vertexConsumers, light, overlay);
         if (profession == VillagerProfession.NITWIT) return;
-        renderArms(findTexture("profession_level", VillagerClothingFeatureRendererAccessor.affinity$LevelToIdMap().get(MathHelper.clamp(data.getLevel(), 1, VillagerClothingFeatureRendererAccessor.affinity$LevelToIdMap().size()))), matrices, vertexConsumers, light, overlay);
+        this.renderArms(findTexture("profession_level", VillagerClothingFeatureRendererAccessor.affinity$LevelToIdMap().get(MathHelper.clamp(data.getLevel(), 1, VillagerClothingFeatureRendererAccessor.affinity$LevelToIdMap().size()))), matrices, vertexConsumers, light, overlay);
     }
 
     private void renderArms(Identifier id, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
