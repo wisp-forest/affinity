@@ -82,6 +82,16 @@ public class VillagerArmatureBlock extends AethumNetworkMemberBlock {
             }
         }
     }
+
+    @Override
+    protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
+
+        if (world.isReceivingRedstonePower(pos) && world.getBlockEntity(pos) instanceof VillagerArmatureBlockEntity armature) {
+            armature.redstoneTriggered();
+        }
+    }
+
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
         return super.getPlacementState(ctx).with(FACING, ctx.shouldCancelInteraction() ? ctx.getHorizontalPlayerFacing() : ctx.getHorizontalPlayerFacing().getOpposite());

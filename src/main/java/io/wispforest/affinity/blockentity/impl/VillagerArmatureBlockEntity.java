@@ -73,6 +73,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
 
     private int time = 0;
     private int lastActionTimestamp = 0;
+    private boolean redstoneTriggered = false;
     private BlockPos miningPos = BlockPos.ORIGIN;
 
     public VillagerArmatureBlockEntity(BlockPos pos, BlockState state) {
@@ -105,7 +106,14 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
             });
         }
 
-        if (!this.world.isReceivingRedstonePower(this.pos)) {
+        var shouldBeActive = switch (this.redstoneMode) {
+            case ALWAYS_ACTIVE -> true;
+            case REPEAT -> this.world.isReceivingRedstonePower(this.pos);
+            case IMPULSE -> this.redstoneTriggered;
+        };
+
+        this.redstoneTriggered = false;
+        if (!shouldBeActive) {
             if (this.action == Action.BREAK && this.miningPos != null) {
                 player.interactionManager.processBlockBreakingAction(
                     this.miningPos,
@@ -121,9 +129,10 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
             return;
         }
 
+        player.setSneaking(this.sneak);
         switch (this.action) {
             case USE -> {
-                if (this.timeSinceLastAction() >= 5 && this.useItem(player, false).isAccepted()) {
+                if (this.timeSinceLastAction() >= 5 && this.useItem(player).isAccepted()) {
                     this.punch();
                     this.lastActionTimestamp = this.time;
                 }
@@ -151,9 +160,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         this.time++;
     }
 
-    public ActionResult useItem(FakePlayer player, boolean sneak) {
-        player.setSneaking(sneak);
-
+    public ActionResult useItem(FakePlayer player) {
         var entityHit = InteractionUtil.raycastEntities(player, 1f, player.getEntityInteractionRange(), .25f, Entity::isAlive);
         if (entityHit != null) {
             var eventResult = UseEntityCallback.EVENT.invoker().interact(player, this.world, Hand.MAIN_HAND, entityHit.getEntity(), entityHit);
@@ -309,6 +316,10 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     @Environment(EnvType.CLIENT)
     private void openScreen() {
         MinecraftClient.getInstance().setScreen(new VillagerArmatureScreen(this));
+    }
+
+    public void redstoneTriggered() {
+        this.redstoneTriggered = true;
     }
 
     public int time() {
