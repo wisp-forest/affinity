@@ -58,6 +58,7 @@
     "ThrowablePotionItemMixin",
     "TippedArrowRecipeMixin",
     "TrackTargetGoalMixin",
+    "VillagerClothingFeatureRendererAccessor",
     "WorldChunkMixin",
     "WorldMixin",
     "WorldViewMixin",

@@ -10,29 +10,31 @@ import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.itemgroup.gui.ItemGroupButton;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.village.VillagerData;
+import net.minecraft.village.VillagerProfession;
+import net.minecraft.village.VillagerType;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
+import static io.wispforest.affinity.item.VillagerArmsItem.VILLAGER_DATA;
 import static io.wispforest.affinity.object.AffinityBlocks.*;
 import static io.wispforest.affinity.object.AffinityItems.*;
 
 public class AffinityItemGroup {
 
     private static OwoItemGroup GROUP;
+
     public static void register() {
         GROUP = OwoItemGroup.builder(Affinity.id("affinity"), () -> Icon.of(INERT_WISP_MATTER)).initializer(group -> {
             //noinspection Convert2MethodRef
@@ -214,6 +216,24 @@ public class AffinityItemGroup {
             entries.add(INERT_WISP_SPAWN_EGG);
             entries.add(WISE_WISP_SPAWN_EGG);
             entries.add(VICIOUS_WISP_SPAWN_EGG);
+            var items = new ArrayList<ItemStack>();
+            for (VillagerProfession villagerProfession : Registries.VILLAGER_PROFESSION) {
+                var stack = VILLAGER_ARMS.getDefaultStack();
+                stack.set(VILLAGER_DATA, new VillagerData(VillagerType.PLAINS, villagerProfession, 5));
+                items.add(stack);
+            }
+            entries.addAll(items, ItemGroup.StackVisibility.PARENT_TAB_ONLY);
+            items.clear();
+            for (VillagerType villagerType : Registries.VILLAGER_TYPE) {
+                for (VillagerProfession villagerProfession : Registries.VILLAGER_PROFESSION) {
+                    for (int i = 1; i < ((villagerProfession.equals(VillagerProfession.NITWIT) || villagerProfession.equals(VillagerProfession.NONE)) ? 2 : 6); i++) {
+                        var stack = VILLAGER_ARMS.getDefaultStack();
+                        stack.set(VILLAGER_DATA, new VillagerData(villagerType, villagerProfession, i));
+                        items.add(stack);
+                    }
+                }
+            }
+            entries.addAll(items, ItemGroup.StackVisibility.SEARCH_TAB_ONLY);
         }, false);
 
         group.addButton(ItemGroupButton.github(group, "https://github.com/wisp-forest/affinity"));

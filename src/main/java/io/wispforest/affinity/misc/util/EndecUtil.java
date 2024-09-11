@@ -10,6 +10,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.Vec2f;
+import net.minecraft.village.VillagerData;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class EndecUtil {
 
     public static final Endec<Ingredient> INGREDIENT_ENDEC = CodecUtils.toEndec(Ingredient.DISALLOW_EMPTY_CODEC);
     public static final Endec<ItemStack> RECIPE_RESULT_ENDEC = CodecUtils.toEndec(ItemStack.VALIDATED_CODEC);
+    public static final Endec<VillagerData> VILLAGER_DATA_ENDEC = CodecUtils.toEndec(VillagerData.CODEC);
 
     public static final Endec<GlobalPos> GLOBAL_POS_ENDEC = StructEndecBuilder.of(
             MinecraftEndecs.IDENTIFIER.xmap(id -> RegistryKey.of(RegistryKeys.WORLD, id), RegistryKey::getValue).fieldOf("dimension", GlobalPos::dimension),

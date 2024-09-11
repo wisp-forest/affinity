@@ -23,6 +23,27 @@ import org.joml.Vector3f;
 
 public class VillagerArmatureBlockEntityRenderer extends AffinityBlockEntityRenderer<VillagerArmatureBlockEntity> {
 
+    public static final ModelPart ARMS;
+
+    static {
+        var rootPart = new ModelData().getRoot();
+        rootPart.addChild(
+                "arms",
+                ModelPartBuilder.create()
+                        .uv(40, 38)
+                        .cuboid(-4.0F, 2.1618F, -2.0F, 8.0F, 4.0F, 4.0F)
+                        .uv(44, 22)
+                        .cuboid(-8.0F, -1.8382F, -2.0F, 4.0F, 8.0F, 4.0F)
+                        .uv(44, 22)
+                        .mirrored()
+                        .cuboid(4.0F, -1.8382F, -2.0F, 4.0F, 8.0F, 4.0F)
+                        .mirrored(false),
+                ModelTransform.of(0.0F, 11.6667F, 2.0F, 2.356f, 0.0F, 0.0F)
+        );
+        ARMS = rootPart.createPart(64, 64);
+    }
+
+
     public static final Transformation.Interpolation EXPO = (result, delta, keyframes, start, end, scale) -> {
         var from = keyframes[start].target();
         var to = keyframes[end].target();
@@ -31,39 +52,26 @@ public class VillagerArmatureBlockEntityRenderer extends AffinityBlockEntityRend
     };
 
     public static final Animation PUNCH_ANIMATION = Animation.Builder.create(0.3f)
-        .addBoneAnimation("arms", new Transformation(Transformation.Targets.ROTATE,
-            new Keyframe(0f, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), EXPO),
-            new Keyframe(0.15f, AnimationHelper.createRotationalVector(-17.5F, 0.0F, 0.0F), EXPO),
-            new Keyframe(0.3f, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), EXPO)
-        ))
-        .addBoneAnimation("arms", new Transformation(Transformation.Targets.TRANSLATE,
-            new Keyframe(0f, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), EXPO),
-            new Keyframe(0.15f, AnimationHelper.createTranslationalVector(0.0F, 1.0F, 1.5F), EXPO),
-            new Keyframe(0.3f, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), EXPO)
-        ))
-        .build();
+            .addBoneAnimation("arms", new Transformation(
+                    Transformation.Targets.ROTATE,
+                    new Keyframe(0f, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), EXPO),
+                    new Keyframe(0.15f, AnimationHelper.createRotationalVector(-17.5F, 0.0F, 0.0F), EXPO),
+                    new Keyframe(0.3f, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), EXPO)
+            ))
+            .addBoneAnimation("arms", new Transformation(
+                    Transformation.Targets.TRANSLATE,
+                    new Keyframe(0f, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), EXPO),
+                    new Keyframe(0.15f, AnimationHelper.createTranslationalVector(0.0F, 1.0F, 1.5F), EXPO),
+                    new Keyframe(0.3f, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), EXPO)
+            ))
+            .build();
 
     private final ModelPart arms;
 
     public VillagerArmatureBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
         super(ctx);
 
-        var rootPart = new ModelData().getRoot();
-        rootPart.addChild(
-            "arms",
-            ModelPartBuilder.create()
-                .uv(0, 16)
-                .cuboid(-4.0F, 2.1618F, -2.0F, 8.0F, 4.0F, 4.0F)
-                .uv(4, 0)
-                .cuboid(-8.0F, -1.8382F, -2.0F, 4.0F, 8.0F, 4.0F)
-                .uv(4, 0)
-                .mirrored()
-                .cuboid(4.0F, -1.8382F, -2.0F, 4.0F, 8.0F, 4.0F)
-                .mirrored(false),
-            ModelTransform.of(0.0F, 11.6667F, 2.0F, 2.356f, 0.0F, 0.0F)
-        );
-
-        this.arms = rootPart.createPart(32, 32);
+        this.arms = ARMS;
     }
 
     @Override

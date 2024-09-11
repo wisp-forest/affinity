@@ -19,51 +19,133 @@
 
   "item.affinity.wispen_testament": "The Wispen Testament",
   "text.affinity.wispen_testament.next_page": "Continued on next page...",
-  "text.affinity.wispen_testament.staff_pedestal_function": {"text": "On Staff Pedestal", "color": "dark_gray"},
+  "text.affinity.wispen_testament.staff_pedestal_function": {
+    "text": "On Staff Pedestal",
+    "color": "dark_gray"
+  },
   "structure.affinity.augmented_crafting_table": "Augmented Crafting Table",
   "structure.affinity.void_beacon": "Void Beacon",
   "structure.affinity.rudimentary_aspen_infusion": "Rudimentary Aspen Infusion",
 
   "key.affinity.activate_evade_ring": [
-    {"translate": "text.affinity.prefix"},
+    {
+      "translate": "text.affinity.prefix"
+    },
     " Activate Evade Ring"
   ],
   "key.affinity.select_staff_from_bundle": [
-    {"translate": "text.affinity.prefix"},
+    {
+      "translate": "text.affinity.prefix"
+    },
     " Select Staff from Bundle"
   ],
 
   "text.affinity.ethereal_aethum_flux_injector.node_location_tooltip": [
-    {"index": 0},
-    {"text": " in ", "color": "gray"},
-    {"index": 1, "color": "#4D4C7D"}
+    {
+      "index": 0
+    },
+    {
+      "text": " in ",
+      "color": "gray"
+    },
+    {
+      "index": 1,
+      "color": "#4D4C7D"
+    }
   ],
   "text.affinity.ethereal_aethum_flux_injector.linked_node_tooltip": [
-    "", {"text": "[", "color": "dark_gray"}, {"text": "⌘", "color": "#6A67CE"}, {"text": "]", "color": "dark_gray"},
-    {"text": " Linked (click to unlink)", "color": "gray"}
+    "",
+    {
+      "text": "[",
+      "color": "dark_gray"
+    },
+    {
+      "text": "⌘",
+      "color": "#6A67CE"
+    },
+    {
+      "text": "]",
+      "color": "dark_gray"
+    },
+    {
+      "text": " Linked (click to unlink)",
+      "color": "gray"
+    }
   ],
   "text.affinity.ethereal_aethum_flux_injector.unlinked_node_tooltip": [
-    "", {"text": "[", "color": "dark_gray"}, {"text": "+", "color": "green"}, {"text": "]", "color": "dark_gray"},
-    {"text": " Click to link", "color": "gray"}
+    "",
+    {
+      "text": "[",
+      "color": "dark_gray"
+    },
+    {
+      "text": "+",
+      "color": "green"
+    },
+    {
+      "text": "]",
+      "color": "dark_gray"
+    },
+    {
+      "text": " Click to link",
+      "color": "gray"
+    }
   ],
   "text.affinity.ethereal_aethum_flux_injector.global_nodes": [
-    "", {"text": "u ", "font": "affinity:symbols"},
+    "",
+    {
+      "text": "u ",
+      "font": "affinity:symbols"
+    },
     "All public nodes"
   ],
   "text.affinity.ethereal_aethum_flux_injector.private_nodes": [
-    "", {"text": "l ", "font": "affinity:symbols"},
+    "",
+    {
+      "text": "l ",
+      "font": "affinity:symbols"
+    },
     "My nodes only"
   ],
 
-  "text.affinity.aethum_flux_consumer": {"translate": "text.affinity.aethum_flux_member_template", "with": ["consumer"]},
-  "text.affinity.aethum_flux_generator": {"translate": "text.affinity.aethum_flux_member_template", "with": ["generator"]},
-  "text.affinity.aethum_flux_node": {"translate": "text.affinity.aethum_flux_member_template", "with": ["node"]},
-  "text.affinity.aethum_flux_storage": {"translate": "text.affinity.aethum_flux_member_template", "with": ["storage"]},
+  "text.affinity.aethum_flux_consumer": {
+    "translate": "text.affinity.aethum_flux_member_template",
+    "with": [
+      "consumer"
+    ]
+  },
+  "text.affinity.aethum_flux_generator": {
+    "translate": "text.affinity.aethum_flux_member_template",
+    "with": [
+      "generator"
+    ]
+  },
+  "text.affinity.aethum_flux_node": {
+    "translate": "text.affinity.aethum_flux_member_template",
+    "with": [
+      "node"
+    ]
+  },
+  "text.affinity.aethum_flux_storage": {
+    "translate": "text.affinity.aethum_flux_member_template",
+    "with": [
+      "storage"
+    ]
+  },
   "text.affinity.aethum_flux_member_template": [
     "",
-    {"text": "a", "font": "affinity:symbols"},
-    {"text": " Flux ", "color": "gray"},
-    {"index": 0, "color": "gray"}
+    {
+      "text": "a",
+      "font": "affinity:symbols"
+    },
+    {
+      "text": " Flux ",
+      "color": "gray"
+    },
+    {
+      "index": 0,
+      "color": "gray"
+    }
   ],
 
   "entity.affinity.wisp": "Wisp",
@@ -114,7 +196,9 @@
   "block.affinity.ritual_socle_composer": "Ritual Socle Composer",
   "block.affinity.affine_infuser": "Affine Infuser",
   "block.affinity.ranthracite_wire": "Ranthracite Dust",
-  "item.affinity.ranthracite_dust": {"translate": "block.affinity.ranthracite_wire"},
+  "item.affinity.ranthracite_dust": {
+    "translate": "block.affinity.ranthracite_wire"
+  },
   "block.affinity.crop_reaper": "Crop Reaper",
   "block.affinity.affine_candle": "Affine Candle",
   "block.affinity.world_pin": "World Pin",
@@ -149,12 +233,18 @@
   "block.affinity.spirit_integration_apparatus.tooltip.complete": "Complete",
   "block.affinity.spirit_integration_apparatus.tooltip.incomplete.singular": [
     "Missing ",
-    {"index": 0, "color": "blue"},
+    {
+      "index": 0,
+      "color": "blue"
+    },
     " core"
   ],
   "block.affinity.spirit_integration_apparatus.tooltip.incomplete.plural": [
     "Missing ",
-    {"index": 0, "color": "blue"},
+    {
+      "index": 0,
+      "color": "blue"
+    },
     " cores"
   ],
   "death.attack.ritual_sacrifice": "%s was commited to the Way of the Goat",
@@ -164,29 +254,67 @@
   "block.affinity.holographic_stereopticon.tooltip_dont_spin": "Don't spin",
   "block.affinity.holographic_stereopticon.tooltip.assembling": "Assembling...",
   "block.affinity.holographic_stereopticon.imprint_block_hint": [
-    {"text": "Sneak-use on", "color": "gray"},
-    {"text": " block ", "color": "blue"},
+    {
+      "text": "Sneak-use on",
+      "color": "gray"
+    },
+    {
+      "text": " block ",
+      "color": "blue"
+    },
     "to imprint"
   ],
   "block.affinity.holographic_stereopticon.imprint_item_hint": [
-    {"text": "Right-click onto", "color": "gray"},
-    {"text": " item ", "color": "blue"},
+    {
+      "text": "Right-click onto",
+      "color": "gray"
+    },
+    {
+      "text": " item ",
+      "color": "blue"
+    },
     "to imprint"
   ],
   "block.affinity.holographic_stereopticon.imprint_entity_hint": [
-    {"text": "Sneak-use on", "color": "gray"},
-    {"text": " entity ", "color": "blue"},
+    {
+      "text": "Sneak-use on",
+      "color": "gray"
+    },
+    {
+      "text": " entity ",
+      "color": "blue"
+    },
     "to imprint"
   ],
   "block.affinity.holographic_stereopticon.imprint_section_hint": [
-    {"text": "Sneak-use to imprint", "color": "gray"},
-    {"text": " world section ", "color": "blue"}
+    {
+      "text": "Sneak-use to imprint",
+      "color": "gray"
+    },
+    {
+      "text": " world section ",
+      "color": "blue"
+    }
   ],
-  "block.affinity.holographic_stereopticon.cycle_imprint_kind_hint": {"text": "Right-click to cycle imprint kind", "color": "gray"},
-  "block.affinity.holographic_stereopticon.imprinted.section_at": ["Section at ", {"index": 0}],
+  "block.affinity.holographic_stereopticon.cycle_imprint_kind_hint": {
+    "text": "Right-click to cycle imprint kind",
+    "color": "gray"
+  },
+  "block.affinity.holographic_stereopticon.imprinted.section_at": [
+    "Section at ",
+    {
+      "index": 0
+    }
+  ],
   "block.affinity.holographic_stereopticon.imprinted": [
-    {"text": "Imprinted: ", "color": "gray"},
-    {"index": 0, "color": "dark_gray"}
+    {
+      "text": "Imprinted: ",
+      "color": "gray"
+    },
+    {
+      "index": 0,
+      "color": "dark_gray"
+    }
   ],
 
   "block.affinity.azalea_planks": "Azalea Planks",
@@ -236,8 +364,13 @@
   "item.affinity.emerald_wand_of_iridescence": "Emerald Wand of Iridescence",
   "item.affinity.sapphire_wand_of_iridescence": "Sapphire Wand of Iridescence",
   "item.affinity.wand_of_iridescence.mode_suffix": [
-    {"text": " [", "color": "dark_gray"},
-    {"index": 0},
+    {
+      "text": " [",
+      "color": "dark_gray"
+    },
+    {
+      "index": 0
+    },
     "]"
   ],
   "item.affinity.wand_of_iridescence.help": {
@@ -281,8 +414,14 @@
   "item.affinity.time_staff.mode.fast": "Fast (x%s)",
   "item.affinity.time_staff.mode.ludicrous": "Ludicrous (x%s)",
   "item.affinity.time_staff.tooltip": [
-    {"text": "☄ ", "color": "#c624ed"},
-    {"index": 0, "color": "gray"}
+    {
+      "text": "☄ ",
+      "color": "#c624ed"
+    },
+    {
+      "index": 0,
+      "color": "gray"
+    }
   ],
 
   "item.affinity.wand_of_inquiry": "Wand of Inquiry",
@@ -294,7 +433,16 @@
   "item.affinity.cultivation_staff.super_foraging_mode": "Super Foraging Mode™",
   "item.affinity.salvo_staff": "Salvo Staff",
   "item.affinity.swivel_staff": "Swivel Staff",
-  "item.affinity.swivel_staff.tooltip.consumption_per_spin": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum to spin an entity", "color": "gray"}],
+  "item.affinity.swivel_staff.tooltip.consumption_per_spin": [
+    {
+      "index": 0,
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " aethum to spin an entity",
+      "color": "gray"
+    }
+  ],
   "item.affinity.nimble_staff": "Nimble Staff",
   "item.affinity.nimble_staff.direction.north": "North",
   "item.affinity.nimble_staff.direction.south": "South",
@@ -317,8 +465,26 @@
   "item.affinity.archetypal_iron_ring": "Archetypal Iron Ring",
   "item.affinity.featherweight_ring": "Featherweight Ring",
   "item.affinity.evade_ring": "Evade Ring",
-  "item.affinity.evade_ring.tooltip.consumption_per_use": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per use", "color": "gray"}],
-  "item.affinity.evade_ring.tooltip.take_control": [{"text": "▼ ", "color": "#690926"}, {"text": "Take Control", "color": "gray"}],
+  "item.affinity.evade_ring.tooltip.consumption_per_use": [
+    {
+      "index": 0,
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " aethum per use",
+      "color": "gray"
+    }
+  ],
+  "item.affinity.evade_ring.tooltip.take_control": [
+    {
+      "text": "▼ ",
+      "color": "#690926"
+    },
+    {
+      "text": "Take Control",
+      "color": "gray"
+    }
+  ],
   "item.affinity.lavaliere_of_safe_keeping": "Lavaliere of Safekeeping",
   "item.affinity.assassins_quiver": "Assassin's Quiver",
   "item.affinity.aethum_fire_extinguisher": "Aethum Fire Extinguisher",
@@ -326,7 +492,10 @@
   "item.affinity.crystallized_experience": "Crystallized Experience",
   "item.affinity.uncanny_rod": "Uncanny Rod",
   "item.affinity.staff_prototype": "Staff Prototype",
-  "item.affinity.misty_potion": {"text": "Misty Potion", "italic": false},
+  "item.affinity.misty_potion": {
+    "text": "Misty Potion",
+    "italic": false
+  },
   "item.affinity.potion_of_infinite_prowess": {
     "text": "Potion of Infinite Prowess",
     "italic": false,
@@ -335,35 +504,119 @@
 
   "item.affinity.resounding_chime": "Resounding Chime",
   "item.affinity.azalea_bow": "Azalea Bow",
-  "item.affinity.azalea_bow.tooltip.consumption_per_shot": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per shot", "color": "gray"}],
+  "item.affinity.azalea_bow.tooltip.consumption_per_shot": [
+    {
+      "index": 0,
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " aethum per shot",
+      "color": "gray"
+    }
+  ],
   "death.attack.resonating": "%s was late to class",
   "death.attack.resonating.player": "%s was late to class because they were chatting with %s",
 
   "item.affinity.staff.mode_template": [
-    {"text": " [", "color": "dark_gray"},
-    {"index": 0, "color": "gray"},
+    {
+      "text": " [",
+      "color": "dark_gray"
+    },
+    {
+      "index": 0,
+      "color": "gray"
+    },
     "]"
   ],
-  "item.affinity.staff.tooltip.consumption_per_use": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per use", "color": "gray"}],
-  "item.affinity.staff.tooltip.consumption_per_second": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per second", "color": "gray"}],
-  "item.affinity.staff.tooltip.cycle_mode_hint": [{"text": "⇄", "color": "#4D4C7D"}, {"text": " Sneak-use to cycle modes", "color": "gray"}],
-
-  "item.affinity.kinesis_staff.tooltip.consumption_per_throw": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per throw", "color": "gray"}],
-  "item.affinity.astrokinesis_staff.tooltip.consumption_per_throw": [
-    {"index": 0, "color": "#4D4C7D"},
-    {"text": " aethum to throw an asteroid", "color": "gray"}
+  "item.affinity.staff.tooltip.consumption_per_use": [
+    {
+      "index": 0,
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " aethum per use",
+      "color": "gray"
+    }
   ],
-  "item.affinity.salvo_staff.tooltip.consumption_per_missile": [{"index": 0, "color": "#4D4C7D"}, {"text": " aethum per missile", "color": "gray"}],
+  "item.affinity.staff.tooltip.consumption_per_second": [
+    {
+      "index": 0,
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " aethum per second",
+      "color": "gray"
+    }
+  ],
+  "item.affinity.staff.tooltip.cycle_mode_hint": [
+    {
+      "text": "⇄",
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " Sneak-use to cycle modes",
+      "color": "gray"
+    }
+  ],
+
+  "item.affinity.kinesis_staff.tooltip.consumption_per_throw": [
+    {
+      "index": 0,
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " aethum per throw",
+      "color": "gray"
+    }
+  ],
+  "item.affinity.astrokinesis_staff.tooltip.consumption_per_throw": [
+    {
+      "index": 0,
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " aethum to throw an asteroid",
+      "color": "gray"
+    }
+  ],
+  "item.affinity.salvo_staff.tooltip.consumption_per_missile": [
+    {
+      "index": 0,
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " aethum per missile",
+      "color": "gray"
+    }
+  ],
 
   "text.affinity.attuned_shard_range": [
-    {"text": "Range: ", "color": "gray"},
-    {"index": 0, "color": "#4D4C7D"},
-    {"text": " blocks", "color": "#4D4C7D"}
+    {
+      "text": "Range: ",
+      "color": "gray"
+    },
+    {
+      "index": 0,
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " blocks",
+      "color": "#4D4C7D"
+    }
   ],
   "text.affinity.attuned_shard_max_transfer": [
-    {"text": "Rate: ", "color": "gray"},
-    {"index": 0, "color": "#4D4C7D"},
-    {"text": " af/s", "color": "#4D4C7D"}
+    {
+      "text": "Rate: ",
+      "color": "gray"
+    },
+    {
+      "index": 0,
+      "color": "#4D4C7D"
+    },
+    {
+      "text": " af/s",
+      "color": "#4D4C7D"
+    }
   ],
   "text.affinity.echo_shard_location": "Bound to %s in %s",
   "item.affinity.mildly_attuned_amethyst_shard": "Mildly Attuned Amethyst Shard",
@@ -371,26 +624,47 @@
   "item.affinity.greatly_attuned_amethyst_shard": "Greatly Attuned Amethyst Shard",
   "item.affinity.sculk_resonant_ethereal_amethyst_shard": "Sculk-Resonant Ethereal Amethyst Shard",
   "item.affinity.void_resonant_ethereal_amethyst_shard": "Void-Resonant Ethereal Amethyst Shard",
+
   "item.affinity.villager_arms": "Villager Arms",
+  "item.affinity.villager_arms.with_profession": "%s Arms",
+  "item.affinity.villager_arms.with_profession.with_level": "%2$s %1$s Arms",
 
   "item.affinity.anthracite_powder": "Anthracite Powder",
   "item.affinity.carbon_copy.empty": "Carbon Copy of ... Nothing?",
   "item.affinity.carbon_copy": [
     "Carbon Copy of ",
-    {"index": 0, "color": "gray"},
-    {"text": "x ", "color": "dark_gray"},
-    {"index": 1, "color": "gray"}
+    {
+      "index": 0,
+      "color": "gray"
+    },
+    {
+      "text": "x ",
+      "color": "dark_gray"
+    },
+    {
+      "index": 1,
+      "color": "gray"
+    }
   ],
   "item.affinity.scintillant_anthracite_blend": "Scintillant Anthracite Blend",
   "item.affinity.crystalline_wisp_matter_composite": "Crystalline Wisp Matter Composite",
   "item.affinity.aethum_map_prototype": "Aethum Map Prototype",
   "item.affinity.realized_aethum_map": "Realized Aethum Map",
-  "item.affinity.realized_aethum_map.tooltip.locked": {"text": "Locked", "color": "gray"},
-  "item.affinity.realized_aethum_map.tooltip.unlocked": {"text": "Unlocked", "color": "gray"},
+  "item.affinity.realized_aethum_map.tooltip.locked": {
+    "text": "Locked",
+    "color": "gray"
+  },
+  "item.affinity.realized_aethum_map.tooltip.unlocked": {
+    "text": "Unlocked",
+    "color": "gray"
+  },
 
   "enchantment.affinity.curse_of_illiteracy": "Curse of Illiteracy",
   "enchantment.affinity.curse_of_illiteracy.desc": [
-    {"text": "honestly strange that this is now readable", "obfuscated": true}
+    {
+      "text": "honestly strange that this is now readable",
+      "obfuscated": true
+    }
   ],
   "enchantment.affinity.curse_of_health": "Curse of Health",
   "enchantment.affinity.curse_of_health.desc": "Increases your health when put on. Taking off is not recommended",
@@ -399,23 +673,41 @@
   "enchantment.affinity.ender_scourge": "Ender Scourge",
   "enchantment.affinity.ender_scourge.desc": "Increased damage to creatures from the End",
   "text.affinity.absolute_enchantment_prefix": [
-    {"text": "Absolute", "color": "#541690"},
-    {"text": " | ", "color": "gray"}
+    {
+      "text": "Absolute",
+      "color": "#541690"
+    },
+    {
+      "text": " | ",
+      "color": "gray"
+    }
   ],
   "enchantment.affinity.berserker": "Berserker",
   "enchantment.affinity.berserker.desc": [
-    {"translate": "text.affinity.absolute_enchantment_prefix"},
-    {"text": "Increased maximum health and higher attack damage the lower your health"}
+    {
+      "translate": "text.affinity.absolute_enchantment_prefix"
+    },
+    {
+      "text": "Increased maximum health and higher attack damage the lower your health"
+    }
   ],
   "enchantment.affinity.gravecaller": "Gravecaller",
   "enchantment.affinity.gravecaller.desc": [
-    {"translate": "text.affinity.absolute_enchantment_prefix"},
-    {"text": "Your armor conjures undead minions and subdues other undead in range"}
+    {
+      "translate": "text.affinity.absolute_enchantment_prefix"
+    },
+    {
+      "text": "Your armor conjures undead minions and subdues other undead in range"
+    }
   ],
   "enchantment.affinity.bastion": "Bastion",
   "enchantment.affinity.bastion.desc": [
-    {"translate": "text.affinity.absolute_enchantment_prefix"},
-    {"text": "Extreme, health-based regeneration at the cost of halving your damage output"}
+    {
+      "translate": "text.affinity.absolute_enchantment_prefix"
+    },
+    {
+      "text": "Extreme, health-based regeneration at the cost of halving your damage output"
+    }
   ],
   "enchantment.affinity.wounding": "Wounding",
   "enchantment.affinity.wounding.desc": "Increased critical hit damage",
@@ -461,18 +753,84 @@
   "gui.affinity.augmented_crafting_table.title": "Augmented Crafting Table",
 
   "gui.affinity.flux_network_visualizer.network_statistics": "Network statistics",
-  "gui.affinity.flux_network_visualizer.member_count": ["Member count: ", {"index": 0, "color": "blue"}],
-  "gui.affinity.flux_network_visualizer.node_count": ["Node count: ", {"index": 0, "color": "blue"}],
-  "gui.affinity.flux_network_visualizer.flux_capacity": ["Flux capacity: ", {"index": 0, "color": "blue"}],
-  "gui.affinity.flux_network_visualizer.total_flux": ["Total flux: ", {"index": 0, "color": "blue"}],
-  "gui.affinity.flux_network_visualizer.rotate_hint": ["Mouse 1 to ", {"text": "rotate", "color": "yellow"}],
-  "gui.affinity.flux_network_visualizer.move_hint": ["Mouse 2 to ", {"text": "move", "color": "yellow"}],
-  "gui.affinity.flux_network_visualizer.reset_hint": ["Double-click to ", {"text": "reset", "color": "yellow"}],
-  "gui.affinity.flux_network_visualizer.hover_hint": ["Hover to ", {"text": "view information", "color": "yellow"}],
+  "gui.affinity.flux_network_visualizer.member_count": [
+    "Member count: ",
+    {
+      "index": 0,
+      "color": "blue"
+    }
+  ],
+  "gui.affinity.flux_network_visualizer.node_count": [
+    "Node count: ",
+    {
+      "index": 0,
+      "color": "blue"
+    }
+  ],
+  "gui.affinity.flux_network_visualizer.flux_capacity": [
+    "Flux capacity: ",
+    {
+      "index": 0,
+      "color": "blue"
+    }
+  ],
+  "gui.affinity.flux_network_visualizer.total_flux": [
+    "Total flux: ",
+    {
+      "index": 0,
+      "color": "blue"
+    }
+  ],
+  "gui.affinity.flux_network_visualizer.rotate_hint": [
+    "Mouse 1 to ",
+    {
+      "text": "rotate",
+      "color": "yellow"
+    }
+  ],
+  "gui.affinity.flux_network_visualizer.move_hint": [
+    "Mouse 2 to ",
+    {
+      "text": "move",
+      "color": "yellow"
+    }
+  ],
+  "gui.affinity.flux_network_visualizer.reset_hint": [
+    "Double-click to ",
+    {
+      "text": "reset",
+      "color": "yellow"
+    }
+  ],
+  "gui.affinity.flux_network_visualizer.hover_hint": [
+    "Hover to ",
+    {
+      "text": "view information",
+      "color": "yellow"
+    }
+  ],
 
-  "gui.affinity.villager_armature.rotate_hint": ["Mouse 1 to ", {"text": "rotate", "color": "yellow"}],
-  "gui.affinity.villager_armature.click_hint": ["Mouse 2 to ", {"text": "set target", "color": "yellow"}],
-  "gui.affinity.villager_armature.reset_hint": ["Double-click to ", {"text": "reset", "color": "yellow"}],
+  "gui.affinity.villager_armature.rotate_hint": [
+    "Mouse 1 to ",
+    {
+      "text": "rotate",
+      "color": "yellow"
+    }
+  ],
+  "gui.affinity.villager_armature.click_hint": [
+    "Mouse 2 to ",
+    {
+      "text": "set target",
+      "color": "yellow"
+    }
+  ],
+  "gui.affinity.villager_armature.reset_hint": [
+    "Double-click to ",
+    {
+      "text": "reset",
+      "color": "yellow"
+    }
+  ],
 
   "advancement.affinity.root.title": "Affinity",
   "advancement.affinity.root.description": "Tomfoolery awaits",
@@ -542,26 +900,61 @@
 
   "text.affinity.prefix": [
     "",
-    {"text": "[", "color": "gray"},
-    {"text":"A","color":"#0096ff"},
-    {"text":"f","color":"#009fff"},
-    {"text":"f","color":"#00a8ff"},
-    {"text":"i","color":"#00b1ff"},
-    {"text":"n","color":"#00bbff"},
-    {"text":"i","color":"#00c4ff"},
-    {"text":"t","color":"#00cdff"},
-    {"text":"y","color":"#00d7ff"},
-    {"text": "]", "color": "gray"}
+    {
+      "text": "[",
+      "color": "gray"
+    },
+    {
+      "text": "A",
+      "color": "#0096ff"
+    },
+    {
+      "text": "f",
+      "color": "#009fff"
+    },
+    {
+      "text": "f",
+      "color": "#00a8ff"
+    },
+    {
+      "text": "i",
+      "color": "#00b1ff"
+    },
+    {
+      "text": "n",
+      "color": "#00bbff"
+    },
+    {
+      "text": "i",
+      "color": "#00c4ff"
+    },
+    {
+      "text": "t",
+      "color": "#00cdff"
+    },
+    {
+      "text": "y",
+      "color": "#00d7ff"
+    },
+    {
+      "text": "]",
+      "color": "gray"
+    }
   ],
   "text.config.affinity.title": [
-    {"translate": "text.affinity.prefix"},
+    {
+      "translate": "text.affinity.prefix"
+    },
     " Configuration"
   ],
   "text.config.affinity.option.renderEntitiesInStereopticonSectionImprints": "Show entities",
   "text.config.affinity.option.renderBlockEntitiesInStereopticonSectionImprints": "Show block entities",
   "text.config.affinity.option.affineInfuserCostPerDurabilityPoint": "Flux cost per durability point repaired",
   "text.config.affinity.option.maxFluxNodeShards": "Maximum outer shards per Flux Node",
-  "text.config.affinity.section.experimental": {"text": "Experimental", "color": "red"},
+  "text.config.affinity.section.experimental": {
+    "text": "Experimental",
+    "color": "red"
+  },
   "text.config.affinity.option.stereopticonSectionImprintRecursionLimit": "Recursion limit",
   "text.config.affinity.option.stereopticonSectionImprintRecursionLimit.tooltip": "How many times a stereopticon's section may be rendered\nwhen nested inside another stereopticon's section",
   "text.config.affinity.option.theSkyIrisIntegration": "Integrate The Sky with Iris shaders",
@@ -666,5 +1059,13 @@
 
   "dimension.minecraft.overworld": "The Overworld",
   "dimension.minecraft.the_nether": "The Nether",
-  "dimension.minecraft.the_end": "The End"
+  "dimension.minecraft.the_end": "The End",
+
+  "villagerType.minecraft.desert": "Desert",
+  "villagerType.minecraft.jungle": "Jungle",
+  "villagerType.minecraft.plains": "Plains",
+  "villagerType.minecraft.savanna": "Savanna",
+  "villagerType.minecraft.snow": "Snow",
+  "villagerType.minecraft.swamp": "Swamp",
+  "villagerType.minecraft.taiga": "Taiga"
 }
