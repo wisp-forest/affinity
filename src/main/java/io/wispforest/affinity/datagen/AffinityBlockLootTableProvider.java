@@ -1,5 +1,6 @@
 package io.wispforest.affinity.datagen;
 
+import io.wispforest.affinity.item.VillagerArmsItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.block.Block;
@@ -8,6 +9,7 @@ import net.minecraft.block.DoorBlock;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.CopyComponentsLootFunction;
 import net.minecraft.loot.function.CopyNbtLootFunction;
 import net.minecraft.loot.provider.nbt.ContextLootNbtProvider;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
@@ -32,7 +34,7 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
                 SPIRIT_INTEGRATION_APPARATUS, RITUAL_SOCLE_COMPOSER, AFFINE_INFUSER, RANTHRACITE_WIRE, CROP_REAPER, WORLD_PIN, SUNDIAL, ARCANE_TREETAP,
                 STAFF_PEDESTAL, OUIJA_BOARD, ITEM_TRANSFER_NODE, AETHUM_PROBE, EMERALD_BLOCK, EMERALD_BLOCK, THE_SKY, INVERSION_STONE,
                 INFUSED_STONE, MATTER_HARVESTING_HEARTH, ASP_RITE_CORE, FIELD_COHERENCE_MODULATOR, GRAVITON_TRANSDUCER, ETHEREAL_AETHUM_FLUX_INJECTOR,
-                LOCAL_DISPLACEMENT_GATEWAY, AZALEA_CHEST, VILLAGER_ARMATURE
+                LOCAL_DISPLACEMENT_GATEWAY, AZALEA_CHEST
         );
 
         this.addDrop(AFFINE_CANDLE, candleDrops(AFFINE_CANDLE));
@@ -65,6 +67,17 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
                                     CopyNbtLootFunction.builder(ContextLootNbtProvider.BLOCK_ENTITY)
                                             .withOperation("{}", "BlockEntityTag")
                             ))
+            ));
+        });
+
+        this.addDrop(VILLAGER_ARMATURE, block -> {
+            return LootTable.builder().pool(this.addSurvivesExplosionCondition(
+                block,
+                LootPool.builder()
+                    .rolls(ConstantLootNumberProvider.create(1.0F))
+                    .with(ItemEntry.builder(block).apply(
+                        CopyComponentsLootFunction.builder(CopyComponentsLootFunction.Source.BLOCK_ENTITY).include(VillagerArmsItem.VILLAGER_DATA)
+                    ))
             ));
         });
     }

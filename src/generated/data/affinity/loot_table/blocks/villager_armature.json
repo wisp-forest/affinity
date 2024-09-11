@@ -11,6 +11,15 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "affinity:villager_data"
+              ],
+              "source": "block_entity"
+            }
+          ],
           "name": "affinity:villager_armature"
         }
       ],

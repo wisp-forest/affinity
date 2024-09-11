@@ -230,9 +230,9 @@
 
   "block.affinity.villager_armature": "Villager Armature",
   "block.affinity.villager_armature.option.action": "Action",
-  "block.affinity.villager_armature.action.use": "Use",
-  "block.affinity.villager_armature.action.break": "Break",
-  "block.affinity.villager_armature.action.attack": "Attack",
+  "block.affinity.villager_armature.action.use": "☞ Use",
+  "block.affinity.villager_armature.action.break": "⛏ Break",
+  "block.affinity.villager_armature.action.attack": "\uD83D\uDDE1 Attack",
   "block.affinity.villager_armature.option.redstone-mode": "Redstone Mode",
   "block.affinity.villager_armature.redstone-mode.always_active": "Always Active",
   "block.affinity.villager_armature.redstone-mode.repeat": "Repeat",

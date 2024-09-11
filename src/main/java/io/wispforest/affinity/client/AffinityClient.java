@@ -15,10 +15,7 @@ import io.wispforest.affinity.client.render.LightLeakRenderer;
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.*;
-import io.wispforest.affinity.client.render.item.AzaleaChestItemRenderer;
-import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
-import io.wispforest.affinity.client.render.item.VillagerArmsItemRenderer;
-import io.wispforest.affinity.client.render.item.VoidResonantEtherealAmethystShardRenderer;
+import io.wispforest.affinity.client.render.item.*;
 import io.wispforest.affinity.client.render.program.*;
 import io.wispforest.affinity.client.screen.*;
 import io.wispforest.affinity.component.AffinityComponents;
@@ -89,11 +86,12 @@ public class AffinityClient implements ClientModInitializer {
 
         ModelLoadingPlugin.register(ctx -> {
             ctx.addModels(
-                    Affinity.id("item/staff_bundle"),
-                    Affinity.id("item/void_resonant_ethereal_amethyst_shard_overlay"),
-                    Affinity.id("item/void_resonant_ethereal_amethyst_shard_outline"),
-                    VillagerArmatureScreen.CROSSHAIR_MODEL_ID,
-                    VillagerArmatureScreen.CROSSHAIR_PREVIEW_MODEL_ID
+                Affinity.id("item/staff_bundle"),
+                Affinity.id("item/void_resonant_ethereal_amethyst_shard_overlay"),
+                Affinity.id("item/void_resonant_ethereal_amethyst_shard_outline"),
+                Affinity.id("item/villager_armature_base"),
+                VillagerArmatureScreen.CROSSHAIR_MODEL_ID,
+                VillagerArmatureScreen.CROSSHAIR_PREVIEW_MODEL_ID
             );
         });
 
@@ -103,6 +101,7 @@ public class AffinityClient implements ClientModInitializer {
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityItems.VOID_RESONANT_ETHEREAL_AMETHYST_SHARD, new VoidResonantEtherealAmethystShardRenderer());
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.AZALEA_CHEST, new AzaleaChestItemRenderer());
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityItems.VILLAGER_ARMS, new VillagerArmsItemRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.VILLAGER_ARMATURE, new VillagerArmatureItemRenderer());
 
         PostItemRenderCallback.EVENT.register((stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
             boolean hasItemGlow = item != null && item.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.ITEM_GLOW);
@@ -120,11 +119,11 @@ public class AffinityClient implements ClientModInitializer {
             }
 
             LightLeakRenderer.render(
-                    matrices,
-                    vertexConsumers,
-                    hasItemGlow
-                            ? Color.WHITE
-                            : new Color(.5f, 0f, 1f, 1f)
+                matrices,
+                vertexConsumers,
+                hasItemGlow
+                    ? Color.WHITE
+                    : new Color(.5f, 0f, 1f, 1f)
             );
 
             matrices.pop();
@@ -140,20 +139,20 @@ public class AffinityClient implements ClientModInitializer {
             matrices.scale(.5f, .5f, .5f);
 
             MinecraftClient.getInstance().getItemRenderer().renderItem(
-                    recipeComponent.result(), renderMode, light, overlay, matrices, vertexConsumers, null, 0
+                recipeComponent.result(), renderMode, light, overlay, matrices, vertexConsumers, null, 0
             );
         });
 
         TooltipComponentCallback.EVENT.register(data -> {
             return data instanceof StaffItem.BundleTooltipData tooltipData
-                    ? new StaffBundleTooltipComponent(tooltipData)
-                    : null;
+                ? new StaffBundleTooltipComponent(tooltipData)
+                : null;
         });
 
         TooltipComponentCallback.EVENT.register(data -> {
             return data instanceof CarbonCopyItem.TooltipData tooltipData
-                    ? new CarbonCopyTooltipComponent(tooltipData)
-                    : null;
+                ? new CarbonCopyTooltipComponent(tooltipData)
+                : null;
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

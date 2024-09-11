@@ -28,7 +28,7 @@ import static net.minecraft.village.VillagerProfession.*;
 
 public class VillagerArmsItem extends Item {
 
-    public static ComponentType<VillagerData> VILLAGER_DATA = Affinity.component("villager_data", CodecUtils.toEndec(VillagerData.CODEC));
+    public static final ComponentType<VillagerData> VILLAGER_DATA = Affinity.component("villager_data", CodecUtils.toEndec(VillagerData.CODEC));
 
     public VillagerArmsItem(Settings settings) {
         super(settings);
@@ -67,16 +67,23 @@ public class VillagerArmsItem extends Item {
             var villagerData = villager.getVillagerData();
 
             if (data != null && !data.getProfession().equals(NITWIT)) {
-                if (!data.getType().equals(villagerData.getType())) return ActionResult.PASS;
+                if (!data.getType().equals(villagerData.getType())) {
+                    return ActionResult.PASS;
+                }
+
                 if (!data.getProfession().equals(NONE)) {
-                    if (!data.getProfession().equals(villagerData.getProfession())) return ActionResult.PASS;
-                    if (data.getProfession() != NITWIT && data.getLevel() >= villagerData.getLevel()) return ActionResult.PASS;
+                    if (!data.getProfession().equals(villagerData.getProfession())) {
+                        return ActionResult.PASS;
+                    }
+
+                    if (data.getProfession() != NITWIT && data.getLevel() < villagerData.getLevel()) {
+                        return ActionResult.PASS;
+                    }
                     //if (data.getLevel() == villagerData.getLevel()) {
                     //TODO "good as new" advancement
                     //}
                 }
             }
-
 
             var flags = AffinityComponents.ENTITY_FLAGS.get(villager);
             if (!flags.hasFlag(EntityFlagComponent.VILLAGER_HAS_NO_ARMS)) return ActionResult.PASS;
@@ -99,6 +106,7 @@ public class VillagerArmsItem extends Item {
             key += ".with_profession";
             if (!data.getProfession().equals(NITWIT)) key += ".with_level";
         }
+
         var profession = Text.translatable("entity.minecraft.villager." + data.getProfession().toString().toLowerCase());
         var level = Text.translatable("merchant.level." + data.getLevel());
 
@@ -108,8 +116,10 @@ public class VillagerArmsItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         super.appendTooltip(stack, context, tooltip, type);
+
         var data = stack.get(VILLAGER_DATA);
         if (data == null) return;
+
         tooltip.add(Text.translatable("villagerType.minecraft." + data.getType()).withColor(Colors.LIGHT_GRAY));
     }
 }

@@ -1,14 +1,13 @@
 package io.wispforest.affinity.client.render.blockentity;
 
-import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.block.impl.VillagerArmatureBlock;
 import io.wispforest.affinity.blockentity.impl.VillagerArmatureBlockEntity;
+import io.wispforest.affinity.client.render.item.VillagerArmsItemRenderer;
 import io.wispforest.owo.ui.core.Easing;
 import net.minecraft.client.model.ModelData;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.model.ModelPartBuilder;
 import net.minecraft.client.model.ModelTransform;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.animation.Animation;
@@ -42,7 +41,6 @@ public class VillagerArmatureBlockEntityRenderer extends AffinityBlockEntityRend
         );
         ARMS = rootPart.createPart(64, 64);
     }
-
 
     public static final Transformation.Interpolation EXPO = (result, delta, keyframes, start, end, scale) -> {
         var from = keyframes[start].target();
@@ -82,8 +80,7 @@ public class VillagerArmatureBlockEntityRenderer extends AffinityBlockEntityRend
         matrices.translate(.5, 0, .5);
         matrices.multiply(entity.getCachedState().get(VillagerArmatureBlock.FACING).getRotationQuaternion().rotateX((float) (Math.PI / -2)));
 
-        var buffer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(Affinity.id("textures/item/villager_arms.png")));
-        ARMS.render(matrices, buffer, light, overlay);
+        VillagerArmsItemRenderer.renderArms(entity.villagerData(), matrices, vertexConsumers, light, overlay);
 
         if (!entity.heldStack().isEmpty()) {
             ARMS.getChild("arms").rotate(matrices);

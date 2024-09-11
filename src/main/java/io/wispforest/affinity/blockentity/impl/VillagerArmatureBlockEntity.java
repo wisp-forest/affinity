@@ -7,6 +7,7 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.client.screen.VillagerArmatureScreen;
+import io.wispforest.affinity.item.VillagerArmsItem;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
 import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.affinity.misc.util.InteractionUtil;
@@ -20,6 +21,7 @@ import io.wispforest.endec.SerializationContext;
 import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.owo.serialization.CodecUtils;
 import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.api.EnvType;
@@ -29,6 +31,7 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -46,15 +49,20 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
+import net.minecraft.village.VillagerData;
+import net.minecraft.village.VillagerProfession;
+import net.minecraft.village.VillagerType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, InWorldTooltipProvider {
 
     public final AnimationState punchAnimationState = new AnimationState();
 
+    private static final KeyedEndec<VillagerData> VILLAGER_DATA = CodecUtils.toEndec(VillagerData.CODEC).keyed("villager_data", new VillagerData(VillagerType.PLAINS, VillagerProfession.NONE, 1));
     private static final KeyedEndec<ItemStack> HELD_STACK = MinecraftEndecs.ITEM_STACK.keyed("held_stack", ItemStack.EMPTY);
     private static final KeyedEndec<Action> ACTION = Action.ENDEC.keyed("action", Action.USE);
     private static final KeyedEndec<RedstoneMode> REDSTONE_MODE = RedstoneMode.ENDEC.keyed("redstone_mode", RedstoneMode.REPEAT);
@@ -66,10 +74,12 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     private ItemStack heldStack = ItemStack.EMPTY;
     private final SingleStackStorageProvider storage = new SingleStackStorageProvider(this::heldStack, this::setHeldStack, this::markDirty);
 
-    public Action action = Action.USE;
-    public RedstoneMode redstoneMode = RedstoneMode.REPEAT;
-    public Vec2f clickPosition = new Vec2f(.5f, .5f);
-    public boolean sneak = false;
+    private VillagerData villagerData = VILLAGER_DATA.defaultValue();
+
+    public Action action = ACTION.defaultValue();
+    public RedstoneMode redstoneMode = REDSTONE_MODE.defaultValue();
+    public Vec2f clickPosition = CLICK_POSITION.defaultValue();
+    public boolean sneak = SNEAK.defaultValue();
 
     private int time = 0;
     private int lastActionTimestamp = 0;
@@ -149,6 +159,20 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
                 }
             }
         }
+    }
+
+    @Override
+    protected void readComponents(ComponentsAccess components) {
+        super.readComponents(components);
+
+        var villagerData = components.get(VillagerArmsItem.VILLAGER_DATA);
+        if (villagerData != null) this.villagerData = villagerData;
+    }
+
+    @Override
+    protected void addComponents(ComponentMap.Builder componentMapBuilder) {
+        super.addComponents(componentMapBuilder);
+        componentMapBuilder.add(VillagerArmsItem.VILLAGER_DATA, this.villagerData);
     }
 
     private long timeSinceLastAction() {
@@ -296,9 +320,10 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     @Override
     public void appendTooltipEntries(List<Entry> entries) {
         super.appendTooltipEntries(entries);
-        entries.add(Entry.text(Text.empty(), Text.literal(this.action.name())));
-        entries.add(Entry.text(Text.empty(), Text.literal(this.redstoneMode.name())));
-        entries.add(Entry.text(Text.empty(), Text.literal("sneaking: " + this.sneak)));
+        entries.add(Entry.text(Text.empty(), Text.translatable(this.action.translationKey())));
+        entries.add(Entry.text(Text.empty(), Text.translatable(this.redstoneMode.translationKey())));
+        // TODO translations
+//        entries.add(Entry.text(Text.empty(), Text.literal()));
     }
 
     @Override
@@ -334,10 +359,15 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         return this.heldStack;
     }
 
+    public VillagerData villagerData() {
+        return this.villagerData;
+    }
+
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
         this.setHeldStack(nbt.get(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), HELD_STACK));
+        this.villagerData = nbt.get(VILLAGER_DATA);
         this.action = nbt.get(ACTION);
         this.redstoneMode = nbt.get(REDSTONE_MODE);
         this.sneak = nbt.get(SNEAK);
@@ -348,6 +378,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.writeNbt(nbt, registries);
         nbt.put(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), HELD_STACK, this.heldStack);
+        nbt.put(VILLAGER_DATA, this.villagerData);
         nbt.put(ACTION, this.action);
         nbt.put(REDSTONE_MODE, this.redstoneMode);
         nbt.put(SNEAK, this.sneak);
@@ -374,11 +405,19 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     public enum Action {
         USE, BREAK, ATTACK;
         public static final Endec<Action> ENDEC = Endec.forEnum(Action.class);
+
+        public String translationKey() {
+            return AffinityBlocks.VILLAGER_ARMATURE.getTranslationKey() + ".action." + this.name().toLowerCase(Locale.ROOT);
+        }
     }
 
     public enum RedstoneMode {
         ALWAYS_ACTIVE, REPEAT, IMPULSE;
         public static final Endec<RedstoneMode> ENDEC = Endec.forEnum(RedstoneMode.class);
+
+        public String translationKey() {
+            return AffinityBlocks.VILLAGER_ARMATURE.getTranslationKey() + ".redstone-mode." + this.name().toLowerCase(Locale.ROOT);
+        }
     }
 
     public record PunchPacket(BlockPos armaturePos) {}
