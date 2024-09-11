@@ -9,14 +9,15 @@ import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -29,6 +30,8 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public static final TagKey<Item> STAFFS = TagKey.of(RegistryKeys.ITEM, Affinity.id("staffs"));
     public static final TagKey<Item> WISP_MATTER = TagKey.of(RegistryKeys.ITEM, Affinity.id("wisp_matter"));
     public static final TagKey<Item> WISP_MIST = TagKey.of(RegistryKeys.ITEM, Affinity.id("wisp_mist"));
+
+    public static final TagKey<Item> AMETHYST_SHARDS = TagKey.of(RegistryKeys.ITEM, Affinity.id("amethyst_shards"));
 
     public AffinityItemTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture, @Nullable BlockTagProvider blockTagProvider) {
         super(output, completableFuture, blockTagProvider);
@@ -72,6 +75,16 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         this.getOrCreateTagBuilder(ItemTags.SWORDS).addTag(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades")));
 
+        this.getOrCreateTagBuilder(ItemTags.BOW_ENCHANTABLE).add(AZALEA_BOW);
+        this.getOrCreateTagBuilder(ConventionalItemTags.BOW_TOOLS).add(AZALEA_BOW);
+
+        this.getOrCreateTagBuilder(ItemTags.HEAD_ARMOR).add(EMERALD_CHESTPLATE);
+        this.getOrCreateTagBuilder(ItemTags.CHEST_ARMOR).add(EMERALD_CHESTPLATE);
+        this.getOrCreateTagBuilder(ItemTags.LEG_ARMOR).add(EMERALD_LEGGINGS);
+        this.getOrCreateTagBuilder(ItemTags.FOOT_ARMOR).add(EMERALD_BOOTS);
+
+        this.getOrCreateTagBuilder(TagKey.of(RegistryKeys.ITEM, Identifier.of("c","buckets/arcane_fade"))).add(ARCANE_FADE_BUCKET);
+
         FieldRegistrationHandler.process(AffinityItems.class, (item, name, field) -> {
             if (item instanceof StaffItem && !(item instanceof AethumFireExtinguisherItem)) {
                 this.getOrCreateTagBuilder(STAFFS).add(item);
@@ -84,6 +97,7 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
             if (item instanceof WispMistItem) {
                 this.getOrCreateTagBuilder(WISP_MIST).add(item);
             }
+
         }, false);
     }
 }

@@ -18,6 +18,7 @@ public class AffinityDataGeneratorEntrypoint implements DataGeneratorEntrypoint 
         pack.addProvider(AffinityRecipesProvider::new);
         pack.addProvider(AffinityDynamicRegistryProvider::new);
         pack.addProvider(AffinityEnchantmentTagProvider::new);
+        pack.addProvider(AffinityFluidTagProvider::new);
 
         var blockTagProvider = pack.addProvider(AffinityBlockTagProvider::new);
         pack.addProvider((output, registries) -> new AffinityItemTagProvider(output, registries, blockTagProvider));
