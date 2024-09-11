@@ -57,6 +57,8 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
 
     private static final KeyedEndec<ItemStack> HELD_STACK = MinecraftEndecs.ITEM_STACK.keyed("held_stack", ItemStack.EMPTY);
     private static final KeyedEndec<Action> ACTION = Action.ENDEC.keyed("action", Action.USE);
+    private static final KeyedEndec<RedstoneMode> REDSTONE_MODE = RedstoneMode.ENDEC.keyed("redstone_mode", RedstoneMode.REPEAT);
+    private static final KeyedEndec<Boolean> SNEAK = Endec.BOOLEAN.keyed("sneak", false);
     private static final KeyedEndec<Vec2f> CLICK_POSITION = EndecUtil.VEC2F_ENDEC.keyed("click_position", new Vec2f(.5f, .5f));
 
     private final GameProfile playerProfile = new GameProfile(UUID.randomUUID(), "villager_armature");
@@ -64,8 +66,10 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     private ItemStack heldStack = ItemStack.EMPTY;
     private final SingleStackStorageProvider storage = new SingleStackStorageProvider(this::heldStack, this::setHeldStack, this::markDirty);
 
-    private Action action = Action.USE;
+    public Action action = Action.USE;
+    public RedstoneMode redstoneMode = RedstoneMode.REPEAT;
     public Vec2f clickPosition = new Vec2f(.5f, .5f);
+    public boolean sneak = false;
 
     private int time = 0;
     private int lastActionTimestamp = 0;
@@ -286,6 +290,8 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     public void appendTooltipEntries(List<Entry> entries) {
         super.appendTooltipEntries(entries);
         entries.add(Entry.text(Text.empty(), Text.literal(this.action.name())));
+        entries.add(Entry.text(Text.empty(), Text.literal(this.redstoneMode.name())));
+        entries.add(Entry.text(Text.empty(), Text.literal("sneaking: " + this.sneak)));
     }
 
     @Override
@@ -305,17 +311,6 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         MinecraftClient.getInstance().setScreen(new VillagerArmatureScreen(this));
     }
 
-    public ActionResult onScroll(boolean direction) {
-        var actionIdx = this.action.ordinal() + (direction ? 1 : -1);
-        if (actionIdx >= Action.values().length) actionIdx -= Action.values().length;
-        if (actionIdx < 0) actionIdx += Action.values().length;
-
-        this.action = Action.values()[actionIdx];
-        this.markDirty();
-
-        return ActionResult.SUCCESS;
-    }
-
     public int time() {
         return this.time;
     }
@@ -333,6 +328,8 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         super.readNbt(nbt, registries);
         this.setHeldStack(nbt.get(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), HELD_STACK));
         this.action = nbt.get(ACTION);
+        this.redstoneMode = nbt.get(REDSTONE_MODE);
+        this.sneak = nbt.get(SNEAK);
         this.clickPosition = nbt.get(CLICK_POSITION);
     }
 
@@ -341,6 +338,8 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         super.writeNbt(nbt, registries);
         nbt.put(SerializationContext.attributes(RegistriesAttribute.of((DynamicRegistryManager) registries)), HELD_STACK, this.heldStack);
         nbt.put(ACTION, this.action);
+        nbt.put(REDSTONE_MODE, this.redstoneMode);
+        nbt.put(SNEAK, this.sneak);
         nbt.put(CLICK_POSITION, this.clickPosition);
     }
 
@@ -350,28 +349,44 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
             armature.punchAnimationState.start(armature.time);
         });
 
-        AffinityNetwork.CHANNEL.registerServerbound(SetClickPositionPacket.class, SetClickPositionPacket.ENDEC, (message, access) -> {
+        AffinityNetwork.CHANNEL.registerServerbound(SetPropertiesPacket.class, SetPropertiesPacket.ENDEC, (message, access) -> {
             if (!(access.player().getWorld().getBlockEntity(message.armaturePos) instanceof VillagerArmatureBlockEntity armature)) return;
 
+            armature.action = message.action;
+            armature.redstoneMode = message.redstoneMode;
             armature.clickPosition = message.clickPosition;
+            armature.sneak = message.sneak;
             armature.markDirty();
         });
     }
 
-    private enum Action {
+    public enum Action {
         USE, BREAK, ATTACK;
         public static final Endec<Action> ENDEC = Endec.forEnum(Action.class);
     }
 
+    public enum RedstoneMode {
+        ALWAYS_ACTIVE, REPEAT, IMPULSE;
+        public static final Endec<RedstoneMode> ENDEC = Endec.forEnum(RedstoneMode.class);
+    }
+
     public record PunchPacket(BlockPos armaturePos) {}
 
-    public record SetClickPositionPacket(BlockPos armaturePos, Vec2f clickPosition) {
-        public static final StructEndec<SetClickPositionPacket> ENDEC = StructEndecBuilder.of(
-            MinecraftEndecs.BLOCK_POS.fieldOf("armature_pos", SetClickPositionPacket::armaturePos),
-            EndecUtil.VEC2F_ENDEC.fieldOf("click_position", SetClickPositionPacket::clickPosition),
-            SetClickPositionPacket::new
+    public record SetPropertiesPacket(BlockPos armaturePos, Action action, RedstoneMode redstoneMode, Vec2f clickPosition, boolean sneak) {
+        public static final StructEndec<SetPropertiesPacket> ENDEC = StructEndecBuilder.of(
+            MinecraftEndecs.BLOCK_POS.fieldOf("armature_pos", SetPropertiesPacket::armaturePos),
+            Action.ENDEC.fieldOf("action", SetPropertiesPacket::action),
+            RedstoneMode.ENDEC.fieldOf("redstone_mode", SetPropertiesPacket::redstoneMode),
+            EndecUtil.VEC2F_ENDEC.fieldOf("click_position", SetPropertiesPacket::clickPosition),
+            Endec.BOOLEAN.fieldOf("sneak", SetPropertiesPacket::sneak),
+            SetPropertiesPacket::new
         );
+
+        public SetPropertiesPacket(VillagerArmatureBlockEntity armature) {
+            this(armature.pos, armature.action, armature.redstoneMode, armature.clickPosition, armature.sneak);
+        }
     }
+
     static {
         ItemStorage.SIDED.registerForBlockEntity((armature, direction) -> armature.storage, AffinityBlocks.Entities.VILLAGER_ARMATURE);
     }

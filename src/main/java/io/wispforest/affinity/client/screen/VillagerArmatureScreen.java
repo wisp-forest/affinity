@@ -1,6 +1,7 @@
 package io.wispforest.affinity.client.screen;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Streams;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.systems.VertexSorter;
 import io.wispforest.affinity.Affinity;
@@ -40,7 +41,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL30;
 
 import java.util.function.Predicate;
-import java.util.stream.StreamSupport;
 
 import static io.wispforest.affinity.client.screen.FluxNetworkVisualizerScreen.VISUALIZER_BUFFER;
 
@@ -71,9 +71,8 @@ public class VillagerArmatureScreen extends BaseUIModelScreen<FlowLayout> {
         this.armature = armature;
 
         var facing = armature.getCachedState().get(VillagerArmatureBlock.FACING);
-        var mainPositions = StreamSupport.stream(
-            Iterables.transform(BlockPos.iterate(armature.getPos().offset(facing), armature.getPos().offset(facing, 5)), BlockPos::toImmutable).spliterator(),
-            false
+        var mainPositions = Streams.stream(
+            Iterables.transform(BlockPos.iterate(armature.getPos().offset(facing), armature.getPos().offset(facing, 5)), BlockPos::toImmutable)
         ).toList();
 
         var minPos = armature.getPos().offset(facing.rotateYCounterclockwise()).down();
@@ -81,20 +80,19 @@ public class VillagerArmatureScreen extends BaseUIModelScreen<FlowLayout> {
 
         this.mainView = new FluxNetworkVisualizerScreen.RenderView(mainPositions);
         this.peripheralView = new FluxNetworkVisualizerScreen.RenderView(
-            StreamSupport.stream(
-                Iterables.transform(BlockPos.iterate(minPos, maxPos), BlockPos::toImmutable).spliterator(),
-                false
+            Streams.stream(
+                Iterables.transform(BlockPos.iterate(minPos, maxPos), BlockPos::toImmutable)
             ).filter(Predicate.not(mainPositions::contains)).toList()
         );
 
         this.mainMesh = new WorldMesh.Builder(this.mainView, mainPositions.getFirst(), mainPositions.getLast()).build();
         this.peripheralMesh = new WorldMesh.Builder(this.peripheralView, minPos, maxPos).build();
 
+        this.rotation = new Interpolator(facing.asRotation() + 135);
+
         this.xSize = this.peripheralMesh.dimensions().getLengthX();
         this.ySize = this.peripheralMesh.dimensions().getLengthY();
         this.zSize = this.peripheralMesh.dimensions().getLengthZ();
-
-        this.rotation = new Interpolator(facing.asRotation() + 135);
     }
 
     @Override
@@ -329,16 +327,18 @@ public class VillagerArmatureScreen extends BaseUIModelScreen<FlowLayout> {
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (this.lastHoverPosition != null) {
-                AffinityNetwork.CHANNEL.clientHandle().send(new VillagerArmatureBlockEntity.SetClickPositionPacket(
-                    this.armature.getPos(),
-                    this.lastHoverPosition
-                ));
+                this.armature.clickPosition = this.lastHoverPosition;
+                this.sendProperties();
             }
 
             return true;
         } else {
             return false;
         }
+    }
+
+    private void sendProperties() {
+        AffinityNetwork.CHANNEL.clientHandle().send(new VillagerArmatureBlockEntity.SetPropertiesPacket(this.armature));
     }
 
     @Override

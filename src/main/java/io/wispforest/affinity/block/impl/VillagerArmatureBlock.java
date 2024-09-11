@@ -1,7 +1,6 @@
 package io.wispforest.affinity.block.impl;
 
 import io.wispforest.affinity.block.template.AethumNetworkMemberBlock;
-import io.wispforest.affinity.block.template.ScrollInteractionReceiver;
 import io.wispforest.affinity.blockentity.impl.VillagerArmatureBlockEntity;
 import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
@@ -28,10 +27,9 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class VillagerArmatureBlock extends AethumNetworkMemberBlock implements ScrollInteractionReceiver {
+public class VillagerArmatureBlock extends AethumNetworkMemberBlock {
 
     public static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
 
@@ -112,11 +110,5 @@ public class VillagerArmatureBlock extends AethumNetworkMemberBlock implements S
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return validateTicker(type, AffinityBlocks.Entities.VILLAGER_ARMATURE, TickedBlockEntity.ticker());
-    }
-
-    @Override
-    public @NotNull ActionResult onScroll(World world, BlockState state, BlockPos pos, PlayerEntity player, boolean direction) {
-        if (!(world.getBlockEntity(pos) instanceof VillagerArmatureBlockEntity armature)) return ActionResult.PASS;
-        return armature.onScroll(direction);
     }
 }
