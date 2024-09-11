@@ -65,6 +65,21 @@ public class VillagerArmsItem extends Item {
 
             if (!(entity instanceof VillagerEntity villager)) return ActionResult.PASS;
 
+            var data = stack.get(VILLAGER_DATA);
+            var villagerData = villager.getVillagerData();
+
+            if (data != null && !data.getProfession().equals(NITWIT)) {
+                if (!data.getType().equals(villagerData.getType())) return ActionResult.PASS;
+                if (!data.getProfession().equals(NONE)) {
+                    if (!data.getProfession().equals(villagerData.getProfession())) return ActionResult.PASS;
+                    if (data.getProfession() != NITWIT && data.getLevel() >= villagerData.getLevel()) return ActionResult.PASS;
+                    //if (data.getLevel() == villagerData.getLevel()) {
+                        //TODO "good as new" advancement
+                    //}
+                }
+            }
+
+
             var flags = AffinityComponents.ENTITY_FLAGS.get(villager);
             if (!flags.hasFlag(EntityFlagComponent.VILLAGER_HAS_NO_ARMS)) return ActionResult.PASS;
 
