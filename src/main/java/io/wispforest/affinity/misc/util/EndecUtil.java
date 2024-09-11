@@ -10,7 +10,6 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.Vec2f;
-import net.minecraft.village.VillagerData;
 
 import java.util.List;
 

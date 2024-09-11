@@ -217,15 +217,15 @@ public class AffinityItemGroup {
             entries.add(WISE_WISP_SPAWN_EGG);
             entries.add(VICIOUS_WISP_SPAWN_EGG);
             var items = new ArrayList<ItemStack>();
-            for (VillagerProfession villagerProfession : Registries.VILLAGER_PROFESSION) {
+            for (var villagerProfession : Registries.VILLAGER_PROFESSION) {
                 var stack = VILLAGER_ARMS.getDefaultStack();
                 stack.set(VILLAGER_DATA, new VillagerData(VillagerType.PLAINS, villagerProfession, 5));
                 items.add(stack);
             }
             entries.addAll(items, ItemGroup.StackVisibility.PARENT_TAB_ONLY);
             items.clear();
-            for (VillagerType villagerType : Registries.VILLAGER_TYPE) {
-                for (VillagerProfession villagerProfession : Registries.VILLAGER_PROFESSION) {
+            for (var villagerType : Registries.VILLAGER_TYPE) {
+                for (var villagerProfession : Registries.VILLAGER_PROFESSION) {
                     for (int i = 1; i < ((villagerProfession.equals(VillagerProfession.NITWIT) || villagerProfession.equals(VillagerProfession.NONE)) ? 2 : 6); i++) {
                         var stack = VILLAGER_ARMS.getDefaultStack();
                         stack.set(VILLAGER_DATA, new VillagerData(villagerType, villagerProfession, i));

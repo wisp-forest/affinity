@@ -29,12 +29,12 @@ public class VillagerArmsItemRenderer implements BuiltinItemRendererRegistry.Dyn
         this.renderArms(NORMIE, matrices, vertexConsumers, light, overlay);
         var data = stack.get(VillagerArmsItem.VILLAGER_DATA);
         if (data == null) return;
-        this.renderArms(findTexture("type", Registries.VILLAGER_TYPE.getId(data.getType())), matrices, vertexConsumers, light, overlay);
+        this.renderArms(this.findTexture("type", Registries.VILLAGER_TYPE.getId(data.getType())), matrices, vertexConsumers, light, overlay);
         var profession = data.getProfession();
         if (profession == VillagerProfession.NONE) return;
-        this.renderArms(findTexture("profession", Registries.VILLAGER_PROFESSION.getId(profession)), matrices, vertexConsumers, light, overlay);
+        this.renderArms(this.findTexture("profession", Registries.VILLAGER_PROFESSION.getId(profession)), matrices, vertexConsumers, light, overlay);
         if (profession == VillagerProfession.NITWIT) return;
-        this.renderArms(findTexture("profession_level", VillagerClothingFeatureRendererAccessor.affinity$LevelToIdMap().get(MathHelper.clamp(data.getLevel(), 1, VillagerClothingFeatureRendererAccessor.affinity$LevelToIdMap().size()))), matrices, vertexConsumers, light, overlay);
+        this.renderArms(this.findTexture("profession_level", VillagerClothingFeatureRendererAccessor.affinity$LevelToIdMap().get(MathHelper.clamp(data.getLevel(), 1, VillagerClothingFeatureRendererAccessor.affinity$LevelToIdMap().size()))), matrices, vertexConsumers, light, overlay);
     }
 
     private void renderArms(Identifier id, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
