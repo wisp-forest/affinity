@@ -58,8 +58,9 @@ public class VillagerArmatureBlock extends AethumNetworkMemberBlock {
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (newState.getBlock() != state.getBlock()) {
-            if (!(world.getBlockEntity(pos) instanceof VillagerArmatureBlockEntity armature) || armature.heldStack().isEmpty()) return;
-            ItemScatterer.spawn(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, armature.heldStack());
+            if (world.getBlockEntity(pos) instanceof VillagerArmatureBlockEntity armature && !armature.heldStack().isEmpty()) {
+                ItemScatterer.spawn(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, armature.heldStack());
+            }
 
             super.onStateReplaced(state, world, pos, newState, moved);
         } else {
