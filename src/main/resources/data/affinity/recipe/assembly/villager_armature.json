@@ -1,0 +1,29 @@
+{
+  "type": "affinity:villager_armature_assembly",
+  "category": "misc",
+  "key": {
+    "r": {
+      "item": "affinity:ranthracite_dust"
+    },
+    "s": {
+      "item": "affinity:mildly_attuned_amethyst_shard"
+    },
+    "i": {
+      "item": "affinity:infused_stone"
+    },
+    "a": {
+      "item": "affinity:villager_arms"
+    },
+    "l": {
+      "item": "affinity:azalea_log"
+    }
+  },
+  "pattern": [
+    " l ",
+    "sas",
+    "rir"
+  ],
+  "result": {
+    "id": "affinity:villager_armature"
+  }
+}

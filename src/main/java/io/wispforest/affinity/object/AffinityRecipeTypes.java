@@ -21,6 +21,7 @@ public class AffinityRecipeTypes implements AutoRegistryContainer<RecipeType<?>>
         public static final RecipeSerializer<SpiritAssimilationRecipe> SPIRIT_ASSIMILATION = new SpiritAssimilationRecipe.Serializer();
         public static final RecipeSerializer<OrnamentCarvingRecipe> ORNAMENT_CARVING = new OrnamentCarvingRecipe.Serializer();
         public static final RecipeSerializer<ShapedRecipe> ASSEMBLY_SHAPED = new ShapedAssemblyRecipe.Serializer();
+        public static final RecipeSerializer<ShapedRecipe> VILLAGER_ARMATURE_ASSEMBLY = new VillagerArmatureAssemblyRecipe.Serializer();
         public static final RecipeSerializer<ShapelessRecipe> ASSEMBLY_SHAPELESS = new ShapelessAssemblyRecipe.Serializer();
 
         public static final RecipeSerializer<GlowingPotionDyeRecipe> CRAFTING_SPECIAL_GLOWING_POTION_DYE = new SpecialRecipeSerializer<>(GlowingPotionDyeRecipe::new);
