@@ -20,6 +20,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.village.VillageGossipType;
 import net.minecraft.village.VillagerData;
 
 import java.util.List;
@@ -49,6 +50,8 @@ public class VillagerArmsItem extends Item {
             var stack = AffinityItems.VILLAGER_ARMS.getDefaultStack();
             stack.set(VILLAGER_DATA, villager.getVillagerData());
             ItemScatterer.spawn(world, villager.getX(), villager.getY(), villager.getZ(), stack);
+
+            villager.getGossip().startGossip(player.getUuid(), VillageGossipType.MAJOR_NEGATIVE, 10);
 
             villager.playSound(SoundEvents.ITEM_AXE_STRIP);
             player.getStackInHand(hand).damage(1, player, hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
