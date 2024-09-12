@@ -88,6 +88,9 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
 
     public VillagerArmatureBlockEntity(BlockPos pos, BlockState state) {
         super(AffinityBlocks.Entities.VILLAGER_ARMATURE, pos, state);
+
+        this.fluxStorage.setFluxCapacity(32000);
+        this.fluxStorage.setMaxInsert(1000);
     }
 
     @Override
