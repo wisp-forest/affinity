@@ -24,7 +24,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
             EndecUtil.RECIPE_RESULT_ENDEC.fieldOf("output", recipe -> recipe.output),
             Endec.BOOLEAN.optionalFieldOf("transfer_components", recipe -> recipe.transferComponents, false),
             Endec.INT.optionalFieldOf("duration", recipe -> recipe.duration, 100),
-            Endec.INT.optionalFieldOf("flux_field_per_tick", recipe -> recipe.fluxCostPerTick, 0),
+            Endec.INT.optionalFieldOf("flux_cost_per_tick", recipe -> recipe.fluxCostPerTick, 0),
             AspenInfusionRecipe::new
     );
 
