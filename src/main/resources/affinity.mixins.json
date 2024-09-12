@@ -59,6 +59,7 @@
     "TippedArrowRecipeMixin",
     "TrackTargetGoalMixin",
     "VillagerClothingFeatureRendererAccessor",
+    "VillagerWorkTaskMixin",
     "WorldChunkMixin",
     "WorldMixin",
     "WorldViewMixin",
