@@ -32,8 +32,9 @@ public class MangroveBasketItemRenderer implements BuiltinItemRendererRegistry.D
         }
 
         var containedBlockEntity = BlockEntity.createFromNbt(pos, containedState, nbt.getNbt().getCompound("ContainedBlockEntity"), client.world.getRegistryManager());
-        containedBlockEntity.setWorld(client.world);
+        if (containedBlockEntity == null) return;
 
+        containedBlockEntity.setWorld(client.world);
         MangroveBasketBlockEntityRenderer.renderContents(
                 client.getBlockRenderManager(),
                 client.getBlockEntityRenderDispatcher(),
