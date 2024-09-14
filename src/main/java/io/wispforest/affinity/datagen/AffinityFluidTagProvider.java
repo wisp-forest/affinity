@@ -14,14 +14,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class AffinityFluidTagProvider extends FabricTagProvider.FluidTagProvider {
 
-    public static final TagKey<Fluid> ARCANE_FADE = TagKey.of(RegistryKeys.FLUID, Identifier.of("c","arcane_fade"));
+    public static final TagKey<Fluid> ARCANE_FADE = TagKey.of(RegistryKeys.FLUID, Identifier.of("c", "arcane_fade"));
 
     public AffinityFluidTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture) {
         super(output, completableFuture);
     }
 
     @Override
-    @SuppressWarnings("UnstableApiUsage")
     protected void configure(RegistryWrapper.WrapperLookup arg) {
         var arcaneFadeInternal = TagKey.of(RegistryKeys.FLUID, Affinity.id("arcane_fade"));
 
