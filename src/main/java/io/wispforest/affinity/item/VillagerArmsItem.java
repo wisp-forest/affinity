@@ -47,6 +47,8 @@ public class VillagerArmsItem extends Item {
     static {
         // let's go steal some villager arms
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            if (!Affinity.config().unfinishedFeatures()) return ActionResult.PASS;
+
             if (!player.shouldCancelInteraction() || !player.getStackInHand(hand).isIn(ItemTags.AXES)) return ActionResult.PASS;
             if (!(entity instanceof VillagerEntity villager)) return ActionResult.PASS;
 
@@ -70,6 +72,8 @@ public class VillagerArmsItem extends Item {
 
         // damn, my conscience
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            if (!Affinity.config().unfinishedFeatures()) return ActionResult.PASS;
+
             var stack = player.getStackInHand(hand);
             if (!stack.isOf(AffinityItems.VILLAGER_ARMS)) return ActionResult.PASS;
 

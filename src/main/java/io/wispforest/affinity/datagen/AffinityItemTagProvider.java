@@ -5,6 +5,8 @@ import io.wispforest.affinity.item.AethumFireExtinguisherItem;
 import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.item.WispMatterItem;
 import io.wispforest.affinity.item.WispMistItem;
+import io.wispforest.affinity.misc.UnfinishedFeaturesResourceCondition;
+import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -66,6 +68,11 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         this.copy(BlockTags.CANDLES, ItemTags.CANDLES);
         this.getOrCreateTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS).add(EMERALD_INGOT);
+
+        this.getOrCreateTagBuilder(UnfinishedFeaturesResourceCondition.UNFINISHED_ITEMS).add(
+            VILLAGER_ARMS,
+            AffinityBlocks.VILLAGER_ARMATURE.asItem()
+        );
 
         this.copy(ConventionalBlockTags.ORES, ConventionalItemTags.ORES);
 

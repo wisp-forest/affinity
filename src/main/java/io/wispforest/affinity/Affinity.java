@@ -6,10 +6,7 @@ import io.wispforest.affinity.enchantment.*;
 import io.wispforest.affinity.entity.EmancipatedBlockEntity;
 import io.wispforest.affinity.item.AffinityItemGroup;
 import io.wispforest.affinity.item.EchoShardExtension;
-import io.wispforest.affinity.misc.AffinityCommands;
-import io.wispforest.affinity.misc.AffinityDebugCommands;
-import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
-import io.wispforest.affinity.misc.InquiryQuestions;
+import io.wispforest.affinity.misc.*;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
@@ -24,6 +21,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.ComponentType;
@@ -98,6 +96,7 @@ public class Affinity implements ModInitializer {
 
         Registry.register(Registries.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
         TrackedDataHandlerRegistry.register(EmancipatedBlockEntity.OPTIONAL_NBT);
+        ResourceConditions.register(UnfinishedFeaturesResourceCondition.TYPE);
 
         AffinityStructures.register();
 

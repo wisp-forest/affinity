@@ -22,4 +22,7 @@ public class AffinityConfigModel {
 
     @RangeConstraint(min = 0, max = 10)
     public int stereopticonSectionImprintRecursionLimit = 0;
+
+    @RestartRequired
+    public boolean unfinishedFeatures = false;
 }

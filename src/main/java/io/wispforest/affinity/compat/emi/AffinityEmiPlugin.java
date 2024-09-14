@@ -6,7 +6,6 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import dev.emi.emi.api.stack.ListEmiIngredient;
 import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.TextureWidget;
 import dev.emi.emi.api.widget.Widget;
@@ -15,6 +14,7 @@ import io.wispforest.affinity.block.impl.ArcaneFadeBlock;
 import io.wispforest.affinity.compat.emi.recipe.*;
 import io.wispforest.affinity.compat.rei.display.SocleComposingDisplay;
 import io.wispforest.affinity.item.SocleOrnamentItem;
+import io.wispforest.affinity.misc.UnfinishedFeaturesResourceCondition;
 import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
@@ -154,6 +154,12 @@ public class AffinityEmiPlugin implements EmiPlugin {
         ArcaneFadeBlock.forEachGroup((id, item, items) -> {
             registry.addRecipe(new ArcaneFadingEmiRecipe(items, item, id));
         });
+
+        // ---
+
+        if (!Affinity.config().unfinishedFeatures()) {
+            registry.removeEmiStacks(emiStack -> emiStack.getItemStack().isIn(UnfinishedFeaturesResourceCondition.UNFINISHED_ITEMS));
+        }
     }
 
     public static EmiIngredient veryCoolFeatureYouGotThereEmi(Ingredient ingredient) {

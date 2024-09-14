@@ -130,7 +130,7 @@ public class AffinityItemGroup {
             entries.add(ITEM_TRANSFER_NODE);
             entries.add(WORLD_PIN);
             entries.add(LOCAL_DISPLACEMENT_GATEWAY);
-            entries.add(VILLAGER_ARMATURE);
+            if (Affinity.config().unfinishedFeatures()) entries.add(VILLAGER_ARMATURE);
             entries.add(Items.AMETHYST_SHARD);
             entries.add(MILDLY_ATTUNED_AMETHYST_SHARD);
             entries.add(FAIRLY_ATTUNED_AMETHYST_SHARD);
@@ -216,24 +216,28 @@ public class AffinityItemGroup {
             entries.add(INERT_WISP_SPAWN_EGG);
             entries.add(WISE_WISP_SPAWN_EGG);
             entries.add(VICIOUS_WISP_SPAWN_EGG);
-            var items = new ArrayList<ItemStack>();
-            for (var villagerProfession : Registries.VILLAGER_PROFESSION) {
-                var stack = VILLAGER_ARMS.getDefaultStack();
-                stack.set(VILLAGER_DATA, new VillagerData(VillagerType.PLAINS, villagerProfession, 5));
-                items.add(stack);
-            }
-            entries.addAll(items, ItemGroup.StackVisibility.PARENT_TAB_ONLY);
-            items.clear();
-            for (var villagerType : Registries.VILLAGER_TYPE) {
+
+            if (Affinity.config().unfinishedFeatures()) {
+                var armStacks = new ArrayList<ItemStack>();
                 for (var villagerProfession : Registries.VILLAGER_PROFESSION) {
-                    for (int i = 1; i < ((villagerProfession.equals(VillagerProfession.NITWIT) || villagerProfession.equals(VillagerProfession.NONE)) ? 2 : 6); i++) {
-                        var stack = VILLAGER_ARMS.getDefaultStack();
-                        stack.set(VILLAGER_DATA, new VillagerData(villagerType, villagerProfession, i));
-                        items.add(stack);
+                    var stack = VILLAGER_ARMS.getDefaultStack();
+                    stack.set(VILLAGER_DATA, new VillagerArmsItem.ArmsData(VillagerType.PLAINS, villagerProfession, 5));
+                    armStacks.add(stack);
+                }
+                entries.addAll(armStacks, ItemGroup.StackVisibility.PARENT_TAB_ONLY);
+
+                armStacks.clear();
+                for (var villagerType : Registries.VILLAGER_TYPE) {
+                    for (var villagerProfession : Registries.VILLAGER_PROFESSION) {
+                        for (int i = 1; i < ((villagerProfession.equals(VillagerProfession.NITWIT) || villagerProfession.equals(VillagerProfession.NONE)) ? 2 : 6); i++) {
+                            var stack = VILLAGER_ARMS.getDefaultStack();
+                            stack.set(VILLAGER_DATA, new VillagerArmsItem.ArmsData(villagerType, villagerProfession, i));
+                            armStacks.add(stack);
+                        }
                     }
                 }
+                entries.addAll(armStacks, ItemGroup.StackVisibility.SEARCH_TAB_ONLY);
             }
-            entries.addAll(items, ItemGroup.StackVisibility.SEARCH_TAB_ONLY);
         }, false);
 
         group.addButton(ItemGroupButton.github(group, "https://github.com/wisp-forest/affinity"));

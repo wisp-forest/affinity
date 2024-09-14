@@ -11,6 +11,7 @@ import io.wispforest.affinity.compat.rei.category.*;
 import io.wispforest.affinity.compat.rei.display.*;
 import io.wispforest.affinity.item.SocleOrnamentItem;
 import io.wispforest.affinity.misc.MixinHooks;
+import io.wispforest.affinity.misc.UnfinishedFeaturesResourceCondition;
 import io.wispforest.affinity.misc.potion.PotionUtil;
 import io.wispforest.affinity.mixin.access.BrewingRecipeRegistryAccessor;
 import io.wispforest.affinity.object.AffinityBlocks;
@@ -24,6 +25,7 @@ import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.common.entry.EntryStack;
+import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.plugin.common.displays.brewing.DefaultBrewingDisplay;
@@ -102,30 +104,30 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
             var brewing = (BrewingRecipeRegistryAccessor) MinecraftClient.getInstance().world.getBrewingRecipeRegistry();
 
             brewing.affinity$getPotionTypes()
-                    .stream()
-                    .flatMap(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStack::copy))
-                    .forEach(potionStack -> {
-                        for (var potion : Registries.POTION) {
-                            PotionUtil.setPotion(potionStack, potion);
-                            if (!MixinHooks.isMistInfusion(testStack, potionStack)) continue;
+                .stream()
+                .flatMap(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStack::copy))
+                .forEach(potionStack -> {
+                    for (var potion : Registries.POTION) {
+                        PotionUtil.setPotion(potionStack, potion);
+                        if (!MixinHooks.isMistInfusion(testStack, potionStack)) continue;
 
-                            registry.add(new DefaultBrewingDisplay(
-                                    EntryIngredients.of(potionStack),
-                                    EntryIngredients.of(testStack),
-                                    EntryStacks.of(MixinHooks.craftMistInfusion(testStack, potionStack))
-                            ));
-                        }
-                    });
+                        registry.add(new DefaultBrewingDisplay(
+                            EntryIngredients.of(potionStack),
+                            EntryIngredients.of(testStack),
+                            EntryStacks.of(MixinHooks.craftMistInfusion(testStack, potionStack))
+                        ));
+                    }
+                });
         }
 
         Registries.ITEM.stream()
-                .filter(SocleOrnamentItem.class::isInstance)
-                .map(SocleOrnamentItem.class::cast)
-                .map(SocleOrnamentItem::socleType)
-                .forEach(type -> {
-                    registry.add(new SocleComposingDisplay(type, SocleComposingDisplay.Action.CRAFT));
-                    registry.add(new SocleComposingDisplay(type, SocleComposingDisplay.Action.UNCRAFT));
-                });
+            .filter(SocleOrnamentItem.class::isInstance)
+            .map(SocleOrnamentItem.class::cast)
+            .map(SocleOrnamentItem::socleType)
+            .forEach(type -> {
+                registry.add(new SocleComposingDisplay(type, SocleComposingDisplay.Action.CRAFT));
+                registry.add(new SocleComposingDisplay(type, SocleComposingDisplay.Action.UNCRAFT));
+            });
 
         ArcaneFadeBlock.forEachGroup((id, item, items) -> {
             registry.add(new ArcaneFadingDisplay(items, item, id));
@@ -141,12 +143,10 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
 
         effectToPotion.forEach((key, value) -> registry.add(new ContainingPotionsDisplay(key, value)));
 
-        HIDDEN_RECIPES.forEach(identifier -> {
-            registry.registerVisibilityPredicate((category, display) -> {
-                return display.getDisplayLocation().map(HIDDEN_RECIPES::contains).orElse(false)
-                        ? EventResult.interruptFalse()
-                        : EventResult.pass();
-            });
+        registry.registerVisibilityPredicate((category, display) -> {
+            return display.getDisplayLocation().map(HIDDEN_RECIPES::contains).orElse(false)
+                ? EventResult.interruptFalse()
+                : EventResult.pass();
         });
     }
 
@@ -154,6 +154,13 @@ public class AffinityReiClientPlugin implements REIClientPlugin {
     public void registerEntries(EntryRegistry registry) {
         for (StatusEffect effect : Registries.STATUS_EFFECT) {
             registry.addEntry(EntryStack.of(AffinityReiCommonPlugin.EFFECT_ENTRY_TYPE, effect));
+        }
+
+        if (!Affinity.config().unfinishedFeatures()) {
+            registry.removeEntryIf(entryStack -> {
+                if (entryStack.getType() != VanillaEntryTypes.ITEM) return false;
+                return entryStack.<ItemStack>castValue().isIn(UnfinishedFeaturesResourceCondition.UNFINISHED_ITEMS);
+            });
         }
     }
 

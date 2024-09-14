@@ -1,4 +1,9 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "affinity:unfinished_features"
+    }
+  ],
   "type": "affinity:villager_armature_assembly",
   "category": "misc",
   "key": {

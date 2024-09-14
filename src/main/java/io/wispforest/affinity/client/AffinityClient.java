@@ -24,6 +24,7 @@ import io.wispforest.affinity.item.CarbonCopyItem;
 import io.wispforest.affinity.item.EvadeRingItem;
 import io.wispforest.affinity.item.IridescenceWandItem;
 import io.wispforest.affinity.item.StaffItem;
+import io.wispforest.affinity.misc.UnfinishedFeaturesResourceCondition;
 import io.wispforest.affinity.misc.callback.PostItemRenderCallback;
 import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -205,6 +206,12 @@ public class AffinityClient implements ClientModInitializer {
             if (linkOrigin == null) return;
 
             CuboidRenderer.add(linkOrigin, CuboidRenderer.Cuboid.of(BlockPos.ORIGIN, new BlockPos(1, 1, 1)));
+        });
+
+        ItemTooltipCallback.EVENT.register((stack, tooltipContext, tooltipType, lines) -> {
+            if (!stack.isIn(UnfinishedFeaturesResourceCondition.UNFINISHED_ITEMS) || Affinity.config().unfinishedFeatures()) return;
+            lines.add(Text.empty());
+            lines.add(Text.translatable("text.affinity.unfinished_item_tooltip"));
         });
 
         AethumNetworkLinkingHud.initialize();

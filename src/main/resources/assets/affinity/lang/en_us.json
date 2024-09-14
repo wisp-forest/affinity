@@ -17,6 +17,8 @@
   "swivel_property.affinity.rotation": "Rotation",
   "swivel_property.affinity.axis": "Axis",
 
+  "text.affinity.unfinished_item_tooltip": ["", {"text": "⚠", "color": "yellow"}, {"text": " Unfinished", "color": "gray"}],
+
   "item.affinity.wispen_testament": "The Wispen Testament",
   "text.affinity.wispen_testament.next_page": "Continued on next page...",
   "text.affinity.wispen_testament.staff_pedestal_function": {
@@ -970,6 +972,7 @@
   "text.config.affinity.option.stereopticonSectionImprintRecursionLimit": "Recursion limit",
   "text.config.affinity.option.stereopticonSectionImprintRecursionLimit.tooltip": "How many times a stereopticon's section may be rendered\nwhen nested inside another stereopticon's section",
   "text.config.affinity.option.theSkyIrisIntegration": "Integrate The Sky with Iris shaders",
+  "text.config.affinity.option.unfinishedFeatures": "Unfinished features",
 
   "effect.affinity.dripping": "Dripping",
   "effect.affinity.dripping.desc": "Got that drip",
