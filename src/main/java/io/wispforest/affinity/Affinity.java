@@ -1,6 +1,5 @@
 package io.wispforest.affinity;
 
-import com.google.common.collect.ImmutableSet;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkMember;
 import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.enchantment.*;
@@ -11,7 +10,6 @@ import io.wispforest.affinity.misc.AffinityCommands;
 import io.wispforest.affinity.misc.AffinityDebugCommands;
 import io.wispforest.affinity.misc.ClumpDirectionLootCondition;
 import io.wispforest.affinity.misc.InquiryQuestions;
-import io.wispforest.affinity.mixin.access.BlockEntityTypeAccessor;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.worldgen.AffinityStructures;
@@ -27,7 +25,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
@@ -104,14 +101,11 @@ public class Affinity implements ModInitializer {
 
         AffinityStructures.register();
 
-        // Inject our sign block into the BE type
-        var signBlocks = ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$getBlocks();
-        signBlocks = ImmutableSet.<Block>builder().addAll(signBlocks).add(AffinityBlocks.AZALEA_SIGN, AffinityBlocks.AZALEA_WALL_SIGN).build();
-        ((BlockEntityTypeAccessor) BlockEntityType.SIGN).affinity$setBlocks(signBlocks);
+        BlockEntityType.SIGN.addSupportedBlock(AffinityBlocks.AZALEA_SIGN);
+        BlockEntityType.SIGN.addSupportedBlock(AffinityBlocks.AZALEA_WALL_SIGN);
 
-        var hangingSignBlocks = ((BlockEntityTypeAccessor) BlockEntityType.HANGING_SIGN).affinity$getBlocks();
-        hangingSignBlocks = ImmutableSet.<Block>builder().addAll(hangingSignBlocks).add(AffinityBlocks.AZALEA_HANGING_SIGN, AffinityBlocks.AZALEA_WALL_HANGING_SIGN).build();
-        ((BlockEntityTypeAccessor) BlockEntityType.HANGING_SIGN).affinity$setBlocks(hangingSignBlocks);
+        BlockEntityType.HANGING_SIGN.addSupportedBlock(AffinityBlocks.AZALEA_HANGING_SIGN);
+        BlockEntityType.HANGING_SIGN.addSupportedBlock(AffinityBlocks.AZALEA_WALL_HANGING_SIGN);
 
         AffinityItemGroup.group().initialize();
 
