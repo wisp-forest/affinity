@@ -169,13 +169,13 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         super.readComponents(components);
 
         var villagerData = components.get(VillagerArmsItem.VILLAGER_DATA);
-        if (villagerData != null) this.villagerData = villagerData;
+        if (villagerData != null) this.villagerData = villagerData.unwrap();
     }
 
     @Override
     protected void addComponents(ComponentMap.Builder componentMapBuilder) {
         super.addComponents(componentMapBuilder);
-        componentMapBuilder.add(VillagerArmsItem.VILLAGER_DATA, this.villagerData);
+        componentMapBuilder.add(VillagerArmsItem.VILLAGER_DATA, VillagerArmsItem.ArmsData.wrap(this.villagerData));
     }
 
     private long timeSinceLastAction() {

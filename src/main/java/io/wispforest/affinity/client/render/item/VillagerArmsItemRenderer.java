@@ -15,6 +15,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.village.VillagerData;
 import net.minecraft.village.VillagerProfession;
+import org.jetbrains.annotations.Nullable;
 
 public class VillagerArmsItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
     public static final Identifier NORMIE = Identifier.ofVanilla("textures/entity/villager/villager.png");
@@ -27,7 +28,11 @@ public class VillagerArmsItemRenderer implements BuiltinItemRendererRegistry.Dyn
         renderArms(stack.get(VillagerArmsItem.VILLAGER_DATA), matrices, vertexConsumers, light, overlay);
     }
 
-    public static void renderArms(VillagerData data, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public static void renderArms(@Nullable VillagerArmsItem.ArmsData data, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        renderArms(data != null ? data.unwrap() : null, matrices, vertexConsumers, light, overlay);
+    }
+
+    public static void renderArms(@Nullable VillagerData data, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         renderArms(NORMIE, matrices, vertexConsumers, light, overlay);
 
         if (data == null) return;

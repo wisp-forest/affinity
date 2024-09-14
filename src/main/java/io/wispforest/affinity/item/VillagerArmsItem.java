@@ -22,14 +22,23 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.village.VillageGossipType;
 import net.minecraft.village.VillagerData;
+import net.minecraft.village.VillagerProfession;
+import net.minecraft.village.VillagerType;
 
 import java.util.List;
 
-import static net.minecraft.village.VillagerProfession.*;
+import static net.minecraft.village.VillagerProfession.NITWIT;
+import static net.minecraft.village.VillagerProfession.NONE;
 
 public class VillagerArmsItem extends Item {
 
-    public static final ComponentType<VillagerData> VILLAGER_DATA = Affinity.component("villager_data", CodecUtils.toEndec(VillagerData.CODEC));
+    public static final ComponentType<ArmsData> VILLAGER_DATA = Affinity.component(
+        "villager_data",
+        CodecUtils.toEndecWithRegistries(
+            VillagerData.CODEC.xmap(ArmsData::wrap, ArmsData::unwrap),
+            VillagerData.PACKET_CODEC.xmap(ArmsData::wrap, ArmsData::unwrap)
+        )
+    );
 
     public VillagerArmsItem(Settings settings) {
         super(settings);
@@ -48,7 +57,7 @@ public class VillagerArmsItem extends Item {
             flags.setFlag(EntityFlagComponent.VILLAGER_HAS_NO_ARMS);
             AffinityComponents.ENTITY_FLAGS.sync(villager);
             var stack = AffinityItems.VILLAGER_ARMS.getDefaultStack();
-            stack.set(VILLAGER_DATA, villager.getVillagerData());
+            stack.set(VILLAGER_DATA, ArmsData.wrap(villager.getVillagerData()));
             ItemScatterer.spawn(world, villager.getX(), villager.getY(), villager.getZ(), stack);
 
             villager.getGossip().startGossip(player.getUuid(), VillageGossipType.MAJOR_NEGATIVE, 10);
@@ -69,17 +78,17 @@ public class VillagerArmsItem extends Item {
             var data = stack.get(VILLAGER_DATA);
             var villagerData = villager.getVillagerData();
 
-            if (data != null && !data.getProfession().equals(NITWIT)) {
-                if (!data.getType().equals(villagerData.getType())) {
+            if (data != null && !data.profession().equals(NITWIT)) {
+                if (!data.type().equals(villagerData.getType())) {
                     return ActionResult.PASS;
                 }
 
-                if (!data.getProfession().equals(NONE)) {
-                    if (!data.getProfession().equals(villagerData.getProfession())) {
+                if (!data.profession().equals(NONE)) {
+                    if (!data.profession().equals(villagerData.getProfession())) {
                         return ActionResult.PASS;
                     }
 
-                    if (data.getProfession() != NITWIT && data.getLevel() < villagerData.getLevel()) {
+                    if (data.level() < villagerData.getLevel()) {
                         return ActionResult.PASS;
                     }
                     //if (data.getLevel() == villagerData.getLevel()) {
@@ -105,13 +114,13 @@ public class VillagerArmsItem extends Item {
         var data = stack.get(VILLAGER_DATA);
         if (data == null) return super.getName(stack);
         var key = "item.affinity.villager_arms";
-        if (!data.getProfession().equals(NONE)) {
+        if (!data.profession().equals(NONE)) {
             key += ".with_profession";
-            if (!data.getProfession().equals(NITWIT)) key += ".with_level";
+            if (!data.profession().equals(NITWIT)) key += ".with_level";
         }
 
-        var profession = Text.translatable("entity.minecraft.villager." + data.getProfession().toString().toLowerCase());
-        var level = Text.translatable("merchant.level." + data.getLevel());
+        var profession = Text.translatable("entity.minecraft.villager." + data.profession().toString().toLowerCase());
+        var level = Text.translatable("merchant.level." + data.level());
 
         return Text.translatable(key, profession, level);
     }
@@ -123,6 +132,16 @@ public class VillagerArmsItem extends Item {
         var data = stack.get(VILLAGER_DATA);
         if (data == null) return;
 
-        tooltip.add(Text.translatable("villagerType.minecraft." + data.getType()).withColor(Colors.LIGHT_GRAY));
+        tooltip.add(Text.translatable("villagerType.minecraft." + data.type()).withColor(Colors.LIGHT_GRAY));
+    }
+
+    public record ArmsData(VillagerType type, VillagerProfession profession, int level) {
+        public static ArmsData wrap(VillagerData data) {
+            return new ArmsData(data.getType(), data.getProfession(), data.getLevel());
+        }
+
+        public VillagerData unwrap() {
+            return new VillagerData(this.type, this.profession, this.level);
+        }
     }
 }

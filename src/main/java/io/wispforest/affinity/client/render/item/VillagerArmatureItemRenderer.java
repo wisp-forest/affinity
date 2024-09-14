@@ -9,7 +9,6 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
-import net.minecraft.village.VillagerData;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
 
@@ -36,7 +35,7 @@ public class VillagerArmatureItemRenderer implements BuiltinItemRendererRegistry
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
         matrices.translate(0, -.5, 0);
 
-        VillagerArmsItemRenderer.renderArms(stack.getOrDefault(VillagerArmsItem.VILLAGER_DATA, new VillagerData(VillagerType.PLAINS, VillagerProfession.NONE, 1)), matrices, vertexConsumers, light, overlay);
+        VillagerArmsItemRenderer.renderArms(stack.getOrDefault(VillagerArmsItem.VILLAGER_DATA, new VillagerArmsItem.ArmsData(VillagerType.PLAINS, VillagerProfession.NONE, 1)), matrices, vertexConsumers, light, overlay);
         matrices.pop();
     }
 }
