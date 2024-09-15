@@ -42,10 +42,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
@@ -57,6 +59,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity implements InteractableBlockEntity, TickedBlockEntity, InWorldTooltipProvider {
 
@@ -102,6 +105,19 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
 
         player.interactionManager.update();
         ((LivingEntityAccessor) player).affinity$setLastAttackedTicks(((LivingEntityAccessor) player).affinity$getLastAttackedTicks() + 1);
+
+        if (this.time % 20 == 0) {
+            for (int i = 0; i < player.getInventory().main.size(); i++) {
+                if (i == 0) continue;
+
+                var stack = player.getInventory().main.get(i);
+                if (stack.isEmpty()) continue;
+
+                player.getInventory().main.set(i, ItemStack.EMPTY);
+                ItemScatterer.spawn(this.world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), stack);
+                this.markDirty();
+            }
+        }
 
         if (this.time % 3 == 0) {
             this.world.getEntitiesByClass(ExperienceOrbEntity.class, new Box(this.pos).expand(.25), entity -> entity.getExperienceAmount() > 0).stream().findFirst().ifPresent(xpOrb -> {
