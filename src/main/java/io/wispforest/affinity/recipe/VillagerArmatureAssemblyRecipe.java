@@ -14,11 +14,27 @@ import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.village.VillagerProfession;
+import net.minecraft.world.World;
 
 public class VillagerArmatureAssemblyRecipe extends ShapedAssemblyRecipe {
 
     public VillagerArmatureAssemblyRecipe(String group, CraftingRecipeCategory category, RawShapedRecipe raw, ItemStack result, boolean showNotification) {
         super(group, category, raw, result, showNotification);
+    }
+
+    @Override
+    public boolean matches(CraftingRecipeInput input, World world) {
+        for (var stack : input.getStacks()) {
+            if (!stack.isOf(AffinityItems.VILLAGER_ARMS)) continue;
+
+            var data = stack.get(VillagerArmsItem.VILLAGER_DATA);
+            if (data != null && data.profession() == VillagerProfession.NITWIT) {
+                return false;
+            }
+        }
+
+        return super.matches(input, world);
     }
 
     @Override
