@@ -58,6 +58,6 @@ Thus, each {i}Affine Candle{} in close range of the {i}Brewing Cauldron{} which 
 
 ;;;;;
 
-{c}during brewing{} extends the resulting potion's length by {c}5%{} ({c}up to 45%{}).
+{c}during brewing{} extends the resulting potion's length by {c}5%{} ({c}up to 50%{}).
 
 @entry-end
