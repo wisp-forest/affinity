@@ -9,6 +9,7 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.client.screen.VillagerArmatureScreen;
 import io.wispforest.affinity.item.VillagerArmsItem;
 import io.wispforest.affinity.misc.SingleStackStorageProvider;
+import io.wispforest.affinity.misc.quack.AffinityServerPlayerInteractionManagerExtension;
 import io.wispforest.affinity.misc.util.EndecUtil;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.mixin.access.ExperienceOrbEntityAccessor;
@@ -139,6 +140,10 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
             case ALWAYS_ACTIVE -> true;
             case REPEAT -> this.world.isReceivingRedstonePower(this.pos);
             case IMPULSE -> this.redstoneTriggered;
+        } && switch (this.action) {
+            case BREAK -> this.flux() >= 10;
+            case ATTACK -> this.flux() >= 5;
+            case USE -> this.flux() >= 2;
         };
 
         this.redstoneTriggered = false;
@@ -209,28 +214,32 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
             var eventResult = UseEntityCallback.EVENT.invoker().interact(player, this.world, Hand.MAIN_HAND, entityHit.getEntity(), entityHit);
             if (eventResult.isAccepted()) {
                 this.updateItem(player);
+                this.updateFlux(this.flux() - 2);
                 return eventResult;
             }
 
             var entityResult = player.interact(entityHit.getEntity(), Hand.MAIN_HAND);
             if (entityResult.isAccepted()) {
                 this.updateItem(player);
+                this.updateFlux(this.flux() - 2);
                 return entityResult;
             }
+        }
+
+        var itemResult = player.interactionManager.interactItem(player, player.getWorld(), player.getMainHandStack(), Hand.MAIN_HAND);
+        if (itemResult.isAccepted()) {
+            this.updateItem(player);
+            this.updateFlux(this.flux() - 2);
+            return itemResult;
         }
 
         var blockHit = this.raycastBlock(player);
         if (blockHit == null) return ActionResult.PASS;
 
-        var itemResult = player.interactionManager.interactItem(player, player.getWorld(), player.getMainHandStack(), Hand.MAIN_HAND);
-        if (itemResult.isAccepted()) {
-            this.updateItem(player);
-            return itemResult;
-        }
-
         var blockResult = player.interactionManager.interactBlock(player, player.getWorld(), player.getMainHandStack(), Hand.MAIN_HAND, blockHit);
         if (blockResult.isAccepted()) {
             this.updateItem(player);
+            this.updateFlux(this.flux() - 2);
             return blockResult;
         }
 
@@ -270,13 +279,15 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
     }
 
     public ActionResult attack(FakePlayer player) {
-        if (player.getAttackCooldownProgress(.5f) < .9f) return ActionResult.PASS;
+        if (player.getAttackCooldownProgress(.5f) < 1f) return ActionResult.PASS;
 
         var entityResult = InteractionUtil.raycastEntities(
             player, 1f, player.getEntityInteractionRange(), .5f,
             entity -> entity.isAlive() && entity.isAttackable() && entity.timeUntilRegen <= 10
         );
         if (entityResult == null) return ActionResult.PASS;
+
+        this.updateFlux(this.flux() - 5);
 
         player.attack(entityResult.getEntity());
         AffinityNetwork.CHANNEL.serverHandle(this).send(new PunchPacket(this.pos));
@@ -288,6 +299,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         if (!(this.world instanceof ServerWorld serverWorld)) return null;
 
         var fakePlayer = FakePlayer.get(serverWorld, this.playerProfile);
+        ((AffinityServerPlayerInteractionManagerExtension) fakePlayer.interactionManager).affinity$setBlockBreakingListener(new BlockBreakingListener(this.pos));
 
         var facing = this.getCachedState().get(VillagerArmatureBlock.FACING);
         var playerPos = this.raycastOrigin().add(0, -fakePlayer.getEyeHeight(fakePlayer.getPose()), 0);
@@ -453,6 +465,14 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
 
         public SetPropertiesPacket(VillagerArmatureBlockEntity armature) {
             this(armature.pos, armature.action, armature.redstoneMode, armature.clickPosition, armature.sneak);
+        }
+    }
+
+    private record BlockBreakingListener(BlockPos armaturePos) implements Consumer<ServerPlayerEntity> {
+        @Override
+        public void accept(ServerPlayerEntity player) {
+            if (!(player.getWorld().getBlockEntity(this.armaturePos) instanceof VillagerArmatureBlockEntity armature)) return;
+            armature.updateFlux(armature.flux() - 20);
         }
     }
 
