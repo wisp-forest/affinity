@@ -73,14 +73,11 @@ public class EmancipationVertexConsumerProvider implements VertexConsumerProvide
         private final Matrix3f inverseNormalMatrix;
         private final float alphaCutoff;
 
-        private final Vector3f pos = new Vector3f();
-        private final Vector3f normal = new Vector3f();
+        private final Vector3f pos = new Vector3f();;
         private final Vector3f color = new Vector3f();
         private final Vector2f texture = new Vector2f();
 
         private int light;
-
-        private boolean writtenVertex = false;
 
         public AlphaMaskConsumer(VertexConsumer delegate, Matrix4f viewMatrix, Matrix3f normalMatrix, float alphaCutoff) {
             this.delegate = delegate;
@@ -93,43 +90,13 @@ public class EmancipationVertexConsumerProvider implements VertexConsumerProvide
 
         private void reset() {
             this.pos.set(0f);
-            this.normal.set(0f, 1f, 0f);
             this.color.set(1f);
             this.texture.set(0f);
             this.light = LightmapTextureManager.MAX_LIGHT_COORDINATE;
         }
 
-        private void next() {
-            var blockSpaceNormal = this.inverseNormalMatrix.transform(new Vector3f(this.normal));
-            var facing = Direction.getFacing(blockSpaceNormal.x(), blockSpaceNormal.y(), blockSpaceNormal.z());
-
-            var blockSpacePos = this.inverseViewMatrix.transform(new Vector4f(this.pos, 1f));
-            blockSpacePos.rotateY((float) Math.PI);
-            blockSpacePos.rotateX((float) (-Math.PI / 2));
-            blockSpacePos.rotate(facing.getRotationQuaternion());
-
-            float overlayU = -blockSpacePos.x();
-            float overlayV = -blockSpacePos.y();
-
-            this.delegate
-                    .vertex(this.pos.x, this.pos.y, this.pos.z)
-                    .color(this.color.x, this.color.y, this.color.z, this.alphaCutoff)
-                    .texture(this.texture.x, this.texture.y)
-                    .overlay(Math.round(overlayU * 16), Math.round(overlayV * 16))
-                    .light(this.light)
-                    .normal(this.normal.x, this.normal.y, this.normal.z);
-
-            this.reset();
-        }
-
         @Override
         public VertexConsumer vertex(float x, float y, float z) {
-            if (writtenVertex) {
-                next();
-            } else {
-                writtenVertex = true;
-            }
-
             this.pos.set(x, y, z);
             return this;
         }
@@ -153,13 +120,32 @@ public class EmancipationVertexConsumerProvider implements VertexConsumerProvide
 
         @Override
         public VertexConsumer light(int u, int v) {
-            this.light = u | v << 16;
+            this.delegate.light(u | v << 16);
             return this;
         }
 
         @Override
         public VertexConsumer normal(float x, float y, float z) {
-            this.normal.set(x, y, z);
+            var blockSpaceNormal = this.inverseNormalMatrix.transform(new Vector3f(x, y, z));
+            var facing = Direction.getFacing(blockSpaceNormal.x(), blockSpaceNormal.y(), blockSpaceNormal.z());
+
+            var blockSpacePos = this.inverseViewMatrix.transform(new Vector4f(this.pos, 1f));
+            blockSpacePos.rotateY((float) Math.PI);
+            blockSpacePos.rotateX((float) (-Math.PI / 2));
+            blockSpacePos.rotate(facing.getRotationQuaternion());
+
+            float overlayU = -blockSpacePos.x();
+            float overlayV = -blockSpacePos.y();
+
+            this.delegate
+                .vertex(this.pos.x, this.pos.y, this.pos.z)
+                .color(this.color.x, this.color.y, this.color.z, this.alphaCutoff)
+                .texture(this.texture.x, this.texture.y)
+                .overlay(Math.round(overlayU * 16), Math.round(overlayV * 16))
+                .light(this.light)
+                .normal(x, y, z);
+
+            this.reset();
             return this;
         }
     }
