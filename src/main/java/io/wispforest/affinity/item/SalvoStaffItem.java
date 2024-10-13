@@ -33,7 +33,7 @@ public class SalvoStaffItem extends StaffItem {
 
         EntityHitResult target = null;
         for (int i = 0; i < 5; i++) {
-            target = InteractionUtil.raycastEntities(player, 1f, 15, .5 * i, entity -> entity.getType() != AffinityEntities.AETHUM_MISSILE && entity.isAlive() && entity instanceof LivingEntity);
+            target = InteractionUtil.raycastEntities(player, 1f, 25, .5 * i, entity -> entity.getType() != AffinityEntities.AETHUM_MISSILE && entity.isAlive() && entity instanceof LivingEntity);
             if (target != null) break;
         }
 
