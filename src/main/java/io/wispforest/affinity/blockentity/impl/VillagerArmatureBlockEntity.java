@@ -105,6 +105,7 @@ public class VillagerArmatureBlockEntity extends AethumNetworkMemberBlockEntity 
         if (player == null) return;
 
         player.interactionManager.update();
+        player.getItemCooldownManager().update();
         ((LivingEntityAccessor) player).affinity$setLastAttackedTicks(((LivingEntityAccessor) player).affinity$getLastAttackedTicks() + 1);
 
         if (this.time % 20 == 0) {
