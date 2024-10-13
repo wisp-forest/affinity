@@ -1,0 +1,20 @@
+{
+  "type": "affinity:assembly_shaped",
+  "category": "misc",
+  "key": {
+    "p": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "a": {
+      "item": "affinity:mildly_attuned_amethyst_shard"
+    }
+  },
+  "pattern": [
+    " a ",
+    "p p",
+    "ppp"
+  ],
+  "result": {
+    "id": "affinity:phantom_bundle"
+  }
+}

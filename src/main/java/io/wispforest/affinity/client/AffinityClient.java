@@ -20,10 +20,7 @@ import io.wispforest.affinity.client.render.program.*;
 import io.wispforest.affinity.client.screen.*;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
-import io.wispforest.affinity.item.CarbonCopyItem;
-import io.wispforest.affinity.item.EvadeRingItem;
-import io.wispforest.affinity.item.IridescenceWandItem;
-import io.wispforest.affinity.item.StaffItem;
+import io.wispforest.affinity.item.*;
 import io.wispforest.affinity.misc.UnfinishedFeaturesResourceCondition;
 import io.wispforest.affinity.misc.callback.PostItemRenderCallback;
 import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
@@ -147,6 +144,12 @@ public class AffinityClient implements ClientModInitializer {
         TooltipComponentCallback.EVENT.register(data -> {
             return data instanceof StaffItem.BundleTooltipData tooltipData
                 ? new StaffBundleTooltipComponent(tooltipData)
+                : null;
+        });
+
+        TooltipComponentCallback.EVENT.register(data -> {
+            return data instanceof PhantomBundleItem.StacksTooltipData tooltipData
+                ? new PhantomBundleTooltipComponent(tooltipData.stacks())
                 : null;
         });
 

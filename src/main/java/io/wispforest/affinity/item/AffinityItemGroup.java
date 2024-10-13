@@ -128,6 +128,7 @@ public class AffinityItemGroup {
             entries.add(OUIJA_BOARD);
             entries.add(AETHUM_PROBE);
             entries.add(ITEM_TRANSFER_NODE);
+            entries.add(PHANTOM_BUNDLE);
             entries.add(WORLD_PIN);
             entries.add(LOCAL_DISPLACEMENT_GATEWAY);
             if (Affinity.config().unfinishedFeatures()) entries.add(VILLAGER_ARMATURE);
