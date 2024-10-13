@@ -129,7 +129,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         return ArtifactBladeItem.DAMAGE_TYPE.source(incoming.getSource(), incoming.getAttacker());
     }
 
-    @ModifyVariable(method = "attack", at = @At(value = "STORE", ordinal = 3), ordinal = 0)
+    @ModifyVariable(method = "attack", at = @At(value = "STORE", ordinal = 0), ordinal = 3)
     private float applyArtifactBladeJumpDamage(float damage, Entity entity) {
         if (this.fallDistance < 2 || !ArtifactBladeItem.isBladeWithActiveAbility(this.getWorld(), this.getMainHandStack(), 2)) {
             return damage;
