@@ -72,7 +72,6 @@
     "lavender": ">=0.1.2"
   },
   "breaks": {
-    "sodium": "0.6.x",
     "iris": "<1.7.0"
   },
   "custom": {
