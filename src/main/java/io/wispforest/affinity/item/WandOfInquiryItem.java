@@ -66,8 +66,8 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
         }
 
         return entity instanceof PlayerEntity
-                ? ActionResult.SUCCESS
-                : ActionResult.PASS;
+            ? ActionResult.SUCCESS
+            : ActionResult.PASS;
     }
 
     @Override
@@ -88,11 +88,11 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
                 String stabilityBar = "|".repeat(stability20) + "§" + "|".repeat(20 - stability20);
 
                 var text = TextOps.withColor("# §" + setup.socles.size() + " | §🛡 " + stabilityBar + " ",
-                        0xD885A3, TextOps.color(Formatting.GRAY), 0x1572A1, TextOps.color(Formatting.GRAY));
+                    0xD885A3, TextOps.color(Formatting.GRAY), 0x1572A1, TextOps.color(Formatting.GRAY));
                 player.sendMessage(text, true);
 
                 AffinityNetwork.CHANNEL.serverHandle(player).send(new SocleParticlesPacket(setup.socles.stream()
-                        .map(RitualCoreBlockEntity.RitualSocleEntry::position).toList()));
+                    .map(RitualCoreBlockEntity.RitualSocleEntry::position).toList()));
             }
 
             return ActionResult.SUCCESS;
@@ -154,7 +154,8 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
     @Environment(EnvType.CLIENT)
     private static void setupOutlineHandler() {
         ClientTickEvents.END_WORLD_TICK.register(world -> {
-            if (!MinecraftClient.getInstance().player.isHolding(AffinityItems.WAND_OF_INQUIRY)) return;
+            var player = MinecraftClient.getInstance().player;
+            if (player == null || !player.isHolding(AffinityItems.WAND_OF_INQUIRY)) return;
 
             ACTIVE_OUTLINE_PROVIDERS.removeIf(providerPos -> {
                 if (!(world.getBlockEntity(providerPos) instanceof InquirableOutlineProvider provider)) return true;
@@ -234,7 +235,7 @@ public class WandOfInquiryItem extends Item implements DirectInteractionHandler 
             final int color = type == null ? 0 : type.glowColor();
 
             ClientParticles.spawnPrecise(new DustParticleEffect(MathUtil.rgbToVec3f(color), 2), world,
-                    Vec3d.ofCenter(soclePos).add(0, .34, 0), .15, .15, .15);
+                Vec3d.ofCenter(soclePos).add(0, .34, 0), .15, .15, .15);
         }
 
         ClientParticles.reset();
