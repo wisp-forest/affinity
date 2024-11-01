@@ -23,39 +23,34 @@ public abstract class AlphaMaskConsumerMixin implements VertexConsumer, VertexBu
     private Vector3f pos;
     @Shadow
     @Final
-    private Vector3f normal;
-    @Shadow
-    @Final
     private Vector2f texture;
     @Shadow
     private int light;
-
-    @Shadow abstract void next();
 
     @Override
     public void push(MemoryStack memoryStack, long srcBuffer, int vtxCount, VertexFormatDescription format) {
         for (int i = 0; i < vtxCount; i++) {
             long elementIdx = srcBuffer + (long) i * format.stride();
+            var elementNormal = new Vector3f();
 
             for (var element : CommonVertexAttribute.values()) {
                 if (!format.containsElement(element)) continue;
 
                 switch (element) {
-                    case POSITION ->
-                            this.pos.set(PositionAttribute.getX(elementIdx), PositionAttribute.getY(elementIdx), PositionAttribute.getZ(elementIdx));
+                    case POSITION -> this.pos.set(PositionAttribute.getX(elementIdx), PositionAttribute.getY(elementIdx), PositionAttribute.getZ(elementIdx));
                     case COLOR -> this.color(ColorAttribute.get(elementIdx));
                     case TEXTURE -> this.texture.set(TextureAttribute.get(elementIdx));
                     case LIGHT -> this.light = LightAttribute.get(elementIdx);
                     case NORMAL -> {
                         var normal = NormalAttribute.get(elementIdx);
-                        this.normal.set(NormI8.unpackX(normal), NormI8.unpackY(normal), NormI8.unpackZ(normal));
+                        elementNormal.set(NormI8.unpackX(normal), NormI8.unpackY(normal), NormI8.unpackZ(normal));
                     }
                 }
 
                 elementIdx += element.getByteLength();
             }
 
-            this.next();
+            this.normal(elementNormal.x, elementNormal.y, elementNormal.z);
         }
     }
 }
