@@ -86,7 +86,9 @@ public class AethumMissileEntity extends ProjectileEntity {
             living.damage(DAMAGE_TYPE.source(this, this.getOwner()), 1f);
 
             if (this.getOwner() instanceof ServerPlayerEntity player) {
-                player.playSound(AffinitySoundEvents.ITEM_SALVO_STAFF_HIT, 1f, .85f + this.getWorld().random.nextFloat() * .3f);
+                player.getWorld().playSound(
+                    null, player.getX(), player.getY(), player.getZ(), AffinitySoundEvents.ITEM_SALVO_STAFF_HIT, SoundCategory.PLAYERS, 1f, .85f + this.getWorld().random.nextFloat() * .3f
+                );
             }
         }
 

@@ -5,6 +5,7 @@ import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.ops.ItemOps;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
@@ -25,7 +26,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potions;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
@@ -111,7 +111,7 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
 
         craftFunction.accept(input, catalyst);
 
-        input.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 1f, input.getWorld().random.nextFloat() * 2f);
+        input.playSound(AffinitySoundEvents.FLUID_ARCANE_FADE_CRAFT, 1f, input.getWorld().random.nextFloat() * 2f);
         AffinityParticleSystems.ARCANE_FADE_CRAFT.spawn(input.getWorld(), input.getPos().add(0, .5f, 0));
 
         return true;
@@ -121,7 +121,7 @@ public abstract class ArcaneFadeFluid extends FlowableFluid {
         if (!(entity instanceof SheepEntity sheep) || sheep.getColor() == DyeColor.WHITE) return;
 
         sheep.setColor(DyeColor.WHITE);
-        sheep.playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 1f, 1f);
+        sheep.playSound(AffinitySoundEvents.FLUID_ARCANE_FADE_BLEACH, 1f, 1f);
 
         AffinityParticleSystems.ARCANE_FADE_BLEACH_SHEEP.spawn(sheep.getWorld(), MathUtil.entityCenterPos(sheep), 1f);
     }

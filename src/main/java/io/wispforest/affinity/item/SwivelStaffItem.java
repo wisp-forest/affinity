@@ -11,10 +11,10 @@ import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.format.gson.GsonDeserializer;
-import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
 import io.wispforest.owo.serialization.CodecUtils;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
@@ -37,7 +37,6 @@ import net.minecraft.resource.JsonDataLoader;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -87,7 +86,7 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
                     .orElse(candidates.get(0));
 
             stack.set(SELECTED_PROPERTY, Util.next(candidates, selectedProp).getName());
-            world.playSound(null, context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS);
+            world.playSound(null, context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), AffinitySoundEvents.ITEM_SWIVEL_STAFF_SELECT_PROPERTY, SoundCategory.PLAYERS);
 
             return ActionResult.SUCCESS;
         } else {
@@ -120,7 +119,7 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
             world.scheduleFluidTick(clickedBlock, newState.getFluidState().getFluid(), newState.getFluidState().getFluid().getTickRate(world));
         }
 
-        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(), SoundCategory.PLAYERS);
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), AffinitySoundEvents.ITEM_SWIVEL_STAFF_SWIVEL, SoundCategory.PLAYERS);
         return TypedActionResult.success(stack);
     }
 

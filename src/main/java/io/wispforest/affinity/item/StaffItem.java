@@ -9,6 +9,7 @@ import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,7 +28,6 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ClickType;
@@ -281,14 +281,15 @@ public abstract class StaffItem extends Item implements SpecialTransformItem {
 
     public static void initNetwork() {
         AffinityNetwork.CHANNEL.registerServerbound(SelectStaffFromBundlePacket.class, (message, access) -> {
-            var playerStack = access.player().getStackInHand(message.hand);
+            var player = access.player();
+            var playerStack = player.getStackInHand(message.hand);
             if (!(playerStack.getItem() instanceof StaffItem)) return;
 
             var bundle = playerStack.get(BUNDLED_STAFFS);
             if (bundle == null || bundle.isEmpty() || message.staffIdx >= bundle.size()) return;
 
-            access.player().setStackInHand(message.hand, selectStaffFromBundle(playerStack, message.staffIdx));
-            access.player().playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(), 1f, 1f);
+            player.setStackInHand(message.hand, selectStaffFromBundle(playerStack, message.staffIdx));
+            player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), AffinitySoundEvents.ITEM_STAFF_SELECT, SoundCategory.PLAYERS);
         });
     }
 

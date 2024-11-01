@@ -63,7 +63,7 @@ public class AffinityParticleSystems {
         ClientParticles.setVelocity(target.subtract(pos).normalize());
         ClientParticles.spawn(ParticleTypes.CLOUD, world, pos, 3f);
 
-        world.playSound(pos.x, pos.y, pos.z, AffinitySoundEvents.ITEM_NIMBLE_STAFF_FLING, SoundCategory.PLAYERS, .75f, .75f + world.random.nextFloat() * .5f, false);
+        world.playSound(pos.x, pos.y, pos.z, AffinitySoundEvents.ITEM_NIMBLE_STAFF_FLING, SoundCategory.PLAYERS, 1f, .75f + world.random.nextFloat() * .5f, false);
     });
 
     public static final ParticleSystem<Vec3d> EVADE = CONTROLLER.register(Vec3d.class, (world, pos, direction) -> {
@@ -154,7 +154,7 @@ public class AffinityParticleSystems {
         ClientParticles.setParticleCount(25);
         ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, pos.subtract(0, 2, 0), 3, 1, 3);
 
-        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.BLOCKS, .75f, .75f, false);
+        world.playSound(pos.x, pos.y, pos.z, AffinitySoundEvents.BLOCK_SPIRIT_INTEGRATION_APPARATUS_RITUAL_FAIL, SoundCategory.BLOCKS, 1f, 1f, false);
     });
 
     public static final ParticleSystem<Void> LAVA_ERUPTION = CONTROLLER.register(Void.class, (world, pos, data) -> {
@@ -187,7 +187,7 @@ public class AffinityParticleSystems {
         ClientParticles.spawnPrecise(ParticleTypes.CLOUD, world, pos, 3, 1, 3);
 
         MinecraftClient.getInstance().getSoundManager().stopSounds(AffinitySoundEvents.BLOCK_ASP_RITE_CORE_ACTIVE.getId(), SoundCategory.BLOCKS);
-        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_GENERIC_EXPLODE.value(), SoundCategory.BLOCKS, .75f, 1.25f, false);
+        world.playSound(pos.x, pos.y, pos.z, AffinitySoundEvents.BLOCK_ASP_RITE_CORE_RITUAL_FAIL, SoundCategory.BLOCKS, 1f, 1f, false);
     });
 
     public static final ParticleSystem<BezierVortexData> BEZIER_VORTEX = CONTROLLER.register(BezierVortexData.class, (world, pos, data) -> {
@@ -262,7 +262,7 @@ public class AffinityParticleSystems {
         var client = MinecraftClient.getInstance();
 
         client.particleManager.addEmitter(entity, ParticleTypes.TOTEM_OF_UNDYING, 30);
-        world.playSound(entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_TOTEM_USE, entity.getSoundCategory(), 1f, 1f, false);
+        world.playSound(entity.getX(), entity.getY(), entity.getZ(), AffinitySoundEvents.ITEM_AETHUM_OVERCHARGER_ACTIVATE, entity.getSoundCategory(), 1f, 1f, false);
 
         if (entity == client.player) {
             ItemStack overcharger = null;
@@ -290,8 +290,8 @@ public class AffinityParticleSystems {
         ClientParticles.randomizeVelocity(.5f);
         ClientParticles.spawn(ParticleTypes.REVERSE_PORTAL, world, pos, 1d);
 
-        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1f, 0.75f, false);
-        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_ENDER_DRAGON_AMBIENT, SoundCategory.PLAYERS, .5f, 0.5f, false);
+        world.playSound(pos.x, pos.y, pos.z, SoundEvents.ENTITY_PLAYER_TELEPORT, SoundCategory.PLAYERS, 1f, 0.75f, false);
+        world.playSound(pos.x, pos.y, pos.z, AffinitySoundEvents.BLOCK_VOID_BEACON_ACTIVATE, SoundCategory.PLAYERS, 1f, 1f, false);
 
         if (entity == client.player) {
             client.gameRenderer.showFloatingItem(AffinityItems.DRAGON_DROP.getDefaultStack());

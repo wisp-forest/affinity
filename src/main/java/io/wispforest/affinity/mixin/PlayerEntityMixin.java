@@ -19,11 +19,9 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -87,7 +85,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         this.removeStatusEffect(flightEntry);
 
         AffinityParticleSystems.FLIGHT_REMOVED.spawn(this.getWorld(), getPos());
-        WorldOps.playSound(this.getWorld(), getPos(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.PLAYERS, .5f, 0f);
+        WorldOps.playSound(this.getWorld(), getPos(), AffinitySoundEvents.EFFECT_FLIGHT_INTERRUPTED, SoundCategory.PLAYERS, .5f, 0f);
     }
 
     @ModifyVariable(method = "attack",

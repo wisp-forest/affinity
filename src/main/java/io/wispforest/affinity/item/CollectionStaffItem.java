@@ -7,9 +7,9 @@ import io.wispforest.affinity.misc.ServerTasks;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.ops.WorldOps;
 import io.wispforest.owo.particles.ClientParticles;
-import io.wispforest.owo.serialization.CodecUtils;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -19,11 +19,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -116,7 +114,7 @@ public class CollectionStaffItem extends StaffItem {
         player.getItemCooldownManager().set(stack.getItem(), 30);
         if (!(player.getWorld() instanceof ServerWorld serverWorld)) return TypedActionResult.success(stack);
 
-        WorldOps.playSound(serverWorld, triggerPos, SoundEvents.ENTITY_ENDER_DRAGON_FLAP, SoundCategory.PLAYERS, 1, 0);
+        WorldOps.playSound(serverWorld, triggerPos, AffinitySoundEvents.ITEM_COLLECTION_STAFF_MARK_ITEMS, SoundCategory.PLAYERS, 1, 1);
 
         var ref = EntityReference.of(getItems(player));
         ServerTasks.doFor(serverWorld, 25, () -> {
@@ -128,7 +126,7 @@ public class CollectionStaffItem extends StaffItem {
             return true;
         }, () -> {
             ref.consume(itemEntities -> {
-                WorldOps.playSound(world, player.getPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1.5f);
+                WorldOps.playSound(world, player.getPos(), AffinitySoundEvents.ITEM_COLLECTION_STAFF_TELEPORT_ITEMS, SoundCategory.PLAYERS, 1, 1f);
                 AffinityNetwork.CHANNEL.serverHandle(serverWorld, triggerPos)
                         .send(new BulkParticlesPacket(itemEntities, ParticleTypes.POOF, .25));
 
