@@ -65,7 +65,7 @@ public abstract class BrewingRecipeRegistryMixin {
 
     @Unique
     private static boolean affinity$isStrengthPotion(ItemStack stack) {
-        return stack.isOf(Items.POTION) && PotionUtil.getPotion(stack) == Potions.LONG_STRENGTH;
+        return stack.isOf(Items.POTION) && PotionUtil.getPotion(stack) == Potions.LONG_STRENGTH.value();
     }
 
 }
