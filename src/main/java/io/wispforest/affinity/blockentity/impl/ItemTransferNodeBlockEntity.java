@@ -4,10 +4,11 @@ import io.wispforest.affinity.block.impl.ItemTransferNodeBlock;
 import io.wispforest.affinity.blockentity.template.*;
 import io.wispforest.affinity.client.render.CuboidRenderer;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
+import io.wispforest.affinity.item.PhantomBundleItem;
 import io.wispforest.affinity.misc.callback.BeforeMangroveBasketCaptureCallback;
 import io.wispforest.affinity.misc.screenhandler.ItemTransferNodeScreenHandler;
-import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.SerializationContext;
@@ -26,16 +27,12 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKeys;
@@ -90,7 +87,6 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     public boolean ignoreData = true;
     public boolean invertFilter = false;
     @NotNull private ItemStack filterStack = ItemStack.EMPTY;
-    @Nullable private TagKey<Item> filterTag = null;
 
     private long time = ThreadLocalRandom.current().nextLong(0, 10);
     private int startIndex = 0;
@@ -228,8 +224,8 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
             var stack = this.storageTransaction((storage, transaction) -> {
                 Predicate<ItemVariant> predicate = item -> this.acceptsItem(item)
-                        && firstTarget.acceptsItem(item)
-                        && firstTarget.maxInsertCount(item, Transaction.getCurrentUnsafe()) > 0;
+                    && firstTarget.acceptsItem(item)
+                    && firstTarget.maxInsertCount(item, Transaction.getCurrentUnsafe()) > 0;
 
                 var resource = StorageUtil.findExtractableResource(storage, predicate, transaction);
                 if (resource == null) return ItemStack.EMPTY;
@@ -275,7 +271,7 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     private void sendToNode(ItemTransferNodeBlockEntity targetNode, ItemStack stack, int insertCount) {
         var transferTime = Math.max(15, (int) Math.round(Math.sqrt(targetNode.pos.getSquaredDistance(this.pos))) * 5);
         AffinityParticleSystems.DISSOLVE_ITEM.spawn(this.world, particleOrigin(this), new AffinityParticleSystems.DissolveData(
-                stack.copy(), particleOrigin(targetNode), 10, transferTime
+            stack.copy(), particleOrigin(targetNode), 10, transferTime
         ));
 
         targetNode.insertItem(this, stack.copyWithCount(insertCount), transferTime + 10);
@@ -288,9 +284,9 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
         if (this.world.getReceivedRedstonePower(this.pos) > 0 && this.world.random.nextFloat() < .075f) {
             var pos = Vec3d.ofCenter(this.pos).add(
-                    this.facing.getOffsetX() * .3,
-                    this.facing.getOffsetY() * .3,
-                    this.facing.getOffsetZ() * .3
+                this.facing.getOffsetX() * .3,
+                this.facing.getOffsetY() * .3,
+                this.facing.getOffsetZ() * .3
 
             );
 
@@ -327,11 +323,11 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
             var velocity = VectorRandomUtils.getRandomOffset(this.world, Vec3d.ZERO, .05);
             this.world.spawnEntity(new ItemEntity(
-                    this.world,
-                    this.pos.getX() + .5 - this.facing.getOffsetX() * .15,
-                    this.pos.getY() + .5 - this.facing.getOffsetY() * .15,
-                    this.pos.getZ() + .5 - this.facing.getOffsetZ() * .15,
-                    dropStack, velocity.x, Math.abs(velocity.y) * 2, velocity.z
+                this.world,
+                this.pos.getX() + .5 - this.facing.getOffsetX() * .15,
+                this.pos.getY() + .5 - this.facing.getOffsetY() * .15,
+                this.pos.getZ() + .5 - this.facing.getOffsetZ() * .15,
+                dropStack, velocity.x, Math.abs(velocity.y) * 2, velocity.z
             ));
 
             stack.decrement(dropCount);
@@ -354,22 +350,41 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     private boolean acceptsItem(ItemVariant variant) {
         if (this.filterStack.isEmpty()) return true;
-        return this.invertFilter != this.testFilter(variant);
+
+        if (this.filterStack.getItem() == AffinityItems.PHANTOM_BUNDLE) {
+            var contents = this.filterStack.getOrDefault(PhantomBundleItem.STACKS, PhantomBundleItem.StacksComponent.DEFAULT);
+            if (!contents.stacks().isEmpty()) {
+                return this.invertFilter != contents.stacks().stream().anyMatch(stack -> testFilter(stack, variant));
+            }
+        }
+
+        return this.invertFilter != this.testFilter(this.filterStack, variant);
     }
 
-    private boolean testFilter(ItemVariant variant) {
-        if (this.filterTag != null) {
-            if (!variant.getItem().getRegistryEntry().isIn(this.filterTag)) return false;
+    private boolean testFilter(ItemStack filter, ItemVariant variant) {
+        var nameString = filter.getName().getString();
+        var filterTag = nameString.startsWith("#") && Identifier.tryParse(nameString.substring(1)) instanceof Identifier tagId
+            ? TagKey.of(RegistryKeys.ITEM, tagId)
+            : null;
+
+        if (filterTag != null) {
+            if (!variant.getItem().getRegistryEntry().isIn(filterTag)) return false;
         } else {
-            if (this.filterStack.getItem() != variant.getItem()) return false;
+            if (filter.getItem() != variant.getItem()) return false;
         }
 
         if (this.ignoreData) return true;
 
-        var standard = this.filterStack.getComponentChanges();
-        if (this.ignoreDamage) standard.withRemovedIf(type -> type == DataComponentTypes.DAMAGE);
+        if (this.ignoreDamage) {
+            var standard = filter.getComponentChanges().withRemovedIf(type -> type == DataComponentTypes.DAMAGE);
+            if (filterTag != null) {
+                standard = standard.withRemovedIf(type -> type == DataComponentTypes.CUSTOM_NAME);
+            }
 
-        return variant.componentsMatch(standard);
+            return standard.equals(variant.getComponents().withRemovedIf(type -> type == DataComponentTypes.DAMAGE));
+        } else {
+            return variant.componentsMatch(filter.getComponentChanges());
+        }
     }
 
     private List<ItemTransferNodeBlockEntity> linkedNodes(Predicate<Mode> modePredicate) {
@@ -473,8 +488,8 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     public ItemStack previewItem() {
         return this.entries.isEmpty() || this.entries.get(0).age < 0
-                ? ItemStack.EMPTY
-                : this.entries.get(0).item;
+            ? ItemStack.EMPTY
+            : this.entries.get(0).item;
     }
 
     public List<ItemStack> displayItems() {
@@ -493,17 +508,6 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
 
     public void setFilterStack(ItemStack filterStack) {
         this.filterStack = filterStack.copyWithCount(1);
-
-        var nameString = this.filterStack.getName().getString();
-        if (nameString.startsWith("#")) {
-            var tagId = Identifier.tryParse(nameString.substring(1));
-            this.filterTag = tagId != null
-                    ? TagKey.of(RegistryKeys.ITEM, tagId)
-                    : null;
-        } else {
-            this.filterTag = null;
-        }
-
         this.markDirty();
     }
 
@@ -518,11 +522,11 @@ public class ItemTransferNodeBlockEntity extends SyncedBlockEntity implements Ti
     public static final class ItemEntry {
 
         public static final Endec<ItemEntry> ENDEC = StructEndecBuilder.of(
-                MinecraftEndecs.BLOCK_POS.fieldOf("OriginNode", entry -> entry.originNode),
-                MinecraftEndecs.ITEM_STACK.fieldOf("Item", entry -> entry.item),
-                Endec.INT.fieldOf("Age", entry -> entry.age),
-                Endec.BOOLEAN.fieldOf("Insert", entry -> entry.insert),
-                ItemEntry::new
+            MinecraftEndecs.BLOCK_POS.fieldOf("OriginNode", entry -> entry.originNode),
+            MinecraftEndecs.ITEM_STACK.fieldOf("Item", entry -> entry.item),
+            Endec.INT.fieldOf("Age", entry -> entry.age),
+            Endec.BOOLEAN.fieldOf("Insert", entry -> entry.insert),
+            ItemEntry::new
         );
 
         private final BlockPos originNode;

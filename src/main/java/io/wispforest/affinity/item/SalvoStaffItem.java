@@ -4,11 +4,11 @@ import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.object.AffinityEntities;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -33,7 +33,7 @@ public class SalvoStaffItem extends StaffItem {
 
         EntityHitResult target = null;
         for (int i = 0; i < 5; i++) {
-            target = InteractionUtil.raycastEntities(player, 1f, 15, .5 * i, entity -> entity.getType() != AffinityEntities.AETHUM_MISSILE && entity.isAlive() && entity instanceof LivingEntity);
+            target = InteractionUtil.raycastEntities(player, 1f, 25, .5 * i, entity -> entity.getType() != AffinityEntities.AETHUM_MISSILE && entity.isAlive() && entity instanceof LivingEntity);
             if (target != null) break;
         }
 
@@ -50,7 +50,7 @@ public class SalvoStaffItem extends StaffItem {
 
             world.spawnEntity(missile);
         } else {
-            player.playSound(SoundEvents.BLOCK_AMETHYST_BLOCK_STEP, 1f, 2f);
+            player.playSound(AffinitySoundEvents.ITEM_SALVO_STAFF_FIRE_MISSILE, 1f, 2f);
         }
 
         return TypedActionResult.success(stack);

@@ -8,8 +8,6 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.compat.emi.AffinityEmiPlugin;
-import me.shedaniel.math.Rectangle;
-import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.util.Identifier;
 

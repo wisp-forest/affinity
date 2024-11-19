@@ -5,6 +5,7 @@ import io.wispforest.affinity.blockentity.impl.StaffPedestalBlockEntity;
 import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.ops.WorldOps;
@@ -25,7 +26,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
@@ -153,7 +153,7 @@ public class CultivationStaffItem extends StaffItem {
                 feature.generateUnregistered(serverWorld, serverWorld.getChunkManager().getChunkGenerator(), world.random, clickedBlock);
             });
 
-            WorldOps.playSound(world, clickedBlock.up(), SoundEvents.ENTITY_EVOKER_CAST_SPELL, SoundCategory.PLAYERS, .25f, 1.1f + world.random.nextFloat() * .4f);
+            WorldOps.playSound(world, clickedBlock.up(), AffinitySoundEvents.ITEM_CULTIVATION_STAFF_CULTIVATE, SoundCategory.PLAYERS, 1, 1.1f + world.random.nextFloat() * .4f);
         } else {
             spawnParticles(world, clickedBlock.up());
         }

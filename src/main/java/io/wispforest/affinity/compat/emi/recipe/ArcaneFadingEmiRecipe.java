@@ -4,7 +4,6 @@ import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
-import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.wispforest.affinity.compat.emi.AffinityEmiPlugin;
 import io.wispforest.affinity.compat.emi.BlockStateEmiStack;

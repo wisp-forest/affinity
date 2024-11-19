@@ -16,7 +16,6 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
@@ -80,6 +79,6 @@ public class SatiatingPotionItem extends Item {
 
     @Override
     public SoundEvent getDrinkSound() {
-        return SoundEvents.ITEM_HONEY_BOTTLE_DRINK;
+        return AffinitySoundEvents.ITEM_SATIATING_POTION_DRINK;
     }
 }

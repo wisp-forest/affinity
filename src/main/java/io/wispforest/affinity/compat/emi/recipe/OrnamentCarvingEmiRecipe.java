@@ -1,11 +1,8 @@
 package io.wispforest.affinity.compat.emi.recipe;
 
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
-import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
-import dev.emi.emi.api.widget.SlotWidget;
-import dev.emi.emi.api.widget.TextureWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.wispforest.affinity.compat.emi.AffinityEmiPlugin;
 import io.wispforest.affinity.compat.emi.EmiUIAdapter;

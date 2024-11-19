@@ -22,7 +22,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -187,7 +186,7 @@ public class SpiritIntegrationApparatusBlockEntity extends RitualCoreBlockEntity
         this.cachedNeighbors = null;
         this.neighborPositions = null;
 
-        WorldOps.playSound(world, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS);
+        WorldOps.playSound(world, pos, AffinitySoundEvents.BLOCK_SPIRIT_INTEGRATION_APPARATUS_DROP_ITEM, SoundCategory.BLOCKS);
 
         return true;
     }

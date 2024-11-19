@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -14,7 +15,6 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.Util;
 
@@ -55,7 +55,7 @@ public class EmeraldArmorItem extends ArmorItem {
                 map.put(ArmorItem.Type.HELMET, -1);
             }),
             15,
-            Registries.SOUND_EVENT.getEntry(SoundEvents.ITEM_HONEY_BOTTLE_DRINK),
+            Registries.SOUND_EVENT.getEntry(AffinitySoundEvents.ITEM_EMERALD_ARMOR_EQUIP),
             () -> Ingredient.ofItems(Items.EMERALD),
             List.of(new ArmorMaterial.Layer(Affinity.id("emerald"))),
             -2,

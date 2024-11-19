@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "affinity:wisp_matter"
+            "items": "#affinity:wisp_matter"
           }
         ]
       }

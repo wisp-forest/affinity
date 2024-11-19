@@ -110,6 +110,7 @@
     "client.EnchantmentScreenMixin",
     "client.EntityMixin",
     "client.FramebufferMixin",
+    "client.HandledScreenMixin",
     "client.HeadFeatureRendererMixin",
     "client.HeldItemFeatureRendererMixin",
     "client.HeldItemRendererMixin",

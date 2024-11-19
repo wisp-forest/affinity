@@ -4,6 +4,7 @@ import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.serialization.CodecUtils;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
@@ -14,7 +15,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Colors;
@@ -64,7 +64,7 @@ public class VillagerArmsItem extends Item {
 
             villager.getGossip().startGossip(player.getUuid(), VillageGossipType.MAJOR_NEGATIVE, 10);
 
-            villager.playSound(SoundEvents.ITEM_AXE_STRIP);
+            villager.playSound(AffinitySoundEvents.ENTITY_VILLAGER_STRIP_ARMS);
             player.getStackInHand(hand).damage(1, player, hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 
             return ActionResult.SUCCESS;

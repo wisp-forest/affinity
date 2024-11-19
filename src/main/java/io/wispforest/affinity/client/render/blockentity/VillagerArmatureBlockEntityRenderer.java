@@ -70,9 +70,9 @@ public class VillagerArmatureBlockEntityRenderer extends AffinityBlockEntityRend
 
     @Override
     protected void render(VillagerArmatureBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        var animationState = entity.punchAnimationState;
-
         ARMS.traverse().forEach(ModelPart::resetTransform);
+
+        var animationState = entity.punchAnimationState;
         animationState.update(entity.time() + tickDelta, 1f);
         animationState.run(state -> animate(ARMS, PUNCH_ANIMATION, state.getTimeRunning(), 1f, new Vector3f()));
 
@@ -90,6 +90,8 @@ public class VillagerArmatureBlockEntityRenderer extends AffinityBlockEntityRend
         }
 
         matrices.pop();
+
+        ARMS.traverse().forEach(ModelPart::resetTransform);
     }
 
     // stolen straight from AnimationHelper
