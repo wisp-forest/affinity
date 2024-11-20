@@ -2,17 +2,18 @@ package io.wispforest.affinity.mixin.client.sodium;
 
 import io.wispforest.affinity.misc.CompatMixin;
 import net.caffeinemc.mods.sodium.api.util.NormI8;
-import net.caffeinemc.mods.sodium.api.vertex.attributes.CommonVertexAttribute;
 import net.caffeinemc.mods.sodium.api.vertex.attributes.common.*;
 import net.caffeinemc.mods.sodium.api.vertex.buffer.VertexBufferWriter;
-import net.caffeinemc.mods.sodium.api.vertex.format.VertexFormatDescription;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexFormat;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+
+import static net.minecraft.client.render.VertexFormatElement.*;
 
 @CompatMixin("sodium")
 @Mixin(targets = "io.wispforest.affinity.client.render.EmancipationVertexConsumerProvider$AlphaMaskConsumer", remap = false)
@@ -28,26 +29,30 @@ public abstract class AlphaMaskConsumerMixin implements VertexConsumer, VertexBu
     private int light;
 
     @Override
-    public void push(MemoryStack memoryStack, long srcBuffer, int vtxCount, VertexFormatDescription format) {
+    public void push(MemoryStack memoryStack, long srcBuffer, int vtxCount, VertexFormat format) {
         for (int i = 0; i < vtxCount; i++) {
-            long elementIdx = srcBuffer + (long) i * format.stride();
+            long elementIdx = srcBuffer + (long) i * format.getVertexSizeByte();
             var elementNormal = new Vector3f();
 
-            for (var element : CommonVertexAttribute.values()) {
-                if (!format.containsElement(element)) continue;
-
-                switch (element) {
-                    case POSITION -> this.pos.set(PositionAttribute.getX(elementIdx), PositionAttribute.getY(elementIdx), PositionAttribute.getZ(elementIdx));
-                    case COLOR -> this.color(ColorAttribute.get(elementIdx));
-                    case TEXTURE -> this.texture.set(TextureAttribute.get(elementIdx));
-                    case LIGHT -> this.light = LightAttribute.get(elementIdx);
-                    case NORMAL -> {
-                        var normal = NormalAttribute.get(elementIdx);
-                        elementNormal.set(NormI8.unpackX(normal), NormI8.unpackY(normal), NormI8.unpackZ(normal));
-                    }
+            for (var element : format.getElements()) {
+                if (element.equals(POSITION)) {
+                    this.pos.set(PositionAttribute.getX(elementIdx), PositionAttribute.getY(elementIdx), PositionAttribute.getZ(elementIdx));
+                } else if (element.equals(COLOR)) {
+                    this.color(ColorAttribute.get(elementIdx));
+                } else if (element.equals(UV_0)) {
+                    this.texture.set(TextureAttribute.get(elementIdx));
+                } else if (element.equals(UV_1)) {
+                    this.overlay(OverlayAttribute.get(elementIdx));
+                } else if (element.equals(UV_2)) {
+                    this.light = LightAttribute.get(elementIdx);
+                } else if (element.equals(NORMAL)) {
+                    var normal = NormalAttribute.get(elementIdx);
+                    elementNormal.set(NormI8.unpackX(normal), NormI8.unpackY(normal), NormI8.unpackZ(normal));
+                } else {
+                    throw new IllegalStateException("Unable to handle the given VertexFormats Element type: " + element);
                 }
 
-                elementIdx += element.getByteLength();
+                elementIdx += element.getSizeInBytes();
             }
 
             this.normal(elementNormal.x, elementNormal.y, elementNormal.z);

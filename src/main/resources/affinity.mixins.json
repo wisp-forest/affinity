@@ -133,7 +133,6 @@
     "client.WorldRendererMixin",
     "client.iris.HorizonRendererMixin",
     "client.iris.WorldRenderingPhaseMixin",
-    "client.sodium.AlphaMaskConsumerMixin",
     "client.sodium.DefaultMaterialsMixin",
     "client.sodium.DefaultTerrainRenderPassesMixin",
     "client.sodium.SodiumWorldRendererMixin",
