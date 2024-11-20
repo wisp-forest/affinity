@@ -43,7 +43,7 @@
         "item": "minecraft:enchanted_book"
       },
       "components": {
-        "minecraft:enchantments": {
+        "minecraft:stored_enchantments": {
           "minecraft:lure": 3
         }
       }
@@ -54,7 +54,7 @@
         "item": "minecraft:enchanted_book"
       },
       "components": {
-        "minecraft:enchantments": {
+        "minecraft:stored_enchantments": {
           "minecraft:loyalty": 3
         }
       }

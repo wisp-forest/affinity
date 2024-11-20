@@ -30,7 +30,7 @@
         "item": "minecraft:enchanted_book"
       },
       "components": {
-        "minecraft:enchantments": {
+        "minecraft:stored_enchantments": {
           "minecraft:infinity": 1
         }
       }
