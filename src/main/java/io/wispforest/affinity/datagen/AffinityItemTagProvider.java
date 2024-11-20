@@ -85,6 +85,7 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.getOrCreateTagBuilder(ItemTags.SWORDS).addTag(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades")));
 
         this.getOrCreateTagBuilder(ItemTags.BOW_ENCHANTABLE).add(AZALEA_BOW);
+        this.getOrCreateTagBuilder(ItemTags.DURABILITY_ENCHANTABLE).add(AZALEA_BOW);
         this.getOrCreateTagBuilder(ConventionalItemTags.BOW_TOOLS).add(AZALEA_BOW);
 
         this.getOrCreateTagBuilder(ItemTags.HEAD_ARMOR).add(EMERALD_CHESTPLATE);
