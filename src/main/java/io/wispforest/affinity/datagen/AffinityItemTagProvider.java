@@ -71,7 +71,9 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         this.getOrCreateTagBuilder(UnfinishedFeaturesResourceCondition.UNFINISHED_ITEMS).add(
             VILLAGER_ARMS,
-            AffinityBlocks.VILLAGER_ARMATURE.asItem()
+            AffinityBlocks.VILLAGER_ARMATURE.asItem(),
+            AffinityBlocks.SONIC_SYPHON.asItem(),
+            PITCHER_ELIXIR_BOTTLE
         );
 
         this.copy(ConventionalBlockTags.ORES, ConventionalItemTags.ORES);

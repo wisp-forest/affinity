@@ -242,6 +242,7 @@ public class AffinityClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.GENERIC_EMITTER, new GenericEmitterParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.ORBITING_EMITTER, new OrbitingEmitterParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.COLORED_FALLING_DUST, ColoredFallingDustParticleEffect.ParticleFactory::new);
+        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.DIRECTIONAL_SHRIEK, DirectionalShriekParticle.Factory::new);
 
         EntityRendererRegistry.register(AffinityEntities.INERT_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.WISE_WISP, WispEntityRenderer::new);
@@ -356,5 +357,6 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.ARCANE_TREETAP, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.RITUAL_SOCLE_COMPOSER, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.VOID_BEACON, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.SONIC_SYPHON, RenderLayer.getCutout());
     }
 }

@@ -6,6 +6,7 @@ import io.wispforest.affinity.block.impl.SpiritIntegrationApparatusBlock;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
+import io.wispforest.affinity.particle.DirectionalShriekParticleEffect;
 import io.wispforest.affinity.particle.GenericEmitterParticleEffect;
 import io.wispforest.affinity.particle.OrbitingEmitterParticleEffect;
 import io.wispforest.owo.particles.ClientParticles;
@@ -76,13 +77,13 @@ public class AffinityParticleSystems {
 
     public static final ParticleSystem<BlockPos> TIME_STAFF_ACCELERATE = CONTROLLER.register(BlockPos.class, (world, pos, data) -> {
         ClientParticles.spawn(
-                new OrbitingEmitterParticleEffect(
-                        new DustParticleEffect(MathUtil.rgbToVec3f(0x3955E5), .75f),
-                        ParticleTypes.ASH,
-                        Vec3d.ofCenter(data).subtract(pos).multiply(1f / 20f).toVector3f(),
-                        .1f, 1, 45, 20
-                ),
-                world, pos, 0
+            new OrbitingEmitterParticleEffect(
+                new DustParticleEffect(MathUtil.rgbToVec3f(0x3955E5), .75f),
+                ParticleTypes.ASH,
+                Vec3d.ofCenter(data).subtract(pos).multiply(1f / 20f).toVector3f(),
+                .1f, 1, 45, 20
+            ),
+            world, pos, 0
         );
 
         ClientParticles.setParticleCount(5);
@@ -98,11 +99,11 @@ public class AffinityParticleSystems {
 
     public static final ParticleSystem<DissolveData> DISSOLVE_ITEM = CONTROLLER.register(DissolveData.class, (world, pos, data) -> {
         world.addParticle(BezierPathEmitterParticleEffect.item(data.suckWhat, data.suckWhere, data.particleMaxAge, data.duration, false),
-                pos.x, pos.y, pos.z, 0, 0, 0);
+            pos.x, pos.y, pos.z, 0, 0, 0);
 
         world.addParticle(new GenericEmitterParticleEffect(
-                new ItemStackParticleEffect(ParticleTypes.ITEM, data.suckWhat),
-                new Vec3d(.05, 0.2, .05), 1, .15f, true, data.duration
+            new ItemStackParticleEffect(ParticleTypes.ITEM, data.suckWhat),
+            new Vec3d(.05, 0.2, .05), 1, .15f, true, data.duration
         ), pos.x, pos.y, pos.z, 0, 0, 0);
     });
 
@@ -135,16 +136,16 @@ public class AffinityParticleSystems {
     public static final ParticleSystem<SpiritAssimilationStacksData> SPIRIT_ASSIMILATION_FAILS = CONTROLLER.register(SpiritAssimilationStacksData.class, (world, pos, data) -> {
         for (int i = 0; i < 8; i++) {
             ClientParticles.spawn(new GenericEmitterParticleEffect(
-                    new ItemStackParticleEffect(ParticleTypes.ITEM, data.stacks.get(i % 4)), new Vec3d(.25, .25, .25), 1, .5f, true, 10
+                new ItemStackParticleEffect(ParticleTypes.ITEM, data.stacks.get(i % 4)), new Vec3d(.25, .25, .25), 1, .5f, true, 10
             ), world, pos, 0d);
         }
 
         var dispersionEffect = new DustColorTransitionParticleEffect(new Vector3f(1, 0, 0), new Vector3f(1, .25f, .75f), 1);
         for (int i = 0; i < 10; i++) {
             ClientParticles.spawn(new BezierPathEmitterParticleEffect(
-                    dispersionEffect,
-                    VectorRandomUtils.getRandomOffsetSpecific(world, pos.add(0, .5, 0), 8, .25, 8),
-                    15, 10, true
+                dispersionEffect,
+                VectorRandomUtils.getRandomOffsetSpecific(world, pos.add(0, .5, 0), 8, .25, 8),
+                15, 10, true
             ), world, pos, 0);
         }
 
@@ -159,7 +160,7 @@ public class AffinityParticleSystems {
 
     public static final ParticleSystem<Void> LAVA_ERUPTION = CONTROLLER.register(Void.class, (world, pos, data) -> {
         ClientParticles.spawn(new GenericEmitterParticleEffect(
-                ParticleTypes.LARGE_SMOKE, new Vec3d(0, .25, 0), 1, .5f, false, 8
+            ParticleTypes.LARGE_SMOKE, new Vec3d(0, .25, 0), 1, .5f, false, 8
         ), world, pos, 0d);
 
         ClientParticles.setParticleCount(10);
@@ -169,14 +170,14 @@ public class AffinityParticleSystems {
     public static final ParticleSystem<ItemStack> ASPEN_INFUSION_FAILS = CONTROLLER.register(ItemStack.class, (world, pos, coreStack) -> {
         ClientParticles.setParticleCount(8);
         ClientParticles.spawn(new GenericEmitterParticleEffect(
-                new ItemStackParticleEffect(ParticleTypes.ITEM, coreStack), new Vec3d(.25, .25, .25), 1, .5f, true, 10
+            new ItemStackParticleEffect(ParticleTypes.ITEM, coreStack), new Vec3d(.25, .25, .25), 1, .5f, true, 10
         ), world, pos, 0d);
 
         for (int i = 0; i < 10; i++) {
             ClientParticles.spawn(new BezierPathEmitterParticleEffect(
-                    new DustParticleEffect(MathUtil.rgbToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb()), 1f),
-                    VectorRandomUtils.getRandomOffsetSpecific(world, pos.add(0, .5, 0), 8, .25, 8),
-                    15, 10, true
+                new DustParticleEffect(MathUtil.rgbToVec3f(Affinity.AETHUM_FLUX_COLOR.rgb()), 1f),
+                VectorRandomUtils.getRandomOffsetSpecific(world, pos.add(0, .5, 0), 8, .25, 8),
+                15, 10, true
             ), world, pos, 0);
         }
 
@@ -211,11 +212,11 @@ public class AffinityParticleSystems {
         for (var entityPos : data.entityPositions) {
             ClientParticles.setParticleCount(15);
             ClientParticles.spawnLine(
-                    ParticleTypes.FIREWORK,
-                    world,
-                    data.targetPos.add(0, .15f, 0),
-                    entityPos.add(0, .15f, 0),
-                    .05f
+                ParticleTypes.FIREWORK,
+                world,
+                data.targetPos.add(0, .15f, 0),
+                entityPos.add(0, .15f, 0),
+                .05f
             );
 
             ClientParticles.setParticleCount(3);
@@ -242,8 +243,8 @@ public class AffinityParticleSystems {
 
     public static final ParticleSystem<Void> ASPEN_INFUSION_ACTIVE = CONTROLLER.register(Void.class, (world, pos, data) -> {
         ClientParticles.spawn(
-                new GenericEmitterParticleEffect(ParticleTypes.ENCHANT, new Vec3d(.2, .2, .2), 1, .25f, true, 10),
-                world, pos, 0
+            new GenericEmitterParticleEffect(ParticleTypes.ENCHANT, new Vec3d(.2, .2, .2), 1, .25f, true, 10),
+            world, pos, 0
         );
     });
 
@@ -321,17 +322,32 @@ public class AffinityParticleSystems {
         ClientParticles.spawn(ArcaneTreetapBlock.PARTICLE, world, pos, .5);
 
         ClientParticles.spawn(
-                new GenericEmitterParticleEffect(
-                        ParticleTypes.END_ROD, Vec3d.ofCenter(transducerPos).subtract(pos).normalize().multiply(.3),
-                        1, .15f, false, 5
-                ),
-                world, pos, .15
+            new GenericEmitterParticleEffect(
+                ParticleTypes.END_ROD, Vec3d.ofCenter(transducerPos).subtract(pos).normalize().multiply(.3),
+                1, .15f, false, 5
+            ),
+            world, pos, .15
         );
 
         world.playSound(
-                pos.x, pos.y, pos.z,
-                AffinitySoundEvents.BLOCK_GRAVITON_TRANSDUCER_TRANSDUCE, SoundCategory.BLOCKS,
-                1f, .75f + world.random.nextFloat() * .3f, false
+            pos.x, pos.y, pos.z,
+            AffinitySoundEvents.BLOCK_GRAVITON_TRANSDUCER_TRANSDUCE, SoundCategory.BLOCKS,
+            1f, .75f + world.random.nextFloat() * .3f, false
+        );
+    });
+
+    public static final ParticleSystem<Direction> DIRECTIONAL_SHRIEK = CONTROLLER.register(Direction.class, (world, pos, direction) -> {
+        for (int i = 0; i < 10; i++) {
+            world.addParticle(
+                new DirectionalShriekParticleEffect(i * 5, direction), false, pos.getX(), pos.getY(), pos.getZ(),
+                0.0, 0.0, 0.0
+            );
+        }
+
+        world.playSound(
+            pos.getX(), pos.getY(), pos.getZ(),
+            AffinitySoundEvents.BLOCK_SONIC_SYPHON_SHRIEK, SoundCategory.BLOCKS,
+            2f, .6f + world.random.nextFloat() * .4f, false
         );
     });
 

@@ -304,7 +304,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @ModifyVariable(method = "takeKnockback", at = @At(value = "STORE", ordinal = 0), ordinal = 0, argsOnly = true)
     private double applyEmeraldArmorToKnockback(double strength) {
-        return strength + this.getAttributeValue(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY));
+        return strength + this.getAttributeValue(Registries.ATTRIBUTE.getEntry(AffinityEntityAttributes.KNOCKBACK_SUSCEPTIBILITY)) * 2;
     }
 
     @ModifyVariable(method = "handleFallDamage", at = @At("HEAD"), ordinal = 0, argsOnly = true)

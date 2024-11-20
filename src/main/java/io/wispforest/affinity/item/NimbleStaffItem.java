@@ -7,7 +7,6 @@ import io.wispforest.affinity.blockentity.template.InquirableOutlineProvider;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.TextOps;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.serialization.CodecUtils;

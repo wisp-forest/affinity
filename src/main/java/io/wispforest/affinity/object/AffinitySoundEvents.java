@@ -39,6 +39,7 @@ public class AffinitySoundEvents implements SimpleFieldProcessingSubject<SoundEv
     public static final SoundEvent ITEM_CULTIVATION_STAFF_CULTIVATE = SoundEvent.of(Affinity.id("item.cultivation_staff.cultivate"));
     public static final SoundEvent BLOCK_SPIRIT_INTEGRATION_APPARATUS_DROP_ITEM = SoundEvent.of(Affinity.id("block.spirit_integration_apparatus.drop_item"));
     public static final SoundEvent BLOCK_SPIRIT_INTEGRATION_APPARATUS_RITUAL_FAIL = SoundEvent.of(Affinity.id("block.spirit_integration_apparatus.ritual_fail"));
+    public static final SoundEvent BLOCK_SONIC_SYPHON_SHRIEK = SoundEvent.of(Affinity.id("block.sonic_syphon.shriek"));
     public static final SoundEvent ITEM_ECHO_SHARD_BIND = SoundEvent.of(Affinity.id("item.echo_shard.bind"));
     public static final SoundEvent ITEM_RESOUNDING_CHIME_DING = SoundEvent.of(Affinity.id("item.resounding_chime.ding"));
     public static final SoundEvent ITEM_EMERALD_ARMOR_EQUIP = SoundEvent.of(Affinity.id("item.emerald_armor.equip"));

@@ -68,6 +68,7 @@ public class AffinityBlocks implements BlockRegistryContainer {
     public static final Block ETHEREAL_AETHUM_FLUX_NODE = new EtherealAethumFluxNodeBlock();
     public static final Block ETHEREAL_AETHUM_FLUX_INJECTOR = new EtherealAethumFluxInjectorBlock();
     public static final Block LOCAL_DISPLACEMENT_GATEWAY = new LocalDisplacementGatewayBlock();
+    public static final Block SONIC_SYPHON = new SonicSyphonBlock(AbstractBlock.Settings.copy(Blocks.SCULK_SHRIEKER).nonOpaque());
     public static final Block INFUSED_STONE = new Block(AbstractBlock.Settings.copy(Blocks.STONE_BRICKS));
 
     public static final AffineCandleBlock AFFINE_CANDLE = new AffineCandleBlock();
@@ -212,6 +213,9 @@ public class AffinityBlocks implements BlockRegistryContainer {
 
         public static final BlockEntityType<VillagerArmatureBlockEntity> VILLAGER_ARMATURE =
             make(VillagerArmatureBlockEntity::new, AffinityBlocks.VILLAGER_ARMATURE);
+
+        public static final BlockEntityType<SonicSyphonBlockEntity> SONIC_SYPHON =
+            make(SonicSyphonBlockEntity::new, AffinityBlocks.SONIC_SYPHON);
 
         @Override
         public void afterFieldProcessing() {

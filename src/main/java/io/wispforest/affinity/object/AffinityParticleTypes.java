@@ -21,6 +21,8 @@ public class AffinityParticleTypes implements AutoRegistryContainer<ParticleType
     public static final ParticleType<BezierPathParticleEffect> BEZIER_PATH = createType(BezierPathParticleEffect.ENDEC);
     public static final ParticleType<BezierPathEmitterParticleEffect> BEZIER_PATH_EMITTER = createType(BezierPathEmitterParticleEffect.ENDEC);
 
+    public static final ParticleType<DirectionalShriekParticleEffect> DIRECTIONAL_SHRIEK = createType(DirectionalShriekParticleEffect.ENDEC);
+
     private static <T extends ParticleEffect> ParticleType<T> createType(StructEndec<T> endec) {
         return FabricParticleTypes.complex(CodecUtils.toMapCodec(endec), CodecUtils.toPacketCodec(endec));
     }

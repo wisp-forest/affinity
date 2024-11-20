@@ -42,6 +42,7 @@ public class AffinityBlockStateModelProvider extends FabricModelProvider {
                 FIELD_COHERENCE_MODULATOR, GRAVITON_TRANSDUCER, ETHEREAL_AETHUM_FLUX_NODE, LOCAL_DISPLACEMENT_GATEWAY, AZALEA_CHEST
         );
 
+        generator.registerNorthDefaultHorizontalRotation(SONIC_SYPHON);
         generator.registerNorthDefaultHorizontalRotation(VILLAGER_ARMATURE);
     }
 

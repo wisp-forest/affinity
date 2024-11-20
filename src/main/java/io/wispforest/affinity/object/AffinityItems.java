@@ -29,6 +29,7 @@ public class AffinityItems implements ItemRegistryContainer {
     public static final Item WISPEN_TESTAMENT = LavenderBookItem.registerForBook(Affinity.id("wispen_testament"), settings().maxCount(1));
 
     public static final Item AETHUM_FLUX_BOTTLE = new AethumFluxBottleItem();
+    public static final Item PITCHER_ELIXIR_BOTTLE = new Item(settings().maxCount(16).rarity(Rarity.UNCOMMON));
     public static final Item BARE_RESPLENDENT_GEM = new Item(settings().maxCount(4).rarity(Rarity.UNCOMMON));
     public static final Item RESPLENDENT_GEM = new ResplendentGemItem();
 
@@ -137,6 +138,7 @@ public class AffinityItems implements ItemRegistryContainer {
         );
 
         potion.set(DataComponentTypes.ITEM_NAME, Text.translatable("item.affinity.potion_of_infinite_prowess"));
+        potion.set(DataComponentTypes.POTION_CONTENTS, component);
         return potion;
     }
 

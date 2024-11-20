@@ -203,6 +203,7 @@
   "subtitles.block.spirit_integration_apparatus.drop_item": "Spirit Assimilation ritual drops item",
   "subtitles.block.spirit_integration_apparatus.ritual_fail": "Spirit Assimilation ritual fails",
   "subtitles.block.asp_rite_core.ritual_fail": "Aspen Infusion ritual fails",
+  "subtitles.block.sonic_syphon.shriek": "Sonic Syphon shrieks",
   "subtitles.item.echo_shard.bind": "Echo Shard is bound to location",
   "subtitles.item.resounding_chime.ding": "Resounding Chime \"dings\"",
   "subtitles.item.emerald_armor.equip": "Emerald armor equips",
@@ -267,6 +268,7 @@
   "block.affinity.ethereal_aethum_flux_node.tooltip.owned_by_someone_else": "Owned by someone else",
   "block.affinity.ethereal_aethum_flux_injector": "Ethereal Aethum Flux Injector",
   "block.affinity.local_displacement_gateway": "Local Displacement Gateway",
+  "block.affinity.sonic_syphon": "Sonic Syphon",
 
   "block.affinity.villager_armature": "Villager Armature",
   "block.affinity.villager_armature.option.action": "Action",
@@ -501,6 +503,7 @@
   "item.affinity.nimble_staff.direction.east": "East",
   "item.affinity.nimble_staff.direction.west": "West",
   "item.affinity.aethum_flux_bottle": "Bottle of Aethum Flux",
+  "item.affinity.pitcher_elixir_bottle": "Bottle of Pitcher Elixir",
   "item.affinity.bare_resplendent_gem": "Bare Resplendent Gem",
   "item.affinity.resplendent_gem": "Resplendent Gem",
   "item.affinity.resonance_crystal": "Resonance Crystal",

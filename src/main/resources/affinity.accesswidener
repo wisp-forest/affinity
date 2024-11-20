@@ -18,6 +18,9 @@ extendable method net/minecraft/block/RedstoneWireBlock update (Lnet/minecraft/w
 accessible field net/minecraft/block/RedstoneWireBlock dotState Lnet/minecraft/block/BlockState;
 accessible field net/minecraft/block/RedstoneWireBlock wiresGivePower Z
 
+extendable method net/minecraft/client/particle/ShriekParticle <init> (Lnet/minecraft/client/world/ClientWorld;DDDI)V
+accessible field net/minecraft/client/particle/ShriekParticle delay I
+
 accessible class net/minecraft/data/client/BlockStateModelGenerator$BlockTexturePool
 accessible class net/minecraft/data/client/BlockStateModelGenerator$LogTexturePool
 
