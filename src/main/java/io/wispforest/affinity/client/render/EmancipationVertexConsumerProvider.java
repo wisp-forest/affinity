@@ -120,7 +120,7 @@ public class EmancipationVertexConsumerProvider implements VertexConsumerProvide
 
         @Override
         public VertexConsumer light(int u, int v) {
-            this.delegate.light(u | v << 16);
+            this.light = u | v << 16;
             return this;
         }
 
