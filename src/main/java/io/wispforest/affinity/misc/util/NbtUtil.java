@@ -36,7 +36,9 @@ public class NbtUtil {
             var stackNbt = (NbtCompound) element;
             byte idx = stackNbt.contains("Slot", NbtElement.BYTE_TYPE) ? stackNbt.getByte("Slot") : -1;
 
-            if (idx >= 0 && idx < items.size()) items.set(idx, ItemStack.fromNbtOrEmpty(registries, stackNbt));
+            if (stackNbt.contains("id") && idx >= 0 && idx < items.size()) {
+                items.set(idx, ItemStack.fromNbtOrEmpty(registries, stackNbt));
+            }
         }
     }
 
