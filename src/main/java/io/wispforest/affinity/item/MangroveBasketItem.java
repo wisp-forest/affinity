@@ -53,7 +53,7 @@ public class MangroveBasketItem extends BlockItem {
         if (nbt == null) return;
 
         tooltip.add(nbt.getNbt().get(MangroveBasketBlockEntity.CONTAINED_STATE_KEY).getBlock().getName().formatted(Formatting.GRAY));
-    }
+    } 
 
     @Override
     protected boolean place(ItemPlacementContext context, BlockState state) {

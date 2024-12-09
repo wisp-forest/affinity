@@ -60,7 +60,7 @@
   "depends": {
     "fabricloader": ">=0.15.0",
     "fabric-api": "*",
-    "minecraft": ">=1.21",
+    "minecraft": "1.21.1",
     "trinkets": "*",
     "owo": ">=0.12.12+1.21",
     "terrablender": "*",
