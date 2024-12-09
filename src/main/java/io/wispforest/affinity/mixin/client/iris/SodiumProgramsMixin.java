@@ -24,7 +24,7 @@ public class SodiumProgramsMixin {
     @Unique
     private static final TerrainRenderPass SKY_PASS = Arrays.stream(DefaultTerrainRenderPasses.ALL).filter(pass -> ((TerrainRenderPassAccessor) pass).affinity$getLayer() == SkyCaptureBuffer.SKY_STENCIL_LAYER).findFirst().get();
 
-    @Inject(method = "mapTerrainRenderPass", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "mapTerrainRenderPass", at = @At("HEAD"), cancellable = true, remap = false)
     private void fixSky(TerrainRenderPass pass, CallbackInfoReturnable<SodiumPrograms.Pass> cir) {
         if (pass != SKY_PASS) return;
         cir.setReturnValue(ShadowRenderingState.areShadowsCurrentlyBeingRendered() ? SodiumPrograms.Pass.SHADOW : SodiumPrograms.Pass.TERRAIN);
