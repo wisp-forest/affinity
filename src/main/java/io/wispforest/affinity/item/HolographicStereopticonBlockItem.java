@@ -10,6 +10,7 @@ import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
+import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.endec.SerializationContext;
 import io.wispforest.owo.particles.ClientParticles;
 import io.wispforest.owo.serialization.RegistriesAttribute;
@@ -136,7 +137,9 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
         if (clickType != ClickType.RIGHT || !otherStack.isEmpty()) return false;
 
         if (!stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
-            stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT);
+            var nbt = new NbtCompound();
+            nbt.putString("id", AffinityBlocks.Entities.HOLOGRAPHIC_STEREOPTICON.getRegistryEntry().getIdAsString());
+            stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbt));
         }
 
         var nextImprintKind = imprintKindOf(stack).next();
@@ -222,6 +225,7 @@ public class HolographicStereopticonBlockItem extends BlockItem implements Direc
 
         imprintKind.writeData(rendererData, data, registries);
         beTag.put(HolographicStereopticonBlockEntity.RENDERER_DATA_KEY, rendererData);
+        beTag.putString("id", AffinityBlocks.Entities.HOLOGRAPHIC_STEREOPTICON.getRegistryEntry().getIdAsString());
 
         stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(beTag));
     }
