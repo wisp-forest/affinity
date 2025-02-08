@@ -23,11 +23,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.item.Item;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.condition.EntityPropertiesLootCondition;
 import net.minecraft.loot.context.LootContext;
@@ -55,6 +57,8 @@ public class Affinity implements ModInitializer {
 
     public static final BlockApiLookup<AethumNetworkMember, Void> AETHUM_MEMBER = BlockApiLookup.get(id("aethum_member"), AethumNetworkMember.class, Void.class);
     public static final BlockApiLookup<AethumNetworkNode, Void> AETHUM_NODE = BlockApiLookup.get(id("aethum_node"), AethumNetworkNode.class, Void.class);
+
+    public static final TagKey<Item> UNFINISHED_ITEMS = TagKey.of(RegistryKeys.ITEM, Affinity.id("unfinished"));
 
     @Override
     public void onInitialize() {
@@ -86,6 +90,7 @@ public class Affinity implements ModInitializer {
 
         Registry.register(Registries.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
         TrackedDataHandlerRegistry.register(EmancipatedBlockEntity.OPTIONAL_NBT);
+        ResourceConditions.register(Affinity.id("unfinished_features"), jsonObject -> CONFIG.unfinishedFeatures());
 
         AffinityStructures.register();
 
@@ -116,6 +121,10 @@ public class Affinity implements ModInitializer {
 
         if (!Owo.DEBUG) return;
         AffinityDebugCommands.register();
+    }
+
+    public static io.wispforest.affinity.AffinityConfig config() {
+        return CONFIG;
     }
 
     public static Identifier id(String path) {

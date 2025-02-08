@@ -45,15 +45,23 @@ this mechanism to function, both the node's and injector's chunk must be loaded.
 
 ---
 
-The {item}Ethereal Aethum Flux Node{} remembers its owner (read, the placer) and may be customized for ease-of-use.
-{concept}Naming it in an anvil{} will...
+It is vital to note that, after placing, a {i}Sculk-Resonant Ethereal Amethyst Shard{} {c}must be inserted{} into the
+{item}Ethereal Aethum Flux Node{}, ...
 
 
 @next-page
 
-...make it retain this name when placed, visible for easy differentiation during injector setup. Further, a node
-{concept}is only visible to{} (and thus usable by) {concept}its owner{} by default. {concept}Sneak-interacting{} with it toggles between this and
-public access.
+...seeing as (contrary to the injector) it does come with one of its own.
+
+---
+
+The {item}Ethereal Aethum Flux Node{} remembers its owner (read, the placer) and may be customized for ease-of-use.
+{concept}Naming it in an anvil{} will make it retain this name when placed, visible for easy differentiation during injector setup. Further, a node
+{concept}is only visible to{} (and thus usable by) {concept}its owner{} by
+
+;;;;;
+
+default. {concept}Sneak-interacting{} with it toggles between this and public access.
 
 
 Now, to link an {item}Ethereal Aethum Flux Injector{} to a previously set-up node, {concept}interact with it{} after

@@ -5,7 +5,6 @@ import io.wispforest.affinity.blockentity.impl.MangroveBasketBlockEntity;
 import io.wispforest.affinity.item.MangroveBasketItem;
 import io.wispforest.affinity.misc.MixinHooks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.owo.itemgroup.OwoItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -103,7 +102,7 @@ public class MangroveBasketBlock extends BlockWithEntity implements BlockItemPro
     }
 
     @Override
-    public Item createBlockItem(Block block, OwoItemSettings settings) {
+    public Item createBlockItem(Block block, Item.Settings settings) {
         return new MangroveBasketItem(block, settings);
     }
 }

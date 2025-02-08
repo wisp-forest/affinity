@@ -13,11 +13,14 @@ import io.wispforest.affinity.misc.callback.ClientDoItemUseCallback;
 import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.format.gson.GsonDeserializer;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.owo.network.serialization.PacketBufSerializer;
+import io.wispforest.owo.network.serialization.RecordSerializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -36,7 +39,6 @@ import net.minecraft.resource.JsonDataLoader;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -72,21 +74,21 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
 
             var swivelProperties = SWIVEL_PROPERTIES.get(state.getBlock());
             var candidates = state.getProperties().stream()
-                    .filter(swivelProperties::hasCycleFor)
-                    .filter(property -> swivelProperties.nextValueFor(property, state).isPresent())
-                    .toList();
+                .filter(swivelProperties::hasCycleFor)
+                .filter(property -> swivelProperties.nextValueFor(property, state).isPresent())
+                .toList();
 
             if (candidates.isEmpty()) return ActionResult.PASS;
             if (world.isClient) return ActionResult.SUCCESS;
 
             var selectedPropName = stack.get(SELECTED_PROPERTY);
             var selectedProp = candidates.stream()
-                    .filter(property -> property.getName().equals(selectedPropName))
-                    .findFirst()
-                    .orElse(candidates.get(0));
+                .filter(property -> property.getName().equals(selectedPropName))
+                .findFirst()
+                .orElse(candidates.get(0));
 
             stack.put(SELECTED_PROPERTY, Util.next(candidates, selectedProp).getName());
-            context.getPlayer().playSound(SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .5f, 2f);
+            world.playSound(null, context.getPlayer().getX(), context.getPlayer().getY(), context.getPlayer().getZ(), AffinitySoundEvents.ITEM_SWIVEL_STAFF_SELECT_PROPERTY, SoundCategory.PLAYERS, 1f, 1f);
 
             return ActionResult.SUCCESS;
         } else {
@@ -105,9 +107,9 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
         var selectedPropName = stack.get(SELECTED_PROPERTY);
 
         var swivelProperty = state.getProperties().stream()
-                .filter(swivelProperties::hasCycleFor)
-                .filter(property -> swivelProperties.nextValueFor(property, state).isPresent())
-                .min(Comparator.comparing(property -> !property.getName().equals(selectedPropName)));
+            .filter(swivelProperties::hasCycleFor)
+            .filter(property -> swivelProperties.nextValueFor(property, state).isPresent())
+            .min(Comparator.comparing(property -> !property.getName().equals(selectedPropName)));
 
         if (swivelProperty.isEmpty()) return TypedActionResult.pass(stack);
         if (world.isClient) return TypedActionResult.success(stack);
@@ -119,7 +121,7 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
             world.scheduleFluidTick(clickedBlock, newState.getFluidState().getFluid(), newState.getFluidState().getFluid().getTickRate(world));
         }
 
-        player.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1f, 1f);
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), AffinitySoundEvents.ITEM_SWIVEL_STAFF_SWIVEL, SoundCategory.PLAYERS, 1f, 1f);
         return TypedActionResult.success(stack);
     }
 
@@ -145,8 +147,8 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
         if (swivelProperties == null) return null;
 
         return swivelProperties.nextValueFor(property, state)
-                .map(comparable -> state.with((Property) property, (Comparable) comparable))
-                .orElse(null);
+            .map(comparable -> state.with((Property) property, (Comparable) comparable))
+            .orElse(null);
     }
 
     public static List<Pair<Property<?>, String>> swivelProperties(BlockState state) {
@@ -181,9 +183,9 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
 
     private record SwivelPropertiesDefinition(TagKey<Block> tag, Map<String, PropertyCycle> cyclesByProperty) {
         public static final StructEndec<SwivelPropertiesDefinition> ENDEC = StructEndecBuilder.of(
-                CodecUtils.toEndec(TagKey.codec(RegistryKeys.BLOCK)).fieldOf("tag", SwivelPropertiesDefinition::tag),
-                PropertyCycle.ENDEC.mapOf().fieldOf("properties", SwivelPropertiesDefinition::cyclesByProperty),
-                SwivelPropertiesDefinition::new
+            CodecUtils.toEndec(TagKey.codec(RegistryKeys.BLOCK)).fieldOf("tag", SwivelPropertiesDefinition::tag),
+            PropertyCycle.ENDEC.mapOf().fieldOf("properties", SwivelPropertiesDefinition::cyclesByProperty),
+            SwivelPropertiesDefinition::new
         );
 
         public void store(Map<Block, SwivelProperties> storage) {
@@ -204,10 +206,10 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
 
     private record PropertyCycle(String translationKey, Map<String, String> cycle, @Nullable StatePredicate predicate) {
         public static final StructEndec<PropertyCycle> ENDEC = StructEndecBuilder.of(
-                Endec.STRING.fieldOf("translation_key", PropertyCycle::translationKey),
-                Endec.STRING.mapOf().fieldOf("cycle", PropertyCycle::cycle),
-                StatePredicate.ENDEC.optionalFieldOf("predicate", PropertyCycle::predicate, (StatePredicate) null),
-                PropertyCycle::new
+            Endec.STRING.fieldOf("translation_key", PropertyCycle::translationKey),
+            Endec.STRING.mapOf().fieldOf("cycle", PropertyCycle::cycle),
+            StatePredicate.ENDEC.optionalFieldOf("predicate", PropertyCycle::predicate, (StatePredicate) null),
+            PropertyCycle::new
         );
     }
 
@@ -239,16 +241,18 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
         }
     }
 
+    public record WeLoveWhenTheApiIsAHotMess(SyncSwivelProperties pain) {}
+
     public record SyncSwivelProperties(Map<Block, SwivelProperties> propertiesMap) {
         public static final StructEndec<SyncSwivelProperties> ENDEC = StructEndecBuilder.of(
-                Endec.map(
-                        BuiltInEndecs.ofRegistry(Registries.BLOCK),
-                        StructEndecBuilder.of(
-                                PropertyCycle.ENDEC.mapOf().fieldOf("cycles_by_property", SwivelProperties::cyclesByProperty),
-                                SwivelProperties::new
-                        )
-                ).fieldOf("properties_map", SyncSwivelProperties::propertiesMap),
-                SyncSwivelProperties::new
+            Endec.map(
+                BuiltInEndecs.ofRegistry(Registries.BLOCK),
+                StructEndecBuilder.of(
+                    PropertyCycle.ENDEC.mapOf().fieldOf("cycles_by_property", SwivelProperties::cyclesByProperty),
+                    SwivelProperties::new
+                )
+            ).fieldOf("properties_map", SyncSwivelProperties::propertiesMap),
+            SyncSwivelProperties::new
         );
     }
 
@@ -261,7 +265,7 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
         });
 
         ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-            AffinityNetwork.CHANNEL.serverHandle(player).send(new SyncSwivelProperties(SWIVEL_PROPERTIES));
+            AffinityNetwork.CHANNEL.serverHandle(player).send(new WeLoveWhenTheApiIsAHotMess(new SyncSwivelProperties(SWIVEL_PROPERTIES)));
         });
 
         StatePredicate.TYPES.put("has_property", HasPropertyPredicate.ENDEC);
@@ -269,9 +273,14 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
         StatePredicate.TYPES.put("any_of", AnyOfPredicate.ENDEC);
         StatePredicate.TYPES.put("none_of", NoneOfPredicate.ENDEC);
 
-        AffinityNetwork.CHANNEL.registerClientbound(SyncSwivelProperties.class, (message, access) -> {
+        PacketBufSerializer.register(
+            SyncSwivelProperties.class,
+            (packetByteBuf, syncSwivelProperties) -> packetByteBuf.write(SyncSwivelProperties.ENDEC, syncSwivelProperties),
+            packetByteBuf -> packetByteBuf.read(SyncSwivelProperties.ENDEC)
+        );
+        AffinityNetwork.CHANNEL.registerClientbound(WeLoveWhenTheApiIsAHotMess.class, (message, access) -> {
             SWIVEL_PROPERTIES.clear();
-            SWIVEL_PROPERTIES.putAll(message.propertiesMap);
+            SWIVEL_PROPERTIES.putAll(message.pain.propertiesMap);
         });
     }
 
@@ -286,7 +295,9 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
             if (entity == null) return ActionResult.PASS;
 
             var blockRaycast = player.raycast(7, 1f, false);
-            if (blockRaycast.getType() != HitResult.Type.MISS && blockRaycast.squaredDistanceTo(player) < entity.squaredDistanceTo(player)) return ActionResult.PASS;
+            if (blockRaycast.getType() != HitResult.Type.MISS && blockRaycast.squaredDistanceTo(player) < entity.squaredDistanceTo(player)) {
+                return ActionResult.PASS;
+            }
 
             var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
             if (!aethum.hasAethum(AETHUM_PER_ENTITY_SPIN)) return ActionResult.PASS;
@@ -305,7 +316,9 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
             if (result == null) return;
 
             var blockRaycast = access.player().raycast(7, 1f, false);
-            if (blockRaycast.getType() != HitResult.Type.MISS && blockRaycast.squaredDistanceTo(access.player()) < result.squaredDistanceTo(access.player())) return;
+            if (blockRaycast.getType() != HitResult.Type.MISS && blockRaycast.squaredDistanceTo(access.player()) < result.squaredDistanceTo(access.player())) {
+                return;
+            }
 
             var aethum = access.player().getComponent(AffinityComponents.PLAYER_AETHUM);
             if (!aethum.tryConsumeAethum(AETHUM_PER_ENTITY_SPIN)) return;
@@ -364,9 +377,9 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
     private record HasPropertyPredicate(String property, @Nullable String value) implements StatePredicate {
 
         private static final StructEndec<HasPropertyPredicate> ENDEC = StructEndecBuilder.of(
-                Endec.STRING.fieldOf("property", HasPropertyPredicate::property),
-                Endec.STRING.optionalFieldOf("value", HasPropertyPredicate::value, (String) null),
-                HasPropertyPredicate::new
+            Endec.STRING.fieldOf("property", HasPropertyPredicate::property),
+            Endec.STRING.optionalFieldOf("value", HasPropertyPredicate::value, (String) null),
+            HasPropertyPredicate::new
         );
 
         @Override
@@ -388,8 +401,8 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
 
     private record AllOfPredicate(List<StatePredicate> args) implements StatePredicate {
         private static final StructEndec<AllOfPredicate> ENDEC = StructEndecBuilder.of(
-                StatePredicate.ENDEC.listOf().fieldOf("args", AllOfPredicate::args),
-                AllOfPredicate::new
+            StatePredicate.ENDEC.listOf().fieldOf("args", AllOfPredicate::args),
+            AllOfPredicate::new
         );
 
         @Override
@@ -409,8 +422,8 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
 
     private record AnyOfPredicate(List<StatePredicate> args) implements StatePredicate {
         private static final StructEndec<AnyOfPredicate> ENDEC = StructEndecBuilder.of(
-                StatePredicate.ENDEC.listOf().fieldOf("args", AnyOfPredicate::args),
-                AnyOfPredicate::new
+            StatePredicate.ENDEC.listOf().fieldOf("args", AnyOfPredicate::args),
+            AnyOfPredicate::new
         );
 
         @Override
@@ -430,8 +443,8 @@ public class SwivelStaffItem extends StaffItem implements DirectInteractionHandl
 
     private record NoneOfPredicate(List<StatePredicate> args) implements StatePredicate {
         private static final StructEndec<NoneOfPredicate> ENDEC = StructEndecBuilder.of(
-                StatePredicate.ENDEC.listOf().fieldOf("args", NoneOfPredicate::args),
-                NoneOfPredicate::new
+            StatePredicate.ENDEC.listOf().fieldOf("args", NoneOfPredicate::args),
+            NoneOfPredicate::new
         );
 
         @Override

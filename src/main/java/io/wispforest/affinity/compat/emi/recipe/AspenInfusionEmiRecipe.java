@@ -5,7 +5,6 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.api.widget.FillingArrowWidget;
-import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.compat.emi.AffinityEmiPlugin;
@@ -16,7 +15,6 @@ import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
-import me.shedaniel.math.Point;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -55,7 +53,7 @@ public class AspenInfusionEmiRecipe extends BasicEmiRecipe {
         inputContainer.verticalAlignment(VerticalAlignment.CENTER).horizontalAlignment(HorizontalAlignment.CENTER).margins(Insets.right(3));
         root.child(inputContainer);
 
-        var center = new Point((bounds.height() - 8) / 2 - 9, (bounds.height() - 8) / 2 - 9);
+        int centerX = (bounds.height() - 8) / 2 - 9, centerY = (bounds.height() - 8) / 2 - 9;
         double angleStep = Math.PI / (this.getInputs().size() - 1) * 2;
 
         for (int i = 1; i < this.getInputs().size(); i++) {
@@ -64,7 +62,7 @@ public class AspenInfusionEmiRecipe extends BasicEmiRecipe {
 
             inputContainer.child(adapter.wrap((x, y) -> {
                 return AffinityEmiPlugin.slot(this.getInputs().get(index), x, y).drawBack(false);
-            }).positioning(Positioning.absolute((int) (center.x + Math.cos(angle) * 30), (int) (center.y + Math.sin(angle) * 30))));
+            }).positioning(Positioning.absolute((int) (centerX + Math.cos(angle) * 30), (int) (centerY + Math.sin(angle) * 30))));
         }
 
         inputContainer.child(adapter.wrap((x, y) -> AffinityEmiPlugin.slot(this.getInputs().get(0), x, y)));
@@ -75,12 +73,12 @@ public class AspenInfusionEmiRecipe extends BasicEmiRecipe {
             container.gap(5).horizontalAlignment(HorizontalAlignment.CENTER);
 
             container.child(adapter.wrap((x, y) -> new FillingArrowWidget(x, y, this.recipe.duration * 50))
-                    .tooltip(Text.of(MathUtil.rounded(this.recipe.duration / 20d, 1) + "s")));
+                .tooltip(Text.of(MathUtil.rounded(this.recipe.duration / 20d, 1) + "s")));
 
             if (this.recipe.fluxCostPerTick != 0) {
                 container.child(Components.label(Text.of(this.recipe.fluxCostPerTick * this.recipe.duration + "\n" + "flux"))
-                        .horizontalTextAlignment(HorizontalAlignment.CENTER)
-                        .color(Color.ofRgb(0x3f3f3f))
+                    .horizontalTextAlignment(HorizontalAlignment.CENTER)
+                    .color(Color.ofRgb(0x3f3f3f))
                 ).padding(Insets.top(25));
             }
         }));

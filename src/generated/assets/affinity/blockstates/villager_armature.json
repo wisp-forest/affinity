@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "affinity:block/villager_armature",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "affinity:block/villager_armature"
+    },
+    "facing=south": {
+      "model": "affinity:block/villager_armature",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "affinity:block/villager_armature",
+      "y": 270
+    }
+  }
+}

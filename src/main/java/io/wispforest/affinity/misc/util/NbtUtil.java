@@ -4,16 +4,13 @@ import io.wispforest.affinity.aethumflux.net.AethumLink;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
+import net.minecraft.nbt.*;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -39,9 +36,11 @@ public class NbtUtil {
 
         for (NbtElement element : nbtList) {
             var stackNbt = (NbtCompound) element;
-            byte idx = stackNbt.getByte("Slot");
+            byte idx = stackNbt.contains("Slot", NbtElement.BYTE_TYPE) ? stackNbt.getByte("Slot") : -1;
 
-            if (idx >= 0 && idx < items.size()) items.set(idx, ItemStack.fromNbt(stackNbt));
+            if (stackNbt.contains("id") && idx >= 0 && idx < items.size()) {
+                items.set(idx, ItemStack.fromNbt(stackNbt));
+            }
         }
     }
 

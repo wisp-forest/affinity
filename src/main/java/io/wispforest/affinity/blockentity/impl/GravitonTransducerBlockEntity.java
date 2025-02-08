@@ -12,6 +12,7 @@ import io.wispforest.affinity.misc.util.InteractionUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityParticleSystems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.endec.impl.KeyedEndec;
 import io.wispforest.owo.ops.WorldOps;
@@ -26,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -85,7 +85,7 @@ public class GravitonTransducerBlockEntity extends AethumNetworkMemberBlockEntit
             this.shard = ItemStack.EMPTY;
             this.markDirty();
 
-            WorldOps.playSound(this.world, this.pos, SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK, SoundCategory.BLOCKS);
+            WorldOps.playSound(this.world, this.pos, AffinitySoundEvents.BLOCK_GRAVITON_TRANSDUCER_SHARD_BREAKS, SoundCategory.BLOCKS);
         }
     }
 

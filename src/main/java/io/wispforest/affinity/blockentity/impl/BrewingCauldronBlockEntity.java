@@ -9,9 +9,7 @@ import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.misc.util.BlockFinder;
 import io.wispforest.affinity.misc.util.ListUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
-import io.wispforest.affinity.object.AffinityBlocks;
-import io.wispforest.affinity.object.AffinityParticleSystems;
-import io.wispforest.affinity.object.AffinityPoiTypes;
+import io.wispforest.affinity.object.*;
 import io.wispforest.affinity.recipe.PotionMixingRecipe;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.KeyedEndec;
@@ -28,7 +26,6 @@ import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -126,7 +123,7 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
 
             if (!ItemOps.emptyAwareDecrement(item.getStack())) item.discard();
 
-            world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1, 0.25f + world.random.nextFloat() * 0.5f);
+            world.playSound(null, pos, AffinitySoundEvents.BLOCK_BREWING_CAULDRON_PICK_UP_ITEM, SoundCategory.BLOCKS, 1, 0.25f + world.random.nextFloat() * 0.5f);
         }
 
         if (!this.updateAndTestCraftingPreconditions()) {
@@ -143,13 +140,13 @@ public class BrewingCauldronBlockEntity extends AethumNetworkMemberBlockEntity i
             return;
         }
 
-        world.playSound(null, this.pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1, 1);
+        world.playSound(null, this.pos, AffinitySoundEvents.BLOCK_BREWING_CAULDRON_BREW, SoundCategory.BLOCKS, 1, 1);
         this.storedPotion = this.cachedRecipe.craftPotion(this.items);
 
         int affineCandleCount = this.countCandles();
         if (affineCandleCount > 0) {
             var extraNbt = this.storedPotion.getOrCreateExtraNbt();
-            extraNbt.put(PotionMixture.EXTEND_DURATION_BY, 1 + Math.min(affineCandleCount * 0.05F, 0.45F));
+            extraNbt.put(PotionMixture.EXTEND_DURATION_BY, 1 + Math.min(affineCandleCount * 0.05F, 0.5F));
         }
 
         for (var ingredient : this.cachedRecipe.getItemInputs()) {

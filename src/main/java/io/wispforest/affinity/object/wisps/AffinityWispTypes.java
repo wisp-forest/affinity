@@ -3,6 +3,7 @@ package io.wispforest.affinity.object.wisps;
 import io.wispforest.affinity.object.AffinityItems;
 import net.minecraft.item.Item;
 
+import java.util.Locale;
 import java.util.function.Supplier;
 
 public enum AffinityWispTypes implements WispType {
@@ -20,7 +21,7 @@ public enum AffinityWispTypes implements WispType {
     AffinityWispTypes(int color, String icon, int aethumFluxPerSecond, Supplier<Item> mistItem) {
         this.color = color;
         this.icon = icon;
-        this.translationKey = "wispType.affinity." + this.name().toLowerCase();
+        this.translationKey = "wispType.affinity." + this.name().toLowerCase(Locale.ROOT);
         this.aethumFluxPerSecond = aethumFluxPerSecond;
         this.mistItem = mistItem;
     }

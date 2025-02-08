@@ -10,6 +10,9 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.GlobalPos;
+import net.minecraft.util.math.Vec2f;
+
+import java.util.List;
 
 public class EndecUtil {
 
@@ -28,5 +31,14 @@ public class EndecUtil {
             BuiltInEndecs.IDENTIFIER.xmap(id -> RegistryKey.of(RegistryKeys.WORLD, id), RegistryKey::getValue).fieldOf("dimension", GlobalPos::getDimension),
             BuiltInEndecs.BLOCK_POS.fieldOf("pos", GlobalPos::getPos),
             GlobalPos::create
+    );
+
+    public static final Endec<Vec2f> VEC2F_ENDEC = Endec.FLOAT.listOf().validate(ints -> {
+        if (ints.size() != 2) {
+            throw new IllegalStateException("Vec2f array must have two elements");
+        }
+    }).xmap(
+        components -> new Vec2f(components.get(0), components.get(1)),
+        vector -> List.of(vector.x, vector.y)
     );
 }

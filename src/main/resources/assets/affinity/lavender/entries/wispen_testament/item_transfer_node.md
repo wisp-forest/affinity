@@ -55,4 +55,4 @@ specify a tag for filtering, {c}rename the filter{}
 
 {c}item{} in an anvil to state the tag ID with a {c}#{} prepended - like so:
 
-<|item-spotlight@lavender:book_components|item=minecraft:oak_planks{display:{Name:'"#minecraft:planks"'}}|>
+<|item-spotlight@lavender:book_components|item=minecraft:oak_planks{display:{Name:'{"text":"#minecraft:planks"}'}}|>

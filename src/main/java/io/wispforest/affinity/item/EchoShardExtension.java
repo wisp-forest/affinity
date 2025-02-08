@@ -2,6 +2,7 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.endec.BuiltInEndecs;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.affinity.particle.BezierPathEmitterParticleEffect;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.KeyedEndec;
@@ -21,7 +22,6 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -91,7 +91,7 @@ public class EchoShardExtension {
             ClientParticles.spawnCubeOutline(ParticleTypes.REVERSE_PORTAL, world, Vec3d.of(pos).add(.25, .25, .25), .5f, .01f);
         }
 
-        WorldOps.playSound(world, pos, SoundEvents.ENTITY_ENDER_EYE_DEATH, SoundCategory.PLAYERS, 1, 0);
+        WorldOps.playSound(world, pos, AffinitySoundEvents.ITEM_ECHO_SHARD_BIND, SoundCategory.PLAYERS, 1, 0);
 
         return ActionResult.SUCCESS;
     }

@@ -2,58 +2,330 @@
   "item.artifact_blade.smash": {
     "sounds": [
       "affinity:item/artifact_blade_smash"
-    ]
+    ],
+    "subtitle": "subtitles.item.artifact_blade.smash"
   },
   "item.iridescence_wand.bind": {
     "sounds": [
       "affinity:item/iridescence_wand_bind"
-    ]
+    ],
+    "subtitle": "subtitles.item.iridescence_wand.bind"
   },
   "item.nimble_staff.fling": {
     "sounds": [
-      "affinity:item/nimble_staff_fling"
-    ]
+      {"name": "affinity:item/nimble_staff_fling", "volume": 0.75}
+    ],
+    "subtitle": "subtitles.item.nimble_staff.fling"
   },
   "item.evade_ring.evade": {
     "sounds": [
       "affinity:item/evade_ring_evade"
-    ]
+    ],
+    "subtitle": "subtitles.item.evade_ring.evade"
   },
   "item.satiating_potion.start_drinking": {
     "sounds": [
       "affinity:item/satiating_potion_start_drinking"
-    ]
+    ],
+    "subtitle": "subtitles.item.satiating_potion.start_drinking"
   },
   "item.aethum_fire_extinguisher.spray": {
     "sounds": [
       "affinity:item/aethum_fire_extinguisher_spray"
-    ]
+    ],
+    "subtitle": "subtitles.item.aethum_fire_extinguisher.spray"
   },
   "item.salvo_staff.hit": {
     "sounds": [
       "affinity:item/salvo_staff_hit_1",
       "affinity:item/salvo_staff_hit_2",
       "affinity:item/salvo_staff_hit_3"
-    ]
+    ],
+    "subtitle": "subtitles.item.salvo_staff.hit"
   },
   "block.spirit_integration_apparatus.ritual_start": {
     "sounds": [
       "affinity:block/spirit_assimilation_start"
-    ]
+    ],
+    "subtitle": "subtitles.block.spirit_integration_apparatus.ritual_start"
   },
   "block.asp_rite_core.craft": {
     "sounds": [
       "affinity:block/aspen_infusion_craft"
-    ]
+    ],
+    "subtitle": "subtitles.block.asp_rite_core.craft"
   },
   "block.asp_rite_core.active": {
     "sounds": [
       "affinity:block/aspen_infusion_active"
-    ]
+    ],
+    "subtitle": "subtitles.block.asp_rite_core.active"
   },
   "block.graviton_transducer.transduce": {
     "sounds": [
       "affinity:block/graviton_transducer_transduce"
-    ]
+    ],
+    "subtitle": "subtitles.block.graviton_transducer.transduce"
+  },
+  "item.satiating_potion.drink": {
+    "sounds": [
+      "item/bottle/drink_honey1",
+      "item/bottle/drink_honey2",
+      {"name": "item/bottle/drink_honey3", "volume": 0.35},
+      {"name": "item/bottle/drink_honey3", "volume": 0.75}
+    ],
+    "subtitle": "subtitles.item.satiating_potion.drink"
+  },
+  "effect.flight.duration_warning": {
+    "sounds": [
+      {"name": "ui/toast/in", "volume": 0.4}
+    ],
+    "subtitle": "subtitles.effect.flight.duration_warning"
+  },
+  "effect.flight.interrupted": {
+    "sounds": [
+      {"name": "mob/illusion_illager/mirror_move1", "volume": 0.5, "pitch": 0.5},
+      {"name": "mob/illusion_illager/mirror_move2", "volume": 0.5, "pitch": 0.5}
+    ],
+    "subtitle": "subtitles.effect.flight.interrupted"
+  },
+  "block.brewing_cauldron.brew": {
+    "sounds": [
+      "block/brewing_stand/brew1",
+      "block/brewing_stand/brew2"
+    ],
+    "subtitle": "subtitles.block.brewing_cauldron.brew"
+  },
+  "entity.villager.strip_arms": {
+    "sounds": [
+      {"name": "item/axe/strip1", "volume": 0.9},
+      {"name": "item/axe/strip1", "pitch": 0.85, "volume": 0.9},
+      {"name": "item/axe/strip2", "volume": 0.9},
+      {"name": "item/axe/strip2", "pitch": 0.85, "volume": 0.9},
+      {"name": "item/axe/strip3", "volume": 0.9},
+      {"name": "item/axe/strip3", "pitch": 0.85, "volume": 0.9},
+      {"name": "item/axe/strip4", "volume": 0.9},
+      {"name": "item/axe/strip4", "pitch": 0.85, "volume": 0.9}
+    ],
+    "subtitle": "subtitles.entity.villager.strip_arms"
+  },
+  "item.swivel_staff.select_property": {
+    "sounds": [
+      "random/pop"
+    ],
+    "subtitle": "subtitles.item.swivel_staff.select_property"
+  },
+  "item.swivel_staff.swivel": {
+    "sounds": [
+      "item/armor/equip_generic1",
+      "item/armor/equip_generic2",
+      "item/armor/equip_generic3",
+      "item/armor/equip_generic4",
+      "item/armor/equip_generic5",
+      "item/armor/equip_generic6"
+    ],
+    "subtitle": "subtitles.item.swivel_staff.swivel"
+  },
+  "block.brewing_cauldron.pick_up_item": {
+    "sounds": [
+      "random/pop"
+    ],
+    "subtitle": "subtitles.block.brewing_cauldron.pick_up_item"
+  },
+  "item.aethum_overcharger.activate": {
+    "sounds": [
+      "item/totem/use_totem"
+    ],
+    "subtitle": "subtitles.item.aethum_overcharger.activate"
+  },
+  "block.void_beacon.activate": {
+    "sounds": [
+      {"name": "mob/enderdragon/growl1", "pitch": 0.5, "volume": 0.5},
+      {"name": "mob/enderdragon/growl2", "pitch": 0.5, "volume": 0.5},
+      {"name": "mob/enderdragon/growl3", "pitch": 0.5, "volume": 0.5},
+      {"name": "mob/enderdragon/growl4", "pitch": 0.5, "volume": 0.5}
+    ],
+    "subtitle": "subtitles.block.void_beacon.activate"
+  },
+  "item.geological_resonator.resonate": {
+    "sounds": [
+      "block/amethyst/step1",
+      "block/amethyst/step2",
+      "block/amethyst/step3",
+      "block/amethyst/step4",
+      "block/amethyst/step5",
+      "block/amethyst/step6",
+      "block/amethyst/step7",
+      "block/amethyst/step8",
+      "block/amethyst/step9",
+      "block/amethyst/step10",
+      "block/amethyst/step11",
+      "block/amethyst/step12"
+    ],
+    "subtitle": "subtitles.item.geological_resonator.resonate"
+  },
+  "item.geological_resonator.plonk": {
+    "sounds": [
+      "step/stone1",
+      "step/stone2",
+      "step/stone3",
+      "step/stone4",
+      "step/stone5",
+      "step/stone6"
+    ],
+    "subtitle": "subtitles.item.geological_resonator.plonk"
+  },
+  "block.graviton_transducer.shard_breaks": {
+    "sounds": [
+      "block/amethyst/break1",
+      "block/amethyst/break2",
+      "block/amethyst/break3",
+      "block/amethyst/break4"
+    ],
+    "subtitle": "subtitles.block.graviton_transducer.shard_breaks"
+  },
+  "item.collection_staff.mark_items": {
+    "sounds": [
+      {"name": "mob/enderdragon/wings1", "pitch": 0.5},
+      {"name": "mob/enderdragon/wings2", "pitch": 0.5},
+      {"name": "mob/enderdragon/wings3", "pitch": 0.5},
+      {"name": "mob/enderdragon/wings4", "pitch": 0.5},
+      {"name": "mob/enderdragon/wings5", "pitch": 0.5},
+      {"name": "mob/enderdragon/wings6", "pitch": 0.5}
+    ],
+    "subtitle": "subtitles.item.collection_staff.mark_items"
+  },
+  "item.collection_staff.teleport_items": {
+    "sounds": [
+      {"name": "mob/endermen/portal", "pitch": 1.5},
+      {"name": "mob/endermen/portal2", "pitch": 1.5}
+    ],
+    "subtitle": "subtitles.item.collection_staff.teleport_items"
+  },
+  "item.cultivation_staff.cultivate": {
+    "sounds": [
+      {"name": "mob/evocation_illager/cast1", "volume": 0.25},
+      {"name": "mob/evocation_illager/cast2", "volume": 0.25}
+    ],
+    "subtitle": "subtitles.item.cultivation_staff.cultivate"
+  },
+  "block.spirit_integration_apparatus.drop_item": {
+    "sounds": [
+      "random/pop"
+    ],
+    "subtitle": "subtitles.block.spirit_integration_apparatus.drop_item"
+  },
+  "block.spirit_integration_apparatus.ritual_fail": {
+    "sounds": [
+      {"name": "random/explode1", "pitch": 0.75, "volume": 0.75},
+      {"name": "random/explode2", "pitch": 0.75, "volume": 0.75},
+      {"name": "random/explode3", "pitch": 0.75, "volume": 0.75},
+      {"name": "random/explode4", "pitch": 0.75, "volume": 0.75}
+    ],
+    "subtitle": "subtitles.block.spirit_integration_apparatus.ritual_fail"
+  },
+  "block.asp_rite_core.ritual_fail": {
+    "sounds": [
+      {"name": "random/explode1", "pitch": 1.25, "volume": 0.75},
+      {"name": "random/explode2", "pitch": 1.25, "volume": 0.75},
+      {"name": "random/explode3", "pitch": 1.25, "volume": 0.75},
+      {"name": "random/explode4", "pitch": 1.25, "volume": 0.75}
+    ],
+    "subtitle": "subtitles.block.asp_rite_core.ritual_fail"
+  },
+  "block.sonic_syphon.shriek": {
+    "sounds": [
+      {
+        "name": "block/sculk_shrieker/shriek1",
+        "volume": 0.85
+      },
+      {
+        "name": "block/sculk_shrieker/shriek2",
+        "volume": 0.85
+      },
+      {
+        "name": "block/sculk_shrieker/shriek3",
+        "volume": 0.85
+      },
+      {
+        "name": "block/sculk_shrieker/shriek4",
+        "volume": 0.85
+      },
+      {
+        "name": "block/sculk_shrieker/shriek5",
+        "volume": 0.85
+      }
+    ],
+    "subtitle": "subtitles.block.sonic_syphon.shriek"
+  },
+  "item.echo_shard.bind": {
+    "sounds": [
+      {"name": "entity/endereye/dead1", "volume": 1.3, "pitch": 0.5},
+      {"name": "entity/endereye/dead2", "volume": 1.3, "pitch": 0.5}
+    ],
+    "subtitle": "subtitles.item.echo_shard.bind"
+  },
+  "item.resounding_chime.ding": {
+    "sounds": [
+      {"name": "block/bell/bell_use01", "pitch": 0.93, "volume": 24.0},
+      {"name": "block/bell/bell_use01", "pitch": 0.95, "volume": 24.0},
+      {"name": "block/bell/bell_use01", "pitch": 0.97, "volume": 24.0},
+      {"name": "block/bell/bell_use02", "pitch": 0.93, "volume": 24.0},
+      {"name": "block/bell/bell_use02", "pitch": 0.95, "volume": 24.0},
+      {"name": "block/bell/bell_use02", "pitch": 0.97, "volume": 24.0}
+    ],
+    "subtitle": "subtitles.item.resounding_chime.ding"
+  },
+  "item.emerald_armor.equip": {
+    "sounds": [
+      "item/bottle/drink_honey1",
+      "item/bottle/drink_honey2",
+      {"name": "item/bottle/drink_honey3", "volume": 0.35},
+      {"name": "item/bottle/drink_honey3", "volume": 0.75}
+    ],
+    "subtitle": "subtitles.item.emerald_armor.equip"
+  },
+  "item.salvo_staff.fire_missile": {
+    "sounds": [
+      {"name": "block/amethyst/step1", "pitch": 2},
+      {"name": "block/amethyst/step2", "pitch": 2},
+      {"name": "block/amethyst/step3", "pitch": 2},
+      {"name": "block/amethyst/step4", "pitch": 2},
+      {"name": "block/amethyst/step5", "pitch": 2},
+      {"name": "block/amethyst/step6", "pitch": 2},
+      {"name": "block/amethyst/step7", "pitch": 2},
+      {"name": "block/amethyst/step8", "pitch": 2},
+      {"name": "block/amethyst/step9", "pitch": 2},
+      {"name": "block/amethyst/step10", "pitch": 2},
+      {"name": "block/amethyst/step11", "pitch": 2},
+      {"name": "block/amethyst/step12", "pitch": 2},
+      {"name": "block/amethyst/step13", "pitch": 2},
+      {"name": "block/amethyst/step14", "pitch": 2}
+    ],
+    "subtitle": "subtitles.item.salvo_staff.fire_missile"
+  },
+  "item.staff.select": {
+    "sounds": [
+      "item/armor/equip_generic1",
+      "item/armor/equip_generic2",
+      "item/armor/equip_generic3",
+      "item/armor/equip_generic4",
+      "item/armor/equip_generic5",
+      "item/armor/equip_generic6"
+    ],
+    "subtitle": "subtitles.item.staff.select"
+  },
+  "fluid.arcane_fade.bleach": {
+    "sounds": [
+      "mob/evocation_illager/cast1",
+      "mob/evocation_illager/cast2"
+    ],
+    "subtitle": "subtitles.fluid.arcane_fade.bleach"
+  },
+  "fluid.arcane_fade.craft": {
+    "sounds": [
+      "random/pop"
+    ],
+    "subtitle": "subtitles.fluid.arcane_fade.craft"
   }
 }

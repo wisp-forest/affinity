@@ -5,11 +5,15 @@ import io.wispforest.affinity.block.template.AttackInteractionReceiver;
 import io.wispforest.affinity.block.template.ScrollInteractionReceiver;
 import io.wispforest.affinity.blockentity.impl.EtherealAethumFluxInjectorBlockEntity;
 import io.wispforest.affinity.blockentity.impl.HolographicStereopticonBlockEntity;
+import io.wispforest.affinity.blockentity.impl.VillagerArmatureBlockEntity;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.item.SwivelStaffItem;
+import io.wispforest.affinity.misc.quack.AffinityExperienceOrbExtension;
 import io.wispforest.affinity.misc.screenhandler.RitualSocleComposerScreenHandler;
 import io.wispforest.affinity.misc.util.EndecUtil;
+import io.wispforest.endec.annotations.NullableComponent;
+import io.wispforest.endec.impl.ReflectiveEndecBuilder;
 import io.wispforest.owo.network.OwoNetChannel;
 import io.wispforest.owo.network.serialization.PacketBufSerializer;
 import net.minecraft.block.entity.BlockEntity;
@@ -49,11 +53,6 @@ public class AffinityNetwork {
 
     public static void initialize() {
         PacketBufSerializer.register(GlobalPos.class, (buf, globalPos) -> buf.write(EndecUtil.GLOBAL_POS_ENDEC, globalPos), buf -> buf.read(EndecUtil.GLOBAL_POS_ENDEC));
-        PacketBufSerializer.register(
-            SwivelStaffItem.SyncSwivelProperties.class,
-            (buf, properties) -> buf.write(SwivelStaffItem.SyncSwivelProperties.ENDEC, properties),
-            buf -> buf.read(SwivelStaffItem.SyncSwivelProperties.ENDEC)
-        );
 
         CHANNEL.registerClientbound(FluxSyncHandler.FluxSyncPacket.class, (message, access) -> {
             final var chunk = access.runtime().world.getChunk(message.chunk().x, message.chunk().z);
@@ -89,10 +88,19 @@ public class AffinityNetwork {
             player.swingHand(Hand.MAIN_HAND);
         });
 
+        CHANNEL.registerClientbound(SetExperienceOrbTargetPacket.class, (message, access) -> {
+            var entity = access.player().getWorld().getEntityById(message.entityId);
+            if (!(entity instanceof AffinityExperienceOrbExtension extension)) return;
+
+            extension.affinity$setArmatureTarget(message.armaturePos);
+        });
+
         HolographicStereopticonBlockEntity.initNetwork();
         RitualSocleComposerScreenHandler.initNetwork();
         EtherealAethumFluxInjectorBlockEntity.initNetwork();
+        VillagerArmatureBlockEntity.initNetwork();
         StaffItem.initNetwork();
     }
 
+    public record SetExperienceOrbTargetPacket(int entityId, @NullableComponent BlockPos armaturePos) {}
 }

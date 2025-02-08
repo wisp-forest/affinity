@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "affinity:block/sonic_syphon",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "affinity:block/sonic_syphon"
+    },
+    "facing=south": {
+      "model": "affinity:block/sonic_syphon",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "affinity:block/sonic_syphon",
+      "y": 270
+    }
+  }
+}

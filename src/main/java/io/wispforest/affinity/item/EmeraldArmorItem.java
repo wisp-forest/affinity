@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import io.wispforest.affinity.Affinity;
 import io.wispforest.affinity.object.AffinityEntityAttributes;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -13,7 +14,6 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Rarity;
 
 import java.util.UUID;
@@ -56,7 +56,7 @@ public class EmeraldArmorItem extends ArmorItem {
 
         @Override
         public SoundEvent getEquipSound() {
-            return SoundEvents.ITEM_HONEY_BOTTLE_DRINK;
+            return AffinitySoundEvents.ITEM_EMERALD_ARMOR_EQUIP;
         }
 
         @Override

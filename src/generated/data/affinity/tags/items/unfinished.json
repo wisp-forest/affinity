@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "affinity:villager_arms",
+    "affinity:villager_armature",
+    "affinity:sonic_syphon",
+    "affinity:pitcher_elixir_bottle"
+  ]
+}

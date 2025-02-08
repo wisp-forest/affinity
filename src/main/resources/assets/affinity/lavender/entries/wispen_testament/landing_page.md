@@ -4,7 +4,7 @@
 }
 ```
 
-Welcome to {dark_purple}Affinity{}
+Welcome to {#0096ff}A{}{#009fff}f{}{#00a8ff}f{}{#00b1ff}i{}{#00bbff}n{}{#00c4ff}i{}{#00cdff}t{}{#00d7ff}y{}
 
 
 Your journey will begin upon uncovering an {concept}Amethyst Geode{} which

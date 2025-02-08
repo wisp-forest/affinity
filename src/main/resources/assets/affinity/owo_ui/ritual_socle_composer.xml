@@ -1,5 +1,5 @@
 <owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.21/owo-ui.xsd">
     <components>
         <flow-layout direction="vertical">
             <children>
@@ -18,11 +18,13 @@
                         <template name="action-button">
                             <action>merge</action>
                             <coordinates>101,20</coordinates>
+                            <u>176</u>
                         </template>
 
                         <template name="action-button">
                             <action>split</action>
                             <coordinates>101,63</coordinates>
+                            <u>203</u>
                         </template>
                     </children>
                 </flow-layout>
@@ -47,7 +49,7 @@
                 <positioning type="absolute">{{coordinates}}</positioning>
                 <active>false</active>
                 <renderer>
-                    <texture texture="affinity:textures/gui/ritual_socle_composer.png" u="176" v="0" texture-width="256" texture-height="256"/>
+                    <texture texture="affinity:textures/gui/ritual_socle_composer.png" u="{{u}}" v="0" texture-width="256" texture-height="256"/>
                 </renderer>
             </button>
         </action-button>

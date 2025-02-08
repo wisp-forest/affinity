@@ -8,6 +8,8 @@ import io.wispforest.affinity.aethumflux.net.AethumNetworkNode;
 import io.wispforest.affinity.aethumflux.net.MultiblockAethumNetworkMember;
 import io.wispforest.affinity.aethumflux.storage.AethumFluxContainer;
 import io.wispforest.affinity.blockentity.template.AethumNetworkMemberBlockEntity;
+import io.wispforest.affinity.client.misc.Interpolator;
+import io.wispforest.affinity.client.misc.WorldMeshUtil;
 import io.wispforest.affinity.client.render.InWorldTooltipProvider;
 import io.wispforest.affinity.client.render.PostEffectBuffer;
 import io.wispforest.affinity.client.render.blockentity.LinkRenderer;
@@ -18,7 +20,6 @@ import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Easing;
-import io.wispforest.owo.ui.util.Delta;
 import io.wispforest.worldmesher.WorldMesh;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -34,7 +35,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.biome.ColorResolver;
 import net.minecraft.world.chunk.light.LightingProvider;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +47,7 @@ import java.util.*;
 
 public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
-    private static final PostEffectBuffer visualizerBuffer = new PostEffectBuffer();
+    public static final PostEffectBuffer VISUALIZER_BUFFER = new PostEffectBuffer();
 
     private final WorldMesh mesh;
     private final BlockRenderView world;
@@ -110,11 +110,11 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
     @Override
     protected void build(FlowLayout rootComponent) {
         rootComponent.childById(LabelComponent.class, "member-count-label").text(
-                Text.translatable("gui.affinity.flux_network_visualizer.member_count", this.networkMembers));
+            Text.translatable("gui.affinity.flux_network_visualizer.member_count", this.networkMembers));
         rootComponent.childById(LabelComponent.class, "node-count-label").text(
-                Text.translatable("gui.affinity.flux_network_visualizer.node_count", this.networkNodes));
+            Text.translatable("gui.affinity.flux_network_visualizer.node_count", this.networkNodes));
         rootComponent.childById(LabelComponent.class, "flux-capacity-label").text(
-                Text.translatable("gui.affinity.flux_network_visualizer.flux_capacity", this.networkCapacity));
+            Text.translatable("gui.affinity.flux_network_visualizer.flux_capacity", this.networkCapacity));
     }
 
     @Override
@@ -122,8 +122,8 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         this.renderBackground(context);
 
         this.component(LabelComponent.class, "total-flux-label").text(Text.translatable(
-                "gui.affinity.flux_network_visualizer.total_flux",
-                this.members.stream().mapToLong(AethumFluxContainer::flux).sum()
+            "gui.affinity.flux_network_visualizer.total_flux",
+            this.members.stream().mapToLong(AethumFluxContainer::flux).sum()
         ));
 
 //        this.renderBackground(context);
@@ -173,7 +173,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             //noinspection deprecation
             RenderSystem.runAsFancy(() -> {
-                visualizerBuffer.beginWrite(true, GL30.GL_COLOR_BUFFER_BIT);
+                VISUALIZER_BUFFER.beginWrite(true, GL30.GL_COLOR_BUFFER_BIT);
 
                 modelViewStack.translate(-this.xSize / 2f, -this.ySize / 2f, -this.zSize / 2f);
                 this.mesh.render(modelViewStack);
@@ -197,15 +197,23 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
                 this.client.getBufferBuilders().getEntityVertexConsumers().draw();
 
-                visualizerBuffer.endWrite();
+                VISUALIZER_BUFFER.endWrite();
             });
 
             // Raycast while we still can,
             // before all transformations are reset
-            var raycastResult = this.raycast(
-                    RenderSystem.getProjectionMatrix(),
-                    modelViewStack.peek().getPositionMatrix().mul(matrices.peek().getPositionMatrix()),
-                    mouseX, mouseY
+            var raycastResult = WorldMeshUtil.pickRay(
+                this.mesh,
+                this.world,
+                RenderSystem.getProjectionMatrix(),
+                modelViewStack.peek().getPositionMatrix().mul(matrices.peek().getPositionMatrix()),
+                mouseX, mouseY,
+                () -> {
+                    // If the scale is too low, we don't bother raycasting for two reasons
+                    // - the ray attains ungodly length (in excess of 100k+ blocks)
+                    // - the user can't really precisely aim at anything anyways
+                    return this.scale.get() >= .75f;
+                }
             );
 
             matrices.pop();
@@ -219,7 +227,7 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
 
             // End model view / projection crimes
 
-            visualizerBuffer.draw(new Color(1f, 1f, 1f, Easing.SINE.apply(ageScalar)));
+            VISUALIZER_BUFFER.draw(new Color(1f, 1f, 1f, Easing.SINE.apply(ageScalar)));
 
             if (raycastResult instanceof BlockHitResult blockHit && blockHit.getType() != HitResult.Type.MISS) {
                 var blockEntity = this.world.getBlockEntity(blockHit.getBlockPos());
@@ -274,50 +282,6 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         Interpolator.update(delta * .75f, this.scale, this.rotation, this.slant, this.xOffset, this.yOffset);
     }
 
-    private HitResult raycast(Matrix4f projection, Matrix4f viewMatrix, double mouseX, double mouseY) {
-        // If the scale is too low, we don't bother raycasting for two reasons
-        // - the ray attains ungodly length (in excess of 100k+ blocks)
-        // - the user can't really precisely aim at anything anyways
-        if (scale.value < .75f) return BlockHitResult.createMissed(Vec3d.ZERO, Direction.NORTH, BlockPos.ORIGIN);
-
-        var window = MinecraftClient.getInstance().getWindow();
-        float x = (float) ((2f * window.getScaleFactor() * mouseX) / window.getFramebufferWidth() - 1f);
-        float y = (float) (1f - (2f * window.getScaleFactor() * mouseY) / window.getFramebufferHeight());
-
-        // Unproject and compute ray enter/exit positions
-
-        var invProj = new Matrix4f(projection).invert();
-        var invView = new Matrix4f(viewMatrix).invert();
-
-        var near = new Vector4f(x, y, -1, 1).mul(invProj).mul(invView);
-        var far = new Vector4f(x, y, 1, 1).mul(invProj).mul(invView);
-
-        // Since the ray points we get are at bogus positions very, very far away due to the
-        // orthographic projection we compute the ray and move the points in by 20% and 65% respectively
-        // to eliminate about 85% of the problem space. This is a fine optimization to make since
-        // no real network will (or even can) ever extend over 20k blocks
-        //
-        // This results in about a 2x performance gain (170 -> 350FPS on my machine)
-        // glisco, 07.02.2023
-
-        var ray = new Vector4f(far).sub(near);
-
-        near.add(ray.mul(.2f));
-        far.add(ray.mul(1f / .2f * -.65f));
-
-        // Now that we have somewhat sane ray points, we just hand off to vanilla raycasting
-        // in the masked block render view we created for meshing the network in the first place
-
-        var origin = this.mesh.startPos();
-        return this.world.raycast(new RaycastContext(
-                new Vec3d(origin.getX() + near.x, origin.getY() + near.y, origin.getZ() + near.z),
-                new Vec3d(origin.getX() + far.x, origin.getY() + far.y, origin.getZ() + far.z),
-                RaycastContext.ShapeType.OUTLINE,
-                RaycastContext.FluidHandling.NONE,
-                client.player
-        ));
-    }
-
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
@@ -363,40 +327,10 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         return false;
     }
 
-    private static class Interpolator {
-
-        private final float defaultValue;
-
-        private float value;
-        private float target;
-
-        public Interpolator(double value) {
-            this.defaultValue = this.target = this.value = (float) value;
-        }
-
-        public static void update(float delta, Interpolator... interpolators) {
-            for (var interpolator : interpolators) {
-                interpolator.value += Delta.compute(interpolator.value, interpolator.target, delta);
-            }
-        }
-
-        public static void reset(Interpolator... interpolators) {
-            for (var interpolator : interpolators) {
-                interpolator.target = interpolator.defaultValue;
-            }
-        }
-
-        public void targetAdd(double value) {
-            this.target += value;
-        }
-
-        public void set(double value) {
-            this.target = this.value = (float) value;
-        }
-
-        public float get() {
-            return this.value;
-        }
+    @Override
+    public void removed() {
+        super.removed();
+        this.mesh.reset();
     }
 
     public static class RenderView implements BlockRenderView {
@@ -428,22 +362,22 @@ public class FluxNetworkVisualizerScreen extends BaseUIModelScreen<FlowLayout> {
         @Override
         public BlockEntity getBlockEntity(BlockPos pos) {
             return this.passthroughPositions.contains(pos)
-                    ? this.world.getBlockEntity(pos)
-                    : null;
+                ? this.world.getBlockEntity(pos)
+                : null;
         }
 
         @Override
         public BlockState getBlockState(BlockPos pos) {
             return this.passthroughPositions.contains(pos)
-                    ? this.world.getBlockState(pos)
-                    : Blocks.AIR.getDefaultState();
+                ? this.world.getBlockState(pos)
+                : Blocks.AIR.getDefaultState();
         }
 
         @Override
         public FluidState getFluidState(BlockPos pos) {
             return this.passthroughPositions.contains(pos)
-                    ? this.world.getFluidState(pos)
-                    : Fluids.EMPTY.getDefaultState();
+                ? this.world.getFluidState(pos)
+                : Fluids.EMPTY.getDefaultState();
         }
 
         @Override

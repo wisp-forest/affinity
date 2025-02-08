@@ -10,27 +10,32 @@ import io.wispforest.owo.itemgroup.OwoItemGroup;
 import io.wispforest.owo.itemgroup.gui.ItemGroupButton;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.village.VillagerData;
+import net.minecraft.village.VillagerProfession;
+import net.minecraft.village.VillagerType;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
+import static io.wispforest.affinity.blockentity.impl.VillagerArmatureBlockEntity.VILLAGER_DATA;
 import static io.wispforest.affinity.object.AffinityBlocks.*;
 import static io.wispforest.affinity.object.AffinityItems.*;
 
 public class AffinityItemGroup {
 
     private static OwoItemGroup GROUP;
+
     public static void register() {
         GROUP = OwoItemGroup.builder(Affinity.id("affinity"), () -> Icon.of(INERT_WISP_MATTER)).initializer(group -> {
             //noinspection Convert2MethodRef
@@ -88,6 +93,7 @@ public class AffinityItemGroup {
             entries.add(VOID_RESONANT_ETHEREAL_AMETHYST_SHARD);
             entries.add(ARCANE_FADE_BUCKET);
             entries.add(AETHUM_FLUX_BOTTLE);
+            if (Affinity.config().unfinishedFeatures()) entries.add(PITCHER_ELIXIR_BOTTLE);
             entries.add(EMERALD_BLOCK);
             entries.add(EMERALD_INGOT);
             entries.add(EMERALD_NUGGET);
@@ -124,8 +130,10 @@ public class AffinityItemGroup {
             entries.add(OUIJA_BOARD);
             entries.add(AETHUM_PROBE);
             entries.add(ITEM_TRANSFER_NODE);
+            entries.add(PHANTOM_BUNDLE);
             entries.add(WORLD_PIN);
             entries.add(LOCAL_DISPLACEMENT_GATEWAY);
+            if (Affinity.config().unfinishedFeatures()) entries.add(VILLAGER_ARMATURE);
             entries.add(Items.AMETHYST_SHARD);
             entries.add(MILDLY_ATTUNED_AMETHYST_SHARD);
             entries.add(FAIRLY_ATTUNED_AMETHYST_SHARD);
@@ -165,12 +173,12 @@ public class AffinityItemGroup {
 
             context.lookup().getOptionalWrapper(RegistryKeys.ENCHANTMENT).ifPresent(wrapper -> {
                 wrapper.streamEntries()
-                        .filter(entry -> entry.registryKey().getValue().getNamespace().equals(Affinity.MOD_ID))
-                        .map(RegistryEntry::value)
+                    .filter(entry -> entry.registryKey().getValue().getNamespace().equals(Affinity.MOD_ID))
+                    .map(RegistryEntry::value)
                         .filter(enchantment -> !(enchantment instanceof AbsoluteEnchantment))
-                        .map(enchantment -> new EnchantmentLevelEntry(enchantment, enchantment.getMaxLevel()))
-                        .map(EnchantedBookItem::forEnchantment)
-                        .forEach(entries::add);
+                    .map(enchantment -> new EnchantmentLevelEntry(enchantment, enchantment.getMaxLevel()))
+                    .map(EnchantedBookItem::forEnchantment)
+                    .forEach(entries::add);
             });
 
             context.lookup().getOptionalWrapper(RegistryKeys.POTION).ifPresent(wrapper -> {
@@ -211,6 +219,28 @@ public class AffinityItemGroup {
             entries.add(INERT_WISP_SPAWN_EGG);
             entries.add(WISE_WISP_SPAWN_EGG);
             entries.add(VICIOUS_WISP_SPAWN_EGG);
+
+            if (Affinity.config().unfinishedFeatures()) {
+                var armStacks = new ArrayList<ItemStack>();
+                for (var villagerProfession : Registries.VILLAGER_PROFESSION) {
+                    var stack = VILLAGER_ARMS.getDefaultStack();
+                    stack.put(VILLAGER_DATA, new VillagerData(VillagerType.PLAINS, villagerProfession, 5));
+                    armStacks.add(stack);
+                }
+                entries.addAll(armStacks, ItemGroup.StackVisibility.PARENT_TAB_ONLY);
+
+                armStacks.clear();
+                for (var villagerType : Registries.VILLAGER_TYPE) {
+                    for (var villagerProfession : Registries.VILLAGER_PROFESSION) {
+                        for (int i = 1; i < ((villagerProfession.equals(VillagerProfession.NITWIT) || villagerProfession.equals(VillagerProfession.NONE)) ? 2 : 6); i++) {
+                            var stack = VILLAGER_ARMS.getDefaultStack();
+                            stack.put(VILLAGER_DATA, new VillagerData(villagerType, villagerProfession, i));
+                            armStacks.add(stack);
+                        }
+                    }
+                }
+                entries.addAll(armStacks, ItemGroup.StackVisibility.SEARCH_TAB_ONLY);
+            }
         }, false);
 
         group.addButton(ItemGroupButton.github(group, "https://github.com/wisp-forest/affinity"));
@@ -220,10 +250,10 @@ public class AffinityItemGroup {
 
     private static void addPotions(ItemGroup.Entries entries, RegistryWrapper<Potion> registryWrapper, Item containerItem) {
         registryWrapper.streamEntries()
-                .filter(entry -> entry.registryKey().getValue().getNamespace().equals(Affinity.MOD_ID))
-                .filter(entry -> !entry.matchesKey(Potions.EMPTY_KEY))
-                .map(entry -> PotionUtil.setPotion(new ItemStack(containerItem), entry.value()))
-                .forEach(entries::add);
+            .filter(entry -> entry.registryKey().getValue().getNamespace().equals(Affinity.MOD_ID))
+            .filter(entry -> !entry.matchesKey(Potions.EMPTY_KEY))
+            .map(entry -> PotionUtil.setPotion(new ItemStack(containerItem), entry.value()))
+            .forEach(entries::add);
     }
 
     private static boolean isChyz() {

@@ -1,6 +1,6 @@
 //file:noinspection GradlePackageVersionRange
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.8-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -34,7 +34,7 @@ repositories {
     maven { url "https://maven.ladysnake.org/releases" }
 
     // owo
-    maven { url "https://maven.wispforest.io/releases" }
+    maven { url "https://maven.wispforest.io/releases/" }
 
     // rei
     maven { url "https://maven.shedaniel.me/" }
@@ -56,8 +56,6 @@ repositories {
     // gadget
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
-
-    mavenLocal()
 }
 
 dependencies {

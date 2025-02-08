@@ -27,10 +27,13 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.potion.Potion;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AffinityOwoWhatsThisPlugin implements OwoWhatsThisPlugin {
 

@@ -60,12 +60,14 @@
   "depends": {
     "fabricloader": ">=0.15.0",
     "fabric-api": "*",
-    "minecraft": ">=1.19.4",
+    "minecraft": ">=1.20.1",
     "trinkets": ">=3.0.0",
     "owo": ">=0.9.3+1.9.3",
     "terrablender": "*",
-    "cardinal-components-entity": ">=5.1.0",
-    "cardinal-components-chunk": ">=5.1.0",
+    "cardinal-components-entity": "*",
+    "cardinal-components-chunk": "*",
+    "cardinal-components-world": "*",
+    "cardinal-components-scoreboard": "*",
     "worldmesher": ">=0.3.0",
     "lavender": "*"
   },

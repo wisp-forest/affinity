@@ -15,17 +15,12 @@ import io.wispforest.affinity.client.render.LightLeakRenderer;
 import io.wispforest.affinity.client.render.SkyCaptureBuffer;
 import io.wispforest.affinity.client.render.blockentity.*;
 import io.wispforest.affinity.client.render.entity.*;
-import io.wispforest.affinity.client.render.item.AzaleaChestItemRenderer;
-import io.wispforest.affinity.client.render.item.MangroveBasketItemRenderer;
-import io.wispforest.affinity.client.render.item.VoidResonantEtherealAmethystShardRenderer;
+import io.wispforest.affinity.client.render.item.*;
 import io.wispforest.affinity.client.render.program.*;
 import io.wispforest.affinity.client.screen.*;
 import io.wispforest.affinity.component.AffinityComponents;
 import io.wispforest.affinity.component.EntityFlagComponent;
-import io.wispforest.affinity.item.CarbonCopyItem;
-import io.wispforest.affinity.item.EvadeRingItem;
-import io.wispforest.affinity.item.IridescenceWandItem;
-import io.wispforest.affinity.item.StaffItem;
+import io.wispforest.affinity.item.*;
 import io.wispforest.affinity.misc.callback.PostItemRenderCallback;
 import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.network.AffinityNetwork;
@@ -86,9 +81,12 @@ public class AffinityClient implements ClientModInitializer {
 
         ModelLoadingPlugin.register(ctx -> {
             ctx.addModels(
-                    Affinity.id("item/staff_bundle"),
-                    Affinity.id("item/void_resonant_ethereal_amethyst_shard_overlay"),
-                    Affinity.id("item/void_resonant_ethereal_amethyst_shard_outline")
+                Affinity.id("item/staff_bundle"),
+                Affinity.id("item/void_resonant_ethereal_amethyst_shard_overlay"),
+                Affinity.id("item/void_resonant_ethereal_amethyst_shard_outline"),
+                Affinity.id("item/villager_armature_base"),
+                VillagerArmatureScreen.CROSSHAIR_MODEL_ID,
+                VillagerArmatureScreen.CROSSHAIR_PREVIEW_MODEL_ID
             );
         });
 
@@ -97,6 +95,9 @@ public class AffinityClient implements ClientModInitializer {
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.FIELD_COHERENCE_MODULATOR, new FieldCoherenceModulatorBlockEntityRenderer(null));
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityItems.VOID_RESONANT_ETHEREAL_AMETHYST_SHARD, new VoidResonantEtherealAmethystShardRenderer());
         BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.AZALEA_CHEST, new AzaleaChestItemRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(AffinityItems.VILLAGER_ARMS, new VillagerArmsItemRenderer());
+        BuiltinItemRendererRegistry.INSTANCE.register(AffinityBlocks.VILLAGER_ARMATURE, new VillagerArmatureItemRenderer());
+
         PostItemRenderCallback.EVENT.register((stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, model, item) -> {
             boolean hasItemGlow = item != null && item.getComponent(AffinityComponents.ENTITY_FLAGS).hasFlag(EntityFlagComponent.ITEM_GLOW);
             if (mode == ModelTransformationMode.GUI || (!stack.isOf(AffinityItems.DRAGON_DROP) && !hasItemGlow)) return;
@@ -113,11 +114,11 @@ public class AffinityClient implements ClientModInitializer {
             }
 
             LightLeakRenderer.render(
-                    matrices,
-                    vertexConsumers,
-                    hasItemGlow
-                            ? Color.WHITE
-                            : new Color(.5f, 0f, 1f, 1f)
+                matrices,
+                vertexConsumers,
+                hasItemGlow
+                    ? Color.WHITE
+                    : new Color(.5f, 0f, 1f, 1f)
             );
 
             matrices.pop();
@@ -133,20 +134,26 @@ public class AffinityClient implements ClientModInitializer {
             matrices.scale(.5f, .5f, .5f);
 
             MinecraftClient.getInstance().getItemRenderer().renderItem(
-                    resultStack, renderMode, light, overlay, matrices, vertexConsumers, null, 0
+                resultStack, renderMode, light, overlay, matrices, vertexConsumers, null, 0
             );
         });
 
         TooltipComponentCallback.EVENT.register(data -> {
             return data instanceof StaffItem.BundleTooltipData tooltipData
-                    ? new StaffBundleTooltipComponent(tooltipData)
-                    : null;
+                ? new StaffBundleTooltipComponent(tooltipData)
+                : null;
+        });
+
+        TooltipComponentCallback.EVENT.register(data -> {
+            return data instanceof PhantomBundleItem.StacksTooltipData tooltipData
+                ? new PhantomBundleTooltipComponent(tooltipData.stacks())
+                : null;
         });
 
         TooltipComponentCallback.EVENT.register(data -> {
             return data instanceof CarbonCopyItem.TooltipData tooltipData
-                    ? new CarbonCopyTooltipComponent(tooltipData)
-                    : null;
+                ? new CarbonCopyTooltipComponent(tooltipData)
+                : null;
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -201,6 +208,12 @@ public class AffinityClient implements ClientModInitializer {
             CuboidRenderer.add(linkOrigin, CuboidRenderer.Cuboid.of(BlockPos.ORIGIN, new BlockPos(1, 1, 1)));
         });
 
+        ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
+            if (!stack.isIn(Affinity.UNFINISHED_ITEMS) || Affinity.config().unfinishedFeatures()) return;
+            lines.add(Text.empty());
+            lines.add(Text.translatable("text.affinity.unfinished_item_tooltip"));
+        });
+
         AethumNetworkLinkingHud.initialize();
         PlayerAethumHud.initialize();
         NimbleStaffHud.initialize();
@@ -226,6 +239,7 @@ public class AffinityClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.GENERIC_EMITTER, new GenericEmitterParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.ORBITING_EMITTER, new OrbitingEmitterParticle.Factory());
         ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.COLORED_FALLING_DUST, ColoredFallingDustParticleEffect.ParticleFactory::new);
+        ParticleFactoryRegistry.getInstance().register(AffinityParticleTypes.DIRECTIONAL_SHRIEK, DirectionalShriekParticle.Factory::new);
 
         EntityRendererRegistry.register(AffinityEntities.INERT_WISP, WispEntityRenderer::new);
         EntityRendererRegistry.register(AffinityEntities.WISE_WISP, WispEntityRenderer::new);
@@ -316,6 +330,7 @@ public class AffinityClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.ETHEREAL_AETHUM_FLUX_NODE, EtherealAethumFluxNodeBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.LOCAL_DISPLACEMENT_GATEWAY, LocalDisplacementGatewayBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(AffinityBlocks.Entities.AZALEA_CHEST, ChestBlockEntityRenderer::new);
+        BlockEntityRendererFactories.register(AffinityBlocks.Entities.VILLAGER_ARMATURE, VillagerArmatureBlockEntityRenderer::new);
     }
 
     private void assignBlockRenderLayers() {
@@ -337,5 +352,6 @@ public class AffinityClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.ARCANE_TREETAP, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.RITUAL_SOCLE_COMPOSER, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.VOID_BEACON, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AffinityBlocks.SONIC_SYPHON, RenderLayer.getCutout());
     }
 }

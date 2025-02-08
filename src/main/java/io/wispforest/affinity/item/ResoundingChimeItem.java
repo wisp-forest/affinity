@@ -2,6 +2,7 @@ package io.wispforest.affinity.item;
 
 import io.wispforest.affinity.misc.callback.ReplaceAttackDamageTextCallback;
 import io.wispforest.affinity.object.AffinityItems;
+import io.wispforest.affinity.object.AffinitySoundEvents;
 import io.wispforest.affinity.object.AffinityStatusEffects;
 import io.wispforest.owo.ops.TextOps;
 import net.fabricmc.api.EnvType;
@@ -14,7 +15,6 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Formatting;
 
 public class ResoundingChimeItem extends SwordItem {
@@ -31,7 +31,7 @@ public class ResoundingChimeItem extends SwordItem {
         }
 
         target.addStatusEffect(new StatusEffectInstance(AffinityStatusEffects.RESONANT, 100, amplifier));
-        target.getWorld().playSound(null, target.getX(), target.getY(), target.getZ(), SoundEvents.BLOCK_BELL_USE, SoundCategory.PLAYERS, 2f, 1 + amplifier * .2f);
+        target.getWorld().playSound(null, target.getX(), target.getY(), target.getZ(), AffinitySoundEvents.ITEM_RESOUNDING_CHIME_DING, SoundCategory.PLAYERS, 1f, 1 + amplifier * .2f);
 
         return super.postHit(stack, target, attacker);
     }

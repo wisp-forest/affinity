@@ -20,6 +20,7 @@
     "minecraft:comparator",
     "minecraft:calibrated_sculk_sensor",
     "minecraft:lever",
-    "#minecraft:campfires"
+    "#minecraft:campfires",
+    "affinity:villager_armature"
   ]
 }

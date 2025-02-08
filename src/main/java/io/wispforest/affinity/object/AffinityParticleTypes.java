@@ -18,6 +18,8 @@ public class AffinityParticleTypes implements AutoRegistryContainer<ParticleType
     public static final ParticleType<BezierPathParticleEffect> BEZIER_PATH = FabricParticleTypes.complex(BezierPathParticleEffect.FACTORY);
     public static final ParticleType<BezierPathEmitterParticleEffect> BEZIER_PATH_EMITTER = FabricParticleTypes.complex(BezierPathEmitterParticleEffect.FACTORY);
 
+    public static final ParticleType<DirectionalShriekParticleEffect> DIRECTIONAL_SHRIEK = FabricParticleTypes.complex(DirectionalShriekParticleEffect.FACTORY);
+
     @Override
     public Registry<ParticleType<?>> getRegistry() {
         return Registries.PARTICLE_TYPE;

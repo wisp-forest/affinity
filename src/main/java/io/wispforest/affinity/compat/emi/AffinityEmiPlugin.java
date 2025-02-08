@@ -164,6 +164,12 @@ public class AffinityEmiPlugin implements EmiPlugin {
         ArcaneFadeBlock.forEachGroup((id, item, items) -> {
             registry.addRecipe(new ArcaneFadingEmiRecipe(items, item, id));
         });
+
+        // ---
+
+        if (!Affinity.config().unfinishedFeatures()) {
+            registry.removeEmiStacks(emiStack -> emiStack.getItemStack().isIn(Affinity.UNFINISHED_ITEMS));
+        }
     }
 
     public static EmiIngredient veryCoolFeatureYouGotThereEmi(Ingredient ingredient) {

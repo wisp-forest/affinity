@@ -9,14 +9,13 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-@SuppressWarnings("UnstableApiUsage")
 public class SingleStackStorageProvider extends SingleStackStorage {
 
     public final Supplier<ItemStack> getter;
     public final Consumer<ItemStack> setter;
     private final Runnable commitCallback;
 
-    private int capacity;
+    private int capacity = 64;
     private BooleanSupplier active = () -> true;
     private Predicate<ItemVariant> canInsert = variant -> true;
     private Predicate<ItemVariant> canExtract = variant -> true;

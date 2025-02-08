@@ -7,6 +7,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 
+import java.util.Locale;
+
 public enum AttunedShardTiers implements AttunedShardTier {
 
     NONE(0, 5),
@@ -26,7 +28,7 @@ public enum AttunedShardTiers implements AttunedShardTier {
         this.maxTransfer = maxTransfer;
         this.maxDistance = maxDistance;
 
-        final var name = this.name().toLowerCase();
+        final var name = this.name().toLowerCase(Locale.ROOT);
         this.translationKey = "shard_tier.affinity." + name;
 
         if (Affinity.onClient()) {

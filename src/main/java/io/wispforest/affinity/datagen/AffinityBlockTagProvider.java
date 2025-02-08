@@ -40,7 +40,7 @@ public class AffinityBlockTagProvider extends FabricTagProvider.BlockTagProvider
 
         this.getOrCreateTagBuilder(BlockTags.AXE_MINEABLE).add(
                 STONE_BANDED_AETHUM_FLUX_NODE, ARBOREAL_ANNIHILATION_APPARATUS, ASP_RITE_CORE, ASSEMBLY_AUGMENT,
-                MATTER_HARVESTING_HEARTH, CROP_REAPER, AZALEA_CHEST
+                MATTER_HARVESTING_HEARTH, CROP_REAPER, AZALEA_CHEST, VILLAGER_ARMATURE
         );
 
         this.getOrCreateTagBuilder(BlockTags.HOE_MINEABLE).add(

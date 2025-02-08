@@ -5,6 +5,7 @@ import io.wispforest.affinity.item.AethumFireExtinguisherItem;
 import io.wispforest.affinity.item.StaffItem;
 import io.wispforest.affinity.item.WispMatterItem;
 import io.wispforest.affinity.item.WispMistItem;
+import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.registration.reflect.FieldRegistrationHandler;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -17,6 +18,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -29,6 +31,8 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public static final TagKey<Item> STAFFS = TagKey.of(RegistryKeys.ITEM, Affinity.id("staffs"));
     public static final TagKey<Item> WISP_MATTER = TagKey.of(RegistryKeys.ITEM, Affinity.id("wisp_matter"));
     public static final TagKey<Item> WISP_MIST = TagKey.of(RegistryKeys.ITEM, Affinity.id("wisp_mist"));
+
+    public static final TagKey<Item> AMETHYST_SHARDS = TagKey.of(RegistryKeys.ITEM, Affinity.id("amethyst_shards"));
 
     public AffinityItemTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> completableFuture, @Nullable BlockTagProvider blockTagProvider) {
         super(output, completableFuture, blockTagProvider);
@@ -64,11 +68,22 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.copy(BlockTags.CANDLES, ItemTags.CANDLES);
         this.getOrCreateTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS).add(EMERALD_INGOT);
 
+        this.getOrCreateTagBuilder(Affinity.UNFINISHED_ITEMS).add(
+            VILLAGER_ARMS,
+            AffinityBlocks.VILLAGER_ARMATURE.asItem(),
+            AffinityBlocks.SONIC_SYPHON.asItem(),
+            PITCHER_ELIXIR_BOTTLE
+        );
+
         this.copy(ConventionalBlockTags.ORES, ConventionalItemTags.ORES);
 
         this.getOrCreateTagBuilder(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades"))).add(
                 FORGOTTEN_ARTIFACT_BLADE, STABILIZED_ARTIFACT_BLADE, STRENGTHENED_ARTIFACT_BLADE, SUPERIOR_ARTIFACT_BLADE, ASTRAL_ARTIFACT_BLADE
         );
+
+        this.getOrCreateTagBuilder(ItemTags.SWORDS).addTag(TagKey.of(RegistryKeys.ITEM, Affinity.id("artifact_blades")));
+
+        this.getOrCreateTagBuilder(TagKey.of(RegistryKeys.ITEM, Identifier.of("c","buckets/arcane_fade"))).add(ARCANE_FADE_BUCKET);
 
         FieldRegistrationHandler.process(AffinityItems.class, (item, name, field) -> {
             if (item instanceof StaffItem && !(item instanceof AethumFireExtinguisherItem)) {
@@ -82,6 +97,7 @@ public class AffinityItemTagProvider extends FabricTagProvider.ItemTagProvider {
             if (item instanceof WispMistItem) {
                 this.getOrCreateTagBuilder(WISP_MIST).add(item);
             }
+
         }, false);
     }
 }

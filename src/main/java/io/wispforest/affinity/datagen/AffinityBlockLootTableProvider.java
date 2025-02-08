@@ -64,6 +64,17 @@ public class AffinityBlockLootTableProvider extends FabricBlockLootTableProvider
                             ))
             ));
         });
+
+        this.addDrop(VILLAGER_ARMATURE, block -> {
+            return LootTable.builder().pool(this.addSurvivesExplosionCondition(
+                block,
+                LootPool.builder()
+                    .rolls(ConstantLootNumberProvider.create(1.0F))
+                    .with(ItemEntry.builder(block).apply(
+                        CopyNbtLootFunction.builder(ContextLootNbtProvider.BLOCK_ENTITY).withOperation("villager_data", "BlockEntityTag")
+                    ))
+            ));
+        });
     }
 
     private void selfDrop(Block... blocks) {

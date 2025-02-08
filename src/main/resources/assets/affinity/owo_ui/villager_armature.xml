@@ -1,0 +1,124 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.21/owo-ui.xsd">
+    <components>
+        <flow-layout direction="horizontal">
+            <children>
+                <stack-layout>
+                    <children>
+                        <texture texture="affinity:textures/gui/villager_armature.png" region-width="276" region-height="166" texture-width="512" texture-height="256"/>
+
+                        <label>
+                            <text>Options</text>
+                            <color>#404040</color>
+
+                            <margins>
+                                <top>6</top>
+                            </margins>
+                            <positioning type="relative">13,0</positioning>
+                        </label>
+
+                        <label>
+                            <text>Villager Armature</text>
+                            <color>#404040</color>
+
+                            <margins>
+                                <top>6</top>
+                            </margins>
+                            <positioning type="relative">75,0</positioning>
+                        </label>
+
+                        <flow-layout direction="vertical">
+                            <children>
+                                <template name="option">
+                                    <option>action</option>
+                                </template>
+                                <template name="option">
+                                    <option>redstone-mode</option>
+                                </template>
+                                <template name="option">
+                                    <option>sneak</option>
+                                </template>
+                            </children>
+
+                            <gap>7</gap>
+
+                            <sizing>
+                                <horizontal method="fixed">88</horizontal>
+                                <vertical method="fixed">140</vertical>
+                            </sizing>
+                            <positioning type="absolute">5,18</positioning>
+                        </flow-layout>
+
+                        <stack-layout id="meshes-anchor">
+                            <children/>
+                            <positioning type="absolute">108,18</positioning>
+                        </stack-layout>
+                    </children>
+                </stack-layout>
+
+                <flow-layout direction="vertical">
+                    <children>
+                        <label>
+                            <text translate="true">gui.affinity.villager_armature.rotate_hint</text>
+                        </label>
+                        <label>
+                            <text translate="true">gui.affinity.villager_armature.click_hint</text>
+                        </label>
+
+                        <label>
+                            <text translate="true">gui.affinity.villager_armature.reset_hint</text>
+
+                            <margins>
+                                <top>4</top>
+                            </margins>
+                        </label>
+                    </children>
+
+                    <gap>3</gap>
+
+                    <positioning type="relative">100,100</positioning>
+
+                    <margins>
+                        <right>25</right>
+                        <bottom>25</bottom>
+                    </margins>
+                </flow-layout>
+            </children>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+
+            <horizontal-alignment>center</horizontal-alignment>
+            <vertical-alignment>center</vertical-alignment>
+        </flow-layout>
+    </components>
+
+    <templates>
+        <template name="option">
+            <flow-layout direction="vertical" id="{{option}}-controls">
+                <children>
+                    <label>
+                        <text translate="true">block.affinity.villager_armature.option.{{option}}</text>
+                        <margins>
+                            <top>3</top>
+                            <bottom>2</bottom>
+                        </margins>
+                    </label>
+
+                    <button id="button">
+                        <sizing>
+                            <horizontal method="fill">100</horizontal>
+                        </sizing>
+
+                        <margins>
+                            <horizontal>3</horizontal>
+                        </margins>
+                    </button>
+                </children>
+
+                <horizontal-alignment>center</horizontal-alignment>
+            </flow-layout>
+        </template>
+    </templates>
+</owo-ui>

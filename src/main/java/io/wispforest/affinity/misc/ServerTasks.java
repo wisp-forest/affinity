@@ -23,8 +23,12 @@ public class ServerTasks {
         SCHEDULED.put(in.getRegistryKey(), new ScheduledTask(delay, task));
     }
 
-    public static void doFor(ServerWorld in, int ticks, BooleanSupplier onTick, Runnable whenDone) {
+    public static void doFor(ServerWorld in, int ticks, TickingTaskRunner onTick, Runnable whenDone) {
         TICKING.put(in.getRegistryKey(), new TickingTask(ticks, onTick, whenDone));
+    }
+
+    public static void doFor(ServerWorld in, int ticks, BooleanSupplier onTick, Runnable whenDone) {
+        TICKING.put(in.getRegistryKey(), new TickingTask(ticks, $ -> onTick.getAsBoolean(), whenDone));
     }
 
     public static void doNext(Consumer<MinecraftServer> task) {
@@ -68,10 +72,10 @@ public class ServerTasks {
 
         private int tick = 0;
         private final int length;
-        private final BooleanSupplier onTick;
+        private final TickingTaskRunner onTick;
         private final Runnable whenDone;
 
-        private TickingTask(int length, BooleanSupplier onTick, Runnable whenDone) {
+        private TickingTask(int length, TickingTaskRunner onTick, Runnable whenDone) {
             this.length = length;
             this.onTick = onTick;
             this.whenDone = whenDone;
@@ -80,7 +84,7 @@ public class ServerTasks {
         private boolean run() {
             if (tick < length) {
                 this.tick++;
-                return this.onTick.getAsBoolean();
+                return this.onTick.tick(this.tick);
             } else {
                 this.whenDone.run();
                 return false;
@@ -89,4 +93,8 @@ public class ServerTasks {
 
     }
 
+    @FunctionalInterface
+    public interface TickingTaskRunner {
+        boolean tick(int tick);
+    }
 }

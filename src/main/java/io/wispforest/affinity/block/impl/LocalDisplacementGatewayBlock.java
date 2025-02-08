@@ -61,7 +61,7 @@ public class LocalDisplacementGatewayBlock extends BlockWithEntity {
         var aethum = player.getComponent(AffinityComponents.PLAYER_AETHUM);
         if (!aethum.tryConsumeAethum(1.5f)) return ActionResult.PASS;
 
-        player.teleport(targetPos.getX() + .5, targetPos.getY(), targetPos.getZ() + .5);
+        player.requestTeleport(targetPos.getX() + .5, targetPos.getY(), targetPos.getZ() + .5);
 
         if (!world.isClient) {
             AffinityParticleSystems.LOCAL_DISPLACEMENT_GATEWAY_TELEPORT.spawn(world, player.getPos());
