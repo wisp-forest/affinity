@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
+import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.List;
@@ -55,7 +56,7 @@ public class AethumFluxBottleItem extends Item implements DirectInteractionHandl
     }
 
     @Override
-    public Collection<Block> interactionOverrideCandidates() {
+    public Collection<Block> interactionOverrideCandidates(World world) {
         return INTERACTION_OVERRIDES;
     }
 }

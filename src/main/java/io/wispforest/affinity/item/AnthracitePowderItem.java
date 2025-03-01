@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
+import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,7 +44,7 @@ public class AnthracitePowderItem extends Item implements DirectInteractionHandl
     }
 
     @Override
-    public Collection<Block> interactionOverrideCandidates() {
+    public Collection<Block> interactionOverrideCandidates(World world) {
         return List.of(AffinityBlocks.ASSEMBLY_AUGMENT);
     }
 }

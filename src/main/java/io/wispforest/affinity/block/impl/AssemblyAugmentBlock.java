@@ -12,6 +12,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -23,6 +24,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -41,24 +44,24 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemProvider {
 
     private static final VoxelShape SHAPE = Stream.of(
-            Block.createCuboidShape(-1, 0, 3, 3, 3, 13),
-            Block.createCuboidShape(-1, 0, -1, 17, 3, 3),
-            Block.createCuboidShape(4, 2, -2, 12, 4, 0),
-            Block.createCuboidShape(4, 2, 16, 12, 4, 18),
-            Block.createCuboidShape(16, 2, 4, 18, 4, 12),
-            Block.createCuboidShape(-2, 2, 4, 0, 4, 12),
-            Block.createCuboidShape(13, -3, -1, 17, 0, 3),
-            Block.createCuboidShape(13, -3, 13, 17, 0, 17),
-            Block.createCuboidShape(-1, -3, 13, 3, 0, 17),
-            Block.createCuboidShape(-1, -3, -1, 3, 0, 3),
-            Block.createCuboidShape(-1, 0, 13, 17, 3, 17),
-            Block.createCuboidShape(13, 0, 3, 17, 3, 13)
+        Block.createCuboidShape(-1, 0, 3, 3, 3, 13),
+        Block.createCuboidShape(-1, 0, -1, 17, 3, 3),
+        Block.createCuboidShape(4, 2, -2, 12, 4, 0),
+        Block.createCuboidShape(4, 2, 16, 12, 4, 18),
+        Block.createCuboidShape(16, 2, 4, 18, 4, 12),
+        Block.createCuboidShape(-2, 2, 4, 0, 4, 12),
+        Block.createCuboidShape(13, -3, -1, 17, 0, 3),
+        Block.createCuboidShape(13, -3, 13, 17, 0, 17),
+        Block.createCuboidShape(-1, -3, 13, 3, 0, 17),
+        Block.createCuboidShape(-1, -3, -1, 3, 0, 3),
+        Block.createCuboidShape(-1, 0, 13, 17, 3, 17),
+        Block.createCuboidShape(13, 0, 3, 17, 3, 13)
     ).reduce(VoxelShapes::union).get();
 
     public AssemblyAugmentBlock() {
@@ -76,12 +79,12 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return world.getBlockState(pos.down()).isOf(Blocks.CRAFTING_TABLE);
+        return world.getBlockState(pos.down()).isIn(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES);
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (!world.isClient || !world.getBlockState(pos.down()).isOf(Blocks.CRAFTING_TABLE)) return;
+        if (!world.isClient || !world.getBlockState(pos.down()).isIn(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES)) return;
         this.displayPlaceParticles(world, pos);
     }
 
@@ -101,7 +104,7 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (direction != Direction.DOWN) return state;
-        return world.getBlockState(neighborPos).isOf(Blocks.CRAFTING_TABLE) ? state : Blocks.AIR.getDefaultState();
+        return world.getBlockState(neighborPos).isIn(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES) ? state : Blocks.AIR.getDefaultState();
     }
 
     @Override
@@ -162,7 +165,7 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
 
     static {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            if (player.isSneaking() || !world.getBlockState(hitResult.getBlockPos()).isOf(Blocks.CRAFTING_TABLE)) {
+            if (player.isSneaking() || !world.getBlockState(hitResult.getBlockPos()).isIn(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES)) {
                 return ActionResult.PASS;
             }
             if (!(world.getBlockEntity(hitResult.getBlockPos().up()) instanceof AssemblyAugmentBlockEntity augment)) {
@@ -184,8 +187,10 @@ public class AssemblyAugmentBlock extends BlockWithEntity implements BlockItemPr
         }
 
         @Override
-        public Collection<Block> interactionOverrideCandidates() {
-            return Set.of(Blocks.CRAFTING_TABLE);
+        public Collection<Block> interactionOverrideCandidates(World world) {
+            return Registries.BLOCK.getEntryList(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES)
+                .map(entries -> entries.stream().map(RegistryEntry::value).toList())
+                .orElse(List.of());
         }
     }
 }

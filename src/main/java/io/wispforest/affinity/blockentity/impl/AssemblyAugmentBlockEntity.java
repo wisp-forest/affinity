@@ -20,6 +20,7 @@ import io.wispforest.owo.serialization.RegistriesAttribute;
 import io.wispforest.owo.serialization.endec.MinecraftEndecs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
@@ -297,7 +298,7 @@ public class AssemblyAugmentBlockEntity extends SyncedBlockEntity implements Tic
     static {
         ItemStorage.SIDED.registerForBlockEntity((augment, direction) -> augment.storage, AffinityBlocks.Entities.ASSEMBLY_AUGMENT);
         ItemStorage.SIDED.registerFallback((tableWorld, tablePos, state, blockEntity, context) -> {
-            if (state.isOf(Blocks.CRAFTING_TABLE) && tableWorld.getBlockEntity(tablePos.up()) instanceof AssemblyAugmentBlockEntity augment) {
+            if (state.isIn(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES) && tableWorld.getBlockEntity(tablePos.up()) instanceof AssemblyAugmentBlockEntity augment) {
                 return augment.storage;
             } else {
                 return null;

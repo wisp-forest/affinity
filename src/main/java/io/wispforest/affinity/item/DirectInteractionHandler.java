@@ -12,10 +12,10 @@ import java.util.Collections;
 public interface DirectInteractionHandler {
 
     default boolean shouldHandleInteraction(ItemStack stack, World world, BlockPos pos, BlockState state) {
-        return interactionOverrideCandidates().contains(state.getBlock());
+        return interactionOverrideCandidates(world).contains(state.getBlock());
     }
 
-    default Collection<Block> interactionOverrideCandidates() {
+    default Collection<Block> interactionOverrideCandidates(World world) {
         return Collections.emptyList();
     }
 
