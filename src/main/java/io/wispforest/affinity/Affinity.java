@@ -95,7 +95,6 @@ public class Affinity implements ModInitializer {
         AffinityWorldgen.initialize();
 
         Registry.register(Registries.LOOT_CONDITION_TYPE, Affinity.id("clump_direction"), ClumpDirectionLootCondition.TYPE);
-        TrackedDataHandlerRegistry.register(EmancipatedBlockEntity.OPTIONAL_NBT);
         ResourceConditions.register(UnfinishedFeaturesResourceCondition.TYPE);
 
         AffinityStructures.register();

@@ -17,12 +17,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -32,11 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 public class EmancipatedBlockEntity extends Entity {
-
-    public static final TrackedDataHandler<Optional<NbtCompound>> OPTIONAL_NBT = TrackedDataHandler.create(PacketCodecs.optional(PacketCodecs.codec(NbtCompound.CODEC)));
 
     private static final KeyedEndec<Integer> MAX_AGE_KEY = Endec.INT.keyed("max_age", 15);
     private static final KeyedEndec<Float> ANIMATION_SCALE_KEY = Endec.FLOAT.keyed("animation_scale", 1f);
@@ -49,7 +41,8 @@ public class EmancipatedBlockEntity extends Entity {
 
     private static final TrackedData<Integer> MAX_AGE = DataTracker.registerData(EmancipatedBlockEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Float> ANIMATION_SCALE = DataTracker.registerData(EmancipatedBlockEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Optional<NbtCompound>> EMANCIPATED_BLOCK_ENTITY_DATA = DataTracker.registerData(EmancipatedBlockEntity.class, OPTIONAL_NBT);
+    private static final TrackedData<Boolean> HAS_BLOCK_ENTITY_DATA = DataTracker.registerData(EmancipatedBlockEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<NbtCompound> EMANCIPATED_BLOCK_ENTITY_DATA = DataTracker.registerData(EmancipatedBlockEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
     private BlockState emancipatedState = Blocks.AIR.getDefaultState();
 
     public EmancipatedBlockEntity(EntityType<?> type, World world) {
@@ -75,7 +68,8 @@ public class EmancipatedBlockEntity extends Entity {
     protected void initDataTracker(DataTracker.Builder builder) {
         builder.add(MAX_AGE, 15);
         builder.add(ANIMATION_SCALE, 1f);
-        builder.add(EMANCIPATED_BLOCK_ENTITY_DATA, Optional.empty());
+        builder.add(HAS_BLOCK_ENTITY_DATA, false);
+        builder.add(EMANCIPATED_BLOCK_ENTITY_DATA, new NbtCompound());
     }
 
     @Override
@@ -96,11 +90,16 @@ public class EmancipatedBlockEntity extends Entity {
     }
 
     public @Nullable NbtCompound emancipatedBlockEntityData() {
-        return this.dataTracker.get(EMANCIPATED_BLOCK_ENTITY_DATA).orElse(null);
+        return this.dataTracker.get(HAS_BLOCK_ENTITY_DATA) ? this.dataTracker.get(EMANCIPATED_BLOCK_ENTITY_DATA) : null;
     }
 
     private void setEmancipatedBlockEntityData(@Nullable NbtCompound emancipatedBlockEntity) {
-        this.dataTracker.set(EMANCIPATED_BLOCK_ENTITY_DATA, Optional.ofNullable(emancipatedBlockEntity));
+        if (emancipatedBlockEntity != null) {
+            this.dataTracker.set(HAS_BLOCK_ENTITY_DATA, true);
+            this.dataTracker.set(EMANCIPATED_BLOCK_ENTITY_DATA, emancipatedBlockEntity);
+        } else {
+            this.dataTracker.set(HAS_BLOCK_ENTITY_DATA, false);
+        }
     }
 
     public int maxAge() {
