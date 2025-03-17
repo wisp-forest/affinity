@@ -53,12 +53,12 @@ public class MinecraftClientMixin {
 
     @Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;isPressed()Z", ordinal = 2))
     private void sendYeetPacket(CallbackInfo ci) {
-        if (this.options.attackKey.wasPressed()) {
-            var activeStack = this.player.getActiveItem();
-            if (!(activeStack.getItem() instanceof KinesisStaffItem staff) || !staff.canThrow(activeStack, this.player)) {
-                return;
-            }
+        var activeStack = this.player.getActiveItem();
+        if (!(activeStack.getItem() instanceof KinesisStaffItem staff) || !staff.canThrow(activeStack, this.player)) {
+            return;
+        }
 
+        if (this.options.attackKey.wasPressed()) {
             var dataBuffer = PacketByteBufs.create();
             staff.writeExtraThrowData(activeStack, this.player, dataBuffer);
 
