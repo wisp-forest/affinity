@@ -13,6 +13,7 @@ import io.wispforest.affinity.object.AffinityItems;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.util.Delta;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
@@ -166,7 +167,9 @@ public abstract class WorldRendererMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", shift = At.Shift.AFTER))
     private void captureSky(RenderTickCounter tickCounter, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci) {
-        if (!SkyCaptureBuffer.isIrisWorldRendering() || !Affinity.config().theSkyIrisIntegration()) SkyCaptureBuffer.captureSky(MinecraftClient.getInstance().getFramebuffer().fbo);
+        if (SkyCaptureBuffer.isIrisWorldRendering() && Affinity.config().theSkyIrisIntegration()) return;
+        Framebuffer framebuffer = MinecraftClient.getInstance().getFramebuffer();
+        SkyCaptureBuffer.captureSky(framebuffer.fbo, framebuffer.viewportWidth, framebuffer.viewportHeight);
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/DimensionEffects;isDarkened()Z", shift = At.Shift.AFTER))

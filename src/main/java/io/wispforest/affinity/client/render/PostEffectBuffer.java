@@ -10,16 +10,20 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.SimpleFramebuffer;
+import org.joml.Vector4i;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL30C;
+import org.lwjgl.system.MemoryStack;
 
+import java.nio.IntBuffer;
 import java.util.function.Supplier;
 
 public class PostEffectBuffer {
 
     private Framebuffer framebuffer = null;
     private int prevBuffer = 0;
+    private final Vector4i prevViewport = new Vector4i();
     private int textureFilter = -1;
 
     public void clear() {
@@ -34,6 +38,13 @@ public class PostEffectBuffer {
         this.ensureInitialized();
 
         this.prevBuffer = GlStateManager.getBoundFramebuffer();
+        if (this.prevBuffer != MinecraftClient.getInstance().getFramebuffer().fbo) {
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                IntBuffer size = stack.mallocInt(4);
+                GL11.glGetIntegerv(GL11.GL_VIEWPORT, size);
+                this.prevViewport.get(size);
+            }
+        }
         if (clear) this.framebuffer.clear(MinecraftClient.IS_SYSTEM_MAC);
 
         if (blitFromMain != 0) {
@@ -48,14 +59,15 @@ public class PostEffectBuffer {
             );
         }
 
-        this.framebuffer.beginWrite(false);
+        this.framebuffer.beginWrite(true);
     }
 
     public void endWrite() {
-        if (prevBuffer == MinecraftClient.getInstance().getFramebuffer().fbo) {
-            MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+        if (this.prevBuffer == MinecraftClient.getInstance().getFramebuffer().fbo) {
+            MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
         } else {
             GlStateManager._glBindFramebuffer(GL30C.GL_FRAMEBUFFER, this.prevBuffer);
+            GlStateManager._viewport(this.prevViewport.x, this.prevViewport.y, this.prevViewport.z, this.prevViewport.w);
         }
     }
 
