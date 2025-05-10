@@ -9,6 +9,7 @@ import io.wispforest.affinity.misc.potion.PotionMixture;
 import io.wispforest.affinity.misc.util.ListUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
 import io.wispforest.owo.ops.ItemOps;
+import io.wispforest.owo.ops.WorldOps;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -22,6 +23,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.function.BooleanBiFunction;
@@ -88,6 +91,8 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
             if (!world.isClient()) {
                 cauldron.addOneBottle(PotionMixture.fromStack(playerStack));
                 player.setStackInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
+
+                WorldOps.playSound(world, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.PLAYERS);
             }
 
             return ItemActionResult.SUCCESS;
@@ -101,6 +106,8 @@ public class BrewingCauldronBlock extends AethumNetworkMemberBlock {
 
                 ItemOps.decrementPlayerHandItem(player, hand);
                 player.getInventory().offerOrDrop(potionStack);
+
+                WorldOps.playSound(world, pos, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.PLAYERS);
             }
 
             return ItemActionResult.SUCCESS;
