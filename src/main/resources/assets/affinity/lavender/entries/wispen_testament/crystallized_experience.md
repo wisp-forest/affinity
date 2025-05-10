@@ -30,9 +30,6 @@ leaving behind some sugary {item}Crystallized Experience{}.
 
 @next-page
 
-
-;;;;;
-
 Consuming this clump once more {concept}restores 30 levels worth of experience{} - precisely the amount it took to create
 it in the first place.
 
