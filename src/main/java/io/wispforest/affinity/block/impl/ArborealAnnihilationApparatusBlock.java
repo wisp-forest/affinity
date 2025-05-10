@@ -23,7 +23,7 @@ public class ArborealAnnihilationApparatusBlock extends AethumNetworkMemberBlock
     private static final VoxelShape SHAPE = Block.createCuboidShape(3, 0, 3, 13, 14, 13);
 
     public ArborealAnnihilationApparatusBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque(), GENERATOR_TOOLTIP);
+        super(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).solid().nonOpaque(), GENERATOR_TOOLTIP);
     }
 
     @Nullable
