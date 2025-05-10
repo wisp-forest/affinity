@@ -40,7 +40,7 @@ functionality...{}
 needs some time to recover{}, to prevent a painful death as outlined previously.
 
 
-All such items (like the numerous [Staffs](^affinity:staffs)), have their usage costs {concept}outlined in their tooltip{}.
+All such items (like the numerous [Staffs](^affinity:staff_prototyping)), have their usage costs {concept}outlined in their tooltip{}.
 
 ---
 

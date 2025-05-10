@@ -30,7 +30,7 @@ Of course, further required is a means of...
 
 @next-page
 
-...forming flux (of which there are numerous) - the [Matter Harvesting Hearth](^affinity:matter_harvesting_heart)
+...forming flux (of which there are numerous) - the [Matter Harvesting Hearth](^affinity:matter_harvesting_hearth)
 might present a good starting point.
 
 
