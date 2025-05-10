@@ -16,7 +16,7 @@ Being able to obtain detailed information about all sorts of magical contraption
 
 
 The {item}Wand of Inquiry{} (in a certain sense not much more than an educated {item}Eye of Ender{} strapped to an
-[Uncanny Rod](^affinity:uncanny_rod)), thus, is an instrument designed precisely for this purpose.
+[Uncanny Rod](^affinity:wand_of_iridescence)), thus, is an instrument designed precisely for this purpose.
 
 ;;;;;
 

@@ -18,7 +18,7 @@
 A specialized device is required to assemble the imposing columns of stone, adorned with a special material, that are
 {item}Ritual Socles{}.
 
-<recipe;affinity:assembly/ritual_socle_composer>
+<recipe;affinity:assembly/infused_stone>
 
 ;;;;;
 
@@ -30,14 +30,16 @@ Eerily similar in appearance and function to a {item}Stonecutter{}, the {item}Ri
 
 @next-page
 
+
+<recipe;affinity:assembly/ritual_socle_composer>
+
+
 At this time, the following three materials are known to produce admissible {concept}socle ornaments{}:
+
+;;;;;
 
 <recipe;affinity:ornament_carving/stone_socle_ornament>
 <recipe;affinity:ornament_carving/prismarine_socle_ornament>
 <recipe;affinity:ornament_carving/purpur_socle_ornament>
 
-;;;;;
-
 They provide, in the order listed, an {concept}increasing boost to the stability{} of a ritual's flux-field.
-
-@entry-end

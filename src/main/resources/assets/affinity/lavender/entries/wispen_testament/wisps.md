@@ -12,7 +12,7 @@
 }
 ```
 
-Found swarming the vast expanses of the [Wisp Forests](^affinity:wisp_forests) and the former's namesake, the
+Found swarming the vast expanses of the [Wisp Forests](^affinity:wisp_forest) and the former's namesake, the
 {concept}Wisps{} are a curious species. Born of [Aethum](^affinity:aethum), they exhibit only mostly-physical form
 and an innate affinity for all things magical.
 
@@ -37,7 +37,7 @@ discussed on the following pages.
 The {concept}Inert Wisp{} is the most frequent and least distinguished of the bunch.
 
 
-They move in small groups all over the [Wisp Forest](^affinity:wisp_forests), not interested in anything and of no
+They move in small groups all over the [Wisp Forest](^affinity:wisp_forest), not interested in anything and of no
 greater interest to anybody either.
 
 
@@ -58,7 +58,7 @@ qualities of the others.
 <|item-spotlight@lavender:book_components|item=affinity:wise_wisp_matter|>
 
 As implied by their name, the {concept}Wise Wisps{} are the most intelligent inhabitants of the
-[Wisp Forest](^affinity:wisp_forests). They move in groups similar in size to the {concept}Inert Wisps{}, but in lower
+[Wisp Forest](^affinity:wisp_forest). They move in groups similar in size to the {concept}Inert Wisps{}, but in lower
 numbers overall.
 
 
@@ -78,7 +78,7 @@ or the processing of information is required.
 
 <|item-spotlight@lavender:book_components|item=affinity:vicious_wisp_matter|>
 
-Last but not least, the {concept}Vicious Wisps{} are the guards of the [Wisp Forest](^affinity:wisp_forests) and defend
+Last but not least, the {concept}Vicious Wisps{} are the guards of the [Wisp Forest](^affinity:wisp_forest) and defend
 it against any and all intruders.
 
 
