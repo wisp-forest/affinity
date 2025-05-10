@@ -7,7 +7,6 @@ import io.wispforest.affinity.misc.quack.AffinityEntityAddon;
 import io.wispforest.affinity.object.AffinityEnchantments;
 import net.minecraft.block.spawner.MobSpawnerEntry;
 import net.minecraft.block.spawner.MobSpawnerLogic;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -31,8 +30,8 @@ public class GravecallerEnchantmentLogic {
 
     public static void initialize() {
         ItemEquipEvents.UNEQUIP.register((entity, slot, stack) -> {
-            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.GRAVECALLER).orElseThrow();
-            if (!enchantment.value().slotMatches(slot)) return;
+            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.GRAVECALLER).orElse(null);
+            if (enchantment == null || !enchantment.value().slotMatches(slot)) return;
 
             if (!AbsoluteEnchantmentLogic.hasCompleteArmor(entity, enchantment) && AffinityEntityAddon.hasData(entity, MINIONS_KEY)) {
                 final var minions = AffinityEntityAddon.removeData(entity, MINIONS_KEY);
@@ -44,8 +43,8 @@ public class GravecallerEnchantmentLogic {
         });
 
         LivingEntityTickCallback.EVENT.register(entity -> {
-            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.GRAVECALLER).orElseThrow();
-            if (!AbsoluteEnchantmentLogic.hasCompleteArmor(entity, enchantment)) return;
+            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.GRAVECALLER).orElse(null);
+            if (enchantment == null || !AbsoluteEnchantmentLogic.hasCompleteArmor(entity, enchantment)) return;
 
             if (!entity.getWorld().isClient) {
                 serverTick(entity);

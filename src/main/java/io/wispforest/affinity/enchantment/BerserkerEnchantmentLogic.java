@@ -18,8 +18,8 @@ public class BerserkerEnchantmentLogic {
 
     public static void initialize() {
         ItemEquipEvents.EQUIP.register((entity, slot, stack) -> {
-            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.BERSERKER).orElseThrow();
-            if (!enchantment.value().slotMatches(slot)) return;
+            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.BERSERKER).orElse(null);
+            if (enchantment == null || !enchantment.value().slotMatches(slot)) return;
 
             if (AbsoluteEnchantmentLogic.hasCompleteArmor(entity, enchantment)) {
                 AffinityEntityAddon.setData(entity, BERSERK_KEY, true);
@@ -31,8 +31,8 @@ public class BerserkerEnchantmentLogic {
         });
 
         ItemEquipEvents.UNEQUIP.register((entity, slot, stack) -> {
-            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.BERSERKER).orElseThrow();
-            if (!enchantment.value().slotMatches(slot)) return;
+            var enchantment = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.BERSERKER).orElse(null);
+            if (enchantment == null || !enchantment.value().slotMatches(slot)) return;
 
             if (!AbsoluteEnchantmentLogic.hasCompleteArmor(entity, enchantment) && AffinityEntityAddon.hasData(entity, BERSERK_KEY)) {
                 AffinityEntityAddon.removeData(entity, BERSERK_KEY);

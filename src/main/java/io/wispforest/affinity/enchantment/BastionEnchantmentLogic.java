@@ -15,7 +15,8 @@ public class BastionEnchantmentLogic {
 
     public static void initialize() {
         ItemEquipEvents.EQUIP.register((entity, slot, stack) -> {
-            var ench = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.BASTION).orElseThrow();
+            var ench = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.BASTION).orElse(null);
+            if (ench == null) return;
 
             if (EnchantmentHelper.getLevel(ench, stack) == 0) return;
 
@@ -24,9 +25,8 @@ public class BastionEnchantmentLogic {
         });
 
         ItemEquipEvents.UNEQUIP.register((entity, slot, stack) -> {
-            var ench = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.BASTION).orElseThrow();
-
-            if (EnchantmentHelper.getLevel(ench, stack) == 0) return;
+            var ench = entity.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(AffinityEnchantments.BASTION).orElse(null);
+            if (ench == null || EnchantmentHelper.getLevel(ench, stack) == 0) return;
 
             if (!ench.value().slotMatches(slot)) return;
             AffinityEntityAddon.removeData(entity, BASTION);
