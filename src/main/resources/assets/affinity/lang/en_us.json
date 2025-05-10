@@ -887,6 +887,9 @@
       "color": "yellow"
     }
   ],
+  "gui.affinity.item_transfer_node.ignore_damage":"Ignore damage",
+  "gui.affinity.item_transfer_node.ignore_data":"Ignore data",
+  "gui.affinity.item_transfer_node.invert_filter":"Invert filter",
 
   "advancement.affinity.root.title": "Affinity",
   "advancement.affinity.root.description": "Tomfoolery awaits",
