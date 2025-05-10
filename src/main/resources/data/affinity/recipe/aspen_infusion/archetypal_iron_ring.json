@@ -7,16 +7,16 @@
   },
   "inputs": [
     {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     },
     {
-      "tag": "c:iron_ingots"
+      "tag": "c:ingots/iron"
     }
   ],
   "output": {
