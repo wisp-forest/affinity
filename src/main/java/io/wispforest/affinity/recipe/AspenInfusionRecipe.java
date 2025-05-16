@@ -49,7 +49,7 @@ public class AspenInfusionRecipe extends RitualRecipe<AspRiteCoreBlockEntity.Asp
         var result = this.output.copy();
 
         if (this.transferComponents) {
-            result.applyComponentsFrom(inventory.primaryInput().getComponents());
+            result.applyUnvalidatedChanges(inventory.primaryInput().getComponentChanges());
         }
 
         return result;

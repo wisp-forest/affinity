@@ -84,7 +84,7 @@ public class SpiritAssimilationRecipe extends RitualRecipe<SpiritIntegrationAppa
             for (var stack : input.coreInputs()) {
                 if (!transferNbtIngredient.test(stack)) continue;
 
-                result.applyComponentsFrom(stack.getComponents());
+                result.applyUnvalidatedChanges(stack.getComponentChanges());
                 break;
             }
         }
