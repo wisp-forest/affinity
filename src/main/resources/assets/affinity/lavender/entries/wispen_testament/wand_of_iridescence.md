@@ -22,11 +22,18 @@ form networks like those employed to create, transport and process [Aethum Flux]
 
 ;;;;;
 
+<recipe;affinity:assembly/uncanny_rod>
+
+
 <recipe;affinity:assembly/emerald_wand_of_iridescence>
+
+@next-page
 
 To do this, {concept}use the wand on two blocks in succession{} to either create or release the link between them.
 
 
 If you need to join multiple blocks to the same hub, {concept}right-click the wand in your inventory{} to make it
 remember the initial block.
+
+@entry-end
 
