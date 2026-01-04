@@ -50,8 +50,7 @@ public interface AttunedShardTier {
     @NotNull
     static AttunedShardTier forItem(Item item) {
         if (item instanceof AttunedShardItem shardItem) return shardItem.tier();
-        if (item == Items.AMETHYST_SHARD) return AttunedShardTiers.CRUDE;
-        return AttunedShardTiers.NONE;
+        return CustomShardTierRegistry.REGISTRY.getOrDefault(item, AttunedShardTiers.NONE);
     }
 
 }

@@ -1,0 +1,10 @@
+{
+  "items": [
+    "minecraft:amethyst_shard"
+  ],
+  "tier": {
+    "maxDistance": 5,
+    "maxTransfer": 5,
+    "tierName": "CRUDE"
+  }
+}
