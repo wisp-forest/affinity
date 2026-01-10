@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 /**
