@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.item.Item;
 
 import net.minecraft.item.Items;
-import net.minecraft.registry.Registry;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -20,7 +19,6 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -30,12 +28,10 @@ public class CustomShardTierRegistry {
     public static HashMap<Item, AttunedShardTier> REGISTRY = new HashMap<>();
 
     public static void initialize() {
-        Affinity.LOGGER.info("Affinity shard tier reload listener registered.");
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new Loader());
     }
 
     private static void registerItems(List<Item> itemList, AttunedShardTier tier) {
-        Affinity.LOGGER.info("Affinity registering items under tier {}", tier.toString());
         REGISTRY.putAll(itemList.stream().collect(Collectors.toMap(item -> item, ign-> tier)));
     }
 
