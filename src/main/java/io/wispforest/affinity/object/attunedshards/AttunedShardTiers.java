@@ -3,7 +3,6 @@ package io.wispforest.affinity.object.attunedshards;
 import io.wispforest.affinity.Affinity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 
