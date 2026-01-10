@@ -45,6 +45,10 @@ public enum AttunedShardTiers implements AttunedShardTier {
         return this.maxDistance;
     }
 
+    public AttunedShardTiers tier() {
+        return this;
+    }
+
     @Override
     public String translationKey() {
         return translationKey;

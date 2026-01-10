@@ -27,6 +27,11 @@ public interface AttunedShardTier {
     int maxDistance();
 
     /**
+     * @return The Tier variant of this shard
+     * */
+    AttunedShardTiers tier();
+
+    /**
      * @return The translation key of this tier, used in the
      * HUD when looking at a node with a shard of this tier
      */
@@ -50,8 +55,7 @@ public interface AttunedShardTier {
     @NotNull
     static AttunedShardTier forItem(Item item) {
         if (item instanceof AttunedShardItem shardItem) return shardItem.tier();
-        if (item == Items.AMETHYST_SHARD) return AttunedShardTiers.CRUDE;
-        return AttunedShardTiers.NONE;
+        return CustomShardTierRegistry.REGISTRY.getOrDefault(item, AttunedShardTiers.NONE);
     }
 
 }

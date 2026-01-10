@@ -9,6 +9,7 @@ import io.wispforest.affinity.item.EchoShardExtension;
 import io.wispforest.affinity.misc.*;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
+import io.wispforest.affinity.object.attunedshards.CustomShardTierRegistry;
 import io.wispforest.affinity.worldgen.AffinityStructures;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.endec.Endec;
@@ -121,6 +122,7 @@ public class Affinity implements ModInitializer {
         });
 
         AffinityCommands.register();
+        CustomShardTierRegistry.initialize();
 
         if (!Owo.DEBUG) return;
         AffinityDebugCommands.register();
