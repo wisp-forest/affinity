@@ -34,7 +34,7 @@ public class GravitonTransducerBlockEntityRenderer extends AffinityBlockEntityRe
     @Override
     protected void render(GravitonTransducerBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         var shardTier = AttunedShardTier.forItem(entity.shard().getItem());
-        if (shardTier == AttunedShardTiers.NONE) return;
+        if (shardTier.isNone()) return;
 
         matrices.push();
         matrices.translate(.5, .5 + Math.sin(time / 1000f) * .1f, .5);

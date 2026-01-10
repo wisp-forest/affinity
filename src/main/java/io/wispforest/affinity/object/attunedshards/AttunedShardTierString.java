@@ -34,7 +34,7 @@ public class AttunedShardTierString {
     }
 
     public String getTierName() {
-        return this.tierName;
+        return this.tierName.toLowerCase(Locale.ROOT);
     }
 
     public AttunedShardTiers getTierVariant() {

@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.item.Item;
 
 import net.minecraft.item.Items;
+import net.minecraft.registry.Registry;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -29,10 +30,12 @@ public class CustomShardTierRegistry {
     public static HashMap<Item, AttunedShardTier> REGISTRY = new HashMap<>();
 
     public static void initialize() {
+        Affinity.LOGGER.info("Affinity shard tier reload listener registered.");
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new Loader());
     }
 
     private static void registerItems(List<Item> itemList, AttunedShardTier tier) {
+        Affinity.LOGGER.info("Affinity registering items under tier {}", tier.toString());
         REGISTRY.putAll(itemList.stream().collect(Collectors.toMap(item -> item, ign-> tier)));
     }
 
@@ -45,50 +48,42 @@ public class CustomShardTierRegistry {
 
         @Override
         public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-
             CompletableFuture.supplyAsync(() -> {
                     CustomShardTierRegistry.REGISTRY.clear();
                     return null;
                 }, prepareExecutor).thenCompose(synchronizer::whenPrepared);
 
-            return FuturesUtil.allOf( manager.findAllResources(
-                    "affinity/tiers",
+            return FuturesUtil.allOf( manager.findResources(
+                    "tiers",
                     path -> path.toString().endsWith(".json")
             ).entrySet().parallelStream().map(ent ->
-                CompletableFuture.supplyAsync(
-                    () -> { try (BufferedReader reader = manager.getResource(ent.getKey()).get().getReader()) {
-                        return reader;
-                    } catch (IOException | NoSuchElementException e) {
-                        Affinity.LOGGER.error("Couldn't open resource described by {}", ent.getKey(), e);
-                    }
-                    return Reader.nullReader();},
-                    applyExecutor
-            ).thenAccept(reader -> {
-                JsonElement json = JsonParser.parseReader(reader);
-                if (json.isJsonNull()) {
-                    return;
-                }
+                CompletableFuture.runAsync(
+                    () -> {
+                        try (BufferedReader reader = ent.getValue().getReader()) {
+                            try {
+                                JsonElement json = JsonParser.parseReader(reader);
+                                if (json.isJsonNull()) {
+                                    return;
+                                }
 
-                try {
-                    CustomShardTierJsonFile result = CustomShardTierJsonFile.ENDEC.decodeFully(GsonDeserializer::of, json);
-                    CustomShardTierRegistry.registerItems(result);
-                } catch (JsonParseException e) {
-                    Affinity.LOGGER.error("Parsing failed", e);
-                }
+                                CustomShardTierJsonFile result = CustomShardTierJsonFile.ENDEC.decodeFully(GsonDeserializer::of, json);
+                                CustomShardTierRegistry.registerItems(result);
 
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    Affinity.LOGGER.error("Couldn't close file (?)", e);
-                }}
-                ).thenRun( () -> {
-                    /* INVARIANTS */
-                    if (CustomShardTierRegistry.REGISTRY.isEmpty()) {
-                        Affinity.LOGGER.error("Affinity Shard registry reloaded with no json entries.");
-                        CustomShardTierRegistry.REGISTRY.put(Items.AMETHYST_SHARD, AttunedShardTiers.CRUDE);
-                    }
-                })
-            ).toList());
+                            } catch (JsonParseException e) {
+                                Affinity.LOGGER.error("Parsing failed", e);
+                            }
+                        } catch (IOException | NoSuchElementException e) {
+                            Affinity.LOGGER.error("Couldn't open resource described by {}", ent.getKey(), e);
+                        }
+                    }, applyExecutor
+                )).toList()
+            ).thenRun( () -> {
+                /* INVARIANTS */
+                if (CustomShardTierRegistry.REGISTRY.isEmpty()) {
+                    Affinity.LOGGER.debug("Affinity Shard registry reloaded with no json entries.");
+                    CustomShardTierRegistry.REGISTRY.put(Items.AMETHYST_SHARD, AttunedShardTiers.CRUDE);
+                }
+            });
         }
 
         @Override

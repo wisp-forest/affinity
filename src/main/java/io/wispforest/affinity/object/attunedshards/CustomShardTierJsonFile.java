@@ -11,7 +11,7 @@ import java.util.List;
 public class CustomShardTierJsonFile {
 
     public static final Endec<CustomShardTierJsonFile> ENDEC = StructEndecBuilder.of(
-            BuiltInEndecs.ofRegistry(Registries.ITEM).listOf().fieldOf("items",CustomShardTierJsonFile::getItems),
+            BuiltInEndecs.ofRegistry(Registries.ITEM).listOf().fieldOf("items", CustomShardTierJsonFile::getItems),
             CustomShardTier.ENDEC.fieldOf("tier", CustomShardTierJsonFile::getTier),
             CustomShardTierJsonFile::new
     );
