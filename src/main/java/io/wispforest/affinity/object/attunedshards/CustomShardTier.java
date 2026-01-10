@@ -61,16 +61,12 @@ public class CustomShardTier implements AttunedShardTier {
         return this.maxDistance;
     }
 
+    public AttunedShardTiers tier() {
+        return this.tierName.getTierVariant();
+    }
+
     public AttunedShardTierString _getASTS() {
         return this.tierName;
-    }
-
-    public String getTierName() {
-        return this.tierName.getTierName();
-    }
-
-    public AttunedShardTier getTier() {
-        return this.tierName.getTierVariant();
     }
 
     @Override

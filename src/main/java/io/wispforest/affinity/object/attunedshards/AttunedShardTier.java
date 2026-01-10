@@ -27,6 +27,11 @@ public interface AttunedShardTier {
     int maxDistance();
 
     /**
+     * @return The Tier variant of this shard
+     * */
+    AttunedShardTiers tier();
+
+    /**
      * @return The translation key of this tier, used in the
      * HUD when looking at a node with a shard of this tier
      */

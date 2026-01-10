@@ -18,7 +18,7 @@ public class AttunedShardTierString {
         this.tierName = tierName;
 
         if (AttunedShardTiers.NONE == this.variant) {
-            Affinity.LOGGER.info("Named tier could not be matched", tierName);
+            Affinity.LOGGER.info("Named tier {} could not be matched", tierName);
             this.tierName = "NONE";
         }
     }
@@ -34,7 +34,7 @@ public class AttunedShardTierString {
     }
 
     public String getTierName() {
-        return this.tierName;
+        return this.tierName.toLowerCase(Locale.ROOT);
     }
 
     public AttunedShardTiers getTierVariant() {
