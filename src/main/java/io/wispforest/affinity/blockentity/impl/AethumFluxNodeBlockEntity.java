@@ -10,11 +10,11 @@ import io.wispforest.affinity.blockentity.template.InteractableBlockEntity;
 import io.wispforest.affinity.blockentity.template.ShardBearingAethumNetworkMemberBlockEntity;
 import io.wispforest.affinity.blockentity.template.TickedBlockEntity;
 import io.wispforest.affinity.client.render.CuboidRenderer;
-import io.wispforest.affinity.item.AttunedShardItem;
 import io.wispforest.affinity.misc.util.ListUtil;
 import io.wispforest.affinity.misc.util.MathUtil;
 import io.wispforest.affinity.misc.util.NbtUtil;
 import io.wispforest.affinity.object.AffinityBlocks;
+import io.wispforest.affinity.object.attunedshards.AttunedShardTier;
 import io.wispforest.affinity.object.attunedshards.AttunedShardTiers;
 import io.wispforest.owo.ops.ItemOps;
 import io.wispforest.owo.particles.ClientParticles;
@@ -25,7 +25,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.text.Text;
@@ -379,45 +378,35 @@ public class AethumFluxNodeBlockEntity extends ShardBearingAethumNetworkMemberBl
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         var playerStack = player.getStackInHand(hand);
-
-        if (!playerStack.isEmpty()) {
-
-            if (playerStack.isOf(Items.AMETHYST_SHARD)) {
-                if (this.shard.isEmpty()) {
-                    this.shard = ItemOps.singleCopy(playerStack);
-                    this.tier = AttunedShardTiers.CRUDE;
-
-                    ItemOps.decrementPlayerHandItem(player, hand);
-
-                    updatePropertyCache();
-                    this.markDirty(false);
-
-                    return ActionResult.SUCCESS;
-                } else if (this.isUpgradeable && this.outerShardCount < this.outerShards.size()) {
-                    ListUtil.addItem(this.outerShards, ItemOps.singleCopy(playerStack));
-
-                    ItemOps.decrementPlayerHandItem(player, hand);
-
-                    updatePropertyCache();
-                    this.markDirty(false);
-
-                    return ActionResult.SUCCESS;
-                }
-            } else if (this.isUpgradeable() && this.shard.isEmpty() && playerStack.getItem() instanceof AttunedShardItem shardItem) {
-                this.shard = ItemOps.singleCopy(playerStack);
-                this.tier = shardItem.tier();
-
-                ItemOps.decrementPlayerHandItem(player, hand);
-
-                updatePropertyCache();
-                this.markDirty(false);
-
-                return ActionResult.SUCCESS;
-            }
-
+        if (playerStack.isEmpty()) {
+            return ActionResult.PASS;
         }
 
-        return ActionResult.PASS;
+        var shardTier = AttunedShardTier.forItem(playerStack.getItem());
+        if (shardTier.isNone()) {
+            return ActionResult.PASS;
+        }
+
+        if (this.shard.isEmpty()) {
+            if (shardTier.tier() == AttunedShardTiers.CRUDE || this.isUpgradeable) {
+                this.shard = ItemOps.singleCopy(playerStack);
+                this.tier = shardTier;
+            } else {
+                return ActionResult.PASS;
+            }
+
+        } else if (shardTier.tier() == AttunedShardTiers.CRUDE && this.isUpgradeable) {
+            ListUtil.addItem(this.outerShards, ItemOps.singleCopy(playerStack));
+        } else {
+            return ActionResult.PASS;
+        }
+
+        ItemOps.decrementPlayerHandItem(player, hand);
+
+        updatePropertyCache();
+        this.markDirty(false);
+
+        return ActionResult.SUCCESS;
     }
 
     public ActionResult onAttack(PlayerEntity player) {

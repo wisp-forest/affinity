@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,6 +24,11 @@ public interface AttunedShardTier {
      * node with a shard of this tier can have
      */
     int maxDistance();
+
+    /**
+     * @return The Tier variant of this shard
+     * */
+    AttunedShardTiers tier();
 
     /**
      * @return The translation key of this tier, used in the
@@ -50,8 +54,7 @@ public interface AttunedShardTier {
     @NotNull
     static AttunedShardTier forItem(Item item) {
         if (item instanceof AttunedShardItem shardItem) return shardItem.tier();
-        if (item == Items.AMETHYST_SHARD) return AttunedShardTiers.CRUDE;
-        return AttunedShardTiers.NONE;
+        return CustomShardTierRegistry.getOrDefault(item, AttunedShardTiers.NONE);
     }
 
 }

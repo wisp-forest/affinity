@@ -3,11 +3,8 @@ package io.wispforest.affinity.object.attunedshards;
 import io.wispforest.affinity.Affinity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
-
-import java.util.Locale;
 
 public enum AttunedShardTiers implements AttunedShardTier {
 
@@ -28,7 +25,7 @@ public enum AttunedShardTiers implements AttunedShardTier {
         this.maxTransfer = maxTransfer;
         this.maxDistance = maxDistance;
 
-        final var name = this.name().toLowerCase(Locale.ROOT);
+        final var name = this.name().toLowerCase();
         this.translationKey = "shard_tier.affinity." + name;
 
         if (Affinity.onClient()) {
@@ -45,6 +42,10 @@ public enum AttunedShardTiers implements AttunedShardTier {
     @Override
     public int maxDistance() {
         return this.maxDistance;
+    }
+
+    public AttunedShardTiers tier() {
+        return this;
     }
 
     @Override

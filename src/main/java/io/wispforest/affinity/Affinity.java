@@ -13,6 +13,7 @@ import io.wispforest.affinity.mixin.access.BlockEntityTypeAccessor;
 import io.wispforest.affinity.endec.ReflectiveMinecraftEndecs;
 import io.wispforest.affinity.network.AffinityNetwork;
 import io.wispforest.affinity.object.*;
+import io.wispforest.affinity.object.attunedshards.CustomShardTierRegistry;
 import io.wispforest.affinity.worldgen.AffinityStructures;
 import io.wispforest.affinity.worldgen.AffinityWorldgen;
 import io.wispforest.owo.Owo;
@@ -118,6 +119,8 @@ public class Affinity implements ModInitializer {
                                             .build()))
                     ));
         });
+
+        CustomShardTierRegistry.initialize();
 
         if (!Owo.DEBUG) return;
         AffinityDebugCommands.register();
