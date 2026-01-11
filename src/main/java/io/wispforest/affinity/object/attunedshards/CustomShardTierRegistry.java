@@ -25,10 +25,19 @@ import java.util.concurrent.Executor;
 
 public class CustomShardTierRegistry {
 
-    public static HashMap<Item, AttunedShardTier> REGISTRY = new HashMap<>();
+    private static HashMap<Item, AttunedShardTier> REGISTRY = new HashMap<>();
 
     public static void initialize() {
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new Loader());
+    }
+
+    public static AttunedShardTier getOrDefault(Item i, AttunedShardTier d) {
+        return REGISTRY.getOrDefault(i, d);
+    }
+
+    public static void clear() {
+        Affinity.LOGGER.info("{} items cleared from shard tier registry.", REGISTRY.size());
+        REGISTRY.clear();
     }
 
     private static void registerItems(List<Item> itemList, AttunedShardTier tier) {
@@ -44,42 +53,43 @@ public class CustomShardTierRegistry {
 
         @Override
         public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-            CompletableFuture.supplyAsync(() -> {
-                    CustomShardTierRegistry.REGISTRY.clear();
-                    return null;
-                }, prepareExecutor).thenCompose(synchronizer::whenPrepared);
+            CompletableFuture prepareStep = CompletableFuture.supplyAsync(() -> {
+                CustomShardTierRegistry.clear();
+                return null;
+            }, prepareExecutor).thenCompose(synchronizer::whenPrepared);
 
-            return FuturesUtil.allOf( manager.findResources(
-                    "tiers",
-                    path -> path.toString().endsWith(".json")
-            ).entrySet().parallelStream().map(ent ->
-                CompletableFuture.runAsync(
-                    () -> {
-                        try (BufferedReader reader = ent.getValue().getReader()) {
-                            try {
-                                JsonElement json = JsonParser.parseReader(reader);
-                                if (json.isJsonNull()) {
-                                    return;
+            CompletableFuture applyStep = FuturesUtil.allOf( manager.findResources(
+                            "tiers",
+                            path -> path.toString().endsWith(".json")
+                    ).entrySet().parallelStream().map(ent ->
+                            prepareStep.thenAcceptAsync(v -> {
+                                try (BufferedReader reader = ent.getValue().getReader()) {
+                                    try {
+                                        JsonElement json = JsonParser.parseReader(reader);
+                                        if (json.isJsonNull()) {
+                                            return;
+                                        }
+
+                                        CustomShardTierJsonFile result = CustomShardTierJsonFile.ENDEC.decodeFully(GsonDeserializer::of, json);
+                                        CustomShardTierRegistry.registerItems(result);
+
+                                    } catch (JsonParseException e) {
+                                        Affinity.LOGGER.error("Parsing failed", e);
+                                    }
+                                } catch (IOException | NoSuchElementException e) {
+                                    Affinity.LOGGER.error("Couldn't open resource described by {}", ent.getKey(), e);
                                 }
-
-                                CustomShardTierJsonFile result = CustomShardTierJsonFile.ENDEC.decodeFully(GsonDeserializer::of, json);
-                                CustomShardTierRegistry.registerItems(result);
-
-                            } catch (JsonParseException e) {
-                                Affinity.LOGGER.error("Parsing failed", e);
-                            }
-                        } catch (IOException | NoSuchElementException e) {
-                            Affinity.LOGGER.error("Couldn't open resource described by {}", ent.getKey(), e);
-                        }
-                    }, applyExecutor
-                )).toList()
-            ).thenRun( () -> {
+                            }, applyExecutor)).toList()
+            ).thenRunAsync( () -> {
                 /* INVARIANTS */
                 if (CustomShardTierRegistry.REGISTRY.isEmpty()) {
                     Affinity.LOGGER.debug("Affinity Shard registry reloaded with no json entries.");
                     CustomShardTierRegistry.REGISTRY.put(Items.AMETHYST_SHARD, AttunedShardTiers.CRUDE);
                 }
-            });
+                Affinity.LOGGER.info("Affinity Shard Registry loaded with {} items", CustomShardTierRegistry.REGISTRY.size());
+            }, applyExecutor);
+
+            return applyStep;
         }
 
         @Override
